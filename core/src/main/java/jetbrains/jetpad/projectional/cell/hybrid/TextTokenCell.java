@@ -1,0 +1,112 @@
+/*
+ * Copyright 2012-2013 JetBrains s.r.o
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package jetbrains.jetpad.projectional.cell.hybrid;
+
+import com.google.common.base.Predicates;
+import com.google.common.base.Supplier;
+import jetbrains.jetpad.projectional.parser.ErrorToken;
+import jetbrains.jetpad.projectional.parser.SimpleToken;
+import jetbrains.jetpad.projectional.parser.Token;
+import jetbrains.jetpad.projectional.cell.*;
+import jetbrains.jetpad.projectional.cell.TextCell;
+import jetbrains.jetpad.projectional.cell.Cell;
+import jetbrains.jetpad.projectional.cell.support.CellLists;
+import jetbrains.jetpad.projectional.cell.support.ProjectionalSynchronizers;
+import jetbrains.jetpad.projectional.cell.support.TextEditing;
+import jetbrains.jetpad.values.Color;
+
+class TextTokenCell extends TextCell {
+  private boolean myFirst;
+  private Token myToken;
+  private Token myNextToken;
+
+  TextTokenCell(Token token) {
+    this.myToken = token;
+    textColor().set(tokenTextColor());
+    bold().set(token instanceof SimpleToken && ((SimpleToken) token).isBold());
+    text().set(token.text());
+
+    addTrait(createTrait());
+    updateFocusability();
+  }
+
+  private Color tokenTextColor() {
+    return myToken instanceof SimpleToken ? ((SimpleToken) myToken).getColor() : Color.BLACK;
+  }
+
+  public void setFirst(boolean first) {
+    myFirst = first;
+    updateFocusability();
+  }
+
+  public void setNextToken(Token token) {
+    myNextToken = token;
+    updateFocusability();
+  }
+
+  private void updateFocusability() {
+    int posCount = myToken.text().length() + 1;
+    if (noSpaceToLeft()) posCount--;
+    if (noSpaceToRight()) posCount--;
+    focusable().set(posCount > 0);
+  }
+
+  private CellTrait createTrait() {
+    return new TokenCellTraits.TokenCellTrait(false) {
+      @Override
+      protected CellTrait[] getBaseTraits(Cell cell) {
+        return new CellTrait[] {
+          new TokenCellTraits.LeftLeafTokenCellTrait(),
+          new TokenCellTraits.RightLeafTokenCellTrait(),
+          TextEditing.validTextEditing(myToken instanceof ErrorToken ? Predicates.<String>alwaysFalse() : Predicates.equalTo(myToken.text()), tokenTextColor(), false)
+        };
+      }
+
+      @Override
+      public Object get(final Cell cell, CellTraitPropertySpec<?> spec) {
+        if (spec == TextEditing.FIRST_ALLOWED) return !noSpaceToLeft();
+        if (spec == TextEditing.LAST_ALLOWED) return !noSpaceToRight();
+        if (spec == TextEditing.DOT_LIKE_RT) return myToken.isDotLike();
+        if (spec == TextEditing.EAGER_COMPLETION) return true;
+
+        if (myToken.noSpaceToLeft() || myToken.noSpaceToRight()) {
+          if (spec == ProjectionalSynchronizers.DELETE_ON_EMPTY) return true;
+          if (spec == CellLists.NO_SPACE_TO_LEFT) return noSpaceToLeft();
+          if (spec == CellLists.NO_SPACE_TO_RIGHT) return noSpaceToRight();
+        }
+
+        if (spec == TextEditing.AFTER_TYPE) {
+          return new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+              return tokenOperations(cell).afterType(TextTokenCell.this);
+            }
+          };
+        }
+
+        return super.get(cell, spec);
+      }
+    };
+  }
+
+  boolean noSpaceToRight() {
+    return myToken.noSpaceToRight() && myNextToken != null && !myNextToken.noSpaceToLeft();
+  }
+
+  boolean noSpaceToLeft() {
+    return myToken.noSpaceToLeft() && !myFirst;
+  }
+}

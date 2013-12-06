@@ -1,0 +1,12 @@
+<!DOCTYPE module
+  PUBLIC
+  "-//Google Inc.//DTD Google Web Toolkit 2.0//EN"
+  "http://google-web-toolkit.googlecode.com/svn/releases/2.0/distro-source/core/src/gwt-module.dtd"
+  >
+<module>
+  <source path="" />
+
+  <inherits name="jetbrains.jetpad.test.Test" />
+  <inherits name="jetbrains.jetpad.projectional.Projectional"/>
+  <inherits name="jetbrains.jetpad.projectional.view.View"/>
+</module>

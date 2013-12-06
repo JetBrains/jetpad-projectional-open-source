@@ -1,0 +1,11 @@
+.idea
+*.iml
+*.vo
+*.glob
+*.iws
+*.db
+.DS_Store
+source_gen
+source_gen.caches
+classes_gen
+target/

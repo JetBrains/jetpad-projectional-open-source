@@ -1,0 +1,80 @@
+@eval textFont jetbrains.jetpad.projectional.view.gwt.View2Dom.font();
+@eval selectionColor jetbrains.jetpad.projectional.cell.Cell.SELECTION_COLOR.toCssColor();
+@eval highlightColor jetbrains.jetpad.projectional.cell.Cell.HIGHLIGHT_COLOR.toCssColor();
+
+.rootContainer:focus {
+  outline: 0;
+}
+
+.rootContainer {
+  position: relative;
+  overflow: visible;
+  user-select: none;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+}
+
+.horizontal {
+  display: inline-block;
+  white-space: nowrap;
+}
+
+.horizontal > div {
+  display: inline-block;
+  vertical-align : top;
+}
+
+.vertical > div {
+  display: block;
+}
+
+.horizontal > div > .vertical {
+  display: inline-block;
+}
+
+.indented {
+}
+
+.hidden {
+  display: none !important;
+}
+
+.highlighted {
+  background-color: highlightColor;
+}
+
+.highlighted .horizontal {
+  background-color: highlightColor;
+}
+
+.highlighted[style] {
+  background-color: highlightColor !important;
+}
+
+.selected {
+  background-color: selectionColor;
+}
+
+.selected .horizontal {
+  background-color: selectionColor;
+}
+
+.selected[style] {
+  background-color: selectionColor !important;
+}
+
+.mobileInputField {
+  position: absolute;
+  width: 0;
+  height: 0;
+  left: 0;
+  top: 0;
+  border-color: transparent;
+  border-width: 0;
+  resize: none;
+  outline: 0;
+}

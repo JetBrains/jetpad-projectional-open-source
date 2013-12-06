@@ -1,0 +1,8 @@
+<module>
+  <inherits name="com.google.gwt.query.Query"/>
+  <inherits name="jetbrains.jetpad.base.Base"/>
+  <inherits name="jetbrains.jetpad.geometry.Geometry"/>
+  <source path="">
+    <exclude name="awt/**" />
+  </source>
+</module>

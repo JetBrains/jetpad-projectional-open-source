@@ -1,0 +1,20 @@
+<!DOCTYPE module
+  PUBLIC
+  "-//Google Inc.//DTD Google Web Toolkit 2.0//EN"
+  "http://google-web-toolkit.googlecode.com/svn/releases/2.0/distro-source/core/src/gwt-module.dtd"
+  >
+<module>
+  <source path="">
+    <exclude name="DataFlowMain.java" />
+  </source>
+
+  <inherits name="jetbrains.jetpad.model.Model" />
+  <inherits name="jetbrains.jetpad.mapper.Mapper" />
+  <inherits name="jetbrains.jetpad.test.Test" />
+  <inherits name="jetbrains.jetpad.projectional.diagram.Diagram" />
+  <inherits name="com.google.gwt.query.Query"/>
+  <inherits name="jetbrains.jetpad.projectional.Projectional"/>
+  <inherits name="jetbrains.jetpad.projectional.view.View"/>
+
+  <entry-point class="jetbrains.mps.diagram.dataflow.DataFlowEntryPoint" />
+</module>
