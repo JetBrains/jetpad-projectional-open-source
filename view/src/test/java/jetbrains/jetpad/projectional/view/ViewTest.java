@@ -325,6 +325,16 @@ public class ViewTest {
     assertNull(container.focusedView().get());
   }
 
+  @Test
+  public void viewAtIgnoresInvisible() {
+    View view = newFocusableView();
+
+    container.root().children().add(view);
+    view.visible().set(false);
+
+    assertTrue(container.root().viewAt(view.bounds().get().center()) != view);
+  }
+
   private EventHandler<PropertyChangeEvent<Rectangle>> originTracker(final List<Vector> origins) {
     return new EventHandler<PropertyChangeEvent<Rectangle>>() {
       @Override

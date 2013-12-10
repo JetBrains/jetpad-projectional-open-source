@@ -493,6 +493,9 @@ public abstract class View implements Composite<View> {
     List<View> children = children();
     for (int i = children.size() - 1; i >= 0; i--) {
       View child = children.get(i);
+
+      if (!child.visible().get()) continue;
+
       if (child.bounds().get().contains(loc)) {
         View result = child.viewAt(loc);
         if (result != null) return result;
