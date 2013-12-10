@@ -28,13 +28,22 @@ import jetbrains.jetpad.projectional.view.ViewPropertySpec;
 public class CenterVerticalLayoutView extends GroupView {
   private static final ViewPropertySpec<Rectangle> OUTER_BOUNDS = new ViewPropertySpec<Rectangle>("outerBounds", ViewPropertyKind.RELAYOUT, new Rectangle(Vector.ZERO, Vector.ZERO));
 
+  private final boolean myUseOuterBounds;
+
   public CenterVerticalLayoutView() {
-    prop(DiagramViewSpecs.CONTENT_RECT_HANDLER).set(new Handler<Rectangle>() {
-      @Override
-      public void handle(Rectangle item) {
-        outerBounds().set(item);
-      }
-    });
+    this(true);
+  }
+
+  public CenterVerticalLayoutView(boolean useOuterBounds) {
+    myUseOuterBounds = useOuterBounds;
+    if (useOuterBounds) {
+      prop(DiagramViewSpecs.CONTENT_RECT_HANDLER).set(new Handler<Rectangle>() {
+        @Override
+        public void handle(Rectangle item) {
+          outerBounds().set(item);
+        }
+      });
+    }
   }
 
   private Property<Rectangle> outerBounds() {
@@ -44,9 +53,28 @@ public class CenterVerticalLayoutView extends GroupView {
   @Override
   protected void doValidate(ValidationContext ctx) {
     super.doValidate(ctx);
-    Rectangle bounds = outerBounds().get();
+
+    Rectangle bounds;
+    if (myUseOuterBounds) {
+      bounds = outerBounds().get();
+    } else {
+      int width = 0;
+      int height = 0;
+      Vector origin = null;
+      for (View childView: children()) {
+        if (!childView.visible().get()) continue;
+        if (origin == null) {
+          origin = childView.bounds().get().origin;
+        }
+        width = Math.max(width, childView.bounds().get().dimension.x);
+        height += childView.bounds().get().dimension.y;
+      }
+      bounds = new Rectangle(origin, new Vector(width, height));
+    }
+
     int yOffset = bounds.origin.y;
     for (View childView: children()) {
+      if (!childView.visible().get()) continue;
       Rectangle childBounds = childView.bounds().get();
       int childWidth = childBounds.dimension.x;
       childView.moveTo(new Vector(Math.max(bounds.origin.x + (bounds.dimension.x - childWidth) / 2, 0), yOffset));
