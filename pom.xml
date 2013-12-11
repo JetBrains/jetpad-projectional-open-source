@@ -24,7 +24,7 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <junit.version>4.9</junit.version>
     <gwt.version>2.5.1</gwt.version>
-    <guava.version>13.0.1</guava.version>
+    <guava.version>14.0.1</guava.version>
   </properties>
 
   <dependencies>
