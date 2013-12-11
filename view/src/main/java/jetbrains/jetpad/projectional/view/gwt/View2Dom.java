@@ -188,47 +188,67 @@ public class View2Dom {
     final Value<Boolean> pressed = new Value<Boolean>(false);
     final Value<Boolean> pressedOutside = new Value<Boolean>(false);
 
+    reg.add(eventRegistration(Event.ONMOUSEDOWN, $(rootDiv).mousedown(new Function() {
+      @Override
+      public boolean f(Event e) {
+        pressed.set(true);
+        rootDiv.focus();
+        container.mousePressed(toMouseEvent(rootDiv, e));
+        pressedOutside.set(false);
+        return false;
+      }
+    })));
     reg.add(eventRegistration(Event.ONMOUSEDOWN, $(Document.get()).mousedown(new Function() {
       @Override
       public boolean f(Event e) {
         pressed.set(true);
         MouseEvent evt = toMouseEvent(rootDiv, e);
-        if (isContainerEvent(evt, container)) {
-          rootDiv.focus();
-          container.mousePressed(evt);
-          pressedOutside.set(false);
-          return false;
-        } else {
+        if (!isContainerEvent(evt, container)) {
           pressedOutside.set(true);
-          return true;
-        }
-      }
-    })));
-    reg.add(eventRegistration(Event.ONMOUSEUP, $(Document.get()).mouseup(new Function() {
-      @Override
-      public boolean f(Event e) {
-        pressed.set(false);
-        MouseEvent evt = toMouseEvent(rootDiv, e);
-        if (isContainerEvent(evt, container)) {
-          container.mouseReleased(evt);
-          return false;
         }
         return true;
       }
     })));
+
+    reg.add(eventRegistration(Event.ONMOUSEUP, $(Document.get()).mouseup(new Function() {
+      @Override
+      public boolean f(Event e) {
+        pressed.set(false);
+        return true;
+      }
+    })));
+    reg.add(eventRegistration(Event.ONMOUSEUP, $(rootDiv).mouseup(new Function() {
+      @Override
+      public boolean f(Event e) {
+        pressed.set(false);
+        container.mouseReleased(toMouseEvent(rootDiv, e));
+        return false;
+      }
+    })));
+
     reg.add(eventRegistration(Event.ONMOUSEMOVE, $(Document.get()).mousemove(new Function() {
       @Override
       public boolean f(Event e) {
         MouseEvent evt = toMouseEvent(rootDiv, e);
         if (pressed.get() && !pressedOutside.get()) {
           container.mouseDragged(evt);
-        } else if (isContainerEvent(evt, container)) {
-          container.mouseMoved(evt);
-          return false;
         }
         return true;
       }
     })));
+    reg.add(eventRegistration(Event.ONMOUSEMOVE, $(rootDiv).mousemove(new Function() {
+      @Override
+      public boolean f(Event e) {
+        MouseEvent evt = toMouseEvent(rootDiv, e);
+        if (pressed.get() && !pressedOutside.get()) {
+          container.mouseDragged(evt);
+        } else {
+          container.mouseMoved(evt);
+        }
+        return true;
+      }
+    })));
+
     reg.add(eventRegistration(Event.ONKEYDOWN, $(rootDiv).keydown(new Function() {
       @Override
       public boolean f(Event e) {
