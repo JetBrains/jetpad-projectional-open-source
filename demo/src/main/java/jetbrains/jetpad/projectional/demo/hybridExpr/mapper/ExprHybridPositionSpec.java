@@ -16,19 +16,19 @@
 package jetbrains.jetpad.projectional.demo.hybridExpr.mapper;
 
 import com.google.common.base.Function;
-import jetbrains.jetpad.projectional.cell.action.CellAction;
-import jetbrains.jetpad.projectional.cell.completion.*;
+import jetbrains.jetpad.cell.action.CellAction;
+import jetbrains.jetpad.cell.completion.*;
 import jetbrains.jetpad.projectional.demo.hybridExpr.model.*;
 import jetbrains.jetpad.projectional.demo.hybridExpr.model.types.FieldDescriptor;
 import jetbrains.jetpad.projectional.demo.hybridExpr.model.types.MethodDescriptor;
 import jetbrains.jetpad.projectional.demo.hybridExpr.model.types.Type;
 import jetbrains.jetpad.projectional.demo.hybridExpr.model.types.Types;
-import jetbrains.jetpad.projectional.cell.hybrid.Completer;
-import jetbrains.jetpad.projectional.cell.hybrid.CompletionContext;
-import jetbrains.jetpad.projectional.cell.hybrid.HybridPositionSpec;
-import jetbrains.jetpad.projectional.parser.*;
-import jetbrains.jetpad.projectional.parser.prettyprint.PrettyPrinter;
-import jetbrains.jetpad.projectional.parser.prettyprint.PrettyPrinterContext;
+import jetbrains.jetpad.hybrid.Completer;
+import jetbrains.jetpad.hybrid.CompletionContext;
+import jetbrains.jetpad.hybrid.HybridPositionSpec;
+import jetbrains.jetpad.hybrid.parser.*;
+import jetbrains.jetpad.hybrid.parser.prettyprint.PrettyPrinter;
+import jetbrains.jetpad.hybrid.parser.prettyprint.PrettyPrinterContext;
 import jetbrains.jetpad.projectional.util.Validators;
 
 import java.util.ArrayList;

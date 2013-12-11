@@ -1,0 +1,17 @@
+<module>
+  <inherits name="com.google.gwt.query.Query"/>
+  <inherits name="org.vectomatic.libgwtsvg" />
+
+  <inherits name="jetbrains.jetpad.model.Model" />
+  <inherits name="jetbrains.jetpad.mapper.Mapper" />
+  <inherits name="jetbrains.jetpad.test.Test" />
+  <inherits name="jetbrains.jetpad.geometry.Geometry" />
+  <inherits name="jetbrains.jetpad.values.Values" />
+  <inherits name="jetbrains.jetpad.base.Base" />
+  <inherits name="jetbrains.jetpad.grammar.Grammar"/>
+  <inherits name="jetbrains.jetpad.event.Event"/>
+
+  <source path="">
+    <exclude name="view/EditingTestCase.java" />
+  </source>
+</module>

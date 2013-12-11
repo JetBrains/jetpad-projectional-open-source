@@ -16,7 +16,7 @@
 package jetbrains.jetpad.projectional.demo.nanoLang.mapper;
 
 import jetbrains.jetpad.mapper.Mapper;
-import jetbrains.jetpad.projectional.cell.indent.IndentRootCell;
+import jetbrains.jetpad.cell.indent.IndentRootCell;
 import jetbrains.jetpad.projectional.demo.nanoLang.model.Container;
 
 public class ContainerMapper extends Mapper<Container, IndentRootCell> {

@@ -18,9 +18,9 @@ package jetbrains.jetpad.projectional.demo.hybridExpr;
 import jetbrains.jetpad.mapper.Mapper;
 import jetbrains.jetpad.projectional.demo.hybridExpr.mapper.ExpressionContainerMapper;
 import jetbrains.jetpad.projectional.demo.hybridExpr.model.*;
-import jetbrains.jetpad.projectional.cell.Cell;
-import jetbrains.jetpad.projectional.cell.CellContainer;
-import jetbrains.jetpad.projectional.cell.util.RootController;
+import jetbrains.jetpad.cell.Cell;
+import jetbrains.jetpad.cell.CellContainer;
+import jetbrains.jetpad.cell.util.RootController;
 
 public class HybridExprDemo {
   public static CellContainer createDemo() {

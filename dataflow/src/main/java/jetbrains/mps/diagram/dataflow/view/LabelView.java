@@ -22,7 +22,7 @@ import jetbrains.jetpad.model.event.EventHandler;
 import jetbrains.jetpad.model.property.Property;
 import jetbrains.jetpad.model.property.PropertyChangeEvent;
 import jetbrains.jetpad.model.property.ValueProperty;
-import jetbrains.jetpad.projectional.cell.view.CellView;
+import jetbrains.jetpad.cell.view.CellView;
 import jetbrains.jetpad.projectional.diagram.algorithm.util.FreeSegmentsUtil;
 import jetbrains.jetpad.projectional.diagram.view.Connection;
 import jetbrains.jetpad.projectional.diagram.view.DiagramView;

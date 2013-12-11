@@ -15,11 +15,11 @@
  */
 package jetbrains.jetpad.projectional.demo.concept.mapper;
 
-import jetbrains.jetpad.projectional.cell.TextCell;
-import jetbrains.jetpad.projectional.cell.Cell;
-import jetbrains.jetpad.projectional.cell.indent.IndentRootCell;
+import jetbrains.jetpad.cell.TextCell;
+import jetbrains.jetpad.cell.Cell;
+import jetbrains.jetpad.cell.indent.IndentRootCell;
 
-import static jetbrains.jetpad.projectional.cell.util.CellFactory.*;
+import static jetbrains.jetpad.cell.util.CellFactory.*;
 
 class ConceptDeclarationCell extends IndentRootCell {
   final TextCell name;

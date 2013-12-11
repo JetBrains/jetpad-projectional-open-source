@@ -16,7 +16,7 @@
 package jetbrains.jetpad.projectional.binOp;
 
 import jetbrains.jetpad.model.property.Property;
-import jetbrains.jetpad.projectional.cell.testApp.model.*;
+import jetbrains.jetpad.cell.testApp.model.*;
 
 public class ExprBinOpTransformer extends BinOpTransformer<Expr, BinExpr> {
   @Override

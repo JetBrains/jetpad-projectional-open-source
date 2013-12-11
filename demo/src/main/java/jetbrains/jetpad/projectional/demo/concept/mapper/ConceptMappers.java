@@ -17,7 +17,7 @@ package jetbrains.jetpad.projectional.demo.concept.mapper;
 
 import jetbrains.jetpad.mapper.Mapper;
 import jetbrains.jetpad.projectional.demo.concept.model.ConceptDeclaration;
-import jetbrains.jetpad.projectional.cell.Cell;
+import jetbrains.jetpad.cell.Cell;
 
 public class ConceptMappers {
   public static Mapper<ConceptDeclaration, ? extends Cell> create(ConceptDeclaration concept) {

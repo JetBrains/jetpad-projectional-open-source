@@ -19,9 +19,9 @@ import jetbrains.jetpad.mapper.Mapper;
 import jetbrains.jetpad.projectional.demo.concept.mapper.ConceptMappers;
 import jetbrains.jetpad.projectional.demo.concept.model.ConceptDeclaration;
 import jetbrains.jetpad.projectional.demo.concept.model.PropertyMember;
-import jetbrains.jetpad.projectional.cell.Cell;
-import jetbrains.jetpad.projectional.cell.CellContainer;
-import jetbrains.jetpad.projectional.cell.util.RootController;
+import jetbrains.jetpad.cell.Cell;
+import jetbrains.jetpad.cell.CellContainer;
+import jetbrains.jetpad.cell.util.RootController;
 
 public class ConceptDemo {
   public static CellContainer create() {

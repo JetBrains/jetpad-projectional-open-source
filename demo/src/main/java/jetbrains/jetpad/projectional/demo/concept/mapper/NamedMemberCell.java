@@ -15,18 +15,18 @@
  */
 package jetbrains.jetpad.projectional.demo.concept.mapper;
 
-import jetbrains.jetpad.projectional.cell.*;
-import jetbrains.jetpad.projectional.cell.indent.IndentCell;
-import jetbrains.jetpad.projectional.cell.action.CellActions;
-import jetbrains.jetpad.projectional.cell.util.CellFactory;
-import jetbrains.jetpad.projectional.cell.support.ProjectionalSynchronizers;
-import jetbrains.jetpad.projectional.cell.text.TextEditing;
-import jetbrains.jetpad.projectional.cell.trait.BaseCellTrait;
-import jetbrains.jetpad.projectional.cell.trait.CellTraitPropertySpec;
+import jetbrains.jetpad.cell.*;
+import jetbrains.jetpad.cell.indent.IndentCell;
+import jetbrains.jetpad.cell.action.CellActions;
+import jetbrains.jetpad.cell.util.CellFactory;
+import jetbrains.jetpad.projectional.cell.ProjectionalSynchronizers;
+import jetbrains.jetpad.cell.text.TextEditing;
+import jetbrains.jetpad.cell.trait.BaseCellTrait;
+import jetbrains.jetpad.cell.trait.CellTraitPropertySpec;
 import jetbrains.jetpad.projectional.util.Validators;
 
-import static jetbrains.jetpad.projectional.cell.util.CellFactory.placeHolder;
-import static jetbrains.jetpad.projectional.cell.util.CellFactory.space;
+import static jetbrains.jetpad.cell.util.CellFactory.placeHolder;
+import static jetbrains.jetpad.cell.util.CellFactory.space;
 
 class NamedMemberCell extends IndentCell {
   final TextCell name = new TextCell();

@@ -15,9 +15,9 @@
  */
 package jetbrains.jetpad.projectional.demo.hybridExpr.mapper;
 
-import jetbrains.jetpad.projectional.parser.BoolValueToken;
-import jetbrains.jetpad.projectional.parser.SimpleToken;
-import jetbrains.jetpad.projectional.parser.Token;
+import jetbrains.jetpad.hybrid.parser.BoolValueToken;
+import jetbrains.jetpad.hybrid.parser.SimpleToken;
+import jetbrains.jetpad.hybrid.parser.Token;
 
 class Tokens {
   static final Token PLUS = new SimpleToken("+");

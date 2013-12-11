@@ -15,10 +15,10 @@
  */
 package jetbrains.jetpad.projectional.demo.expr.mapper;
 
-import jetbrains.jetpad.projectional.cell.indent.IndentCell;
-import jetbrains.jetpad.projectional.cell.util.CellFactory;
+import jetbrains.jetpad.cell.indent.IndentCell;
+import jetbrains.jetpad.cell.util.CellFactory;
 
-import static jetbrains.jetpad.projectional.cell.util.CellFactory.indent;
+import static jetbrains.jetpad.cell.util.CellFactory.indent;
 
 class ParensExpressionCell extends IndentCell {
   final IndentCell expression;

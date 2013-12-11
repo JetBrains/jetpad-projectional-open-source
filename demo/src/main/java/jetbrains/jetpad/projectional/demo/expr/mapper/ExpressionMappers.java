@@ -17,7 +17,7 @@ package jetbrains.jetpad.projectional.demo.expr.mapper;
 
 import jetbrains.jetpad.mapper.Mapper;
 import jetbrains.jetpad.projectional.demo.expr.model.ExpressionContainer;
-import jetbrains.jetpad.projectional.cell.Cell;
+import jetbrains.jetpad.cell.Cell;
 
 public class ExpressionMappers {
   public static Mapper<ExpressionContainer, ? extends Cell> create(ExpressionContainer source) {

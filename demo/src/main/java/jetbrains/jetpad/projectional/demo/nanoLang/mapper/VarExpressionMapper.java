@@ -18,8 +18,8 @@ package jetbrains.jetpad.projectional.demo.nanoLang.mapper;
 import com.google.common.base.Predicate;
 import jetbrains.jetpad.mapper.Mapper;
 import jetbrains.jetpad.mapper.Synchronizers;
-import jetbrains.jetpad.projectional.cell.TextCell;
-import jetbrains.jetpad.projectional.cell.text.TextEditing;
+import jetbrains.jetpad.cell.TextCell;
+import jetbrains.jetpad.cell.text.TextEditing;
 import jetbrains.jetpad.projectional.demo.nanoLang.model.VarExpression;
 
 class VarExpressionMapper extends Mapper<VarExpression, TextCell> {

@@ -17,8 +17,8 @@ package jetbrains.jetpad.projectional.demo.concept.mapper;
 
 import jetbrains.jetpad.mapper.Mapper;
 import jetbrains.jetpad.projectional.demo.concept.model.EmptyMember;
-import jetbrains.jetpad.projectional.cell.TextCell;
-import jetbrains.jetpad.projectional.cell.text.TextEditing;
+import jetbrains.jetpad.cell.TextCell;
+import jetbrains.jetpad.cell.text.TextEditing;
 import jetbrains.jetpad.projectional.util.Validators;
 
 class EmptyMemberMapper extends Mapper<EmptyMember, TextCell> {

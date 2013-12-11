@@ -19,7 +19,7 @@ import jetbrains.jetpad.geometry.Vector;
 import jetbrains.jetpad.mapper.Mapper;
 import jetbrains.jetpad.mapper.Synchronizers;
 import jetbrains.jetpad.model.property.WritableProperty;
-import jetbrains.jetpad.projectional.cell.view.CellView;
+import jetbrains.jetpad.cell.view.CellView;
 import jetbrains.jetpad.projectional.diagram.view.DeleteHandler;
 import jetbrains.jetpad.projectional.diagram.view.PolyLineConnection;
 import jetbrains.jetpad.projectional.diagram.view.RootTrait;

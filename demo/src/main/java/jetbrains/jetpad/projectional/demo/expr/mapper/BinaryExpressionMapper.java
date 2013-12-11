@@ -17,15 +17,15 @@ package jetbrains.jetpad.projectional.demo.expr.mapper;
 
 import jetbrains.jetpad.mapper.Mapper;
 import jetbrains.jetpad.mapper.Mappers;
-import jetbrains.jetpad.projectional.cell.action.CellAction;
-import jetbrains.jetpad.projectional.cell.action.CellActions;
-import jetbrains.jetpad.projectional.cell.completion.*;
-import jetbrains.jetpad.projectional.cell.trait.BaseCellTrait;
-import jetbrains.jetpad.projectional.cell.trait.CellTraitPropertySpec;
+import jetbrains.jetpad.cell.action.CellAction;
+import jetbrains.jetpad.cell.action.CellActions;
+import jetbrains.jetpad.cell.completion.*;
+import jetbrains.jetpad.cell.trait.BaseCellTrait;
+import jetbrains.jetpad.cell.trait.CellTraitPropertySpec;
 import jetbrains.jetpad.projectional.demo.expr.ExprBinOpTransformer;
 import jetbrains.jetpad.projectional.demo.expr.model.*;
+import jetbrains.jetpad.cell.*;
 import jetbrains.jetpad.projectional.cell.*;
-import jetbrains.jetpad.projectional.cell.support.*;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -18,7 +18,7 @@ package jetbrains.jetpad.projectional.demo.diagramExpr.mapper;
 import jetbrains.jetpad.geometry.Rectangle;
 import jetbrains.jetpad.geometry.Vector;
 import jetbrains.jetpad.model.property.Property;
-import jetbrains.jetpad.projectional.cell.view.CellView;
+import jetbrains.jetpad.cell.view.CellView;
 import jetbrains.jetpad.projectional.view.VerticalView;
 import jetbrains.jetpad.projectional.view.View;
 import jetbrains.jetpad.projectional.view.ViewPropertyKind;

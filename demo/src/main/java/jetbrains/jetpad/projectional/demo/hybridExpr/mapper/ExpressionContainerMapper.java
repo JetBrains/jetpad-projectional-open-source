@@ -18,7 +18,7 @@ package jetbrains.jetpad.projectional.demo.hybridExpr.mapper;
 import jetbrains.jetpad.mapper.Mapper;
 import jetbrains.jetpad.projectional.demo.hybridExpr.model.Expression;
 import jetbrains.jetpad.projectional.demo.hybridExpr.model.ExpressionContainer;
-import jetbrains.jetpad.projectional.cell.hybrid.HybridSynchronizer;
+import jetbrains.jetpad.hybrid.HybridSynchronizer;
 
 
 public class ExpressionContainerMapper extends Mapper<ExpressionContainer, ExpressionContainerCell> {

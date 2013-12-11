@@ -16,9 +16,9 @@
 package jetbrains.jetpad.projectional.demo.nanoLang.mapper;
 
 import jetbrains.jetpad.mapper.Mapper;
-import jetbrains.jetpad.projectional.cell.Cell;
-import jetbrains.jetpad.projectional.cell.indent.NewLineCell;
-import jetbrains.jetpad.projectional.cell.util.SeparatedCellList;
+import jetbrains.jetpad.cell.Cell;
+import jetbrains.jetpad.cell.indent.NewLineCell;
+import jetbrains.jetpad.cell.util.SeparatedCellList;
 import jetbrains.jetpad.projectional.demo.nanoLang.model.SeqExpression;
 
 class SeqExpressionMapper extends Mapper<SeqExpression, SeqExpressionCell> {

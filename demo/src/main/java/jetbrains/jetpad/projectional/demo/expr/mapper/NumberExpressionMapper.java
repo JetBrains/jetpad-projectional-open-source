@@ -18,8 +18,8 @@ package jetbrains.jetpad.projectional.demo.expr.mapper;
 import jetbrains.jetpad.mapper.Mapper;
 import jetbrains.jetpad.mapper.Synchronizers;
 import jetbrains.jetpad.projectional.demo.expr.model.NumberExpression;
-import jetbrains.jetpad.projectional.cell.TextCell;
-import jetbrains.jetpad.projectional.cell.util.ValueEditors;
+import jetbrains.jetpad.cell.TextCell;
+import jetbrains.jetpad.cell.util.ValueEditors;
 
 class NumberExpressionMapper extends Mapper<NumberExpression, TextCell> {
   NumberExpressionMapper(NumberExpression source) {

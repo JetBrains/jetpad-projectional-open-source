@@ -15,10 +15,10 @@
  */
 package jetbrains.jetpad.projectional.demo.hybridExpr.mapper;
 
-import jetbrains.jetpad.projectional.cell.VerticalCell;
-import jetbrains.jetpad.projectional.cell.Cell;
+import jetbrains.jetpad.cell.VerticalCell;
+import jetbrains.jetpad.cell.Cell;
 
-import static jetbrains.jetpad.projectional.cell.util.CellFactory.*;
+import static jetbrains.jetpad.cell.util.CellFactory.*;
 
 class ExpressionContainerCell extends VerticalCell {
   final Cell expression;

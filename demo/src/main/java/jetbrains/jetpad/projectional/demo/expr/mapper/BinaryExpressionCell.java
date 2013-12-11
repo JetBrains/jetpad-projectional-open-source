@@ -15,13 +15,13 @@
  */
 package jetbrains.jetpad.projectional.demo.expr.mapper;
 
-import jetbrains.jetpad.projectional.cell.TextCell;
-import jetbrains.jetpad.projectional.cell.indent.IndentCell;
-import jetbrains.jetpad.projectional.cell.util.CellFactory;
-import jetbrains.jetpad.projectional.cell.text.TextEditing;
+import jetbrains.jetpad.cell.TextCell;
+import jetbrains.jetpad.cell.indent.IndentCell;
+import jetbrains.jetpad.cell.util.CellFactory;
+import jetbrains.jetpad.cell.text.TextEditing;
 import jetbrains.jetpad.projectional.util.Validators;
 
-import static jetbrains.jetpad.projectional.cell.util.CellFactory.*;
+import static jetbrains.jetpad.cell.util.CellFactory.*;
 
 class BinaryExpressionCell extends IndentCell {
   final IndentCell left = indent();

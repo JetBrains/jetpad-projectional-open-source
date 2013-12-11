@@ -16,9 +16,9 @@
 package jetbrains.mps.diagram.dataflow.mapper;
 
 import jetbrains.jetpad.mapper.Synchronizers;
-import jetbrains.jetpad.projectional.cell.TextCell;
-import jetbrains.jetpad.projectional.cell.text.TextEditing;
-import jetbrains.jetpad.projectional.cell.view.CellView;
+import jetbrains.jetpad.cell.TextCell;
+import jetbrains.jetpad.cell.text.TextEditing;
+import jetbrains.jetpad.cell.view.CellView;
 import jetbrains.jetpad.projectional.view.GroupView;
 import jetbrains.mps.diagram.dataflow.model.Block;
 

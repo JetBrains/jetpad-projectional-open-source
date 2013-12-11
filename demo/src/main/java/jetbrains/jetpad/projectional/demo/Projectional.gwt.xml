@@ -25,6 +25,7 @@
   <inherits name="org.vectomatic.libgwtsvg" />
 
   <inherits name="jetbrains.jetpad.projectional.Projectional"/>
+  <inherits name="jetbrains.jetpad.hybrid.Hybrid"/>
   <inherits name="jetbrains.jetpad.projectional.diagram.Diagram"/>
 
   <add-linker name="xsiframe"/>

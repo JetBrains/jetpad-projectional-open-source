@@ -19,12 +19,12 @@ import jetbrains.jetpad.base.Handler;
 import jetbrains.jetpad.grammar.*;
 import jetbrains.jetpad.grammar.lr.Lexeme;
 import jetbrains.jetpad.projectional.demo.hybridExpr.model.*;
-import jetbrains.jetpad.projectional.parser.IdentifierToken;
-import jetbrains.jetpad.projectional.parser.IntValueToken;
-import jetbrains.jetpad.projectional.parser.Parser;
-import jetbrains.jetpad.projectional.parser.simple.BinaryExpressionFactory;
-import jetbrains.jetpad.projectional.parser.simple.SimpleParserSpecification;
-import jetbrains.jetpad.projectional.parser.simple.UnaryExpressionFactory;
+import jetbrains.jetpad.hybrid.parser.IdentifierToken;
+import jetbrains.jetpad.hybrid.parser.IntValueToken;
+import jetbrains.jetpad.hybrid.parser.Parser;
+import jetbrains.jetpad.hybrid.parser.simple.BinaryExpressionFactory;
+import jetbrains.jetpad.hybrid.parser.simple.SimpleParserSpecification;
+import jetbrains.jetpad.hybrid.parser.simple.UnaryExpressionFactory;
 
 import java.util.List;
 

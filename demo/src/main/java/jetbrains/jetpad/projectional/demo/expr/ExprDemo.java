@@ -21,9 +21,9 @@ import jetbrains.jetpad.projectional.demo.expr.model.ExpressionContainer;
 import jetbrains.jetpad.projectional.demo.expr.model.MulExpression;
 import jetbrains.jetpad.projectional.demo.expr.model.NumberExpression;
 import jetbrains.jetpad.projectional.demo.expr.model.PlusExpression;
-import jetbrains.jetpad.projectional.cell.Cell;
-import jetbrains.jetpad.projectional.cell.CellContainer;
-import jetbrains.jetpad.projectional.cell.util.RootController;
+import jetbrains.jetpad.cell.Cell;
+import jetbrains.jetpad.cell.CellContainer;
+import jetbrains.jetpad.cell.util.RootController;
 
 public class ExprDemo {
   public static CellContainer createDemo() {
