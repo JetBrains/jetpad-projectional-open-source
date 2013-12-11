@@ -30,7 +30,7 @@ import static jetbrains.jetpad.projectional.cell.text.TextNavigationTrait.getMin
 public class TextCellPositionHandler implements PositionHandler {
   private final TextCell myTextCell;
 
-  TextCellPositionHandler(TextCell textCell) {
+  public TextCellPositionHandler(TextCell textCell) {
     myTextCell = textCell;
   }
 
