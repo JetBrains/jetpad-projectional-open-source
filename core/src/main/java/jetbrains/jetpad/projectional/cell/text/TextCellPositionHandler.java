@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package jetbrains.jetpad.projectional.cell.support;
+package jetbrains.jetpad.projectional.cell.text;
 
 import jetbrains.jetpad.model.event.EventHandler;
 import jetbrains.jetpad.model.event.Registration;
@@ -22,11 +22,12 @@ import jetbrains.jetpad.model.property.Property;
 import jetbrains.jetpad.model.property.PropertyChangeEvent;
 import jetbrains.jetpad.model.property.ReadableProperty;
 import jetbrains.jetpad.projectional.cell.TextCell;
+import jetbrains.jetpad.projectional.cell.position.PositionHandler;
 
-import static jetbrains.jetpad.projectional.cell.support.TextNavigationTrait.getMaxPos;
-import static jetbrains.jetpad.projectional.cell.support.TextNavigationTrait.getMinPos;
+import static jetbrains.jetpad.projectional.cell.text.TextNavigationTrait.getMaxPos;
+import static jetbrains.jetpad.projectional.cell.text.TextNavigationTrait.getMinPos;
 
-class TextCellPositionHandler implements PositionHandler {
+public class TextCellPositionHandler implements PositionHandler {
   private final TextCell myTextCell;
 
   TextCellPositionHandler(TextCell textCell) {

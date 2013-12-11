@@ -27,6 +27,7 @@ import jetbrains.jetpad.model.event.CompositeRegistration;
 import jetbrains.jetpad.model.event.EventHandler;
 import jetbrains.jetpad.model.event.Registration;
 import jetbrains.jetpad.model.property.*;
+import jetbrains.jetpad.projectional.cell.position.PositionHandler;
 import jetbrains.jetpad.projectional.cell.trait.BaseCellTrait;
 import jetbrains.jetpad.projectional.cell.Cell;
 import jetbrains.jetpad.projectional.cell.CellContainer;

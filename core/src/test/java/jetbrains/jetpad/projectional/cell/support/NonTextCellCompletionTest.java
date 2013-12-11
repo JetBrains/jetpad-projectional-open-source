@@ -20,6 +20,7 @@ import jetbrains.jetpad.projectional.cell.*;
 import jetbrains.jetpad.projectional.cell.completion.Completion;
 import jetbrains.jetpad.projectional.cell.completion.CompletionController;
 import jetbrains.jetpad.projectional.cell.completion.CompletionSupport;
+import jetbrains.jetpad.projectional.cell.text.TextEditing;
 import jetbrains.jetpad.projectional.cell.trait.BaseCellTrait;
 import jetbrains.jetpad.projectional.cell.trait.CellTraitPropertySpec;
 import jetbrains.jetpad.projectional.cell.util.CellFactory;

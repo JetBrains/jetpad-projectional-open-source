@@ -18,6 +18,8 @@ package jetbrains.jetpad.projectional.cell.support;
 import jetbrains.jetpad.event.Key;
 import jetbrains.jetpad.event.ModifierKey;
 import jetbrains.jetpad.projectional.cell.*;
+import jetbrains.jetpad.projectional.cell.position.PositionHandler;
+import jetbrains.jetpad.projectional.cell.text.TextEditing;
 import jetbrains.jetpad.projectional.cell.util.CellFactory;
 import org.junit.Before;
 import org.junit.Test;

@@ -26,7 +26,7 @@ import jetbrains.jetpad.projectional.cell.TextCell;
 import jetbrains.jetpad.projectional.cell.Cell;
 import jetbrains.jetpad.projectional.cell.util.CellLists;
 import jetbrains.jetpad.projectional.cell.support.ProjectionalSynchronizers;
-import jetbrains.jetpad.projectional.cell.support.TextEditing;
+import jetbrains.jetpad.projectional.cell.text.TextEditing;
 import jetbrains.jetpad.values.Color;
 
 class TextTokenCell extends TextCell {

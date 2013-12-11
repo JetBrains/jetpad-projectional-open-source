@@ -20,13 +20,14 @@ import jetbrains.jetpad.model.property.Property;
 import jetbrains.jetpad.projectional.cell.Cell;
 import jetbrains.jetpad.projectional.cell.completion.Completion;
 import jetbrains.jetpad.projectional.cell.completion.CompletionSupplier;
+import jetbrains.jetpad.projectional.cell.text.TextEditing;
 import jetbrains.jetpad.projectional.cell.trait.CellTraitPropertySpec;
 import jetbrains.jetpad.projectional.cell.action.CellAction;
 
 import java.lang.Override;
 import java.lang.String;
 
-enum Side {
+public enum Side {
   LEFT() {
     @Override
     Property<Cell> getPopup(Cell cell) {

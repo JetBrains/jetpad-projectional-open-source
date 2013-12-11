@@ -31,6 +31,8 @@ import jetbrains.jetpad.projectional.cell.action.CellActions;
 import jetbrains.jetpad.projectional.cell.completion.CompletionItem;
 import jetbrains.jetpad.projectional.cell.completion.CompletionParameters;
 import jetbrains.jetpad.projectional.cell.completion.SimpleCompletionItem;
+import jetbrains.jetpad.projectional.cell.position.PositionHandler;
+import jetbrains.jetpad.projectional.cell.text.TextEditing;
 import jetbrains.jetpad.projectional.cell.util.CellFactory;
 import jetbrains.jetpad.projectional.cell.util.CellLists;
 import jetbrains.jetpad.projectional.util.Validators;

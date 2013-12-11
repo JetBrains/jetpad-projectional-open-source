@@ -20,7 +20,7 @@ import jetbrains.jetpad.projectional.cell.indent.IndentCell;
 import jetbrains.jetpad.projectional.cell.action.CellActions;
 import jetbrains.jetpad.projectional.cell.util.CellFactory;
 import jetbrains.jetpad.projectional.cell.support.ProjectionalSynchronizers;
-import jetbrains.jetpad.projectional.cell.support.TextEditing;
+import jetbrains.jetpad.projectional.cell.text.TextEditing;
 import jetbrains.jetpad.projectional.cell.trait.BaseCellTrait;
 import jetbrains.jetpad.projectional.cell.trait.CellTraitPropertySpec;
 import jetbrains.jetpad.projectional.util.Validators;

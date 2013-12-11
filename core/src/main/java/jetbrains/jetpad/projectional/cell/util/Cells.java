@@ -19,7 +19,7 @@ import com.google.common.base.Strings;
 import jetbrains.jetpad.model.children.Composites;
 import jetbrains.jetpad.projectional.cell.Cell;
 import jetbrains.jetpad.projectional.cell.TextCell;
-import jetbrains.jetpad.projectional.cell.support.Positions;
+import jetbrains.jetpad.projectional.cell.position.Positions;
 
 import java.util.List;
 

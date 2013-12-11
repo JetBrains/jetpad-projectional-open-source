@@ -26,6 +26,7 @@ import jetbrains.jetpad.projectional.cell.*;
 import jetbrains.jetpad.projectional.cell.action.CellAction;
 import jetbrains.jetpad.projectional.cell.action.CellActions;
 import jetbrains.jetpad.projectional.cell.completion.*;
+import jetbrains.jetpad.projectional.cell.position.Positions;
 import jetbrains.jetpad.projectional.cell.trait.BaseCellTrait;
 import jetbrains.jetpad.projectional.cell.trait.CellTrait;
 import jetbrains.jetpad.projectional.cell.trait.CellTraitPropertySpec;

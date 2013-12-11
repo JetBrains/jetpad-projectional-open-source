@@ -26,7 +26,7 @@ import jetbrains.jetpad.model.event.Registration;
 import jetbrains.jetpad.model.property.Property;
 import jetbrains.jetpad.model.property.ValueProperty;
 import jetbrains.jetpad.projectional.cell.TextCell;
-import jetbrains.jetpad.projectional.cell.support.TextEditing;
+import jetbrains.jetpad.projectional.cell.text.TextEditing;
 import jetbrains.jetpad.projectional.cell.view.CellView;
 import jetbrains.jetpad.projectional.view.*;
 import jetbrains.mps.diagram.contentDemo.model.Content;

@@ -18,7 +18,7 @@ package jetbrains.jetpad.projectional.demo.nanoLang.mapper;
 import com.google.common.base.Predicate;
 import jetbrains.jetpad.mapper.Mapper;
 import jetbrains.jetpad.mapper.Synchronizers;
-import jetbrains.jetpad.projectional.cell.support.TextEditing;
+import jetbrains.jetpad.projectional.cell.text.TextEditing;
 import jetbrains.jetpad.projectional.demo.nanoLang.model.LambdaExpression;
 
 class LambdaExpressionMapper extends Mapper<LambdaExpression, LambdaExpressionCell> {

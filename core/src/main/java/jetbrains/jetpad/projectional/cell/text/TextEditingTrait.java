@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package jetbrains.jetpad.projectional.cell.support;
+package jetbrains.jetpad.projectional.cell.text;
 
 import com.google.common.base.Strings;
 import com.google.common.base.Supplier;
@@ -23,6 +23,7 @@ import jetbrains.jetpad.model.event.Registration;
 import jetbrains.jetpad.projectional.cell.*;
 import jetbrains.jetpad.projectional.cell.completion.*;
 import jetbrains.jetpad.projectional.cell.event.CompletionEvent;
+import jetbrains.jetpad.projectional.cell.support.ProjectionalSynchronizers;
 import jetbrains.jetpad.projectional.cell.trait.CellTraitPropertySpec;
 
 import java.util.List;

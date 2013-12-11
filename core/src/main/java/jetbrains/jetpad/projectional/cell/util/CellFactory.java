@@ -21,7 +21,7 @@ import jetbrains.jetpad.event.MouseEvent;
 import jetbrains.jetpad.projectional.cell.*;
 import jetbrains.jetpad.projectional.cell.indent.IndentCell;
 import jetbrains.jetpad.projectional.cell.indent.NewLineCell;
-import jetbrains.jetpad.projectional.cell.support.TextEditing;
+import jetbrains.jetpad.projectional.cell.text.TextEditing;
 import jetbrains.jetpad.projectional.cell.trait.BaseCellTrait;
 import jetbrains.jetpad.projectional.cell.trait.CellTrait;
 import jetbrains.jetpad.projectional.cell.trait.CellTraitPropertySpec;

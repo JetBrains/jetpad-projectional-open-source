@@ -30,6 +30,7 @@ import jetbrains.jetpad.projectional.cell.completion.CompletionController;
 import jetbrains.jetpad.projectional.cell.hybrid.testapp.mapper.ExprContainerMapper;
 import jetbrains.jetpad.projectional.cell.hybrid.testapp.mapper.Tokens;
 import jetbrains.jetpad.projectional.cell.hybrid.testapp.model.*;
+import jetbrains.jetpad.projectional.cell.position.Positions;
 import jetbrains.jetpad.projectional.cell.support.*;
 import jetbrains.jetpad.projectional.parser.*;
 import org.junit.Before;

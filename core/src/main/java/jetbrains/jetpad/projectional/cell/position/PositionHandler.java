@@ -13,11 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package jetbrains.jetpad.projectional.cell.support;
+package jetbrains.jetpad.projectional.cell.position;
 
 import com.google.common.base.Function;
 import jetbrains.jetpad.model.property.Property;
 import jetbrains.jetpad.projectional.cell.*;
+import jetbrains.jetpad.projectional.cell.text.TextCellPositionHandler;
 import jetbrains.jetpad.projectional.cell.trait.CellTraitPropertySpec;
 
 public interface PositionHandler {

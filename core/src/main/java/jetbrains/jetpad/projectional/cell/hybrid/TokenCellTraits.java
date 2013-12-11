@@ -21,6 +21,8 @@ import jetbrains.jetpad.event.Key;
 import jetbrains.jetpad.event.KeyEvent;
 import jetbrains.jetpad.projectional.cell.action.CellAction;
 import jetbrains.jetpad.projectional.cell.completion.Completion;
+import jetbrains.jetpad.projectional.cell.position.Positions;
+import jetbrains.jetpad.projectional.cell.text.TextEditing;
 import jetbrains.jetpad.projectional.cell.trait.BaseCellTrait;
 import jetbrains.jetpad.projectional.cell.trait.CellTraitEventSpec;
 import jetbrains.jetpad.projectional.cell.trait.CellTraitPropertySpec;

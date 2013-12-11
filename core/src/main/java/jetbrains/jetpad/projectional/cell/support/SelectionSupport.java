@@ -24,6 +24,7 @@ import jetbrains.jetpad.projectional.cell.*;
 import jetbrains.jetpad.projectional.cell.action.CellAction;
 import jetbrains.jetpad.projectional.cell.action.CellActions;
 import jetbrains.jetpad.projectional.cell.event.FocusEvent;
+import jetbrains.jetpad.projectional.cell.position.Positions;
 import jetbrains.jetpad.projectional.cell.trait.BaseCellTrait;
 import jetbrains.jetpad.projectional.cell.trait.CellTraitPropertySpec;
 import jetbrains.jetpad.projectional.cell.util.Cells;

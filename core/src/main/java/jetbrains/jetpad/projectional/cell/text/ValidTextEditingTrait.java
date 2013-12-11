@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package jetbrains.jetpad.projectional.cell.support;
+package jetbrains.jetpad.projectional.cell.text;
 
 import com.google.common.base.Predicate;
 import jetbrains.jetpad.model.property.PropertyChangeEvent;
@@ -26,6 +26,7 @@ import jetbrains.jetpad.projectional.cell.completion.Completion;
 import jetbrains.jetpad.projectional.cell.completion.CompletionHelper;
 import jetbrains.jetpad.projectional.cell.completion.CompletionItem;
 import jetbrains.jetpad.projectional.cell.completion.CompletionParameters;
+import jetbrains.jetpad.projectional.cell.support.Side;
 import jetbrains.jetpad.projectional.cell.trait.CellTraitPropertySpec;
 import jetbrains.jetpad.values.Color;
 

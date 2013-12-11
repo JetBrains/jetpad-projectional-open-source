@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package jetbrains.jetpad.projectional.cell.support;
+package jetbrains.jetpad.projectional.cell.text;
 
 import com.google.common.base.Function;
 import com.google.common.base.Objects;
@@ -25,6 +25,8 @@ import jetbrains.jetpad.projectional.cell.action.CellActions;
 import jetbrains.jetpad.projectional.cell.completion.CompletionHelper;
 import jetbrains.jetpad.projectional.cell.completion.CompletionParameters;
 import jetbrains.jetpad.projectional.cell.completion.CompletionSupport;
+import jetbrains.jetpad.projectional.cell.support.CellStateHandler;
+import jetbrains.jetpad.projectional.cell.support.Side;
 import jetbrains.jetpad.projectional.cell.trait.BaseCellTrait;
 import jetbrains.jetpad.projectional.cell.trait.CellTrait;
 import jetbrains.jetpad.projectional.cell.trait.CellTraitPropertySpec;

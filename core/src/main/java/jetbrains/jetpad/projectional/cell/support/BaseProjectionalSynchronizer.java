@@ -32,6 +32,8 @@ import jetbrains.jetpad.projectional.cell.completion.CompletionItem;
 import jetbrains.jetpad.projectional.cell.completion.CompletionParameters;
 import jetbrains.jetpad.projectional.cell.completion.CompletionSupplier;
 import jetbrains.jetpad.projectional.cell.indent.IndentCell;
+import jetbrains.jetpad.projectional.cell.position.Positions;
+import jetbrains.jetpad.projectional.cell.text.TextEditing;
 import jetbrains.jetpad.projectional.cell.trait.BaseCellTrait;
 import jetbrains.jetpad.projectional.cell.trait.CellTrait;
 import jetbrains.jetpad.projectional.cell.trait.CellTraitPropertySpec;

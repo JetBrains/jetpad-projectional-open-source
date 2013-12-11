@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package jetbrains.jetpad.projectional.cell.support;
+package jetbrains.jetpad.projectional.cell.text;
 
 import com.google.common.base.Strings;
 import jetbrains.jetpad.model.property.Property;
