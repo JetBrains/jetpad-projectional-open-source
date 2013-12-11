@@ -15,13 +15,13 @@
  */
 package jetbrains.jetpad.projectional.binOp;
 
-import jetbrains.jetpad.projectional.cell.support.testApp.model.AssignExpr;
-import jetbrains.jetpad.projectional.cell.support.testApp.model.BinExpr;
-import jetbrains.jetpad.projectional.cell.support.testApp.model.ExprContainer;
-import jetbrains.jetpad.projectional.cell.support.testApp.model.PlusExpr;
+import jetbrains.jetpad.projectional.cell.testApp.model.AssignExpr;
+import jetbrains.jetpad.projectional.cell.testApp.model.BinExpr;
+import jetbrains.jetpad.projectional.cell.testApp.model.ExprContainer;
+import jetbrains.jetpad.projectional.cell.testApp.model.PlusExpr;
 import org.junit.Test;
 
-import static jetbrains.jetpad.projectional.cell.support.testApp.model.Exprs.*;
+import static jetbrains.jetpad.projectional.cell.testApp.model.Exprs.*;
 import static org.junit.Assert.assertEquals;
 
 public class BinOpTransformerTest {

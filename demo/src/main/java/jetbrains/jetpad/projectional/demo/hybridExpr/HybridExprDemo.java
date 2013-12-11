@@ -20,7 +20,7 @@ import jetbrains.jetpad.projectional.demo.hybridExpr.mapper.ExpressionContainerM
 import jetbrains.jetpad.projectional.demo.hybridExpr.model.*;
 import jetbrains.jetpad.projectional.cell.Cell;
 import jetbrains.jetpad.projectional.cell.CellContainer;
-import jetbrains.jetpad.projectional.cell.support.RootController;
+import jetbrains.jetpad.projectional.cell.util.RootController;
 
 public class HybridExprDemo {
   public static CellContainer createDemo() {

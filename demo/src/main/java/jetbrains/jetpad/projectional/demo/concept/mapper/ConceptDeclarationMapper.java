@@ -27,6 +27,7 @@ import jetbrains.jetpad.projectional.cell.completion.CompletionParameters;
 import jetbrains.jetpad.projectional.cell.completion.SimpleCompletionItem;
 import jetbrains.jetpad.projectional.cell.text.TextEditing;
 import jetbrains.jetpad.projectional.cell.util.CellLists;
+import jetbrains.jetpad.projectional.cell.util.ValueEditors;
 import jetbrains.jetpad.projectional.demo.concept.model.*;
 import jetbrains.jetpad.projectional.cell.Cell;
 import jetbrains.jetpad.projectional.cell.support.*;

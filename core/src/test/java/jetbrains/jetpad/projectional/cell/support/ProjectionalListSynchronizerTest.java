@@ -35,6 +35,7 @@ import jetbrains.jetpad.projectional.cell.position.PositionHandler;
 import jetbrains.jetpad.projectional.cell.text.TextEditing;
 import jetbrains.jetpad.projectional.cell.util.CellFactory;
 import jetbrains.jetpad.projectional.cell.util.CellLists;
+import jetbrains.jetpad.projectional.cell.util.RootController;
 import jetbrains.jetpad.projectional.util.Validators;
 import org.junit.Before;
 import org.junit.Test;

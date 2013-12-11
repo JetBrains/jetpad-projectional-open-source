@@ -19,11 +19,11 @@ import jetbrains.jetpad.mapper.Mapper;
 import jetbrains.jetpad.projectional.cell.Cell;
 import jetbrains.jetpad.projectional.cell.EditingTestCase;
 import jetbrains.jetpad.projectional.cell.action.CellActions;
-import jetbrains.jetpad.projectional.cell.support.testApp.mapper.BinExprCell;
-import jetbrains.jetpad.projectional.cell.support.testApp.mapper.ExprMappers;
-import jetbrains.jetpad.projectional.cell.support.testApp.model.ExprContainer;
-import jetbrains.jetpad.projectional.cell.support.testApp.model.IdExpr;
-import jetbrains.jetpad.projectional.cell.support.testApp.model.PlusExpr;
+import jetbrains.jetpad.projectional.cell.testApp.mapper.BinExprCell;
+import jetbrains.jetpad.projectional.cell.testApp.mapper.ExprMappers;
+import jetbrains.jetpad.projectional.cell.testApp.model.ExprContainer;
+import jetbrains.jetpad.projectional.cell.testApp.model.IdExpr;
+import jetbrains.jetpad.projectional.cell.testApp.model.PlusExpr;
 import org.junit.Before;
 import org.junit.Test;
 

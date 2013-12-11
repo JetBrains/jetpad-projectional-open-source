@@ -31,7 +31,8 @@ import jetbrains.jetpad.projectional.cell.hybrid.testapp.mapper.ExprContainerMap
 import jetbrains.jetpad.projectional.cell.hybrid.testapp.mapper.Tokens;
 import jetbrains.jetpad.projectional.cell.hybrid.testapp.model.*;
 import jetbrains.jetpad.projectional.cell.position.Positions;
-import jetbrains.jetpad.projectional.cell.support.*;
+import jetbrains.jetpad.projectional.cell.util.CellStateHandler;
+import jetbrains.jetpad.projectional.cell.util.RootController;
 import jetbrains.jetpad.projectional.parser.*;
 import org.junit.Before;
 import org.junit.Test;

@@ -26,7 +26,7 @@ import jetbrains.jetpad.projectional.cell.completion.Completion;
 import jetbrains.jetpad.projectional.cell.completion.CompletionHelper;
 import jetbrains.jetpad.projectional.cell.completion.CompletionItem;
 import jetbrains.jetpad.projectional.cell.completion.CompletionParameters;
-import jetbrains.jetpad.projectional.cell.support.Side;
+import jetbrains.jetpad.projectional.cell.completion.Side;
 import jetbrains.jetpad.projectional.cell.trait.CellTraitPropertySpec;
 import jetbrains.jetpad.values.Color;
 

@@ -16,7 +16,7 @@
 package jetbrains.jetpad.projectional.demo.nanoLang;
 
 import jetbrains.jetpad.projectional.cell.CellContainer;
-import jetbrains.jetpad.projectional.cell.support.RootController;
+import jetbrains.jetpad.projectional.cell.util.RootController;
 import jetbrains.jetpad.projectional.demo.nanoLang.mapper.ContainerMapper;
 import jetbrains.jetpad.projectional.demo.nanoLang.model.Container;
 import jetbrains.jetpad.projectional.demo.nanoLang.model.LambdaExpression;

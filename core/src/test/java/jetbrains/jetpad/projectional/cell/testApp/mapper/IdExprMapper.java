@@ -13,24 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package jetbrains.jetpad.projectional.demo.expr.mapper;
+package jetbrains.jetpad.projectional.cell.testApp.mapper;
 
 import jetbrains.jetpad.mapper.Mapper;
-import jetbrains.jetpad.mapper.Synchronizers;
-import jetbrains.jetpad.projectional.demo.expr.model.NumberExpression;
 import jetbrains.jetpad.projectional.cell.TextCell;
-import jetbrains.jetpad.projectional.cell.util.ValueEditors;
+import jetbrains.jetpad.projectional.cell.text.TextEditing;
+import jetbrains.jetpad.projectional.cell.testApp.model.IdExpr;
+import jetbrains.jetpad.projectional.util.Validators;
 
-class NumberExpressionMapper extends Mapper<NumberExpression, TextCell> {
-  NumberExpressionMapper(NumberExpression source) {
+public class IdExprMapper extends Mapper<IdExpr, TextCell> {
+  IdExprMapper(IdExpr source) {
     super(source, new TextCell());
-    getTarget().focusable().set(true);
-  }
-
-  @Override
-  protected void registerSynchronizers(SynchronizersConfiguration conf) {
-    super.registerSynchronizers(conf);
-
-    conf.add(Synchronizers.forProperties(getSource().value, ValueEditors.intProperty(getTarget())));
+    getTarget().text().set("id");
+    getTarget().addTrait(TextEditing.validTextEditing(Validators.equalsTo("id")));
   }
 }

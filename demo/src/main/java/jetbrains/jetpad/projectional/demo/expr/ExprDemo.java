@@ -23,7 +23,7 @@ import jetbrains.jetpad.projectional.demo.expr.model.NumberExpression;
 import jetbrains.jetpad.projectional.demo.expr.model.PlusExpression;
 import jetbrains.jetpad.projectional.cell.Cell;
 import jetbrains.jetpad.projectional.cell.CellContainer;
-import jetbrains.jetpad.projectional.cell.support.RootController;
+import jetbrains.jetpad.projectional.cell.util.RootController;
 
 public class ExprDemo {
   public static CellContainer createDemo() {

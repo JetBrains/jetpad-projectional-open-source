@@ -13,24 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package jetbrains.jetpad.projectional.demo.expr.mapper;
+package jetbrains.jetpad.projectional.cell.testApp.mapper;
 
 import jetbrains.jetpad.mapper.Mapper;
-import jetbrains.jetpad.mapper.Synchronizers;
-import jetbrains.jetpad.projectional.demo.expr.model.NumberExpression;
-import jetbrains.jetpad.projectional.cell.TextCell;
-import jetbrains.jetpad.projectional.cell.util.ValueEditors;
+import jetbrains.jetpad.projectional.cell.HorizontalCell;
+import jetbrains.jetpad.projectional.cell.testApp.model.ExprContainer;
 
-class NumberExpressionMapper extends Mapper<NumberExpression, TextCell> {
-  NumberExpressionMapper(NumberExpression source) {
-    super(source, new TextCell());
-    getTarget().focusable().set(true);
+class ExprContainerMapper extends Mapper<ExprContainer, HorizontalCell> {
+  ExprContainerMapper(ExprContainer source) {
+    super(source, new HorizontalCell());
   }
 
   @Override
   protected void registerSynchronizers(SynchronizersConfiguration conf) {
     super.registerSynchronizers(conf);
 
-    conf.add(Synchronizers.forProperties(getSource().value, ValueEditors.intProperty(getTarget())));
+    conf.add(ExprSynchronizers.forSingleRole(this, getSource().expr, getTarget()));
   }
 }
