@@ -30,34 +30,34 @@ import java.lang.String;
 public enum Side {
   LEFT() {
     @Override
-    Property<Cell> getPopup(Cell cell) {
+    public Property<Cell> getPopup(Cell cell) {
       return cell.leftPopup();
     }
 
     @Override
-    CellTraitPropertySpec<CompletionSupplier> getKey() {
+    public CellTraitPropertySpec<CompletionSupplier> getKey() {
       return Completion.LEFT_TRANSFORM;
     }
 
     @Override
-    Function<String, CellAction> getExpander(Cell cell) {
+    public Function<String, CellAction> getExpander(Cell cell) {
       return cell.get(TextEditing.EXPAND_LEFT);
     }
   },
 
   RIGHT() {
     @Override
-    Property<Cell> getPopup(Cell cell) {
+    public Property<Cell> getPopup(Cell cell) {
       return cell.rightPopup();
     }
 
     @Override
-    CellTraitPropertySpec<CompletionSupplier> getKey() {
+    public CellTraitPropertySpec<CompletionSupplier> getKey() {
       return Completion.RIGHT_TRANSFORM;
     }
 
     @Override
-    Function<String, CellAction> getExpander(Cell cell) {
+    public Function<String, CellAction> getExpander(Cell cell) {
       return cell.get(TextEditing.EXPAND_RIGHT);
     }
   };
