@@ -62,9 +62,7 @@ public enum Side {
     }
   };
 
-  abstract Property<Cell> getPopup(Cell cell);
-
-
-  abstract CellTraitPropertySpec<CompletionSupplier> getKey();
-  abstract Function<String, CellAction> getExpander(Cell cell);
+  public abstract Property<Cell> getPopup(Cell cell);
+  public abstract CellTraitPropertySpec<CompletionSupplier> getKey();
+  public abstract Function<String, CellAction> getExpander(Cell cell);
 }
