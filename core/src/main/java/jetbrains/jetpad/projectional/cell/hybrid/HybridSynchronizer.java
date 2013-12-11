@@ -45,6 +45,7 @@ import jetbrains.jetpad.projectional.cell.trait.CellTraitPropertySpec;
 import jetbrains.jetpad.projectional.cell.util.CellFactory;
 import jetbrains.jetpad.projectional.cell.util.CellLists;
 import jetbrains.jetpad.projectional.cell.util.Cells;
+import jetbrains.jetpad.projectional.cell.util.SeparatedCellList;
 import jetbrains.jetpad.projectional.parser.Token;
 import jetbrains.jetpad.projectional.parser.ValueToken;
 import jetbrains.jetpad.projectional.parser.prettyprint.ParseNode;

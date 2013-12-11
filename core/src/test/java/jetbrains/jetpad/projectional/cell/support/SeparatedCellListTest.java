@@ -17,6 +17,7 @@ package jetbrains.jetpad.projectional.cell.support;
 
 import jetbrains.jetpad.projectional.cell.Cell;
 import jetbrains.jetpad.projectional.cell.TextCell;
+import jetbrains.jetpad.projectional.cell.util.SeparatedCellList;
 import org.junit.Test;
 
 import java.util.ArrayList;
