@@ -24,7 +24,6 @@ import jetbrains.jetpad.projectional.cell.action.CellAction;
 import jetbrains.jetpad.projectional.cell.completion.*;
 import jetbrains.jetpad.projectional.parser.Token;
 import jetbrains.jetpad.projectional.cell.Cell;
-import jetbrains.jetpad.projectional.cell.support.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;

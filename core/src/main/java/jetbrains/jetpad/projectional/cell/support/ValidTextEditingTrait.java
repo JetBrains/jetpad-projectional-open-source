@@ -23,6 +23,7 @@ import jetbrains.jetpad.event.ModifierKey;
 import jetbrains.jetpad.projectional.cell.*;
 import jetbrains.jetpad.projectional.cell.action.CellAction;
 import jetbrains.jetpad.projectional.cell.completion.Completion;
+import jetbrains.jetpad.projectional.cell.completion.CompletionHelper;
 import jetbrains.jetpad.projectional.cell.completion.CompletionItem;
 import jetbrains.jetpad.projectional.cell.completion.CompletionParameters;
 import jetbrains.jetpad.projectional.cell.trait.CellTraitPropertySpec;

@@ -22,6 +22,7 @@ import com.google.common.base.Supplier;
 import jetbrains.jetpad.projectional.cell.*;
 import jetbrains.jetpad.projectional.cell.action.CellAction;
 import jetbrains.jetpad.projectional.cell.action.CellActions;
+import jetbrains.jetpad.projectional.cell.completion.CompletionHelper;
 import jetbrains.jetpad.projectional.cell.completion.CompletionParameters;
 import jetbrains.jetpad.projectional.cell.completion.CompletionSupport;
 import jetbrains.jetpad.projectional.cell.trait.BaseCellTrait;
