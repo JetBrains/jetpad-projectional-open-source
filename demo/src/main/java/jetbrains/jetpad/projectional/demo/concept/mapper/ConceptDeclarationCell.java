@@ -19,7 +19,7 @@ import jetbrains.jetpad.projectional.cell.TextCell;
 import jetbrains.jetpad.projectional.cell.Cell;
 import jetbrains.jetpad.projectional.cell.indent.IndentRootCell;
 
-import static jetbrains.jetpad.projectional.cell.support.CellFactory.*;
+import static jetbrains.jetpad.projectional.cell.util.CellFactory.*;
 
 class ConceptDeclarationCell extends IndentRootCell {
   final TextCell name;

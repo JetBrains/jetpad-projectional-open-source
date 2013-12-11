@@ -28,6 +28,8 @@ import jetbrains.jetpad.event.ModifierKey;
 import jetbrains.jetpad.projectional.cell.*;
 import jetbrains.jetpad.projectional.cell.action.CellAction;
 import jetbrains.jetpad.projectional.cell.action.CellActions;
+import jetbrains.jetpad.projectional.cell.util.CellFactory;
+import jetbrains.jetpad.projectional.cell.util.CellLists;
 import jetbrains.jetpad.projectional.util.Validators;
 import org.junit.Before;
 import org.junit.Test;

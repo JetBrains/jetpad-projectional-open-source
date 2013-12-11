@@ -17,11 +17,11 @@ package jetbrains.jetpad.projectional.demo.expr.mapper;
 
 import jetbrains.jetpad.projectional.cell.TextCell;
 import jetbrains.jetpad.projectional.cell.indent.IndentCell;
-import jetbrains.jetpad.projectional.cell.support.CellFactory;
+import jetbrains.jetpad.projectional.cell.util.CellFactory;
 import jetbrains.jetpad.projectional.cell.support.TextEditing;
 import jetbrains.jetpad.projectional.util.Validators;
 
-import static jetbrains.jetpad.projectional.cell.support.CellFactory.*;
+import static jetbrains.jetpad.projectional.cell.util.CellFactory.*;
 
 class BinaryExpressionCell extends IndentCell {
   final IndentCell left = indent();

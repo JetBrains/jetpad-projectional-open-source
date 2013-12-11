@@ -19,6 +19,7 @@ import com.google.common.base.Predicates;
 import jetbrains.jetpad.projectional.cell.*;
 import jetbrains.jetpad.projectional.cell.trait.BaseCellTrait;
 import jetbrains.jetpad.projectional.cell.trait.CellTraitPropertySpec;
+import jetbrains.jetpad.projectional.cell.util.CellFactory;
 import org.junit.Before;
 import org.junit.Test;
 

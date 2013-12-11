@@ -42,6 +42,8 @@ import jetbrains.jetpad.projectional.cell.support.*;
 import jetbrains.jetpad.projectional.cell.trait.BaseCellTrait;
 import jetbrains.jetpad.projectional.cell.trait.CellTrait;
 import jetbrains.jetpad.projectional.cell.trait.CellTraitPropertySpec;
+import jetbrains.jetpad.projectional.cell.util.CellFactory;
+import jetbrains.jetpad.projectional.cell.util.CellLists;
 import jetbrains.jetpad.projectional.cell.util.Cells;
 import jetbrains.jetpad.projectional.parser.Token;
 import jetbrains.jetpad.projectional.parser.ValueToken;

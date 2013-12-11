@@ -17,11 +17,11 @@ package jetbrains.jetpad.projectional.cell.support.testApp.mapper;
 
 import jetbrains.jetpad.projectional.cell.HorizontalCell;
 import jetbrains.jetpad.projectional.cell.TextCell;
-import jetbrains.jetpad.projectional.cell.support.CellFactory;
+import jetbrains.jetpad.projectional.cell.util.CellFactory;
 
-import static jetbrains.jetpad.projectional.cell.support.CellFactory.horizontal;
-import static jetbrains.jetpad.projectional.cell.support.CellFactory.space;
-import static jetbrains.jetpad.projectional.cell.support.CellFactory.label;
+import static jetbrains.jetpad.projectional.cell.util.CellFactory.horizontal;
+import static jetbrains.jetpad.projectional.cell.util.CellFactory.space;
+import static jetbrains.jetpad.projectional.cell.util.CellFactory.label;
 
 public class BinExprCell extends HorizontalCell {
   public final HorizontalCell left = horizontal();

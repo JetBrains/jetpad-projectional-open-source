@@ -18,7 +18,7 @@ package jetbrains.jetpad.projectional.cell.hybrid.testapp.mapper;
 import jetbrains.jetpad.mapper.Mapper;
 import jetbrains.jetpad.projectional.cell.hybrid.testapp.model.ValueExpr;
 import jetbrains.jetpad.projectional.cell.TextCell;
-import jetbrains.jetpad.projectional.cell.support.CellFactory;
+import jetbrains.jetpad.projectional.cell.util.CellFactory;
 
 class ValueExprMapper extends Mapper<ValueExpr, TextCell> {
   ValueExprMapper(ValueExpr source) {

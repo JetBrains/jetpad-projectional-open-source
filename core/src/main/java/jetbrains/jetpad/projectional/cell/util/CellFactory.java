@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package jetbrains.jetpad.projectional.cell.support;
+package jetbrains.jetpad.projectional.cell.util;
 
 import com.google.common.base.Strings;
 import jetbrains.jetpad.model.property.PropertyChangeEvent;
@@ -21,6 +21,7 @@ import jetbrains.jetpad.event.MouseEvent;
 import jetbrains.jetpad.projectional.cell.*;
 import jetbrains.jetpad.projectional.cell.indent.IndentCell;
 import jetbrains.jetpad.projectional.cell.indent.NewLineCell;
+import jetbrains.jetpad.projectional.cell.support.TextEditing;
 import jetbrains.jetpad.projectional.cell.trait.BaseCellTrait;
 import jetbrains.jetpad.projectional.cell.trait.CellTrait;
 import jetbrains.jetpad.projectional.cell.trait.CellTraitPropertySpec;

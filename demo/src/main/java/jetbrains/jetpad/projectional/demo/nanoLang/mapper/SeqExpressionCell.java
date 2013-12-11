@@ -17,12 +17,10 @@ package jetbrains.jetpad.projectional.demo.nanoLang.mapper;
 
 import jetbrains.jetpad.projectional.cell.Cell;
 import jetbrains.jetpad.projectional.cell.indent.IndentCell;
-import jetbrains.jetpad.projectional.cell.indent.NewLineCell;
-import jetbrains.jetpad.projectional.cell.support.CellFactory;
 
 import java.util.Arrays;
 
-import static jetbrains.jetpad.projectional.cell.support.CellFactory.*;
+import static jetbrains.jetpad.projectional.cell.util.CellFactory.*;
 
 class SeqExpressionCell extends IndentCell {
   IndentCell seqContainer = new IndentCell();

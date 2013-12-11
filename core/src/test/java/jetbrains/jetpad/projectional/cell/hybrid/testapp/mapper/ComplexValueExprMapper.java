@@ -19,7 +19,7 @@ import jetbrains.jetpad.mapper.Mapper;
 import jetbrains.jetpad.projectional.cell.hybrid.testapp.model.ComplexValueExpr;
 import jetbrains.jetpad.projectional.cell.*;
 import jetbrains.jetpad.projectional.cell.action.CellActions;
-import jetbrains.jetpad.projectional.cell.support.CellFactory;
+import jetbrains.jetpad.projectional.cell.util.CellFactory;
 import jetbrains.jetpad.projectional.cell.support.ProjectionalSynchronizers;
 import jetbrains.jetpad.projectional.cell.trait.BaseCellTrait;
 import jetbrains.jetpad.projectional.cell.trait.CellTraitPropertySpec;

@@ -18,7 +18,6 @@ package jetbrains.jetpad.projectional.demo.nanoLang.mapper;
 import com.google.common.base.Predicates;
 import jetbrains.jetpad.mapper.Mapper;
 import jetbrains.jetpad.projectional.cell.TextCell;
-import jetbrains.jetpad.projectional.cell.support.CellFactory;
 import jetbrains.jetpad.projectional.cell.support.TextEditing;
 import jetbrains.jetpad.projectional.demo.nanoLang.model.DummyExpression;
 

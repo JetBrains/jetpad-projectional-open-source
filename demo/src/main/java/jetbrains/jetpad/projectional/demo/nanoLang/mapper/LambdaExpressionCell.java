@@ -15,15 +15,12 @@
  */
 package jetbrains.jetpad.projectional.demo.nanoLang.mapper;
 
-import jetbrains.jetpad.projectional.cell.Cell;
 import jetbrains.jetpad.projectional.cell.TextCell;
 import jetbrains.jetpad.projectional.cell.indent.IndentCell;
-import jetbrains.jetpad.projectional.cell.support.CellFactory;
 
 import java.util.Arrays;
-import java.util.List;
 
-import static jetbrains.jetpad.projectional.cell.support.CellFactory.*;
+import static jetbrains.jetpad.projectional.cell.util.CellFactory.*;
 
 class LambdaExpressionCell extends IndentCell {
   final TextCell varName = new TextCell();

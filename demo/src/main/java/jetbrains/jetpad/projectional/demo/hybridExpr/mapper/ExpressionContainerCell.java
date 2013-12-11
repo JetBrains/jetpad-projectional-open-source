@@ -18,7 +18,7 @@ package jetbrains.jetpad.projectional.demo.hybridExpr.mapper;
 import jetbrains.jetpad.projectional.cell.VerticalCell;
 import jetbrains.jetpad.projectional.cell.Cell;
 
-import static jetbrains.jetpad.projectional.cell.support.CellFactory.*;
+import static jetbrains.jetpad.projectional.cell.util.CellFactory.*;
 
 class ExpressionContainerCell extends VerticalCell {
   final Cell expression;

@@ -18,7 +18,7 @@ package jetbrains.jetpad.projectional.demo.expr.mapper;
 import jetbrains.jetpad.projectional.cell.Cell;
 import jetbrains.jetpad.projectional.cell.indent.IndentRootCell;
 
-import static jetbrains.jetpad.projectional.cell.support.CellFactory.*;
+import static jetbrains.jetpad.projectional.cell.util.CellFactory.*;
 
 class ExpressionContainerCell extends IndentRootCell {
   final Cell expression;

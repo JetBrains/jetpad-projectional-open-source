@@ -31,6 +31,7 @@ import jetbrains.jetpad.projectional.cell.indent.IndentCell;
 import jetbrains.jetpad.projectional.cell.trait.BaseCellTrait;
 import jetbrains.jetpad.projectional.cell.trait.CellTrait;
 import jetbrains.jetpad.projectional.cell.trait.CellTraitPropertySpec;
+import jetbrains.jetpad.projectional.cell.util.CellFactory;
 import jetbrains.jetpad.projectional.util.Validators;
 
 import java.util.*;

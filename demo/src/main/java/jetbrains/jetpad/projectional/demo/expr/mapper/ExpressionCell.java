@@ -15,11 +15,10 @@
  */
 package jetbrains.jetpad.projectional.demo.expr.mapper;
 
-import jetbrains.jetpad.projectional.cell.HorizontalCell;
 import jetbrains.jetpad.projectional.cell.indent.IndentCell;
 
-import static jetbrains.jetpad.projectional.cell.support.CellFactory.label;
-import static jetbrains.jetpad.projectional.cell.support.CellFactory.to;
+import static jetbrains.jetpad.projectional.cell.util.CellFactory.label;
+import static jetbrains.jetpad.projectional.cell.util.CellFactory.to;
 
 class ExpressionCell extends IndentCell {
   ExpressionCell() {
