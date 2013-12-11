@@ -17,13 +17,13 @@ package jetbrains.jetpad.cell.text;
 
 import com.google.common.base.Strings;
 import com.google.common.base.Supplier;
+import jetbrains.jetpad.cell.util.Cells;
 import jetbrains.jetpad.event.*;
 import jetbrains.jetpad.event.TextClipboardContent;
 import jetbrains.jetpad.model.event.Registration;
 import jetbrains.jetpad.cell.*;
 import jetbrains.jetpad.cell.completion.*;
 import jetbrains.jetpad.cell.event.CompletionEvent;
-import jetbrains.jetpad.projectional.cell.ProjectionalSynchronizers;
 import jetbrains.jetpad.cell.trait.CellTraitPropertySpec;
 
 import java.util.List;
@@ -266,7 +266,7 @@ public class TextEditingTrait extends TextNavigationTrait {
 
   protected void setText(TextCell cell, String text) {
     if (Strings.isNullOrEmpty(text)) {
-      cell.dispatch(new Event(), ProjectionalSynchronizers.BECAME_EMPTY);
+      cell.dispatch(new Event(), Cells.BECAME_EMPTY);
     }
 
     cell.text().set(text);

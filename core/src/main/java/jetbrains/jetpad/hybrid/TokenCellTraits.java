@@ -142,7 +142,7 @@ class TokenCellTraits {
 
     @Override
     public void onViewTraitEvent(Cell cell, CellTraitEventSpec<?> spec, Event event) {
-      if (spec == ProjectionalSynchronizers.BECAME_EMPTY) {
+      if (spec == Cells.BECAME_EMPTY) {
         int index = tokenViews(cell).indexOf(cell);
 
         Token prev = index == 0 ? null : tokens(cell).get(index - 1);

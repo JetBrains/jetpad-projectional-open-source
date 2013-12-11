@@ -40,7 +40,6 @@ public class ProjectionalSynchronizers {
     }
   });
   public static final CellTraitPropertySpec<Boolean> DELETE_ON_EMPTY = new CellTraitPropertySpec<Boolean>("deleteOnEmpty", false);
-  public static final CellTraitEventSpec<Event> BECAME_EMPTY = new CellTraitEventSpec<Event>("becameEmpty", false);
 
 
   public static <ContextT, SourceT> ProjectionalRoleSynchronizer<ContextT, SourceT> forRole(

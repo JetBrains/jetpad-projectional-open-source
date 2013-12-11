@@ -17,6 +17,7 @@ package jetbrains.jetpad.projectional.cell;
 
 import com.google.common.base.Function;
 import com.google.common.base.Supplier;
+import jetbrains.jetpad.cell.util.Cells;
 import jetbrains.jetpad.event.*;
 import jetbrains.jetpad.mapper.Mapper;
 import jetbrains.jetpad.mapper.MapperFactory;
@@ -220,7 +221,7 @@ public class ProjectionalPropertySynchronizerTest extends EditingTestCase {
 
       @Override
       public void onViewTraitEvent(Cell cell, CellTraitEventSpec<?> spec, Event event) {
-        if (spec == ProjectionalSynchronizers.BECAME_EMPTY) {
+        if (spec == Cells.BECAME_EMPTY) {
           becameEmptyFired.set(true);
           event.consume();
           return;

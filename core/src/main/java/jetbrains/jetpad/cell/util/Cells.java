@@ -16,6 +16,8 @@
 package jetbrains.jetpad.cell.util;
 
 import com.google.common.base.Strings;
+import jetbrains.jetpad.cell.trait.CellTraitEventSpec;
+import jetbrains.jetpad.event.Event;
 import jetbrains.jetpad.model.children.Composites;
 import jetbrains.jetpad.cell.Cell;
 import jetbrains.jetpad.cell.TextCell;
@@ -24,6 +26,8 @@ import jetbrains.jetpad.cell.position.Positions;
 import java.util.List;
 
 public class Cells {
+  public static final CellTraitEventSpec<Event> BECAME_EMPTY = new CellTraitEventSpec<Event>("becameEmpty", false);
+
   public static boolean isLastChild(Cell cell) {
     Cell parent = cell.parent().get();
     if (parent == null) return false;

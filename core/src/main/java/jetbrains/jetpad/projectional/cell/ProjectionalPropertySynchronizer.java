@@ -15,6 +15,7 @@
  */
 package jetbrains.jetpad.projectional.cell;
 
+import jetbrains.jetpad.cell.util.Cells;
 import jetbrains.jetpad.mapper.Mapper;
 import jetbrains.jetpad.mapper.MapperFactory;
 import jetbrains.jetpad.mapper.RoleSynchronizer;
@@ -94,7 +95,7 @@ class ProjectionalPropertySynchronizer<ContextT, SourceItemT extends ContextT> e
 
       @Override
       public void onViewTraitEvent(Cell cell, CellTraitEventSpec<?> spec, Event event) {
-        if (spec == ProjectionalSynchronizers.BECAME_EMPTY) {
+        if (spec == Cells.BECAME_EMPTY) {
           if (cell.get(ProjectionalSynchronizers.DELETE_ON_EMPTY)) {
             itemBecameEmpty();
             event.consume();
@@ -154,7 +155,7 @@ class ProjectionalPropertySynchronizer<ContextT, SourceItemT extends ContextT> e
     mySource.set(null);
     getOnLastItemDeleted().execute();
     if (getTarget().get(ProjectionalSynchronizers.DELETE_ON_EMPTY)) {
-      getTarget().dispatch(new Event(), ProjectionalSynchronizers.BECAME_EMPTY);
+      getTarget().dispatch(new Event(), Cells.BECAME_EMPTY);
     }
   }
 }
