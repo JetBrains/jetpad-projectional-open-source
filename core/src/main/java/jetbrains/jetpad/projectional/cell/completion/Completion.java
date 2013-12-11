@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package jetbrains.jetpad.projectional.cell.support;
+package jetbrains.jetpad.projectional.cell.completion;
 
 import jetbrains.jetpad.projectional.cell.trait.CellTraitPropertySpec;
 

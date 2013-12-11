@@ -18,6 +18,8 @@ package jetbrains.jetpad.projectional.cell.support;
 
 import jetbrains.jetpad.mapper.Mapper;
 import jetbrains.jetpad.projectional.cell.Cell;
+import jetbrains.jetpad.projectional.cell.completion.CompletionItem;
+import jetbrains.jetpad.projectional.cell.completion.CompletionParameters;
 
 import java.util.List;
 

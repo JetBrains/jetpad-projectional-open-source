@@ -18,6 +18,8 @@ package jetbrains.jetpad.projectional.cell.support;
 import com.google.common.base.Function;
 import jetbrains.jetpad.model.property.Property;
 import jetbrains.jetpad.projectional.cell.Cell;
+import jetbrains.jetpad.projectional.cell.completion.Completion;
+import jetbrains.jetpad.projectional.cell.completion.CompletionSupplier;
 import jetbrains.jetpad.projectional.cell.trait.CellTraitPropertySpec;
 import jetbrains.jetpad.projectional.cell.action.CellAction;
 

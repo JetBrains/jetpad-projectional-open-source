@@ -16,6 +16,10 @@
 package jetbrains.jetpad.projectional.cell.support;
 
 import jetbrains.jetpad.projectional.cell.Cell;
+import jetbrains.jetpad.projectional.cell.completion.Completion;
+import jetbrains.jetpad.projectional.cell.completion.CompletionItem;
+import jetbrains.jetpad.projectional.cell.completion.CompletionParameters;
+import jetbrains.jetpad.projectional.cell.completion.CompletionSupplier;
 import jetbrains.jetpad.projectional.cell.trait.CellTraitPropertySpec;
 
 import java.util.ArrayList;

@@ -13,11 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package jetbrains.jetpad.projectional.cell.support;
+package jetbrains.jetpad.projectional.cell.completion;
 
-public interface CompletionParameters {
-  public static final CompletionParameters EMPTY = new BaseCompletionParameters();
+import java.util.Collections;
+import java.util.List;
 
-  boolean isEndRightTransform();
-  boolean isMenu();
+public interface CompletionSupplier {
+  public static final CompletionSupplier EMPTY = new CompletionSupplier() {
+    @Override
+    public List<CompletionItem> get(CompletionParameters cp) {
+      return Collections.emptyList();
+    }
+  };
+
+  List<CompletionItem> get(CompletionParameters cp);
 }

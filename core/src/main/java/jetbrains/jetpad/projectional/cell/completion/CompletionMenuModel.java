@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package jetbrains.jetpad.projectional.cell.support;
+package jetbrains.jetpad.projectional.cell.completion;
 
 import com.google.common.base.Function;
 import jetbrains.jetpad.model.collections.CollectionItemEvent;
@@ -22,6 +22,7 @@ import jetbrains.jetpad.model.collections.list.ObservableList;
 import jetbrains.jetpad.model.event.EventHandler;
 import jetbrains.jetpad.model.property.*;
 import jetbrains.jetpad.model.transform.Transformers;
+import jetbrains.jetpad.projectional.cell.completion.CompletionItem;
 
 import java.util.Comparator;
 

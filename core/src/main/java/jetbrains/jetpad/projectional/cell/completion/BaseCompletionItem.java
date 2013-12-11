@@ -13,18 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package jetbrains.jetpad.projectional.cell.support;
+package jetbrains.jetpad.projectional.cell.completion;
 
-import java.util.Collections;
-import java.util.List;
+import jetbrains.jetpad.projectional.cell.completion.CompletionItem;
 
-public interface CompletionSupplier {
-  public static final CompletionSupplier EMPTY = new CompletionSupplier() {
-    @Override
-    public List<CompletionItem> get(CompletionParameters cp) {
-      return Collections.emptyList();
-    }
-  };
+public abstract class BaseCompletionItem implements CompletionItem {
+  @Override
+  public boolean isLowPriority() {
+    return false;
+  }
 
-  List<CompletionItem> get(CompletionParameters cp);
+  @Override
+  public final boolean isMatchPrefix(String text) {
+    return isStrictMatchPrefix(text) || isMatch(text);
+  }
 }

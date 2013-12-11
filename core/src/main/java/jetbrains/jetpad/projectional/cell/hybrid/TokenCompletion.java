@@ -21,6 +21,7 @@ import jetbrains.jetpad.base.Value;
 import jetbrains.jetpad.mapper.Mapper;
 import jetbrains.jetpad.projectional.cell.TextCell;
 import jetbrains.jetpad.projectional.cell.action.CellAction;
+import jetbrains.jetpad.projectional.cell.completion.*;
 import jetbrains.jetpad.projectional.parser.Token;
 import jetbrains.jetpad.projectional.cell.Cell;
 import jetbrains.jetpad.projectional.cell.support.*;

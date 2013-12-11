@@ -16,6 +16,8 @@
 package jetbrains.jetpad.projectional.cell.support;
 
 import jetbrains.jetpad.projectional.cell.Cell;
+import jetbrains.jetpad.projectional.cell.completion.Completion;
+import jetbrains.jetpad.projectional.cell.completion.CompletionController;
 import org.junit.Test;
 
 import static org.junit.Assert.assertFalse;

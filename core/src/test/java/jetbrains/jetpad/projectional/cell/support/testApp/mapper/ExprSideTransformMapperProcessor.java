@@ -17,6 +17,7 @@ package jetbrains.jetpad.projectional.cell.support.testApp.mapper;
 
 import jetbrains.jetpad.mapper.Mapper;
 import jetbrains.jetpad.mapper.MapperProcessor;
+import jetbrains.jetpad.projectional.cell.completion.*;
 import jetbrains.jetpad.projectional.cell.trait.BaseCellTrait;
 import jetbrains.jetpad.projectional.cell.Cell;
 import jetbrains.jetpad.projectional.cell.util.Cells;

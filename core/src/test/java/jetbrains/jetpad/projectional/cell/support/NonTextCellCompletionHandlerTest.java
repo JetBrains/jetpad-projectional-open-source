@@ -15,6 +15,8 @@
  */
 package jetbrains.jetpad.projectional.cell.support;
 
+import jetbrains.jetpad.projectional.cell.completion.Completion;
+import jetbrains.jetpad.projectional.cell.completion.CompletionSupport;
 import jetbrains.jetpad.projectional.cell.trait.BaseCellTrait;
 import jetbrains.jetpad.projectional.cell.trait.CellTraitPropertySpec;
 import jetbrains.jetpad.projectional.cell.HorizontalCell;

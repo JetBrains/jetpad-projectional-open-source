@@ -17,6 +17,7 @@ package jetbrains.jetpad.projectional.demo.hybridExpr.mapper;
 
 import com.google.common.base.Function;
 import jetbrains.jetpad.projectional.cell.action.CellAction;
+import jetbrains.jetpad.projectional.cell.completion.*;
 import jetbrains.jetpad.projectional.demo.hybridExpr.model.*;
 import jetbrains.jetpad.projectional.demo.hybridExpr.model.types.FieldDescriptor;
 import jetbrains.jetpad.projectional.demo.hybridExpr.model.types.MethodDescriptor;
@@ -29,7 +30,6 @@ import jetbrains.jetpad.projectional.parser.*;
 import jetbrains.jetpad.projectional.parser.prettyprint.PrettyPrinter;
 import jetbrains.jetpad.projectional.parser.prettyprint.PrettyPrinterContext;
 import jetbrains.jetpad.projectional.util.Validators;
-import jetbrains.jetpad.projectional.cell.support.*;
 
 import java.util.ArrayList;
 import java.util.List;

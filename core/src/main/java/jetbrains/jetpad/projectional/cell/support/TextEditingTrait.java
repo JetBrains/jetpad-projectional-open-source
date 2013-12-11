@@ -21,13 +21,14 @@ import jetbrains.jetpad.event.*;
 import jetbrains.jetpad.event.TextClipboardContent;
 import jetbrains.jetpad.model.event.Registration;
 import jetbrains.jetpad.projectional.cell.*;
+import jetbrains.jetpad.projectional.cell.completion.*;
 import jetbrains.jetpad.projectional.cell.event.CompletionEvent;
 import jetbrains.jetpad.projectional.cell.trait.CellTraitPropertySpec;
 
 import java.util.List;
 
-class TextEditingTrait extends TextNavigationTrait {
-  TextEditingTrait() {
+public class TextEditingTrait extends TextNavigationTrait {
+  public TextEditingTrait() {
   }
 
   @Override

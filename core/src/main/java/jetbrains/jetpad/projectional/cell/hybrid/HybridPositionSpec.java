@@ -20,7 +20,7 @@ import jetbrains.jetpad.projectional.parser.Parser;
 import jetbrains.jetpad.projectional.parser.Token;
 import jetbrains.jetpad.projectional.parser.prettyprint.PrettyPrinter;
 import jetbrains.jetpad.projectional.cell.action.CellAction;
-import jetbrains.jetpad.projectional.cell.support.CompletionSupplier;
+import jetbrains.jetpad.projectional.cell.completion.CompletionSupplier;
 
 public interface HybridPositionSpec<SourceT> {
   Parser<SourceT> getParser();

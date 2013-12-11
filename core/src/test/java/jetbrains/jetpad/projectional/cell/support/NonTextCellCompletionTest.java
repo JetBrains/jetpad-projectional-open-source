@@ -17,6 +17,9 @@ package jetbrains.jetpad.projectional.cell.support;
 
 import com.google.common.base.Predicates;
 import jetbrains.jetpad.projectional.cell.*;
+import jetbrains.jetpad.projectional.cell.completion.Completion;
+import jetbrains.jetpad.projectional.cell.completion.CompletionController;
+import jetbrains.jetpad.projectional.cell.completion.CompletionSupport;
 import jetbrains.jetpad.projectional.cell.trait.BaseCellTrait;
 import jetbrains.jetpad.projectional.cell.trait.CellTraitPropertySpec;
 import jetbrains.jetpad.projectional.cell.util.CellFactory;

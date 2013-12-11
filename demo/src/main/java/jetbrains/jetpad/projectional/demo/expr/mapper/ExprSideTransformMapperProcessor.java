@@ -20,13 +20,13 @@ import jetbrains.jetpad.mapper.MapperProcessor;
 import jetbrains.jetpad.mapper.Mappers;
 import jetbrains.jetpad.projectional.cell.action.CellAction;
 import jetbrains.jetpad.projectional.cell.action.CellActions;
+import jetbrains.jetpad.projectional.cell.completion.*;
 import jetbrains.jetpad.projectional.demo.expr.ExprBinOpTransformer;
 import jetbrains.jetpad.projectional.demo.expr.model.*;
 import jetbrains.jetpad.projectional.cell.trait.BaseCellTrait;
 import jetbrains.jetpad.projectional.cell.Cell;
 import jetbrains.jetpad.projectional.cell.util.Cells;
 import jetbrains.jetpad.projectional.cell.trait.CellTraitPropertySpec;
-import jetbrains.jetpad.projectional.cell.support.*;
 import jetbrains.jetpad.base.Handler;
 
 import java.util.ArrayList;

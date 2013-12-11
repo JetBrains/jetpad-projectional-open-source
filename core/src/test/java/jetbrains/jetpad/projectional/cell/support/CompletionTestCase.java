@@ -17,6 +17,10 @@ package jetbrains.jetpad.projectional.cell.support;
 
 import jetbrains.jetpad.projectional.cell.EditingTestCase;
 import jetbrains.jetpad.projectional.cell.action.CellAction;
+import jetbrains.jetpad.projectional.cell.completion.CompletionItem;
+import jetbrains.jetpad.projectional.cell.completion.CompletionParameters;
+import jetbrains.jetpad.projectional.cell.completion.CompletionSupplier;
+import jetbrains.jetpad.projectional.cell.completion.SimpleCompletionItem;
 
 import java.util.ArrayList;
 import java.util.List;

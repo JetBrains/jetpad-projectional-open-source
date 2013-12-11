@@ -13,16 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package jetbrains.jetpad.projectional.cell.support;
+package jetbrains.jetpad.projectional.cell.completion;
 
-class BaseCompletionParameters implements CompletionParameters {
-  @Override
-  public boolean isEndRightTransform() {
-    return false;
-  }
+public interface CompletionController {
+  boolean isActive();
+  boolean canActivate();
+  void setActive(boolean active);
 
-  @Override
-  public boolean isMenu() {
-    return false;
-  }
+  boolean hasAmbiguousMatches();
 }

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package jetbrains.jetpad.projectional.cell.support;
+package jetbrains.jetpad.projectional.cell.completion;
 
 import com.google.common.base.Strings;
 import jetbrains.jetpad.base.Handler;
@@ -31,6 +31,7 @@ import jetbrains.jetpad.base.Value;
 import jetbrains.jetpad.projectional.cell.action.CellAction;
 import jetbrains.jetpad.projectional.cell.event.CompletionEvent;
 import jetbrains.jetpad.projectional.cell.event.FocusEvent;
+import jetbrains.jetpad.projectional.cell.support.*;
 import jetbrains.jetpad.projectional.cell.trait.BaseCellTrait;
 import jetbrains.jetpad.projectional.cell.trait.CellTrait;
 import jetbrains.jetpad.projectional.cell.trait.CellTraitPropertySpec;
@@ -40,7 +41,7 @@ import java.util.Collections;
 import java.util.List;
 
 public class CompletionSupport {
-  static final CellTraitPropertySpec<Runnable> HIDE_COMPLETION = new CellTraitPropertySpec<Runnable>("hideCompletion");
+  public static final CellTraitPropertySpec<Runnable> HIDE_COMPLETION = new CellTraitPropertySpec<Runnable>("hideCompletion");
 
   public static CellTrait trait() {
     return new BaseCellTrait() {
@@ -117,7 +118,7 @@ public class CompletionSupport {
     };
   }
 
-  static void showCompletion(final TextCell textView, List<CompletionItem> items, Registration removeOnClose, final CellContainer.State prevState) {
+  public static void showCompletion(final TextCell textView, List<CompletionItem> items, Registration removeOnClose, final CellContainer.State prevState) {
     if (!textView.focused().get()) {
       throw new IllegalArgumentException();
     }
@@ -211,7 +212,7 @@ public class CompletionSupport {
     textView.bottomPopup().set(completionCell);
   }
 
-  static TextCell showPopup(
+  public static TextCell showPopup(
       Cell cell,
       Property<Cell> targetPopup,
       List<CompletionItem> items) {
@@ -236,7 +237,7 @@ public class CompletionSupport {
     return textView;
   }
 
-  static TextCell showSideTransformPopup(
+  public static TextCell showSideTransformPopup(
       final Cell cell,
       final Property<Cell> targetPopup,
       List<CompletionItem> items) {

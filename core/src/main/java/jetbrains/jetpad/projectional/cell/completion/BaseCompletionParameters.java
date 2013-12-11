@@ -13,16 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package jetbrains.jetpad.projectional.cell.support;
+package jetbrains.jetpad.projectional.cell.completion;
 
-public abstract class BaseCompletionItem implements CompletionItem {
+public class BaseCompletionParameters implements CompletionParameters {
   @Override
-  public boolean isLowPriority() {
+  public boolean isEndRightTransform() {
     return false;
   }
 
   @Override
-  public final boolean isMatchPrefix(String text) {
-    return isStrictMatchPrefix(text) || isMatch(text);
+  public boolean isMenu() {
+    return false;
   }
 }
