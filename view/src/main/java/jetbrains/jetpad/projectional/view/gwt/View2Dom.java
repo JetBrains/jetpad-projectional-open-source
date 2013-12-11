@@ -197,10 +197,11 @@ public class View2Dom {
           rootDiv.focus();
           container.mousePressed(evt);
           pressedOutside.set(false);
+          return false;
         } else {
           pressedOutside.set(true);
+          return true;
         }
-        return false;
       }
     })));
     reg.add(eventRegistration(Event.ONMOUSEUP, $(Document.get()).mouseup(new Function() {
@@ -210,8 +211,9 @@ public class View2Dom {
         MouseEvent evt = toMouseEvent(rootDiv, e);
         if (isContainerEvent(evt, container)) {
           container.mouseReleased(evt);
+          return false;
         }
-        return false;
+        return true;
       }
     })));
     reg.add(eventRegistration(Event.ONMOUSEMOVE, $(Document.get()).mousemove(new Function() {
@@ -222,8 +224,9 @@ public class View2Dom {
           container.mouseDragged(evt);
         } else if (isContainerEvent(evt, container)) {
           container.mouseMoved(evt);
+          return false;
         }
-        return false;
+        return true;
       }
     })));
     reg.add(eventRegistration(Event.ONKEYDOWN, $(rootDiv).keydown(new Function() {
