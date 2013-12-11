@@ -16,7 +16,7 @@
 package jetbrains.jetpad.projectional.cell.hybrid;
 
 import jetbrains.jetpad.projectional.parser.Token;
-import jetbrains.jetpad.projectional.cell.support.CellAction;
+import jetbrains.jetpad.projectional.cell.action.CellAction;
 
 public abstract class BaseCompleter implements Completer {
   @Override

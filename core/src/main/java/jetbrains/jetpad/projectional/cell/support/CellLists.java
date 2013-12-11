@@ -17,6 +17,7 @@ package jetbrains.jetpad.projectional.cell.support;
 
 import com.google.common.base.Supplier;
 import jetbrains.jetpad.projectional.cell.*;
+import jetbrains.jetpad.projectional.cell.trait.CellTraitPropertySpec;
 
 import java.util.List;
 

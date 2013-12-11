@@ -16,6 +16,7 @@
 package jetbrains.jetpad.projectional.cell.hybrid.testapp.mapper;
 
 import com.google.common.base.Function;
+import jetbrains.jetpad.projectional.cell.action.CellAction;
 import jetbrains.jetpad.projectional.cell.hybrid.Completer;
 import jetbrains.jetpad.projectional.cell.hybrid.CompletionContext;
 import jetbrains.jetpad.projectional.cell.hybrid.HybridPositionSpec;

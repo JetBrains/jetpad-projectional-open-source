@@ -18,8 +18,9 @@ package jetbrains.jetpad.projectional.cell.support;
 import com.google.common.base.Function;
 import jetbrains.jetpad.model.property.Property;
 import jetbrains.jetpad.projectional.cell.*;
+import jetbrains.jetpad.projectional.cell.trait.CellTraitPropertySpec;
 
-interface PositionHandler {
+public interface PositionHandler {
   static final CellTraitPropertySpec<PositionHandler> PROPERTY = new CellTraitPropertySpec<PositionHandler>("positionHandler", new Function<Cell, PositionHandler>() {
     @Override
     public PositionHandler apply(Cell input) {

@@ -17,10 +17,12 @@ package jetbrains.jetpad.projectional.demo.concept.mapper;
 
 import jetbrains.jetpad.projectional.cell.*;
 import jetbrains.jetpad.projectional.cell.indent.IndentCell;
-import jetbrains.jetpad.projectional.cell.support.CellActions;
+import jetbrains.jetpad.projectional.cell.action.CellActions;
 import jetbrains.jetpad.projectional.cell.support.CellFactory;
 import jetbrains.jetpad.projectional.cell.support.ProjectionalSynchronizers;
 import jetbrains.jetpad.projectional.cell.support.TextEditing;
+import jetbrains.jetpad.projectional.cell.trait.BaseCellTrait;
+import jetbrains.jetpad.projectional.cell.trait.CellTraitPropertySpec;
 import jetbrains.jetpad.projectional.util.Validators;
 
 import static jetbrains.jetpad.projectional.cell.support.CellFactory.placeHolder;

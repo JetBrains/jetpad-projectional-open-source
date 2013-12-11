@@ -16,6 +16,7 @@
 package jetbrains.jetpad.projectional.cell.support;
 
 import jetbrains.jetpad.projectional.cell.EditingTestCase;
+import jetbrains.jetpad.projectional.cell.action.CellAction;
 
 import java.util.ArrayList;
 import java.util.List;

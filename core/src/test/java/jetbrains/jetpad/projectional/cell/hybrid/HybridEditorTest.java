@@ -24,6 +24,7 @@ import jetbrains.jetpad.projectional.cell.Cell;
 import jetbrains.jetpad.projectional.cell.EditingTestCase;
 import jetbrains.jetpad.projectional.cell.HorizontalCell;
 import jetbrains.jetpad.projectional.cell.TextCell;
+import jetbrains.jetpad.projectional.cell.action.CellActions;
 import jetbrains.jetpad.projectional.cell.hybrid.testapp.mapper.ExprContainerMapper;
 import jetbrains.jetpad.projectional.cell.hybrid.testapp.mapper.Tokens;
 import jetbrains.jetpad.projectional.cell.hybrid.testapp.model.*;

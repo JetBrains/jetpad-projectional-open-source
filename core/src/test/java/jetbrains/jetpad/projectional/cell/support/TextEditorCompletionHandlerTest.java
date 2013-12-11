@@ -15,8 +15,8 @@
  */
 package jetbrains.jetpad.projectional.cell.support;
 
-import jetbrains.jetpad.projectional.cell.BaseCellTrait;
-import jetbrains.jetpad.projectional.cell.CellTraitPropertySpec;
+import jetbrains.jetpad.projectional.cell.trait.BaseCellTrait;
+import jetbrains.jetpad.projectional.cell.trait.CellTraitPropertySpec;
 import jetbrains.jetpad.projectional.cell.TextCell;
 import jetbrains.jetpad.projectional.cell.Cell;
 import org.junit.Before;

@@ -17,8 +17,8 @@ package jetbrains.jetpad.projectional.cell.support.testApp.mapper;
 
 import jetbrains.jetpad.mapper.Mapper;
 import jetbrains.jetpad.projectional.cell.Cell;
-import jetbrains.jetpad.projectional.cell.support.CellAction;
-import jetbrains.jetpad.projectional.cell.support.CellActions;
+import jetbrains.jetpad.projectional.cell.action.CellAction;
+import jetbrains.jetpad.projectional.cell.action.CellActions;
 import jetbrains.jetpad.projectional.cell.support.DeleteHandler;
 import jetbrains.jetpad.projectional.cell.support.ProjectionalRoleSynchronizer;
 import jetbrains.jetpad.projectional.cell.support.testApp.model.BinExpr;

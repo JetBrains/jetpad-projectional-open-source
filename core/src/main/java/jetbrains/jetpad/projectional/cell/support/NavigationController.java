@@ -27,14 +27,14 @@ import jetbrains.jetpad.model.event.CompositeRegistration;
 import jetbrains.jetpad.model.event.EventHandler;
 import jetbrains.jetpad.model.event.Registration;
 import jetbrains.jetpad.model.property.*;
-import jetbrains.jetpad.projectional.cell.BaseCellTrait;
+import jetbrains.jetpad.projectional.cell.trait.BaseCellTrait;
 import jetbrains.jetpad.projectional.cell.Cell;
 import jetbrains.jetpad.projectional.cell.CellContainer;
-import jetbrains.jetpad.projectional.cell.Cells;
+import jetbrains.jetpad.projectional.cell.util.Cells;
 
 import java.util.Stack;
 
-import static jetbrains.jetpad.projectional.cell.Cells.*;
+import static jetbrains.jetpad.projectional.cell.util.Cells.*;
 
 class NavigationController {
   static Registration install(CellContainer container) {

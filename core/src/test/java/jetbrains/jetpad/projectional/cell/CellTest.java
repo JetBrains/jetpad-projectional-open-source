@@ -19,8 +19,9 @@ import jetbrains.jetpad.model.event.EventHandler;
 import jetbrains.jetpad.model.property.Property;
 import jetbrains.jetpad.base.Value;
 import jetbrains.jetpad.model.property.PropertyChangeEvent;
+import jetbrains.jetpad.projectional.cell.event.FocusEvent;
+import jetbrains.jetpad.projectional.cell.trait.BaseCellTrait;
 import org.junit.Test;
-import org.mockito.Mockito;
 
 import java.util.Arrays;
 

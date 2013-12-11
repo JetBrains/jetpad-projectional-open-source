@@ -26,7 +26,9 @@ import jetbrains.jetpad.model.event.Registration;
 import jetbrains.jetpad.model.property.Property;
 import jetbrains.jetpad.model.property.PropertyChangeEvent;
 import jetbrains.jetpad.model.property.ValueProperty;
+import jetbrains.jetpad.projectional.cell.event.CellEventSpec;
 import jetbrains.jetpad.projectional.cell.event.CompletionEvent;
+import jetbrains.jetpad.projectional.cell.event.FocusEvent;
 
 import java.util.*;
 

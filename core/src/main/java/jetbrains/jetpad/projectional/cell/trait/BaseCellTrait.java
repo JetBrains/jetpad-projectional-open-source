@@ -13,11 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package jetbrains.jetpad.projectional.cell;
+package jetbrains.jetpad.projectional.cell.trait;
 
 import jetbrains.jetpad.event.*;
 import jetbrains.jetpad.model.property.PropertyChangeEvent;
+import jetbrains.jetpad.projectional.cell.Cell;
+import jetbrains.jetpad.projectional.cell.CellPropertySpec;
 import jetbrains.jetpad.projectional.cell.event.CompletionEvent;
+import jetbrains.jetpad.projectional.cell.event.FocusEvent;
+import jetbrains.jetpad.projectional.cell.trait.CellTrait;
+import jetbrains.jetpad.projectional.cell.trait.CellTraitEventSpec;
+import jetbrains.jetpad.projectional.cell.trait.CellTraitPropertySpec;
 
 public abstract class BaseCellTrait implements CellTrait {
   protected CellTrait[] getBaseTraits(Cell cell) {

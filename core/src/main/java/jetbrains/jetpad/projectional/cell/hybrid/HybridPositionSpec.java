@@ -19,7 +19,7 @@ import com.google.common.base.Function;
 import jetbrains.jetpad.projectional.parser.Parser;
 import jetbrains.jetpad.projectional.parser.Token;
 import jetbrains.jetpad.projectional.parser.prettyprint.PrettyPrinter;
-import jetbrains.jetpad.projectional.cell.support.CellAction;
+import jetbrains.jetpad.projectional.cell.action.CellAction;
 import jetbrains.jetpad.projectional.cell.support.CompletionSupplier;
 
 public interface HybridPositionSpec<SourceT> {

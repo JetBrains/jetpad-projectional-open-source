@@ -16,6 +16,8 @@
 package jetbrains.jetpad.projectional.cell.hybrid;
 
 import com.google.common.base.Function;
+import jetbrains.jetpad.projectional.cell.action.CellAction;
+import jetbrains.jetpad.projectional.cell.action.CellActions;
 import jetbrains.jetpad.projectional.parser.ErrorToken;
 import jetbrains.jetpad.projectional.parser.Token;
 import jetbrains.jetpad.projectional.parser.ValueToken;
@@ -26,8 +28,8 @@ import jetbrains.jetpad.projectional.cell.support.*;
 import java.util.List;
 
 import static jetbrains.jetpad.projectional.cell.hybrid.SelectionPosition.*;
-import static jetbrains.jetpad.projectional.cell.support.CellActions.toFirstFocusable;
-import static jetbrains.jetpad.projectional.cell.support.CellActions.toPosition;
+import static jetbrains.jetpad.projectional.cell.action.CellActions.toFirstFocusable;
+import static jetbrains.jetpad.projectional.cell.action.CellActions.toPosition;
 
 class TokenOperations<SourceT> {
   private HybridSynchronizer<SourceT> mySync;

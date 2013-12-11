@@ -20,6 +20,7 @@ import com.google.common.base.Supplier;
 import jetbrains.jetpad.event.ContentKind;
 import jetbrains.jetpad.mapper.RoleSynchronizer;
 import jetbrains.jetpad.projectional.cell.Cell;
+import jetbrains.jetpad.projectional.cell.action.CellAction;
 
 import java.util.List;
 

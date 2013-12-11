@@ -15,7 +15,7 @@
  */
 package jetbrains.jetpad.projectional.cell.support;
 
-import jetbrains.jetpad.projectional.cell.Cells;
+import jetbrains.jetpad.projectional.cell.util.Cells;
 import jetbrains.jetpad.projectional.cell.Cell;
 
 public class Positions {

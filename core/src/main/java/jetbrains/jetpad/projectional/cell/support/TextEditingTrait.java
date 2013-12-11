@@ -22,6 +22,7 @@ import jetbrains.jetpad.event.TextClipboardContent;
 import jetbrains.jetpad.model.event.Registration;
 import jetbrains.jetpad.projectional.cell.*;
 import jetbrains.jetpad.projectional.cell.event.CompletionEvent;
+import jetbrains.jetpad.projectional.cell.trait.CellTraitPropertySpec;
 
 import java.util.List;
 

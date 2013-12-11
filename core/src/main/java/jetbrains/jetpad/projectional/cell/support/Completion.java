@@ -15,7 +15,7 @@
  */
 package jetbrains.jetpad.projectional.cell.support;
 
-import jetbrains.jetpad.projectional.cell.CellTraitPropertySpec;
+import jetbrains.jetpad.projectional.cell.trait.CellTraitPropertySpec;
 
 import java.util.Collections;
 import java.util.List;

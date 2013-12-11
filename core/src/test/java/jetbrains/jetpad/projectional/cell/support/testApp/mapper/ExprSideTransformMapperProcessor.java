@@ -17,10 +17,11 @@ package jetbrains.jetpad.projectional.cell.support.testApp.mapper;
 
 import jetbrains.jetpad.mapper.Mapper;
 import jetbrains.jetpad.mapper.MapperProcessor;
-import jetbrains.jetpad.projectional.cell.BaseCellTrait;
+import jetbrains.jetpad.projectional.cell.trait.BaseCellTrait;
 import jetbrains.jetpad.projectional.cell.Cell;
-import jetbrains.jetpad.projectional.cell.Cells;
-import jetbrains.jetpad.projectional.cell.CellTraitPropertySpec;
+import jetbrains.jetpad.projectional.cell.util.Cells;
+import jetbrains.jetpad.projectional.cell.trait.CellTraitPropertySpec;
+import jetbrains.jetpad.projectional.cell.action.CellAction;
 import jetbrains.jetpad.projectional.cell.support.*;
 import jetbrains.jetpad.projectional.cell.support.testApp.model.*;
 

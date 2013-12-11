@@ -26,8 +26,11 @@ import jetbrains.jetpad.model.collections.list.ObservableArrayList;
 import jetbrains.jetpad.model.collections.list.ObservableList;
 import jetbrains.jetpad.model.event.Registration;
 import jetbrains.jetpad.projectional.cell.*;
+import jetbrains.jetpad.projectional.cell.action.CellAction;
 import jetbrains.jetpad.projectional.cell.indent.IndentCell;
-import jetbrains.jetpad.projectional.cell.indent.IndentRootCell;
+import jetbrains.jetpad.projectional.cell.trait.BaseCellTrait;
+import jetbrains.jetpad.projectional.cell.trait.CellTrait;
+import jetbrains.jetpad.projectional.cell.trait.CellTraitPropertySpec;
 import jetbrains.jetpad.projectional.util.Validators;
 
 import java.util.*;

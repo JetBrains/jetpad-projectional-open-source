@@ -13,10 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package jetbrains.jetpad.projectional.cell;
+package jetbrains.jetpad.projectional.cell.event;
 
 import jetbrains.jetpad.event.*;
-import jetbrains.jetpad.projectional.cell.event.CompletionEvent;
 
 public class CellEventSpec<EventT extends Event> {
   public static final CellEventSpec<KeyEvent> KEY_PRESSED = new CellEventSpec<KeyEvent>("keyPressed");

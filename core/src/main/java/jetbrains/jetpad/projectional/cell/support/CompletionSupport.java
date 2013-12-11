@@ -28,7 +28,12 @@ import jetbrains.jetpad.event.KeyEvent;
 import jetbrains.jetpad.event.ModifierKey;
 import jetbrains.jetpad.projectional.cell.*;
 import jetbrains.jetpad.base.Value;
+import jetbrains.jetpad.projectional.cell.action.CellAction;
 import jetbrains.jetpad.projectional.cell.event.CompletionEvent;
+import jetbrains.jetpad.projectional.cell.event.FocusEvent;
+import jetbrains.jetpad.projectional.cell.trait.BaseCellTrait;
+import jetbrains.jetpad.projectional.cell.trait.CellTrait;
+import jetbrains.jetpad.projectional.cell.trait.CellTraitPropertySpec;
 
 import java.util.ArrayList;
 import java.util.Collections;

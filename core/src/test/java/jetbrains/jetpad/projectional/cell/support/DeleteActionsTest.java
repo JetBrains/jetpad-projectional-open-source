@@ -18,6 +18,7 @@ package jetbrains.jetpad.projectional.cell.support;
 import jetbrains.jetpad.mapper.Mapper;
 import jetbrains.jetpad.projectional.cell.Cell;
 import jetbrains.jetpad.projectional.cell.EditingTestCase;
+import jetbrains.jetpad.projectional.cell.action.CellActions;
 import jetbrains.jetpad.projectional.cell.support.testApp.mapper.BinExprCell;
 import jetbrains.jetpad.projectional.cell.support.testApp.mapper.ExprMappers;
 import jetbrains.jetpad.projectional.cell.support.testApp.model.ExprContainer;

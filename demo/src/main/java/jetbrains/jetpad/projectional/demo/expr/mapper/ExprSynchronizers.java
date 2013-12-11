@@ -18,6 +18,7 @@ package jetbrains.jetpad.projectional.demo.expr.mapper;
 import com.google.common.base.Supplier;
 import jetbrains.jetpad.mapper.*;
 import jetbrains.jetpad.model.property.Property;
+import jetbrains.jetpad.projectional.cell.action.CellAction;
 import jetbrains.jetpad.projectional.demo.expr.model.*;
 import jetbrains.jetpad.projectional.cell.Cell;
 import jetbrains.jetpad.projectional.cell.support.*;

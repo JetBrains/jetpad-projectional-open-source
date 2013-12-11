@@ -20,10 +20,10 @@ import com.google.common.base.Objects;
 import jetbrains.jetpad.base.Value;
 import jetbrains.jetpad.mapper.Mapper;
 import jetbrains.jetpad.projectional.cell.TextCell;
+import jetbrains.jetpad.projectional.cell.action.CellAction;
 import jetbrains.jetpad.projectional.parser.Token;
 import jetbrains.jetpad.projectional.cell.Cell;
 import jetbrains.jetpad.projectional.cell.support.*;
-import jetbrains.jetpad.projectional.view.TextView;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -31,7 +31,7 @@ import java.util.Collections;
 import java.util.List;
 
 import static jetbrains.jetpad.projectional.cell.hybrid.SelectionPosition.*;
-import static jetbrains.jetpad.projectional.cell.support.CellActions.seq;
+import static jetbrains.jetpad.projectional.cell.action.CellActions.seq;
 
 class TokenCompletion {
   private HybridSynchronizer<?> mySync;

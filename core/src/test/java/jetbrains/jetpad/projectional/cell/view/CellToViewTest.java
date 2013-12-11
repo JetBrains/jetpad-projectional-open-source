@@ -1,7 +1,7 @@
 package jetbrains.jetpad.projectional.cell.view;
 
 import jetbrains.jetpad.event.MouseEvent;
-import jetbrains.jetpad.projectional.cell.BaseCellTrait;
+import jetbrains.jetpad.projectional.cell.trait.BaseCellTrait;
 import jetbrains.jetpad.projectional.cell.Cell;
 import jetbrains.jetpad.projectional.cell.TextCell;
 import jetbrains.jetpad.projectional.view.ViewContainer;

@@ -21,12 +21,11 @@ import jetbrains.jetpad.mapper.MappingContext;
 import jetbrains.jetpad.model.children.Composites;
 import jetbrains.jetpad.model.collections.CollectionItemEvent;
 import jetbrains.jetpad.model.collections.set.ObservableSet;
-import jetbrains.jetpad.model.event.EventHandler;
 import jetbrains.jetpad.model.event.Registration;
 import jetbrains.jetpad.model.property.PropertyChangeEvent;
 import jetbrains.jetpad.projectional.cell.Cell;
 import jetbrains.jetpad.projectional.cell.CellPropertySpec;
-import jetbrains.jetpad.projectional.cell.Cells;
+import jetbrains.jetpad.projectional.cell.util.Cells;
 import jetbrains.jetpad.projectional.cell.indent.CellIndentUpdaterSource;
 import jetbrains.jetpad.projectional.cell.indent.IndentCell;
 import jetbrains.jetpad.projectional.cell.indent.IndentRootCell;
@@ -39,9 +38,7 @@ import jetbrains.jetpad.projectional.view.TextView;
 import jetbrains.jetpad.projectional.view.VerticalView;
 import jetbrains.jetpad.projectional.view.View;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 class IndentRootCellMapper extends BaseCellMapper<IndentRootCell, VerticalView> {
   private IndentUpdater<Cell, View> myIndentUpdater;

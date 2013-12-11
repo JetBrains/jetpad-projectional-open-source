@@ -22,6 +22,7 @@ import jetbrains.jetpad.mapper.Synchronizer;
 import jetbrains.jetpad.model.collections.list.ObservableList;
 import jetbrains.jetpad.model.property.Property;
 import jetbrains.jetpad.projectional.cell.Cell;
+import jetbrains.jetpad.projectional.cell.action.CellAction;
 import jetbrains.jetpad.projectional.cell.support.*;
 import jetbrains.jetpad.projectional.demo.nanoLang.model.*;
 

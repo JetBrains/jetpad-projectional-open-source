@@ -15,6 +15,8 @@
  */
 package jetbrains.jetpad.projectional.cell.support;
 
+import jetbrains.jetpad.projectional.cell.action.CellAction;
+
 public interface Role<TargetT> {
   TargetT get();
   CellAction set(TargetT target);

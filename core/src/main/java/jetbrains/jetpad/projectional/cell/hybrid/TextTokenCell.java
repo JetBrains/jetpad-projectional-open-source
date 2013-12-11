@@ -17,10 +17,11 @@ package jetbrains.jetpad.projectional.cell.hybrid;
 
 import com.google.common.base.Predicates;
 import com.google.common.base.Supplier;
+import jetbrains.jetpad.projectional.cell.trait.CellTrait;
+import jetbrains.jetpad.projectional.cell.trait.CellTraitPropertySpec;
 import jetbrains.jetpad.projectional.parser.ErrorToken;
 import jetbrains.jetpad.projectional.parser.SimpleToken;
 import jetbrains.jetpad.projectional.parser.Token;
-import jetbrains.jetpad.projectional.cell.*;
 import jetbrains.jetpad.projectional.cell.TextCell;
 import jetbrains.jetpad.projectional.cell.Cell;
 import jetbrains.jetpad.projectional.cell.support.CellLists;

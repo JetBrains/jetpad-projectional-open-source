@@ -13,15 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package jetbrains.jetpad.projectional.cell;
+package jetbrains.jetpad.projectional.cell.event;
 
 import jetbrains.jetpad.event.Event;
+import jetbrains.jetpad.projectional.cell.Cell;
 
 public class FocusEvent extends Event {
   private Cell myOldValue;
   private Cell myNewValue;
 
-  FocusEvent(Cell oldValue, Cell newValue) {
+  public FocusEvent(Cell oldValue, Cell newValue) {
     myOldValue = oldValue;
     myNewValue = newValue;
   }

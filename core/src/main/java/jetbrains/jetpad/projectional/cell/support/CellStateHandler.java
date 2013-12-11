@@ -16,7 +16,7 @@
 package jetbrains.jetpad.projectional.cell.support;
 
 import jetbrains.jetpad.projectional.cell.Cell;
-import jetbrains.jetpad.projectional.cell.CellTraitPropertySpec;
+import jetbrains.jetpad.projectional.cell.trait.CellTraitPropertySpec;
 
 public interface CellStateHandler<CellT extends Cell, T> {
   public static final CellTraitPropertySpec<CellStateHandler<?, ?>> PROPERTY = new CellTraitPropertySpec<CellStateHandler<?, ?>>("cellStateHandler");

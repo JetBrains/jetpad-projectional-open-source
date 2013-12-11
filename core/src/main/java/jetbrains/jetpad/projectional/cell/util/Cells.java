@@ -13,10 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package jetbrains.jetpad.projectional.cell;
+package jetbrains.jetpad.projectional.cell.util;
 
 import com.google.common.base.Strings;
 import jetbrains.jetpad.model.children.Composites;
+import jetbrains.jetpad.projectional.cell.Cell;
+import jetbrains.jetpad.projectional.cell.TextCell;
 import jetbrains.jetpad.projectional.cell.support.Positions;
 
 import java.util.List;

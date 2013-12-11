@@ -31,7 +31,7 @@ import jetbrains.jetpad.model.event.Registration;
 import jetbrains.jetpad.model.property.PropertyChangeEvent;
 import jetbrains.jetpad.projectional.cell.Cell;
 import jetbrains.jetpad.projectional.cell.CellPropertySpec;
-import jetbrains.jetpad.projectional.cell.Cells;
+import jetbrains.jetpad.projectional.cell.util.Cells;
 import jetbrains.jetpad.projectional.cell.indent.CellIndentUpdaterSource;
 import jetbrains.jetpad.projectional.cell.indent.IndentCell;
 import jetbrains.jetpad.projectional.cell.indent.IndentRootCell;

@@ -32,7 +32,14 @@ import jetbrains.jetpad.model.property.BaseReadableProperty;
 import jetbrains.jetpad.model.property.Property;
 import jetbrains.jetpad.model.property.PropertyChangeEvent;
 import jetbrains.jetpad.model.property.ReadableProperty;
+import jetbrains.jetpad.projectional.cell.event.CellEventSpec;
 import jetbrains.jetpad.projectional.cell.event.CompletionEvent;
+import jetbrains.jetpad.projectional.cell.event.EventPriority;
+import jetbrains.jetpad.projectional.cell.event.FocusEvent;
+import jetbrains.jetpad.projectional.cell.trait.CellTrait;
+import jetbrains.jetpad.projectional.cell.trait.CellTraitEventSpec;
+import jetbrains.jetpad.projectional.cell.trait.CellTraitPropertySpec;
+import jetbrains.jetpad.projectional.cell.util.Cells;
 import jetbrains.jetpad.values.Color;
 import jetbrains.jetpad.model.util.ListMap;
 

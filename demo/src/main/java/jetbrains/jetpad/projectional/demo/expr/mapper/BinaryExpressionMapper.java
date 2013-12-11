@@ -17,6 +17,10 @@ package jetbrains.jetpad.projectional.demo.expr.mapper;
 
 import jetbrains.jetpad.mapper.Mapper;
 import jetbrains.jetpad.mapper.Mappers;
+import jetbrains.jetpad.projectional.cell.action.CellAction;
+import jetbrains.jetpad.projectional.cell.action.CellActions;
+import jetbrains.jetpad.projectional.cell.trait.BaseCellTrait;
+import jetbrains.jetpad.projectional.cell.trait.CellTraitPropertySpec;
 import jetbrains.jetpad.projectional.demo.expr.ExprBinOpTransformer;
 import jetbrains.jetpad.projectional.demo.expr.model.*;
 import jetbrains.jetpad.projectional.cell.*;

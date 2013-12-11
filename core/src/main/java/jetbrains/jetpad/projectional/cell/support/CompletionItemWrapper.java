@@ -15,6 +15,8 @@
  */
 package jetbrains.jetpad.projectional.cell.support;
 
+import jetbrains.jetpad.projectional.cell.action.CellAction;
+
 public class CompletionItemWrapper implements CompletionItem {
   private CompletionItem myWrappedItem;
 

@@ -13,11 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package jetbrains.jetpad.projectional.cell.support;
+package jetbrains.jetpad.projectional.cell.action;
 
 import jetbrains.jetpad.projectional.cell.Cell;
-import jetbrains.jetpad.projectional.cell.Cells;
+import jetbrains.jetpad.projectional.cell.util.Cells;
 import jetbrains.jetpad.projectional.cell.TextCell;
+import jetbrains.jetpad.projectional.cell.support.PositionHandler;
 
 public class CellActions {
   public static CellAction seq(final CellAction... actions) {
