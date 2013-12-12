@@ -19,11 +19,11 @@ import jetbrains.jetpad.cell.*;
 import jetbrains.jetpad.cell.indent.IndentCell;
 import jetbrains.jetpad.cell.action.CellActions;
 import jetbrains.jetpad.cell.util.CellFactory;
+import jetbrains.jetpad.cell.util.Validators;
 import jetbrains.jetpad.projectional.cell.ProjectionalSynchronizers;
 import jetbrains.jetpad.cell.text.TextEditing;
 import jetbrains.jetpad.cell.trait.BaseCellTrait;
 import jetbrains.jetpad.cell.trait.CellTraitPropertySpec;
-import jetbrains.jetpad.projectional.util.Validators;
 
 import static jetbrains.jetpad.cell.util.CellFactory.placeHolder;
 import static jetbrains.jetpad.cell.util.CellFactory.space;

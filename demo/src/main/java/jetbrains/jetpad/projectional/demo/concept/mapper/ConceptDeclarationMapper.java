@@ -17,6 +17,7 @@ package jetbrains.jetpad.projectional.demo.concept.mapper;
 
 import com.google.common.base.Function;
 import com.google.common.base.Supplier;
+import jetbrains.jetpad.cell.util.Validators;
 import jetbrains.jetpad.event.ContentKinds;
 import jetbrains.jetpad.mapper.Mapper;
 import jetbrains.jetpad.mapper.MapperFactory;
@@ -31,7 +32,6 @@ import jetbrains.jetpad.cell.util.ValueEditors;
 import jetbrains.jetpad.projectional.demo.concept.model.*;
 import jetbrains.jetpad.cell.Cell;
 import jetbrains.jetpad.projectional.cell.*;
-import jetbrains.jetpad.projectional.util.Validators;
 
 import java.util.ArrayList;
 import java.util.List;

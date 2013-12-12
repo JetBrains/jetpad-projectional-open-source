@@ -16,6 +16,7 @@
 package jetbrains.jetpad.projectional.demo.expr.mapper;
 
 import com.google.common.base.Supplier;
+import jetbrains.jetpad.cell.util.Validators;
 import jetbrains.jetpad.mapper.*;
 import jetbrains.jetpad.model.property.Property;
 import jetbrains.jetpad.cell.action.CellAction;
@@ -26,7 +27,6 @@ import jetbrains.jetpad.cell.completion.SimpleCompletionItem;
 import jetbrains.jetpad.projectional.demo.expr.model.*;
 import jetbrains.jetpad.cell.Cell;
 import jetbrains.jetpad.projectional.cell.*;
-import jetbrains.jetpad.projectional.util.Validators;
 
 import java.util.ArrayList;
 import java.util.List;

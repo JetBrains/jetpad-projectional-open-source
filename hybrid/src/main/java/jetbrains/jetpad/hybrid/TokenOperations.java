@@ -31,7 +31,6 @@ import jetbrains.jetpad.projectional.cell.*;
 import java.util.List;
 
 import static jetbrains.jetpad.hybrid.SelectionPosition.*;
-import static jetbrains.jetpad.cell.action.CellActions.toFirstFocusable;
 import static jetbrains.jetpad.cell.action.CellActions.toPosition;
 
 class TokenOperations<SourceT> {

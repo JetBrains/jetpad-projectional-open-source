@@ -26,7 +26,6 @@ import jetbrains.jetpad.cell.text.TextEditing;
 import jetbrains.jetpad.cell.trait.BaseCellTrait;
 import jetbrains.jetpad.cell.trait.CellTrait;
 import jetbrains.jetpad.cell.trait.CellTraitPropertySpec;
-import jetbrains.jetpad.projectional.util.Validators;
 import jetbrains.jetpad.cell.*;
 import jetbrains.jetpad.values.Color;
 

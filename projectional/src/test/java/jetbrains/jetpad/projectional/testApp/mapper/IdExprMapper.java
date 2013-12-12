@@ -13,24 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package jetbrains.jetpad.projectional.demo.expr.mapper;
+package jetbrains.jetpad.projectional.testApp.mapper;
 
+import jetbrains.jetpad.mapper.Mapper;
 import jetbrains.jetpad.cell.TextCell;
-import jetbrains.jetpad.cell.indent.IndentCell;
-import jetbrains.jetpad.cell.util.CellFactory;
 import jetbrains.jetpad.cell.text.TextEditing;
+import jetbrains.jetpad.projectional.testApp.model.IdExpr;
 import jetbrains.jetpad.cell.util.Validators;
 
-import static jetbrains.jetpad.cell.util.CellFactory.*;
-
-class BinaryExpressionCell extends IndentCell {
-  final IndentCell left = indent();
-  final IndentCell right = indent();
-  final TextCell sign;
-
-  BinaryExpressionCell(String signText) {
-    CellFactory.to(this, left, space(), sign = label(signText), space(), right);
-    sign.addTrait(TextEditing.validTextEditing(Validators.equalsTo(signText)));
-    focusable().set(true);
+public class IdExprMapper extends Mapper<IdExpr, TextCell> {
+  IdExprMapper(IdExpr source) {
+    super(source, new TextCell());
+    getTarget().text().set("id");
+    getTarget().addTrait(TextEditing.validTextEditing(Validators.equalsTo("id")));
   }
 }

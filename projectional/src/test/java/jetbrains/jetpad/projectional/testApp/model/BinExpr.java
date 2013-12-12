@@ -13,17 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package jetbrains.jetpad.projectional.demo.concept.mapper;
+package jetbrains.jetpad.projectional.testApp.model;
 
-import jetbrains.jetpad.cell.util.Validators;
-import jetbrains.jetpad.mapper.Mapper;
-import jetbrains.jetpad.projectional.demo.concept.model.EmptyMember;
-import jetbrains.jetpad.cell.TextCell;
-import jetbrains.jetpad.cell.text.TextEditing;
+import jetbrains.jetpad.model.children.ChildProperty;
 
-class EmptyMemberMapper extends Mapper<EmptyMember, TextCell> {
-  EmptyMemberMapper(EmptyMember source) {
-    super(source, new TextCell());
-    getTarget().addTrait(TextEditing.validTextEditing(Validators.equalsTo("")));
+public abstract class BinExpr extends Expr {
+  public final ChildProperty<ExprNode, Expr> left = new ChildProperty<ExprNode, Expr>(this);
+  public final ChildProperty<ExprNode, Expr> right = new ChildProperty<ExprNode, Expr>(this);
+
+  protected abstract String getSign();
+
+  @Override
+  public String toString() {
+    return "(" + left.get() + " '" + getSign() + "' " + right.get() + ")";
   }
 }

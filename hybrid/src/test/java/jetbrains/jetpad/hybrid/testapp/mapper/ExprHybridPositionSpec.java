@@ -18,6 +18,7 @@ package jetbrains.jetpad.hybrid.testapp.mapper;
 import com.google.common.base.Function;
 import jetbrains.jetpad.cell.action.CellAction;
 import jetbrains.jetpad.cell.completion.*;
+import jetbrains.jetpad.cell.util.Validators;
 import jetbrains.jetpad.hybrid.Completer;
 import jetbrains.jetpad.hybrid.CompletionContext;
 import jetbrains.jetpad.hybrid.HybridPositionSpec;
@@ -25,7 +26,6 @@ import jetbrains.jetpad.hybrid.parser.*;
 import jetbrains.jetpad.hybrid.parser.prettyprint.PrettyPrinter;
 import jetbrains.jetpad.hybrid.parser.prettyprint.PrettyPrinterContext;
 import jetbrains.jetpad.hybrid.testapp.model.*;
-import jetbrains.jetpad.projectional.util.Validators;
 
 import java.util.ArrayList;
 import java.util.List;

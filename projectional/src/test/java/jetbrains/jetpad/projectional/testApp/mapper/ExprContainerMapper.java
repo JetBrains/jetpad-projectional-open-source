@@ -13,17 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package jetbrains.jetpad.projectional.demo.concept.mapper;
+package jetbrains.jetpad.projectional.testApp.mapper;
 
-import jetbrains.jetpad.cell.util.Validators;
 import jetbrains.jetpad.mapper.Mapper;
-import jetbrains.jetpad.projectional.demo.concept.model.EmptyMember;
-import jetbrains.jetpad.cell.TextCell;
-import jetbrains.jetpad.cell.text.TextEditing;
+import jetbrains.jetpad.cell.HorizontalCell;
+import jetbrains.jetpad.projectional.testApp.model.ExprContainer;
 
-class EmptyMemberMapper extends Mapper<EmptyMember, TextCell> {
-  EmptyMemberMapper(EmptyMember source) {
-    super(source, new TextCell());
-    getTarget().addTrait(TextEditing.validTextEditing(Validators.equalsTo("")));
+class ExprContainerMapper extends Mapper<ExprContainer, HorizontalCell> {
+  ExprContainerMapper(ExprContainer source) {
+    super(source, new HorizontalCell());
+  }
+
+  @Override
+  protected void registerSynchronizers(SynchronizersConfiguration conf) {
+    super.registerSynchronizers(conf);
+
+    conf.add(ExprSynchronizers.forSingleRole(this, getSource().expr, getTarget()));
   }
 }

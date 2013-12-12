@@ -7,6 +7,5 @@
   <source path="" />
 
   <inherits name="jetbrains.jetpad.test.Test" />
-  <inherits name="jetbrains.jetpad.projectional.Projectional"/>
   <inherits name="jetbrains.jetpad.projectional.view.View"/>
 </module>

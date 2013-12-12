@@ -13,24 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package jetbrains.jetpad.projectional.demo.expr.mapper;
+package jetbrains.jetpad.projectional.testApp.mapper;
 
+import jetbrains.jetpad.cell.HorizontalCell;
 import jetbrains.jetpad.cell.TextCell;
-import jetbrains.jetpad.cell.indent.IndentCell;
 import jetbrains.jetpad.cell.util.CellFactory;
-import jetbrains.jetpad.cell.text.TextEditing;
-import jetbrains.jetpad.cell.util.Validators;
 
-import static jetbrains.jetpad.cell.util.CellFactory.*;
+import static jetbrains.jetpad.cell.util.CellFactory.horizontal;
+import static jetbrains.jetpad.cell.util.CellFactory.space;
+import static jetbrains.jetpad.cell.util.CellFactory.label;
 
-class BinaryExpressionCell extends IndentCell {
-  final IndentCell left = indent();
-  final IndentCell right = indent();
-  final TextCell sign;
+public class BinExprCell extends HorizontalCell {
+  public final HorizontalCell left = horizontal();
+  public final HorizontalCell right = horizontal();
+  public final TextCell sign;
 
-  BinaryExpressionCell(String signText) {
+  BinExprCell(String signText) {
     CellFactory.to(this, left, space(), sign = label(signText), space(), right);
-    sign.addTrait(TextEditing.validTextEditing(Validators.equalsTo(signText)));
     focusable().set(true);
   }
 }

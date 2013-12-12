@@ -13,8 +13,8 @@
   <inherits name="jetbrains.jetpad.test.Test" />
   <inherits name="jetbrains.jetpad.projectional.diagram.Diagram" />
   <inherits name="com.google.gwt.query.Query"/>
-  <inherits name="jetbrains.jetpad.projectional.Projectional"/>
   <inherits name="jetbrains.jetpad.projectional.view.View"/>
+  <inherits name="jetbrains.jetpad.cell.Cell"/>
 
   <entry-point class="jetbrains.mps.diagram.dataflow.DataFlowEntryPoint" />
 </module>
