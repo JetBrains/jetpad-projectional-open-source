@@ -14,6 +14,7 @@
     <module>view</module>
     <module>event</module>
     <module>hybrid</module>
+    <module>projectional</module>
     <module>demo</module>
     <module>grammar</module>
     <module>dataflow</module>
