@@ -24,7 +24,8 @@ You can try the following online demo:
 * http://mbeddr-dataflow.appspot.com/ - data flow editor demo
 
 Modules:
-* core - cells, projectional editing synchronizers
+* cell - cells
+* projectional - projectional (MPS like) editing
 * hybrid - hybrid editors
 * dataflow - data flow diagram demo
 * demo - demos
