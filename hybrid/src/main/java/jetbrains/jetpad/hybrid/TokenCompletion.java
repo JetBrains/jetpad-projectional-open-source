@@ -18,6 +18,7 @@ package jetbrains.jetpad.hybrid;
 import com.google.common.base.Function;
 import com.google.common.base.Objects;
 import jetbrains.jetpad.base.Value;
+import jetbrains.jetpad.cell.action.CellActions;
 import jetbrains.jetpad.mapper.Mapper;
 import jetbrains.jetpad.cell.TextCell;
 import jetbrains.jetpad.cell.action.CellAction;
@@ -122,7 +123,7 @@ class TokenCompletion {
         }
 
         if (wasCompletionActive) {
-          result = seq(result, activateCompletion(index + selectionIndex));
+          result = CellActions.seq(result, activateCompletion(index + selectionIndex));
         }
         return result;
       }
@@ -145,7 +146,7 @@ class TokenCompletion {
             tokenListEditor().updateToPrintedTokens();
             CellAction result = tokenOperations().selectOnCreation(index + delta + selectionIndex, LAST);
             if (cp.isEndRightTransform()) {
-              result = seq(result, activateCompletion(index + delta + selectionIndex));
+              result = CellActions.seq(result, activateCompletion(index + delta + selectionIndex));
             }
             return result;
           }

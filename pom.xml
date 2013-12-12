@@ -13,6 +13,7 @@
     <module>core</module>
     <module>view</module>
     <module>event</module>
+    <module>hybrid</module>
     <module>demo</module>
     <module>grammar</module>
     <module>dataflow</module>

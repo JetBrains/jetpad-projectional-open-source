@@ -15,12 +15,12 @@
  */
 package jetbrains.jetpad.hybrid.testapp.mapper;
 
+import jetbrains.jetpad.hybrid.testapp.model.*;
 import jetbrains.jetpad.mapper.Mapper;
 import jetbrains.jetpad.mapper.MapperFactory;
 import jetbrains.jetpad.cell.HorizontalCell;
 import jetbrains.jetpad.hybrid.HybridSynchronizer;
 import jetbrains.jetpad.cell.Cell;
-import jetbrains.jetpad.hybrid.testapp.model.*;
 
 public class ExprContainerMapper extends Mapper<ExprContainer, HorizontalCell> {
   public final HybridSynchronizer<Expr> hybridSync;

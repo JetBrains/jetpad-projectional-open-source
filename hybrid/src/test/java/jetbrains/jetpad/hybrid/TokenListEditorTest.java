@@ -21,6 +21,7 @@ import jetbrains.jetpad.hybrid.testapp.model.Expr;
 import jetbrains.jetpad.hybrid.testapp.model.NumberExpr;
 import jetbrains.jetpad.hybrid.testapp.model.PlusExpr;
 import jetbrains.jetpad.hybrid.parser.IntValueToken;
+import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.Arrays;

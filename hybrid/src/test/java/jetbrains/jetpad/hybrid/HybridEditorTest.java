@@ -19,6 +19,8 @@ import com.google.common.collect.Ranges;
 import jetbrains.jetpad.event.Key;
 import jetbrains.jetpad.event.KeyEvent;
 import jetbrains.jetpad.event.ModifierKey;
+import jetbrains.jetpad.hybrid.parser.*;
+import jetbrains.jetpad.hybrid.testapp.model.*;
 import jetbrains.jetpad.mapper.Mapper;
 import jetbrains.jetpad.cell.Cell;
 import jetbrains.jetpad.cell.EditingTestCase;
@@ -29,11 +31,10 @@ import jetbrains.jetpad.cell.completion.Completion;
 import jetbrains.jetpad.cell.completion.CompletionController;
 import jetbrains.jetpad.hybrid.testapp.mapper.ExprContainerMapper;
 import jetbrains.jetpad.hybrid.testapp.mapper.Tokens;
-import jetbrains.jetpad.hybrid.testapp.model.*;
 import jetbrains.jetpad.cell.position.Positions;
 import jetbrains.jetpad.cell.util.CellStateHandler;
 import jetbrains.jetpad.cell.util.RootController;
-import jetbrains.jetpad.hybrid.parser.*;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -65,14 +66,14 @@ public class HybridEditorTest extends EditingTestCase {
   public void simpleTyping() {
     type("id");
 
-    assertTrue(container.expr.get() instanceof IdExpr);
+    Assert.assertTrue(container.expr.get() instanceof IdExpr);
   }
 
   @Test
   public void errorState() {
     type("+");
 
-    assertNull(container.expr.get());
+    Assert.assertNull(container.expr.get());
     assertTokens(Tokens.PLUS);
   }
 
@@ -80,14 +81,14 @@ public class HybridEditorTest extends EditingTestCase {
   public void plusExpr() {
     type("id+id");
 
-    assertTrue(container.expr.get() instanceof PlusExpr);
+    Assert.assertTrue(container.expr.get() instanceof PlusExpr);
   }
 
   @Test
   public void intermediateErrorState() {
     type("id+");
 
-    assertTrue(container.expr.get() instanceof IdExpr);
+    Assert.assertTrue(container.expr.get() instanceof IdExpr);
     assertTokens(Tokens.ID, Tokens.PLUS);
   }
 
@@ -100,7 +101,7 @@ public class HybridEditorTest extends EditingTestCase {
     type("i");
     enter();
 
-    assertTrue(container.expr.get() instanceof IdExpr);
+    Assert.assertTrue(container.expr.get() instanceof IdExpr);
   }
 
   @Test
@@ -110,7 +111,7 @@ public class HybridEditorTest extends EditingTestCase {
 
     type("id");
 
-    assertTrue(container.expr.get() instanceof PlusExpr);
+    Assert.assertTrue(container.expr.get() instanceof PlusExpr);
   }
 
   @Test
@@ -121,8 +122,8 @@ public class HybridEditorTest extends EditingTestCase {
 
     press(Key.DELETE, ModifierKey.CONTROL);
 
-    assertNull(container.expr.get());
-    assertTrue(sync.placeholder().focused().get());
+    Assert.assertNull(container.expr.get());
+    Assert.assertTrue(sync.placeholder().focused().get());
   }
 
   @Test
@@ -187,7 +188,7 @@ public class HybridEditorTest extends EditingTestCase {
 
     assertTokens(Tokens.INCREMENT);
     TextCell text = (TextCell) myCellContainer.focusedCell.get();
-    assertEquals(1, (int) text.caretPosition().get());
+    Assert.assertEquals(1, (int) text.caretPosition().get());
   }
 
   @Test
@@ -247,7 +248,7 @@ public class HybridEditorTest extends EditingTestCase {
 
     type("d");
 
-    assertTrue(container.expr.get() instanceof IdExpr);
+    Assert.assertTrue(container.expr.get() instanceof IdExpr);
   }
 
 
@@ -311,7 +312,7 @@ public class HybridEditorTest extends EditingTestCase {
     type("+");
 
     assertTokens(new IntValueToken(23), Tokens.PLUS, new IntValueToken(9));
-    assertTrue(container.expr.get() instanceof PlusExpr);
+    Assert.assertTrue(container.expr.get() instanceof PlusExpr);
   }
 
   @Test
@@ -336,7 +337,7 @@ public class HybridEditorTest extends EditingTestCase {
     complete();
     type("+");
 
-    assertTrue(isCompletionActive());
+    Assert.assertTrue(isCompletionActive());
   }
 
   @Test
@@ -347,7 +348,7 @@ public class HybridEditorTest extends EditingTestCase {
 
     type("+");
 
-    assertFalse(isCompletionActive());
+    Assert.assertFalse(isCompletionActive());
   }
 
   @Test
@@ -359,7 +360,7 @@ public class HybridEditorTest extends EditingTestCase {
     type("+");
 
     assertTokens(Tokens.DOT, Tokens.PLUS);
-    assertTrue(isCompletionActive());
+    Assert.assertTrue(isCompletionActive());
   }
 
   @Test
@@ -370,7 +371,7 @@ public class HybridEditorTest extends EditingTestCase {
     complete();
     complete();
 
-    assertTrue(isCompletionActive());
+    Assert.assertTrue(isCompletionActive());
   }
 
   @Test
@@ -396,7 +397,7 @@ public class HybridEditorTest extends EditingTestCase {
     type(")");
 
     assertTokens(Tokens.DOT, Tokens.RP);
-    assertFalse(isCompletionActive());
+    Assert.assertFalse(isCompletionActive());
   }
 
 
@@ -404,8 +405,8 @@ public class HybridEditorTest extends EditingTestCase {
   public void valueTokenParse() {
     type("value");
 
-    assertTrue(sync.valid().get());
-    assertTrue(container.expr.get() instanceof ValueExpr);
+    Assert.assertTrue(sync.valid().get());
+    Assert.assertTrue(container.expr.get() instanceof ValueExpr);
   }
 
   @Test
@@ -424,8 +425,8 @@ public class HybridEditorTest extends EditingTestCase {
   public void valueTokenTransform() {
     type("value+value");
 
-    assertTrue(sync.valid().get());
-    assertTrue(container.expr.get() instanceof PlusExpr);
+    Assert.assertTrue(sync.valid().get());
+    Assert.assertTrue(container.expr.get() instanceof PlusExpr);
   }
 
   @Test
@@ -435,9 +436,9 @@ public class HybridEditorTest extends EditingTestCase {
 
     type("+id");
 
-    assertTrue(sync.valid().get());
-    assertTrue(container.expr.get() instanceof PlusExpr);
-    assertTrue(((PlusExpr) container.expr.get()).right.get() instanceof IdExpr);
+    Assert.assertTrue(sync.valid().get());
+    Assert.assertTrue(container.expr.get() instanceof PlusExpr);
+    Assert.assertTrue(((PlusExpr) container.expr.get()).right.get() instanceof IdExpr);
   }
 
   @Test
@@ -560,7 +561,7 @@ public class HybridEditorTest extends EditingTestCase {
     sync.placeholder().focus();
 
     KeyEvent event = press(Key.UP, ModifierKey.ALT);
-    assertFalse(event.isConsumed());
+    Assert.assertFalse(event.isConsumed());
   }
 
   @Test
@@ -677,7 +678,7 @@ public class HybridEditorTest extends EditingTestCase {
 
     Cell tokenCell = myTargetCell.children().get(0);
     assertFocused(tokenCell);
-    assertTrue(Positions.isHomePosition(tokenCell));
+    Assert.assertTrue(Positions.isHomePosition(tokenCell));
     assertTokens(Tokens.ID);
   }
 
@@ -692,7 +693,7 @@ public class HybridEditorTest extends EditingTestCase {
 
     Cell tokenCell = myTargetCell.children().get(0);
     assertFocused(tokenCell);
-    assertTrue(Positions.isEndPosition(tokenCell));
+    Assert.assertTrue(Positions.isEndPosition(tokenCell));
     assertTokens(Tokens.ID);
   }
 
@@ -730,7 +731,7 @@ public class HybridEditorTest extends EditingTestCase {
 
     assertTokens(Tokens.INCREMENT);
     assertSelected(0);
-    assertEquals(1, (int) ((TextCell) sync.tokenCells().get(0)).caretPosition().get());
+    Assert.assertEquals(1, (int) ((TextCell) sync.tokenCells().get(0)).caretPosition().get());
   }
 
   private void assertTokens(Token... tokens) {
@@ -752,13 +753,13 @@ public class HybridEditorTest extends EditingTestCase {
 
   private Cell assertSelected(int index) {
     Cell cell = sync.tokenCells().get(index);
-    assertTrue(cell.focused().get());
+    Assert.assertTrue(cell.focused().get());
     return cell;
   }
 
   private void assertSelectedEnd(int index) {
     Cell cell = assertSelected(index);
-    assertTrue(Positions.isEndPosition(cell));
+    Assert.assertTrue(Positions.isEndPosition(cell));
   }
 
   private void assertSelection(int start, int end) {
@@ -766,7 +767,7 @@ public class HybridEditorTest extends EditingTestCase {
   }
 
   private void assertNoSelection() {
-    assertFalse(sync.hasSelection());
+    Assert.assertFalse(sync.hasSelection());
   }
 
   private boolean isCompletionActive() {

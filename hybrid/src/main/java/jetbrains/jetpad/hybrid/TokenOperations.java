@@ -87,7 +87,7 @@ class TokenOperations<SourceT> {
     if (pos == 0) {
       return select(index, FIRST);
     }
-    return toPosition(tokenViews().get(index), pos);
+    return CellActions.toPosition(tokenViews().get(index), pos);
   }
 
 
@@ -119,7 +119,7 @@ class TokenOperations<SourceT> {
     } else if (!tokens().isEmpty()) {
       return select(0, FIRST);
     } else {
-      return toFirstFocusable(mySync.target());
+      return CellActions.toFirstFocusable(mySync.target());
     }
   }
 

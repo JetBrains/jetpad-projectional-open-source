@@ -24,8 +24,8 @@ import jetbrains.jetpad.hybrid.HybridPositionSpec;
 import jetbrains.jetpad.hybrid.parser.*;
 import jetbrains.jetpad.hybrid.parser.prettyprint.PrettyPrinter;
 import jetbrains.jetpad.hybrid.parser.prettyprint.PrettyPrinterContext;
-import jetbrains.jetpad.projectional.util.Validators;
 import jetbrains.jetpad.hybrid.testapp.model.*;
+import jetbrains.jetpad.projectional.util.Validators;
 
 import java.util.ArrayList;
 import java.util.List;

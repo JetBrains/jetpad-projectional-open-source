@@ -24,6 +24,12 @@
     </dependency>
 
     <dependency>
+      <groupId>jetbrains.jetpad.projectional</groupId>
+      <artifactId>hybrid</artifactId>
+      <version>1.0-SNAPSHOT</version>
+    </dependency>
+
+    <dependency>
       <groupId>jetbrains.jetpad.mapper</groupId>
       <artifactId>mapper</artifactId>
       <version>1.0-SNAPSHOT</version>

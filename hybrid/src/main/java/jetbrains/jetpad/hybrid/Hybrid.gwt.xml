@@ -1,4 +1,5 @@
 <module>
   <source path="" />
   <inherits name="jetbrains.jetpad.cell.Cell" />
+  <inherits name="jetbrains.jetpad.projectional.Projectional"/>
 </module>

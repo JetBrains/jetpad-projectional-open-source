@@ -24,7 +24,6 @@ import jetbrains.jetpad.grammar.lr.LRTable;
 import jetbrains.jetpad.grammar.lr.Lexeme;
 import jetbrains.jetpad.grammar.slr.SLRTableGenerator;
 import jetbrains.jetpad.hybrid.parser.*;
-import jetbrains.jetpad.hybrid.parser.ValueToken;
 
 import java.util.*;
 
