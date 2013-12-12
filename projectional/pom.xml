@@ -19,7 +19,7 @@
   <dependencies>
     <dependency>
       <groupId>jetbrains.jetpad.projectional</groupId>
-      <artifactId>core</artifactId>
+      <artifactId>cell</artifactId>
       <version>1.0-SNAPSHOT</version>
     </dependency>
   </dependencies>

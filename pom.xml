@@ -10,7 +10,7 @@
   <packaging>pom</packaging>
 
   <modules>
-    <module>core</module>
+    <module>cell</module>
     <module>view</module>
     <module>event</module>
     <module>hybrid</module>
