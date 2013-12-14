@@ -16,10 +16,9 @@
 package jetbrains.jetpad.cell.action;
 
 import jetbrains.jetpad.cell.Cell;
-import jetbrains.jetpad.cell.util.Cells;
 import jetbrains.jetpad.cell.TextCell;
 import jetbrains.jetpad.cell.position.PositionHandler;
-import jetbrains.jetpad.views.Views;
+import jetbrains.jetpad.model.children.Composites;
 
 public class CellActions {
   public static CellAction seq(final CellAction... actions) {
@@ -83,7 +82,7 @@ public class CellActions {
     return new CellAction() {
       @Override
       public void execute() {
-        toHome(Views.firstFocusable(cell)).execute();
+        toHome(Composites.firstFocusable(cell)).execute();
       }
     };
   }
@@ -94,7 +93,7 @@ public class CellActions {
     return new CellAction() {
       @Override
       public void execute() {
-        Cell lf = Views.lastFocusable(cell);
+        Cell lf = Composites.lastFocusable(cell);
         toEnd(lf).execute();
       }
     };

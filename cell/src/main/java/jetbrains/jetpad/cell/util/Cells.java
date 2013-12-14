@@ -22,7 +22,6 @@ import jetbrains.jetpad.model.children.Composites;
 import jetbrains.jetpad.cell.Cell;
 import jetbrains.jetpad.cell.TextCell;
 import jetbrains.jetpad.cell.position.Positions;
-import jetbrains.jetpad.views.Views;
 
 import java.util.List;
 
@@ -54,7 +53,7 @@ public class Cells {
       if (c.focusable().get()) return c;
       return null;
     } else {
-      return Views.firstFocusable(c.children().get(0));
+      return Composites.firstFocusable(c.children().get(0));
     }
   }
 
@@ -63,16 +62,9 @@ public class Cells {
       if (c.focusable().get()) return c;
       return null;
     } else {
-      return Views.firstFocusable(c.children().get(c.children().size() - 1));
+      return Composites.firstFocusable(c.children().get(c.children().size() - 1));
     }
   }
-
-  public static boolean isDescendant(Cell ancestor, Cell descendant) {
-    if (ancestor == descendant) return true;
-    if (descendant.parent().get() == null) return false;
-    return isDescendant(ancestor, descendant.parent().get());
-  }
-
 
   public static Cell nextFocusable(Cell cell) {
     for (Cell c : Composites.nextLeaves(cell)) {

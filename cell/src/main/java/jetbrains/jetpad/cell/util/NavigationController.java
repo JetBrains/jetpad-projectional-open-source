@@ -23,6 +23,7 @@ import jetbrains.jetpad.event.KeyEvent;
 import jetbrains.jetpad.event.ModifierKey;
 import jetbrains.jetpad.event.MouseEvent;
 import jetbrains.jetpad.geometry.Vector;
+import jetbrains.jetpad.model.children.Composites;
 import jetbrains.jetpad.model.event.CompositeRegistration;
 import jetbrains.jetpad.model.event.EventHandler;
 import jetbrains.jetpad.model.event.Registration;
@@ -31,7 +32,6 @@ import jetbrains.jetpad.cell.position.PositionHandler;
 import jetbrains.jetpad.cell.trait.BaseCellTrait;
 import jetbrains.jetpad.cell.Cell;
 import jetbrains.jetpad.cell.CellContainer;
-import jetbrains.jetpad.views.Views;
 
 import java.util.Stack;
 
@@ -125,7 +125,7 @@ class NavigationController {
             }
           } else if (event.is(Key.DOWN, ModifierKey.ALT)) {
             if (selectionStack.isEmpty()) {
-              next = Views.firstFocusable(current, false);
+              next = Composites.firstFocusable(current, false);
             } else {
               next = selectionStack.pop();
             }

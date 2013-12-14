@@ -15,6 +15,7 @@
  */
 package jetbrains.jetpad.projectional.cell;
 
+import jetbrains.jetpad.model.children.Composites;
 import jetbrains.jetpad.model.collections.list.ObservableArrayList;
 import jetbrains.jetpad.model.collections.list.ObservableList;
 import jetbrains.jetpad.event.Key;
@@ -27,8 +28,6 @@ import jetbrains.jetpad.cell.event.FocusEvent;
 import jetbrains.jetpad.cell.position.Positions;
 import jetbrains.jetpad.cell.trait.BaseCellTrait;
 import jetbrains.jetpad.cell.trait.CellTraitPropertySpec;
-import jetbrains.jetpad.cell.util.Cells;
-import jetbrains.jetpad.views.Views;
 
 import java.util.List;
 
@@ -103,7 +102,7 @@ public class SelectionSupport<ItemT> {
 
     if (start == -1 || end == -1) throw new IllegalArgumentException();
     if (start > end) throw new IllegalArgumentException();
-    if (!Cells.isDescendant(myTarget, focusedCell)) throw new IllegalStateException();
+    if (!Composites.isDescendant(myTarget, focusedCell)) throw new IllegalStateException();
 
     int currentIndex = myTargetList.indexOf(currentCell());
     if (currentIndex < start || currentIndex > end) throw new IllegalArgumentException();
@@ -251,7 +250,7 @@ public class SelectionSupport<ItemT> {
       if (selection != null) {
         return !selection.selection().isEmpty();
       }
-      if (!Views.isLastChild(current) && !Views.isFirstChild(current)) return false;
+      if (!Composites.isLastChild(current) && !Composites.isFirstChild(current)) return false;
       current = parent;
     }
   }

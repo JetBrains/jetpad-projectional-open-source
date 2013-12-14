@@ -1,5 +1,0 @@
-<module>
-  <inherits name="jetbrains.jetpad.model.Model" />
-  <inherits name="jetbrains.jetpad.geometry.Geometry" />
-  <inherits name="jetbrains.jetpad.base.Base" />
-</module>
