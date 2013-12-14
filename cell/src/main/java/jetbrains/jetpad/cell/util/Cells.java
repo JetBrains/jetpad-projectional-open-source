@@ -22,6 +22,7 @@ import jetbrains.jetpad.model.children.Composites;
 import jetbrains.jetpad.cell.Cell;
 import jetbrains.jetpad.cell.TextCell;
 import jetbrains.jetpad.cell.position.Positions;
+import jetbrains.jetpad.model.collections.list.ObservableList;
 
 import java.util.List;
 
@@ -52,21 +53,33 @@ public class Cells {
   }
 
   public static Cell firstFocusableLeaf(Cell c) {
-    if (c.children().isEmpty()) {
-      if (c.focusable().get()) return c;
-      return null;
+    ObservableList<Cell> children = c.children();
+    if (children.isEmpty() && c.focusable().get()) {
+      return c;
     } else {
-      return firstFocusable(c.children().get(0));
+      for (int i = 0; i < children.size(); i++) {
+        Cell cell = children.get(i);
+        if (cell.visible().get()) {
+          return firstFocusable(cell);
+        }
+      }
     }
+    return null;
   }
 
   public static Cell lastFocusableLeaf(Cell c) {
-    if (c.children().isEmpty()) {
-      if (c.focusable().get()) return c;
-      return null;
+    ObservableList<Cell> children = c.children();
+    if (children.isEmpty() && c.focusable().get()) {
+      return c;
     } else {
-      return firstFocusable(c.children().get(c.children().size() - 1));
+      for (int i = children.size() - 1; i >= 0; i--) {
+        Cell cell = children.get(i);
+        if (cell.visible().get()) {
+          return firstFocusable(cell);
+        }
+      }
     }
+    return null;
   }
 
   public static Cell nextFocusable(Cell cell) {
