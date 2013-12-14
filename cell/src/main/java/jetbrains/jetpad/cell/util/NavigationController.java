@@ -15,7 +15,6 @@
  */
 package jetbrains.jetpad.cell.util;
 
-import com.google.common.collect.Range;
 import jetbrains.jetpad.base.Value;
 import jetbrains.jetpad.cell.Cell;
 import jetbrains.jetpad.cell.CellContainer;
@@ -25,7 +24,6 @@ import jetbrains.jetpad.event.Key;
 import jetbrains.jetpad.event.KeyEvent;
 import jetbrains.jetpad.event.ModifierKey;
 import jetbrains.jetpad.event.MouseEvent;
-import jetbrains.jetpad.geometry.Vector;
 import jetbrains.jetpad.model.composite.Composites;
 import jetbrains.jetpad.model.event.CompositeRegistration;
 import jetbrains.jetpad.model.event.EventHandler;
@@ -147,7 +145,7 @@ class NavigationController {
 
         @Override
         public void onMousePressed(Cell cell, MouseEvent event) {
-          Cell closest = findClosestCell(cell, event.x(), event.y());
+          Cell closest = findClosest(cell, event.location());
           if (closest != null) {
             closest.focus();
             if (event.x() < closest.origin().x) {
@@ -205,34 +203,5 @@ class NavigationController {
           return input.caretOffset();
         }
       });
-  }
-
-  private static Cell findClosestCell(Cell current, int x, int y) {
-    if (!current.visible().get()) return null;
-
-    Range<Integer> range = Range.closed(current.origin().y, current.origin().y + current.dimension().y);
-    if (!range.contains(y)) {
-      return null;
-    }
-    Cell result = null;
-    int distance = Integer.MAX_VALUE;
-    for (Cell child : current.children()) {
-      if (!child.visible().get()) continue;
-
-      Cell closest = findClosestCell(child, x, y);
-      if (closest == null) continue;
-      int newDistance = (int) closest.getBounds().distance(new Vector(x, y));
-
-      if (newDistance < distance) {
-        result = closest;
-        distance = newDistance;
-      }
-    }
-
-    if (result == null && current.focusable().get()) {
-      return current;
-    }
-
-    return result;
   }
 }
