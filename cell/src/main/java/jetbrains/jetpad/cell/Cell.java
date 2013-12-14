@@ -42,10 +42,12 @@ import jetbrains.jetpad.cell.trait.CellTraitPropertySpec;
 import jetbrains.jetpad.cell.util.Cells;
 import jetbrains.jetpad.values.Color;
 import jetbrains.jetpad.model.util.ListMap;
+import jetbrains.jetpad.views.HasFocusability;
+import jetbrains.jetpad.views.HasVisibility;
 
 import java.util.*;
 
-public abstract class Cell implements Composite<Cell> {
+public abstract class Cell implements Composite<Cell>, HasVisibility, HasFocusability {
   public static final Color HIGHLIGHT_COLOR = new Color(200, 200, 200);
   public static final Color SELECTION_COLOR = Color.LIGHT_BLUE;
 

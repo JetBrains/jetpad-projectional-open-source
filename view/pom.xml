@@ -18,6 +18,12 @@
 
   <dependencies>
     <dependency>
+      <groupId>jetbrains.jetpad.projectional</groupId>
+      <artifactId>views</artifactId>
+      <version>1.0-SNAPSHOT</version>
+    </dependency>
+
+    <dependency>
       <groupId>org.vectomatic</groupId>
       <artifactId>lib-gwt-svg</artifactId>
       <version>0.5.7</version>

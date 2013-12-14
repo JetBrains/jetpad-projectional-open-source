@@ -28,6 +28,7 @@ import jetbrains.jetpad.cell.position.Positions;
 import jetbrains.jetpad.cell.trait.BaseCellTrait;
 import jetbrains.jetpad.cell.trait.CellTraitPropertySpec;
 import jetbrains.jetpad.cell.util.Cells;
+import jetbrains.jetpad.views.Views;
 
 import java.util.List;
 
@@ -250,7 +251,7 @@ public class SelectionSupport<ItemT> {
       if (selection != null) {
         return !selection.selection().isEmpty();
       }
-      if (!Cells.isLastChild(current) && !Cells.isFirstChild(current)) return false;
+      if (!Views.isLastChild(current) && !Views.isFirstChild(current)) return false;
       current = parent;
     }
   }

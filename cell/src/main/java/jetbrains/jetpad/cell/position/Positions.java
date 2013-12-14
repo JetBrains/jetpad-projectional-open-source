@@ -17,26 +17,27 @@ package jetbrains.jetpad.cell.position;
 
 import jetbrains.jetpad.cell.util.Cells;
 import jetbrains.jetpad.cell.Cell;
+import jetbrains.jetpad.views.Views;
 
 public class Positions {
   public static boolean isHomePosition(Cell cell) {
-    Cell first = Cells.firstFocusable(cell);
+    Cell first = Views.firstFocusable(cell);
     return first != null && first.focused().get() && first.get(PositionHandler.PROPERTY).isHome();
   }
 
   public static boolean isEndPosition(Cell cell) {
-    Cell last = Cells.lastFocusable(cell);
+    Cell last = Views.lastFocusable(cell);
     return last != null && last.focused().get() && last.get(PositionHandler.PROPERTY).isEnd();
   }
 
   public static boolean isFirstPosition(Cell cell) {
-    Cell firstFocusable = Cells.firstFocusable(cell, true);
+    Cell firstFocusable = Views.firstFocusable(cell, true);
     if (firstFocusable == null) return false;
     return firstFocusable.get(PositionHandler.PROPERTY).isHome();
   }
 
   public static boolean isLastPosition(Cell cell) {
-    Cell lastFocusable = Cells.lastFocusable(cell, true);
+    Cell lastFocusable = Views.lastFocusable(cell, true);
     if (lastFocusable == null) return false;
     return lastFocusable.focused().get() && lastFocusable.get(PositionHandler.PROPERTY).isEnd();
   }

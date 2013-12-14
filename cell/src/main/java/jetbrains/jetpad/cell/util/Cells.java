@@ -22,72 +22,12 @@ import jetbrains.jetpad.model.children.Composites;
 import jetbrains.jetpad.cell.Cell;
 import jetbrains.jetpad.cell.TextCell;
 import jetbrains.jetpad.cell.position.Positions;
+import jetbrains.jetpad.views.Views;
 
 import java.util.List;
 
 public class Cells {
   public static final CellTraitEventSpec<Event> BECAME_EMPTY = new CellTraitEventSpec<Event>("becameEmpty", false);
-
-  public static boolean isLastChild(Cell cell) {
-    Cell parent = cell.parent().get();
-    if (parent == null) return false;
-    List<Cell> siblings = parent.children();
-    int index = siblings.indexOf(cell);
-    for (Cell c : siblings.subList(index + 1, siblings.size())) {
-      if (c.visible().get()) return false;
-    }
-    return true;
-  }
-
-  public static boolean isFirstChild(Cell cell) {
-    Cell parent = cell.parent().get();
-    if (parent == null) return false;
-    List<Cell> siblings = parent.children();
-    int index = siblings.indexOf(cell);
-
-    for (Cell c : siblings.subList(0, index)) {
-      if (c.visible().get()) return false;
-    }
-    return true;
-  }
-
-  public static Cell firstFocusable(Cell c) {
-    return firstFocusable(c, true);
-  }
-
-  public static Cell firstFocusable(Cell c, boolean deepest) {
-    for (Cell current : c.children()) {
-      if (!current.visible().get()) continue;
-      if (!deepest && current.focusable().get()) return current;
-
-      Cell result = firstFocusable(current);
-      if (result != null) return result;
-    }
-
-    if (c.focusable().get()) return c;
-
-    return null;
-  }
-
-  public static Cell lastFocusable(Cell c) {
-    return lastFocusable(c, true);
-  }
-
-  public static Cell lastFocusable(Cell c, boolean deepest) {
-    List<Cell> children = c.children();
-    for (int i = children.size() - 1; i >= 0; i--) {
-      Cell cc = children.get(i);
-
-      if (!cc.visible().get()) continue;
-      if (!deepest && cc.focusable().get()) return cc;
-
-      Cell result = lastFocusable(cc, deepest);
-      if (result != null) return result;
-    }
-
-    if (c.focusable().get()) return c;
-    return null;
-  }
 
   public static Cell getNonPopupAncestor(Cell c) {
     Cell current = c;
@@ -114,7 +54,7 @@ public class Cells {
       if (c.focusable().get()) return c;
       return null;
     } else {
-      return firstFocusable(c.children().get(0));
+      return Views.firstFocusable(c.children().get(0));
     }
   }
 
@@ -123,7 +63,7 @@ public class Cells {
       if (c.focusable().get()) return c;
       return null;
     } else {
-      return firstFocusable(c.children().get(c.children().size() - 1));
+      return Views.firstFocusable(c.children().get(c.children().size() - 1));
     }
   }
 

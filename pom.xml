@@ -12,6 +12,7 @@
   <modules>
     <module>cell</module>
     <module>view</module>
+    <module>views</module>
     <module>event</module>
     <module>hybrid</module>
     <module>projectional</module>

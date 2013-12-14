@@ -31,6 +31,7 @@ import jetbrains.jetpad.cell.position.PositionHandler;
 import jetbrains.jetpad.cell.trait.BaseCellTrait;
 import jetbrains.jetpad.cell.Cell;
 import jetbrains.jetpad.cell.CellContainer;
+import jetbrains.jetpad.views.Views;
 
 import java.util.Stack;
 
@@ -124,7 +125,7 @@ class NavigationController {
             }
           } else if (event.is(Key.DOWN, ModifierKey.ALT)) {
             if (selectionStack.isEmpty()) {
-              next = Cells.firstFocusable(current, false);
+              next = Views.firstFocusable(current, false);
             } else {
               next = selectionStack.pop();
             }

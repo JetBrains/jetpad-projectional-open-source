@@ -19,6 +19,7 @@ import jetbrains.jetpad.cell.Cell;
 import jetbrains.jetpad.cell.util.Cells;
 import jetbrains.jetpad.cell.TextCell;
 import jetbrains.jetpad.cell.position.PositionHandler;
+import jetbrains.jetpad.views.Views;
 
 public class CellActions {
   public static CellAction seq(final CellAction... actions) {
@@ -82,7 +83,7 @@ public class CellActions {
     return new CellAction() {
       @Override
       public void execute() {
-        toHome(Cells.firstFocusable(cell)).execute();
+        toHome(Views.firstFocusable(cell)).execute();
       }
     };
   }
@@ -93,10 +94,7 @@ public class CellActions {
     return new CellAction() {
       @Override
       public void execute() {
-        Cell lf = Cells.lastFocusable(cell);
-        if (lf == null) {
-          Cells.lastFocusable(cell);
-        }
+        Cell lf = Views.lastFocusable(cell);
         toEnd(lf).execute();
       }
     };
