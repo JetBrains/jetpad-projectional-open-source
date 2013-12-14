@@ -117,7 +117,7 @@ class NavigationController {
             next = endElement(current);
             moveToEnd(next);
           } else if (event.is(Key.UP, ModifierKey.ALT)) {
-            Cell focusableParent = focusableParent(current);
+            Cell focusableParent = Composites.focusableParent(current);
             if (focusableParent != null) {
               selectionStack.push(current);
               next = focusableParent;

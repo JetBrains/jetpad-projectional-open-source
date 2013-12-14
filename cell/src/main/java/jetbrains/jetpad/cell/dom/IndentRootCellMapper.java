@@ -25,6 +25,7 @@ import jetbrains.jetpad.base.Handler;
 import jetbrains.jetpad.geometry.Rectangle;
 import jetbrains.jetpad.mapper.Mapper;
 import jetbrains.jetpad.mapper.MappingContext;
+import jetbrains.jetpad.model.children.Composites;
 import jetbrains.jetpad.model.collections.CollectionItemEvent;
 import jetbrains.jetpad.model.event.EventHandler;
 import jetbrains.jetpad.model.event.Registration;
@@ -225,7 +226,7 @@ class IndentRootCellMapper extends BaseCellMapper<IndentRootCell> {
 
       private void iterateLeaves(Cell cell, Handler<Cell> handler) {
         for (Cell child : cell.children()) {
-          if (!Cells.isVisible(child)) continue;
+          if (!Composites.isVisible(child)) continue;
           if (child instanceof IndentCell) {
             iterateLeaves(child, handler);
           } else {

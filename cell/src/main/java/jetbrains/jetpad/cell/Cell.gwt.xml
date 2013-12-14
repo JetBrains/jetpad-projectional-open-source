@@ -10,6 +10,7 @@
   <inherits name="jetbrains.jetpad.base.Base" />
   <inherits name="jetbrains.jetpad.grammar.Grammar"/>
   <inherits name="jetbrains.jetpad.event.Event"/>
+  <inherits name="jetbrains.jetpad.projectional.view.View"/>
 
   <source path="">
     <exclude name="view/EditingTestCase.java" />

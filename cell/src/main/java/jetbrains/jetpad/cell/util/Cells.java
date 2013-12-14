@@ -118,20 +118,6 @@ public class Cells {
     return isAbove(upper, lower);
   }
 
-  public static Cell focusableParent(Cell c) {
-    Cell parent = c.parent().get();
-    if (parent == null) return null;
-    if (parent.focusable().get()) return parent;
-    return focusableParent(parent);
-  }
-
-  public static boolean isVisible(Cell c) {
-    if (!c.visible().get()) return false;
-    Cell parent = c.parent().get();
-    if (parent == null) return true;
-    return isVisible(parent);
-  }
-
   public static boolean isEmpty(Cell cell) {
     if (cell instanceof TextCell) {
       return Strings.isNullOrEmpty(((TextCell) cell).text().get());

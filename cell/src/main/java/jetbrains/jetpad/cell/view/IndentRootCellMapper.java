@@ -161,7 +161,7 @@ class IndentRootCellMapper extends BaseCellMapper<IndentRootCell, VerticalView> 
 
       private void iterateLeaves(Cell cell, Handler<Cell> handler) {
         for (Cell child : cell.children()) {
-          if (!Cells.isVisible(child)) continue;
+          if (!Composites.isVisible(child)) continue;
           if (child instanceof IndentCell) {
             iterateLeaves(child, handler);
           } else {
