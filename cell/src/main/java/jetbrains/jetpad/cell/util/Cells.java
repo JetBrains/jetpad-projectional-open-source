@@ -25,6 +25,9 @@ import jetbrains.jetpad.cell.position.Positions;
 
 import java.util.List;
 
+import static jetbrains.jetpad.model.children.Composites.firstFocusable;
+import static jetbrains.jetpad.model.children.Composites.isFocusable;
+
 public class Cells {
   public static final CellTraitEventSpec<Event> BECAME_EMPTY = new CellTraitEventSpec<Event>("becameEmpty", false);
 
@@ -53,7 +56,7 @@ public class Cells {
       if (c.focusable().get()) return c;
       return null;
     } else {
-      return Composites.firstFocusable(c.children().get(0));
+      return firstFocusable(c.children().get(0));
     }
   }
 
@@ -62,7 +65,7 @@ public class Cells {
       if (c.focusable().get()) return c;
       return null;
     } else {
-      return Composites.firstFocusable(c.children().get(c.children().size() - 1));
+      return firstFocusable(c.children().get(c.children().size() - 1));
     }
   }
 
@@ -96,18 +99,6 @@ public class Cells {
       if (next == null || isBelow(next, cell)) return current;
       current = next;
     }
-  }
-
-  public static boolean isFocusable(Cell c) {
-    if (!c.focusable().get()) return false;
-
-    Cell current = c;
-    while (current != null) {
-      if (!current.visible().get()) return false;
-      current = current.parent().get();
-    }
-
-    return true;
   }
 
   public static boolean isAbove(Cell upper, Cell lower) {
