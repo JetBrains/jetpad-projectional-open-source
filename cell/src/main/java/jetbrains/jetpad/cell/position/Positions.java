@@ -16,7 +16,7 @@
 package jetbrains.jetpad.cell.position;
 
 import jetbrains.jetpad.cell.Cell;
-import jetbrains.jetpad.model.children.Composites;
+import jetbrains.jetpad.model.composite.Composites;
 
 public class Positions {
   public static boolean isHomePosition(Cell cell) {

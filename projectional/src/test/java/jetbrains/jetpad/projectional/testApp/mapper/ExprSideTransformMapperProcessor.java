@@ -20,17 +20,15 @@ import jetbrains.jetpad.mapper.MapperProcessor;
 import jetbrains.jetpad.cell.completion.*;
 import jetbrains.jetpad.cell.trait.BaseCellTrait;
 import jetbrains.jetpad.cell.Cell;
-import jetbrains.jetpad.cell.util.Cells;
 import jetbrains.jetpad.cell.trait.CellTraitPropertySpec;
 import jetbrains.jetpad.cell.action.CellAction;
-import jetbrains.jetpad.model.children.Composites;
 import jetbrains.jetpad.projectional.cell.ProjectionalSynchronizers;
 import jetbrains.jetpad.projectional.testApp.model.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static jetbrains.jetpad.model.children.Composites.*;
+import static jetbrains.jetpad.model.composite.Composites.*;
 
 class ExprSideTransformMapperProcessor implements MapperProcessor<Expr, Cell> {
   static final ExprSideTransformMapperProcessor INSTANCE = new ExprSideTransformMapperProcessor();

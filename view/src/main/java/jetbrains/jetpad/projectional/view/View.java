@@ -19,7 +19,7 @@ import com.google.common.base.Objects;
 import jetbrains.jetpad.event.Event;
 import jetbrains.jetpad.geometry.Rectangle;
 import jetbrains.jetpad.geometry.Vector;
-import jetbrains.jetpad.model.children.Composite;
+import jetbrains.jetpad.model.composite.Composite;
 import jetbrains.jetpad.model.collections.CollectionItemEvent;
 import jetbrains.jetpad.model.collections.CollectionListener;
 import jetbrains.jetpad.model.collections.list.ObservableArrayList;

@@ -16,7 +16,7 @@
 package jetbrains.jetpad.cell.indent.test;
 
 import jetbrains.jetpad.model.children.ChildList;
-import jetbrains.jetpad.model.children.Composite;
+import jetbrains.jetpad.model.composite.Composite;
 import jetbrains.jetpad.model.children.HasParent;
 import jetbrains.jetpad.model.collections.list.ObservableList;
 import jetbrains.jetpad.model.property.PropertyChangeEvent;

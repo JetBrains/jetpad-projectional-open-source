@@ -18,15 +18,13 @@ package jetbrains.jetpad.projectional.view;
 import jetbrains.jetpad.base.Value;
 import jetbrains.jetpad.geometry.Rectangle;
 import jetbrains.jetpad.geometry.Vector;
-import jetbrains.jetpad.model.children.Composites;
-import jetbrains.jetpad.model.collections.CollectionAdapter;
+import jetbrains.jetpad.model.composite.Composites;
 import jetbrains.jetpad.model.collections.CollectionItemEvent;
 import jetbrains.jetpad.model.collections.CollectionListener;
 import jetbrains.jetpad.model.event.EventHandler;
 import jetbrains.jetpad.model.event.Registration;
 import jetbrains.jetpad.model.property.PropertyChangeEvent;
 import org.junit.Test;
-import org.mockito.Mockito;
 
 import java.util.ArrayList;
 import java.util.Arrays;

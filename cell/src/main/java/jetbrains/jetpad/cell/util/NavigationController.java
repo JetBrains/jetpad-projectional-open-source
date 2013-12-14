@@ -27,7 +27,7 @@ import jetbrains.jetpad.event.KeyEvent;
 import jetbrains.jetpad.event.ModifierKey;
 import jetbrains.jetpad.event.MouseEvent;
 import jetbrains.jetpad.geometry.Vector;
-import jetbrains.jetpad.model.children.Composites;
+import jetbrains.jetpad.model.composite.Composites;
 import jetbrains.jetpad.model.event.CompositeRegistration;
 import jetbrains.jetpad.model.event.EventHandler;
 import jetbrains.jetpad.model.event.Registration;
@@ -35,8 +35,8 @@ import jetbrains.jetpad.model.property.*;
 
 import java.util.Stack;
 
-import static jetbrains.jetpad.model.children.Composites.nextFocusable;
-import static jetbrains.jetpad.model.children.Composites.prevFocusable;
+import static jetbrains.jetpad.model.composite.Composites.nextFocusable;
+import static jetbrains.jetpad.model.composite.Composites.prevFocusable;
 
 class NavigationController {
   static Registration install(CellContainer container) {

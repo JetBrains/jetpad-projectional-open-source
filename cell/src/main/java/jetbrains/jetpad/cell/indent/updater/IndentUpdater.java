@@ -15,7 +15,7 @@
  */
 package jetbrains.jetpad.cell.indent.updater;
 
-import jetbrains.jetpad.model.children.Composite;
+import jetbrains.jetpad.model.composite.Composite;
 import jetbrains.jetpad.model.property.PropertyChangeEvent;
 import jetbrains.jetpad.cell.Cell;
 

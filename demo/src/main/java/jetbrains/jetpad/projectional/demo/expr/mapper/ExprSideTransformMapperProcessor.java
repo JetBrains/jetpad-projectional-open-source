@@ -21,12 +21,11 @@ import jetbrains.jetpad.mapper.Mappers;
 import jetbrains.jetpad.cell.action.CellAction;
 import jetbrains.jetpad.cell.action.CellActions;
 import jetbrains.jetpad.cell.completion.*;
-import jetbrains.jetpad.model.children.Composites;
+import jetbrains.jetpad.model.composite.Composites;
 import jetbrains.jetpad.projectional.demo.expr.ExprBinOpTransformer;
 import jetbrains.jetpad.projectional.demo.expr.model.*;
 import jetbrains.jetpad.cell.trait.BaseCellTrait;
 import jetbrains.jetpad.cell.Cell;
-import jetbrains.jetpad.cell.util.Cells;
 import jetbrains.jetpad.cell.trait.CellTraitPropertySpec;
 import jetbrains.jetpad.base.Handler;
 

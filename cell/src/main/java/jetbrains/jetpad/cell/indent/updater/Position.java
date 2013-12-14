@@ -15,8 +15,8 @@
  */
 package jetbrains.jetpad.cell.indent.updater;
 
-import jetbrains.jetpad.model.children.Composite;
-import jetbrains.jetpad.model.children.Composites;
+import jetbrains.jetpad.model.composite.Composite;
+import jetbrains.jetpad.model.composite.Composites;
 
 import java.util.Iterator;
 

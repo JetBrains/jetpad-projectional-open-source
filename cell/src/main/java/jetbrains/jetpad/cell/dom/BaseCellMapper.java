@@ -23,7 +23,7 @@ import com.google.gwt.user.client.Timer;
 import jetbrains.jetpad.geometry.Rectangle;
 import jetbrains.jetpad.mapper.Mapper;
 import jetbrains.jetpad.mapper.MappingContext;
-import jetbrains.jetpad.model.children.Composites;
+import jetbrains.jetpad.model.composite.Composites;
 import jetbrains.jetpad.model.collections.CollectionItemEvent;
 import jetbrains.jetpad.model.collections.set.ObservableSet;
 import jetbrains.jetpad.model.event.Registration;

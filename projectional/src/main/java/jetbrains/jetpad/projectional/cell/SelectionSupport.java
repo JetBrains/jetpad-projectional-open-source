@@ -15,7 +15,7 @@
  */
 package jetbrains.jetpad.projectional.cell;
 
-import jetbrains.jetpad.model.children.Composites;
+import jetbrains.jetpad.model.composite.Composites;
 import jetbrains.jetpad.model.collections.list.ObservableArrayList;
 import jetbrains.jetpad.model.collections.list.ObservableList;
 import jetbrains.jetpad.event.Key;

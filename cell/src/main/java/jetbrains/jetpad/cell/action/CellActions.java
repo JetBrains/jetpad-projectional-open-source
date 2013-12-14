@@ -18,7 +18,7 @@ package jetbrains.jetpad.cell.action;
 import jetbrains.jetpad.cell.Cell;
 import jetbrains.jetpad.cell.TextCell;
 import jetbrains.jetpad.cell.position.PositionHandler;
-import jetbrains.jetpad.model.children.Composites;
+import jetbrains.jetpad.model.composite.Composites;
 
 public class CellActions {
   public static CellAction seq(final CellAction... actions) {
