@@ -16,7 +16,6 @@
 package jetbrains.jetpad.hybrid.parser.prettyprint;
 
 import com.google.common.collect.Range;
-import com.google.common.collect.Ranges;
 
 public class ParseNodes {
   public static ParseNode findForRange(ParseNode root, Range<Integer> range) {
@@ -40,7 +39,7 @@ public class ParseNodes {
   }
 
   public static ParseNode nonSameRangeChild(ParseNode node, int offset) {
-    Range<Integer> targetRange = Ranges.closed(offset, offset + 1);
+    Range<Integer> targetRange = Range.closed(offset, offset + 1);
 
     if (!node.range().encloses(targetRange)) throw new IllegalArgumentException();
 

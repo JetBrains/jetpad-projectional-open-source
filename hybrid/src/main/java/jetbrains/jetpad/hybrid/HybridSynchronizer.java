@@ -17,7 +17,6 @@ package jetbrains.jetpad.hybrid;
 
 import com.google.common.base.Predicates;
 import com.google.common.collect.Range;
-import com.google.common.collect.Ranges;
 import jetbrains.jetpad.base.Handler;
 import jetbrains.jetpad.event.*;
 import jetbrains.jetpad.mapper.Mapper;
@@ -200,8 +199,8 @@ public class HybridSynchronizer<SourceT> implements Synchronizer {
                 }
               }
             } else {
-              if (!currentRange.equals(Ranges.closed(0, tokens().size()))) {
-                select(Ranges.closed(0, tokens().size()));
+              if (!currentRange.equals(Range.closed(0, tokens().size()))) {
+                select(Range.closed(0, tokens().size()));
                 event.consume();
               }
             }
@@ -503,7 +502,7 @@ public class HybridSynchronizer<SourceT> implements Synchronizer {
   Range<Integer> selection() {
     ObservableList<Cell> selection = mySelectionSupport.selection();
     if (selection.isEmpty()) throw new IllegalStateException();
-    return Ranges.closed(myTargetList.indexOf(selection.get(0)), myTargetList.indexOf(selection.get(selection.size() - 1)) + 1);
+    return Range.closed(myTargetList.indexOf(selection.get(0)), myTargetList.indexOf(selection.get(selection.size() - 1)) + 1);
   }
 
   void select(Range<Integer> sel) {

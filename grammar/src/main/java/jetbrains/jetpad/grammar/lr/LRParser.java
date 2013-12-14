@@ -17,7 +17,6 @@ package jetbrains.jetpad.grammar.lr;
 
 import com.google.common.base.Function;
 import com.google.common.collect.Range;
-import com.google.common.collect.Ranges;
 import jetbrains.jetpad.grammar.*;
 
 import java.util.*;
@@ -85,7 +84,7 @@ public class LRParser {
         Collections.reverse(handlerInput);
 
         LRState nextState = stack.peek().state.getNextState(reduce.getRule().getHead());
-        RuleContext ruleContext = new MyRuleContext(Ranges.closed(startOffset, pos), handlerInput);
+        RuleContext ruleContext = new MyRuleContext(Range.closed(startOffset, pos), handlerInput);
         RuleHandler handler = handlerProvider.apply(reduce.getRule());
         Object result = handler != null ? handler.handle(ruleContext) : handlerInput;
 

@@ -15,7 +15,7 @@
  */
 package jetbrains.jetpad.projectional.view;
 
-import com.google.common.collect.Ranges;
+import com.google.common.collect.Range;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -52,7 +52,7 @@ public class ScrollUtilTest {
   }
 
   private void assertDelta(int expectedDelta, int r1s, int r1e, int r2s, int r2e) {
-    int delta = ScrollUtil.moveDelta(Ranges.closed(r1s, r1e), Ranges.closed(r2s, r2e));
+    int delta = ScrollUtil.moveDelta(Range.closed(r1s, r1e), Range.closed(r2s, r2e));
     assertEquals(expectedDelta, delta);
   }
 }

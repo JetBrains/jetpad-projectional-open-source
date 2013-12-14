@@ -16,7 +16,6 @@
 package jetbrains.jetpad.cell.util;
 
 import com.google.common.collect.Range;
-import com.google.common.collect.Ranges;
 import jetbrains.jetpad.base.Value;
 import jetbrains.jetpad.cell.Cell;
 import jetbrains.jetpad.cell.CellContainer;
@@ -277,7 +276,7 @@ class NavigationController {
   private static Cell findClosestView(Cell current, int x, int y) {
     if (!current.visible().get()) return null;
 
-    Range<Integer> range = Ranges.closed(current.origin().y, current.origin().y + current.dimension().y);
+    Range<Integer> range = Range.closed(current.origin().y, current.origin().y + current.dimension().y);
     if (!range.contains(y)) {
       return null;
     }

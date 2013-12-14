@@ -16,7 +16,6 @@
 package jetbrains.jetpad.grammar.slr;
 
 import com.google.common.collect.Range;
-import com.google.common.collect.Ranges;
 import jetbrains.jetpad.grammar.*;
 import jetbrains.jetpad.grammar.lr.LRParser;
 import jetbrains.jetpad.grammar.lr.LRTable;
@@ -24,9 +23,7 @@ import jetbrains.jetpad.grammar.lr.Lexeme;
 import org.junit.Test;
 
 import static jetbrains.jetpad.grammar.GrammarTestUtil.asTokens;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class SLRParserGenerationTest {
   @Test(expected = IllegalArgumentException.class)
@@ -152,9 +149,9 @@ public class SLRParserGenerationTest {
     LRParser parser = new LRParser(table);
     BinExpr parse = (BinExpr) parser.parse(asTokens(g.id, g.plus, g.id));
 
-    assertEquals(Ranges.closed(0, 3), parse.getRange());
-    assertEquals(Ranges.closed(0, 1), parse.left.getRange());
-    assertEquals(Ranges.closed(2, 3), parse.right.getRange());
+    assertEquals(Range.closed(0, 3), parse.getRange());
+    assertEquals(Range.closed(0, 1), parse.left.getRange());
+    assertEquals(Range.closed(2, 3), parse.right.getRange());
   }
 
   private class SimplePrecedenceGrammar {

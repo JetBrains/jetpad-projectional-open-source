@@ -15,13 +15,7 @@
  */
 package jetbrains.jetpad.hybrid;
 
-import com.google.common.collect.Ranges;
-import jetbrains.jetpad.event.Key;
-import jetbrains.jetpad.event.KeyEvent;
-import jetbrains.jetpad.event.ModifierKey;
-import jetbrains.jetpad.hybrid.parser.*;
-import jetbrains.jetpad.hybrid.testapp.model.*;
-import jetbrains.jetpad.mapper.Mapper;
+import com.google.common.collect.Range;
 import jetbrains.jetpad.cell.Cell;
 import jetbrains.jetpad.cell.EditingTestCase;
 import jetbrains.jetpad.cell.HorizontalCell;
@@ -29,11 +23,17 @@ import jetbrains.jetpad.cell.TextCell;
 import jetbrains.jetpad.cell.action.CellActions;
 import jetbrains.jetpad.cell.completion.Completion;
 import jetbrains.jetpad.cell.completion.CompletionController;
-import jetbrains.jetpad.hybrid.testapp.mapper.ExprContainerMapper;
-import jetbrains.jetpad.hybrid.testapp.mapper.Tokens;
 import jetbrains.jetpad.cell.position.Positions;
 import jetbrains.jetpad.cell.util.CellStateHandler;
 import jetbrains.jetpad.cell.util.RootController;
+import jetbrains.jetpad.event.Key;
+import jetbrains.jetpad.event.KeyEvent;
+import jetbrains.jetpad.event.ModifierKey;
+import jetbrains.jetpad.hybrid.parser.*;
+import jetbrains.jetpad.hybrid.testapp.mapper.ExprContainerMapper;
+import jetbrains.jetpad.hybrid.testapp.mapper.Tokens;
+import jetbrains.jetpad.hybrid.testapp.model.*;
+import jetbrains.jetpad.mapper.Mapper;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -43,9 +43,6 @@ import java.util.Arrays;
 import static jetbrains.jetpad.hybrid.SelectionPosition.FIRST;
 import static jetbrains.jetpad.hybrid.SelectionPosition.LAST;
 import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertFalse;
-import static junit.framework.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
 
 public class HybridEditorTest extends EditingTestCase {
   private ExprContainer container = new ExprContainer();
@@ -581,7 +578,7 @@ public class HybridEditorTest extends EditingTestCase {
     setTokens(Tokens.ID, Tokens.INCREMENT, Tokens.INCREMENT);
 
     select(0, true);
-    sync.select(Ranges.closed(0, 1));
+    sync.select(Range.closed(0, 1));
 
     press(Key.DOWN, ModifierKey.ALT);
 
@@ -594,7 +591,7 @@ public class HybridEditorTest extends EditingTestCase {
     setTokens(Tokens.ID, Tokens.ID);
     select(0, true);
 
-    sync.select(Ranges.closed(0, 2));
+    sync.select(Range.closed(0, 2));
 
     press(Key.DOWN, ModifierKey.ALT);
 
@@ -607,7 +604,7 @@ public class HybridEditorTest extends EditingTestCase {
     setTokens(Tokens.ID, Tokens.INCREMENT, Tokens.INCREMENT);
 
     select(0, true);
-    sync.select(Ranges.closed(0, 3));
+    sync.select(Range.closed(0, 3));
 
     press(Key.DOWN, ModifierKey.ALT);
 
@@ -720,7 +717,7 @@ public class HybridEditorTest extends EditingTestCase {
     press(Key.DOWN, ModifierKey.SHIFT);
     press(Key.DOWN, ModifierKey.SHIFT);
 
-    assertEquals(Ranges.closed(0, 2), sync.selection());
+    assertEquals(Range.closed(0, 2), sync.selection());
   }
 
   @Test
@@ -763,7 +760,7 @@ public class HybridEditorTest extends EditingTestCase {
   }
 
   private void assertSelection(int start, int end) {
-    assertEquals(Ranges.closed(start, end), sync.selection());
+    assertEquals(Range.closed(start, end), sync.selection());
   }
 
   private void assertNoSelection() {

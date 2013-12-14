@@ -17,7 +17,6 @@ package jetbrains.jetpad.hybrid.parser.prettyprint;
 
 import com.google.common.base.Function;
 import com.google.common.collect.Range;
-import com.google.common.collect.Ranges;
 import jetbrains.jetpad.model.collections.list.ObservableList;
 import jetbrains.jetpad.model.event.CompositeRegistration;
 import jetbrains.jetpad.model.event.EventHandler;
@@ -217,7 +216,7 @@ public class PrettyPrinterContext<NodeT>  {
     public Range<Integer> range() {
       int start = myChildren.get(0).range().lowerEndpoint();
       int end = myChildren.get(myChildren.size() - 1).range().upperEndpoint();
-      return Ranges.closed(start, end);
+      return Range.closed(start, end);
     }
 
     @Override
@@ -247,7 +246,7 @@ public class PrettyPrinterContext<NodeT>  {
 
     @Override
     public Range<Integer> range() {
-      return Ranges.closed(myOffset, myOffset);
+      return Range.closed(myOffset, myOffset);
     }
 
     @Override
@@ -277,7 +276,7 @@ public class PrettyPrinterContext<NodeT>  {
 
     @Override
     public Range<Integer> range() {
-      return Ranges.closed(myOffset, myOffset + 1);
+      return Range.closed(myOffset, myOffset + 1);
     }
 
     @Override
