@@ -24,6 +24,7 @@ import jetbrains.jetpad.mapper.Mapper;
 import jetbrains.jetpad.mapper.MapperFactory;
 import jetbrains.jetpad.mapper.Synchronizer;
 import jetbrains.jetpad.mapper.SynchronizerContext;
+import jetbrains.jetpad.model.children.Composites;
 import jetbrains.jetpad.model.collections.CollectionAdapter;
 import jetbrains.jetpad.model.collections.CollectionItemEvent;
 import jetbrains.jetpad.model.collections.CollectionListener;
@@ -57,6 +58,8 @@ import java.util.*;
 
 import static jetbrains.jetpad.hybrid.SelectionPosition.FIRST;
 import static jetbrains.jetpad.hybrid.SelectionPosition.LAST;
+import static jetbrains.jetpad.model.children.Composites.firstFocusableLeaf;
+import static jetbrains.jetpad.model.children.Composites.lastFocusableLeaf;
 
 public class HybridSynchronizer<SourceT> implements Synchronizer {
   private static final ContentKind<List<Token>> TOKENS_CONTENT = new ContentKind<List<Token>>() {
@@ -449,8 +452,8 @@ public class HybridSynchronizer<SourceT> implements Synchronizer {
         }
       });
 
-      Cells.firstFocusableLeaf(target).addTrait(new TokenCellTraits.LeftLeafTokenCellTrait());
-      Cells.lastFocusableLeaf(target).addTrait(new TokenCellTraits.RightLeafTokenCellTrait());
+      firstFocusableLeaf(target).addTrait(new TokenCellTraits.LeftLeafTokenCellTrait());
+      lastFocusableLeaf(target).addTrait(new TokenCellTraits.RightLeafTokenCellTrait());
 
       return target;
     }

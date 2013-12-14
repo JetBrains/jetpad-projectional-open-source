@@ -36,6 +36,8 @@ import jetbrains.jetpad.cell.CellContainer;
 import java.util.Stack;
 
 import static jetbrains.jetpad.cell.util.Cells.*;
+import static jetbrains.jetpad.model.children.Composites.nextFocusable;
+import static jetbrains.jetpad.model.children.Composites.prevFocusable;
 
 class NavigationController {
   static Registration install(CellContainer container) {

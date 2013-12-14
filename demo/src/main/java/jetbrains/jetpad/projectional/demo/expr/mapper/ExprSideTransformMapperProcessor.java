@@ -21,6 +21,7 @@ import jetbrains.jetpad.mapper.Mappers;
 import jetbrains.jetpad.cell.action.CellAction;
 import jetbrains.jetpad.cell.action.CellActions;
 import jetbrains.jetpad.cell.completion.*;
+import jetbrains.jetpad.model.children.Composites;
 import jetbrains.jetpad.projectional.demo.expr.ExprBinOpTransformer;
 import jetbrains.jetpad.projectional.demo.expr.model.*;
 import jetbrains.jetpad.cell.trait.BaseCellTrait;
@@ -40,8 +41,8 @@ class ExprSideTransformMapperProcessor implements MapperProcessor<Expression, Ce
     final Cell cell = mapper.getTarget();
     final Expression expr = mapper.getSource();
 
-    Cell firstFocusable = Cells.firstFocusableLeaf(cell);
-    Cell lastFocusable = Cells.lastFocusableLeaf(cell);
+    Cell firstFocusable = Composites.firstFocusableLeaf(cell);
+    Cell lastFocusable = Composites.lastFocusableLeaf(cell);
 
     if (lastFocusable != null) {
       lastFocusable.addTrait(new BaseCellTrait() {

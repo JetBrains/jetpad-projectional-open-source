@@ -52,54 +52,10 @@ public class Cells {
     }
   }
 
-  public static Cell firstFocusableLeaf(Cell c) {
-    ObservableList<Cell> children = c.children();
-    if (children.isEmpty() && c.focusable().get()) {
-      return c;
-    } else {
-      for (int i = 0; i < children.size(); i++) {
-        Cell cell = children.get(i);
-        if (cell.visible().get()) {
-          return firstFocusable(cell);
-        }
-      }
-    }
-    return null;
-  }
-
-  public static Cell lastFocusableLeaf(Cell c) {
-    ObservableList<Cell> children = c.children();
-    if (children.isEmpty() && c.focusable().get()) {
-      return c;
-    } else {
-      for (int i = children.size() - 1; i >= 0; i--) {
-        Cell cell = children.get(i);
-        if (cell.visible().get()) {
-          return firstFocusable(cell);
-        }
-      }
-    }
-    return null;
-  }
-
-  public static Cell nextFocusable(Cell cell) {
-    for (Cell c : Composites.nextLeaves(cell)) {
-      if (isFocusable(c)) return c;
-    }
-    return null;
-  }
-
-  public static Cell prevFocusable(Cell cell) {
-    for (Cell c : Composites.prevLeaves(cell)) {
-      if (isFocusable(c)) return c;
-    }
-    return null;
-  }
-
   public static Cell homeElement(Cell cell) {
     Cell current = cell;
     while (true) {
-      Cell prev = prevFocusable(current);
+      Cell prev = Composites.prevFocusable(current);
       if (prev == null || isAbove(prev, cell)) return current;
       current = prev;
     }
@@ -108,7 +64,7 @@ public class Cells {
   public static Cell endElement(Cell cell) {
     Cell current = cell;
     while (true) {
-      Cell next = nextFocusable(current);
+      Cell next = Composites.nextFocusable(current);
       if (next == null || isBelow(next, cell)) return current;
       current = next;
     }
