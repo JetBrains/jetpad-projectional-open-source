@@ -34,8 +34,7 @@ import jetbrains.jetpad.model.property.*;
 
 import java.util.Stack;
 
-import static jetbrains.jetpad.model.composite.Composites.nextFocusable;
-import static jetbrains.jetpad.model.composite.Composites.prevFocusable;
+import static jetbrains.jetpad.model.composite.Composites.*;
 
 class NavigationController {
   static Registration install(CellContainer container) {
@@ -161,56 +160,6 @@ class NavigationController {
           }
         }
       }));
-  }
-
-  private static Cell upperFocusable(Cell c, int xOffset) {
-    Cell current = prevFocusable(c);
-    Cell bestMatch = null;
-
-    while (current != null) {
-      if (bestMatch != null && Composites.isAbove(current, bestMatch)) {
-        break;
-      }
-
-      if (bestMatch != null) {
-        if (distanceTo(bestMatch, xOffset) > distanceTo(current, xOffset)) {
-          bestMatch = current;
-        }
-      } else if (Composites.isAbove(current, c)) {
-        bestMatch = current;
-      }
-
-      current = prevFocusable(current);
-    }
-
-    return bestMatch;
-  }
-
-  private static Cell lowerFocusable(Cell c, int xOffset) {
-    Cell current = nextFocusable(c);
-    Cell bestMatch = null;
-
-    while (current != null) {
-      if (bestMatch != null && Composites.isBelow(current, bestMatch)) {
-        break;
-      }
-
-      if (bestMatch != null) {
-        if (distanceTo(bestMatch, xOffset) > distanceTo(current, xOffset)) {
-          bestMatch = current;
-        }
-      } else if (Composites.isBelow(current, c)) {
-        bestMatch = current;
-      }
-
-      current = nextFocusable(current);
-    }
-
-    return bestMatch;
-  }
-
-  private static double distanceTo(Cell c, int x) {
-    return c.getBounds().distance(new Vector(x, c.origin().y));
   }
 
   private static ReadableProperty<Integer> selectedXOffset(CellContainer container) {
