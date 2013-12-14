@@ -18,6 +18,10 @@ package jetbrains.jetpad.cell.util;
 import com.google.common.collect.Range;
 import com.google.common.collect.Ranges;
 import jetbrains.jetpad.base.Value;
+import jetbrains.jetpad.cell.Cell;
+import jetbrains.jetpad.cell.CellContainer;
+import jetbrains.jetpad.cell.position.PositionHandler;
+import jetbrains.jetpad.cell.trait.BaseCellTrait;
 import jetbrains.jetpad.event.Key;
 import jetbrains.jetpad.event.KeyEvent;
 import jetbrains.jetpad.event.ModifierKey;
@@ -28,14 +32,9 @@ import jetbrains.jetpad.model.event.CompositeRegistration;
 import jetbrains.jetpad.model.event.EventHandler;
 import jetbrains.jetpad.model.event.Registration;
 import jetbrains.jetpad.model.property.*;
-import jetbrains.jetpad.cell.position.PositionHandler;
-import jetbrains.jetpad.cell.trait.BaseCellTrait;
-import jetbrains.jetpad.cell.Cell;
-import jetbrains.jetpad.cell.CellContainer;
 
 import java.util.Stack;
 
-import static jetbrains.jetpad.cell.util.Cells.*;
 import static jetbrains.jetpad.model.children.Composites.nextFocusable;
 import static jetbrains.jetpad.model.children.Composites.prevFocusable;
 
@@ -113,10 +112,10 @@ class NavigationController {
             next = lowerFocusable(current, currentOffset);
             restoreOffset = true;
           } else if (event.is(Key.HOME) || event.is(Key.LEFT, ModifierKey.META)) {
-            next = homeElement(current);
+            next = Composites.homeElement(current);
             moveToHome(next);
           } else if (event.is(Key.END) || event.is(Key.RIGHT, ModifierKey.META)) {
-            next = endElement(current);
+            next = Composites.endElement(current);
             moveToEnd(next);
           } else if (event.is(Key.UP, ModifierKey.ALT)) {
             Cell focusableParent = Composites.focusableParent(current);
@@ -185,7 +184,7 @@ class NavigationController {
     Cell bestMatch = null;
 
     while (current != null) {
-      if (bestMatch != null && isAbove(current, bestMatch)) {
+      if (bestMatch != null && Composites.isAbove(current, bestMatch)) {
         break;
       }
 
@@ -193,7 +192,7 @@ class NavigationController {
         if (distanceTo(bestMatch, xOffset) > distanceTo(current, xOffset)) {
           bestMatch = current;
         }
-      } else if (isAbove(current, c)) {
+      } else if (Composites.isAbove(current, c)) {
         bestMatch = current;
       }
 
@@ -208,7 +207,7 @@ class NavigationController {
     Cell bestMatch = null;
 
     while (current != null) {
-      if (bestMatch != null && isBelow(current, bestMatch)) {
+      if (bestMatch != null && Composites.isBelow(current, bestMatch)) {
         break;
       }
 
@@ -216,7 +215,7 @@ class NavigationController {
         if (distanceTo(bestMatch, xOffset) > distanceTo(current, xOffset)) {
           bestMatch = current;
         }
-      } else if (isBelow(current, c)) {
+      } else if (Composites.isBelow(current, c)) {
         bestMatch = current;
       }
 

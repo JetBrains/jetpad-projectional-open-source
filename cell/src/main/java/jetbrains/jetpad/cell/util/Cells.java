@@ -52,32 +52,6 @@ public class Cells {
     }
   }
 
-  public static Cell homeElement(Cell cell) {
-    Cell current = cell;
-    while (true) {
-      Cell prev = Composites.prevFocusable(current);
-      if (prev == null || isAbove(prev, cell)) return current;
-      current = prev;
-    }
-  }
-
-  public static Cell endElement(Cell cell) {
-    Cell current = cell;
-    while (true) {
-      Cell next = Composites.nextFocusable(current);
-      if (next == null || isBelow(next, cell)) return current;
-      current = next;
-    }
-  }
-
-  public static boolean isAbove(Cell upper, Cell lower) {
-    return upper.origin().y + upper.dimension().y <= lower.origin().y;
-  }
-
-  public static  boolean isBelow(Cell lower, Cell upper) {
-    return isAbove(upper, lower);
-  }
-
   public static boolean isEmpty(Cell cell) {
     if (cell instanceof TextCell) {
       return Strings.isNullOrEmpty(((TextCell) cell).text().get());

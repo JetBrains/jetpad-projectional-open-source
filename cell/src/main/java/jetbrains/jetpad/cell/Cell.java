@@ -19,9 +19,7 @@ import com.google.common.base.Objects;
 import jetbrains.jetpad.event.*;
 import jetbrains.jetpad.geometry.Rectangle;
 import jetbrains.jetpad.geometry.Vector;
-import jetbrains.jetpad.model.children.Composite;
-import jetbrains.jetpad.model.children.Composites;
-import jetbrains.jetpad.model.children.HasFocusability;
+import jetbrains.jetpad.model.children.*;
 import jetbrains.jetpad.model.collections.CollectionItemEvent;
 import jetbrains.jetpad.model.collections.CollectionListener;
 import jetbrains.jetpad.model.collections.list.ObservableArrayList;
@@ -43,11 +41,10 @@ import jetbrains.jetpad.cell.trait.CellTraitEventSpec;
 import jetbrains.jetpad.cell.trait.CellTraitPropertySpec;
 import jetbrains.jetpad.values.Color;
 import jetbrains.jetpad.model.util.ListMap;
-import jetbrains.jetpad.model.children.HasVisibility;
 
 import java.util.*;
 
-public abstract class Cell implements Composite<Cell>, HasVisibility, HasFocusability {
+public abstract class Cell implements Composite<Cell>, HasVisibility, HasFocusability, HasBounds {
   public static final Color HIGHLIGHT_COLOR = new Color(200, 200, 200);
   public static final Color SELECTION_COLOR = Color.LIGHT_BLUE;
 
