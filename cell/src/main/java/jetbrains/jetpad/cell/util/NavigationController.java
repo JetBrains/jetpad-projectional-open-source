@@ -163,7 +163,7 @@ class NavigationController {
 
         @Override
         public void onMousePressed(Cell cell, MouseEvent event) {
-          Cell closest = findClosestView(cell, event.x(), event.y());
+          Cell closest = findClosestCell(cell, event.x(), event.y());
           if (closest != null) {
             closest.focus();
             if (event.x() < closest.origin().x) {
@@ -273,7 +273,7 @@ class NavigationController {
       });
   }
 
-  private static Cell findClosestView(Cell current, int x, int y) {
+  private static Cell findClosestCell(Cell current, int x, int y) {
     if (!current.visible().get()) return null;
 
     Range<Integer> range = Range.closed(current.origin().y, current.origin().y + current.dimension().y);
@@ -285,7 +285,7 @@ class NavigationController {
     for (Cell child : current.children()) {
       if (!child.visible().get()) continue;
 
-      Cell closest = findClosestView(child, x, y);
+      Cell closest = findClosestCell(child, x, y);
       if (closest == null) continue;
       int newDistance = (int) closest.getBounds().distance(new Vector(x, y));
 
