@@ -15,14 +15,31 @@
  */
 package jetbrains.jetpad.cell.util;
 
+import jetbrains.jetpad.cell.Cell;
 import jetbrains.jetpad.model.event.CompositeRegistration;
+import jetbrains.jetpad.model.event.EventHandler;
 import jetbrains.jetpad.model.event.Registration;
 import jetbrains.jetpad.cell.CellContainer;
+import jetbrains.jetpad.model.property.PropertyChangeEvent;
 
 public class RootController {
   public static Registration install(CellContainer container) {
     return new CompositeRegistration(
-      NavigationController.install(container)
+      NavigationController.install(container),
+      container.focusedCell.addHandler(new EventHandler<PropertyChangeEvent<Cell>>() {
+        @Override
+        public void onEvent(PropertyChangeEvent<Cell> event) {
+          Cell oldCell = event.getOldValue();
+          if (oldCell != null) {
+            oldCell.highlighted().set(false);
+          }
+
+          Cell newCell = event.getNewValue();
+          if (newCell != null) {
+            newCell.highlighted().set(true);
+          }
+        }
+      })
     );
   }
 }

@@ -47,20 +47,6 @@ class NavigationController {
     final ReadableProperty<Integer> selectionXOffset = selectedXOffset(container);
     final ReadableProperty<Cell> focusedCell = container.focusedCell;
     return new CompositeRegistration(
-      focusedCell.addHandler(new EventHandler<PropertyChangeEvent<Cell>>() {
-        @Override
-        public void onEvent(PropertyChangeEvent<Cell> event) {
-          Cell oldCell = event.getOldValue();
-          if (oldCell != null) {
-            oldCell.highlighted().set(false);
-          }
-
-          Cell newCell = event.getNewValue();
-          if (newCell != null) {
-            newCell.highlighted().set(true);
-          }
-        }
-      }),
       selectedCaretOffset(container).addHandler(new EventHandler<PropertyChangeEvent<Integer>>() {
         @Override
         public void onEvent(PropertyChangeEvent<Integer> event) {
@@ -75,7 +61,6 @@ class NavigationController {
           }
         }
       }),
-
       cell.addTrait(new BaseCellTrait() {
         @Override
         public void onKeyPressed(Cell cell, KeyEvent event) {
