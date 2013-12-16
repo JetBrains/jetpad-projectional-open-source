@@ -84,9 +84,9 @@ class CellNavigationController {
           if (closest != null) {
             closest.focus();
             if (event.x() < closest.origin().x) {
-              closest.get(PositionHandler.PROPERTY).home();
+              moveToHome(closest);
             } else {
-              closest.get(PositionHandler.PROPERTY).end();
+              moveToEnd(closest);
             }
             event.consume();
             return;
