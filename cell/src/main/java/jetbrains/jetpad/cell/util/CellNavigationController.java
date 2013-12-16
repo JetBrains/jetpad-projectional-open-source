@@ -27,7 +27,8 @@ import jetbrains.jetpad.model.property.Property;
 import jetbrains.jetpad.model.property.ReadableProperty;
 import jetbrains.jetpad.model.property.Selector;
 
-class CellNavigationController extends NavigationController<Cell> {
+//todo move it out of cell module
+public class CellNavigationController extends NavigationController<Cell> {
   static Registration install(final CellContainer container) {
     final CellNavigationController controller = new CellNavigationController(container);
     return controller.install();
