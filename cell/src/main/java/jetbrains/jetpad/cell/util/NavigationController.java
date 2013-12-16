@@ -16,10 +16,6 @@
 package jetbrains.jetpad.cell.util;
 
 import jetbrains.jetpad.base.Value;
-import jetbrains.jetpad.cell.Cell;
-import jetbrains.jetpad.cell.CellContainer;
-import jetbrains.jetpad.cell.position.PositionHandler;
-import jetbrains.jetpad.cell.trait.BaseCellTrait;
 import jetbrains.jetpad.event.Key;
 import jetbrains.jetpad.event.KeyEvent;
 import jetbrains.jetpad.event.ModifierKey;
@@ -27,7 +23,6 @@ import jetbrains.jetpad.event.MouseEvent;
 import jetbrains.jetpad.model.composite.*;
 import jetbrains.jetpad.model.event.CompositeRegistration;
 import jetbrains.jetpad.model.event.EventHandler;
-import jetbrains.jetpad.model.event.Registration;
 import jetbrains.jetpad.model.property.*;
 
 import java.util.Stack;
