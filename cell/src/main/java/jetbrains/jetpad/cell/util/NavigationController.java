@@ -55,7 +55,6 @@ class NavigationController {
   private NavigationController(final CellContainer container) {
     myContainer = container;
 
-    final ReadableProperty<Integer> selectionXOffset = selectedXOffset(container);
     myRegistration.add(
       selectedCaretOffset(container).addHandler(new EventHandler<PropertyChangeEvent<Integer>>() {
         @Override
@@ -74,90 +73,9 @@ class NavigationController {
       myContainer.root.addTrait(new BaseCellTrait() {
         @Override
         public void onKeyPressed(Cell cell, KeyEvent event) {
-          handleKeyPress(cell, event);
-        }
-
-        private void handleKeyPress(Cell cell, KeyEvent event) {
-          Cell current = cell.container().focusedCell.get();
-          Integer currentOffset = null;
-
-          if (event.is(Key.UP) || event.is(Key.DOWN)) {
-            currentOffset = myPrevXOffset.get();
-            if (currentOffset == null) {
-              currentOffset = selectionXOffset.get();
-            }
-          }
-
-          Cell next = null;
-          boolean restoreOffset = false;
-
-          if (event.is(Key.RIGHT) || event.is(Key.TAB)) {
-            next = nextFocusable(current);
-            moveToHome(next);
-          } else if (event.is(Key.RIGHT, ModifierKey.ALT) || event.is(Key.RIGHT, ModifierKey.CONTROL)) {
-            next = nextFocusable(current);
-            moveToEnd(next);
-          } else if (event.is(Key.LEFT) || event.is(Key.TAB, ModifierKey.SHIFT)) {
-            next = prevFocusable(current);
-            moveToEnd(next);
-          } else if (event.is(Key.LEFT, ModifierKey.ALT) || event.is(Key.LEFT, ModifierKey.CONTROL)) {
-            next = prevFocusable(current);
-            moveToHome(next);
-          } else if (event.is(Key.UP)) {
-            next = upperFocusable(current, currentOffset);
-            restoreOffset = true;
-          } else if (event.is(Key.DOWN)) {
-            next = lowerFocusable(current, currentOffset);
-            restoreOffset = true;
-          } else if (event.is(Key.HOME) || event.is(Key.LEFT, ModifierKey.META)) {
-            next = Composites.homeElement(current);
-            moveToHome(next);
-          } else if (event.is(Key.END) || event.is(Key.RIGHT, ModifierKey.META)) {
-            next = Composites.endElement(current);
-            moveToEnd(next);
-          } else if (event.is(Key.UP, ModifierKey.ALT)) {
-            Cell focusableParent = Composites.focusableParent(current);
-            if (focusableParent != null) {
-              mySelectionStack.push(current);
-              next = focusableParent;
-              myStackResetEnabled.set(false);
-            }
-          } else if (event.is(Key.DOWN, ModifierKey.ALT)) {
-            if (mySelectionStack.isEmpty()) {
-              next = Composites.firstFocusable(current, false);
-            } else {
-              next = mySelectionStack.pop();
-            }
-            myStackResetEnabled.set(false);
-          }
-          if (next != null) {
-            container.focusedCell.set(next);
-            next.scrollTo();
-
-            if (restoreOffset) {
-              next.get(PositionHandler.PROPERTY).caretOffset().set(currentOffset - next.origin().x);
-              myPrevXOffset.set(currentOffset);
-            }
-
-            event.consume();
-          }
-          myStackResetEnabled.set(true);
+          handleKeyPress(event);
           if (event.isConsumed()) return;
-
-
           super.onKeyPressed(cell, event);
-        }
-
-        private void moveToHome(Cell next) {
-          if (next != null) {
-            next.get(PositionHandler.PROPERTY).home();
-          }
-        }
-
-        private void moveToEnd(Cell next) {
-          if (next != null) {
-            next.get(PositionHandler.PROPERTY).end();
-          }
         }
 
         @Override
@@ -175,6 +93,85 @@ class NavigationController {
           }
         }
       }));
+  }
+
+  private void handleKeyPress(KeyEvent event) {
+    Cell current = myContainer.focusedCell.get();
+    Integer currentOffset = null;
+
+    if (event.is(Key.UP) || event.is(Key.DOWN)) {
+      currentOffset = myPrevXOffset.get();
+      if (currentOffset == null) {
+        currentOffset = selectedXOffset(myContainer).get();
+      }
+    }
+
+    Cell next = null;
+    boolean restoreOffset = false;
+
+    if (event.is(Key.RIGHT) || event.is(Key.TAB)) {
+      next = nextFocusable(current);
+      moveToHome(next);
+    } else if (event.is(Key.RIGHT, ModifierKey.ALT) || event.is(Key.RIGHT, ModifierKey.CONTROL)) {
+      next = nextFocusable(current);
+      moveToEnd(next);
+    } else if (event.is(Key.LEFT) || event.is(Key.TAB, ModifierKey.SHIFT)) {
+      next = prevFocusable(current);
+      moveToEnd(next);
+    } else if (event.is(Key.LEFT, ModifierKey.ALT) || event.is(Key.LEFT, ModifierKey.CONTROL)) {
+      next = prevFocusable(current);
+      moveToHome(next);
+    } else if (event.is(Key.UP)) {
+      next = upperFocusable(current, currentOffset);
+      restoreOffset = true;
+    } else if (event.is(Key.DOWN)) {
+      next = lowerFocusable(current, currentOffset);
+      restoreOffset = true;
+    } else if (event.is(Key.HOME) || event.is(Key.LEFT, ModifierKey.META)) {
+      next = Composites.homeElement(current);
+      moveToHome(next);
+    } else if (event.is(Key.END) || event.is(Key.RIGHT, ModifierKey.META)) {
+      next = Composites.endElement(current);
+      moveToEnd(next);
+    } else if (event.is(Key.UP, ModifierKey.ALT)) {
+      Cell focusableParent = Composites.focusableParent(current);
+      if (focusableParent != null) {
+        mySelectionStack.push(current);
+        next = focusableParent;
+        myStackResetEnabled.set(false);
+      }
+    } else if (event.is(Key.DOWN, ModifierKey.ALT)) {
+      if (mySelectionStack.isEmpty()) {
+        next = Composites.firstFocusable(current, false);
+      } else {
+        next = mySelectionStack.pop();
+      }
+      myStackResetEnabled.set(false);
+    }
+    if (next != null) {
+      myContainer.focusedCell.set(next);
+      next.scrollTo();
+
+      if (restoreOffset) {
+        next.get(PositionHandler.PROPERTY).caretOffset().set(currentOffset - next.origin().x);
+        myPrevXOffset.set(currentOffset);
+      }
+
+      event.consume();
+    }
+    myStackResetEnabled.set(true);
+  }
+
+  private void moveToHome(Cell next) {
+    if (next != null) {
+      next.get(PositionHandler.PROPERTY).home();
+    }
+  }
+
+  private void moveToEnd(Cell next) {
+    if (next != null) {
+      next.get(PositionHandler.PROPERTY).end();
+    }
   }
 
   private ReadableProperty<Integer> selectedXOffset(CellContainer container) {
