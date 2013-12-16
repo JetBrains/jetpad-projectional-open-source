@@ -28,7 +28,7 @@ import java.util.Arrays;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-public class NavigationControllerTest extends EditingTestCase {
+public class CellNavigationControllerTest extends EditingTestCase {
   private Cell c1 = new HorizontalCell();
   private TextCell c11 = view(true);
   private Cell c12 = view(false);
@@ -43,7 +43,7 @@ public class NavigationControllerTest extends EditingTestCase {
 
   @Before
   public void init() {
-    NavigationController.install(myCellContainer);
+    CellNavigationController.install(myCellContainer);
 
     VerticalCell vertical = new VerticalCell();
     vertical.focusable().set(true);

@@ -34,9 +34,9 @@ import java.util.Stack;
 
 import static jetbrains.jetpad.model.composite.Composites.*;
 
-class NavigationController {
+class CellNavigationController {
   static Registration install(final CellContainer container) {
-    final NavigationController controller = new NavigationController(container);
+    final CellNavigationController controller = new CellNavigationController(container);
     return new Registration() {
       @Override
       public void remove() {
@@ -52,7 +52,7 @@ class NavigationController {
   private Value<Boolean> myStackResetEnabled = new Value<Boolean>(true);
   private Stack<Cell> mySelectionStack = new Stack<Cell>();
 
-  private NavigationController(final CellContainer container) {
+  private CellNavigationController(final CellContainer container) {
     myContainer = container;
 
     myRegistration.add(

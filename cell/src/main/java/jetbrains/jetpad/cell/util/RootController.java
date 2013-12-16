@@ -25,7 +25,7 @@ import jetbrains.jetpad.model.property.PropertyChangeEvent;
 public class RootController {
   public static Registration install(CellContainer container) {
     return new CompositeRegistration(
-      NavigationController.install(container),
+      CellNavigationController.install(container),
       container.focusedCell.addHandler(new EventHandler<PropertyChangeEvent<Cell>>() {
         @Override
         public void onEvent(PropertyChangeEvent<Cell> event) {
