@@ -80,19 +80,24 @@ class CellNavigationController {
 
         @Override
         public void onMousePressed(Cell cell, MouseEvent event) {
-          Cell closest = findClosest(cell, event.location());
-          if (closest != null) {
-            closest.focus();
-            if (event.x() < closest.origin().x) {
-              moveToHome(closest);
-            } else {
-              moveToEnd(closest);
-            }
-            event.consume();
-            return;
-          }
+          handleMousePress(event);
+          if (event.isConsumed()) return;
+          super.onMousePressed(cell, event);
         }
       }));
+  }
+
+  private void handleMousePress(MouseEvent event) {
+    Cell closest = Composites.<Cell>findClosest(myContainer.root, event.location());
+    if (closest != null) {
+      closest.focus();
+      if (event.x() < closest.origin().x) {
+        moveToHome(closest);
+      } else {
+        moveToEnd(closest);
+      }
+      event.consume();
+    }
   }
 
   private void handleKeyPress(KeyEvent event) {
