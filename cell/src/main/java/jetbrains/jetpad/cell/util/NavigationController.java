@@ -56,7 +56,7 @@ class NavigationController {
     myContainer = container;
 
     myRegistration.add(
-      selectedCaretOffset(container).addHandler(new EventHandler<PropertyChangeEvent<Integer>>() {
+      selectedCaretOffset().addHandler(new EventHandler<PropertyChangeEvent<Integer>>() {
         @Override
         public void onEvent(PropertyChangeEvent<Integer> event) {
           myPrevXOffset.set(null);
@@ -102,7 +102,7 @@ class NavigationController {
     if (event.is(Key.UP) || event.is(Key.DOWN)) {
       currentOffset = myPrevXOffset.get();
       if (currentOffset == null) {
-        currentOffset = selectedXOffset(myContainer).get();
+        currentOffset = selectedXOffset();
       }
     }
 
@@ -174,35 +174,13 @@ class NavigationController {
     }
   }
 
-  private ReadableProperty<Integer> selectedXOffset(CellContainer container) {
-    ReadableProperty<Integer> selectionX = Properties.select(container.focusedCell, new Selector<Cell, ReadableProperty<Integer>>() {
-      @Override
-      public ReadableProperty<Integer> select(final Cell input) {
-        return new BaseReadableProperty<Integer>() {
-          @Override
-          public Integer get() {
-            return input.origin().x;
-          }
-
-          @Override
-          public Registration addHandler(EventHandler<? super PropertyChangeEvent<Integer>> handler) {
-            //we can't watch to relayout events, so x coordinate, might change, if relayout is performed. We ignore such changes here
-            return Registration.EMPTY;
-          }
-
-          @Override
-          public String getPropExpr() {
-            return "selectionX";
-          }
-        };
-      }
-    });
-    return Properties.add(selectedCaretOffset(container), selectionX);
+  private int selectedXOffset() {
+    return selectedCaretOffset().get() + myContainer.focusedCell.get().origin().x;
   }
 
-  private ReadableProperty<Integer> selectedCaretOffset(CellContainer container) {
+  private ReadableProperty<Integer> selectedCaretOffset() {
     return Properties.select(
-      Properties.select(container.focusedCell, new Selector<Cell, ReadableProperty<PositionHandler>>() {
+      Properties.select(myContainer.focusedCell, new Selector<Cell, ReadableProperty<PositionHandler>>() {
         @Override
         public ReadableProperty<PositionHandler> select(Cell input) {
           if (input == null) return null;
