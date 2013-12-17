@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package jetbrains.jetpad.cell.util;
+package jetbrains.jetpad.projectional.util;
 
 import jetbrains.jetpad.cell.Cell;
 import jetbrains.jetpad.model.event.CompositeRegistration;

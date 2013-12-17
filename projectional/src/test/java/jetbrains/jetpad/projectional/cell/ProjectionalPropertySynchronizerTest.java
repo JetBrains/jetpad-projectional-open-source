@@ -34,7 +34,7 @@ import jetbrains.jetpad.cell.trait.BaseCellTrait;
 import jetbrains.jetpad.cell.trait.CellTrait;
 import jetbrains.jetpad.cell.trait.CellTraitEventSpec;
 import jetbrains.jetpad.cell.trait.CellTraitPropertySpec;
-import jetbrains.jetpad.cell.util.RootController;
+import jetbrains.jetpad.projectional.util.RootController;
 import jetbrains.jetpad.cell.util.Validators;
 import jetbrains.jetpad.base.Value;
 import org.junit.Before;

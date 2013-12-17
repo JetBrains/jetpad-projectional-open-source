@@ -15,6 +15,7 @@
   <inherits name="com.google.gwt.query.Query"/>
   <inherits name="jetbrains.jetpad.projectional.view.View"/>
   <inherits name="jetbrains.jetpad.cell.Cell"/>
+  <inherits name="jetbrains.jetpad.projectional.Projectional"/>
 
   <entry-point class="jetbrains.mps.diagram.dataflow.DataFlowEntryPoint" />
 </module>

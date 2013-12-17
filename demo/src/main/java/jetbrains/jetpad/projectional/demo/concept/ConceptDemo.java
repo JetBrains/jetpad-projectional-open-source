@@ -21,7 +21,7 @@ import jetbrains.jetpad.projectional.demo.concept.model.ConceptDeclaration;
 import jetbrains.jetpad.projectional.demo.concept.model.PropertyMember;
 import jetbrains.jetpad.cell.Cell;
 import jetbrains.jetpad.cell.CellContainer;
-import jetbrains.jetpad.cell.util.RootController;
+import jetbrains.jetpad.projectional.util.RootController;
 
 public class ConceptDemo {
   public static CellContainer create() {

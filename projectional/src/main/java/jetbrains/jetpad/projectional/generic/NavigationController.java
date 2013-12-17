@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package jetbrains.jetpad.cell.util;
+package jetbrains.jetpad.projectional.generic;
 
 import jetbrains.jetpad.base.Value;
 import jetbrains.jetpad.event.Key;

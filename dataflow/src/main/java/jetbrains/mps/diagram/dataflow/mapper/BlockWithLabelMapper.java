@@ -15,11 +15,11 @@
  */
 package jetbrains.mps.diagram.dataflow.mapper;
 
-import jetbrains.jetpad.cell.util.RootController;
 import jetbrains.jetpad.mapper.Synchronizers;
 import jetbrains.jetpad.cell.TextCell;
 import jetbrains.jetpad.cell.text.TextEditing;
 import jetbrains.jetpad.cell.view.CellView;
+import jetbrains.jetpad.projectional.util.RootController;
 import jetbrains.jetpad.projectional.view.GroupView;
 import jetbrains.mps.diagram.dataflow.model.Block;
 

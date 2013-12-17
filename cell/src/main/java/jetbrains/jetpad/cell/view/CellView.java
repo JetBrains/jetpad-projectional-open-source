@@ -21,7 +21,6 @@ import jetbrains.jetpad.model.property.PropertyChangeEvent;
 import jetbrains.jetpad.model.property.ValueProperty;
 import jetbrains.jetpad.cell.Cell;
 import jetbrains.jetpad.cell.CellContainer;
-import jetbrains.jetpad.cell.util.RootController;
 import jetbrains.jetpad.projectional.view.HorizontalView;
 import jetbrains.jetpad.projectional.view.View;
 
@@ -30,7 +29,6 @@ public class CellView extends HorizontalView {
   public final CellContainer container = new CellContainer();
 
   public CellView(View popupView) {
-    RootController.install(container);
     cell.addHandler(new EventHandler<PropertyChangeEvent<Cell>>() {
       @Override
       public void onEvent(PropertyChangeEvent<Cell> event) {

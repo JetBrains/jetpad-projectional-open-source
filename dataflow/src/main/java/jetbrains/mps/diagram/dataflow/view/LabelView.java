@@ -15,7 +15,6 @@
  */
 package jetbrains.mps.diagram.dataflow.view;
 
-import jetbrains.jetpad.cell.util.RootController;
 import jetbrains.jetpad.geometry.Rectangle;
 import jetbrains.jetpad.geometry.Segment;
 import jetbrains.jetpad.geometry.Vector;
@@ -28,6 +27,7 @@ import jetbrains.jetpad.projectional.diagram.algorithm.util.FreeSegmentsUtil;
 import jetbrains.jetpad.projectional.diagram.view.Connection;
 import jetbrains.jetpad.projectional.diagram.view.DiagramView;
 import jetbrains.jetpad.projectional.diagram.view.PolyLineConnection;
+import jetbrains.jetpad.projectional.util.RootController;
 import jetbrains.jetpad.projectional.view.View;
 import jetbrains.jetpad.projectional.view.ViewPropertyKind;
 import jetbrains.jetpad.projectional.view.ViewPropertySpec;

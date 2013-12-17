@@ -17,7 +17,6 @@ package jetbrains.mps.diagram.contentDemo.mapper;
 
 import com.google.common.base.Supplier;
 import jetbrains.jetpad.base.Handler;
-import jetbrains.jetpad.cell.util.RootController;
 import jetbrains.jetpad.event.Key;
 import jetbrains.jetpad.event.KeyEvent;
 import jetbrains.jetpad.mapper.Mapper;
@@ -29,6 +28,7 @@ import jetbrains.jetpad.model.property.ValueProperty;
 import jetbrains.jetpad.cell.TextCell;
 import jetbrains.jetpad.cell.text.TextEditing;
 import jetbrains.jetpad.cell.view.CellView;
+import jetbrains.jetpad.projectional.util.RootController;
 import jetbrains.jetpad.projectional.view.*;
 import jetbrains.mps.diagram.contentDemo.model.Content;
 import jetbrains.mps.diagram.contentDemo.model.ContentItem;

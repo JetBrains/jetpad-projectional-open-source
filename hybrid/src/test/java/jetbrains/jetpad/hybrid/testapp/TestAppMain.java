@@ -21,7 +21,7 @@ import jetbrains.jetpad.hybrid.testapp.model.ExprContainer;
 import jetbrains.jetpad.projectional.util.awt.AwtComponent;
 import jetbrains.jetpad.cell.Cell;
 import jetbrains.jetpad.cell.CellContainer;
-import jetbrains.jetpad.cell.util.RootController;
+import jetbrains.jetpad.projectional.util.RootController;
 
 public class TestAppMain {
   public static void main(String[] args) {
