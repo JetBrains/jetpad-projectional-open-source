@@ -34,8 +34,6 @@ public class NonTextCellCompletionTest extends CompletionTestCase {
 
   @Before
   public void init() {
-    RootController.install(myCellContainer);
-
     target.addTrait(new BaseCellTrait() {
       @Override
       public Object get(Cell cell, CellTraitPropertySpec<?> spec) {
