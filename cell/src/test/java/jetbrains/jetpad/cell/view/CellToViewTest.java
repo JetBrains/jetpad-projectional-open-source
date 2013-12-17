@@ -14,7 +14,6 @@ public class CellToViewTest {
   private ViewContainer targetViewContainer = new ViewContainer();
   private CellView cellView = new CellView(targetViewContainer.root());
 
-
   @Before
   public void init() {
     targetViewContainer.root().children().add(cellView);

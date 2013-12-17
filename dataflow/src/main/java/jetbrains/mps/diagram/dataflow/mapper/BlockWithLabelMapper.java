@@ -15,6 +15,7 @@
  */
 package jetbrains.mps.diagram.dataflow.mapper;
 
+import jetbrains.jetpad.cell.util.RootController;
 import jetbrains.jetpad.mapper.Synchronizers;
 import jetbrains.jetpad.cell.TextCell;
 import jetbrains.jetpad.cell.text.TextEditing;
@@ -28,6 +29,9 @@ public class BlockWithLabelMapper extends BlockMapper {
   public BlockWithLabelMapper(Block source) {
     super(source);
     myCell = new CellView(new GroupView());
+    RootController.install(myCell.container);
+
+
     TextCell cell = new TextCell();
     cell.addTrait(TextEditing.textEditing());
     myCell.cell.set(cell);

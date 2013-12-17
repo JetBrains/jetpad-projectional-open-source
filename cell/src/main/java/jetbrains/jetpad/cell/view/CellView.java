@@ -27,22 +27,20 @@ import jetbrains.jetpad.projectional.view.View;
 
 public class CellView extends HorizontalView {
   public final Property<Cell> cell = new ValueProperty<Cell>();
-
-  private CellContainer myCellContainer = new CellContainer();
-
+  public final CellContainer container = new CellContainer();
 
   public CellView(View popupView) {
-    RootController.install(myCellContainer);
+    RootController.install(container);
     cell.addHandler(new EventHandler<PropertyChangeEvent<Cell>>() {
       @Override
       public void onEvent(PropertyChangeEvent<Cell> event) {
-        myCellContainer.root.children().clear();
+        container.root.children().clear();
         if (event.getNewValue() != null) {
-          myCellContainer.root.children().add(event.getNewValue());
+          container.root.children().add(event.getNewValue());
         }
       }
     });
 
-    MapperCell2View.map(myCellContainer, this, this, popupView);
+    MapperCell2View.map(container, this, this, popupView);
   }
 }

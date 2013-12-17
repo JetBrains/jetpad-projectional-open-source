@@ -15,6 +15,7 @@
  */
 package jetbrains.jetpad.projectional.demo.diagramExpr.mapper;
 
+import jetbrains.jetpad.cell.util.RootController;
 import jetbrains.jetpad.geometry.Rectangle;
 import jetbrains.jetpad.geometry.Vector;
 import jetbrains.jetpad.model.property.Property;
@@ -32,6 +33,7 @@ class DiagramNodeView extends VerticalView {
 
   DiagramNodeView(View popupView) {
     children().add(cellView = new CellView(popupView));
+    RootController.install(cellView.container);
     cellView.background().set(Color.WHITE);
   }
 

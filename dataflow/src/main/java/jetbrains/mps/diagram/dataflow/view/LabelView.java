@@ -15,6 +15,7 @@
  */
 package jetbrains.mps.diagram.dataflow.view;
 
+import jetbrains.jetpad.cell.util.RootController;
 import jetbrains.jetpad.geometry.Rectangle;
 import jetbrains.jetpad.geometry.Segment;
 import jetbrains.jetpad.geometry.Vector;
@@ -48,6 +49,9 @@ public class LabelView extends CellView {
 
   public LabelView(View popupView, PolyLineConnection connection, DiagramView diagramView) {
     super(popupView);
+
+    RootController.install(container);
+
     myDiagramView = diagramView;
     myConnection = connection;
     myConnection.view().valid().addHandler(new EventHandler<PropertyChangeEvent<Boolean>>() {
