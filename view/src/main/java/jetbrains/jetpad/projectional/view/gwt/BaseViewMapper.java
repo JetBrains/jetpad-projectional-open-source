@@ -124,6 +124,22 @@ class BaseViewMapper<ViewT extends View, ElementT extends Element> extends Mappe
       }
     }));
 
+    conf.add(Synchronizers.forProperty(getSource().border(), new WritableProperty<Color>() {
+      @Override
+      public void set(Color value) {
+        Style style = getTarget().getStyle();
+        if (value != null) {
+          style.setBorderColor(value.toCssColor());
+          style.setBorderWidth(1, Style.Unit.PX);
+          style.setBorderStyle(Style.BorderStyle.SOLID);
+        } else {
+          style.clearBorderStyle();
+          style.clearBorderColor();
+          style.clearBorderWidth();
+        }
+      }
+    }));
+
     conf.add(Synchronizers.forProperty(getSource().visible(), new WritableProperty<Boolean>() {
       @Override
       public void set(final Boolean value) {
