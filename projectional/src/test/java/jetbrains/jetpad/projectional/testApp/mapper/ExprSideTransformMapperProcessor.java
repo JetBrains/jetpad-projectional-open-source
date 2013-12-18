@@ -38,8 +38,8 @@ class ExprSideTransformMapperProcessor implements MapperProcessor<Expr, Cell> {
     final Cell cell = mapper.getTarget();
     final Expr expr = mapper.getSource();
 
-    Cell firstLeaf = firstFocusableLeaf(cell);
-    Cell lastLeaf = lastFocusableLeaf(cell);
+    Cell firstLeaf = firstFocusable(cell);
+    Cell lastLeaf = lastFocusable(cell);
 
     if (firstLeaf != null) {
       firstLeaf.addTrait(new BaseCellTrait() {

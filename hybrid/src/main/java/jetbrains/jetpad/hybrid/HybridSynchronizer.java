@@ -56,8 +56,8 @@ import java.util.*;
 
 import static jetbrains.jetpad.hybrid.SelectionPosition.FIRST;
 import static jetbrains.jetpad.hybrid.SelectionPosition.LAST;
-import static jetbrains.jetpad.model.composite.Composites.firstFocusableLeaf;
-import static jetbrains.jetpad.model.composite.Composites.lastFocusableLeaf;
+import static jetbrains.jetpad.model.composite.Composites.firstFocusable;
+import static jetbrains.jetpad.model.composite.Composites.lastFocusable;
 
 public class HybridSynchronizer<SourceT> implements Synchronizer {
   private static final ContentKind<List<Token>> TOKENS_CONTENT = new ContentKind<List<Token>>() {
@@ -450,8 +450,8 @@ public class HybridSynchronizer<SourceT> implements Synchronizer {
         }
       });
 
-      firstFocusableLeaf(target).addTrait(new TokenCellTraits.LeftLeafTokenCellTrait());
-      lastFocusableLeaf(target).addTrait(new TokenCellTraits.RightLeafTokenCellTrait());
+      firstFocusable(target).addTrait(new TokenCellTraits.LeftLeafTokenCellTrait());
+      lastFocusable(target).addTrait(new TokenCellTraits.RightLeafTokenCellTrait());
 
       return target;
     }
