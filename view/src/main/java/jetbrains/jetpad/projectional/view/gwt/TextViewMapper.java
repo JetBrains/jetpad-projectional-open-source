@@ -43,6 +43,18 @@ class TextViewMapper extends BaseViewMapper<TextView, Element> {
 
     super.registerSynchronizers(conf);
 
+    conf.add(Synchronizers.forProperty(getSource().selectionVisible(), new WritableProperty<Boolean>() {
+      @Override
+      public void set(Boolean value) {
+        editor.selectionVisble(value);
+      }
+    }));
+    conf.add(Synchronizers.forProperty(getSource().selectionStart(), new WritableProperty<Integer>() {
+      @Override
+      public void set(Integer value) {
+        editor.selectionStart(value);
+      }
+    }));
     conf.add(Synchronizers.forProperty(getSource().text(), new WritableProperty<String>() {
       @Override
       public void set(String value) {
