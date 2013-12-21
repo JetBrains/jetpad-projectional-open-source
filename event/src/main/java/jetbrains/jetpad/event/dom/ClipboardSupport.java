@@ -1,4 +1,4 @@
-package jetbrains.jetpad.cell.dom;
+package jetbrains.jetpad.event.dom;
 
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style;

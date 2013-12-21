@@ -26,10 +26,9 @@ import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.RootPanel;
-import com.google.gwt.user.client.ui.TextArea;
 import jetbrains.jetpad.base.Handler;
 import jetbrains.jetpad.event.*;
+import jetbrains.jetpad.event.dom.ClipboardSupport;
 import jetbrains.jetpad.event.dom.EventTranslator;
 import jetbrains.jetpad.geometry.Rectangle;
 import jetbrains.jetpad.geometry.Vector;
@@ -413,6 +412,7 @@ public class CellContainerToDomMapper extends Mapper<CellContainer, Element> {
               }
               return;
             }
+
             getSource().keyPressed(e);
           }
         });

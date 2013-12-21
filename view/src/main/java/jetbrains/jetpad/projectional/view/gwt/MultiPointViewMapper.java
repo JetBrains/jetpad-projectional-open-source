@@ -34,8 +34,8 @@ import org.vectomatic.dom.svg.*;
 import org.vectomatic.dom.svg.utils.OMSVGParser;
 import org.vectomatic.dom.svg.utils.SVGConstants;
 
-public class MultiPointViewMapper extends BaseViewMapper<MultiPointView, Element> {
-  public MultiPointViewMapper(View2DomContext ctx, MultiPointView source) {
+class MultiPointViewMapper extends BaseViewMapper<MultiPointView, Element> {
+  MultiPointViewMapper(View2DomContext ctx, MultiPointView source) {
     super(ctx, source, DOM.createDiv());
   }
 

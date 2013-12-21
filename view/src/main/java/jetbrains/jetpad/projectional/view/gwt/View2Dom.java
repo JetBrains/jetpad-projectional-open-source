@@ -15,6 +15,7 @@
  */
 package jetbrains.jetpad.projectional.view.gwt;
 
+import com.google.common.base.Strings;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Style;
@@ -28,8 +29,8 @@ import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Window;
 import jetbrains.jetpad.base.Handler;
 import jetbrains.jetpad.base.Value;
-import jetbrains.jetpad.event.KeyEvent;
-import jetbrains.jetpad.event.MouseEvent;
+import jetbrains.jetpad.event.*;
+import jetbrains.jetpad.event.dom.ClipboardSupport;
 import jetbrains.jetpad.event.dom.EventTranslator;
 import jetbrains.jetpad.geometry.Rectangle;
 import jetbrains.jetpad.geometry.Vector;
@@ -117,6 +118,8 @@ public class View2Dom {
     final int fontWidth = metrics.dimension().x;
     final int fontHeight = metrics.dimension().y;
 
+    final ClipboardSupport clipboardSupport = new ClipboardSupport(rootDiv);
+
     container.setPeer(new ViewContainerPeer() {
       private Registration myReg;
 
@@ -133,6 +136,7 @@ public class View2Dom {
             });
           }
         });
+
         container.root().validate();
       }
 
@@ -254,7 +258,35 @@ public class View2Dom {
       public boolean f(Event e) {
         return EventTranslator.dispatchKeyPress(e, new Handler<KeyEvent>() {
           @Override
-          public void handle(KeyEvent e) {
+          public void handle(final KeyEvent e) {
+            if (e.is(Key.V, ModifierKey.CONTROL) || e.is(Key.V, ModifierKey.META)) {
+              clipboardSupport.pasteContent(new Handler<String>() {
+                @Override
+                public void handle(String text) {
+                  if (Strings.isNullOrEmpty(text)) {
+                    container.keyPressed(new KeyEvent(e.key(), e.keyChar(), e.modifiers()));
+                  } else {
+                    container.paste(new PasteEvent(new TextClipboardContent(text)));
+                  }
+                }
+              });
+              return;
+            }
+
+            if (e.is(Key.C, ModifierKey.CONTROL) || e.is(Key.C, ModifierKey.META) || e.is(Key.X, ModifierKey.CONTROL) || e.is(Key.X, ModifierKey.META)) {
+              CopyCutEvent copyEvent;
+              if (e.key() == Key.X) {
+                container.cut(copyEvent = new CopyCutEvent(true));
+              } else {
+                container.copy(copyEvent = new CopyCutEvent(false));
+              }
+              ClipboardContent content = copyEvent.getResult();
+              if (content != null) {
+                clipboardSupport.copyContent(content);
+              }
+              return;
+            }
+
             container.keyPressed(e);
           }
         });
