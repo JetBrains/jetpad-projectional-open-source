@@ -411,6 +411,7 @@ public class CellContainerToDomMapper extends Mapper<CellContainer, Element> {
               if (content != null) {
                 clipboardSupport.copyContent(content);
               }
+              return;
             }
             getSource().keyPressed(e);
           }
