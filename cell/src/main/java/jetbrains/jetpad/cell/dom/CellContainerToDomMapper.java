@@ -348,6 +348,7 @@ public class CellContainerToDomMapper extends Mapper<CellContainer, Element> {
   private void registerListeners() {
     final Element focusTarget = getFocusTarget();
     final Element target = getTarget();
+    final ClipboardSupport clipboardSupport = new ClipboardSupport(focusTarget);
 
     $(target).mousedown(new Function() {
       @Override
@@ -386,20 +387,16 @@ public class CellContainerToDomMapper extends Mapper<CellContainer, Element> {
             }
 
             if (e.is(Key.V, ModifierKey.CONTROL) || e.is(Key.V, ModifierKey.META)) {
-              final TextArea pasteArea = createClipboardTextArea();
-              new Timer() {
+              clipboardSupport.pasteContent(new Handler<String>() {
                 @Override
-                public void run() {
-                  RootPanel.get().remove(pasteArea);
-                  $(focusTarget).focus();
-                  String text = pasteArea.getText();
+                public void handle(String text) {
                   if (Strings.isNullOrEmpty(text)) {
                     getSource().keyPressed(new KeyEvent(e.key(), e.keyChar(), e.modifiers()));
                   } else {
                     getSource().paste(text);
                   }
                 }
-              }.schedule(20);
+              });
               return;
             }
 
@@ -412,34 +409,10 @@ public class CellContainerToDomMapper extends Mapper<CellContainer, Element> {
               }
               ClipboardContent content = copyEvent.getResult();
               if (content != null) {
-                final TextArea copyArea = createClipboardTextArea();
-                if (content.isSupported(ContentKinds.TEXT)) {
-                  copyArea.setText(content.get(ContentKinds.TEXT));
-                } else {
-                  copyArea.setText(content.toString());
-                }
-                copyArea.selectAll();
-                new Timer() {
-                  @Override
-                  public void run() {
-                    RootPanel.get().remove(copyArea);
-                    $(focusTarget).focus();
-                  }
-                }.schedule(20);
+                clipboardSupport.copyContent(content);
               }
             }
-
             getSource().keyPressed(e);
-          }
-
-          private TextArea createClipboardTextArea() {
-            final TextArea pasteArea = new TextArea();
-            pasteArea.setPixelSize(0, 0);
-            Style style = pasteArea.getElement().getStyle();
-            style.setPosition(Style.Position.FIXED);
-            RootPanel.get().add(pasteArea);
-            pasteArea.setFocus(true);
-            return pasteArea;
           }
         });
       }
