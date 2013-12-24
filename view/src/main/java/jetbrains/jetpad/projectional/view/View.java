@@ -397,7 +397,9 @@ public abstract class View implements Composite<View> {
     });
 
     for (View child : children()) {
-      if (!child.valid().get()) throw new IllegalStateException();
+      if (!child.valid().get()) {
+        throw new IllegalStateException("After doValidate all children must be valid");
+      }
     }
 
     myValid = true;
