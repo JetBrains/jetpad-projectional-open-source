@@ -94,7 +94,7 @@ public class TextView extends View {
   }
 
   @Override
-  public String toString() {
+  protected String toStringPrefix() {
     return "TextView('" + text().get() + "')";
   }
 }

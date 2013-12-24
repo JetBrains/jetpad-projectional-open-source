@@ -16,6 +16,7 @@
 package jetbrains.jetpad.projectional.view;
 
 import com.google.common.base.Objects;
+import com.google.common.base.Strings;
 import jetbrains.jetpad.event.Event;
 import jetbrains.jetpad.geometry.Rectangle;
 import jetbrains.jetpad.geometry.Vector;
@@ -35,6 +36,9 @@ import java.util.List;
 import java.util.Set;
 
 public abstract class View implements Composite<View> {
+  //debug attribute which is used in toString
+  public static final ViewPropertySpec<String> NAME = new ViewPropertySpec<String>("name", ViewPropertyKind.NONE, "");
+
   public static final ViewPropertySpec<Boolean> VISIBLE = new ViewPropertySpec<Boolean>("visible", ViewPropertyKind.RELAYOUT_PARENT, true);
   public static final ViewPropertySpec<Boolean> FOCUSED = new ViewPropertySpec<Boolean>("focused", ViewPropertyKind.NONE, false);
   public static final ViewPropertySpec<Boolean> FOCUSABLE = new ViewPropertySpec<Boolean>("focusabled", ViewPropertyKind.NONE, false);
@@ -81,6 +85,10 @@ public abstract class View implements Composite<View> {
 
   public Property<Color> border() {
     return prop(BORDER_COLOR);
+  }
+
+  public Property<String> name() {
+    return prop(NAME);
   }
 
   public ReadableProperty<View> parent() {
@@ -640,10 +648,21 @@ public abstract class View implements Composite<View> {
 
   @Override
   public String toString() {
+    return toStringPrefix() + toStringSuffix();
+  }
+
+  protected String toStringPrefix() {
     String name = getClass().getName();
     int dotIndex = name.lastIndexOf('.');
-    String className = dotIndex == 1 ? name : name.substring(dotIndex + 1);
-    return className + "@" + Integer.toHexString(hashCode());
+    return dotIndex == 1 ? name : name.substring(dotIndex + 1);
+  }
+
+  protected String toStringSuffix() {
+    String result = "@" + Integer.toHexString(hashCode());
+    if (!Strings.isNullOrEmpty(name().get())) {
+      result += "<" + name().get() + ">";
+    }
+    return result;
   }
 
   private class ChildList extends ObservableArrayList<View> {
