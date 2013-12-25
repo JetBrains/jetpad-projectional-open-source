@@ -31,6 +31,10 @@ public class MapperCell2View {
     };
   }
 
+  public static Registration map(final CellContainer cellContainer, ViewContainer container) {
+    return map(cellContainer, container.root(), container.contentRoot(), container.decorationRoot());
+  }
+
   public static Registration map(final CellContainer cellContainer, View root) {
     final CellContainerToViewMapper mapper = new CellContainerToViewMapper(cellContainer, root);
     mapper.attachRoot();

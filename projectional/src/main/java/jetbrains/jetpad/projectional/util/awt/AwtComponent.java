@@ -23,7 +23,7 @@ import jetbrains.jetpad.projectional.view.awt.AwtDemo;
 public class AwtComponent {
   public static void showDemo(final CellContainer container) {
     ViewContainer viewContainer = new ViewContainer();
-    MapperCell2View.map(container, viewContainer.root());
+    MapperCell2View.map(container, viewContainer);
     AwtDemo.show(viewContainer);
   }
 }

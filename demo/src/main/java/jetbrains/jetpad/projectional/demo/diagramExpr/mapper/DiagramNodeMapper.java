@@ -33,8 +33,8 @@ import jetbrains.jetpad.projectional.view.View;
 import jetbrains.jetpad.values.Color;
 
 class DiagramNodeMapper extends Mapper<DiagramNode, DiagramNodeView> {
-  DiagramNodeMapper(DiagramNode source, View popupView) {
-    super(source, new DiagramNodeView(popupView));
+  DiagramNodeMapper(DiagramNode source) {
+    super(source, new DiagramNodeView());
 
     getTarget().padding().set(10);
     getTarget().focusable().set(true);

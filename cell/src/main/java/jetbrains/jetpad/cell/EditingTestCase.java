@@ -37,7 +37,7 @@ public abstract class EditingTestCase {
 
   @Before
   public void initLViewContainer() {
-    MapperCell2View.map(myCellContainer, myViewContainer.root());
+    MapperCell2View.map(myCellContainer, myViewContainer);
   }
 
   protected void layout() {

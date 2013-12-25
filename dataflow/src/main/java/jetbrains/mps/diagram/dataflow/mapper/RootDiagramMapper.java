@@ -40,7 +40,7 @@ public class RootDiagramMapper extends Mapper<Diagram, ViewContainer> {
   protected void registerSynchronizers(SynchronizersConfiguration conf) {
     super.registerSynchronizers(conf);
 
-    conf.add(Synchronizers.forConstantRole(this, getSource(), getTarget().root().children(), new MapperFactory<Diagram, View>() {
+    conf.add(Synchronizers.forConstantRole(this, getSource(), getTarget().contentRoot().children(), new MapperFactory<Diagram, View>() {
       @Override
       public Mapper<? extends Diagram, ? extends View> createMapper(Diagram source) {
         return new DiagramMapper(source, new MapperFactory<Block, View>() {

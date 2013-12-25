@@ -38,7 +38,7 @@ class SimpleDiagramMapper extends Mapper<SimpleDiagram, DiagramView> {
     conf.add(Synchronizers.forObservableRole(this, getSource().nodes, getTarget().itemsView.children(), new MapperFactory<DiagramNode, View>() {
       @Override
       public Mapper<? extends DiagramNode, ? extends View> createMapper(DiagramNode source) {
-        return new DiagramNodeMapper(source, getTarget().popupView);
+        return new DiagramNodeMapper(source);
       }
     }));
 

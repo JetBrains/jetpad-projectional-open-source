@@ -228,9 +228,9 @@ public class CellNavigationControllerTest extends EditingTestCase {
     int x = -100;
     int y = c1.origin().y + c1.dimension().y / 2;
 
-    mousePress(x, y);
-
     c11.addTrait(TextEditing.textNavigation(true, true));
+
+    mousePress(x, y);
 
     assertFocused(c11);
     assertTrue(c11.get(PositionHandler.PROPERTY).isHome());

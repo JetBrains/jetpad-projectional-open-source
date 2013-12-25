@@ -138,7 +138,7 @@ public class ViewTest {
     View child = newView();
 
     container.root().validate();
-    container.root().children().add(child);
+    container.contentRoot().children().add(child);
 
     assertTrue(child.isAttached());
     assertFalse(container.root().valid().get());
@@ -147,10 +147,10 @@ public class ViewTest {
   @Test
   public void detachment() {
     View child = newView();
-    container.root().children().add(child);
+    container.contentRoot().children().add(child);
     container.root().validate();
 
-    container.root().children().remove(child);
+    container.contentRoot().children().remove(child);
 
     assertFalse(child.isAttached());
     assertFalse(container.root().valid().get());
@@ -219,14 +219,14 @@ public class ViewTest {
   @Test(expected = IllegalStateException.class)
   public void cantFocusUnfocusable() {
     View view = newView();
-    container.root().children().add(view);
+    container.contentRoot().children().add(view);
     container.focusedView().set(view);
   }
 
   @Test
   public void focusing() {
     View view = newFocusableView();
-    container.root().children().add(view);
+    container.contentRoot().children().add(view);
 
     container.focusedView().set(view);
 
@@ -238,7 +238,7 @@ public class ViewTest {
     View view1 = newFocusableView();
     View view2 = newFocusableView();
 
-    container.root().children().addAll(Arrays.asList(view1, view2));
+    container.contentRoot().children().addAll(Arrays.asList(view1, view2));
 
     container.focusedView().set(view1);
     container.focusedView().set(view2);
@@ -250,7 +250,7 @@ public class ViewTest {
   @Test(expected = IllegalStateException.class)
   public void cantChangeFocusableToFalseOnFocused() {
     View view = newFocusableView();
-    container.root().children().add(view);
+    container.contentRoot().children().add(view);
 
     container.focusedView().set(view);
 
@@ -315,7 +315,7 @@ public class ViewTest {
   @Test
   public void viewDetachLeadsToFocusLoss() {
     View view = newFocusableView();
-    container.root().children().add(view);
+    container.contentRoot().children().add(view);
     container.focusedView().set(view);
 
     Composites.<View>removeFromParent(view);
@@ -327,7 +327,7 @@ public class ViewTest {
   public void viewAtIgnoresInvisible() {
     View view = newFocusableView();
 
-    container.root().children().add(view);
+    container.contentRoot().children().add(view);
     view.visible().set(false);
 
     assertTrue(container.root().viewAt(view.bounds().get().center()) != view);

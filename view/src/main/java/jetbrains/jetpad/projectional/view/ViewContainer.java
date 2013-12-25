@@ -18,6 +18,7 @@ package jetbrains.jetpad.projectional.view;
 import jetbrains.jetpad.event.*;
 import jetbrains.jetpad.geometry.Rectangle;
 import jetbrains.jetpad.geometry.Vector;
+import jetbrains.jetpad.model.collections.CollectionItemEvent;
 import jetbrains.jetpad.model.event.ListenerCaller;
 import jetbrains.jetpad.model.event.Listeners;
 import jetbrains.jetpad.model.event.Registration;
@@ -32,7 +33,7 @@ import java.util.List;
 
 public class ViewContainer {
   private ViewContainerPeer myPeer = new NullViewContainerPeer();
-  private View myRoot = new RootView();
+  private RootView myContentRoot = new RootView();
   private Property<View> myFocusedView = new FocusedViewProperty();
   private View myDragStart;
   private List<Runnable> myOnValidate = new ArrayList<Runnable>();
@@ -40,25 +41,32 @@ public class ViewContainer {
 
   public ViewContainer() {
     myPeer.attach(this);
-    myRoot.attach(this);
+    myContentRoot.attach(this);
   }
 
   public Property<View> focusedView() {
     return myFocusedView;
   }
 
+  public View contentRoot() {
+    return myContentRoot.myContentRoot;
+  }
+
+  public View decorationRoot() {
+    return myContentRoot.myDecorationView;
+  }
+
   public View root() {
-    return myRoot;
+    return myContentRoot;
   }
 
   public void whenValid(Runnable r) {
-    if (myRoot.valid().get()) {
+    if (myContentRoot.valid().get()) {
       r.run();
     } else {
       myOnValidate.add(r);
     }
   }
-
 
   public Rectangle visibleRect() {
     return myPeer.visibleRect();
@@ -67,7 +75,7 @@ public class ViewContainer {
   public void setPeer(ViewContainerPeer peer) {
     myPeer.detach();
     myPeer = peer;
-    myRoot.invalidateTree();
+    myContentRoot.invalidateTree();
     myPeer.attach(this);
   }
 
@@ -189,6 +197,26 @@ public class ViewContainer {
   }
 
   private class RootView extends View {
+    private GroupView myDecorationView = new GroupView();
+    private GroupView myContentRoot = new GroupView();
+
+    private RootView() {
+      children().add(myContentRoot);
+      children().add(myDecorationView);
+
+      addListener(new ViewAdapter() {
+        @Override
+        public void onChildAdded(CollectionItemEvent<View> event) {
+          throw new IllegalStateException();
+        }
+
+        @Override
+        public void onChildRemoved(CollectionItemEvent<View> event) {
+          throw new IllegalStateException();
+        }
+      });
+    }
+
     @Override
     public void validate() {
       super.validate();
@@ -196,6 +224,7 @@ public class ViewContainer {
         r.run();
       }
       myOnValidate.clear();
+
     }
 
     @Override

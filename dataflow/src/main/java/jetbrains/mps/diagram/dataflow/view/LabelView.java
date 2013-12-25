@@ -47,8 +47,8 @@ public class LabelView extends CellView {
 
   private DiagramView myDiagramView;
 
-  public LabelView(View popupView, PolyLineConnection connection, DiagramView diagramView) {
-    super(popupView);
+  public LabelView(PolyLineConnection connection, DiagramView diagramView) {
+    super();
 
     RootController.install(container);
 

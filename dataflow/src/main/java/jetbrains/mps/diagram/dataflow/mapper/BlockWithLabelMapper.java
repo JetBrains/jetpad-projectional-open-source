@@ -28,7 +28,7 @@ public class BlockWithLabelMapper extends BlockMapper {
 
   public BlockWithLabelMapper(Block source) {
     super(source);
-    myCell = new CellView(new GroupView());
+    myCell = new CellView();
     RootController.install(myCell.container);
 
 

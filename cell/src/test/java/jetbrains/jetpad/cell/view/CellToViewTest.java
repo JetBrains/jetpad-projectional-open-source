@@ -12,11 +12,11 @@ import static org.junit.Assert.assertFalse;
 
 public class CellToViewTest {
   private ViewContainer targetViewContainer = new ViewContainer();
-  private CellView cellView = new CellView(targetViewContainer.root());
+  private CellView cellView = new CellView();
 
   @Before
   public void init() {
-    targetViewContainer.root().children().add(cellView);
+    targetViewContainer.contentRoot().children().add(cellView);
   }
 
   @Test
@@ -25,7 +25,7 @@ public class CellToViewTest {
     testCell.addTrait(new BaseCellTrait() {
       @Override
       public void onMousePressed(Cell cell, MouseEvent event) {
-        targetViewContainer.root().children().clear();
+        targetViewContainer.contentRoot().children().clear();
         event.consume();
       }
     });

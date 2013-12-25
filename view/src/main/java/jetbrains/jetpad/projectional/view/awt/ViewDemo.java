@@ -41,7 +41,7 @@ public class ViewDemo {
     r2.move(new Vector(80, 150));
     gv.children().add(r2);
 
-    container.root().children().add(gv);
+    container.contentRoot().children().add(gv);
     gv.validate();
 
     LineView line = new LineView();
@@ -54,7 +54,7 @@ public class ViewDemo {
 
   private static ViewContainer createRectDemo() {
     ViewContainer container = new ViewContainer();
-    container.root().children().add(
+    container.contentRoot().children().add(
       verticalView(
         horizontal(rect(Color.RED), rect(Color.BLACK), rect(Color.BLUE)),
         horizontal(rect(Color.BLUE), rect(Color.PINK), rect(Color.GRAY), rect(Color.DARK_GREEN))

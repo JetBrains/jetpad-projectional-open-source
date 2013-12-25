@@ -53,7 +53,7 @@ public class ContentRootMapper extends Mapper<Diagram, ViewContainer> {
     myContent = content;
 
     myView = new VerticalView();
-    getTarget().root().children().add(myView);
+    getTarget().contentRoot().children().add(myView);
 
     RootDiagramMapper.initRoot(diagram, getTarget());
   }
@@ -121,7 +121,7 @@ public class ContentRootMapper extends Mapper<Diagram, ViewContainer> {
   }
 
   private Property<String> createCell(String value, final Handler<String> handler) {
-    final CellView cell = new CellView(new GroupView());
+    final CellView cell = new CellView();
     RootController.install(cell.container);
     final TextCell text = new TextCell();
     text.text().set(value);

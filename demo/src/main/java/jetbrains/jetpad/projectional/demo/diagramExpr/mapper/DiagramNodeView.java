@@ -31,8 +31,8 @@ class DiagramNodeView extends VerticalView {
 
   final CellView cellView;
 
-  DiagramNodeView(View popupView) {
-    children().add(cellView = new CellView(popupView));
+  DiagramNodeView() {
+    children().add(cellView = new CellView());
     RootController.install(cellView.container);
     cellView.background().set(Color.WHITE);
   }

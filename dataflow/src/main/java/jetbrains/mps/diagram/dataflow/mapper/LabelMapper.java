@@ -33,7 +33,7 @@ class LabelMapper extends Mapper<Connector, LabelView> {
   private static int ourConnectorCounter = 0;
 
   LabelMapper(Connector source, View popupView, PolyLineConnection connection, DiagramView diagramView) {
-    super(source, new LabelView(popupView, connection, diagramView));
+    super(source, new LabelView(connection, diagramView));
 
     getSource().text.set("label " + ourConnectorCounter++);
 

@@ -333,7 +333,7 @@ public class View2Dom {
   }
 
   private static boolean isContainerEvent(MouseEvent evt, ViewContainer container) {
-    return container.root().bounds().get().contains(evt.location());
+    return container.contentRoot().bounds().get().contains(evt.location());
   }
 
   private static MouseEvent toMouseEvent(Element el, Event e) {

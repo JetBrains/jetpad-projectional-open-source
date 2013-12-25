@@ -26,7 +26,7 @@ public class IndentDemoMain {
     CellContainer cellContainer = NanoLangDemo.create();
 
     ViewContainer viewContainer = new ViewContainer();
-    MapperCell2View.map(cellContainer, viewContainer.root());
+    MapperCell2View.map(cellContainer, viewContainer);
     AwtDemo.show(viewContainer);
   }
 }

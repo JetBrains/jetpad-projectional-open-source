@@ -68,7 +68,7 @@ public class RootSimpleDiagramMapper extends Mapper<SimpleDiagram, ViewContainer
   protected void registerSynchronizers(SynchronizersConfiguration conf) {
     super.registerSynchronizers(conf);
 
-    conf.add(Synchronizers.forConstantRole(this, getSource(), getTarget().root().children(), new MapperFactory<SimpleDiagram, View>() {
+    conf.add(Synchronizers.forConstantRole(this, getSource(), getTarget().contentRoot().children(), new MapperFactory<SimpleDiagram, View>() {
       @Override
       public Mapper<? extends SimpleDiagram, ? extends View> createMapper(SimpleDiagram source) {
         return new SimpleDiagramMapper(source);

@@ -31,7 +31,7 @@ import jetbrains.mps.diagram.dataflow.model.OutputPort;
 
 public class ConnectorMapper extends Mapper<Connector, PolyLineConnection> {
   ConnectorMapper(Connector source, View popupView) {
-    super(source, new PolyLineConnection(new CellView(popupView)));
+    super(source, new PolyLineConnection(new CellView()));
 
     getTarget().view().prop(RootTrait.DELETE_HANDLER).set(new DeleteHandler() {
       @Override
