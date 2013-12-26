@@ -50,7 +50,7 @@ class BaseViewMapper<ViewT extends View, ElementT extends Element> extends Mappe
 
   protected void whenValid(Runnable r) {
     if (getSource().container() == null) {
-      getSource().validate();
+//      getSource().validate();
       r.run();
     } else {
       getSource().container().whenValid(r);
