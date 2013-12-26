@@ -16,11 +16,8 @@
 package jetbrains.jetpad.projectional.view.gwt;
 
 import com.google.gwt.dom.client.Element;
-import com.google.gwt.dom.client.Style;
 import com.google.gwt.user.client.DOM;
-import jetbrains.jetpad.geometry.Rectangle;
 import jetbrains.jetpad.geometry.Vector;
-import jetbrains.jetpad.mapper.Mapper;
 import jetbrains.jetpad.mapper.Synchronizer;
 import jetbrains.jetpad.mapper.SynchronizerContext;
 import jetbrains.jetpad.mapper.Synchronizers;

@@ -25,6 +25,7 @@ import jetbrains.jetpad.model.event.EventHandler;
 import jetbrains.jetpad.model.event.Registration;
 import jetbrains.jetpad.model.property.PropertyChangeEvent;
 import org.junit.Test;
+import org.mockito.Mockito;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -331,6 +332,29 @@ public class ViewTest {
     view.visible().set(false);
 
     assertTrue(container.root().viewAt(view.bounds().get().center()) != view);
+  }
+
+  @Test
+  public void onAttachEventSource() {
+    View view = newFocusableView();
+    EventHandler<Object> handler = (EventHandler<Object>) Mockito.mock(EventHandler.class);
+    view.attachEvents().addHandler(handler);
+    container.contentRoot().children().add(view);
+    Mockito.verify(handler).onEvent(null);
+  }
+
+  @Test
+  public void onDetachEventSource() {
+    View view = newFocusableView();
+    EventHandler<Object> handler = (EventHandler<Object>) Mockito.mock(EventHandler.class);
+    view.detachEvents().addHandler(handler);
+    container.contentRoot().children().add(view);
+
+    Mockito.verifyZeroInteractions(handler);
+
+    container.contentRoot().children().remove(view);
+
+    Mockito.verify(handler).onEvent(null);
   }
 
   private EventHandler<PropertyChangeEvent<Rectangle>> originTracker(final List<Vector> origins) {

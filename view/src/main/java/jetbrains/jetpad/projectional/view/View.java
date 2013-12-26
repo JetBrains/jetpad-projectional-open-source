@@ -662,7 +662,7 @@ public abstract class View implements Composite<View> {
       public Registration addHandler(final EventHandler<? super Object> handler) {
         return addListener(new ViewAdapter() {
           @Override
-          public void onViewAttached() {
+          public void onViewDetached() {
             handler.onEvent(null);
           }
         });
