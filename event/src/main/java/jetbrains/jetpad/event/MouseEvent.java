@@ -30,7 +30,6 @@ public class MouseEvent extends Event {
     this(v.x, v.y);
   }
 
-
   public int x() {
     return myX;
   }
@@ -41,13 +40,5 @@ public class MouseEvent extends Event {
 
   public Vector location() {
     return new Vector(myX, myY);
-  }
-
-  private Throwable myConsumedAt;
-
-  @Override
-  public void consume() {
-    myConsumedAt = new Throwable();
-    super.consume();
   }
 }
