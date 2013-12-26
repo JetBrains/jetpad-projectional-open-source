@@ -21,6 +21,8 @@ import jetbrains.jetpad.base.Value;
 import jetbrains.jetpad.geometry.Rectangle;
 import jetbrains.jetpad.mapper.Mapper;
 import jetbrains.jetpad.mapper.Synchronizers;
+import jetbrains.jetpad.model.event.EventHandler;
+import jetbrains.jetpad.model.event.Registration;
 import jetbrains.jetpad.model.property.DerivedProperty;
 import jetbrains.jetpad.model.property.ReadableProperty;
 import jetbrains.jetpad.model.property.WritableProperty;
@@ -48,10 +50,16 @@ class BaseViewMapper<ViewT extends View, ElementT extends Element> extends Mappe
     return ((BaseViewMapper) getParent()).isDomLayout();
   }
 
-  protected void whenValid(Runnable r) {
+  protected void whenValid(final Runnable r) {
     if (getSource().container() == null) {
-//      getSource().validate();
-      r.run();
+      final Value<Registration> reg = new Value<Registration>();
+      reg.set(getSource().attachEvents().addHandler(new EventHandler<Object>() {
+        @Override
+        public void onEvent(Object event) {
+          whenValid(r);
+          reg.get().remove();
+        }
+      }));
     } else {
       getSource().container().whenValid(r);
     }

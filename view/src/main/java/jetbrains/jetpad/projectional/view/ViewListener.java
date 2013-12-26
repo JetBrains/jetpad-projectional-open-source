@@ -30,6 +30,9 @@ interface ViewListener {
   void onViewValidated();
   void onViewInvalidated();
 
+  void onViewAttached();
+  void onViewDetached();
+
   void onBoundsChanged(PropertyChangeEvent<Rectangle> change);
 
   /**

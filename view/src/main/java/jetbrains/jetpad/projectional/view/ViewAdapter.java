@@ -38,6 +38,14 @@ class ViewAdapter implements ViewListener {
   }
 
   @Override
+  public void onViewAttached() {
+  }
+
+  @Override
+  public void onViewDetached() {
+  }
+
+  @Override
   public void onBoundsChanged(PropertyChangeEvent<Rectangle> change) {
   }
 

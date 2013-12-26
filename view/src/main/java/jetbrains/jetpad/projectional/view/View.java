@@ -139,10 +139,24 @@ public abstract class View implements Composite<View> {
     myContainer.viewAttached(this);
 
     onAttach();
+
+    fire(new ListenerCaller<ViewListener>() {
+      @Override
+      public void call(ViewListener l) {
+        l.onViewAttached();
+      }
+    });
   }
 
   void detach() {
     if (myContainer == null) throw new IllegalStateException();
+
+    fire(new ListenerCaller<ViewListener>() {
+      @Override
+      public void call(ViewListener l) {
+        l.onViewDetached();
+      }
+    });
 
     onDetach();
 
@@ -607,24 +621,6 @@ public abstract class View implements Composite<View> {
     }
   }
 
-  public void dump() {
-    dump(0);
-  }
-
-  private void dump(int indent) {
-    String text = "";
-    for (int i = 0; i < indent; i++) {
-      text += "  ";
-    }
-
-    String name = getClass().getName();
-    System.out.println(text + name.substring(1 + name.lastIndexOf(".")) + " " + bounds().get());
-
-    for (View child : children()) {
-      child.dump(indent + 1);
-    }
-  }
-
   private void scrollInScrollViews() {
     View current = parent().get();
 
@@ -644,6 +640,34 @@ public abstract class View implements Composite<View> {
     if (container() != null) {
       container().peer().scrollTo(this);
     }
+  }
+
+  public EventSource<?> attachEvents() {
+    return new EventSource<Object>() {
+      @Override
+      public Registration addHandler(final EventHandler<? super Object> handler) {
+        return addListener(new ViewAdapter() {
+          @Override
+          public void onViewAttached() {
+            handler.onEvent(null);
+          }
+        });
+      }
+    };
+  }
+
+  public EventSource<?> detachEvents() {
+    return new EventSource<Object>() {
+      @Override
+      public Registration addHandler(final EventHandler<? super Object> handler) {
+        return addListener(new ViewAdapter() {
+          @Override
+          public void onViewAttached() {
+            handler.onEvent(null);
+          }
+        });
+      }
+    };
   }
 
   @Override
@@ -668,6 +692,8 @@ public abstract class View implements Composite<View> {
   private class ChildList extends ObservableArrayList<View> {
     @Override
     public void add(final int index, final View item) {
+      invalidate();
+
       item.myParent = View.this;
       item.fire(new ListenerCaller<ViewListener>() {
         @Override
@@ -685,12 +711,14 @@ public abstract class View implements Composite<View> {
       if (isAttached()) {
         item.attach(myContainer);
       }
-      invalidate();
     }
 
     @Override
     public View remove(final int index) {
       final View item = get(index);
+      if (isAttached()) {
+        item.detach();
+      }
       final View oldParent = item.myParent;
       item.myParent = null;
       item.fire(new ListenerCaller<ViewListener>() {
@@ -706,9 +734,6 @@ public abstract class View implements Composite<View> {
           l.onChildRemoved(new CollectionItemEvent<View>(item, index, false));
         }
       });
-      if (isAttached()) {
-        item.detach();
-      }
       invalidate();
       return result;
     }
