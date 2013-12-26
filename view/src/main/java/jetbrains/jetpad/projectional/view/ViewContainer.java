@@ -207,12 +207,12 @@ public class ViewContainer {
       addListener(new ViewAdapter() {
         @Override
         public void onChildAdded(CollectionItemEvent<View> event) {
-          throw new IllegalStateException();
+          throw new IllegalStateException("It's forbidden to add children to root node");
         }
 
         @Override
         public void onChildRemoved(CollectionItemEvent<View> event) {
-          throw new IllegalStateException();
+          throw new IllegalStateException("It's forbidden to remove children from root node");
         }
       });
     }
