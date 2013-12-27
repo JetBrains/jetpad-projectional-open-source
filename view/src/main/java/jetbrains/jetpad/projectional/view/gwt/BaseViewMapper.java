@@ -35,6 +35,12 @@ class BaseViewMapper<ViewT extends View, ElementT extends Element> extends Mappe
   BaseViewMapper(View2DomContext ctx, ViewT source, ElementT target) {
     super(source, target);
     myContext = ctx;
+
+    if (source == source.container().decorationRoot()) {
+      //we use optimization to position horizontal and vertical items in a special way (we use browser positioning)
+      //that's (probably) why stacking orded doesn't work correctly: we mix relative with absolute positioning there
+      getTarget().getStyle().setZIndex(100);
+    }
   }
 
   View2DomContext context() {
