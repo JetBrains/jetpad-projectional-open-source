@@ -695,6 +695,10 @@ public abstract class View implements Composite<View> {
       invalidate();
 
       item.myParent = View.this;
+      if (isAttached()) {
+        item.attach(myContainer);
+      }
+
       item.fire(new ListenerCaller<ViewListener>() {
         @Override
         public void call(ViewListener l) {
@@ -708,19 +712,18 @@ public abstract class View implements Composite<View> {
           l.onChildAdded(new CollectionItemEvent<View>(item, index, true));
         }
       });
-      if (isAttached()) {
-        item.attach(myContainer);
-      }
     }
 
     @Override
     public View remove(final int index) {
       final View item = get(index);
+
       if (isAttached()) {
         item.detach();
       }
       final View oldParent = item.myParent;
       item.myParent = null;
+
       item.fire(new ListenerCaller<ViewListener>() {
         @Override
         public void call(ViewListener l) {
