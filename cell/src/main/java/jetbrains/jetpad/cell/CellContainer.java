@@ -44,7 +44,7 @@ public class CellContainer {
 
   private List<Cell> myPopups = new ArrayList<Cell>();
   private Listeners<CellContainerListener> myListeners = new Listeners<CellContainerListener>();
-  private boolean myDispatching;
+  private boolean myInCommand;
   private CellContainerPeer myCellContainerPeer = CellContainerPeer.NULL;
 
   private String myLastSeenText;
@@ -242,10 +242,10 @@ public class CellContainer {
    * For example, CellContainerListeners can save UI state, record undoable actions, and do other stuff.
    */
   public void executeCommand(Runnable r) {
-    if (myDispatching) {
+    if (myInCommand) {
       r.run();
     } else {
-      myDispatching = true;
+      myInCommand = true;
       myListeners.fire(new ListenerCaller<CellContainerListener>() {
         @Override
         public void call(CellContainerListener l) {
@@ -261,7 +261,7 @@ public class CellContainer {
             l.onAfterCommand();
           }
         });
-        myDispatching = false;
+        myInCommand = false;
       }
     }
   }

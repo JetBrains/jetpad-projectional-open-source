@@ -315,7 +315,7 @@ public class ViewContainerComponent extends JComponent implements Scrollable {
             });
           }
         }),
-        myContainer.addListener(new ViewContainerListener() {
+        myContainer.addListener(new ViewContainerAdapter() {
           @Override
           public void onPropertySet(View view, ViewPropertySpec<?> prop, PropertyChangeEvent<?> event) {
             if (view instanceof TextView && prop == TextView.CARET_VISIBLE) {

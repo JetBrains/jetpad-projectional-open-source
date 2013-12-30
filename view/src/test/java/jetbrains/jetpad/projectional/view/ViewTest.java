@@ -16,6 +16,7 @@
 package jetbrains.jetpad.projectional.view;
 
 import jetbrains.jetpad.base.Value;
+import jetbrains.jetpad.event.MouseEvent;
 import jetbrains.jetpad.geometry.Rectangle;
 import jetbrains.jetpad.geometry.Vector;
 import jetbrains.jetpad.model.composite.Composites;
@@ -355,6 +356,17 @@ public class ViewTest {
     container.contentRoot().children().remove(view);
 
     Mockito.verify(handler).onEvent(null);
+  }
+
+  @Test
+  public void eventsAreFiredInCommands() {
+    ViewContainerListener listener = Mockito.mock(ViewContainerListener.class);
+    container.addListener(listener);
+
+    container.mousePressed(new MouseEvent(0, 0));
+
+    Mockito.verify(listener).onBeforeCommand();
+    Mockito.verify(listener).onAfterCommand();
   }
 
   private EventHandler<PropertyChangeEvent<Rectangle>> originTracker(final List<Vector> origins) {

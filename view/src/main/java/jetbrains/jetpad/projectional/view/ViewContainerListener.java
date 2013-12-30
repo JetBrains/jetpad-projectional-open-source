@@ -18,6 +18,9 @@ package jetbrains.jetpad.projectional.view;
 import jetbrains.jetpad.model.property.PropertyChangeEvent;
 
 public interface ViewContainerListener {
+  void onBeforeCommand();
+  void onAfterCommand();
+
   void onPropertySet(View view, ViewPropertySpec<?> prop, PropertyChangeEvent<?> event);
   void onViewAttached(View view);
   void onViewDetached(View view);

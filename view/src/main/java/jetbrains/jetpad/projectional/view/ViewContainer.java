@@ -38,6 +38,7 @@ public class ViewContainer {
   private View myDragStart;
   private List<Runnable> myOnValidate = new ArrayList<Runnable>();
   private Listeners<ViewContainerListener> myListeners = new Listeners<ViewContainerListener>();
+  private boolean myInCommand;
 
   public ViewContainer() {
     myPeer.attach(this);
@@ -109,25 +110,35 @@ public class ViewContainer {
     dispatchMouseEvent(e, ViewEvents.MOUSE_MOVED);
   }
 
-  public void mouseDragged(MouseEvent e) {
-    root().validate();
+  public void mouseDragged(final MouseEvent e) {
+    executeCommand(new Runnable() {
+      @Override
+      public void run() {
+        root().validate();
 
-    if (myDragStart != null) {
-      myDragStart.dispatch(ViewEvents.MOUSE_DRAGGED, e);
-    }
+        if (myDragStart != null) {
+          myDragStart.dispatch(ViewEvents.MOUSE_DRAGGED, e);
+        }
+      }
+    });
   }
 
-  private void dispatchMouseEvent(MouseEvent e, ViewEventSpec<MouseEvent> spec) {
-    root().validate();
+  private void dispatchMouseEvent(final MouseEvent e, final ViewEventSpec<MouseEvent> spec) {
+    executeCommand(new Runnable() {
+      @Override
+      public void run() {
+        root().validate();
 
-    View target = root().viewAt(e.location());
-    if (target == null) {
-      target = root();
-    }
-    if (spec == ViewEvents.MOUSE_PRESSED) {
-      myDragStart = target;
-    }
-    target.dispatch(spec, e);
+        View target = root().viewAt(e.location());
+        if (target == null) {
+          target = root();
+        }
+        if (spec == ViewEvents.MOUSE_PRESSED) {
+          myDragStart = target;
+        }
+        target.dispatch(spec, e);
+      }
+    });
   }
 
   public void keyPressed(KeyEvent e) {
@@ -154,12 +165,42 @@ public class ViewContainer {
     dispatchFocusBasedEvent(e, ViewEvents.PASTE);
   }
 
-  private <EventT extends Event> void dispatchFocusBasedEvent(EventT e, ViewEventSpec<EventT> spec) {
-    View target = focusedView().get();
-    if (target == null) {
-      target = root();
+  public void executeCommand(Runnable r) {
+    if (myInCommand) {
+      r.run();
+    } else {
+      myInCommand = true;
+      myListeners.fire(new ListenerCaller<ViewContainerListener>() {
+        @Override
+        public void call(ViewContainerListener l) {
+          l.onBeforeCommand();
+        }
+      });
+      try {
+        r.run();
+      } finally {
+        myListeners.fire(new ListenerCaller<ViewContainerListener>() {
+          @Override
+          public void call(ViewContainerListener l) {
+            l.onAfterCommand();
+          }
+        });
+        myInCommand = false;
+      }
     }
-    target.dispatch(spec, e);
+  }
+
+  private <EventT extends Event> void dispatchFocusBasedEvent(final EventT e, final ViewEventSpec<EventT> spec) {
+    executeCommand(new Runnable() {
+      @Override
+      public void run() {
+        View target = focusedView().get();
+        if (target == null) {
+          target = root();
+        }
+        target.dispatch(spec, e);
+      }
+    });
   }
 
   void propertyChanged(final View view, final ViewPropertySpec<?> prop, final PropertyChangeEvent<?> event) {
