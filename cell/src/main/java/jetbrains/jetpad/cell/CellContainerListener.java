@@ -19,8 +19,8 @@ import jetbrains.jetpad.model.collections.CollectionItemEvent;
 import jetbrains.jetpad.model.property.PropertyChangeEvent;
 
 public interface CellContainerListener {
-  void onBeforeInputEventHandled();
-  void onAfterInputEventHandled();
+  void onBeforeCommand();
+  void onAfterCommand();
 
   void onViewPropertyChanged(Cell cell, CellPropertySpec<?> prop, PropertyChangeEvent<?> change);
   void onChildAdded(Cell parent, CollectionItemEvent<Cell> change);

@@ -249,7 +249,7 @@ public class CellContainer {
       myListeners.fire(new ListenerCaller<CellContainerListener>() {
         @Override
         public void call(CellContainerListener l) {
-          l.onBeforeInputEventHandled();
+          l.onBeforeCommand();
         }
       });
       try {
@@ -258,7 +258,7 @@ public class CellContainer {
         myListeners.fire(new ListenerCaller<CellContainerListener>() {
           @Override
           public void call(CellContainerListener l) {
-            l.onAfterInputEventHandled();
+            l.onAfterCommand();
           }
         });
         myDispatching = false;

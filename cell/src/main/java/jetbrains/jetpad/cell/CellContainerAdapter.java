@@ -20,11 +20,11 @@ import jetbrains.jetpad.model.property.PropertyChangeEvent;
 
 public class CellContainerAdapter implements CellContainerListener {
   @Override
-  public void onBeforeInputEventHandled() {
+  public void onBeforeCommand() {
   }
 
   @Override
-  public void onAfterInputEventHandled() {
+  public void onAfterCommand() {
   }
 
   @Override
