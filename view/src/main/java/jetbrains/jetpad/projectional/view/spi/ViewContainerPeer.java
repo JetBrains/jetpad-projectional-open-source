@@ -34,4 +34,6 @@ public interface ViewContainerPeer {
   int textHeight();
   int textBaseLine();
   int textWidth(String text);
+
+  void requestFocus();
 }

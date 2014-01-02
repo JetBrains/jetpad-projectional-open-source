@@ -64,4 +64,8 @@ public class NullViewContainerPeer implements ViewContainerPeer {
   public int textWidth(String text) {
     return text.length() * 5;
   }
+
+  @Override
+  public void requestFocus() {
+  }
 }

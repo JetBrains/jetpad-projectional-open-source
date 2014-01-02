@@ -659,5 +659,10 @@ public class ViewContainerComponent extends JComponent implements Scrollable {
     public int textWidth(String text) {
       return getFontMetrics().stringWidth(text);
     }
+
+    @Override
+    public void requestFocus() {
+      ViewContainerComponent.this.requestFocus();
+    }
   }
 }

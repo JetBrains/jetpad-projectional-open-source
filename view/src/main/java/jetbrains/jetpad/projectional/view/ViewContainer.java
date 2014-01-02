@@ -233,8 +233,13 @@ public class ViewContainer {
       }
     });
   }
+
   public Registration addListener(ViewContainerListener l) {
     return myListeners.add(l);
+  }
+
+  public void requestFocus() {
+    myPeer.requestFocus();
   }
 
   private class RootView extends View {

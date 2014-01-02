@@ -530,5 +530,10 @@ public class View2Canvas {
     public int textWidth(String text) {
       return text.length() * myMetrics.dimension().x;
     }
+
+    @Override
+    public void requestFocus() {
+      myElement.focus();
+    }
   }
 }

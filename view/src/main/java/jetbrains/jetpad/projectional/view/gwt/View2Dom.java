@@ -178,6 +178,11 @@ public class View2Dom {
       public int textWidth(String text) {
         return text.length() * fontWidth;
       }
+
+      @Override
+      public void requestFocus() {
+        rootDiv.focus();
+      }
     });
 
     reg.add(PropertyBinding.bind(container.root().bounds(), new WritableProperty<Rectangle>() {
