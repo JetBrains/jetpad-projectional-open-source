@@ -181,6 +181,11 @@ public class CellContainerToViewMapper extends Mapper<CellContainer, View> {
         if (mapper == null) return;
         mapper.getTarget().scrollTo();
       }
+
+      @Override
+      public void requestFocus() {
+        getTarget().container().requestFocus();
+      }
     };
   }
 

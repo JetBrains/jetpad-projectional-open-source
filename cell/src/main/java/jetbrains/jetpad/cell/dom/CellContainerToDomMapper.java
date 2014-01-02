@@ -341,6 +341,11 @@ public class CellContainerToDomMapper extends Mapper<CellContainer, Element> {
       public void scrollTo(Cell cell) {
         Scrolling.scrollTo(getElement(cell));
       }
+
+      @Override
+      public void requestFocus() {
+        getFocusTarget().focus();
+      }
     };
   }
 

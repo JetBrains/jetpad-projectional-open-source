@@ -37,10 +37,16 @@ public interface CellContainerPeer {
     @Override
     public void scrollTo(Cell cell) {
     }
+
+    @Override
+    public void requestFocus() {
+    }
   };
 
   int getCaretAt(TextCell tv, int x);
   int getCaretOffset(TextCell tv, int caret);
   Rectangle getBounds(Cell cell);
   void scrollTo(Cell cell);
+
+  void requestFocus();
 }

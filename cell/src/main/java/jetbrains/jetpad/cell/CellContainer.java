@@ -330,6 +330,10 @@ public class CellContainer {
     myCellContainerPeer = CellContainerPeer.NULL;
   }
 
+  public void requestFocus() {
+    myCellContainerPeer.requestFocus();
+  }
+
   public interface State {
     void restore();
   }
