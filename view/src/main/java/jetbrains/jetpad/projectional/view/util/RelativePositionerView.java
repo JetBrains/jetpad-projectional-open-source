@@ -56,9 +56,9 @@ public class RelativePositionerView extends View {
       } else if (vAnchor == VerticalAnchor.TOP) {
         y = 0;
       } else if (vAnchor == VerticalAnchor.BOTTOM) {
-        y = childBounds.dimension.y;
+        y = -childBounds.dimension.y;
       } else if (vAnchor == VerticalAnchor.CENTER) {
-        y = childBounds.dimension.y / 2;
+        y = -childBounds.dimension.y / 2;
       }
 
       child.moveTo(relativeTo.add(new Vector(x, y)));

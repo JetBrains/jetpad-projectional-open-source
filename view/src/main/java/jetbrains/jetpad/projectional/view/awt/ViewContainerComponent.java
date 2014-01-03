@@ -26,6 +26,7 @@ import jetbrains.jetpad.model.property.PropertyChangeEvent;
 import jetbrains.jetpad.projectional.view.*;
 import jetbrains.jetpad.projectional.view.spi.NullViewContainerPeer;
 import jetbrains.jetpad.projectional.view.spi.ViewContainerPeer;
+import jetbrains.jetpad.projectional.view.util.RelativePositionerView;
 import jetbrains.jetpad.values.Color;
 
 import javax.swing.*;
@@ -506,6 +507,12 @@ public class ViewContainerComponent extends JComponent implements Scrollable {
           g.fillPolygon(xs, ys, n);
         }
       }
+    }
+
+    if (view instanceof RelativePositionerView) {
+      g.setColor(toAwtColor(Color.RED));
+      g.drawLine(bounds.origin.x + bounds.dimension.x / 2, bounds.origin.y, bounds.origin.x + bounds.dimension.x / 2, bounds.origin.y + bounds.dimension.y);
+      g.drawLine(bounds.origin.x, bounds.origin.y + bounds.dimension.y / 2, bounds.origin.x + bounds.dimension.x, bounds.origin.y + bounds.dimension.y / 2);
     }
 
     for (View child : view.children()) {

@@ -41,13 +41,13 @@ public class RelativePositionerViewTest {
   @Test
   public void verticalBottom() {
     positionerView.verticalAnchor().set(RelativePositionerView.VerticalAnchor.BOTTOM);
-    assertBounds(0, 20, 10, 20);
+    assertBounds(0, -20, 10, 20);
   }
 
   @Test
   public void verticalCenter() {
     positionerView.verticalAnchor().set(RelativePositionerView.VerticalAnchor.CENTER);
-    assertBounds(0, 10, 10, 20);
+    assertBounds(0, -10, 10, 20);
   }
 
   public void assertBounds(int x, int y, int w, int h) {
