@@ -173,6 +173,7 @@ class BaseViewMapper<ViewT extends View, ElementT extends Element> extends Mappe
 
   protected OMSVGSVGElement createSVG(OMSVGDocument doc) {
     final OMSVGSVGElement svg = doc.createSVGSVGElement();
+    //without setting absolute position svg element might move down for unknown reason
     OMSVGStyle style = svg.getStyle();
     style.setPosition(Style.Position.ABSOLUTE);
     style.setLeft(0, Style.Unit.PX);
