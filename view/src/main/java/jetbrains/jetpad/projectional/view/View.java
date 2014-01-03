@@ -254,21 +254,26 @@ public abstract class View implements Composite<View> {
     }
   }
 
-  public <ValueT> Property<ValueT> prop(final ViewPropertySpec<ValueT> prop) {
+
+  protected Property<Vector> toParentOffsetProp(final ViewPropertySpec<Vector> spec) {
+    return new ToParentOffsetProperty(prop(spec));
+  }
+
+  public <ValueT> Property<ValueT> prop(final ViewPropertySpec<ValueT> spec) {
     return new Property<ValueT>() {
       @Override
       public String getPropExpr() {
-        return this + "." + prop;
+        return this + "." + spec;
       }
 
       @Override
       public ValueT get() {
-        return View.this.get(prop);
+        return View.this.get(spec);
       }
 
       @Override
       public void set(ValueT value) {
-        View.this.set(prop, value);
+        View.this.set(spec, value);
       }
 
       @Override
@@ -276,7 +281,7 @@ public abstract class View implements Composite<View> {
         return addListener(new ViewAdapter() {
           @Override
           public void onPropertySet(ViewPropertySpec<?> p, PropertyChangeEvent<?> event) {
-            if (p != prop) return;
+            if (p != spec) return;
             handler.onEvent((PropertyChangeEvent<ValueT>) event);
           }
         });
@@ -818,5 +823,24 @@ public abstract class View implements Composite<View> {
     Vector origin();
     void bounds(Vector rect, int baseLine);
     void bounds(Rectangle bounds, int baseLine);
+  }
+
+  private class ToParentOffsetProperty extends DerivedProperty<Vector> implements Property<Vector> {
+    private Property<Vector> myBaseProperty;
+
+    private ToParentOffsetProperty(Property<Vector> baseProperty) {
+      super(baseProperty, toRootDelta());
+      myBaseProperty = baseProperty;
+    }
+
+    @Override
+    public Vector get() {
+      return myBaseProperty.get().add(toRootDelta().get());
+    }
+
+    @Override
+    public void set(Vector value) {
+      myBaseProperty.set(value.sub(toRootDelta().get()));
+    }
   }
 }

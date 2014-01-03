@@ -31,11 +31,11 @@ public class LineView extends View {
   private static final ViewPropertySpec<Vector> END = new ViewPropertySpec<Vector>("end", ViewPropertyKind.RELAYOUT_AND_REPAINT, Vector.ZERO);
 
   public Property<Vector> start() {
-    return new ToParentOffsetProperty(prop(START));
+    return toParentOffsetProp(START);
   }
 
   public Property<Vector> end() {
-    return new ToParentOffsetProperty(prop(END));
+    return toParentOffsetProp(END);
   }
 
   public Property<Color> color() {
@@ -60,24 +60,5 @@ public class LineView extends View {
     DoubleSegment segment = new DoubleSegment(start().get().toDoubleVector(), end().get().toDoubleVector());
     double distance = segment.distance(loc.toDoubleVector());
     return bounds().get().contains(loc) && distance < THRESHOLD;
-  }
-
-  private class ToParentOffsetProperty extends DerivedProperty<Vector> implements Property<Vector> {
-    private Property<Vector> myBaseProperty;
-
-    private ToParentOffsetProperty(Property<Vector> baseProperty) {
-      super(baseProperty, toRootDelta());
-      myBaseProperty = baseProperty;
-    }
-
-    @Override
-    public Vector get() {
-      return myBaseProperty.get().add(toRootDelta().get());
-    }
-
-    @Override
-    public void set(Vector value) {
-      myBaseProperty.set(value.sub(toRootDelta().get()));
-    }
   }
 }
