@@ -41,7 +41,7 @@ class LineViewMapper extends BaseViewMapper<LineView, Element> {
     super.registerSynchronizers(conf);
 
     OMSVGDocument doc = OMSVGParser.createDocument();
-    final OMSVGSVGElement svg = doc.createSVGSVGElement();
+    final OMSVGSVGElement svg = createSVG(doc);
     getTarget().appendChild(svg.getElement());
 
     final OMSVGLineElement line = new OMSVGLineElement();

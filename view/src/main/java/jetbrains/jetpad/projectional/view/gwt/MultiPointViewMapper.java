@@ -41,7 +41,7 @@ class MultiPointViewMapper extends BaseViewMapper<MultiPointView, Element> {
     super.registerSynchronizers(conf);
 
     OMSVGDocument doc = OMSVGParser.createDocument();
-    final OMSVGSVGElement svg = doc.createSVGSVGElement();
+    final OMSVGSVGElement svg = createSVG(doc);
     getTarget().appendChild(svg.getElement());
 
     final OMSVGPolylineElement polyLine = new OMSVGPolylineElement();
