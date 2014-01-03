@@ -44,6 +44,12 @@ public class RelativePositionerViewTest {
     assertBounds(0, 20, 10, 20);
   }
 
+  @Test
+  public void verticalCenter() {
+    positionerView.verticalAnchor().set(RelativePositionerView.VerticalAnchor.CENTER);
+    assertBounds(0, 10, 10, 20);
+  }
+
   public void assertBounds(int x, int y, int w, int h) {
     positionerView.validate();
     Assert.assertEquals(new Rectangle(x, y, w, h), positionerView.bounds().get());
