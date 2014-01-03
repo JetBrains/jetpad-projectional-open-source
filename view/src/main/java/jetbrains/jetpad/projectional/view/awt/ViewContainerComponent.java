@@ -509,12 +509,6 @@ public class ViewContainerComponent extends JComponent implements Scrollable {
       }
     }
 
-    if (view instanceof RelativePositionerView) {
-      g.setColor(toAwtColor(Color.RED));
-      g.drawLine(bounds.origin.x + bounds.dimension.x / 2, bounds.origin.y, bounds.origin.x + bounds.dimension.x / 2, bounds.origin.y + bounds.dimension.y);
-      g.drawLine(bounds.origin.x, bounds.origin.y + bounds.dimension.y / 2, bounds.origin.x + bounds.dimension.x, bounds.origin.y + bounds.dimension.y / 2);
-    }
-
     for (View child : view.children()) {
       paint(g.create(), child);
     }
