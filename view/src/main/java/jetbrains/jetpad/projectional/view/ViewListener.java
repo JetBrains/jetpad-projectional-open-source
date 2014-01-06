@@ -21,7 +21,8 @@ import jetbrains.jetpad.model.collections.CollectionItemEvent;
 import jetbrains.jetpad.model.property.PropertyChangeEvent;
 
 /**
- * This interface created for the sole purpose of memory optimization
+ * This interface created for the sole purpose of memory optimization.
+ * It's internal to view package. Do not make it public.
  */
 interface ViewListener {
   void onPropertySet(ViewPropertySpec<?> prop, PropertyChangeEvent<?> event);
