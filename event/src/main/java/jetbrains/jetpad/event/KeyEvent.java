@@ -18,8 +18,7 @@ package jetbrains.jetpad.event;
 import java.util.*;
 
 public class KeyEvent extends Event {
-  private Key myKey;
-  private Set<ModifierKey> myModifiers;
+  private KeyStroke myKeyStroke;
   private char myKeyChar;
 
   public KeyEvent(Key key) {
@@ -27,13 +26,16 @@ public class KeyEvent extends Event {
   }
 
   public KeyEvent(Key key, char ch, Collection<ModifierKey> modifiers) {
-    myKey = key;
-    myModifiers = new HashSet<ModifierKey>(modifiers);
+    myKeyStroke = new KeyStroke(key, modifiers);
     myKeyChar = ch;
   }
 
   public Key key() {
-    return myKey;
+    return myKeyStroke.key();
+  }
+
+  public KeyStroke keyStroke() {
+    return myKeyStroke;
   }
 
   public char keyChar() {
@@ -41,20 +43,19 @@ public class KeyEvent extends Event {
   }
 
   public Set<ModifierKey> modifiers() {
-    return Collections.unmodifiableSet(myModifiers);
+    return myKeyStroke.modifiers();
   }
 
   public boolean is(Key key, ModifierKey... modifiers) {
-    if (key != myKey) return false;
-    return myModifiers.equals(new HashSet<ModifierKey>(Arrays.asList(modifiers)));
+    return myKeyStroke.is(key, modifiers);
   }
 
   public boolean has(ModifierKey key) {
-    return myModifiers.contains(key);
+    return myKeyStroke.has(key);
   }
 
   @Override
   public String toString() {
-    return myKey + " " + myModifiers;
+    return myKeyStroke.toString();
   }
 }
