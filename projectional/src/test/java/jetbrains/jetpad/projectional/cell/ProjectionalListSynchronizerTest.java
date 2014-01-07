@@ -17,14 +17,11 @@ package jetbrains.jetpad.projectional.cell;
 
 import com.google.common.base.Function;
 import com.google.common.base.Supplier;
-import jetbrains.jetpad.event.ContentKind;
-import jetbrains.jetpad.event.ContentKinds;
+import jetbrains.jetpad.event.*;
 import jetbrains.jetpad.mapper.Mapper;
 import jetbrains.jetpad.mapper.MapperFactory;
 import jetbrains.jetpad.model.collections.list.ObservableArrayList;
 import jetbrains.jetpad.model.collections.list.ObservableList;
-import jetbrains.jetpad.event.Key;
-import jetbrains.jetpad.event.ModifierKey;
 import jetbrains.jetpad.cell.*;
 import jetbrains.jetpad.cell.action.CellAction;
 import jetbrains.jetpad.cell.action.CellActions;
@@ -570,8 +567,8 @@ public class ProjectionalListSynchronizerTest extends EditingTestCase {
     selectChild(0);
 
     press(Key.DOWN, ModifierKey.SHIFT);
-    press(Key.C, ModifierKey.CONTROL);
-    press(Key.V, ModifierKey.CONTROL);
+    press(KeyStrokeSpecs.COPY);
+    press(KeyStrokeSpecs.PASTE);
 
     assertEquals(2, container.children.size());
   }
@@ -582,8 +579,8 @@ public class ProjectionalListSynchronizerTest extends EditingTestCase {
     container.children.add(new ComplexChild());
     selectChild(0);
 
-    press(Key.C, ModifierKey.CONTROL);
-    press(Key.V, ModifierKey.CONTROL);
+    press(KeyStrokeSpecs.COPY);
+    press(KeyStrokeSpecs.PASTE);
 
     assertEquals(2, container.children.size());
   }
@@ -594,7 +591,7 @@ public class ProjectionalListSynchronizerTest extends EditingTestCase {
     selectChild(0);
 
     press(Key.DOWN, ModifierKey.SHIFT);
-    press(Key.X, ModifierKey.CONTROL);
+    press(KeyStrokeSpecs.CUT);
 
     assertTrue(container.children.isEmpty());
   }

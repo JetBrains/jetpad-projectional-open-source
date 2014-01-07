@@ -138,12 +138,12 @@ public class ProjectionalPropertySynchronizerTest extends EditingTestCase {
 
     beforeCopyAction.run();
 
-    press(Key.C, ModifierKey.CONTROL);
+    press(KeyStrokeSpecs.COPY);
     press(Key.DELETE, ModifierKey.CONTROL);
 
     assertNull(container.child.get());
 
-    press(Key.V, ModifierKey.CONTROL);
+    press(KeyStrokeSpecs.PASTE);
 
     assertNotNull(container.child.get());
   }
@@ -174,7 +174,7 @@ public class ProjectionalPropertySynchronizerTest extends EditingTestCase {
     focusChild(child);
 
     press(Key.DOWN, ModifierKey.SHIFT);
-    press(Key.X, ModifierKey.CONTROL);
+    press(KeyStrokeSpecs.CUT);
 
     assertNull(container.child.get());
   }

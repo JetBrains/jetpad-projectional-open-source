@@ -25,6 +25,7 @@ import jetbrains.jetpad.cell.completion.Completion;
 import jetbrains.jetpad.cell.completion.CompletionController;
 import jetbrains.jetpad.cell.position.Positions;
 import jetbrains.jetpad.cell.util.CellStateHandler;
+import jetbrains.jetpad.event.KeyStrokeSpecs;
 import jetbrains.jetpad.projectional.util.RootController;
 import jetbrains.jetpad.event.Key;
 import jetbrains.jetpad.event.KeyEvent;
@@ -618,8 +619,8 @@ public class HybridEditorTest extends EditingTestCase {
     select(0, true);
 
     press(Key.RIGHT, ModifierKey.SHIFT);
-    press(Key.C, ModifierKey.CONTROL);
-    press(Key.V, ModifierKey.CONTROL);
+    press(KeyStrokeSpecs.COPY);
+    press(KeyStrokeSpecs.PASTE);
 
     assertTokens(Tokens.ID, Tokens.ID, Tokens.PLUS);
   }
@@ -630,7 +631,7 @@ public class HybridEditorTest extends EditingTestCase {
     select(0, true);
 
     press(Key.RIGHT, ModifierKey.SHIFT);
-    press(Key.X, ModifierKey.CONTROL);
+    press(KeyStrokeSpecs.CUT);
 
     assertTokens(Tokens.PLUS);
   }
@@ -641,9 +642,9 @@ public class HybridEditorTest extends EditingTestCase {
     select(0, true);
 
     press(Key.RIGHT, ModifierKey.SHIFT);
-    press(Key.X, ModifierKey.CONTROL);
-    press(Key.V, ModifierKey.CONTROL);
-    press(Key.V, ModifierKey.CONTROL);
+    press(KeyStrokeSpecs.CUT);
+    press(KeyStrokeSpecs.PASTE);
+    press(KeyStrokeSpecs.PASTE);
 
     assertTokens(Tokens.ID, Tokens.ID, Tokens.PLUS);
   }

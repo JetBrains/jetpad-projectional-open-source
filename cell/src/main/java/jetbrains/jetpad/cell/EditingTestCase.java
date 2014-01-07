@@ -15,17 +15,13 @@
  */
 package jetbrains.jetpad.cell;
 
-import jetbrains.jetpad.event.Key;
-import jetbrains.jetpad.event.KeyEvent;
-import jetbrains.jetpad.event.ModifierKey;
-import jetbrains.jetpad.event.MouseEvent;
+import jetbrains.jetpad.event.*;
 import jetbrains.jetpad.geometry.Vector;
 import jetbrains.jetpad.cell.event.CompletionEvent;
 import jetbrains.jetpad.cell.view.MapperCell2View;
 import jetbrains.jetpad.projectional.view.ViewContainer;
 import org.junit.Before;
 
-import java.util.Arrays;
 import java.util.Collections;
 
 import static org.junit.Assert.*;
@@ -56,8 +52,17 @@ public abstract class EditingTestCase {
     return event;
   }
 
-  protected KeyEvent press(Key key, ModifierKey... keys) {
-    KeyEvent event = new KeyEvent(key, (char) 0, Arrays.asList(keys));
+  protected KeyEvent press(Key key, ModifierKey... modifiers) {
+    return press(new KeyStroke(key, modifiers));
+  }
+
+  protected KeyEvent press(KeyStrokeSpec spec) {
+    if (spec.keyStrokes().isEmpty()) throw new IllegalArgumentException();
+    return press(spec.keyStrokes().iterator().next());
+  }
+
+  protected KeyEvent press(KeyStroke ks) {
+    KeyEvent event = new KeyEvent(ks.key(), (char) 0, ks.modifiers());
     myViewContainer.keyPressed(event);
     return event;
   }
