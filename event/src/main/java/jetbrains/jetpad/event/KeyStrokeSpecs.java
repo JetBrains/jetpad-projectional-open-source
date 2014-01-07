@@ -21,6 +21,9 @@ public class KeyStrokeSpecs {
   public static final KeyStrokeSpec SELECT_UP = new KeyStroke(Key.UP, ModifierKey.ALT);
   public static final KeyStrokeSpec SELECT_DOWN = new KeyStroke(Key.DOWN, ModifierKey.ALT);
 
+  public static final KeyStrokeSpec SELECT_BEFORE = composite(new KeyStroke(Key.UP, ModifierKey.SHIFT), new KeyStroke(Key.LEFT, ModifierKey.SHIFT));
+  public static final KeyStrokeSpec SELECT_AFTER = composite(new KeyStroke(Key.DOWN, ModifierKey.SHIFT), new KeyStroke(Key.RIGHT, ModifierKey.SHIFT));
+
 
   public static KeyStrokeSpec commandOrMeta(Key key, ModifierKey... modifiers) {
     return composite(new KeyStroke(key, add(ModifierKey.CONTROL, modifiers)), new KeyStroke(key, add(ModifierKey.META, modifiers)));

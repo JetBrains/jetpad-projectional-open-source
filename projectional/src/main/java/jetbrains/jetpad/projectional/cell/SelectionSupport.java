@@ -15,6 +15,7 @@
  */
 package jetbrains.jetpad.projectional.cell;
 
+import jetbrains.jetpad.event.KeyStrokeSpecs;
 import jetbrains.jetpad.model.composite.Composites;
 import jetbrains.jetpad.model.collections.list.ObservableArrayList;
 import jetbrains.jetpad.model.collections.list.ObservableList;
@@ -144,7 +145,7 @@ public class SelectionSupport<ItemT> {
   }
 
   private void handleTargetKeyPress(final KeyEvent event) {
-    if (event.is(Key.DOWN, ModifierKey.SHIFT) || event.is(Key.RIGHT, ModifierKey.SHIFT)) {
+    if (event.is(KeyStrokeSpecs.SELECT_AFTER)) {
       runSelectionAction(new Runnable() {
         @Override
         public void run() {
@@ -192,7 +193,7 @@ public class SelectionSupport<ItemT> {
       });
     }
 
-    if (event.is(Key.UP, ModifierKey.SHIFT) || event.is(Key.LEFT, ModifierKey.SHIFT)) {
+    if (event.is(KeyStrokeSpecs.SELECT_BEFORE)) {
       runSelectionAction(new Runnable() {
         @Override
         public void run() {
