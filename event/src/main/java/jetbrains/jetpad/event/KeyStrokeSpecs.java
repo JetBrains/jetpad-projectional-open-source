@@ -2,6 +2,7 @@ package jetbrains.jetpad.event;
 
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 public class KeyStrokeSpecs {
@@ -50,7 +51,7 @@ public class KeyStrokeSpecs {
 
       @Override
       public Set<KeyStroke> keyStrokes() {
-        Set<KeyStroke> result = new HashSet<KeyStroke>();
+        Set<KeyStroke> result = new LinkedHashSet<KeyStroke>();
         for (KeyStrokeSpec s : specs) {
           result.addAll(s.keyStrokes());
         }
