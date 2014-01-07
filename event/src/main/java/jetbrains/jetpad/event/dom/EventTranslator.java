@@ -19,6 +19,7 @@ import com.google.gwt.user.client.Event;
 import jetbrains.jetpad.event.KeyEvent;
 import jetbrains.jetpad.base.Handler;
 import jetbrains.jetpad.event.Key;
+import jetbrains.jetpad.event.KeyStrokeSpecs;
 import jetbrains.jetpad.event.ModifierKey;
 
 import java.util.HashSet;
@@ -55,7 +56,7 @@ public class EventTranslator {
     if (event.key() == Key.SPACE) return false;
 
     //disable shift+arrow selection
-    if (event.is(Key.DOWN, ModifierKey.SHIFT) || event.is(Key.UP, ModifierKey.SHIFT) || event.is(Key.LEFT, ModifierKey.SHIFT) || event.is(Key.RIGHT, ModifierKey.SHIFT)) return false;
+    if (event.is(KeyStrokeSpecs.SELECT_BEFORE) || event.is(KeyStrokeSpecs.SELECT_AFTER)) return false;
 
     return !event.isConsumed();
   }
