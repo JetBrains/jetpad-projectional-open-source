@@ -27,9 +27,9 @@ import jetbrains.jetpad.cell.trait.BaseCellTrait;
 import jetbrains.jetpad.cell.trait.CellTraitEventSpec;
 import jetbrains.jetpad.cell.trait.CellTraitPropertySpec;
 import jetbrains.jetpad.cell.util.Cells;
+import jetbrains.jetpad.event.KeyStrokeSpecs;
 import jetbrains.jetpad.hybrid.parser.Token;
 import jetbrains.jetpad.cell.*;
-import jetbrains.jetpad.projectional.cell.*;
 
 import java.util.List;
 
@@ -77,7 +77,7 @@ class TokenCellTraits {
     @Override
     public void onKeyPressed(Cell tokenCell, KeyEvent event) {
       if (hybridSync(tokenCell).hasSelection() &&
-          (event.is(Key.BACKSPACE) || event.is(Key.DELETE) || ProjectionalSynchronizers.isUnconditionalDelete(event))) {
+          (event.is(Key.BACKSPACE) || event.is(Key.DELETE) || event.is(KeyStrokeSpecs.DELETE_CURRENT))) {
         hybridSync(tokenCell).clearSelection();
         event.consume();
         return;
@@ -131,7 +131,7 @@ class TokenCellTraits {
         return;
       }
 
-      if (ProjectionalSynchronizers.isUnconditionalDelete(event)) {
+      if (event.is(KeyStrokeSpecs.DELETE_CURRENT)) {
         tokenOps.deleteToken(tokenCell, 0).execute();
         event.consume();
         return;

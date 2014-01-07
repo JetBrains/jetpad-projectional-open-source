@@ -31,6 +31,8 @@ public class KeyStrokeSpecs {
   public static final KeyStrokeSpec INSERT_BEFORE = composite(new KeyStroke(Key.INSERT), new KeyStroke(Key.ENTER, ModifierKey.SHIFT));
   public static final KeyStrokeSpec INSERT_AFTER = new KeyStroke(Key.ENTER);
 
+  public static final KeyStrokeSpec DELETE_CURRENT = composite(new KeyStroke(Key.BACKSPACE, ModifierKey.META), new KeyStroke(Key.DELETE, ModifierKey.META), new KeyStroke(Key.DELETE, ModifierKey.CONTROL), new KeyStroke(Key.BACKSPACE, ModifierKey.CONTROL));
+
 
   public static KeyStrokeSpec commandOrMeta(Key key, ModifierKey... modifiers) {
     return composite(new KeyStroke(key, add(ModifierKey.CONTROL, modifiers)), new KeyStroke(key, add(ModifierKey.META, modifiers)));

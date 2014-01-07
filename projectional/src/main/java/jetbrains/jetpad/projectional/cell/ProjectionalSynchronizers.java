@@ -64,13 +64,4 @@ public class ProjectionalSynchronizers {
   public static boolean isAdd(KeyEvent event) {
     return event.is(KeyStrokeSpecs.INSERT_BEFORE) || event.is(KeyStrokeSpecs.INSERT_AFTER);
   }
-
-  public static boolean isDelete(KeyEvent event) {
-    return event.is(Key.DELETE) || event.is(Key.BACKSPACE) || isUnconditionalDelete(event);
-  }
-
-  public static boolean isUnconditionalDelete(KeyEvent event) {
-    return event.is(Key.BACKSPACE, ModifierKey.META) || event.is(Key.DELETE, ModifierKey.META) ||
-      event.is(Key.DELETE, ModifierKey.CONTROL) || event.is(Key.BACKSPACE, ModifierKey.CONTROL);
-  }
 }
