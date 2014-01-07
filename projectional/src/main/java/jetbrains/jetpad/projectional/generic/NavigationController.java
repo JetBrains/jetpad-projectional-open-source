@@ -16,10 +16,7 @@
 package jetbrains.jetpad.projectional.generic;
 
 import jetbrains.jetpad.base.Value;
-import jetbrains.jetpad.event.Key;
-import jetbrains.jetpad.event.KeyEvent;
-import jetbrains.jetpad.event.ModifierKey;
-import jetbrains.jetpad.event.MouseEvent;
+import jetbrains.jetpad.event.*;
 import jetbrains.jetpad.model.composite.*;
 import jetbrains.jetpad.model.event.CompositeRegistration;
 import jetbrains.jetpad.model.event.EventHandler;
@@ -110,10 +107,10 @@ public abstract class NavigationController<ViewT extends Composite<ViewT> & HasF
     } else if (event.is(Key.DOWN)) {
       next = lowerFocusable(current, currentOffset);
       restoreOffset = true;
-    } else if (event.is(Key.HOME) || event.is(Key.LEFT, ModifierKey.META)) {
+    } else if (event.is(KeyStrokeSpecs.HOME)) {
       next = Composites.homeElement(current);
       moveToHome(next);
-    } else if (event.is(Key.END) || event.is(Key.RIGHT, ModifierKey.META)) {
+    } else if (event.is(KeyStrokeSpecs.END)) {
       next = Composites.endElement(current);
       moveToEnd(next);
     } else if (event.is(Key.UP, ModifierKey.ALT)) {

@@ -9,10 +9,14 @@ public class KeyStrokeSpecs {
   public static final KeyStrokeSpec CUT = commandOrMeta(Key.X);
   public static final KeyStrokeSpec PASTE = commandOrMeta(Key.V);
 
-  public static final KeyStrokeSpec COMPLETE = composite(new KeyStroke(Key.SPACE, ModifierKey.CONTROL));
-
   public static final KeyStrokeSpec UNDO = commandOrMeta(Key.Z);
   public static final KeyStrokeSpec REDO = commandOrMeta(Key.Z, ModifierKey.SHIFT);
+
+  public static final KeyStrokeSpec COMPLETE = composite(new KeyStroke(Key.SPACE, ModifierKey.CONTROL));
+
+  public static final KeyStrokeSpec SELECT_ALL = commandOrMeta(Key.A);
+  public static final KeyStrokeSpec HOME = composite(new KeyStroke(Key.HOME), new KeyStroke(Key.LEFT, ModifierKey.META));
+  public static final KeyStrokeSpec END = composite(new KeyStroke(Key.END), new KeyStroke(Key.RIGHT, ModifierKey.META));
 
 
   public static KeyStrokeSpec commandOrMeta(Key key, ModifierKey... modifiers) {

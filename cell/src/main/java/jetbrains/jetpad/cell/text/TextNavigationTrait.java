@@ -16,12 +16,9 @@
 package jetbrains.jetpad.cell.text;
 
 import com.google.common.base.Strings;
+import jetbrains.jetpad.event.*;
 import jetbrains.jetpad.model.property.Property;
 import jetbrains.jetpad.model.property.PropertyChangeEvent;
-import jetbrains.jetpad.event.Key;
-import jetbrains.jetpad.event.KeyEvent;
-import jetbrains.jetpad.event.ModifierKey;
-import jetbrains.jetpad.event.MouseEvent;
 import jetbrains.jetpad.cell.*;
 import jetbrains.jetpad.cell.completion.*;
 import jetbrains.jetpad.cell.event.CompletionEvent;
@@ -125,7 +122,7 @@ class TextNavigationTrait extends BaseCellTrait {
       }
     }
 
-    if (event.is(Key.A, ModifierKey.CONTROL) || event.is(Key.A, ModifierKey.META)) {
+    if (event.is(KeyStrokeSpecs.SELECT_ALL)) {
       view.selectionStart().set(0);
       view.caretPosition().set(maxCaret);
       view.selectionVisible().set(true);
