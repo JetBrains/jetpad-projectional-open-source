@@ -361,7 +361,7 @@ abstract class BaseProjectionalSynchronizer<SourceT, ContextT, SourceItemT> impl
   }
 
   protected boolean isDeleteEvent(KeyEvent event, Cell cell) {
-    if (isAnyPositionDeleteEvent(event)) return true;
+    if (event.is(KeyStrokeSpecs.DELETE_CURRENT)) return true;
 
     if (event.is(Key.BACKSPACE) && !Positions.isHomePosition(cell)) return true;
 
@@ -371,12 +371,7 @@ abstract class BaseProjectionalSynchronizer<SourceT, ContextT, SourceItemT> impl
   }
 
   protected boolean isDeleteEvent(KeyEvent event) {
-    return isAnyPositionDeleteEvent(event) || event.is(Key.BACKSPACE) || event.is(Key.DELETE);
-  }
-
-  private boolean isAnyPositionDeleteEvent(KeyEvent event) {
-    return event.is(Key.BACKSPACE, ModifierKey.META) || event.is(Key.DELETE, ModifierKey.META) ||
-      event.is(Key.DELETE, ModifierKey.CONTROL) || event.is(Key.BACKSPACE, ModifierKey.CONTROL);
+    return event.is(KeyStrokeSpecs.DELETE_CURRENT) || event.is(Key.BACKSPACE) || event.is(Key.DELETE);
   }
 
   protected Cell currentCell() {
