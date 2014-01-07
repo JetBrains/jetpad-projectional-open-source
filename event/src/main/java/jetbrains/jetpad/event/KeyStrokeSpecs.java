@@ -1,17 +1,29 @@
 package jetbrains.jetpad.event;
 
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
 public class KeyStrokeSpecs {
-  public static final KeyStrokeSpec COPY = composite(new KeyStroke(Key.C, ModifierKey.CONTROL), new KeyStroke(Key.C, ModifierKey.META));
-  public static final KeyStrokeSpec CUT = composite(new KeyStroke(Key.X, ModifierKey.CONTROL), new KeyStroke(Key.X, ModifierKey.META));
-  public static final KeyStrokeSpec PASTE = composite(new KeyStroke(Key.V, ModifierKey.CONTROL), new KeyStroke(Key.V, ModifierKey.META));
+  public static final KeyStrokeSpec COPY = commandOrMeta(Key.C);
+  public static final KeyStrokeSpec CUT = commandOrMeta(Key.X);
+  public static final KeyStrokeSpec PASTE = commandOrMeta(Key.V);
 
   public static final KeyStrokeSpec COMPLETE = composite(new KeyStroke(Key.SPACE, ModifierKey.CONTROL));
 
-  public static final KeyStrokeSpec UNDO = composite(new KeyStroke(Key.Z, ModifierKey.CONTROL), new KeyStroke(Key.Z, ModifierKey.META));
-  public static final KeyStrokeSpec REDO = composite(new KeyStroke(Key.Z, ModifierKey.CONTROL, ModifierKey.SHIFT), new KeyStroke(Key.Z, ModifierKey.META, ModifierKey.SHIFT));
+  public static final KeyStrokeSpec UNDO = commandOrMeta(Key.Z);
+  public static final KeyStrokeSpec REDO = commandOrMeta(Key.Z, ModifierKey.SHIFT);
+
+
+  public static KeyStrokeSpec commandOrMeta(Key key, ModifierKey... modifiers) {
+    return composite(new KeyStroke(key, add(ModifierKey.CONTROL, modifiers)), new KeyStroke(key, add(ModifierKey.META, modifiers)));
+  }
+
+  private static Set<ModifierKey> add(ModifierKey key, ModifierKey... otherKeys) {
+    Set<ModifierKey> result = new HashSet<ModifierKey>(Arrays.asList(otherKeys));
+    result.add(key);
+    return result;
+  }
 
   public static KeyStrokeSpec composite(final KeyStrokeSpec... specs) {
     return new KeyStrokeSpec() {
