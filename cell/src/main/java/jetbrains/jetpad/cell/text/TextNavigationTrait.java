@@ -98,13 +98,13 @@ class TextNavigationTrait extends BaseCellTrait {
         return;
       }
 
-      if ((isCaretKey(selectionAvailable, event, Key.LEFT, ModifierKey.ALT) || isCaretKey(selectionAvailable, event, Key.LEFT, ModifierKey.CONTROL) || isCaretKey(selectionAvailable, event, Key.HOME)) && caret > 0) {
+      if ((isCaretKey(selectionAvailable, event, Key.LEFT, ModifierKey.ALT) || event.is(KeyStrokeSpecs.HOME) || event.is(KeyStrokeSpecs.SELECT_HOME)) && caret > 0) {
         view.caretPosition().set(0);
         event.consume();
         return;
       }
 
-      if ((isCaretKey(selectionAvailable, event, Key.RIGHT, ModifierKey.ALT) || isCaretKey(selectionAvailable, event, Key.RIGHT, ModifierKey.CONTROL) || isCaretKey(selectionAvailable, event, Key.END)) && caret < maxCaret) {
+      if ((isCaretKey(selectionAvailable, event, Key.RIGHT, ModifierKey.ALT) || event.is(KeyStrokeSpecs.END) || event.is(KeyStrokeSpecs.SELECT_END)) && caret < maxCaret) {
         view.caretPosition().set(maxCaret);
         event.consume();
         return;

@@ -19,6 +19,9 @@ public class KeyStrokeSpecs {
   public static final KeyStrokeSpec HOME = composite(new KeyStroke(Key.HOME), new KeyStroke(Key.LEFT, ModifierKey.META));
   public static final KeyStrokeSpec END = composite(new KeyStroke(Key.END), new KeyStroke(Key.RIGHT, ModifierKey.META));
 
+  public static final KeyStrokeSpec SELECT_HOME = composite(new KeyStroke(Key.HOME, ModifierKey.SHIFT), new KeyStroke(Key.LEFT, ModifierKey.META, ModifierKey.SHIFT));
+  public static final KeyStrokeSpec SELECT_END = composite(new KeyStroke(Key.END, ModifierKey.SHIFT), new KeyStroke(Key.RIGHT, ModifierKey.META, ModifierKey.SHIFT));
+
   public static final KeyStrokeSpec SELECT_UP = new KeyStroke(Key.UP, ModifierKey.ALT);
   public static final KeyStrokeSpec SELECT_DOWN = new KeyStroke(Key.DOWN, ModifierKey.ALT);
 

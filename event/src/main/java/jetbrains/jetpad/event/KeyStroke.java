@@ -43,6 +43,12 @@ public class KeyStroke implements KeyStrokeSpec {
     return Collections.singleton(this);
   }
 
+  public KeyStroke addModifier(ModifierKey key) {
+    Set<ModifierKey> keys = new HashSet<ModifierKey>(myModifiers);
+    keys.add(key);
+    return new KeyStroke(myKey, keys);
+  }
+
   @Override
   public int hashCode() {
     return myKey.hashCode() * 31 + myModifiers.hashCode();
