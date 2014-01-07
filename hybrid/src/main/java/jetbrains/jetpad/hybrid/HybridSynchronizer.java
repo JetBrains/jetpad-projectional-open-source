@@ -181,13 +181,13 @@ public class HybridSynchronizer<SourceT> implements Synchronizer {
       public void onKeyPressed(Cell cell, KeyEvent event) {
         if (!hasSelection()) {
           Cell currentCell = mySelectionSupport.currentCell();
-          if (event.is(Key.UP, ModifierKey.ALT) && currentCell != null) {
+          if (event.is(KeyStrokeSpecs.SELECT_UP) && currentCell != null) {
             mySelectionSupport.select(currentCell, currentCell);
             event.consume();
           }
         } else {
           Range<Integer> currentRange = selection();
-          if (event.is(Key.UP, ModifierKey.ALT)) {
+          if (event.is(KeyStrokeSpecs.SELECT_UP)) {
             ParseNode parseNode = myTokenListEditor.parseNode();
             if (parseNode != null) {
               if (!currentRange.equals(parseNode.range())) {
@@ -206,7 +206,7 @@ public class HybridSynchronizer<SourceT> implements Synchronizer {
             }
           }
 
-          if (event.is(Key.DOWN, ModifierKey.ALT)) {
+          if (event.is(KeyStrokeSpecs.SELECT_DOWN)) {
             ParseNode parseNode = myTokenListEditor.parseNode();
             if (parseNode != null) {
               ParseNode node = ParseNodes.findForRange(parseNode, currentRange);
