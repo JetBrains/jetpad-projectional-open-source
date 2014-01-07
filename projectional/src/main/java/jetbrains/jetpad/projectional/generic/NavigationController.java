@@ -113,14 +113,14 @@ public abstract class NavigationController<ViewT extends Composite<ViewT> & HasF
     } else if (event.is(KeyStrokeSpecs.END)) {
       next = Composites.endElement(current);
       moveToEnd(next);
-    } else if (event.is(Key.UP, ModifierKey.ALT)) {
+    } else if (event.is(KeyStrokeSpecs.SELECT_UP)) {
       ViewT focusableParent = Composites.focusableParent(current);
       if (focusableParent != null) {
         mySelectionStack.push(current);
         next = focusableParent;
         myStackResetEnabled.set(false);
       }
-    } else if (event.is(Key.DOWN, ModifierKey.ALT)) {
+    } else if (event.is(KeyStrokeSpecs.SELECT_DOWN)) {
       if (mySelectionStack.isEmpty()) {
         next = Composites.firstFocusable(current, false);
       } else {
