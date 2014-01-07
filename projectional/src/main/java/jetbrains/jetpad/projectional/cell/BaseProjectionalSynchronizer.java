@@ -412,7 +412,7 @@ abstract class BaseProjectionalSynchronizer<SourceT, ContextT, SourceItemT> impl
   }
 
   private void handlePlaceholderKeyPress(KeyEvent event) {
-    if (canCreateNewItem() && (event.is(Key.INSERT) || event.is(Key.ENTER) || event.is(Key.ENTER, ModifierKey.SHIFT))) {
+    if (canCreateNewItem() && (event.is(KeyStrokeSpecs.INSERT_AFTER) || event.is(KeyStrokeSpecs.INSERT_BEFORE))) {
       SourceItemT newItem = newItem();
       if (newItem != null) {
         insertItem(newItem).execute();

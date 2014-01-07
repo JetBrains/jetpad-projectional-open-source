@@ -24,6 +24,9 @@ public class KeyStrokeSpecs {
   public static final KeyStrokeSpec SELECT_BEFORE = composite(new KeyStroke(Key.UP, ModifierKey.SHIFT), new KeyStroke(Key.LEFT, ModifierKey.SHIFT));
   public static final KeyStrokeSpec SELECT_AFTER = composite(new KeyStroke(Key.DOWN, ModifierKey.SHIFT), new KeyStroke(Key.RIGHT, ModifierKey.SHIFT));
 
+  public static final KeyStrokeSpec INSERT_BEFORE = composite(new KeyStroke(Key.INSERT), new KeyStroke(Key.ENTER, ModifierKey.SHIFT));
+  public static final KeyStrokeSpec INSERT_AFTER = new KeyStroke(Key.ENTER);
+
 
   public static KeyStrokeSpec commandOrMeta(Key key, ModifierKey... modifiers) {
     return composite(new KeyStroke(key, add(ModifierKey.CONTROL, modifiers)), new KeyStroke(key, add(ModifierKey.META, modifiers)));

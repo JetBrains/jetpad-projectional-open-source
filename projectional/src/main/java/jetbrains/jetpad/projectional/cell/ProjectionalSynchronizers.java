@@ -16,6 +16,7 @@
 package jetbrains.jetpad.projectional.cell;
 
 import com.google.common.base.Function;
+import jetbrains.jetpad.event.KeyStrokeSpecs;
 import jetbrains.jetpad.mapper.Mapper;
 import jetbrains.jetpad.mapper.MapperFactory;
 import jetbrains.jetpad.model.collections.list.ObservableList;
@@ -61,7 +62,7 @@ public class ProjectionalSynchronizers {
   }
 
   public static boolean isAdd(KeyEvent event) {
-    return event.is(Key.ENTER) || event.is(Key.INSERT) || event.is(Key.ENTER, ModifierKey.SHIFT);
+    return event.is(KeyStrokeSpecs.INSERT_BEFORE) || event.is(KeyStrokeSpecs.INSERT_AFTER);
   }
 
   public static boolean isDelete(KeyEvent event) {

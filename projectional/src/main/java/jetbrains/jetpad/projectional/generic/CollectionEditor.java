@@ -17,6 +17,7 @@ package jetbrains.jetpad.projectional.generic;
 
 import jetbrains.jetpad.event.Key;
 import jetbrains.jetpad.event.KeyEvent;
+import jetbrains.jetpad.event.KeyStrokeSpecs;
 import jetbrains.jetpad.event.ModifierKey;
 
 import java.util.List;
@@ -61,7 +62,7 @@ public abstract class CollectionEditor<ItemT, ViewT> {
     boolean isEnd = isEnd(view);
 
     if (myCanCreateNew) {
-      if (event.is(Key.ENTER) && isHome) {
+      if (event.is(KeyStrokeSpecs.INSERT_AFTER) && isHome) {
         myItems.add(index, newItem());
         if (!isEmpty(index)) {
           selectOnCreation(index);
@@ -70,14 +71,14 @@ public abstract class CollectionEditor<ItemT, ViewT> {
         return;
       }
 
-      if (event.is(Key.ENTER) && !isHome) {
+      if (event.is(KeyStrokeSpecs.INSERT_AFTER) && !isHome) {
         myItems.add(index + 1, newItem());
         selectOnCreation(index + 1);
         event.consume();
         return;
       }
 
-      if ((event.is(Key.ENTER, ModifierKey.SHIFT) || event.is(Key.INSERT))) {
+      if ((event.is(KeyStrokeSpecs.INSERT_BEFORE))) {
         int i = isEnd && !isHome ? index + 1 : index;
         myItems.add(i, newItem());
         selectOnCreation(i);
