@@ -4,7 +4,7 @@ import com.google.common.base.Objects;
 
 import java.util.*;
 
-public class KeyStroke {
+public class KeyStroke implements KeyStrokeSpec {
   private Key myKey;
   private Set<ModifierKey> myModifiers;
 
@@ -30,7 +30,17 @@ public class KeyStroke {
   }
 
   public boolean is(Key key, ModifierKey... modifiers) {
-    return equals(new KeyStroke(key, modifiers));
+    return matches(new KeyStroke(key, modifiers));
+  }
+
+  @Override
+  public boolean matches(KeyStroke keyStroke) {
+    return equals(keyStroke);
+  }
+
+  @Override
+  public Set<KeyStroke> keyStrokes() {
+    return Collections.singleton(this);
   }
 
   @Override

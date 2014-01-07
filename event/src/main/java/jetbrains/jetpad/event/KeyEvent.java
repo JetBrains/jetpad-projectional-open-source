@@ -50,6 +50,10 @@ public class KeyEvent extends Event {
     return myKeyStroke.is(key, modifiers);
   }
 
+  public boolean is(KeyStrokeSpec spec) {
+    return spec.matches(myKeyStroke);
+  }
+
   public boolean has(ModifierKey key) {
     return myKeyStroke.has(key);
   }
