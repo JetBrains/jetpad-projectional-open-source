@@ -168,7 +168,7 @@ public class ViewContainerComponent extends JComponent implements Scrollable {
           @Override
           public void handle(jetbrains.jetpad.event.KeyEvent e) {
             Clipboard cb = Toolkit.getDefaultToolkit().getSystemClipboard();
-            if (e.is(Key.V, ModifierKey.CONTROL) || e.is(Key.V, ModifierKey.META)) {
+            if (e.is(KeyStrokeSpecs.PASTE)) {
               if (cb.isDataFlavorAvailable(DataFlavor.stringFlavor)) {
                 try {
                   String text = (String) cb.getData(DataFlavor.stringFlavor);
@@ -183,9 +183,9 @@ public class ViewContainerComponent extends JComponent implements Scrollable {
               }
             }
 
-            if (e.is(Key.C, ModifierKey.CONTROL) || e.is(Key.C, ModifierKey.META) || e.is(Key.X, ModifierKey.CONTROL) || e.is(Key.X, ModifierKey.META)) {
+            if (e.is(KeyStrokeSpecs.COPY) || e.is(KeyStrokeSpecs.CUT)) {
               CopyCutEvent event;
-              if (e.key() == Key.X) {
+              if (e.is(KeyStrokeSpecs.CUT)) {
                 myContainer.cut(event = new CopyCutEvent(true));
               } else {
                 myContainer.copy(event = new CopyCutEvent(true));

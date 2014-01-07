@@ -390,7 +390,7 @@ public class CellContainerToDomMapper extends Mapper<CellContainer, Element> {
               return;
             }
 
-            if (e.is(Key.V, ModifierKey.CONTROL) || e.is(Key.V, ModifierKey.META)) {
+            if (e.is(KeyStrokeSpecs.PASTE)) {
               clipboardSupport.pasteContent(new Handler<String>() {
                 @Override
                 public void handle(String text) {
@@ -404,9 +404,9 @@ public class CellContainerToDomMapper extends Mapper<CellContainer, Element> {
               return;
             }
 
-            if (e.is(Key.C, ModifierKey.CONTROL) || e.is(Key.C, ModifierKey.META) || e.is(Key.X, ModifierKey.CONTROL) || e.is(Key.X, ModifierKey.META)) {
+            if (e.is(KeyStrokeSpecs.CUT) || e.is(KeyStrokeSpecs.COPY)) {
               CopyCutEvent copyEvent;
-              if (e.key() == Key.X) {
+              if (e.is(KeyStrokeSpecs.CUT)) {
                 getSource().cut(copyEvent = new CopyCutEvent(true));
               } else {
                 getSource().copy(copyEvent = new CopyCutEvent(false));

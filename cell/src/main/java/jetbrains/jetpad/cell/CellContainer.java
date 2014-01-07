@@ -100,25 +100,25 @@ public class CellContainer {
   }
 
   public void keyPressed(KeyEvent e) {
-    if ((e.is(Key.C, ModifierKey.CONTROL) || e.is(Key.C, ModifierKey.META))) {
+    if (e.is(KeyStrokeSpecs.COPY)) {
       copy(new CopyCutEvent(false));
       e.consume();
       return;
     }
 
-    if ((e.is(Key.X, ModifierKey.CONTROL) || e.is(Key.X, ModifierKey.META))) {
+    if (e.is(KeyStrokeSpecs.CUT)) {
       cut(new CopyCutEvent(true));
       e.consume();
       return;
     }
 
-    if ((e.is(Key.V, ModifierKey.CONTROL) || e.is(Key.V, ModifierKey.META))) {
+    if (e.is(KeyStrokeSpecs.PASTE)) {
       paste(new PasteEvent(myContent));
       e.consume();
       return;
     }
 
-    if (e.is(Key.SPACE, ModifierKey.CONTROL)) {
+    if (e.is(KeyStrokeSpecs.COMPLETE)) {
       CompletionEvent event = new CompletionEvent(false);
       complete(event);
       if (event.isConsumed()) {

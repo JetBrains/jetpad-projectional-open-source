@@ -264,7 +264,7 @@ public class View2Dom {
         return EventTranslator.dispatchKeyPress(e, new Handler<KeyEvent>() {
           @Override
           public void handle(final KeyEvent e) {
-            if (e.is(Key.V, ModifierKey.CONTROL) || e.is(Key.V, ModifierKey.META)) {
+            if (e.is(KeyStrokeSpecs.PASTE)) {
               clipboardSupport.pasteContent(new Handler<String>() {
                 @Override
                 public void handle(String text) {
@@ -278,9 +278,9 @@ public class View2Dom {
               return;
             }
 
-            if (e.is(Key.C, ModifierKey.CONTROL) || e.is(Key.C, ModifierKey.META) || e.is(Key.X, ModifierKey.CONTROL) || e.is(Key.X, ModifierKey.META)) {
+            if (e.is(KeyStrokeSpecs.COPY) || e.is(KeyStrokeSpecs.CUT)) {
               CopyCutEvent copyEvent;
-              if (e.key() == Key.X) {
+              if (e.is(KeyStrokeSpecs.CUT)) {
                 container.cut(copyEvent = new CopyCutEvent(true));
               } else {
                 container.copy(copyEvent = new CopyCutEvent(false));
