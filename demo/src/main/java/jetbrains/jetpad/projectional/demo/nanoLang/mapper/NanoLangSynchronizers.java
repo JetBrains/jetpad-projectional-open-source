@@ -27,6 +27,8 @@ import jetbrains.jetpad.completion.CompletionParameters;
 import jetbrains.jetpad.completion.SimpleCompletionItem;
 import jetbrains.jetpad.projectional.cell.*;
 import jetbrains.jetpad.projectional.demo.nanoLang.model.*;
+import jetbrains.jetpad.projectional.generic.Role;
+import jetbrains.jetpad.projectional.generic.RoleCompletion;
 
 import java.util.ArrayList;
 import java.util.List;

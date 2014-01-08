@@ -38,6 +38,8 @@ import jetbrains.jetpad.cell.trait.CellTrait;
 import jetbrains.jetpad.cell.trait.CellTraitPropertySpec;
 import jetbrains.jetpad.cell.util.CellFactory;
 import jetbrains.jetpad.cell.util.Validators;
+import jetbrains.jetpad.projectional.generic.Role;
+import jetbrains.jetpad.projectional.generic.RoleCompletion;
 
 import java.util.*;
 

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package jetbrains.jetpad.projectional.cell;
+package jetbrains.jetpad.projectional.generic;
 
 public interface Role<TargetT> {
   TargetT get();

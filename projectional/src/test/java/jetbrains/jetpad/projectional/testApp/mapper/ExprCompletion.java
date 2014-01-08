@@ -19,8 +19,8 @@ import jetbrains.jetpad.mapper.Mapper;
 import jetbrains.jetpad.completion.CompletionItem;
 import jetbrains.jetpad.completion.CompletionParameters;
 import jetbrains.jetpad.completion.SimpleCompletionItem;
-import jetbrains.jetpad.projectional.cell.Role;
-import jetbrains.jetpad.projectional.cell.RoleCompletion;
+import jetbrains.jetpad.projectional.generic.Role;
+import jetbrains.jetpad.projectional.generic.RoleCompletion;
 import jetbrains.jetpad.projectional.testApp.model.*;
 
 import java.util.ArrayList;

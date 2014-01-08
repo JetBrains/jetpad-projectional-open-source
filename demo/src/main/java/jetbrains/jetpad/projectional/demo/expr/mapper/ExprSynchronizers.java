@@ -26,6 +26,8 @@ import jetbrains.jetpad.completion.SimpleCompletionItem;
 import jetbrains.jetpad.projectional.demo.expr.model.*;
 import jetbrains.jetpad.cell.Cell;
 import jetbrains.jetpad.projectional.cell.*;
+import jetbrains.jetpad.projectional.generic.Role;
+import jetbrains.jetpad.projectional.generic.RoleCompletion;
 
 import java.util.ArrayList;
 import java.util.List;

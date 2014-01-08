@@ -35,6 +35,7 @@ import jetbrains.jetpad.cell.trait.CellTrait;
 import jetbrains.jetpad.cell.trait.CellTraitPropertySpec;
 import jetbrains.jetpad.cell.util.Cells;
 import jetbrains.jetpad.projectional.generic.CollectionEditor;
+import jetbrains.jetpad.projectional.generic.Role;
 
 import java.util.ArrayList;
 import java.util.List;
