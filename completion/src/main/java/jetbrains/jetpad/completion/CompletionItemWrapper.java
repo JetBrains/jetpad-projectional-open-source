@@ -13,38 +13,42 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package jetbrains.jetpad.cell.completion;
+package jetbrains.jetpad.completion;
 
-public abstract class SimpleCompletionItem extends BaseCompletionItem {
-  private String myMatchingText;
-  private String myVisibleText;
+public class CompletionItemWrapper implements CompletionItem {
+  private CompletionItem myWrappedItem;
 
-  protected SimpleCompletionItem(String matchingText) {
-    this(matchingText, matchingText);
-  }
-
-  protected SimpleCompletionItem(String matchingText, String visibleText) {
-    myMatchingText = matchingText;
-    myVisibleText = visibleText;
+  public CompletionItemWrapper(CompletionItem wrappedItem) {
+    myWrappedItem = wrappedItem;
   }
 
   @Override
   public String visibleText(String text) {
-    return myVisibleText;
+    return myWrappedItem.visibleText(text);
   }
 
   @Override
   public boolean isStrictMatchPrefix(String text) {
-    return myMatchingText.startsWith(text) && !isMatch(text);
+    return myWrappedItem.isStrictMatchPrefix(text);
+  }
+
+  @Override
+  public boolean isMatchPrefix(String text) {
+    return myWrappedItem.isMatchPrefix(text);
   }
 
   @Override
   public boolean isMatch(String text) {
-    return myMatchingText.equals(text);
+    return myWrappedItem.isMatch(text);
   }
 
   @Override
-  public String toString() {
-    return "CompletionItem " + myMatchingText;
+  public Runnable complete(String text) {
+    return myWrappedItem.complete(text);
+  }
+
+  @Override
+  public boolean isLowPriority() {
+    return myWrappedItem.isLowPriority();
   }
 }

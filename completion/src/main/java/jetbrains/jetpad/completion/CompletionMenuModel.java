@@ -13,9 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package jetbrains.jetpad.cell.completion;
+package jetbrains.jetpad.completion;
 
 import com.google.common.base.Function;
+import jetbrains.jetpad.completion.CompletionItem;
 import jetbrains.jetpad.model.collections.CollectionItemEvent;
 import jetbrains.jetpad.model.collections.list.ObservableArrayList;
 import jetbrains.jetpad.model.collections.list.ObservableList;
@@ -25,12 +26,12 @@ import jetbrains.jetpad.model.transform.Transformers;
 
 import java.util.Comparator;
 
-class CompletionMenuModel {
-  final Property<String> text = new ValueProperty<String>();
-  final ObservableList<CompletionItem> items = new ObservableArrayList<CompletionItem>();
-  final Property<CompletionItem> selectedItem = new ValueProperty<CompletionItem>();
+public class CompletionMenuModel {
+  public final Property<String> text = new ValueProperty<String>();
+  public final ObservableList<CompletionItem> items = new ObservableArrayList<CompletionItem>();
+  public final Property<CompletionItem> selectedItem = new ValueProperty<CompletionItem>();
 
-  final ObservableList<CompletionItem> visibleItems;
+  public final ObservableList<CompletionItem> visibleItems;
 
   {
     visibleItems = Transformers.filter(new Function<CompletionItem, ReadableProperty<Boolean>>() {
@@ -83,7 +84,7 @@ class CompletionMenuModel {
     });
   }
 
-  void up() {
+  public void up() {
     CompletionItem selected = selectedItem.get();
     if (selected == null) throw new IllegalStateException();
 
@@ -93,7 +94,7 @@ class CompletionMenuModel {
     }
   }
 
-  void down() {
+  public void down() {
     CompletionItem selected = selectedItem.get();
     if (selected == null) throw new IllegalStateException();
 

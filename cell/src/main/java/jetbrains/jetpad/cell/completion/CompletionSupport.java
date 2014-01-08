@@ -17,6 +17,7 @@ package jetbrains.jetpad.cell.completion;
 
 import com.google.common.base.Strings;
 import jetbrains.jetpad.base.Handler;
+import jetbrains.jetpad.completion.*;
 import jetbrains.jetpad.model.event.CompositeRegistration;
 import jetbrains.jetpad.model.event.Registration;
 import jetbrains.jetpad.model.property.Property;

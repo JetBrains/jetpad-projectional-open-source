@@ -17,9 +17,8 @@ package jetbrains.jetpad.projectional.cell;
 
 
 import jetbrains.jetpad.mapper.Mapper;
-import jetbrains.jetpad.cell.Cell;
-import jetbrains.jetpad.cell.completion.CompletionItem;
-import jetbrains.jetpad.cell.completion.CompletionParameters;
+import jetbrains.jetpad.completion.CompletionItem;
+import jetbrains.jetpad.completion.CompletionParameters;
 
 import java.util.List;
 

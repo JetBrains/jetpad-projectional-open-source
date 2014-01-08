@@ -21,6 +21,7 @@ import jetbrains.jetpad.cell.text.TextEditing;
 import jetbrains.jetpad.cell.trait.BaseCellTrait;
 import jetbrains.jetpad.cell.trait.CellTraitPropertySpec;
 import jetbrains.jetpad.cell.util.CellFactory;
+import jetbrains.jetpad.completion.CompletionController;
 import org.junit.Before;
 import org.junit.Test;
 

@@ -16,8 +16,8 @@
 package jetbrains.jetpad.projectional.demo.hybridExpr.mapper;
 
 import com.google.common.base.Function;
-import jetbrains.jetpad.cell.completion.*;
 import jetbrains.jetpad.cell.util.Validators;
+import jetbrains.jetpad.completion.*;
 import jetbrains.jetpad.hybrid.parser.*;
 import jetbrains.jetpad.projectional.demo.hybridExpr.model.*;
 import jetbrains.jetpad.projectional.demo.hybridExpr.model.types.FieldDescriptor;

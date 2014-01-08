@@ -15,6 +15,10 @@
  */
 package jetbrains.jetpad.projectional.demo.expr.mapper;
 
+import jetbrains.jetpad.completion.CompletionItem;
+import jetbrains.jetpad.completion.CompletionParameters;
+import jetbrains.jetpad.completion.CompletionSupplier;
+import jetbrains.jetpad.completion.SimpleCompletionItem;
 import jetbrains.jetpad.mapper.Mapper;
 import jetbrains.jetpad.mapper.Mappers;
 import jetbrains.jetpad.cell.action.CellActions;

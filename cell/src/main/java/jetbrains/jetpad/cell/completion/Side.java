@@ -16,6 +16,7 @@
 package jetbrains.jetpad.cell.completion;
 
 import com.google.common.base.Function;
+import jetbrains.jetpad.completion.CompletionSupplier;
 import jetbrains.jetpad.model.property.Property;
 import jetbrains.jetpad.cell.Cell;
 import jetbrains.jetpad.cell.text.TextEditing;

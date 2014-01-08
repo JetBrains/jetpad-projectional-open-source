@@ -11,6 +11,7 @@
 
   <modules>
     <module>cell</module>
+    <module>completion</module>
     <module>view</module>
     <module>event</module>
     <module>hybrid</module>

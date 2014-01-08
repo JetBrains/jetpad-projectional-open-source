@@ -19,7 +19,7 @@ import com.google.common.base.Function;
 import jetbrains.jetpad.cell.action.CellActions;
 import jetbrains.jetpad.base.Runnables;
 import jetbrains.jetpad.cell.completion.CompletionHelper;
-import jetbrains.jetpad.cell.completion.CompletionItem;
+import jetbrains.jetpad.completion.CompletionItem;
 import jetbrains.jetpad.cell.util.CellLists;
 import jetbrains.jetpad.hybrid.parser.ErrorToken;
 import jetbrains.jetpad.hybrid.parser.Token;

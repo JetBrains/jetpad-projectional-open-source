@@ -16,6 +16,9 @@
 package jetbrains.jetpad.projectional.cell;
 
 import jetbrains.jetpad.cell.util.Cells;
+import jetbrains.jetpad.completion.CompletionItem;
+import jetbrains.jetpad.completion.CompletionParameters;
+import jetbrains.jetpad.completion.CompletionSupplier;
 import jetbrains.jetpad.mapper.Mapper;
 import jetbrains.jetpad.mapper.MapperFactory;
 import jetbrains.jetpad.mapper.RoleSynchronizer;

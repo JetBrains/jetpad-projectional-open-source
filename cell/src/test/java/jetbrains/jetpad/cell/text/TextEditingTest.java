@@ -16,6 +16,10 @@
 package jetbrains.jetpad.cell.text;
 
 import jetbrains.jetpad.base.Runnables;
+import jetbrains.jetpad.completion.CompletionItem;
+import jetbrains.jetpad.completion.CompletionParameters;
+import jetbrains.jetpad.completion.CompletionSupplier;
+import jetbrains.jetpad.completion.SimpleCompletionItem;
 import jetbrains.jetpad.event.*;
 import jetbrains.jetpad.cell.*;
 import jetbrains.jetpad.cell.completion.*;

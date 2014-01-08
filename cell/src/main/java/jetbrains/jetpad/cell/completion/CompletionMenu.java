@@ -16,6 +16,8 @@
 package jetbrains.jetpad.cell.completion;
 
 import jetbrains.jetpad.base.Handler;
+import jetbrains.jetpad.completion.CompletionItem;
+import jetbrains.jetpad.completion.CompletionMenuModel;
 import jetbrains.jetpad.geometry.Vector;
 import jetbrains.jetpad.mapper.*;
 import jetbrains.jetpad.model.property.DerivedProperty;

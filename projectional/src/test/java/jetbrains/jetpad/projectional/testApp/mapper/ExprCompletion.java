@@ -16,10 +16,9 @@
 package jetbrains.jetpad.projectional.testApp.mapper;
 
 import jetbrains.jetpad.mapper.Mapper;
-import jetbrains.jetpad.cell.Cell;
-import jetbrains.jetpad.cell.completion.CompletionItem;
-import jetbrains.jetpad.cell.completion.CompletionParameters;
-import jetbrains.jetpad.cell.completion.SimpleCompletionItem;
+import jetbrains.jetpad.completion.CompletionItem;
+import jetbrains.jetpad.completion.CompletionParameters;
+import jetbrains.jetpad.completion.SimpleCompletionItem;
 import jetbrains.jetpad.projectional.cell.Role;
 import jetbrains.jetpad.projectional.cell.RoleCompletion;
 import jetbrains.jetpad.projectional.testApp.model.*;

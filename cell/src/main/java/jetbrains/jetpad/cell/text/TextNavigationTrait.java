@@ -16,6 +16,9 @@
 package jetbrains.jetpad.cell.text;
 
 import com.google.common.base.Strings;
+import jetbrains.jetpad.completion.CompletionController;
+import jetbrains.jetpad.completion.CompletionParameters;
+import jetbrains.jetpad.completion.CompletionSupplier;
 import jetbrains.jetpad.event.*;
 import jetbrains.jetpad.model.property.Property;
 import jetbrains.jetpad.model.property.PropertyChangeEvent;

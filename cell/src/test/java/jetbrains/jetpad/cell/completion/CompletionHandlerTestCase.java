@@ -16,6 +16,7 @@
 package jetbrains.jetpad.cell.completion;
 
 import jetbrains.jetpad.cell.Cell;
+import jetbrains.jetpad.completion.CompletionController;
 import org.junit.Test;
 
 import static org.junit.Assert.assertFalse;

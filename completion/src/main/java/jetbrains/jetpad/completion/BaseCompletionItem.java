@@ -13,12 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package jetbrains.jetpad.cell.completion;
+package jetbrains.jetpad.completion;
 
-public interface CompletionController {
-  boolean isActive();
-  boolean canActivate();
-  void setActive(boolean active);
+public abstract class BaseCompletionItem implements CompletionItem {
+  @Override
+  public boolean isLowPriority() {
+    return false;
+  }
 
-  boolean hasAmbiguousMatches();
+  @Override
+  public final boolean isMatchPrefix(String text) {
+    return isStrictMatchPrefix(text) || isMatch(text);
+  }
 }

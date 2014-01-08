@@ -13,18 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package jetbrains.jetpad.cell.completion;
+package jetbrains.jetpad.completion;
 
-import java.util.Collections;
-import java.util.List;
+public class BaseCompletionParameters implements CompletionParameters {
+  @Override
+  public boolean isEndRightTransform() {
+    return false;
+  }
 
-public interface CompletionSupplier {
-  public static final CompletionSupplier EMPTY = new CompletionSupplier() {
-    @Override
-    public List<CompletionItem> get(CompletionParameters cp) {
-      return Collections.emptyList();
-    }
-  };
-
-  List<CompletionItem> get(CompletionParameters cp);
+  @Override
+  public boolean isMenu() {
+    return false;
+  }
 }

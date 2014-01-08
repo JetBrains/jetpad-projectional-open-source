@@ -16,6 +16,10 @@
 package jetbrains.jetpad.cell.completion;
 
 import jetbrains.jetpad.cell.trait.CellTraitPropertySpec;
+import jetbrains.jetpad.completion.CompletionController;
+import jetbrains.jetpad.completion.CompletionItem;
+import jetbrains.jetpad.completion.CompletionParameters;
+import jetbrains.jetpad.completion.CompletionSupplier;
 
 import java.util.Collections;
 import java.util.List;

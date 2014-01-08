@@ -22,9 +22,9 @@ import jetbrains.jetpad.mapper.Synchronizer;
 import jetbrains.jetpad.model.collections.list.ObservableList;
 import jetbrains.jetpad.model.property.Property;
 import jetbrains.jetpad.cell.Cell;
-import jetbrains.jetpad.cell.completion.CompletionItem;
-import jetbrains.jetpad.cell.completion.CompletionParameters;
-import jetbrains.jetpad.cell.completion.SimpleCompletionItem;
+import jetbrains.jetpad.completion.CompletionItem;
+import jetbrains.jetpad.completion.CompletionParameters;
+import jetbrains.jetpad.completion.SimpleCompletionItem;
 import jetbrains.jetpad.projectional.cell.*;
 import jetbrains.jetpad.projectional.demo.nanoLang.model.*;
 

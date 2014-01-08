@@ -19,7 +19,7 @@ import com.google.common.base.Function;
 import jetbrains.jetpad.hybrid.parser.Parser;
 import jetbrains.jetpad.hybrid.parser.Token;
 import jetbrains.jetpad.hybrid.parser.prettyprint.PrettyPrinter;
-import jetbrains.jetpad.cell.completion.CompletionSupplier;
+import jetbrains.jetpad.completion.CompletionSupplier;
 
 public interface HybridPositionSpec<SourceT> {
   Parser<SourceT> getParser();
