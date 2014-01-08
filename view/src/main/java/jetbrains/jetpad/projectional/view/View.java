@@ -25,7 +25,9 @@ import jetbrains.jetpad.model.collections.CollectionItemEvent;
 import jetbrains.jetpad.model.collections.CollectionListener;
 import jetbrains.jetpad.model.collections.list.ObservableArrayList;
 import jetbrains.jetpad.model.collections.list.ObservableList;
+import jetbrains.jetpad.model.composite.HasBounds;
 import jetbrains.jetpad.model.composite.HasFocusability;
+import jetbrains.jetpad.model.composite.HasVisibility;
 import jetbrains.jetpad.model.event.*;
 import jetbrains.jetpad.model.property.*;
 import jetbrains.jetpad.model.util.ListMap;
@@ -36,7 +38,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-public abstract class View implements Composite<View>, HasFocusability {
+public abstract class View implements Composite<View>, HasFocusability, HasVisibility, HasBounds {
   //debug attribute which is used in toString
   public static final ViewPropertySpec<String> NAME = new ViewPropertySpec<String>("name", ViewPropertyKind.NONE, "");
 
@@ -674,6 +676,11 @@ public abstract class View implements Composite<View>, HasFocusability {
         });
       }
     };
+  }
+
+  @Override
+  public Rectangle getBounds() {
+    return bounds().get();
   }
 
   @Override
