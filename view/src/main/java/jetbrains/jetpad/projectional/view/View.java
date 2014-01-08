@@ -25,6 +25,7 @@ import jetbrains.jetpad.model.collections.CollectionItemEvent;
 import jetbrains.jetpad.model.collections.CollectionListener;
 import jetbrains.jetpad.model.collections.list.ObservableArrayList;
 import jetbrains.jetpad.model.collections.list.ObservableList;
+import jetbrains.jetpad.model.composite.HasFocusability;
 import jetbrains.jetpad.model.event.*;
 import jetbrains.jetpad.model.property.*;
 import jetbrains.jetpad.model.util.ListMap;
@@ -35,7 +36,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-public abstract class View implements Composite<View> {
+public abstract class View implements Composite<View>, HasFocusability {
   //debug attribute which is used in toString
   public static final ViewPropertySpec<String> NAME = new ViewPropertySpec<String>("name", ViewPropertyKind.NONE, "");
 
