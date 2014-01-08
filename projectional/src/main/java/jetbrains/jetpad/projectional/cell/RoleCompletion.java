@@ -26,7 +26,7 @@ import java.util.List;
 public interface RoleCompletion<ContextT, TargetT> {
   List<CompletionItem> createRoleCompletion(
     CompletionParameters ctx,
-    Mapper<?, ? extends Cell> mapper,
+    Mapper<?, ?> mapper,
     ContextT contextNode,
     Role<TargetT> target);
 }

@@ -59,7 +59,7 @@ class NanoLangSynchronizers {
   private static RoleCompletion<NanoLangNode, Expression> expressionCompletion() {
     return new RoleCompletion<NanoLangNode, Expression>() {
       @Override
-      public List<CompletionItem> createRoleCompletion(CompletionParameters ctx, Mapper<?, ? extends Cell> mapper, NanoLangNode contextNode, final Role<Expression> target) {
+      public List<CompletionItem> createRoleCompletion(CompletionParameters ctx, Mapper<?, ?> mapper, NanoLangNode contextNode, final Role<Expression> target) {
         List<CompletionItem> result = new ArrayList<CompletionItem>();
         result.add(new SimpleCompletionItem("seq") {
           @Override

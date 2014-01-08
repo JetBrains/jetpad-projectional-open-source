@@ -77,7 +77,7 @@ public class ExprSynchronizers {
     });
     sync.setCompletion(new RoleCompletion<ExpressionAstNode, Expression>() {
       @Override
-      public List<CompletionItem> createRoleCompletion(CompletionParameters cp, Mapper<?, ? extends Cell> mapper, ExpressionAstNode contextNode, Role<Expression> target) {
+      public List<CompletionItem> createRoleCompletion(CompletionParameters cp, Mapper<?, ?> mapper, ExpressionAstNode contextNode, Role<Expression> target) {
         return exprCompletion(target);
       }
     });

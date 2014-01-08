@@ -97,7 +97,7 @@ class ConceptDeclarationMapper extends Mapper<ConceptDeclaration, ConceptDeclara
 
   static class ConceptMemberCompletion implements RoleCompletion<Object, ConceptMember> {
     @Override
-    public List<CompletionItem> createRoleCompletion(CompletionParameters cp, Mapper<?, ? extends Cell> mapper, Object contextNode, final Role<ConceptMember> target) {
+    public List<CompletionItem> createRoleCompletion(CompletionParameters cp, Mapper<?, ?> mapper, Object contextNode, final Role<ConceptMember> target) {
       List<CompletionItem> result = new ArrayList<CompletionItem>();
       result.add(new SimpleCompletionItem("Property") {
         @Override

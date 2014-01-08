@@ -304,7 +304,7 @@ public class ProjectionalPropertySynchronizerTest extends EditingTestCase {
       });
       sync.setCompletion(new RoleCompletion<Object, Child>() {
         @Override
-        public List<CompletionItem> createRoleCompletion(CompletionParameters ctx, final Mapper<?, ? extends Cell> mapper, final Object contextNode, final Role<Child> target) {
+        public List<CompletionItem> createRoleCompletion(CompletionParameters ctx, final Mapper<?, ?> mapper, final Object contextNode, final Role<Child> target) {
           List<CompletionItem> result = new ArrayList<CompletionItem>();
           result.add(new SimpleCompletionItem("c1") {
             @Override
