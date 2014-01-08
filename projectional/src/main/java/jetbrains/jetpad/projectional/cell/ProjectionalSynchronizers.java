@@ -16,25 +16,22 @@
 package jetbrains.jetpad.projectional.cell;
 
 import com.google.common.base.Function;
+import jetbrains.jetpad.cell.Cell;
+import jetbrains.jetpad.cell.action.CellActions;
+import jetbrains.jetpad.cell.trait.CellTraitPropertySpec;
+import jetbrains.jetpad.event.KeyEvent;
 import jetbrains.jetpad.event.KeyStrokeSpecs;
 import jetbrains.jetpad.mapper.Mapper;
 import jetbrains.jetpad.mapper.MapperFactory;
 import jetbrains.jetpad.model.collections.list.ObservableList;
 import jetbrains.jetpad.model.property.Property;
-import jetbrains.jetpad.event.Key;
-import jetbrains.jetpad.event.KeyEvent;
-import jetbrains.jetpad.event.ModifierKey;
-import jetbrains.jetpad.cell.Cell;
-import jetbrains.jetpad.cell.trait.CellTraitPropertySpec;
-import jetbrains.jetpad.cell.action.CellAction;
-import jetbrains.jetpad.cell.action.CellActions;
 
 import java.util.List;
 
 public class ProjectionalSynchronizers {
-  public static final CellTraitPropertySpec<CellAction> ON_CREATE = new CellTraitPropertySpec<CellAction>("onCreate", new Function<Cell, CellAction>() {
+  public static final CellTraitPropertySpec<Runnable> ON_CREATE = new CellTraitPropertySpec<Runnable>("onCreate", new Function<Cell, Runnable>() {
     @Override
-    public CellAction apply(Cell input) {
+    public Runnable apply(Cell input) {
       return CellActions.toLastFocusable(input);
     }
   });

@@ -16,14 +16,13 @@
 package jetbrains.jetpad.hybrid;
 
 import jetbrains.jetpad.hybrid.parser.Token;
-import jetbrains.jetpad.cell.action.CellAction;
 
 public interface Completer {
-  CellAction complete(Token token);
-  CellAction complete(Token... token);
+  Runnable complete(Token token);
+  Runnable complete(Token... token);
 
   /**
    * @param selectionIndex of the passed token to be selected after the action
    */
-  CellAction complete(int selectionIndex, Token... tokens);
+  Runnable complete(int selectionIndex, Token... tokens);
 }

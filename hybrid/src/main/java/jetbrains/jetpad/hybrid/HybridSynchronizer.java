@@ -18,6 +18,7 @@ package jetbrains.jetpad.hybrid;
 import com.google.common.base.Predicates;
 import com.google.common.collect.Range;
 import jetbrains.jetpad.base.Handler;
+import jetbrains.jetpad.cell.action.Runnables;
 import jetbrains.jetpad.event.*;
 import jetbrains.jetpad.mapper.Mapper;
 import jetbrains.jetpad.mapper.MapperFactory;
@@ -35,7 +36,6 @@ import jetbrains.jetpad.model.property.PropertyBinding;
 import jetbrains.jetpad.model.property.ReadableProperty;
 import jetbrains.jetpad.model.property.WritableProperty;
 import jetbrains.jetpad.cell.*;
-import jetbrains.jetpad.cell.action.CellAction;
 import jetbrains.jetpad.cell.action.CellActions;
 import jetbrains.jetpad.cell.completion.Completion;
 import jetbrains.jetpad.cell.completion.CompletionSupport;
@@ -77,7 +77,7 @@ public class HybridSynchronizer<SourceT> implements Synchronizer {
   private TextCell myPlaceholder;
   private MapperFactory<Object, ? extends Cell> myMapperFactory;
   private SelectionSupport<Cell> mySelectionSupport;
-  private CellAction myLastItemDeleted;
+  private Runnable myLastItemDeleted;
   private Synchronizer[] mySynchronizers = Synchronizer.EMPTY_ARRAY;
 
   public HybridSynchronizer(Mapper<?, ?> contextMapper, Property<SourceT> prop, Cell target, HybridPositionSpec<SourceT> spec) {
@@ -118,12 +118,12 @@ public class HybridSynchronizer<SourceT> implements Synchronizer {
       }
 
       @Override
-      protected CellAction focusAndScrollTo(final int index, boolean first) {
-        return CellActions.seq(
+      protected Runnable focusAndScrollTo(final int index, boolean first) {
+        return Runnables.seq(
           tokenOperations().select(index, first ? FIRST : LAST),
-          new CellAction() {
+          new Runnable() {
             @Override
-            public void execute() {
+            public void run() {
               tokenCells().get(index).scrollTo();
             }
           }
@@ -265,7 +265,7 @@ public class HybridSynchronizer<SourceT> implements Synchronizer {
         int currentCellIndex = myTargetList.indexOf(currentCell);
         int targetIndex = Positions.isHomePosition(currentCell) ? currentCellIndex : currentCellIndex + 1;
         tokens().addAll(targetIndex, tokens);
-        tokenOperations().select(targetIndex + tokens.size() - 1, LAST).execute();
+        tokenOperations().select(targetIndex + tokens.size() - 1, LAST).run();
       }
 
       private boolean canCopy() {
@@ -509,15 +509,15 @@ public class HybridSynchronizer<SourceT> implements Synchronizer {
     mySelectionSupport.select(myTargetList.get(sel.lowerEndpoint()), myTargetList.get(sel.upperEndpoint() - 1));
   }
 
-  public CellAction select(int index, SelectionPosition pos) {
+  public Runnable select(int index, SelectionPosition pos) {
     return tokenOperations().select(index, pos);
   }
 
-  public CellAction selectOnCreation(int index, SelectionPosition pos) {
+  public Runnable selectOnCreation(int index, SelectionPosition pos) {
     return tokenOperations().selectOnCreation(index, pos);
   }
 
-  public void setOnLastItemDeleted(CellAction action) {
+  public void setOnLastItemDeleted(Runnable action) {
     myLastItemDeleted = action;
   }
 
@@ -533,14 +533,14 @@ public class HybridSynchronizer<SourceT> implements Synchronizer {
     tokens().subList(firstIndex, lastIndex).clear();
 
     if (tokens().isEmpty()) {
-      lastItemDeleted().execute();
+      lastItemDeleted().run();
     } else {
       boolean isEnd = tokens().size() == firstIndex;
-      tokenOperations().select(!isEnd ? firstIndex : firstIndex - 1, isEnd ? LAST :  FIRST).execute();
+      tokenOperations().select(!isEnd ? firstIndex : firstIndex - 1, isEnd ? LAST :  FIRST).run();
     }
   }
 
-  CellAction lastItemDeleted() {
+  Runnable lastItemDeleted() {
     if (myLastItemDeleted != null) {
       return myLastItemDeleted;
     } else {

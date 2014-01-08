@@ -56,7 +56,7 @@ public class HybridEditorTest extends EditingTestCase {
     RootController.install(myCellContainer);
     mapper.attachRoot();
     myCellContainer.root.children().add(myTargetCell = mapper.getTarget());
-    CellActions.toFirstFocusable(mapper.getTarget()).execute();
+    CellActions.toFirstFocusable(mapper.getTarget()).run();
     sync = mapper.hybridSync;
   }
 
@@ -742,11 +742,11 @@ public class HybridEditorTest extends EditingTestCase {
   }
 
   private void select(int index, boolean first) {
-    sync.tokenOperations().select(index, first ? FIRST : LAST).execute();
+    sync.tokenOperations().select(index, first ? FIRST : LAST).run();
   }
 
   private void select(int index, int pos) {
-    sync.tokenOperations().select(index, pos).execute();
+    sync.tokenOperations().select(index, pos).run();
   }
 
   private Cell assertSelected(int index) {

@@ -21,23 +21,13 @@ import jetbrains.jetpad.cell.position.PositionHandler;
 import jetbrains.jetpad.model.composite.Composites;
 
 public class CellActions {
-  public static CellAction seq(final CellAction... actions) {
-    return new CellAction() {
-      @Override
-      public void execute() {
-        for (CellAction a : actions) {
-          a.execute();
-        }
-      }
-    };
-  }
 
-  public static CellAction toCell(final Cell cell) {
+  public static Runnable toCell(final Cell cell) {
     if (cell == null) throw new NullPointerException();
 
-    return new CellAction() {
+    return new Runnable() {
       @Override
-      public void execute() {
+      public void run() {
         if (!cell.focusable().get()) {
           throw new IllegalStateException();
         }
@@ -46,12 +36,12 @@ public class CellActions {
     };
   }
 
-  public static CellAction toHome(final Cell cell) {
+  public static Runnable toHome(final Cell cell) {
     if (cell == null) throw new NullPointerException();
 
-    return new CellAction() {
+    return new Runnable() {
       @Override
-      public void execute() {
+      public void run() {
         if (!cell.focusable().get()) {
           throw new IllegalStateException();
         }
@@ -61,12 +51,12 @@ public class CellActions {
     };
   }
 
-  public static CellAction toEnd(final Cell cell) {
+  public static Runnable toEnd(final Cell cell) {
     if (cell == null) throw new NullPointerException();
 
-    return new CellAction() {
+    return new Runnable() {
       @Override
-      public void execute() {
+      public void run() {
         if (!cell.focusable().get()) {
           throw new IllegalStateException();
         }
@@ -76,30 +66,30 @@ public class CellActions {
     };
   }
 
-  public static CellAction toFirstFocusable(final Cell cell) {
+  public static Runnable toFirstFocusable(final Cell cell) {
     if (cell == null) throw new NullPointerException();
 
-    return new CellAction() {
+    return new Runnable() {
       @Override
-      public void execute() {
-        toHome(Composites.firstFocusable(cell)).execute();
+      public void run() {
+        toHome(Composites.firstFocusable(cell)).run();
       }
     };
   }
 
-  public static CellAction toLastFocusable(final Cell cell) {
+  public static Runnable toLastFocusable(final Cell cell) {
     if (cell == null) throw new NullPointerException();
 
-    return new CellAction() {
+    return new Runnable() {
       @Override
-      public void execute() {
+      public void run() {
         Cell lf = Composites.lastFocusable(cell);
-        toEnd(lf).execute();
+        toEnd(lf).run();
       }
     };
   }
 
-  public static CellAction toPosition(final Cell cell, final int pos) {
+  public static Runnable toPosition(final Cell cell, final int pos) {
     if (cell instanceof TextCell) {
       return toPosition((TextCell) cell, pos);
     } else {
@@ -107,12 +97,12 @@ public class CellActions {
     }
   }
 
-  public static CellAction toPosition(final TextCell cell, final int pos) {
+  public static Runnable toPosition(final TextCell cell, final int pos) {
     if (cell == null) throw new NullPointerException();
 
-    return new CellAction() {
+    return new Runnable() {
       @Override
-      public void execute() {
+      public void run() {
         cell.focus();
         cell.caretPosition().set(pos);
       }

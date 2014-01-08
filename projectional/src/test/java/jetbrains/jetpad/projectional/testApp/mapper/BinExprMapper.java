@@ -17,7 +17,6 @@ package jetbrains.jetpad.projectional.testApp.mapper;
 
 import jetbrains.jetpad.mapper.Mapper;
 import jetbrains.jetpad.cell.Cell;
-import jetbrains.jetpad.cell.action.CellAction;
 import jetbrains.jetpad.cell.action.CellActions;
 import jetbrains.jetpad.projectional.cell.DeleteHandler;
 import jetbrains.jetpad.projectional.cell.ProjectionalRoleSynchronizer;
@@ -43,7 +42,7 @@ public class BinExprMapper extends Mapper<BinExpr, BinExprCell> {
       }
 
       @Override
-      public CellAction delete() {
+      public Runnable delete() {
         Expr right = getSource().right.get();
         right.removeFromParent();
         Mapper<?, ?> parentMapper = getParent();
@@ -62,7 +61,7 @@ public class BinExprMapper extends Mapper<BinExpr, BinExprCell> {
       }
 
       @Override
-      public CellAction delete() {
+      public Runnable delete() {
         Expr left = getSource().left.get();
         left.removeFromParent();
         Mapper<?, ?> parentMapper = getParent();

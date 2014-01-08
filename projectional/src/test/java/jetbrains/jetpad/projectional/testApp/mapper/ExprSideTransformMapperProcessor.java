@@ -21,7 +21,6 @@ import jetbrains.jetpad.cell.completion.*;
 import jetbrains.jetpad.cell.trait.BaseCellTrait;
 import jetbrains.jetpad.cell.Cell;
 import jetbrains.jetpad.cell.trait.CellTraitPropertySpec;
-import jetbrains.jetpad.cell.action.CellAction;
 import jetbrains.jetpad.projectional.cell.ProjectionalSynchronizers;
 import jetbrains.jetpad.projectional.testApp.model.*;
 
@@ -53,37 +52,37 @@ class ExprSideTransformMapperProcessor implements MapperProcessor<Expr, Cell> {
                 List<CompletionItem> result = new ArrayList<CompletionItem>();
                 result.add(new SimpleCompletionItem("+") {
                   @Override
-                  public CellAction complete(String text) {
+                  public Runnable complete(String text) {
                     return rightTransform(mapper, new PlusExpr(), expr);
                   }
                 });
                 result.add(new SimpleCompletionItem("-") {
                   @Override
-                  public CellAction complete(String text) {
+                  public Runnable complete(String text) {
                     return rightTransform(mapper, new MinusExpr(), expr);
                   }
                 });
                 result.add(new SimpleCompletionItem("*") {
                   @Override
-                  public CellAction complete(String text) {
+                  public Runnable complete(String text) {
                     return rightTransform(mapper, new MulExpr(), expr);
                   }
                 });
                 result.add(new SimpleCompletionItem("/") {
                   @Override
-                  public CellAction complete(String text) {
+                  public Runnable complete(String text) {
                     return rightTransform(mapper, new DivExpr(), expr);
                   }
                 });
                 result.add(new SimpleCompletionItem("=") {
                   @Override
-                  public CellAction complete(String text) {
+                  public Runnable complete(String text) {
                     return rightTransform(mapper, new AssignExpr(), expr);
                   }
                 });
                 result.add(new SimpleCompletionItem("==") {
                   @Override
-                  public CellAction complete(String text) {
+                  public Runnable complete(String text) {
                     return rightTransform(mapper, new EqExpr(), expr);
                   }
                 });
@@ -108,37 +107,37 @@ class ExprSideTransformMapperProcessor implements MapperProcessor<Expr, Cell> {
                 List<CompletionItem> result = new ArrayList<CompletionItem>();
                 result.add(new SimpleCompletionItem("+") {
                   @Override
-                  public CellAction complete(String text) {
+                  public Runnable complete(String text) {
                     return leftTransform(mapper, new PlusExpr(), expr);
                   }
                 });
                 result.add(new SimpleCompletionItem("-") {
                   @Override
-                  public CellAction complete(String text) {
+                  public Runnable complete(String text) {
                     return leftTransform(mapper, new MinusExpr(), expr);
                   }
                 });
                 result.add(new SimpleCompletionItem("*") {
                   @Override
-                  public CellAction complete(String text) {
+                  public Runnable complete(String text) {
                     return leftTransform(mapper, new MulExpr(), expr);
                   }
                 });
                 result.add(new SimpleCompletionItem("/") {
                   @Override
-                  public CellAction complete(String text) {
+                  public Runnable complete(String text) {
                     return leftTransform(mapper, new DivExpr(), expr);
                   }
                 });
                 result.add(new SimpleCompletionItem("=") {
                   @Override
-                  public CellAction complete(String text) {
+                  public Runnable complete(String text) {
                     return leftTransform(mapper, new AssignExpr(), expr);
                   }
                 });
                 result.add(new SimpleCompletionItem("==") {
                   @Override
-                  public CellAction complete(String text) {
+                  public Runnable complete(String text) {
                     return leftTransform(mapper, new EqExpr(), expr);
                   }
                 });
@@ -153,7 +152,7 @@ class ExprSideTransformMapperProcessor implements MapperProcessor<Expr, Cell> {
     }
   }
 
-  private CellAction leftTransform(Mapper<?, ?> sourceMapper, BinExpr newExpr, Expr expr) {
+  private Runnable leftTransform(Mapper<?, ?> sourceMapper, BinExpr newExpr, Expr expr) {
     Mapper<?, ?> parentMapper = sourceMapper.getParent();
     expr.replaceWith(newExpr);
     newExpr.right.set(expr);
@@ -162,7 +161,7 @@ class ExprSideTransformMapperProcessor implements MapperProcessor<Expr, Cell> {
     return selectExpression(target);
   }
 
-  private CellAction rightTransform(Mapper<?, ?> sourceMapper, BinExpr newExpr, Expr expr) {
+  private Runnable rightTransform(Mapper<?, ?> sourceMapper, BinExpr newExpr, Expr expr) {
     Mapper<?, ?> parentMapper = sourceMapper.getParent();
     expr.replaceWith(newExpr);
     newExpr.left.set(expr);
@@ -171,7 +170,7 @@ class ExprSideTransformMapperProcessor implements MapperProcessor<Expr, Cell> {
     return selectExpression(target);
   }
 
-  private static CellAction selectExpression(Cell pos) {
+  private static Runnable selectExpression(Cell pos) {
     return pos.get(ProjectionalSynchronizers.ON_CREATE);
   }
 }

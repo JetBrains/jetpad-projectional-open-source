@@ -19,7 +19,6 @@ import com.google.common.base.Function;
 import jetbrains.jetpad.event.Event;
 import jetbrains.jetpad.event.Key;
 import jetbrains.jetpad.event.KeyEvent;
-import jetbrains.jetpad.cell.action.CellAction;
 import jetbrains.jetpad.cell.completion.Completion;
 import jetbrains.jetpad.cell.position.Positions;
 import jetbrains.jetpad.cell.text.TextEditing;
@@ -106,16 +105,16 @@ class TokenCellTraits {
       TokenOperations<?> tokenOps = tokenOperations(tokenCell);
 
       if ((event.is(Key.DELETE) || event.is(Key.BACKSPACE)) && (Cells.isEmpty(tokenCell) || myValueToken)) {
-        tokenOps.deleteToken(tokenCell, 0).execute();
+        tokenOps.deleteToken(tokenCell, 0).run();
         event.consume();
         return;
       }
 
       if (event.is(Key.DELETE) && Positions.isLastPosition(tokenCell) && tokenOps.canDelete(tokenCell, 1)) {
         if (tokenOps.canMerge(tokenCell, 1)) {
-          tokenOps.mergeTokens(tokenCell, false).execute();
+          tokenOps.mergeTokens(tokenCell, false).run();
         } else {
-          tokenOps.deleteToken(tokenCell, 1).execute();
+          tokenOps.deleteToken(tokenCell, 1).run();
         }
         event.consume();
         return;
@@ -123,16 +122,16 @@ class TokenCellTraits {
 
       if (event.is(Key.BACKSPACE) && Positions.isFirstPosition(tokenCell) && tokenOps.canDelete(tokenCell, -1)) {
         if (tokenOps.canMerge(tokenCell, -1)) {
-          tokenOps.mergeTokens(tokenCell, true).execute();
+          tokenOps.mergeTokens(tokenCell, true).run();
         } else {
-          tokenOps.deleteToken(tokenCell, -1).execute();
+          tokenOps.deleteToken(tokenCell, -1).run();
         }
         event.consume();
         return;
       }
 
       if (event.is(KeyStrokeSpecs.DELETE_CURRENT)) {
-        tokenOps.deleteToken(tokenCell, 0).execute();
+        tokenOps.deleteToken(tokenCell, 0).run();
         event.consume();
         return;
       }
@@ -149,7 +148,7 @@ class TokenCellTraits {
         Token next = index == tokens(cell).size() - 1 ? null : tokens(cell).get(index + 1);
 
         if ((prev != null && prev.noSpaceToRight()) || (next != null && next.noSpaceToLeft())) {
-          tokenOperations(cell).deleteToken(cell, 0).execute();
+          tokenOperations(cell).deleteToken(cell, 0).run();
           event.consume();
           return;
         }
@@ -173,9 +172,9 @@ class TokenCellTraits {
       if (spec == Completion.LEFT_TRANSFORM) return tokenCompletion(cell).sideTransform(tokenView(cell), 0);
 
       if (spec == TextEditing.EXPAND_LEFT) {
-        return new Function<String, CellAction>() {
+        return new Function<String, Runnable>() {
           @Override
-          public CellAction apply(String text) {
+          public Runnable apply(String text) {
             return tokenOperations(cell).expandToError(cell, text, 0);
           }
         };
@@ -191,9 +190,9 @@ class TokenCellTraits {
       if (spec == Completion.RIGHT_TRANSFORM) return tokenCompletion(cell).sideTransform(tokenView(cell), 1);
 
       if (spec == TextEditing.EXPAND_RIGHT) {
-        return new Function<String, CellAction>() {
+        return new Function<String, Runnable>() {
           @Override
-          public CellAction apply(String text) {
+          public Runnable apply(String text) {
             return tokenOperations(cell).expandToError(cell, text, 1);
           }
         };

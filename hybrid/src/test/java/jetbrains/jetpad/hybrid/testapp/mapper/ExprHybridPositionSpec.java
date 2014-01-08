@@ -16,7 +16,6 @@
 package jetbrains.jetpad.hybrid.testapp.mapper;
 
 import com.google.common.base.Function;
-import jetbrains.jetpad.cell.action.CellAction;
 import jetbrains.jetpad.cell.completion.*;
 import jetbrains.jetpad.cell.util.Validators;
 import jetbrains.jetpad.hybrid.Completer;
@@ -256,7 +255,7 @@ public class ExprHybridPositionSpec implements HybridPositionSpec<Expr> {
   }
 
   @Override
-  public CompletionSupplier getTokenCompletion(final Function<Token, CellAction> tokenHandler) {
+  public CompletionSupplier getTokenCompletion(final Function<Token, Runnable> tokenHandler) {
     return new CompletionSupplier() {
       @Override
       public List<CompletionItem> get(CompletionParameters cp) {
@@ -269,7 +268,7 @@ public class ExprHybridPositionSpec implements HybridPositionSpec<Expr> {
           }
 
           @Override
-          public CellAction complete(String text) {
+          public Runnable complete(String text) {
             return tokenHandler.apply(myToken);
           }
         }
@@ -284,20 +283,20 @@ public class ExprHybridPositionSpec implements HybridPositionSpec<Expr> {
         result.add(new SimpleTokenCompletionItem(Tokens.DOT));
         result.add(new SimpleCompletionItem("value") {
           @Override
-          public CellAction complete(String text) {
+          public Runnable complete(String text) {
             return tokenHandler.apply(new ValueToken(new ValueExpr()));
           }
         });
         result.add(new SimpleCompletionItem("aaaa") {
           @Override
-          public CellAction complete(String text) {
+          public Runnable complete(String text) {
             return tokenHandler.apply(new ValueToken(new ComplexValueExpr()));
           }
         });
 
         result.add(new SimpleCompletionItem("posValue") {
           @Override
-          public CellAction complete(String text) {
+          public Runnable complete(String text) {
             return tokenHandler.apply(new ValueToken(new PosValueExpr()));
           }
         });
@@ -320,7 +319,7 @@ public class ExprHybridPositionSpec implements HybridPositionSpec<Expr> {
           }
 
           @Override
-          public CellAction complete(String text) {
+          public Runnable complete(String text) {
             int value;
             if (text == null || text.isEmpty()) {
               value = 0;
@@ -349,7 +348,7 @@ public class ExprHybridPositionSpec implements HybridPositionSpec<Expr> {
           }
 
           @Override
-          public CellAction complete(String text) {
+          public Runnable complete(String text) {
             return tokenHandler.apply(new IdentifierToken(text));
           }
 

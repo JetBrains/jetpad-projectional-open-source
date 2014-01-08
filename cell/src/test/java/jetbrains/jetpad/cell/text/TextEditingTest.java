@@ -15,9 +15,9 @@
  */
 package jetbrains.jetpad.cell.text;
 
+import jetbrains.jetpad.cell.action.Runnables;
 import jetbrains.jetpad.event.*;
 import jetbrains.jetpad.cell.*;
-import jetbrains.jetpad.cell.action.CellAction;
 import jetbrains.jetpad.cell.completion.*;
 import jetbrains.jetpad.cell.position.PositionHandler;
 import jetbrains.jetpad.cell.trait.BaseCellTrait;
@@ -572,9 +572,9 @@ public class TextEditingTest extends EditingTestCase {
   private SimpleCompletionItem createCompletionItem(final String visibleText) {
     return new SimpleCompletionItem(visibleText) {
       @Override
-      public CellAction complete(String text) {
+      public Runnable complete(String text) {
         completed = visibleText;
-        return CellAction.EMPTY;
+        return Runnables.EMPTY;
       }
     };
   }

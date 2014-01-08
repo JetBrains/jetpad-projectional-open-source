@@ -18,10 +18,9 @@ package jetbrains.jetpad.hybrid;
 import com.google.common.base.Function;
 import com.google.common.base.Objects;
 import jetbrains.jetpad.base.Value;
-import jetbrains.jetpad.cell.action.CellActions;
+import jetbrains.jetpad.cell.action.Runnables;
 import jetbrains.jetpad.mapper.Mapper;
 import jetbrains.jetpad.cell.TextCell;
-import jetbrains.jetpad.cell.action.CellAction;
 import jetbrains.jetpad.cell.completion.*;
 import jetbrains.jetpad.hybrid.parser.Token;
 import jetbrains.jetpad.cell.Cell;
@@ -32,7 +31,6 @@ import java.util.Collections;
 import java.util.List;
 
 import static jetbrains.jetpad.hybrid.SelectionPosition.*;
-import static jetbrains.jetpad.cell.action.CellActions.seq;
 
 class TokenCompletion {
   private HybridSynchronizer<?> mySync;
@@ -53,14 +51,14 @@ class TokenCompletion {
     return mySync.tokenOperations();
   }
 
-  CompletionHelper completion(Function<Token, CellAction> handler) {
+  CompletionHelper completion(Function<Token, Runnable> handler) {
     return new CompletionHelper(positionSpec().getTokenCompletion(handler).get(CompletionParameters.EMPTY));
   }
 
   CompletionSupplier placeholderCompletion() {
     return tokenCompletion(new PlaceholderCompletionContext(), new BaseCompleter() {
       @Override
-      public CellAction complete(int selectionIndex, Token... tokens) {
+      public Runnable complete(int selectionIndex, Token... tokens) {
         tokenListEditor().tokens.addAll(Arrays.asList(tokens));
         tokenListEditor().updateToPrintedTokens();
 
@@ -73,7 +71,7 @@ class TokenCompletion {
     final int index = mySync.tokenCells().indexOf(tokenCell);
     return tokenCompletion(new TokenCompletionContext(index), new BaseCompleter() {
       @Override
-      public CellAction complete(int selectionIndex, Token... tokens) {
+      public Runnable complete(int selectionIndex, Token... tokens) {
         final int caretPosition;
         String oldText = null;
         SelectionPosition position = LAST;
@@ -109,11 +107,11 @@ class TokenCompletion {
           position = LAST;
         }
 
-        CellAction result;
+        Runnable result;
         if (position == null) {
-          result = new CellAction() {
+          result = new Runnable() {
             @Override
-            public void execute() {
+            public void run() {
               targetCell.focus();
               ((TextCell) targetCell).caretPosition().set(caretPosition);
             }
@@ -123,7 +121,7 @@ class TokenCompletion {
         }
 
         if (wasCompletionActive) {
-          result = CellActions.seq(result, activateCompletion(index + selectionIndex));
+          result = Runnables.seq(result, activateCompletion(index + selectionIndex));
         }
         return result;
       }
@@ -138,15 +136,15 @@ class TokenCompletion {
       public List<CompletionItem> get(final CompletionParameters cp) {
         BaseCompleter completer = new BaseCompleter() {
           @Override
-          public CellAction complete(int selectionIndex, Token... tokens) {
+          public Runnable complete(int selectionIndex, Token... tokens) {
             int i = index + delta;
             for (Token t : tokens) {
               tokenListEditor().tokens.add(i++, t);
             }
             tokenListEditor().updateToPrintedTokens();
-            CellAction result = tokenOperations().selectOnCreation(index + delta + selectionIndex, LAST);
+            Runnable result = tokenOperations().selectOnCreation(index + delta + selectionIndex, LAST);
             if (cp.isEndRightTransform()) {
-              result = CellActions.seq(result, activateCompletion(index + delta + selectionIndex));
+              result = Runnables.seq(result, activateCompletion(index + delta + selectionIndex));
             }
             return result;
           }
@@ -166,9 +164,9 @@ class TokenCompletion {
       @Override
       public List<CompletionItem> get(CompletionParameters cp) {
         List<CompletionItem> result = new ArrayList<CompletionItem>();
-        result.addAll(positionSpec().getTokenCompletion(new Function<Token, CellAction>() {
+        result.addAll(positionSpec().getTokenCompletion(new Function<Token, Runnable>() {
           @Override
-          public CellAction apply(Token input) {
+          public Runnable apply(Token input) {
             return completer.complete(input);
           }
         }).get(cp));
@@ -182,11 +180,11 @@ class TokenCompletion {
 
   Token completeToken(String text) {
     final Value<Token> result = new Value<Token>();
-    CompletionHelper completion = completion(new Function<Token, CellAction>() {
+    CompletionHelper completion = completion(new Function<Token, Runnable>() {
       @Override
-      public CellAction apply(Token token) {
+      public Runnable apply(Token token) {
         result.set(token);
-        return CellAction.EMPTY;
+        return Runnables.EMPTY;
       }
     });
     List<CompletionItem> matches = completion.matches(text);
@@ -197,10 +195,10 @@ class TokenCompletion {
     return null;
   }
 
-  private CellAction activateCompletion(final int index) {
-    return new CellAction() {
+  private Runnable activateCompletion(final int index) {
+    return new Runnable() {
       @Override
-      public void execute() {
+      public void run() {
         CompletionController ctrl = mySync.tokenCells().get(index).get(Completion.COMPLETION_CONTROLLER);
         if (ctrl.hasAmbiguousMatches()) {
           ctrl.setActive(true);

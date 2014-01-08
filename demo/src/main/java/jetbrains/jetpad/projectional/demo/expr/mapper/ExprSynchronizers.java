@@ -19,7 +19,6 @@ import com.google.common.base.Supplier;
 import jetbrains.jetpad.cell.util.Validators;
 import jetbrains.jetpad.mapper.*;
 import jetbrains.jetpad.model.property.Property;
-import jetbrains.jetpad.cell.action.CellAction;
 import jetbrains.jetpad.cell.completion.BaseCompletionItem;
 import jetbrains.jetpad.cell.completion.CompletionItem;
 import jetbrains.jetpad.cell.completion.CompletionParameters;
@@ -89,31 +88,31 @@ public class ExprSynchronizers {
     List<CompletionItem> result = new ArrayList<CompletionItem>();
     result.add(new SimpleCompletionItem("+") {
       @Override
-      public CellAction complete(String text) {
+      public Runnable complete(String text) {
         return target.set(new PlusExpression());
       }
     });
     result.add(new SimpleCompletionItem("-") {
       @Override
-      public CellAction complete(String text) {
+      public Runnable complete(String text) {
         return target.set(new MinusExpression());
       }
     });
     result.add(new SimpleCompletionItem("/") {
       @Override
-      public CellAction complete(String text) {
+      public Runnable complete(String text) {
         return target.set(new DivExpression());
       }
     });
     result.add(new SimpleCompletionItem("*") {
       @Override
-      public CellAction complete(String text) {
+      public Runnable complete(String text) {
         return target.set(new MulExpression());
       }
     });
     result.add(new SimpleCompletionItem("(expr)") {
       @Override
-      public CellAction complete(String text) {
+      public Runnable complete(String text) {
         return target.set(new ParensExpression());
       }
     });
@@ -136,7 +135,7 @@ public class ExprSynchronizers {
       }
 
       @Override
-      public CellAction complete(String text) {
+      public Runnable complete(String text) {
         NumberExpression numberExpr = new NumberExpression();
         if (text == null || text.isEmpty()) {
           numberExpr.value.set(0);

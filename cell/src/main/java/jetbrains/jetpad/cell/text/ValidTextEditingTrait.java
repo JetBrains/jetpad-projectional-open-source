@@ -16,18 +16,16 @@
 package jetbrains.jetpad.cell.text;
 
 import com.google.common.base.Predicate;
-import jetbrains.jetpad.model.property.PropertyChangeEvent;
+import jetbrains.jetpad.cell.Cell;
+import jetbrains.jetpad.cell.CellContainer;
+import jetbrains.jetpad.cell.CellPropertySpec;
+import jetbrains.jetpad.cell.TextCell;
+import jetbrains.jetpad.cell.completion.*;
+import jetbrains.jetpad.cell.trait.CellTraitPropertySpec;
 import jetbrains.jetpad.event.Key;
 import jetbrains.jetpad.event.KeyEvent;
 import jetbrains.jetpad.event.ModifierKey;
-import jetbrains.jetpad.cell.*;
-import jetbrains.jetpad.cell.action.CellAction;
-import jetbrains.jetpad.cell.completion.Completion;
-import jetbrains.jetpad.cell.completion.CompletionHelper;
-import jetbrains.jetpad.cell.completion.CompletionItem;
-import jetbrains.jetpad.cell.completion.CompletionParameters;
-import jetbrains.jetpad.cell.completion.Side;
-import jetbrains.jetpad.cell.trait.CellTraitPropertySpec;
+import jetbrains.jetpad.model.property.PropertyChangeEvent;
 import jetbrains.jetpad.values.Color;
 
 import java.util.Collections;
@@ -111,7 +109,7 @@ class ValidTextEditingTrait extends TextEditingTrait {
         } else {
           List<CompletionItem> matches = completion.matches(prefix);
           if (matches.size() == 1) {
-            matches.get(0).complete(prefix).execute();
+            matches.get(0).complete(prefix).run();
             container.keyTyped(new KeyEvent(Key.UNKNOWN, suffix.charAt(0), Collections.<ModifierKey>emptySet()));
           }
         }
@@ -136,11 +134,11 @@ class ValidTextEditingTrait extends TextEditingTrait {
       if (!sideCompletion.hasMatches(sideText)) return;
 
       setText(textCell, cellText);
-      expand(textCell, side, sideText).execute();
+      expand(textCell, side, sideText).run();
     }
   }
 
-  private CellAction expand(TextCell textCell, Side side, String sideText) {
+  private Runnable expand(TextCell textCell, Side side, String sideText) {
     return side.getExpander(textCell).apply(sideText);
   }
 

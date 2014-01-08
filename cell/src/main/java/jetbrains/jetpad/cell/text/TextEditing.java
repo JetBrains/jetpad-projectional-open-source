@@ -20,7 +20,6 @@ import com.google.common.base.Objects;
 import com.google.common.base.Predicate;
 import com.google.common.base.Supplier;
 import jetbrains.jetpad.cell.*;
-import jetbrains.jetpad.cell.action.CellAction;
 import jetbrains.jetpad.cell.action.CellActions;
 import jetbrains.jetpad.cell.completion.CompletionHelper;
 import jetbrains.jetpad.cell.completion.CompletionParameters;
@@ -37,8 +36,8 @@ public class TextEditing {
   public static final CellTraitPropertySpec<Boolean> LAST_ALLOWED = new CellTraitPropertySpec<Boolean>("firstAllowed", true);
   public static final CellTraitPropertySpec<Boolean> DOT_LIKE_RT = new CellTraitPropertySpec<Boolean>("dotLikeRt", false);
 
-  public static final CellTraitPropertySpec<Function<String, CellAction>> EXPAND_LEFT = new CellTraitPropertySpec<Function<String, CellAction>>("expandLeft", expansionProvider(Side.LEFT));
-  public static final CellTraitPropertySpec<Function<String, CellAction>> EXPAND_RIGHT = new CellTraitPropertySpec<Function<String, CellAction>>("expandRight", expansionProvider(Side.RIGHT));
+  public static final CellTraitPropertySpec<Function<String, Runnable>> EXPAND_LEFT = new CellTraitPropertySpec<Function<String, Runnable>>("expandLeft", expansionProvider(Side.LEFT));
+  public static final CellTraitPropertySpec<Function<String, Runnable>> EXPAND_RIGHT = new CellTraitPropertySpec<Function<String, Runnable>>("expandRight", expansionProvider(Side.RIGHT));
   public static final CellTraitPropertySpec<Supplier<Boolean>> AFTER_TYPE = new CellTraitPropertySpec<Supplier<Boolean>>("afterType");
 
   public static final CellTraitPropertySpec<Boolean> EAGER_COMPLETION = new CellTraitPropertySpec<Boolean>("eagerCompletion", false);
@@ -180,13 +179,13 @@ public class TextEditing {
   }
 
 
-  private static Function<Cell, Function<String, CellAction>> expansionProvider(final Side side) {
-    return new Function<Cell, Function<String, CellAction>>() {
+  private static Function<Cell, Function<String, Runnable>> expansionProvider(final Side side) {
+    return new Function<Cell, Function<String, Runnable>>() {
       @Override
-      public Function<String, CellAction> apply(final Cell cell) {
-        return new Function<String, CellAction>() {
+      public Function<String, Runnable> apply(final Cell cell) {
+        return new Function<String, Runnable>() {
           @Override
-          public CellAction apply(String sideText) {
+          public Runnable apply(String sideText) {
             CompletionHelper sideCompletion = CompletionHelper.completionFor(cell, CompletionParameters.EMPTY, side.getKey());
             TextCell popupView = CompletionSupport.showSideTransformPopup(cell, side.getPopup(cell), sideCompletion.getItems());
             popupView.text().set(sideText);

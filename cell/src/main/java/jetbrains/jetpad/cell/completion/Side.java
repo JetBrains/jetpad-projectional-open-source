@@ -20,7 +20,6 @@ import jetbrains.jetpad.model.property.Property;
 import jetbrains.jetpad.cell.Cell;
 import jetbrains.jetpad.cell.text.TextEditing;
 import jetbrains.jetpad.cell.trait.CellTraitPropertySpec;
-import jetbrains.jetpad.cell.action.CellAction;
 
 import java.lang.Override;
 import java.lang.String;
@@ -38,7 +37,7 @@ public enum Side {
     }
 
     @Override
-    public Function<String, CellAction> getExpander(Cell cell) {
+    public Function<String, Runnable> getExpander(Cell cell) {
       return cell.get(TextEditing.EXPAND_LEFT);
     }
   },
@@ -55,12 +54,12 @@ public enum Side {
     }
 
     @Override
-    public Function<String, CellAction> getExpander(Cell cell) {
+    public Function<String, Runnable> getExpander(Cell cell) {
       return cell.get(TextEditing.EXPAND_RIGHT);
     }
   };
 
   public abstract Property<Cell> getPopup(Cell cell);
   public abstract CellTraitPropertySpec<CompletionSupplier> getKey();
-  public abstract Function<String, CellAction> getExpander(Cell cell);
+  public abstract Function<String, Runnable> getExpander(Cell cell);
 }

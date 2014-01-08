@@ -19,13 +19,12 @@ import com.google.common.base.Function;
 import jetbrains.jetpad.hybrid.parser.Parser;
 import jetbrains.jetpad.hybrid.parser.Token;
 import jetbrains.jetpad.hybrid.parser.prettyprint.PrettyPrinter;
-import jetbrains.jetpad.cell.action.CellAction;
 import jetbrains.jetpad.cell.completion.CompletionSupplier;
 
 public interface HybridPositionSpec<SourceT> {
   Parser<SourceT> getParser();
   PrettyPrinter<? super SourceT> getPrettyPrinter();
 
-  CompletionSupplier getTokenCompletion(Function<Token, CellAction> tokenHandler);
+  CompletionSupplier getTokenCompletion(Function<Token, Runnable> tokenHandler);
   CompletionSupplier getAdditionalCompletion(CompletionContext ctx, Completer completer);
 }

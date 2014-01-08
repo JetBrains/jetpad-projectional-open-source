@@ -15,15 +15,13 @@
  */
 package jetbrains.jetpad.projectional.cell;
 
+import jetbrains.jetpad.cell.action.Runnables;
 import jetbrains.jetpad.event.KeyStrokeSpecs;
 import jetbrains.jetpad.model.composite.Composites;
 import jetbrains.jetpad.model.collections.list.ObservableArrayList;
 import jetbrains.jetpad.model.collections.list.ObservableList;
-import jetbrains.jetpad.event.Key;
 import jetbrains.jetpad.event.KeyEvent;
-import jetbrains.jetpad.event.ModifierKey;
 import jetbrains.jetpad.cell.*;
-import jetbrains.jetpad.cell.action.CellAction;
 import jetbrains.jetpad.cell.action.CellActions;
 import jetbrains.jetpad.cell.event.FocusEvent;
 import jetbrains.jetpad.cell.position.Positions;
@@ -160,13 +158,13 @@ public class SelectionSupport<ItemT> {
           if (!Positions.isEndPosition(currentCell)) {
             if (!mySelectedItems.contains(currentItem)) {
               mySelectedItems.add(currentItem);
-              focusAndScrollTo(currentIndex, false).execute();
+              focusAndScrollTo(currentIndex, false).run();
             } else {
               mySelectedItems.remove(currentItem);
               if (currentIndex == myTargetList.size() - 1) {
-                focusAndScrollTo(currentIndex, false).execute();
+                focusAndScrollTo(currentIndex, false).run();
               } else {
-                focusAndScrollTo(currentIndex + 1, true).execute();
+                focusAndScrollTo(currentIndex + 1, true).run();
               }
             }
             event.consume();
@@ -183,10 +181,10 @@ public class SelectionSupport<ItemT> {
 
           if (mySelectedItems.contains(nextItem)) {
             mySelectedItems.remove(currentItem);
-            focusAndScrollTo(currentIndex + 1, true).execute();
+            focusAndScrollTo(currentIndex + 1, true).run();
           } else {
             mySelectedItems.add(nextItem);
-            focusAndScrollTo(currentIndex + 1, false).execute();
+            focusAndScrollTo(currentIndex + 1, false).run();
           }
           event.consume();
         }
@@ -208,13 +206,13 @@ public class SelectionSupport<ItemT> {
           if (!Positions.isHomePosition(currentCell)) {
             if (!mySelectedItems.contains(currentItem)) {
               mySelectedItems.add(0, currentItem);
-              focusAndScrollTo(currentIndex, true).execute();
+              focusAndScrollTo(currentIndex, true).run();
             } else {
               mySelectedItems.remove(currentItem);
               if (currentIndex == 0) {
-                focusAndScrollTo(currentIndex, true).execute();
+                focusAndScrollTo(currentIndex, true).run();
               } else {
-                focusAndScrollTo(currentIndex - 1, false).execute();
+                focusAndScrollTo(currentIndex - 1, false).run();
               }
             }
             event.consume();
@@ -231,10 +229,10 @@ public class SelectionSupport<ItemT> {
 
           if (mySelectedItems.contains(prevItem)) {
             mySelectedItems.remove(currentItem);
-            focusAndScrollTo(currentIndex - 1, false).execute();
+            focusAndScrollTo(currentIndex - 1, false).run();
           } else {
             mySelectedItems.add(0, prevItem);
-            focusAndScrollTo(currentIndex - 1, true).execute();
+            focusAndScrollTo(currentIndex - 1, true).run();
           }
           event.consume();
         }
@@ -273,13 +271,13 @@ public class SelectionSupport<ItemT> {
     return siblings.contains(cell) && siblings.size() == 1;
   }
 
-  protected CellAction focusAndScrollTo(int index, boolean first) {
+  protected Runnable focusAndScrollTo(int index, boolean first) {
     final Cell child = myTargetList.get(index);
-    return CellActions.seq(
+    return Runnables.seq(
       first ? CellActions.toFirstFocusable(child) : CellActions.toLastFocusable(child),
-      new CellAction() {
+      new Runnable() {
         @Override
-        public void execute() {
+        public void run() {
           child.scrollTo();
         }
       }

@@ -49,7 +49,7 @@ public class DeleteActionsTest extends EditingTestCase {
   public void leftDelete() {
     IdExpr left = new IdExpr();
     plusExpr.left.set(left);
-    CellActions.toFirstFocusable(binExprMapper.getTarget().right).execute();
+    CellActions.toFirstFocusable(binExprMapper.getTarget().right).run();
 
     del();
 
@@ -60,7 +60,7 @@ public class DeleteActionsTest extends EditingTestCase {
   public void rightDelete() {
     IdExpr right = new IdExpr();
     plusExpr.right.set(right);
-    CellActions.toFirstFocusable(binExprMapper.getTarget().left).execute();
+    CellActions.toFirstFocusable(binExprMapper.getTarget().left).run();
 
     del();
 

@@ -16,16 +16,15 @@
 package jetbrains.jetpad.hybrid;
 
 import jetbrains.jetpad.hybrid.parser.Token;
-import jetbrains.jetpad.cell.action.CellAction;
 
 public abstract class BaseCompleter implements Completer {
   @Override
-  public final CellAction complete(Token token) {
+  public final Runnable complete(Token token) {
     return complete(new Token[] { token });
   }
 
   @Override
-  public CellAction complete(Token... tokens) {
+  public Runnable complete(Token... tokens) {
     return complete(tokens.length - 1, tokens);
   }
 }

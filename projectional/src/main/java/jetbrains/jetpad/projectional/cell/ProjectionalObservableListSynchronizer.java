@@ -15,6 +15,7 @@
  */
 package jetbrains.jetpad.projectional.cell;
 
+import jetbrains.jetpad.cell.action.Runnables;
 import jetbrains.jetpad.event.KeyEvent;
 import jetbrains.jetpad.mapper.Mapper;
 import jetbrains.jetpad.mapper.MapperFactory;
@@ -23,7 +24,6 @@ import jetbrains.jetpad.mapper.Synchronizers;
 import jetbrains.jetpad.model.collections.list.ObservableList;
 import jetbrains.jetpad.model.event.Registration;
 import jetbrains.jetpad.cell.*;
-import jetbrains.jetpad.cell.action.CellAction;
 import jetbrains.jetpad.cell.action.CellActions;
 import jetbrains.jetpad.cell.completion.*;
 import jetbrains.jetpad.cell.position.Positions;
@@ -128,22 +128,22 @@ class ProjectionalObservableListSynchronizer<ContextT, SourceItemT> extends Base
 
       @Override
       protected void selectOnCreation(int index) {
-        ProjectionalObservableListSynchronizer.this.selectOnCreation(index).execute();
+        ProjectionalObservableListSynchronizer.this.selectOnCreation(index).run();
       }
 
       @Override
       protected void selectHome(int index) {
-        CellActions.toLastFocusable(childCells().get(index)).execute();
+        CellActions.toLastFocusable(childCells().get(index)).run();
       }
 
       @Override
       protected void selectEnd(int index) {
-        CellActions.toFirstFocusable(childCells().get(index)).execute();
+        CellActions.toFirstFocusable(childCells().get(index)).run();
       }
 
       @Override
       protected void selectPlaceholder() {
-        getOnLastItemDeleted().execute();
+        getOnLastItemDeleted().run();
       }
     }.handleKey(currentCell(), event);
   }
@@ -160,7 +160,7 @@ class ProjectionalObservableListSynchronizer<ContextT, SourceItemT> extends Base
       }
 
       @Override
-      public CellAction set(SourceItemT target) {
+      public Runnable set(SourceItemT target) {
         int index = childCells().indexOf(currentCell());
         mySource.set(index, target);
         return childCells().get(index).get(ProjectionalSynchronizers.ON_CREATE);
@@ -169,7 +169,7 @@ class ProjectionalObservableListSynchronizer<ContextT, SourceItemT> extends Base
   }
 
   @Override
-  protected CellAction insertItems(List<SourceItemT> items) {
+  protected Runnable insertItems(List<SourceItemT> items) {
     int index = childCells().indexOf(currentCell());
     if (index == -1) {
       mySource.addAll(items);
@@ -181,7 +181,7 @@ class ProjectionalObservableListSynchronizer<ContextT, SourceItemT> extends Base
       if (!isEmpty(index)) {
         return selectOnCreation(index);
       }
-      return CellAction.EMPTY;
+      return Runnables.EMPTY;
     } else {
       mySource.addAll(index + 1, items);
       return selectOnCreation(index + items.size());
@@ -199,14 +199,14 @@ class ProjectionalObservableListSynchronizer<ContextT, SourceItemT> extends Base
 
   private void selectAfterClear(int index) {
     if (mySource.isEmpty()) {
-      getOnLastItemDeleted().execute();
+      getOnLastItemDeleted().run();
     } else {
       if (index < mySource.size()) {
         Cell target = childCells().get(index);
-        CellActions.toFirstFocusable(target).execute();
+        CellActions.toFirstFocusable(target).run();
       } else {
         Cell target = childCells().get(index - 1);
-        CellActions.toLastFocusable(target).execute();
+        CellActions.toLastFocusable(target).run();
       }
     }
   }

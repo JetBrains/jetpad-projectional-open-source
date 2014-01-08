@@ -17,7 +17,7 @@ package jetbrains.jetpad.cell.text;
 
 import com.google.common.base.Predicate;
 import jetbrains.jetpad.cell.*;
-import jetbrains.jetpad.cell.action.CellAction;
+import jetbrains.jetpad.cell.action.Runnables;
 import jetbrains.jetpad.cell.completion.*;
 import jetbrains.jetpad.cell.trait.BaseCellTrait;
 import jetbrains.jetpad.cell.trait.CellTrait;
@@ -73,9 +73,9 @@ public class ValidTextCompletionTest extends CompletionTestCase {
                 }
 
                 @Override
-                public CellAction complete(String text) {
+                public Runnable complete(String text) {
                   lowPriorityCompleted = true;
-                  return CellAction.EMPTY;
+                  return Runnables.EMPTY;
                 }
               }
 
@@ -99,9 +99,9 @@ public class ValidTextCompletionTest extends CompletionTestCase {
               List<CompletionItem> result = new ArrayList<CompletionItem>();
               result.add(new SimpleCompletionItem("z") {
                 @Override
-                public CellAction complete(String text) {
+                public Runnable complete(String text) {
                   rtCompleted = true;
-                  return CellAction.EMPTY;
+                  return Runnables.EMPTY;
                 }
               });
               return result;

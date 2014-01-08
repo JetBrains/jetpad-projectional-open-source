@@ -16,7 +16,7 @@
 package jetbrains.jetpad.cell.completion;
 
 import jetbrains.jetpad.cell.EditingTestCase;
-import jetbrains.jetpad.cell.action.CellAction;
+import jetbrains.jetpad.cell.action.Runnables;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -57,9 +57,9 @@ public abstract class CompletionTestCase extends EditingTestCase {
     }
 
     @Override
-    public CellAction complete(String text) {
+    public Runnable complete(String text) {
       mySetTo = myText;
-      return CellAction.EMPTY;
+      return Runnables.EMPTY;
     }
   }
 

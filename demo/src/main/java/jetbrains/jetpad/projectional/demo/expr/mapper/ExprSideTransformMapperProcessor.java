@@ -15,19 +15,18 @@
  */
 package jetbrains.jetpad.projectional.demo.expr.mapper;
 
+import jetbrains.jetpad.base.Handler;
+import jetbrains.jetpad.cell.Cell;
+import jetbrains.jetpad.cell.action.CellActions;
+import jetbrains.jetpad.cell.completion.*;
+import jetbrains.jetpad.cell.trait.BaseCellTrait;
+import jetbrains.jetpad.cell.trait.CellTraitPropertySpec;
 import jetbrains.jetpad.mapper.Mapper;
 import jetbrains.jetpad.mapper.MapperProcessor;
 import jetbrains.jetpad.mapper.Mappers;
-import jetbrains.jetpad.cell.action.CellAction;
-import jetbrains.jetpad.cell.action.CellActions;
-import jetbrains.jetpad.cell.completion.*;
 import jetbrains.jetpad.model.composite.Composites;
 import jetbrains.jetpad.projectional.demo.expr.ExprBinOpTransformer;
 import jetbrains.jetpad.projectional.demo.expr.model.*;
-import jetbrains.jetpad.cell.trait.BaseCellTrait;
-import jetbrains.jetpad.cell.Cell;
-import jetbrains.jetpad.cell.trait.CellTraitPropertySpec;
-import jetbrains.jetpad.base.Handler;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,25 +53,25 @@ class ExprSideTransformMapperProcessor implements MapperProcessor<Expression, Ce
                 List<CompletionItem> result = new ArrayList<CompletionItem>();
                 result.add(new SimpleCompletionItem("+") {
                   @Override
-                  public CellAction complete(String text) {
+                  public Runnable complete(String text) {
                     return rightTransform(mapper, new PlusExpression(), expr);
                   }
                 });
                 result.add(new SimpleCompletionItem("-") {
                   @Override
-                  public CellAction complete(String text) {
+                  public Runnable complete(String text) {
                     return rightTransform(mapper, new MinusExpression(), expr);
                   }
                 });
                 result.add(new SimpleCompletionItem("*") {
                   @Override
-                  public CellAction complete(String text) {
+                  public Runnable complete(String text) {
                     return rightTransform(mapper, new MulExpression(), expr);
                   }
                 });
                 result.add(new SimpleCompletionItem("/") {
                   @Override
-                  public CellAction complete(String text) {
+                  public Runnable complete(String text) {
                     return rightTransform(mapper, new DivExpression(), expr);
                   }
                 });
@@ -98,25 +97,25 @@ class ExprSideTransformMapperProcessor implements MapperProcessor<Expression, Ce
                 List<CompletionItem> result = new ArrayList<CompletionItem>();
                 result.add(new SimpleCompletionItem("+") {
                   @Override
-                  public CellAction complete(String text) {
+                  public Runnable complete(String text) {
                     return leftTransform(mapper, new PlusExpression(), expr);
                   }
                 });
                 result.add(new SimpleCompletionItem("-") {
                   @Override
-                  public CellAction complete(String text) {
+                  public Runnable complete(String text) {
                     return leftTransform(mapper, new MinusExpression(), expr);
                   }
                 });
                 result.add(new SimpleCompletionItem("*") {
                   @Override
-                  public CellAction complete(String text) {
+                  public Runnable complete(String text) {
                     return leftTransform(mapper, new MulExpression(), expr);
                   }
                 });
                 result.add(new SimpleCompletionItem("/") {
                   @Override
-                  public CellAction complete(String text) {
+                  public Runnable complete(String text) {
                     return leftTransform(mapper, new DivExpression(), expr);
                   }
                 });
@@ -132,7 +131,7 @@ class ExprSideTransformMapperProcessor implements MapperProcessor<Expression, Ce
   }
 
 
-  private static CellAction leftTransform(Mapper<? extends Expression, ?> mapper, final BinaryExpression newExpr, final Expression expr) {
+  private static Runnable leftTransform(Mapper<? extends Expression, ?> mapper, final BinaryExpression newExpr, final Expression expr) {
     return doTransform(mapper, newExpr, new Handler<Expression>() {
       @Override
       public void handle(Expression placeholder) {
@@ -142,7 +141,7 @@ class ExprSideTransformMapperProcessor implements MapperProcessor<Expression, Ce
     });
   }
 
-  private static CellAction rightTransform(Mapper<? extends Expression, ?> mapper, final BinaryExpression newExpr, final Expression expr) {
+  private static Runnable rightTransform(Mapper<? extends Expression, ?> mapper, final BinaryExpression newExpr, final Expression expr) {
     return doTransform(mapper, newExpr, new Handler<Expression>() {
       @Override
       public void handle(Expression placeholder) {
@@ -152,7 +151,7 @@ class ExprSideTransformMapperProcessor implements MapperProcessor<Expression, Ce
     });
   }
 
-  private static CellAction doTransform(final Mapper<? extends Expression, ?> mapper, final BinaryExpression newExpr, final Handler<Expression> handler) {
+  private static Runnable doTransform(final Mapper<? extends Expression, ?> mapper, final BinaryExpression newExpr, final Handler<Expression> handler) {
     Mapper<?, ?> root = Mappers.getRoot(mapper);
 
     final Expression placeholder = new Expression();
@@ -167,11 +166,6 @@ class ExprSideTransformMapperProcessor implements MapperProcessor<Expression, Ce
 
     placeholder.removeFromParent();
 
-    return new CellAction() {
-      @Override
-      public void execute() {
-        CellActions.toFirstFocusable(targetCell).execute();
-      }
-    };
+    return CellActions.toFirstFocusable(targetCell);
   }
 }

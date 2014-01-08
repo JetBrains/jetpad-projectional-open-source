@@ -24,7 +24,6 @@ import jetbrains.jetpad.mapper.MapperFactory;
 import jetbrains.jetpad.model.property.Property;
 import jetbrains.jetpad.model.property.ValueProperty;
 import jetbrains.jetpad.cell.*;
-import jetbrains.jetpad.cell.action.CellAction;
 import jetbrains.jetpad.cell.action.CellActions;
 import jetbrains.jetpad.cell.completion.CompletionItem;
 import jetbrains.jetpad.cell.completion.CompletionParameters;
@@ -56,7 +55,7 @@ public class ProjectionalPropertySynchronizerTest extends EditingTestCase {
     rootMapper = new ContainerMapper(container);
     rootMapper.attachRoot();
     myCellContainer.root.children().add(rootMapper.getTarget());
-    CellActions.toFirstFocusable(rootMapper.getTarget()).execute();
+    CellActions.toFirstFocusable(rootMapper.getTarget()).run();
 
     RootController.install(myCellContainer);
   }
@@ -184,7 +183,7 @@ public class ProjectionalPropertySynchronizerTest extends EditingTestCase {
     Child1 child = new Child1();
     container.child.set(child);
     Cell childCell = focusChild(child);
-    CellActions.toEnd(childCell).execute();
+    CellActions.toEnd(childCell).run();
 
     backspace();
     backspace();
@@ -197,7 +196,7 @@ public class ProjectionalPropertySynchronizerTest extends EditingTestCase {
     Child2 child = new Child2();
     container.child.set(child);
     Cell childCell = focusChild(child);
-    CellActions.toEnd(childCell).execute();
+    CellActions.toEnd(childCell).run();
 
     backspace();
     backspace();
@@ -308,13 +307,13 @@ public class ProjectionalPropertySynchronizerTest extends EditingTestCase {
           List<CompletionItem> result = new ArrayList<CompletionItem>();
           result.add(new SimpleCompletionItem("c1") {
             @Override
-            public CellAction complete(String text) {
+            public Runnable complete(String text) {
               return target.set(new Child1());
             }
           });
           result.add(new SimpleCompletionItem("c2") {
             @Override
-            public CellAction complete(String text) {
+            public Runnable complete(String text) {
               return target.set(new Child2());
             }
           });

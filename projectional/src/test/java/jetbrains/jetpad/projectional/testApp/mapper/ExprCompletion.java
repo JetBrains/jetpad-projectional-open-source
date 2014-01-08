@@ -17,7 +17,6 @@ package jetbrains.jetpad.projectional.testApp.mapper;
 
 import jetbrains.jetpad.mapper.Mapper;
 import jetbrains.jetpad.cell.Cell;
-import jetbrains.jetpad.cell.action.CellAction;
 import jetbrains.jetpad.cell.completion.CompletionItem;
 import jetbrains.jetpad.cell.completion.CompletionParameters;
 import jetbrains.jetpad.cell.completion.SimpleCompletionItem;
@@ -34,25 +33,25 @@ class ExprCompletion implements RoleCompletion<ExprNode, Expr> {
     List<CompletionItem> result = new ArrayList<CompletionItem>();
     result.add(new SimpleCompletionItem("id") {
       @Override
-      public CellAction complete(String text) {
+      public Runnable complete(String text) {
         return target.set(new IdExpr());
       }
     });
     result.add(new SimpleCompletionItem("i") {
       @Override
-      public CellAction complete(String text) {
+      public Runnable complete(String text) {
         return target.set(new IdExpr());
       }
     });
     result.add(new SimpleCompletionItem("+") {
       @Override
-      public CellAction complete(String text) {
+      public Runnable complete(String text) {
         return target.set(new PlusExpr());
       }
     });
     result.add(new SimpleCompletionItem("-") {
       @Override
-      public CellAction complete(String text) {
+      public Runnable complete(String text) {
         return target.set(new MinusExpr());
       }
     });

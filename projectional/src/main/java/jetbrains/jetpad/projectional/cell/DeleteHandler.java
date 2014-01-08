@@ -15,8 +15,6 @@
  */
 package jetbrains.jetpad.projectional.cell;
 
-import jetbrains.jetpad.cell.action.CellAction;
-
 public interface DeleteHandler {
   public static final DeleteHandler EMPTY = new DeleteHandler() {
     @Override
@@ -25,11 +23,11 @@ public interface DeleteHandler {
     }
 
     @Override
-    public CellAction delete() {
+    public Runnable delete() {
       throw new UnsupportedOperationException();
     }
   };
 
   boolean canDelete();
-  CellAction delete();
+  Runnable delete();
 }

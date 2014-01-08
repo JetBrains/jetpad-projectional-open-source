@@ -22,7 +22,6 @@ import jetbrains.jetpad.event.ContentKinds;
 import jetbrains.jetpad.mapper.Mapper;
 import jetbrains.jetpad.mapper.MapperFactory;
 import jetbrains.jetpad.mapper.Synchronizers;
-import jetbrains.jetpad.cell.action.CellAction;
 import jetbrains.jetpad.cell.completion.CompletionItem;
 import jetbrains.jetpad.cell.completion.CompletionParameters;
 import jetbrains.jetpad.cell.completion.SimpleCompletionItem;
@@ -101,25 +100,25 @@ class ConceptDeclarationMapper extends Mapper<ConceptDeclaration, ConceptDeclara
       List<CompletionItem> result = new ArrayList<CompletionItem>();
       result.add(new SimpleCompletionItem("Property") {
         @Override
-        public CellAction complete(String text) {
+        public Runnable complete(String text) {
           return target.set(new PropertyMember());
         }
       });
       result.add(new SimpleCompletionItem("Reference") {
         @Override
-        public CellAction complete(String text) {
+        public Runnable complete(String text) {
           return target.set(new ReferenceMember());
         }
       });
       result.add(new SimpleCompletionItem("Child") {
         @Override
-        public CellAction complete(String text) {
+        public Runnable complete(String text) {
           return target.set(new ChildMember());
         }
       });
       result.add(new SimpleCompletionItem("Empty") {
         @Override
-        public CellAction complete(String text) {
+        public Runnable complete(String text) {
           return target.set(new EmptyMember());
         }
       });

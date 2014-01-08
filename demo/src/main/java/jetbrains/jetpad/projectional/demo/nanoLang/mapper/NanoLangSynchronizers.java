@@ -22,7 +22,6 @@ import jetbrains.jetpad.mapper.Synchronizer;
 import jetbrains.jetpad.model.collections.list.ObservableList;
 import jetbrains.jetpad.model.property.Property;
 import jetbrains.jetpad.cell.Cell;
-import jetbrains.jetpad.cell.action.CellAction;
 import jetbrains.jetpad.cell.completion.CompletionItem;
 import jetbrains.jetpad.cell.completion.CompletionParameters;
 import jetbrains.jetpad.cell.completion.SimpleCompletionItem;
@@ -63,14 +62,14 @@ class NanoLangSynchronizers {
         List<CompletionItem> result = new ArrayList<CompletionItem>();
         result.add(new SimpleCompletionItem("seq") {
           @Override
-          public CellAction complete(String text) {
+          public Runnable complete(String text) {
             return target.set(new SeqExpression());
           }
         });
 
         result.add(new SimpleCompletionItem("lambda") {
           @Override
-          public CellAction complete(String text) {
+          public Runnable complete(String text) {
             LambdaExpression result = new LambdaExpression();
             result.argumentName.set("x");
             return target.set(result);
@@ -79,7 +78,7 @@ class NanoLangSynchronizers {
 
         result.add(new SimpleCompletionItem("x") {
           @Override
-          public CellAction complete(String text) {
+          public Runnable complete(String text) {
             VarExpression var = new VarExpression();
             var.name.set("x");
             return target.set(var);

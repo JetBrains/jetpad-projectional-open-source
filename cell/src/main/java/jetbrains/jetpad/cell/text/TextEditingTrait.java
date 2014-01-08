@@ -168,7 +168,7 @@ public class TextEditingTrait extends TextNavigationTrait {
 
       List<CompletionItem> prefixed = completion.prefixedBy(prefixText);
       if (prefixed.size() == 1 && !currentText.isEmpty() && canCompleteWithCtrlSpace(textCell)) {
-        prefixed.get(0).complete(prefixText).execute();
+        prefixed.get(0).complete(prefixText).run();
         event.consume();
       } else if (handler.canActivate()) {
         handler.setActive(true);

@@ -26,7 +26,6 @@ import jetbrains.jetpad.model.collections.list.ObservableArrayList;
 import jetbrains.jetpad.model.collections.list.ObservableList;
 import jetbrains.jetpad.model.event.Registration;
 import jetbrains.jetpad.cell.*;
-import jetbrains.jetpad.cell.action.CellAction;
 import jetbrains.jetpad.cell.completion.Completion;
 import jetbrains.jetpad.cell.completion.CompletionItem;
 import jetbrains.jetpad.cell.completion.CompletionParameters;
@@ -55,7 +54,7 @@ abstract class BaseProjectionalSynchronizer<SourceT, ContextT, SourceItemT> impl
   private DeleteHandler myDeleteHandler = DeleteHandler.EMPTY;
   private ContentKind<SourceItemT> myItemKind;
   private Function<SourceItemT, SourceItemT> myCloner;
-  private CellAction myOnLastItemDeleted;
+  private Runnable myOnLastItemDeleted;
   private List<Cell> myTargetList;
 
   BaseProjectionalSynchronizer(
@@ -97,9 +96,9 @@ abstract class BaseProjectionalSynchronizer<SourceT, ContextT, SourceItemT> impl
 
   protected abstract void clear(List<SourceItemT> items);
 
-  protected abstract CellAction insertItems(List<SourceItemT> items);
+  protected abstract Runnable insertItems(List<SourceItemT> items);
 
-  protected CellAction insertItem(SourceItemT item) {
+  protected Runnable insertItem(SourceItemT item) {
     return insertItems(Arrays.asList(item));
   }
 
@@ -160,7 +159,7 @@ abstract class BaseProjectionalSynchronizer<SourceT, ContextT, SourceItemT> impl
   private void initChildViews() {
   }
 
-  protected CellAction selectOnCreation(int index) {
+  protected Runnable selectOnCreation(int index) {
     return childCells().get(index).get(ProjectionalSynchronizers.ON_CREATE);
   }
 
@@ -180,7 +179,7 @@ abstract class BaseProjectionalSynchronizer<SourceT, ContextT, SourceItemT> impl
   }
 
   @Override
-  public void setOnLastItemDeleted(CellAction action) {
+  public void setOnLastItemDeleted(Runnable action) {
     myOnLastItemDeleted = action;
   }
 
@@ -194,11 +193,11 @@ abstract class BaseProjectionalSynchronizer<SourceT, ContextT, SourceItemT> impl
     myItemFactory = itemFactory;
   }
 
-  protected CellAction getOnLastItemDeleted() {
+  protected Runnable getOnLastItemDeleted() {
     if (myOnLastItemDeleted == null) {
-      return new CellAction() {
+      return new Runnable() {
         @Override
-        public void execute() {
+        public void run() {
           myTargetCellList.getPlaceHolder().focus();
         }
       };
@@ -327,9 +326,9 @@ abstract class BaseProjectionalSynchronizer<SourceT, ContextT, SourceItemT> impl
 
       private void paste(ClipboardContent content) {
         if (isMultiItemPasteSupported() && content.isSupported(ContentKinds.listOf(myItemKind))) {
-          insertItems(content.get(ContentKinds.listOf(myItemKind))).execute();
+          insertItems(content.get(ContentKinds.listOf(myItemKind))).run();
         } else {
-          insertItem(content.get(myItemKind)).execute();
+          insertItem(content.get(myItemKind)).run();
         }
       }
     });
@@ -398,7 +397,7 @@ abstract class BaseProjectionalSynchronizer<SourceT, ContextT, SourceItemT> impl
           }
 
           @Override
-          public CellAction set(SourceItemT target) {
+          public Runnable set(SourceItemT target) {
             return insertItem(target);
           }
         });
@@ -410,13 +409,13 @@ abstract class BaseProjectionalSynchronizer<SourceT, ContextT, SourceItemT> impl
     if (canCreateNewItem() && (event.is(KeyStrokeSpecs.INSERT_AFTER) || event.is(KeyStrokeSpecs.INSERT_BEFORE))) {
       SourceItemT newItem = newItem();
       if (newItem != null) {
-        insertItem(newItem).execute();
+        insertItem(newItem).run();
         event.consume();
       }
     }
 
     if (isDeleteEvent(event) && myDeleteHandler.canDelete()) {
-      myDeleteHandler.delete().execute();
+      myDeleteHandler.delete().run();
       event.consume();
     }
   }

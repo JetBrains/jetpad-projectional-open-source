@@ -16,7 +16,6 @@
 package jetbrains.jetpad.projectional.demo.hybridExpr.mapper;
 
 import com.google.common.base.Function;
-import jetbrains.jetpad.cell.action.CellAction;
 import jetbrains.jetpad.cell.completion.*;
 import jetbrains.jetpad.cell.util.Validators;
 import jetbrains.jetpad.hybrid.parser.*;
@@ -159,7 +158,7 @@ public class ExprHybridPositionSpec implements HybridPositionSpec<Expression> {
   }
 
   @Override
-  public CompletionSupplier getTokenCompletion(final Function<Token, CellAction> tokenHandler) {
+  public CompletionSupplier getTokenCompletion(final Function<Token, Runnable> tokenHandler) {
     return new CompletionSupplier() {
       @Override
       public List<CompletionItem> get(CompletionParameters cp) {
@@ -172,7 +171,7 @@ public class ExprHybridPositionSpec implements HybridPositionSpec<Expression> {
           }
 
           @Override
-          public CellAction complete(String text) {
+          public Runnable complete(String text) {
             return tokenHandler.apply(myToken);
           }
         }
@@ -210,7 +209,7 @@ public class ExprHybridPositionSpec implements HybridPositionSpec<Expression> {
           }
 
           @Override
-          public CellAction complete(String text) {
+          public Runnable complete(String text) {
             int value;
             if (text == null || text.isEmpty()) {
               value = 0;
@@ -239,7 +238,7 @@ public class ExprHybridPositionSpec implements HybridPositionSpec<Expression> {
           }
 
           @Override
-          public CellAction complete(String text) {
+          public Runnable complete(String text) {
             return tokenHandler.apply(new IdentifierToken(text));
           }
 
@@ -278,7 +277,7 @@ public class ExprHybridPositionSpec implements HybridPositionSpec<Expression> {
         for (final FieldDescriptor fd : type.getFields()) {
           result.add(new SimpleCompletionItem(fd.getName()) {
             @Override
-            public CellAction complete(String text) {
+            public Runnable complete(String text) {
               return completer.complete(new IdentifierToken(fd.getName()));
             }
           });
@@ -287,7 +286,7 @@ public class ExprHybridPositionSpec implements HybridPositionSpec<Expression> {
         for (final MethodDescriptor md : type.getMethods()) {
           result.add(new SimpleCompletionItem(md.getName(), md.toString()) {
             @Override
-            public CellAction complete(String text) {
+            public Runnable complete(String text) {
               if (ctx.targetIndex() + 1 < ctx.views().size() && ctx.tokens().get(ctx.targetIndex() + 1) == Tokens.LEFT_PARENT_METHOD_CALL) {
                 return completer.complete(new IdentifierToken(md.getName()));
               }

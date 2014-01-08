@@ -23,7 +23,6 @@ import jetbrains.jetpad.mapper.MapperFactory;
 import jetbrains.jetpad.model.collections.list.ObservableArrayList;
 import jetbrains.jetpad.model.collections.list.ObservableList;
 import jetbrains.jetpad.cell.*;
-import jetbrains.jetpad.cell.action.CellAction;
 import jetbrains.jetpad.cell.action.CellActions;
 import jetbrains.jetpad.cell.completion.CompletionItem;
 import jetbrains.jetpad.cell.completion.CompletionParameters;
@@ -69,7 +68,7 @@ public class ProjectionalListSynchronizerTest extends EditingTestCase {
     rootMapper = new ContainerMapper(container);
     rootMapper.attachRoot();
     myCellContainer.root.children().add(rootMapper.getTarget());
-    CellActions.toFirstFocusable(rootMapper.getTarget()).execute();
+    CellActions.toFirstFocusable(rootMapper.getTarget()).run();
 
     RootController.install(myCellContainer);
   }
@@ -291,7 +290,7 @@ public class ProjectionalListSynchronizerTest extends EditingTestCase {
 
   @Test
   public void selectDownInEmptyList() {
-    CellActions.toFirstFocusable(rootMapper.getTarget()).execute();
+    CellActions.toFirstFocusable(rootMapper.getTarget()).run();
 
     press(Key.DOWN, ModifierKey.SHIFT);
 
@@ -300,7 +299,7 @@ public class ProjectionalListSynchronizerTest extends EditingTestCase {
 
   @Test
   public void selectUpInEmptyList() {
-    CellActions.toFirstFocusable(rootMapper.getTarget()).execute();
+    CellActions.toFirstFocusable(rootMapper.getTarget()).run();
 
     press(Key.UP, ModifierKey.SHIFT);
 
@@ -345,7 +344,7 @@ public class ProjectionalListSynchronizerTest extends EditingTestCase {
   public void selectDownInComplexNonSelectableChild() {
     container.children.add(new ComplexNonSelectableChild());
 
-    CellActions.toFirstFocusable(getChild(0)).execute();
+    CellActions.toFirstFocusable(getChild(0)).run();
 
     press(Key.DOWN, ModifierKey.SHIFT);
 
@@ -387,7 +386,7 @@ public class ProjectionalListSynchronizerTest extends EditingTestCase {
   @Test
   public void selectDownInsideSelectsChildViewFirst() {
     container.children.add(new ComplexChild());
-    CellActions.toFirstFocusable(getChild(0)).execute();
+    CellActions.toFirstFocusable(getChild(0)).run();
 
     assertTrue(rootMapper.mySynchronizer.getSelectedItems().isEmpty());
 
@@ -402,7 +401,7 @@ public class ProjectionalListSynchronizerTest extends EditingTestCase {
     children.add(new NonSelectableChild());
     children.add(new NonSelectableChild());
 
-    CellActions.toFirstFocusable(getChild(0)).execute();
+    CellActions.toFirstFocusable(getChild(0)).run();
 
     press(Key.DOWN, ModifierKey.SHIFT);
 
@@ -539,7 +538,7 @@ public class ProjectionalListSynchronizerTest extends EditingTestCase {
 
   @Test
   public void selectDownInPlaceholder() {
-    CellActions.toFirstFocusable(rootMapper.getTarget()).execute();
+    CellActions.toFirstFocusable(rootMapper.getTarget()).run();
 
     press(Key.DOWN, ModifierKey.SHIFT);
 
@@ -698,7 +697,7 @@ public class ProjectionalListSynchronizerTest extends EditingTestCase {
         List<CompletionItem> result = new ArrayList<CompletionItem>();
         result.add(new SimpleCompletionItem("item") {
           @Override
-          public CellAction complete(String text) {
+          public Runnable complete(String text) {
             return target.set(new NonEmptyChild());
           }
         });

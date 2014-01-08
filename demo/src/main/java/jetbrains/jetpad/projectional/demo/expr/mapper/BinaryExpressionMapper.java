@@ -17,7 +17,6 @@ package jetbrains.jetpad.projectional.demo.expr.mapper;
 
 import jetbrains.jetpad.mapper.Mapper;
 import jetbrains.jetpad.mapper.Mappers;
-import jetbrains.jetpad.cell.action.CellAction;
 import jetbrains.jetpad.cell.action.CellActions;
 import jetbrains.jetpad.cell.completion.*;
 import jetbrains.jetpad.cell.trait.BaseCellTrait;
@@ -57,7 +56,7 @@ class BinaryExpressionMapper extends Mapper<BinaryExpression, BinaryExpressionCe
       }
 
       @Override
-      public CellAction delete() {
+      public Runnable delete() {
         Mapper<?, ?> parentMapper = getParent();
         Expression right = getSource().right.get();
         right.removeFromParent();
@@ -75,7 +74,7 @@ class BinaryExpressionMapper extends Mapper<BinaryExpression, BinaryExpressionCe
       }
 
       @Override
-      public CellAction delete() {
+      public Runnable delete() {
         Mapper<?, ?> parentMapper = getParent();
         Expression left = getSource().left.get();
         left.removeFromParent();
@@ -99,32 +98,32 @@ class BinaryExpressionMapper extends Mapper<BinaryExpression, BinaryExpressionCe
       List<CompletionItem> result = new ArrayList<CompletionItem>();
       result.add(new SimpleCompletionItem("+") {
         @Override
-        public CellAction complete(String text) {
+        public Runnable complete(String text) {
           return replaceWith(new PlusExpression());
         }
       });
       result.add(new SimpleCompletionItem("-") {
         @Override
-        public CellAction complete(String text) {
+        public Runnable complete(String text) {
           return replaceWith(new MinusExpression());
         }
       });
       result.add(new SimpleCompletionItem("*") {
         @Override
-        public CellAction complete(String text) {
+        public Runnable complete(String text) {
           return replaceWith(new MulExpression());
         }
       });
       result.add(new SimpleCompletionItem("/") {
         @Override
-        public CellAction complete(String text) {
+        public Runnable complete(String text) {
           return replaceWith(new DivExpression());
         }
       });
       return result;
     }
 
-    private CellAction replaceWith(final BinaryExpression newExpr) {
+    private Runnable replaceWith(final BinaryExpression newExpr) {
       final Mapper<?, ?> root = Mappers.getRoot(myMapper);
 
       BinaryExpression oldExpr = myMapper.getSource();

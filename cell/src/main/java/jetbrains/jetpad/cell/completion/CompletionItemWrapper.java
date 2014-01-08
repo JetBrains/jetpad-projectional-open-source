@@ -15,8 +15,6 @@
  */
 package jetbrains.jetpad.cell.completion;
 
-import jetbrains.jetpad.cell.action.CellAction;
-
 public class CompletionItemWrapper implements CompletionItem {
   private CompletionItem myWrappedItem;
 
@@ -45,7 +43,7 @@ public class CompletionItemWrapper implements CompletionItem {
   }
 
   @Override
-  public CellAction complete(String text) {
+  public Runnable complete(String text) {
     return myWrappedItem.complete(text);
   }
 

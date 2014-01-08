@@ -28,7 +28,6 @@ import jetbrains.jetpad.event.KeyEvent;
 import jetbrains.jetpad.event.ModifierKey;
 import jetbrains.jetpad.cell.*;
 import jetbrains.jetpad.base.Value;
-import jetbrains.jetpad.cell.action.CellAction;
 import jetbrains.jetpad.cell.event.CompletionEvent;
 import jetbrains.jetpad.cell.event.FocusEvent;
 import jetbrains.jetpad.cell.text.TextEditing;
@@ -136,7 +135,7 @@ public class CompletionSupport {
       public void handle(CompletionItem item) {
         reg.remove();
         prevState.restore();
-        item.complete(prefixText.get()).execute();
+        item.complete(prefixText.get()).run();
       }
     };
 
@@ -251,7 +250,7 @@ public class CompletionSupport {
     for (CompletionItem i : items) {
       wrappedItems.add(new CompletionItemWrapper(i) {
         @Override
-        public CellAction complete(String text) {
+        public Runnable complete(String text) {
           completed.set(true);
           return super.complete(text);
         }
@@ -311,14 +310,14 @@ public class CompletionSupport {
 
         String text = textView.text().get();
         if (completion.hasSingleMatch(text, cell.get(TextEditing.EAGER_COMPLETION))) {
-          completion.matches(text).get(0).complete(text).execute();
+          completion.matches(text).get(0).complete(text).run();
           return true;
         }
 
         String prefix = text.substring(0, text.length() - 1);
         String suffix = text.substring(text.length() - 1);
         if (completion.matches(prefix).size() == 1 && completion.prefixedBy(text).isEmpty()) {
-          completion.matches(prefix).get(0).complete(prefix).execute();
+          completion.matches(prefix).get(0).complete(prefix).run();
           for (int i = 0; i < suffix.length(); i++) {
             container.keyTyped(new KeyEvent(Key.UNKNOWN, suffix.charAt(i), Collections.<ModifierKey>emptySet()));
           }

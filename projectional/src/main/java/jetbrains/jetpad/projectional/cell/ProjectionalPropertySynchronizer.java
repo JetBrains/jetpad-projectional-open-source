@@ -26,7 +26,6 @@ import jetbrains.jetpad.model.property.WritableProperty;
 import jetbrains.jetpad.event.Event;
 import jetbrains.jetpad.event.KeyEvent;
 import jetbrains.jetpad.cell.*;
-import jetbrains.jetpad.cell.action.CellAction;
 import jetbrains.jetpad.cell.completion.*;
 import jetbrains.jetpad.cell.trait.BaseCellTrait;
 import jetbrains.jetpad.cell.trait.CellTrait;
@@ -115,7 +114,7 @@ class ProjectionalPropertySynchronizer<ContextT, SourceItemT extends ContextT> e
   }
 
   @Override
-  protected CellAction insertItems(List<SourceItemT> items) {
+  protected Runnable insertItems(List<SourceItemT> items) {
     mySource.set(items.get(0));
     return selectOnCreation(0);
   }
@@ -137,7 +136,7 @@ class ProjectionalPropertySynchronizer<ContextT, SourceItemT extends ContextT> e
       }
 
       @Override
-      public CellAction set(SourceItemT target) {
+      public Runnable set(SourceItemT target) {
         mySource.set(target);
         return selectOnCreation(0);
       }
@@ -153,7 +152,7 @@ class ProjectionalPropertySynchronizer<ContextT, SourceItemT extends ContextT> e
 
   private void deleteItem() {
     mySource.set(null);
-    getOnLastItemDeleted().execute();
+    getOnLastItemDeleted().run();
     if (getTarget().get(ProjectionalSynchronizers.DELETE_ON_EMPTY)) {
       getTarget().dispatch(new Event(), Cells.BECAME_EMPTY);
     }

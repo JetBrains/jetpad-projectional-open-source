@@ -125,7 +125,7 @@ public class CompletionHelper {
   }
 
   public void completeFirstMatch(String text) {
-    matches(text).get(0).complete(text).execute();
+    matches(text).get(0).complete(text).run();
   }
 
   public boolean hasMatches(String text) {

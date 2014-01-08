@@ -15,7 +15,6 @@
  */
 package jetbrains.jetpad.cell.completion;
 
-import jetbrains.jetpad.cell.action.CellAction;
 
 public interface CompletionItem {
   String visibleText(String text);
@@ -42,5 +41,5 @@ public interface CompletionItem {
    */
   boolean isLowPriority();
 
-  CellAction complete(String text);
+  Runnable complete(String text);
 }

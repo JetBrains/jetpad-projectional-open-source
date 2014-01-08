@@ -16,8 +16,8 @@
 package jetbrains.jetpad.hybrid;
 
 import com.google.common.base.Function;
-import jetbrains.jetpad.cell.action.CellAction;
 import jetbrains.jetpad.cell.action.CellActions;
+import jetbrains.jetpad.cell.action.Runnables;
 import jetbrains.jetpad.cell.completion.CompletionHelper;
 import jetbrains.jetpad.cell.completion.CompletionItem;
 import jetbrains.jetpad.cell.util.CellLists;
@@ -48,10 +48,10 @@ class TokenOperations<SourceT> {
     return mySync.tokens();
   }
 
-  CellAction selectOnCreation(int index, SelectionPosition pos) {
+  Runnable selectOnCreation(int index, SelectionPosition pos) {
     Cell cell = tokenViews().get(index);
 
-    CellAction onCreate = cell.getRaw(ProjectionalSynchronizers.ON_CREATE);
+    Runnable onCreate = cell.getRaw(ProjectionalSynchronizers.ON_CREATE);
     if (onCreate != null) {
       return onCreate;
     }
@@ -59,7 +59,7 @@ class TokenOperations<SourceT> {
     return select(index, pos);
   }
 
-  public CellAction select(int index, SelectionPosition pos) {
+  public Runnable select(int index, SelectionPosition pos) {
     final Cell cell = tokenViews().get(index);
 
     boolean noSpaceToLeft = cell.get(CellLists.NO_SPACE_TO_LEFT) || !cell.focusable().get();
@@ -82,7 +82,7 @@ class TokenOperations<SourceT> {
     }
   }
 
-  public CellAction select(int index, int pos) {
+  public Runnable select(int index, int pos) {
     if (pos == 0) {
       return select(index, FIRST);
     }
@@ -101,7 +101,7 @@ class TokenOperations<SourceT> {
     return true;
   }
 
-  CellAction deleteToken(Cell contextCell, final int delta) {
+  Runnable deleteToken(Cell contextCell, final int delta) {
     final int index = tokenViews().indexOf(contextCell);
     tokens().remove(index + delta);
 
@@ -135,7 +135,7 @@ class TokenOperations<SourceT> {
     return true;
   }
 
-  CellAction mergeTokens(Cell contextCell, boolean backward) {
+  Runnable mergeTokens(Cell contextCell, boolean backward) {
     abstract class TokenHandler {
       abstract void handle(Token token);
     }
@@ -144,7 +144,7 @@ class TokenOperations<SourceT> {
     Token token = tokens().get(index);
 
     final TokenHandler tokenHandler;
-    Function<Token, CellAction> completer;
+    Function<Token, Runnable> completer;
     final String newTokenText;
     final int pos;
     if (backward) {
@@ -162,9 +162,9 @@ class TokenOperations<SourceT> {
           tokens().set(index - 1, item);
         }
       };
-      completer = new Function<Token, CellAction>() {
+      completer = new Function<Token, Runnable>() {
         @Override
-        public CellAction apply(Token token) {
+        public Runnable apply(Token token) {
           tokenHandler.handle(token);
           return select(index - 1, 0);
         }
@@ -185,9 +185,9 @@ class TokenOperations<SourceT> {
           tokens().set(index, item);
         }
       };
-      completer = new Function<Token, CellAction>() {
+      completer = new Function<Token, Runnable>() {
         @Override
-        public CellAction apply(Token token) {
+        public Runnable apply(Token token) {
           tokenHandler.handle(token);
           return select(index, 0);
         }
@@ -205,7 +205,7 @@ class TokenOperations<SourceT> {
     return select(backward ? index - 1 : index, pos);
   }
 
-  CellAction expandToError(Cell tokenCell, String text, int delta) {
+  Runnable expandToError(Cell tokenCell, String text, int delta) {
     int targetIndex = tokenViews().indexOf(tokenCell) + delta;
     tokens().add(targetIndex, new ErrorToken(text));
     return select(targetIndex, LAST);
@@ -228,15 +228,15 @@ class TokenOperations<SourceT> {
 
         tokens().set(index, firstToken != null ? firstToken : new ErrorToken(firstTokenText));
         tokens().add(index + 1, secondToken != null ? secondToken : new ErrorToken(secondTokenText));
-        select(index + 1, FIRST).execute();
+        select(index + 1, FIRST).run();
         return true;
       }
     }
 
-    CompletionHelper completion = tc.completion(new Function<Token, CellAction>() {
+    CompletionHelper completion = tc.completion(new Function<Token, Runnable>() {
       @Override
-      public CellAction apply(Token token) {
-        return CellAction.EMPTY;
+      public Runnable apply(Token token) {
+        return Runnables.EMPTY;
       }
     });
     if (completion.isBoundary(text, caret - 1) && completion.isBoundary(text.substring(caret - 1), 1)) {
@@ -249,7 +249,7 @@ class TokenOperations<SourceT> {
       tokens().add(index, first);
       tokens().add(index + 1, second);
       tokens().add(index + 2, third);
-      select(index + 1, LAST).execute();
+      select(index + 1, LAST).run();
       return true;
     }
 

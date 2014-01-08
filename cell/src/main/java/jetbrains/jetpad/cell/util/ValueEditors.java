@@ -17,9 +17,9 @@ package jetbrains.jetpad.cell.util;
 
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
+import jetbrains.jetpad.cell.action.Runnables;
 import jetbrains.jetpad.model.property.Properties;
 import jetbrains.jetpad.model.property.Property;
-import jetbrains.jetpad.cell.action.CellAction;
 import jetbrains.jetpad.cell.action.CellActions;
 import jetbrains.jetpad.cell.completion.*;
 import jetbrains.jetpad.cell.text.TextEditing;
@@ -71,7 +71,7 @@ public class ValueEditors {
               for (final EnumT v : cls.getEnumConstants()) {
                 result.add(new SimpleCompletionItem(v.toString()) {
                   @Override
-                  public CellAction complete(String text) {
+                  public Runnable complete(String text) {
                     textView.text().set(v.toString());
                     return CellActions.toEnd(textView);
                   }
@@ -138,16 +138,16 @@ public class ValueEditors {
               List<CompletionItem> result = new ArrayList<CompletionItem>();
               result.add(new SimpleCompletionItem("true") {
                 @Override
-                public CellAction complete(String text) {
+                public Runnable complete(String text) {
                   textView.text().set("true");
-                  return CellAction.EMPTY;
+                  return Runnables.EMPTY;
                 }
               });
               result.add(new SimpleCompletionItem("false") {
                 @Override
-                public CellAction complete(String text) {
+                public Runnable complete(String text) {
                   textView.text().set("false");
-                  return CellAction.EMPTY;
+                  return Runnables.EMPTY;
                 }
               });
 
