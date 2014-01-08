@@ -15,7 +15,7 @@
  */
 package jetbrains.jetpad.projectional.cell;
 
-import jetbrains.jetpad.cell.action.Runnables;
+import jetbrains.jetpad.base.Runnables;
 import jetbrains.jetpad.event.KeyEvent;
 import jetbrains.jetpad.mapper.Mapper;
 import jetbrains.jetpad.mapper.MapperFactory;

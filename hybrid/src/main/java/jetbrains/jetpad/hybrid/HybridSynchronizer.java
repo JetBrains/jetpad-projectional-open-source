@@ -18,7 +18,7 @@ package jetbrains.jetpad.hybrid;
 import com.google.common.base.Predicates;
 import com.google.common.collect.Range;
 import jetbrains.jetpad.base.Handler;
-import jetbrains.jetpad.cell.action.Runnables;
+import jetbrains.jetpad.base.Runnables;
 import jetbrains.jetpad.event.*;
 import jetbrains.jetpad.mapper.Mapper;
 import jetbrains.jetpad.mapper.MapperFactory;

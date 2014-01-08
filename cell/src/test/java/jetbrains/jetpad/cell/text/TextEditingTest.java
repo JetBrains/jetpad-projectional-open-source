@@ -15,7 +15,7 @@
  */
 package jetbrains.jetpad.cell.text;
 
-import jetbrains.jetpad.cell.action.Runnables;
+import jetbrains.jetpad.base.Runnables;
 import jetbrains.jetpad.event.*;
 import jetbrains.jetpad.cell.*;
 import jetbrains.jetpad.cell.completion.*;

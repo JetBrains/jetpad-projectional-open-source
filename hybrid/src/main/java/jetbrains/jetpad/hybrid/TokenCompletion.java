@@ -18,7 +18,7 @@ package jetbrains.jetpad.hybrid;
 import com.google.common.base.Function;
 import com.google.common.base.Objects;
 import jetbrains.jetpad.base.Value;
-import jetbrains.jetpad.cell.action.Runnables;
+import jetbrains.jetpad.base.Runnables;
 import jetbrains.jetpad.mapper.Mapper;
 import jetbrains.jetpad.cell.TextCell;
 import jetbrains.jetpad.cell.completion.*;

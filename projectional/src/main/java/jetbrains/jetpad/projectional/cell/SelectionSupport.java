@@ -15,7 +15,7 @@
  */
 package jetbrains.jetpad.projectional.cell;
 
-import jetbrains.jetpad.cell.action.Runnables;
+import jetbrains.jetpad.base.Runnables;
 import jetbrains.jetpad.event.KeyStrokeSpecs;
 import jetbrains.jetpad.model.composite.Composites;
 import jetbrains.jetpad.model.collections.list.ObservableArrayList;

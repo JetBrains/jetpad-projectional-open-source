@@ -17,7 +17,7 @@ package jetbrains.jetpad.cell.text;
 
 import com.google.common.base.Predicate;
 import jetbrains.jetpad.cell.*;
-import jetbrains.jetpad.cell.action.Runnables;
+import jetbrains.jetpad.base.Runnables;
 import jetbrains.jetpad.cell.completion.*;
 import jetbrains.jetpad.cell.trait.BaseCellTrait;
 import jetbrains.jetpad.cell.trait.CellTrait;

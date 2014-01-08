@@ -17,7 +17,7 @@ package jetbrains.jetpad.cell.util;
 
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
-import jetbrains.jetpad.cell.action.Runnables;
+import jetbrains.jetpad.base.Runnables;
 import jetbrains.jetpad.model.property.Properties;
 import jetbrains.jetpad.model.property.Property;
 import jetbrains.jetpad.cell.action.CellActions;

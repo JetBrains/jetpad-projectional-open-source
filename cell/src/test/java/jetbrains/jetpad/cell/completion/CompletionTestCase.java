@@ -16,7 +16,7 @@
 package jetbrains.jetpad.cell.completion;
 
 import jetbrains.jetpad.cell.EditingTestCase;
-import jetbrains.jetpad.cell.action.Runnables;
+import jetbrains.jetpad.base.Runnables;
 
 import java.util.ArrayList;
 import java.util.List;
