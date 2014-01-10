@@ -52,6 +52,10 @@ public abstract class CollectionEditor<ItemT, ViewT> {
     return index == myItems.size() - 1;
   }
 
+  private boolean isFirst(int index) {
+    return index == 0;
+  }
+
   private boolean isEmpty(int index) {
     return isEmpty(myViews.get(index));
   }
@@ -121,6 +125,8 @@ public abstract class CollectionEditor<ItemT, ViewT> {
     } else {
       if (isLast(index)) {
         selectEnd(index);
+      } else if (isFirst(index)) {
+        selectHome(index);
       } else {
         selectHome(index - 1);
       }
