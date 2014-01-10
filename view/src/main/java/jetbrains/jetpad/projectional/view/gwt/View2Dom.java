@@ -46,6 +46,8 @@ import jetbrains.jetpad.projectional.view.View;
 import jetbrains.jetpad.projectional.view.ViewContainer;
 import jetbrains.jetpad.projectional.view.spi.ViewContainerPeer;
 
+import java.util.Collections;
+
 import static com.google.gwt.query.client.GQuery.$;
 
 public class View2Dom {
@@ -264,6 +266,12 @@ public class View2Dom {
         return EventTranslator.dispatchKeyPress(e, new Handler<KeyEvent>() {
           @Override
           public void handle(final KeyEvent e) {
+            if (e.is(Key.SPACE)) {
+              container.keyPressed(e);
+              container.keyTyped(new KeyEvent(Key.SPACE, ' ', Collections.<ModifierKey>emptySet()));
+              return;
+            }
+
             if (e.is(KeyStrokeSpecs.PASTE)) {
               clipboardSupport.pasteContent(new Handler<String>() {
                 @Override
@@ -314,6 +322,8 @@ public class View2Dom {
         return EventTranslator.dispatchKeyType(e, new Handler<KeyEvent>() {
           @Override
           public void handle(KeyEvent e) {
+            //Space is a special key in Chrome. We emulate its typing in keydown
+            if (e.keyChar() == ' ') return;
             container.keyTyped(e);
           }
         });
