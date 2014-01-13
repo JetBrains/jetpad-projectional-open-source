@@ -69,6 +69,8 @@ public class View2Dom {
     final Style rootDivStyle = rootDiv.getStyle();
     rootDivStyle.setPosition(Style.Position.RELATIVE);
     rootDivStyle.setPadding(0, Style.Unit.PX);
+    rootDivStyle.setOverflow(Style.Overflow.VISIBLE);
+    rootDivStyle.setOutlineStyle(Style.OutlineStyle.NONE);
 
     final ValueProperty<Rectangle> visibleArea = new ValueProperty<Rectangle>();
     final Runnable update = new Runnable() {
