@@ -155,21 +155,29 @@ public class CellContainerToViewMapper extends Mapper<CellContainer, View> {
 
       @Override
       public Rectangle getBounds(Cell cell) {
+        Rectangle bounds = calculateBounds(cell);
+        if (bounds == null) return new Rectangle(Vector.ZERO, Vector.ZERO);
+        return bounds;
+      }
+
+      private Rectangle calculateBounds(Cell cell) {
         getTarget().container().root().validate();
         BaseCellMapper<?, ?> descendantMapper = (BaseCellMapper<?, ?>) rootMapper.getDescendantMapper(cell);
         if (descendantMapper == null) {
           Rectangle result = null;
           for (Cell child : cell.children()) {
+            Rectangle childBounds = calculateBounds(child);
+            if (childBounds == null) continue;
             if (result == null) {
-              result = getBounds(child);
+              result = childBounds;
             } else {
-              result = result.union(getBounds(child));
+              result = result.union(childBounds);
             }
           }
           if (result != null) {
             return result;
           } else {
-            return new Rectangle(Vector.ZERO, Vector.ZERO);
+            return null;
           }
         }
         return descendantMapper.getTarget().bounds().get();
