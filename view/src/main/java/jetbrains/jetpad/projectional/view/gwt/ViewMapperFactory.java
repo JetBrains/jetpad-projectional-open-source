@@ -22,7 +22,7 @@ import jetbrains.jetpad.mapper.MapperFactory;
 import jetbrains.jetpad.projectional.view.*;
 
 class ViewMapperFactory {
-  //todo set to false because it causes
+  //todo set to false because it causes ui corruption when changing zoom in chrome
   private static boolean BROWSER_LAYOUT_COLLECTIONS = false;
 
   static MapperFactory<View, Element> factory(final View2DomContext ctx) {
