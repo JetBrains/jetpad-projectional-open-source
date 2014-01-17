@@ -22,6 +22,9 @@ import jetbrains.jetpad.mapper.MapperFactory;
 import jetbrains.jetpad.projectional.view.*;
 
 class ViewMapperFactory {
+  //todo set to false because it causes
+  private static boolean BROWSER_LAYOUT_COLLECTIONS = false;
+
   static MapperFactory<View, Element> factory(final View2DomContext ctx) {
     return new MapperFactory<View, Element>() {
       @Override
@@ -33,9 +36,9 @@ class ViewMapperFactory {
           result = new LineViewMapper(ctx, (LineView) source);
         } else if (source instanceof MultiPointView) {
           result = new MultiPointViewMapper(ctx, (MultiPointView) source);
-        } else if (source.getClass() == VerticalView.class) {
+        } else if (BROWSER_LAYOUT_COLLECTIONS && source.getClass() == VerticalView.class) {
           result = new VerticalViewMapper(ctx, (VerticalView) source);
-        } else if (source.getClass() == HorizontalView.class) {
+        } else if (BROWSER_LAYOUT_COLLECTIONS && source.getClass() == HorizontalView.class) {
           result = new HorizontalViewMapper(ctx, (HorizontalView) source);
         } else {
           result = new CompositeViewMapper<View, Element>(ctx, source, DOM.createDiv());
