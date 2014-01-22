@@ -40,6 +40,8 @@ class ViewMapperFactory {
           result = new VerticalViewMapper(ctx, (VerticalView) source);
         } else if (BROWSER_LAYOUT_COLLECTIONS && source.getClass() == HorizontalView.class) {
           result = new HorizontalViewMapper(ctx, (HorizontalView) source);
+        } else if (source instanceof ScrollView) {
+          result = new ScrollViewMapper(ctx, (ScrollView) source);
         } else {
           result = new CompositeViewMapper<View, Element>(ctx, source, DOM.createDiv());
         }
@@ -54,6 +56,10 @@ class ViewMapperFactory {
 
         if (source instanceof TextView) {
           result.getTarget().addClassName("T");
+        }
+
+        if (source instanceof ScrollView) {
+          result.getTarget().addClassName("S");
         }
 
         return result;
