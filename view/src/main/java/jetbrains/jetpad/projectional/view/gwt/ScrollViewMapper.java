@@ -43,7 +43,7 @@ class ScrollViewMapper extends CompositeViewMapper<ScrollView, Element> {
     conf.add(Synchronizers.forProperty(getSource().scroll(), new WritableProperty<Boolean>() {
       @Override
       public void set(Boolean value) {
-        style.setOverflow(value ? Style.Overflow.SCROLL : Style.Overflow.VISIBLE);
+        style.setOverflow(value ? Style.Overflow.HIDDEN : Style.Overflow.VISIBLE);
       }
     }));
     conf.add(Synchronizers.forProperty(getSource().maxDimension(), new WritableProperty<Vector>() {
