@@ -31,7 +31,7 @@ class ScrollCellMapper extends BaseCellMapper<ScrollCell> {
     Style style = getTarget().getStyle();
     Vector maxDim = getSource().maxDimension().get();
     style.setProperty("maxWidth", maxDim.x + "px");
-    style.setProperty("maxHeight",maxDim.y + "px");
+    style.setProperty("maxHeight", maxDim.y + "px");
 
     Boolean scroll = getSource().scroll().get();
     style.setOverflow(scroll ? Style.Overflow.SCROLL : Style.Overflow.VISIBLE);
