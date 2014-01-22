@@ -19,6 +19,7 @@ import com.google.common.base.Function;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Node;
 import jetbrains.jetpad.mapper.Synchronizers;
+import jetbrains.jetpad.mapper.gwt.DomUtil;
 import jetbrains.jetpad.model.collections.list.ObservableList;
 import jetbrains.jetpad.model.property.DerivedProperty;
 import jetbrains.jetpad.model.property.ReadableProperty;
@@ -41,6 +42,7 @@ class CompositeViewMapper<ViewT extends View, ElementT extends Element> extends 
   protected void registerSynchronizers(SynchronizersConfiguration conf) {
     super.registerSynchronizers(conf);
 
+    List<Node> nodes = DomUtil.elementChildren(getTarget());
     if (clipChildren()) {
       Transformer<ObservableList<View>, ObservableList<View>> transformer = Transformers.listFilter(new Function<View, ReadableProperty<Boolean>>() {
         @Override
@@ -53,7 +55,6 @@ class CompositeViewMapper<ViewT extends View, ElementT extends Element> extends 
           };
         }
       });
-      List<Node> nodes = new ChildNodeList(getTarget());
       conf.add(Synchronizers.<ObservableList<View>, View, Node, Element>forObservableRole(
         this,
         getSource().children(),
@@ -61,7 +62,7 @@ class CompositeViewMapper<ViewT extends View, ElementT extends Element> extends 
         nodes,
         ViewMapperFactory.factory(context())));
     } else {
-      conf.add(Synchronizers.forObservableRole(this, getSource().children(), new ChildNodeList(getTarget()), ViewMapperFactory.factory(context())));
+      conf.add(Synchronizers.forObservableRole(this, getSource().children(), nodes, ViewMapperFactory.factory(context())));
     }
   }
 }

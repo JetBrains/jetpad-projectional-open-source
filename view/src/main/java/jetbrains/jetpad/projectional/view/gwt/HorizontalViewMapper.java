@@ -22,6 +22,7 @@ import com.google.gwt.user.client.DOM;
 import jetbrains.jetpad.mapper.Mapper;
 import jetbrains.jetpad.mapper.MapperFactory;
 import jetbrains.jetpad.mapper.Synchronizers;
+import jetbrains.jetpad.mapper.gwt.DomUtil;
 import jetbrains.jetpad.projectional.view.HorizontalView;
 import jetbrains.jetpad.projectional.view.View;
 
@@ -47,7 +48,7 @@ class HorizontalViewMapper extends BaseViewMapper<HorizontalView, Element> {
   protected void registerSynchronizers(SynchronizersConfiguration conf) {
     super.registerSynchronizers(conf);
 
-    conf.add(Synchronizers.forObservableRole(this, getSource().children(), new ChildNodeList(myContainer), new MapperFactory<View, Node>() {
+    conf.add(Synchronizers.forObservableRole(this, getSource().children(), DomUtil.elementChildren(myContainer), new MapperFactory<View, Node>() {
       @Override
       public Mapper<? extends View, ? extends Node> createMapper(View source) {
         Mapper<? extends View, ? extends Element> result = ViewMapperFactory.factory(context()).createMapper(source);
