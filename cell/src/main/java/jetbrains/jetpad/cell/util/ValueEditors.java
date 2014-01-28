@@ -90,7 +90,7 @@ public class ValueEditors {
       }
     });
 
-    return Properties.transform(validatedProperty(textView.text(), new MyEnumValidator()), new Function<String, EnumT>() {
+    return Properties.map(validatedProperty(textView.text(), new MyEnumValidator()), new Function<String, EnumT>() {
         @Override
         public EnumT apply(String s) {
           return s == null ? null : Enum.valueOf(cls, s);
@@ -108,17 +108,18 @@ public class ValueEditors {
     textView.addTrait(TextEditing.validTextEditing(Validators.integer(), Color.BLUE));
     Property<String> validated = validatedProperty(textView.text(), Validators.integer());
 
-    return Properties.transform(validated, new Function<String, Integer>() {
-      @Override
-      public Integer apply(String s) {
-        return s == null ? null : Integer.parseInt(s);
+    return Properties.map(validated, new Function<String, Integer>() {
+        @Override
+        public Integer apply(String s) {
+          return s == null ? null : Integer.parseInt(s);
+        }
+      }, new Function<Integer, String>() {
+        @Override
+        public String apply(Integer integer) {
+          return integer == null ? null : "" + integer;
+        }
       }
-    }, new Function<Integer, String>() {
-      @Override
-      public String apply(Integer integer) {
-        return integer == null ? null : "" + integer;
-      }
-    });
+    );
   }
 
   public static Property<Boolean> booleanProperty(TextCell textView) {
@@ -164,16 +165,17 @@ public class ValueEditors {
       }
     });
 
-    return Properties.transform(textView.text(), new Function<String, Boolean>() {
-      @Override
-      public Boolean apply(String s) {
-        return s == null ? null : Boolean.parseBoolean(s);
+    return Properties.map(textView.text(), new Function<String, Boolean>() {
+        @Override
+        public Boolean apply(String s) {
+          return s == null ? null : Boolean.parseBoolean(s);
+        }
+      }, new Function<Boolean, String>() {
+        @Override
+        public String apply(Boolean bool) {
+          return "" + bool;
+        }
       }
-    }, new Function<Boolean, String>() {
-      @Override
-      public String apply(Boolean bool) {
-        return "" + bool;
-      }
-    });
+    );
   }
 }
