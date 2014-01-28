@@ -29,6 +29,7 @@ import jetbrains.jetpad.model.event.EventHandler;
 import jetbrains.jetpad.model.event.Registration;
 import jetbrains.jetpad.model.property.Properties;
 import jetbrains.jetpad.model.property.PropertyChangeEvent;
+import jetbrains.jetpad.model.property.ReadableProperty;
 import jetbrains.jetpad.model.property.WritableProperty;
 import jetbrains.jetpad.cell.*;
 import jetbrains.jetpad.projectional.view.*;
@@ -193,6 +194,11 @@ public class CellContainerToViewMapper extends Mapper<CellContainer, View> {
       @Override
       public void requestFocus() {
         getTarget().container().requestFocus();
+      }
+
+      @Override
+      public ReadableProperty<Boolean> focused() {
+        return getTarget().focused();
       }
     };
   }

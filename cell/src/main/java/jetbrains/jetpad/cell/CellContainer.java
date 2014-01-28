@@ -25,6 +25,7 @@ import jetbrains.jetpad.model.event.Listeners;
 import jetbrains.jetpad.model.event.Registration;
 import jetbrains.jetpad.model.property.Property;
 import jetbrains.jetpad.model.property.PropertyChangeEvent;
+import jetbrains.jetpad.model.property.ReadableProperty;
 import jetbrains.jetpad.model.property.ValueProperty;
 import jetbrains.jetpad.cell.event.CellEventSpec;
 import jetbrains.jetpad.cell.event.CompletionEvent;
@@ -328,6 +329,10 @@ public class CellContainer {
 
   public void resetContainerPeer() {
     myCellContainerPeer = CellContainerPeer.NULL;
+  }
+
+  public ReadableProperty<Boolean> focused() {
+    return getCellContainerPeer().focused();
   }
 
   public void requestFocus() {

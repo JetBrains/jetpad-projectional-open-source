@@ -39,9 +39,7 @@ import jetbrains.jetpad.mapper.Synchronizers;
 import jetbrains.jetpad.model.collections.CollectionItemEvent;
 import jetbrains.jetpad.model.event.EventHandler;
 import jetbrains.jetpad.model.event.Registration;
-import jetbrains.jetpad.model.property.Properties;
-import jetbrains.jetpad.model.property.PropertyChangeEvent;
-import jetbrains.jetpad.model.property.WritableProperty;
+import jetbrains.jetpad.model.property.*;
 import jetbrains.jetpad.cell.*;
 import jetbrains.jetpad.cell.event.CompletionEvent;
 import jetbrains.jetpad.projectional.domUtil.DomTextEditor;
@@ -345,6 +343,11 @@ public class CellContainerToDomMapper extends Mapper<CellContainer, Element> {
       @Override
       public void requestFocus() {
         getFocusTarget().focus();
+      }
+
+      @Override
+      public ReadableProperty<Boolean> focused() {
+        return myCellToDomContext.focused;
       }
     };
   }

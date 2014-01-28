@@ -16,6 +16,8 @@
 package jetbrains.jetpad.cell;
 
 import jetbrains.jetpad.geometry.Rectangle;
+import jetbrains.jetpad.model.property.Properties;
+import jetbrains.jetpad.model.property.ReadableProperty;
 
 public interface CellContainerPeer {
   public static final CellContainerPeer NULL = new CellContainerPeer() {
@@ -41,12 +43,18 @@ public interface CellContainerPeer {
     @Override
     public void requestFocus() {
     }
+
+    @Override
+    public ReadableProperty<Boolean> focused() {
+      return Properties.constant(true);
+    }
   };
 
   int getCaretAt(TextCell tv, int x);
   int getCaretOffset(TextCell tv, int caret);
   Rectangle getBounds(Cell cell);
   void scrollTo(Cell cell);
+  ReadableProperty<Boolean> focused();
 
   void requestFocus();
 }
