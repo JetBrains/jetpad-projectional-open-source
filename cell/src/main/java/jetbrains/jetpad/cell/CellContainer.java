@@ -57,7 +57,7 @@ public class CellContainer {
       public void set(Cell value) {
         if (value != null) {
           if (!value.canFocus()) throw new IllegalStateException("cannot set focus: " + value);
-          if (value.container() != CellContainer.this) throw new IllegalArgumentException();
+          if (value.cellContainer().get() != CellContainer.this) throw new IllegalArgumentException();
         }
 
         Cell oldValue = get();

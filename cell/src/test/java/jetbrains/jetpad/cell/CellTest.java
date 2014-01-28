@@ -35,11 +35,11 @@ public class CellTest {
   public void attachToViewContainer() {
     TextCell v = new TextCell();
 
-    assertNull(v.container());
+    assertNull(v.cellContainer().get());
 
     container.root.children().add(v);
 
-    assertSame(container, v.container());
+    assertSame(container, v.cellContainer().get());
   }
 
   @Test
@@ -195,4 +195,30 @@ public class CellTest {
     parent.children().addAll(Arrays.asList(child, child));
   }
 
+
+  @Test
+  public void cellContainerPropChangeOnAttach() {
+    TextCell cell = new TextCell();
+
+    EventHandler<PropertyChangeEvent<CellContainer>> listener = mock(EventHandler.class);
+    cell.cellContainer().addHandler(listener);
+
+    container.root.children().add(cell);
+
+    verify(listener).onEvent(new PropertyChangeEvent<CellContainer>(null, container));
+  }
+
+
+  @Test
+  public void cellContainerPropChangeOnDetach() {
+    TextCell cell = new TextCell();
+    container.root.children().add(cell);
+
+    EventHandler<PropertyChangeEvent<CellContainer>> listener = mock(EventHandler.class);
+    cell.cellContainer().addHandler(listener);
+
+    container.root.children().remove(cell);
+
+    verify(listener).onEvent(new PropertyChangeEvent<CellContainer>(container, null));
+  }
 }

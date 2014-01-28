@@ -34,4 +34,12 @@ public class CellAdapter implements CellListener {
   @Override
   public void onParentChanged(PropertyChangeEvent<Cell> event) {
   }
+
+  @Override
+  public void onAttach(CellContainer container) {
+  }
+
+  @Override
+  public void onDetach(CellContainer container) {
+  }
 }

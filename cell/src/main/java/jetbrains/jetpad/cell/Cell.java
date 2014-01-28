@@ -239,8 +239,33 @@ public abstract class Cell implements Composite<Cell>, HasVisibility, HasFocusab
     };
   }
 
-  public CellContainer container() {
-    return myContainer;
+  public ReadableProperty<CellContainer> cellContainer() {
+    return new ReadableProperty<CellContainer>() {
+      @Override
+      public String getPropExpr() {
+        return "cell.cellContainer";
+      }
+
+      @Override
+      public CellContainer get() {
+        return myContainer;
+      }
+
+      @Override
+      public Registration addHandler(final EventHandler<? super PropertyChangeEvent<CellContainer>> handler) {
+        return addListener(new CellAdapter() {
+          @Override
+          public void onAttach(CellContainer container) {
+            handler.onEvent(new PropertyChangeEvent<CellContainer>(null, container));
+          }
+
+          @Override
+          public void onDetach(CellContainer container) {
+            handler.onEvent(new PropertyChangeEvent<CellContainer>(container, null));
+          }
+        });
+      }
+    };
   }
 
   public ReadableProperty<Boolean> focused() {
@@ -422,12 +447,21 @@ public abstract class Cell implements Composite<Cell>, HasVisibility, HasFocusab
     return myContainer != null;
   }
 
-  private void attach(CellContainer container) {
+  private void attach(final CellContainer container) {
     if (container == null) throw new IllegalStateException();
     if (myContainer != null) throw new IllegalStateException();
 
     myContainer = container;
     myContainer.viewAdded(this);
+
+    if (myListeners != null) {
+      myListeners.fire(new ListenerCaller<CellListener>() {
+        @Override
+        public void call(CellListener l) {
+          l.onAttach(container);
+        }
+      });
+    }
 
     if (myChildren != null) {
       for (Cell child : myChildren) {
@@ -444,7 +478,16 @@ public abstract class Cell implements Composite<Cell>, HasVisibility, HasFocusab
 
     myContainer.viewRemoved(this);
 
+    final CellContainer oldContainer = myContainer;
     myContainer = null;
+    if (myListeners != null) {
+      myListeners.fire(new ListenerCaller<CellListener>() {
+        @Override
+        public void call(CellListener l) {
+          l.onDetach(oldContainer);
+        }
+      });
+    }
 
     if (myChildren != null) {
       for (Cell child : myChildren) {

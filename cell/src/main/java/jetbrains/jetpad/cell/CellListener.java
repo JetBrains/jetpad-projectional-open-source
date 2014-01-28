@@ -23,4 +23,7 @@ public interface CellListener {
   void onChildAdded(CollectionItemEvent<Cell> event);
   void onChildRemoved(CollectionItemEvent<Cell> event);
   void onParentChanged(PropertyChangeEvent<Cell> event);
+
+  void onAttach(CellContainer container);
+  void onDetach(CellContainer container);
 }

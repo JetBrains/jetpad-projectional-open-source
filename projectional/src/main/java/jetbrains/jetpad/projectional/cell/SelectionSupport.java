@@ -83,7 +83,7 @@ public class SelectionSupport<ItemT> {
   public Cell currentCell() {
     if (mySource.isEmpty()) return null;
 
-    Cell current = myTarget.container().focusedCell.get();
+    Cell current = myTarget.cellContainer().get().focusedCell.get();
     while (current != null) {
       Cell parent = current.parent().get();
       if (parent == myTarget) {
@@ -97,7 +97,7 @@ public class SelectionSupport<ItemT> {
   public void select(ItemT from, ItemT to) {
     final int start = mySource.indexOf(from);
     final int end = mySource.indexOf(to);
-    Cell focusedCell = myTarget.container().focusedCell.get();
+    Cell focusedCell = myTarget.cellContainer().get().focusedCell.get();
 
     if (start == -1 || end == -1) throw new IllegalArgumentException();
     if (start > end) throw new IllegalArgumentException();

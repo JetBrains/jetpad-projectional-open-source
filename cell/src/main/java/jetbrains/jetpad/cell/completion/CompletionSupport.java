@@ -106,7 +106,7 @@ public class CompletionSupport {
       }
 
       private boolean canComplete(Cell cell) {
-        Cell current = cell.container().focusedCell.get();
+        Cell current = cell.cellContainer().get().focusedCell.get();
         while (current != cell) {
           Cell parent = current.parent().get();
           if (parent == null) throw new IllegalStateException();
@@ -217,7 +217,7 @@ public class CompletionSupport {
       Cell cell,
       Property<Cell> targetPopup,
       List<CompletionItem> items) {
-    CellContainer container = cell.container();
+    CellContainer container = cell.cellContainer().get();
     final HorizontalCell popup = new HorizontalCell();
     final TextCell textView = new TextCell();
 
@@ -242,7 +242,7 @@ public class CompletionSupport {
       final Cell cell,
       final Property<Cell> targetPopup,
       List<CompletionItem> items) {
-    final CellContainer container = cell.container();
+    final CellContainer container = cell.cellContainer().get();
     final Value<Boolean> completed = new Value<Boolean>(false);
     final Value<Boolean> dismissed = new Value<Boolean>(false);
     final CellContainer.State state = container.saveState();
