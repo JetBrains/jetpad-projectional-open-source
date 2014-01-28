@@ -95,17 +95,12 @@ class CompletionMenu {
       super.registerSynchronizers(conf);
       final ReadableProperty<String> text = ((CompletionMenuModelMapper) getParent()).getSource().text;
 
-      conf.add(Synchronizers.forProperty(new DerivedProperty<Boolean>(text) {
+      conf.add(Synchronizers.forProperty(Properties.ifProp(new DerivedProperty<Boolean>(text) {
         @Override
         public Boolean get() {
           return getSource().isMatch(text.get());
         }
-      }, new WritableProperty<Boolean>() {
-        @Override
-        public void set(Boolean value) {
-          myText.textColor().set(value ? Color.BLUE : Color.BLACK);
-        }
-      }));
+      }, Color.BLUE, Color.BLACK), myText.textColor()));
 
       conf.add(Synchronizers.forProperty(new DerivedProperty<String>() {
         @Override
