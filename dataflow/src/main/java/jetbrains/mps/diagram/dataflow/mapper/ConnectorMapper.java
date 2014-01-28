@@ -65,11 +65,6 @@ public class ConnectorMapper extends Mapper<Connector, PolyLineConnection> {
       }
     }));
 
-    conf.add(Synchronizers.forProperty(getSource().inputLocation, new WritableProperty<Vector>() {
-      @Override
-      public void set(Vector value) {
-        getTarget().toLocation().set(value);
-      }
-    }));
+    conf.add(Synchronizers.forProperty(getSource().inputLocation, getTarget().toLocation()));
   }
 }
