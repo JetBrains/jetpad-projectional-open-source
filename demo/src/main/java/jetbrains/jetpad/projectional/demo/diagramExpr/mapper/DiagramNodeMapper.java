@@ -84,7 +84,7 @@ class DiagramNodeMapper extends Mapper<DiagramNode, DiagramNodeView> {
       }));
 
     conf.add(Synchronizers.forProperty(
-      Properties.ifProp(getTarget().focused(), Properties.constant(Color.RED), Properties.constant(Color.LIGHT_GRAY)),
+      Properties.ifProp(getTarget().focused(), Color.RED, Color.LIGHT_GRAY),
       getTarget().background()
     ));
 
