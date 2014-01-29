@@ -1,7 +1,6 @@
 package jetbrains.jetpad.projectional.demo.stlc.core;
 
 public class Expr {
-
   public static class VarExpr extends Expr {
     public final String name;
 
