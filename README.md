@@ -3,7 +3,7 @@
 Projectional editing is an approach to editing where instead of working with text as is, user works with model data structure
 directly. The following widely used applications can be considered projectional editors:
 * WYSIWYG text editor
-* Spreadsheet applciations
+* Spreadsheet applications
 * Diagram editors
 
 The framework implements projectional editor in the style of JetBrains MPS (http://www.jetbrains.com/mps/), with the following
