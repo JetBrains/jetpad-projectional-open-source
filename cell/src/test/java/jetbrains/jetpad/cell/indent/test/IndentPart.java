@@ -71,7 +71,7 @@ public class IndentPart extends HasParent<IndentPart, IndentPart> implements Com
   }
 
   @Override
-  public List<IndentPart> children() {
+  public ObservableList<IndentPart> children() {
     return children;
   }
 
