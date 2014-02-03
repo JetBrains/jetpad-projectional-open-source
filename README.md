@@ -11,6 +11,7 @@ advantages over it:
 * Support for web - the framework uses GWT for this purpose
 * Testability - it's possible to create fast test for almost any editor.
 * Better architecture
+
 It also supports new features which aren't available in MPS:
 * Diagrams - it's possible to create diagrams with the framework and mix and match diagrams with MPS-like editors
 * Hybrid editing - hybrid approach to expression editing which makes it much more text like while keeping most of the projectional
