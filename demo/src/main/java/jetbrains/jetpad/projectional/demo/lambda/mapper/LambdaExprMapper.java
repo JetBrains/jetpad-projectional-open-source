@@ -7,10 +7,7 @@ import jetbrains.jetpad.cell.util.CellFactory;
 import jetbrains.jetpad.cell.util.Validators;
 import jetbrains.jetpad.mapper.Mapper;
 import jetbrains.jetpad.mapper.Synchronizers;
-import jetbrains.jetpad.projectional.cell.ProjectionalSynchronizers;
-import jetbrains.jetpad.projectional.demo.lambda.model.Expr;
 import jetbrains.jetpad.projectional.demo.lambda.model.LambdaExpr;
-import jetbrains.jetpad.projectional.demo.lambda.model.LambdaNode;
 
 class LambdaExprMapper extends Mapper<LambdaExpr, LambdaExprMapper.LambdaExprCell> {
   LambdaExprMapper(LambdaExpr source) {
@@ -32,7 +29,7 @@ class LambdaExprMapper extends Mapper<LambdaExpr, LambdaExprMapper.LambdaExprCel
     LambdaExprCell() {
       focusable().set(true);
 
-      CellFactory.to(this, CellFactory.label("(\\", true, false), name, CellFactory.space(), CellFactory.label("->"), CellFactory.space(), body, CellFactory.label(")", false, true));
+      CellFactory.to(this, CellFactory.label("(\\", true, false), name, CellFactory.space(), CellFactory.label("->"), CellFactory.indent(true, CellFactory.newLine(), CellFactory.space(), body, CellFactory.label(")", false, true)));
 
       name.addTrait(TextEditing.validTextEditing(Validators.identifier()));
     }
