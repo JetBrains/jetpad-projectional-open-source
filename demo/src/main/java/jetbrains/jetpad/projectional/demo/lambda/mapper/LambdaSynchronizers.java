@@ -52,6 +52,13 @@ class LambdaSynchronizers {
           }
         });
 
+        result.add(new SimpleCompletionItem("(") {
+          @Override
+          public Runnable complete(String text) {
+            ParensExpr result = new ParensExpr();
+            return target.set(result);
+          }
+        });
 
         return result;
       }
