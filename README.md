@@ -3,7 +3,7 @@
 Projectional editing is an approach to editing where instead of working with text as is, user works with model data structure
 directly. The following widely used applications can be considered projectional editors:
 * WYSIWYG text editor
-* Spreadsheet applciations
+* Spreadsheet applications
 * Diagram editors
 
 The framework implements projectional editor in the style of JetBrains MPS (http://www.jetbrains.com/mps/), with the following
@@ -11,6 +11,7 @@ advantages over it:
 * Support for web - the framework uses GWT for this purpose
 * Testability - it's possible to create fast test for almost any editor.
 * Better architecture
+
 It also supports new features which aren't available in MPS:
 * Diagrams - it's possible to create diagrams with the framework and mix and match diagrams with MPS-like editors
 * Hybrid editing - hybrid approach to expression editing which makes it much more text like while keeping most of the projectional
