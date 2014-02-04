@@ -12,6 +12,7 @@ class VarExprMapper extends Mapper<VarExpr, TextCell> {
   VarExprMapper(VarExpr source) {
     super(source, CellFactory.label(""));
     getTarget().addTrait(TextEditing.validTextEditing(Validators.identifier()));
+    getTarget().focusable().set(true);
   }
 
   @Override

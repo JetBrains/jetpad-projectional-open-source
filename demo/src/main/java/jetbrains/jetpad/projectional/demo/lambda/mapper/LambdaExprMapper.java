@@ -22,7 +22,7 @@ class LambdaExprMapper extends Mapper<LambdaExpr, LambdaExprMapper.LambdaExprCel
     super.registerSynchronizers(conf);
 
     conf.add(Synchronizers.forProperties(getSource().varName, getTarget().name.text()));
-    conf.add(ProjectionalSynchronizers.<LambdaNode, Expr>forSingleRole(this, getSource().body, getTarget().body, new ExprMapperFactory()));
+    conf.add(LambdaSynchronizers.exprSynchronizer(this, getSource().body, getTarget().body));
   }
 
   static class LambdaExprCell extends IndentCell {
@@ -30,6 +30,8 @@ class LambdaExprMapper extends Mapper<LambdaExpr, LambdaExprMapper.LambdaExprCel
     final IndentCell body = new IndentCell();
 
     LambdaExprCell() {
+      focusable().set(true);
+
       CellFactory.to(this, CellFactory.label("(\\", true, false), name, CellFactory.space(), CellFactory.label("->"), CellFactory.space(), body, CellFactory.label(")", false, true));
 
       name.addTrait(TextEditing.validTextEditing(Validators.identifier()));

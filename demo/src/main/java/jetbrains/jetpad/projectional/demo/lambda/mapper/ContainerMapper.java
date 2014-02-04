@@ -3,10 +3,7 @@ package jetbrains.jetpad.projectional.demo.lambda.mapper;
 import jetbrains.jetpad.cell.indent.IndentCell;
 import jetbrains.jetpad.cell.indent.IndentRootCell;
 import jetbrains.jetpad.mapper.Mapper;
-import jetbrains.jetpad.projectional.cell.ProjectionalSynchronizers;
 import jetbrains.jetpad.projectional.demo.lambda.model.Container;
-import jetbrains.jetpad.projectional.demo.lambda.model.Expr;
-import jetbrains.jetpad.projectional.demo.lambda.model.LambdaNode;
 
 import static jetbrains.jetpad.cell.util.CellFactory.*;
 
@@ -18,8 +15,7 @@ public class ContainerMapper extends Mapper<Container, ContainerMapper.Container
   @Override
   protected void registerSynchronizers(SynchronizersConfiguration conf) {
     super.registerSynchronizers(conf);
-
-    conf.add(ProjectionalSynchronizers.<LambdaNode, Expr>forSingleRole(this, getSource().expr, getTarget().expr, new ExprMapperFactory()));
+    conf.add(LambdaSynchronizers.exprSynchronizer(this, getSource().expr, getTarget().expr));
   }
 
   static class ContainerCell extends IndentRootCell {

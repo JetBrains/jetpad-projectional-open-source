@@ -3,12 +3,10 @@ package jetbrains.jetpad.projectional.demo.lambda.mapper;
 import jetbrains.jetpad.cell.indent.IndentCell;
 import jetbrains.jetpad.cell.util.CellFactory;
 import jetbrains.jetpad.mapper.Mapper;
-import jetbrains.jetpad.projectional.cell.ProjectionalSynchronizers;
 import jetbrains.jetpad.projectional.demo.lambda.model.AppExpr;
-import jetbrains.jetpad.projectional.demo.lambda.model.Expr;
-import jetbrains.jetpad.projectional.demo.lambda.model.LambdaNode;
 
-import static jetbrains.jetpad.cell.util.CellFactory.*;
+import static jetbrains.jetpad.cell.util.CellFactory.space;
+import static jetbrains.jetpad.cell.util.CellFactory.to;
 
 class AppExprMapper extends Mapper<AppExpr, AppExprMapper.AppExprCell> {
   AppExprMapper(AppExpr source) {
@@ -19,8 +17,8 @@ class AppExprMapper extends Mapper<AppExpr, AppExprMapper.AppExprCell> {
   protected void registerSynchronizers(SynchronizersConfiguration conf) {
     super.registerSynchronizers(conf);
 
-    conf.add(ProjectionalSynchronizers.<LambdaNode, Expr>forSingleRole(this, getSource().fun, getTarget().fun, new ExprMapperFactory()));
-    conf.add(ProjectionalSynchronizers.<LambdaNode, Expr>forSingleRole(this, getSource().arg, getTarget().arg, new ExprMapperFactory()));
+    conf.add(LambdaSynchronizers.exprSynchronizer(this, getSource().fun, getTarget().fun));
+    conf.add(LambdaSynchronizers.exprSynchronizer(this, getSource().arg, getTarget().arg));
   }
 
   static final class AppExprCell extends IndentCell {
@@ -28,7 +26,8 @@ class AppExprMapper extends Mapper<AppExpr, AppExprMapper.AppExprCell> {
     final IndentCell arg = new IndentCell();
 
     AppExprCell() {
-      to(this, fun, space(), arg);
+      focusable().set(true);
+      to(this, CellFactory.label("(", true, false), fun, space(), arg, CellFactory.label(")", false, true));
     }
   }
 }
