@@ -22,7 +22,7 @@ import jetbrains.jetpad.projectional.demo.diagram.DiagramDemo;
 import jetbrains.jetpad.projectional.demo.diagramExpr.DiagramExprDemo;
 import jetbrains.jetpad.projectional.demo.expr.ExprDemo;
 import jetbrains.jetpad.projectional.demo.hybridExpr.HybridExprDemo;
-import jetbrains.jetpad.projectional.demo.nanoLang.NanoLangDemo;
+import jetbrains.jetpad.projectional.demo.lambda.LambdaDemo;
 import jetbrains.jetpad.projectional.view.gwt.View2Dom;
 
 import static com.google.gwt.query.client.GQuery.$;
@@ -32,7 +32,7 @@ public class ProjectionalMain implements EntryPoint {
   public void onModuleLoad() {
     new CellContainerToDomMapper(ConceptDemo.create(), $("#conceptDemo").get(0)).attachRoot();
     new CellContainerToDomMapper(ExprDemo.createDemo(), $("#exprDemo").get(0)).attachRoot();
-    new CellContainerToDomMapper(NanoLangDemo.create(), $("#indentDemo").get(0)).attachRoot();
+    new CellContainerToDomMapper(LambdaDemo.create(), $("#indentDemo").get(0)).attachRoot();
     new CellContainerToDomMapper(HybridExprDemo.createDemo(), $("#hybridExprDemo").get(0)).attachRoot();
     View2Dom.showDemo(DiagramDemo.createContainer(), $("#diagramDemo").get(0));
     View2Dom.showDemo(DiagramExprDemo.createContainer(), $("#diagramExprDemo").get(0));
