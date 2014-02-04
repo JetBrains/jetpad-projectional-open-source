@@ -24,6 +24,10 @@ class ExprMapperFactory implements MapperFactory<Expr, Cell> {
       return new ParensExprMapper((ParensExpr) source);
     }
 
+    if (source instanceof WildCardExpr) {
+      return new WildCardExprMapper((WildCardExpr) source);
+    }
+
     return null;
   }
 }
