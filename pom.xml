@@ -27,6 +27,7 @@
     <module>dataflow</module>
     <module>diagram</module>
     <module>domUtil</module>
+    <module>lambda</module>
   </modules>
 
   <build>
