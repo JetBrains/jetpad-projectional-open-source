@@ -6,7 +6,8 @@ import jetbrains.jetpad.completion.*;
 import jetbrains.jetpad.hybrid.Completer;
 import jetbrains.jetpad.hybrid.CompletionContext;
 import jetbrains.jetpad.hybrid.HybridPositionSpec;
-import jetbrains.jetpad.hybrid.SimpleTokenCompletionItem;
+import jetbrains.jetpad.hybrid.util.IdentifierTokenCompletionItem;
+import jetbrains.jetpad.hybrid.util.SimpleTokenCompletionItem;
 import jetbrains.jetpad.hybrid.parser.IdentifierToken;
 import jetbrains.jetpad.hybrid.parser.Parser;
 import jetbrains.jetpad.hybrid.parser.Token;
@@ -71,34 +72,7 @@ public class LambdaHybridPositionSpec implements HybridPositionSpec<Expr> {
         result.add(new SimpleTokenCompletionItem(Tokens.WILDCARD, tokenHandler));
         result.add(new SimpleTokenCompletionItem(Tokens.LP, tokenHandler));
         result.add(new SimpleTokenCompletionItem(Tokens.RP, tokenHandler));
-        result.add(new BaseCompletionItem() {
-          @Override
-          public String visibleText(String text) {
-            return "id";
-          }
-
-          @Override
-          public boolean isStrictMatchPrefix(String text) {
-            if ("".equals(text)) return true;
-            return isMatch(text);
-          }
-
-          @Override
-          public boolean isMatch(String text) {
-            return Validators.identifier().apply(text);
-          }
-
-          @Override
-          public Runnable complete(String text) {
-            return tokenHandler.apply(new IdentifierToken(text));
-          }
-
-          @Override
-          public boolean isLowPriority() {
-            return true;
-          }
-        });
-
+        result.add(new IdentifierTokenCompletionItem(tokenHandler));
         return result;
       }
     };

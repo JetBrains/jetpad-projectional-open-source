@@ -18,7 +18,8 @@ package jetbrains.jetpad.projectional.demo.hybridExpr.mapper;
 import com.google.common.base.Function;
 import jetbrains.jetpad.cell.util.Validators;
 import jetbrains.jetpad.completion.*;
-import jetbrains.jetpad.hybrid.SimpleTokenCompletionItem;
+import jetbrains.jetpad.hybrid.util.IdentifierTokenCompletionItem;
+import jetbrains.jetpad.hybrid.util.SimpleTokenCompletionItem;
 import jetbrains.jetpad.hybrid.parser.*;
 import jetbrains.jetpad.projectional.demo.hybridExpr.model.*;
 import jetbrains.jetpad.projectional.demo.hybridExpr.model.types.FieldDescriptor;
@@ -207,33 +208,7 @@ public class ExprHybridPositionSpec implements HybridPositionSpec<Expression> {
           }
         });
 
-        result.add(new BaseCompletionItem() {
-          @Override
-          public String visibleText(String text) {
-            return "identifier";
-          }
-
-          @Override
-          public boolean isStrictMatchPrefix(String text) {
-            if ("".equals(text)) return true;
-            return isMatch(text);
-          }
-
-          @Override
-          public boolean isMatch(String text) {
-            return Validators.identifier().apply(text);
-          }
-
-          @Override
-          public Runnable complete(String text) {
-            return tokenHandler.apply(new IdentifierToken(text));
-          }
-
-          @Override
-          public boolean isLowPriority() {
-            return true;
-          }
-        });
+        result.add(new IdentifierTokenCompletionItem(tokenHandler));
 
         return result;
       }

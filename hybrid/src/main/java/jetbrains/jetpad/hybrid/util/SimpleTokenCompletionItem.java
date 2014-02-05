@@ -1,10 +1,9 @@
-package jetbrains.jetpad.hybrid;
+package jetbrains.jetpad.hybrid.util;
 
 import com.google.common.base.Function;
 import jetbrains.jetpad.completion.SimpleCompletionItem;
 import jetbrains.jetpad.hybrid.parser.Token;
 
-//todo we have the same code in other HybridPositionSpecs. Nice to make it less duplicated.
 public class SimpleTokenCompletionItem extends SimpleCompletionItem {
   private Token myToken;
   private Function<Token, Runnable> myTokenHandler;
