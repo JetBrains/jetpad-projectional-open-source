@@ -4,6 +4,7 @@ import com.google.common.base.Function;
 import jetbrains.jetpad.completion.CompletionItem;
 import jetbrains.jetpad.completion.CompletionParameters;
 import jetbrains.jetpad.completion.CompletionSupplier;
+import jetbrains.jetpad.completion.SimpleCompletionItem;
 import jetbrains.jetpad.hybrid.Completer;
 import jetbrains.jetpad.hybrid.CompletionContext;
 import jetbrains.jetpad.hybrid.HybridPositionSpec;
@@ -72,6 +73,15 @@ public class LambdaHybridPositionSpec implements HybridPositionSpec<Expr> {
         TokenCompletionItems items = new TokenCompletionItems(tokenHandler);
         result.addAll(items.forTokens(Tokens.WILDCARD, Tokens.LP, Tokens.RP));
         result.add(items.forId());
+
+        result.add(new SimpleCompletionItem("\\") {
+          @Override
+          public Runnable complete(String text) {
+            LambdaExpr lambda = new LambdaExpr();
+            lambda.varName.set("x");
+            return tokenHandler.apply(new ValueToken(lambda));
+          }
+        });
         return result;
       }
     };
