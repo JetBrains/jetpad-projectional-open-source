@@ -61,7 +61,6 @@ public class LambdaHybridPositionSpec implements HybridPositionSpec<Expr> {
         ctx.append(new ValueToken(value.copy()));
       }
     };
-
   }
 
   @Override
