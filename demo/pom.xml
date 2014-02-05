@@ -59,7 +59,6 @@
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>gwt-maven-plugin</artifactId>
-        <version>2.6.0-rc3</version>
       </plugin>
     </plugins>
   </build>

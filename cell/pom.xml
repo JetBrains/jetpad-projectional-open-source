@@ -84,12 +84,6 @@
     </dependency>
 
     <dependency>
-      <groupId>com.googlecode.gwtquery</groupId>
-      <artifactId>gwtquery</artifactId>
-      <version>1.4.0</version>
-    </dependency>
-
-    <dependency>
       <groupId>org.vectomatic</groupId>
       <artifactId>lib-gwt-svg</artifactId>
       <version>0.5.7</version>
