@@ -15,13 +15,13 @@
  */
 package jetbrains.jetpad.projectional.demo.concept.mapper;
 
-import jetbrains.jetpad.cell.TextCell;
 import jetbrains.jetpad.cell.Cell;
-import jetbrains.jetpad.cell.indent.IndentRootCell;
+import jetbrains.jetpad.cell.TextCell;
+import jetbrains.jetpad.cell.indent.IndentCell;
 
 import static jetbrains.jetpad.cell.util.CellFactory.*;
 
-class ConceptDeclarationCell extends IndentRootCell {
+class ConceptDeclarationCell extends IndentCell {
   final TextCell name;
   final Cell members;
   final TextCell isAbstractText;

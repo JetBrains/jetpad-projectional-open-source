@@ -16,7 +16,7 @@
 package jetbrains.jetpad.cell.view;
 
 import jetbrains.jetpad.cell.*;
-import jetbrains.jetpad.cell.indent.IndentRootCell;
+import jetbrains.jetpad.cell.indent.IndentCell;
 
 class CellMappers {
   static BaseCellMapper<?, ?> create(Cell cell, CellToViewContext ctx) {
@@ -40,8 +40,12 @@ class CellMappers {
       return new RootCellMapper((RootCell) cell, ctx);
     }
 
-    if (cell instanceof IndentRootCell) {
-      return new IndentRootCellMapper((IndentRootCell) cell, ctx);
+    if (cell instanceof IndentCell) {
+      IndentCell indentCell = (IndentCell) cell;
+      if (!indentCell.isRootIndent()) {
+        throw new IllegalStateException();
+      }
+      return new IndentRootCellMapper(indentCell, ctx);
     }
 
     throw new UnsupportedOperationException();

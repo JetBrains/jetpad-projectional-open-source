@@ -17,21 +17,20 @@ package jetbrains.jetpad.cell.view;
 
 import com.google.common.base.Strings;
 import jetbrains.jetpad.base.Handler;
-import jetbrains.jetpad.mapper.MappingContext;
-import jetbrains.jetpad.model.composite.Composites;
-import jetbrains.jetpad.model.collections.CollectionItemEvent;
-import jetbrains.jetpad.model.collections.set.ObservableSet;
-import jetbrains.jetpad.model.event.Registration;
-import jetbrains.jetpad.model.property.PropertyChangeEvent;
 import jetbrains.jetpad.cell.Cell;
 import jetbrains.jetpad.cell.CellPropertySpec;
 import jetbrains.jetpad.cell.indent.CellIndentUpdaterSource;
 import jetbrains.jetpad.cell.indent.IndentCell;
-import jetbrains.jetpad.cell.indent.IndentRootCell;
 import jetbrains.jetpad.cell.indent.IndentContainerCellListener;
 import jetbrains.jetpad.cell.indent.updater.CellWrapper;
 import jetbrains.jetpad.cell.indent.updater.IndentUpdater;
 import jetbrains.jetpad.cell.indent.updater.IndentUpdaterTarget;
+import jetbrains.jetpad.mapper.MappingContext;
+import jetbrains.jetpad.model.collections.CollectionItemEvent;
+import jetbrains.jetpad.model.collections.set.ObservableSet;
+import jetbrains.jetpad.model.composite.Composites;
+import jetbrains.jetpad.model.event.Registration;
+import jetbrains.jetpad.model.property.PropertyChangeEvent;
 import jetbrains.jetpad.projectional.view.HorizontalView;
 import jetbrains.jetpad.projectional.view.TextView;
 import jetbrains.jetpad.projectional.view.VerticalView;
@@ -39,12 +38,12 @@ import jetbrains.jetpad.projectional.view.View;
 
 import java.util.List;
 
-class IndentRootCellMapper extends BaseCellMapper<IndentRootCell, VerticalView> {
+class IndentRootCellMapper extends BaseCellMapper<IndentCell, VerticalView> {
   private IndentUpdater<Cell, View> myIndentUpdater;
   private ObservableSet<BaseCellMapper<?, ?>> myCellMappers;
   private Registration myRegistration;
 
-  IndentRootCellMapper(IndentRootCell source, CellToViewContext ctx) {
+  IndentRootCellMapper(IndentCell source, CellToViewContext ctx) {
     super(source, new VerticalView(), ctx);
 
     myCellMappers = createChildSet();

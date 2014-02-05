@@ -22,33 +22,37 @@ import com.google.gwt.dom.client.Style;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Timer;
 import jetbrains.jetpad.base.Handler;
-import jetbrains.jetpad.geometry.Rectangle;
-import jetbrains.jetpad.mapper.Mapper;
-import jetbrains.jetpad.mapper.MappingContext;
-import jetbrains.jetpad.model.composite.Composites;
-import jetbrains.jetpad.model.collections.CollectionItemEvent;
-import jetbrains.jetpad.model.event.EventHandler;
-import jetbrains.jetpad.model.event.Registration;
-import jetbrains.jetpad.model.property.PropertyChangeEvent;
 import jetbrains.jetpad.cell.Cell;
 import jetbrains.jetpad.cell.CellPropertySpec;
 import jetbrains.jetpad.cell.indent.CellIndentUpdaterSource;
 import jetbrains.jetpad.cell.indent.IndentCell;
-import jetbrains.jetpad.cell.indent.IndentRootCell;
 import jetbrains.jetpad.cell.indent.IndentContainerCellListener;
-import jetbrains.jetpad.cell.indent.updater.*;
+import jetbrains.jetpad.cell.indent.updater.CellWrapper;
+import jetbrains.jetpad.cell.indent.updater.IndentUpdater;
+import jetbrains.jetpad.cell.indent.updater.IndentUpdaterTarget;
+import jetbrains.jetpad.geometry.Rectangle;
+import jetbrains.jetpad.mapper.Mapper;
+import jetbrains.jetpad.mapper.MappingContext;
+import jetbrains.jetpad.model.collections.CollectionItemEvent;
+import jetbrains.jetpad.model.composite.Composites;
+import jetbrains.jetpad.model.event.EventHandler;
+import jetbrains.jetpad.model.event.Registration;
+import jetbrains.jetpad.model.property.PropertyChangeEvent;
 import jetbrains.jetpad.projectional.domUtil.DomTextEditor;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
-class IndentRootCellMapper extends BaseCellMapper<IndentRootCell> {
+class IndentRootCellMapper extends BaseCellMapper<IndentCell> {
   private Set<BaseCellMapper<?>> myCellMappers;
   private IndentUpdater<Cell, Node> myIndentUpdater;
   private Registration myRegistration;
   private Timer myPositionUpdater;
   private Map<Mapper<?, ?>, Runnable> myPositionUpdaters = new HashMap<Mapper<?, ?>, Runnable>();
 
-  IndentRootCellMapper(IndentRootCell source, CellToDomContext ctx) {
+  IndentRootCellMapper(IndentCell source, CellToDomContext ctx) {
     super(source, ctx, DOM.createDiv());
     myCellMappers = createChildSet();
 

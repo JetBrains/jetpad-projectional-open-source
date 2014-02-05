@@ -16,11 +16,11 @@
 package jetbrains.jetpad.projectional.demo.expr.mapper;
 
 import jetbrains.jetpad.cell.Cell;
-import jetbrains.jetpad.cell.indent.IndentRootCell;
+import jetbrains.jetpad.cell.indent.IndentCell;
 
 import static jetbrains.jetpad.cell.util.CellFactory.*;
 
-class ExpressionContainerCell extends IndentRootCell {
+class ExpressionContainerCell extends IndentCell {
   final Cell expression;
 
   ExpressionContainerCell() {

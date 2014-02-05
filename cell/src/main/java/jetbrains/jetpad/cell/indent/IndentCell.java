@@ -16,12 +16,16 @@
 package jetbrains.jetpad.cell.indent;
 
 import jetbrains.jetpad.model.collections.CollectionItemEvent;
+import jetbrains.jetpad.model.event.ListenerCaller;
+import jetbrains.jetpad.model.event.Listeners;
+import jetbrains.jetpad.model.event.Registration;
 import jetbrains.jetpad.model.property.PropertyChangeEvent;
 import jetbrains.jetpad.cell.Cell;
 import jetbrains.jetpad.cell.CellPropertySpec;
 
 public class IndentCell extends Cell {
   private boolean myIndented;
+  private Listeners<IndentContainerCellListener> myListeners;
 
   public IndentCell() {
     this(false);
@@ -35,9 +39,16 @@ public class IndentCell extends Cell {
     return myIndented;
   }
 
-  private IndentRootCell indentContainer() {
-    if (this instanceof IndentRootCell) {
-      return (IndentRootCell) this;
+  public boolean isRootIndent() {
+    if (cellContainer() == null) return false;
+    Cell parent = parent().get();
+    if (parent instanceof IndentCell) return false;
+    return true;
+  }
+
+  private IndentCell indentContainer() {
+    if (isRootIndent()) {
+      return this;
     }
     Cell parent = parent().get();
     if (parent instanceof IndentCell) {
@@ -50,7 +61,7 @@ public class IndentCell extends Cell {
   protected void onPropertySet(CellPropertySpec<?> prop, PropertyChangeEvent<?> event) {
     super.onPropertySet(prop, event);
 
-    IndentRootCell container = indentContainer();
+    IndentCell container = indentContainer();
     if (container == null) return;
     container.handlePropertyChanged(this, prop, event);
   }
@@ -59,7 +70,7 @@ public class IndentCell extends Cell {
   protected void onChildAdded(CollectionItemEvent<Cell> event) {
     super.onChildAdded(event);
 
-    IndentRootCell container = indentContainer();
+    IndentCell container = indentContainer();
     if (container == null) return;
 
     container.handleChildAdd(event);
@@ -69,9 +80,69 @@ public class IndentCell extends Cell {
   protected void onBeforeChildRemoved(CollectionItemEvent<Cell> event) {
     super.onBeforeChildRemoved(event);
 
-    IndentRootCell container = indentContainer();
+    IndentCell container = indentContainer();
     if (container == null) return;
 
     container.handleChildRemove(event);
+  }
+
+  void handleChildAdd(final CollectionItemEvent<Cell> event) {
+    checkRootIndent();
+
+    if (myListeners == null) return;
+    myListeners.fire(new ListenerCaller<IndentContainerCellListener>() {
+      @Override
+      public void call(IndentContainerCellListener l) {
+        l.childAdded(event);
+      }
+    });
+  }
+
+  void handleChildRemove(final CollectionItemEvent<Cell> event) {
+    checkRootIndent();
+
+    if (myListeners == null) return;
+    myListeners.fire(new ListenerCaller<IndentContainerCellListener>() {
+      @Override
+      public void call(IndentContainerCellListener l) {
+        l.childRemoved(event);
+      }
+    });
+  }
+
+  void handlePropertyChanged(final Cell cell, final CellPropertySpec<?> prop, final PropertyChangeEvent<?> event) {
+    checkRootIndent();
+
+    if (myListeners == null) return;
+    myListeners.fire(new ListenerCaller<IndentContainerCellListener>() {
+      @Override
+      public void call(IndentContainerCellListener l) {
+        l.propertyChanged(cell, prop, event);
+      }
+    });
+  }
+
+  private void checkRootIndent() {
+    if (!isRootIndent()) {
+      throw new IllegalStateException();
+    }
+  }
+
+  public Registration addListener(IndentContainerCellListener l) {
+    checkRootIndent();
+
+    if (myListeners == null) {
+      myListeners = new Listeners<IndentContainerCellListener>();
+    }
+    final Registration reg = myListeners.add(l);
+    return new Registration() {
+      @Override
+      public void remove() {
+        reg.remove();
+        if (myListeners.isEmpty()) {
+          myListeners = null;
+        }
+      }
+    };
   }
 }

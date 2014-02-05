@@ -16,10 +16,11 @@
 package jetbrains.jetpad.lambda;
 
 import jetbrains.jetpad.cell.CellContainer;
-import jetbrains.jetpad.cell.indent.IndentRootCell;
-import jetbrains.jetpad.cell.util.CellFactory;
 import jetbrains.jetpad.lambda.mapper.ContainerMapper;
-import jetbrains.jetpad.lambda.model.*;
+import jetbrains.jetpad.lambda.model.AppExpr;
+import jetbrains.jetpad.lambda.model.Container;
+import jetbrains.jetpad.lambda.model.LambdaExpr;
+import jetbrains.jetpad.lambda.model.VarExpr;
 import jetbrains.jetpad.projectional.util.RootController;
 
 public class LambdaDemo {

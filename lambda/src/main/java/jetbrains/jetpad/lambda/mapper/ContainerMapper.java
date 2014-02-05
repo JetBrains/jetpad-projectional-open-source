@@ -16,9 +16,8 @@
 package jetbrains.jetpad.lambda.mapper;
 
 import jetbrains.jetpad.cell.indent.IndentCell;
-import jetbrains.jetpad.cell.indent.IndentRootCell;
-import jetbrains.jetpad.mapper.Mapper;
 import jetbrains.jetpad.lambda.model.Container;
+import jetbrains.jetpad.mapper.Mapper;
 
 import static jetbrains.jetpad.cell.util.CellFactory.*;
 
@@ -33,7 +32,7 @@ public class ContainerMapper extends Mapper<Container, ContainerMapper.Container
     conf.add(LambdaSynchronizers.exprSynchronizer(this, getSource().expr, getTarget().expr));
   }
 
-  static class ContainerCell extends IndentRootCell {
+  static class ContainerCell extends IndentCell {
     final IndentCell expr = new IndentCell();
 
     ContainerCell() {
