@@ -16,11 +16,10 @@ public class LambdaParserTest {
     assertParsed("y", new IdentifierToken("y"));
   }
 
-//  @Test
-//  public void appAssociativity() {
-//    assertParsed("(app (app x y) z))", new IdentifierToken("x"), new IdentifierToken("y"), new IdentifierToken("z"));
-//  }
-
+  @Test
+  public void appAssociativity() {
+    assertParsed("(app (app x y) z)", new IdentifierToken("x"), new IdentifierToken("y"), new IdentifierToken("z"));
+  }
 
   private void assertParsed(String textRep, Token... tokens) {
     Expr expr = LambdaParser.EXPR.parse(new ParsingContext(Arrays.asList(tokens)));

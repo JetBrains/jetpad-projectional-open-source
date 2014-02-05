@@ -4,6 +4,7 @@ import com.google.common.base.Predicate;
 import jetbrains.jetpad.base.Handler;
 import jetbrains.jetpad.grammar.*;
 import jetbrains.jetpad.grammar.lr.Lexeme;
+import jetbrains.jetpad.grammar.slr.SLRTableGenerator;
 import jetbrains.jetpad.hybrid.parser.IdentifierToken;
 import jetbrains.jetpad.hybrid.parser.Parser;
 import jetbrains.jetpad.hybrid.parser.simple.SimpleParserSpecification;
@@ -19,6 +20,8 @@ class LambdaParser {
       public void handle(SimpleParserSpecification.SimpleGrammarContext ctx) {
         Grammar g = ctx.grammar();
         NonTerminal expr = ctx.expr();
+        NonTerminal pe = g.newNonTerminal("pe");
+        NonTerminal app = g.newNonTerminal("app");
 
         Terminal wildcard = ctx.terminal(Tokens.WILDCARD);
         Terminal lp = ctx.terminal(Tokens.LP);
@@ -31,13 +34,13 @@ class LambdaParser {
           }
         });
 
-        g.newRule(expr, wildcard).setPriority(10).setHandler(new RuleHandler() {
+        g.newRule(pe, wildcard).setHandler(new RuleHandler() {
           @Override
           public Object handle(RuleContext ctx) {
             return new WildCardExpr();
           }
         });
-        g.newRule(expr, id).setPriority(10).setHandler(new RuleHandler() {
+        g.newRule(pe, id).setHandler(new RuleHandler() {
           @Override
           public Object handle(RuleContext ctx) {
             VarExpr result = new VarExpr();
@@ -47,7 +50,7 @@ class LambdaParser {
             return result;
           }
         });
-        g.newRule(expr, lp, expr, rp).setPriority(10).setHandler(new RuleHandler() {
+        g.newRule(pe, lp, expr, rp).setHandler(new RuleHandler() {
           @Override
           public Object handle(RuleContext ctx) {
             Expr expr = (Expr) ctx.get(1);
@@ -56,13 +59,21 @@ class LambdaParser {
             return result;
           }
         });
-        g.newRule(expr, valExpr).setPriority(10).setHandler(new RuleHandler() {
+        g.newRule(pe, valExpr).setHandler(new RuleHandler() {
           @Override
           public Object handle(RuleContext ctx) {
             return (Expr) ctx.get(0);
           }
         });
-        g.newRule(expr, expr, expr).setPriority(0).setHandler(new RuleHandler() {
+
+        g.newRule(app, pe).setHandler(new RuleHandler() {
+          @Override
+          public Object handle(RuleContext ctx) {
+            return (Expr) ctx.get(0);
+          }
+        });
+
+        g.newRule(app, app, pe).setHandler(new RuleHandler() {
           @Override
           public Object handle(RuleContext ctx) {
             Expr fun = (Expr) ctx.get(0);
@@ -74,14 +85,16 @@ class LambdaParser {
             return result;
           }
         });
+
+        g.newRule(expr, app).setHandler(new RuleHandler() {
+          @Override
+          public Object handle(RuleContext ctx) {
+            return (Expr) ctx.get(0);
+          }
+        });
       }
     });
 
     EXPR = spec.buildParser();
-  }
-
-  public static void main(String[] args) {
-
-
   }
 }
