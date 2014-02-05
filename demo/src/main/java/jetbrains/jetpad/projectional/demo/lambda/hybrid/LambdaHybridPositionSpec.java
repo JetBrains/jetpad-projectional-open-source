@@ -6,6 +6,7 @@ import jetbrains.jetpad.completion.*;
 import jetbrains.jetpad.hybrid.Completer;
 import jetbrains.jetpad.hybrid.CompletionContext;
 import jetbrains.jetpad.hybrid.HybridPositionSpec;
+import jetbrains.jetpad.hybrid.SimpleTokenCompletionItem;
 import jetbrains.jetpad.hybrid.parser.IdentifierToken;
 import jetbrains.jetpad.hybrid.parser.Parser;
 import jetbrains.jetpad.hybrid.parser.Token;
@@ -66,24 +67,10 @@ public class LambdaHybridPositionSpec implements HybridPositionSpec<Expr> {
     return new CompletionSupplier() {
       @Override
       public List<CompletionItem> get(CompletionParameters cp) {
-        class SimpleTokenCompletionItem extends SimpleCompletionItem {
-          private Token myToken;
-
-          SimpleTokenCompletionItem(Token token) {
-            super(token.toString());
-            myToken = token;
-          }
-
-          @Override
-          public Runnable complete(String text) {
-            return tokenHandler.apply(myToken);
-          }
-        }
-
         List<CompletionItem> result = new ArrayList<CompletionItem>();
-        result.add(new SimpleTokenCompletionItem(Tokens.WILDCARD));
-        result.add(new SimpleTokenCompletionItem(Tokens.LP));
-        result.add(new SimpleTokenCompletionItem(Tokens.RP));
+        result.add(new SimpleTokenCompletionItem(Tokens.WILDCARD, tokenHandler));
+        result.add(new SimpleTokenCompletionItem(Tokens.LP, tokenHandler));
+        result.add(new SimpleTokenCompletionItem(Tokens.RP, tokenHandler));
         result.add(new BaseCompletionItem() {
           @Override
           public String visibleText(String text) {

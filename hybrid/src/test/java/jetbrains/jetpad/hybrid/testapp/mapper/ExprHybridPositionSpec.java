@@ -21,6 +21,7 @@ import jetbrains.jetpad.completion.*;
 import jetbrains.jetpad.hybrid.Completer;
 import jetbrains.jetpad.hybrid.CompletionContext;
 import jetbrains.jetpad.hybrid.HybridPositionSpec;
+import jetbrains.jetpad.hybrid.SimpleTokenCompletionItem;
 import jetbrains.jetpad.hybrid.parser.*;
 import jetbrains.jetpad.hybrid.parser.prettyprint.PrettyPrinter;
 import jetbrains.jetpad.hybrid.parser.prettyprint.PrettyPrinterContext;
@@ -259,28 +260,14 @@ public class ExprHybridPositionSpec implements HybridPositionSpec<Expr> {
     return new CompletionSupplier() {
       @Override
       public List<CompletionItem> get(CompletionParameters cp) {
-        class SimpleTokenCompletionItem extends SimpleCompletionItem {
-          private Token myToken;
-
-          SimpleTokenCompletionItem(Token token) {
-            super(token.toString());
-            myToken = token;
-          }
-
-          @Override
-          public Runnable complete(String text) {
-            return tokenHandler.apply(myToken);
-          }
-        }
-
         List<CompletionItem> result = new ArrayList<CompletionItem>();
-        result.add(new SimpleTokenCompletionItem(Tokens.ID));
-        result.add(new SimpleTokenCompletionItem(Tokens.PLUS));
-        result.add(new SimpleTokenCompletionItem(Tokens.INCREMENT));
-        result.add(new SimpleTokenCompletionItem(Tokens.MUL));
-        result.add(new SimpleTokenCompletionItem(Tokens.LP));
-        result.add(new SimpleTokenCompletionItem(Tokens.RP));
-        result.add(new SimpleTokenCompletionItem(Tokens.DOT));
+        result.add(new SimpleTokenCompletionItem(Tokens.ID, tokenHandler));
+        result.add(new SimpleTokenCompletionItem(Tokens.PLUS, tokenHandler));
+        result.add(new SimpleTokenCompletionItem(Tokens.INCREMENT, tokenHandler));
+        result.add(new SimpleTokenCompletionItem(Tokens.MUL, tokenHandler));
+        result.add(new SimpleTokenCompletionItem(Tokens.LP, tokenHandler));
+        result.add(new SimpleTokenCompletionItem(Tokens.RP, tokenHandler));
+        result.add(new SimpleTokenCompletionItem(Tokens.DOT, tokenHandler));
         result.add(new SimpleCompletionItem("value") {
           @Override
           public Runnable complete(String text) {

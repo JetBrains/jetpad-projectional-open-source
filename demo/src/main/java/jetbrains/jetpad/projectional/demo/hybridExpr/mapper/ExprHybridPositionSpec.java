@@ -18,6 +18,7 @@ package jetbrains.jetpad.projectional.demo.hybridExpr.mapper;
 import com.google.common.base.Function;
 import jetbrains.jetpad.cell.util.Validators;
 import jetbrains.jetpad.completion.*;
+import jetbrains.jetpad.hybrid.SimpleTokenCompletionItem;
 import jetbrains.jetpad.hybrid.parser.*;
 import jetbrains.jetpad.projectional.demo.hybridExpr.model.*;
 import jetbrains.jetpad.projectional.demo.hybridExpr.model.types.FieldDescriptor;
@@ -162,34 +163,20 @@ public class ExprHybridPositionSpec implements HybridPositionSpec<Expression> {
     return new CompletionSupplier() {
       @Override
       public List<CompletionItem> get(CompletionParameters cp) {
-        class SimpleTokenCompletionItem extends SimpleCompletionItem {
-          private Token myToken;
-
-          SimpleTokenCompletionItem(Token token) {
-            super(token.toString());
-            myToken = token;
-          }
-
-          @Override
-          public Runnable complete(String text) {
-            return tokenHandler.apply(myToken);
-          }
-        }
-
         List<CompletionItem> result = new ArrayList<CompletionItem>();
 
-        result.add(new SimpleTokenCompletionItem(Tokens.PLUS));
-        result.add(new SimpleTokenCompletionItem(Tokens.MINUS));
-        result.add(new SimpleTokenCompletionItem(Tokens.MUL));
-        result.add(new SimpleTokenCompletionItem(Tokens.DIV));
-        result.add(new SimpleTokenCompletionItem(Tokens.LEFT_PAREN));
-        result.add(new SimpleTokenCompletionItem(Tokens.RIGHT_PAREN));
-        result.add(new SimpleTokenCompletionItem(Tokens.INCREMENT));
-        result.add(new SimpleTokenCompletionItem(Tokens.DECREMENT));
-        result.add(new SimpleTokenCompletionItem(Tokens.DOT));
-        result.add(new SimpleTokenCompletionItem(Tokens.TRUE));
-        result.add(new SimpleTokenCompletionItem(Tokens.FALSE));
-        result.add(new SimpleTokenCompletionItem(Tokens.COMMA));
+        result.add(new SimpleTokenCompletionItem(Tokens.PLUS, tokenHandler));
+        result.add(new SimpleTokenCompletionItem(Tokens.MINUS, tokenHandler));
+        result.add(new SimpleTokenCompletionItem(Tokens.MUL, tokenHandler));
+        result.add(new SimpleTokenCompletionItem(Tokens.DIV, tokenHandler));
+        result.add(new SimpleTokenCompletionItem(Tokens.LEFT_PAREN, tokenHandler));
+        result.add(new SimpleTokenCompletionItem(Tokens.RIGHT_PAREN, tokenHandler));
+        result.add(new SimpleTokenCompletionItem(Tokens.INCREMENT, tokenHandler));
+        result.add(new SimpleTokenCompletionItem(Tokens.DECREMENT, tokenHandler));
+        result.add(new SimpleTokenCompletionItem(Tokens.DOT, tokenHandler));
+        result.add(new SimpleTokenCompletionItem(Tokens.TRUE, tokenHandler));
+        result.add(new SimpleTokenCompletionItem(Tokens.FALSE, tokenHandler));
+        result.add(new SimpleTokenCompletionItem(Tokens.COMMA, tokenHandler));
 
         result.add(new BaseCompletionItem() {
           @Override
