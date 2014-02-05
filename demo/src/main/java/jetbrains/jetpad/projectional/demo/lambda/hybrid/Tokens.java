@@ -1,6 +1,5 @@
 package jetbrains.jetpad.projectional.demo.lambda.hybrid;
 
-import jetbrains.jetpad.hybrid.parser.IdentifierToken;
 import jetbrains.jetpad.hybrid.parser.SimpleToken;
 import jetbrains.jetpad.hybrid.parser.Token;
 

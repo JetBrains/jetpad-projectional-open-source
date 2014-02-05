@@ -34,8 +34,9 @@ public class LambdaHybridPositionSpec implements HybridPositionSpec<Expr> {
         }
 
         if (value instanceof VarExpr) {
-          VarExpr varExpr = new VarExpr();
-          ctx.append(new IdentifierToken(varExpr.name.get()));
+          VarExpr varExpr = (VarExpr) value;
+          String name = varExpr.name.get();
+          ctx.append(new IdentifierToken(name == null ? "" : name));
           return;
         }
 
@@ -54,7 +55,7 @@ public class LambdaHybridPositionSpec implements HybridPositionSpec<Expr> {
           return;
         }
 
-        ctx.append(new ValueToken(value));
+        ctx.append(new ValueToken(value.copy()));
       }
     };
 

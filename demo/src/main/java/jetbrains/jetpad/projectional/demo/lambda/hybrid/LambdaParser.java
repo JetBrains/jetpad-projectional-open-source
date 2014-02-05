@@ -4,9 +4,9 @@ import com.google.common.base.Predicate;
 import jetbrains.jetpad.base.Handler;
 import jetbrains.jetpad.grammar.*;
 import jetbrains.jetpad.grammar.lr.Lexeme;
-import jetbrains.jetpad.grammar.slr.SLRTableGenerator;
 import jetbrains.jetpad.hybrid.parser.IdentifierToken;
 import jetbrains.jetpad.hybrid.parser.Parser;
+import jetbrains.jetpad.hybrid.parser.ValueToken;
 import jetbrains.jetpad.hybrid.parser.simple.SimpleParserSpecification;
 import jetbrains.jetpad.projectional.demo.lambda.model.*;
 
@@ -62,7 +62,8 @@ class LambdaParser {
         g.newRule(pe, valExpr).setHandler(new RuleHandler() {
           @Override
           public Object handle(RuleContext ctx) {
-            return (Expr) ctx.get(0);
+            Lexeme lexeme = (Lexeme) ctx.get(0);
+            return ((Expr) ((ValueToken) lexeme.getValue()).value()).copy();
           }
         });
 
