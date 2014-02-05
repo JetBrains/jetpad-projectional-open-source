@@ -16,10 +16,8 @@
 package jetbrains.jetpad.projectional.demo.hybridExpr.mapper;
 
 import com.google.common.base.Function;
-import jetbrains.jetpad.cell.util.Validators;
 import jetbrains.jetpad.completion.*;
-import jetbrains.jetpad.hybrid.util.IdentifierTokenCompletionItem;
-import jetbrains.jetpad.hybrid.util.SimpleTokenCompletionItem;
+import jetbrains.jetpad.hybrid.TokenCompletionItems;
 import jetbrains.jetpad.hybrid.parser.*;
 import jetbrains.jetpad.projectional.demo.hybridExpr.model.*;
 import jetbrains.jetpad.projectional.demo.hybridExpr.model.types.FieldDescriptor;
@@ -165,51 +163,12 @@ public class ExprHybridPositionSpec implements HybridPositionSpec<Expression> {
       @Override
       public List<CompletionItem> get(CompletionParameters cp) {
         List<CompletionItem> result = new ArrayList<CompletionItem>();
-
-        result.add(new SimpleTokenCompletionItem(Tokens.PLUS, tokenHandler));
-        result.add(new SimpleTokenCompletionItem(Tokens.MINUS, tokenHandler));
-        result.add(new SimpleTokenCompletionItem(Tokens.MUL, tokenHandler));
-        result.add(new SimpleTokenCompletionItem(Tokens.DIV, tokenHandler));
-        result.add(new SimpleTokenCompletionItem(Tokens.LEFT_PAREN, tokenHandler));
-        result.add(new SimpleTokenCompletionItem(Tokens.RIGHT_PAREN, tokenHandler));
-        result.add(new SimpleTokenCompletionItem(Tokens.INCREMENT, tokenHandler));
-        result.add(new SimpleTokenCompletionItem(Tokens.DECREMENT, tokenHandler));
-        result.add(new SimpleTokenCompletionItem(Tokens.DOT, tokenHandler));
-        result.add(new SimpleTokenCompletionItem(Tokens.TRUE, tokenHandler));
-        result.add(new SimpleTokenCompletionItem(Tokens.FALSE, tokenHandler));
-        result.add(new SimpleTokenCompletionItem(Tokens.COMMA, tokenHandler));
-
-        result.add(new BaseCompletionItem() {
-          @Override
-          public String visibleText(String text) {
-            return "number";
-          }
-
-          @Override
-          public boolean isStrictMatchPrefix(String text) {
-            if ("".equals(text)) return true;
-            return isMatch(text);
-          }
-
-          @Override
-          public boolean isMatch(String text) {
-            return Validators.integer().apply(text);
-          }
-
-          @Override
-          public Runnable complete(String text) {
-            int value;
-            if (text == null || text.isEmpty()) {
-              value = 0;
-            } else {
-              value = Integer.parseInt(text);
-            }
-            return tokenHandler.apply(new IntValueToken(value));
-          }
-        });
-
-        result.add(new IdentifierTokenCompletionItem(tokenHandler));
-
+        TokenCompletionItems items = new TokenCompletionItems(tokenHandler);
+        result.addAll(items.forTokens(
+          Tokens.PLUS, Tokens.MINUS, Tokens.MUL, Tokens.DIV, Tokens.LEFT_PAREN,
+          Tokens.RIGHT_PAREN, Tokens.INCREMENT, Tokens.DECREMENT, Tokens.DOT, Tokens.TRUE, Tokens.FALSE, Tokens.COMMA));
+        result.add(items.forId());
+        result.add(items.forNumber());
         return result;
       }
     };

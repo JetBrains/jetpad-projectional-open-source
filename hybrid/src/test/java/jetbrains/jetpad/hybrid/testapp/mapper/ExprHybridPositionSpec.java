@@ -16,13 +16,14 @@
 package jetbrains.jetpad.hybrid.testapp.mapper;
 
 import com.google.common.base.Function;
-import jetbrains.jetpad.cell.util.Validators;
-import jetbrains.jetpad.completion.*;
+import jetbrains.jetpad.completion.CompletionItem;
+import jetbrains.jetpad.completion.CompletionParameters;
+import jetbrains.jetpad.completion.CompletionSupplier;
+import jetbrains.jetpad.completion.SimpleCompletionItem;
 import jetbrains.jetpad.hybrid.Completer;
 import jetbrains.jetpad.hybrid.CompletionContext;
 import jetbrains.jetpad.hybrid.HybridPositionSpec;
-import jetbrains.jetpad.hybrid.util.IdentifierTokenCompletionItem;
-import jetbrains.jetpad.hybrid.util.SimpleTokenCompletionItem;
+import jetbrains.jetpad.hybrid.TokenCompletionItems;
 import jetbrains.jetpad.hybrid.parser.*;
 import jetbrains.jetpad.hybrid.parser.prettyprint.PrettyPrinter;
 import jetbrains.jetpad.hybrid.parser.prettyprint.PrettyPrinterContext;
@@ -262,13 +263,9 @@ public class ExprHybridPositionSpec implements HybridPositionSpec<Expr> {
       @Override
       public List<CompletionItem> get(CompletionParameters cp) {
         List<CompletionItem> result = new ArrayList<CompletionItem>();
-        result.add(new SimpleTokenCompletionItem(Tokens.ID, tokenHandler));
-        result.add(new SimpleTokenCompletionItem(Tokens.PLUS, tokenHandler));
-        result.add(new SimpleTokenCompletionItem(Tokens.INCREMENT, tokenHandler));
-        result.add(new SimpleTokenCompletionItem(Tokens.MUL, tokenHandler));
-        result.add(new SimpleTokenCompletionItem(Tokens.LP, tokenHandler));
-        result.add(new SimpleTokenCompletionItem(Tokens.RP, tokenHandler));
-        result.add(new SimpleTokenCompletionItem(Tokens.DOT, tokenHandler));
+        TokenCompletionItems items = new TokenCompletionItems(tokenHandler);
+        result.addAll(items.forTokens(Tokens.ID, Tokens.INCREMENT, Tokens.PLUS, Tokens.MUL, Tokens.LP, Tokens.RP, Tokens.DOT));
+        result.add(items.forNumber());
         result.add(new SimpleCompletionItem("value") {
           @Override
           public Runnable complete(String text) {
@@ -288,37 +285,6 @@ public class ExprHybridPositionSpec implements HybridPositionSpec<Expr> {
             return tokenHandler.apply(new ValueToken(new PosValueExpr()));
           }
         });
-
-        result.add(new BaseCompletionItem() {
-          @Override
-          public String visibleText(String text) {
-            return "number";
-          }
-
-          @Override
-          public boolean isStrictMatchPrefix(String text) {
-            if ("".equals(text)) return true;
-            return isMatch(text);
-          }
-
-          @Override
-          public boolean isMatch(String text) {
-            return Validators.integer().apply(text);
-          }
-
-          @Override
-          public Runnable complete(String text) {
-            int value;
-            if (text == null || text.isEmpty()) {
-              value = 0;
-            } else {
-              value = Integer.parseInt(text);
-            }
-            return tokenHandler.apply(new IntValueToken(value));
-          }
-        });
-
-        result.add(new IdentifierTokenCompletionItem(tokenHandler));
 
         return result;
       }

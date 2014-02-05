@@ -1,13 +1,13 @@
 package jetbrains.jetpad.projectional.demo.lambda.hybrid;
 
 import com.google.common.base.Function;
-import jetbrains.jetpad.cell.util.Validators;
-import jetbrains.jetpad.completion.*;
+import jetbrains.jetpad.completion.CompletionItem;
+import jetbrains.jetpad.completion.CompletionParameters;
+import jetbrains.jetpad.completion.CompletionSupplier;
 import jetbrains.jetpad.hybrid.Completer;
 import jetbrains.jetpad.hybrid.CompletionContext;
 import jetbrains.jetpad.hybrid.HybridPositionSpec;
-import jetbrains.jetpad.hybrid.util.IdentifierTokenCompletionItem;
-import jetbrains.jetpad.hybrid.util.SimpleTokenCompletionItem;
+import jetbrains.jetpad.hybrid.TokenCompletionItems;
 import jetbrains.jetpad.hybrid.parser.IdentifierToken;
 import jetbrains.jetpad.hybrid.parser.Parser;
 import jetbrains.jetpad.hybrid.parser.Token;
@@ -69,10 +69,9 @@ public class LambdaHybridPositionSpec implements HybridPositionSpec<Expr> {
       @Override
       public List<CompletionItem> get(CompletionParameters cp) {
         List<CompletionItem> result = new ArrayList<CompletionItem>();
-        result.add(new SimpleTokenCompletionItem(Tokens.WILDCARD, tokenHandler));
-        result.add(new SimpleTokenCompletionItem(Tokens.LP, tokenHandler));
-        result.add(new SimpleTokenCompletionItem(Tokens.RP, tokenHandler));
-        result.add(new IdentifierTokenCompletionItem(tokenHandler));
+        TokenCompletionItems items = new TokenCompletionItems(tokenHandler);
+        result.addAll(items.forTokens(Tokens.WILDCARD, Tokens.LP, Tokens.RP));
+        result.add(items.forId());
         return result;
       }
     };
