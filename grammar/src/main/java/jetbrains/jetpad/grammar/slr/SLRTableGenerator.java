@@ -112,7 +112,7 @@ public class SLRTableGenerator {
 
 
   private ActionRecord disambiguate(Set<ActionRecord> records) {
-    records = mergeActions(records); //todo need a test for this ambiguity (it happens in dot operation between .id nad .id(args))
+    records = mergeActions(records); //todo need a test for this ambiguity (it happens in dot operation between .id and .id(args))
     records = filterByPriority(records);
     if (records.size() == 1) {
       return records.iterator().next();
