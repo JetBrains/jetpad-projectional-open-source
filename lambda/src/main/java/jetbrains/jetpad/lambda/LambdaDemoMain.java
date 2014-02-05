@@ -16,8 +16,6 @@
 package jetbrains.jetpad.lambda;
 
 import jetbrains.jetpad.cell.CellContainer;
-import jetbrains.jetpad.cell.indent.IndentCell;
-import jetbrains.jetpad.cell.util.CellFactory;
 import jetbrains.jetpad.cell.view.MapperCell2View;
 import jetbrains.jetpad.projectional.view.ViewContainer;
 import jetbrains.jetpad.projectional.view.awt.AwtDemo;
