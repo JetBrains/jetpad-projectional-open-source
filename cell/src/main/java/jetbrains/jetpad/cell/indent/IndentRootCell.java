@@ -24,9 +24,10 @@ import jetbrains.jetpad.cell.Cell;
 import jetbrains.jetpad.cell.CellPropertySpec;
 
 public class IndentRootCell extends IndentCell {
-  private Listeners<IndentContainerCellListener> myListeners = new Listeners<IndentContainerCellListener>();
+  private Listeners<IndentContainerCellListener> myListeners;
 
   void handleChildAdd(final CollectionItemEvent<Cell> event) {
+    if (myListeners == null) return;
     myListeners.fire(new ListenerCaller<IndentContainerCellListener>() {
       @Override
       public void call(IndentContainerCellListener l) {
@@ -36,6 +37,7 @@ public class IndentRootCell extends IndentCell {
   }
 
   void handleChildRemove(final CollectionItemEvent<Cell> event) {
+    if (myListeners == null) return;
     myListeners.fire(new ListenerCaller<IndentContainerCellListener>() {
       @Override
       public void call(IndentContainerCellListener l) {
@@ -45,6 +47,7 @@ public class IndentRootCell extends IndentCell {
   }
 
   void handlePropertyChanged(final Cell cell, final CellPropertySpec<?> prop, final PropertyChangeEvent<?> event) {
+    if (myListeners == null) return;
     myListeners.fire(new ListenerCaller<IndentContainerCellListener>() {
       @Override
       public void call(IndentContainerCellListener l) {
@@ -54,6 +57,18 @@ public class IndentRootCell extends IndentCell {
   }
 
   public Registration addListener(IndentContainerCellListener l) {
-    return myListeners.add(l);
+    if (myListeners == null) {
+      myListeners = new Listeners<IndentContainerCellListener>();
+    }
+    final Registration reg = myListeners.add(l);
+    return new Registration() {
+      @Override
+      public void remove() {
+        reg.remove();
+        if (myListeners.isEmpty()) {
+          myListeners = null;
+        }
+      }
+    };
   }
 }

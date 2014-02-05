@@ -16,6 +16,8 @@
 package jetbrains.jetpad.lambda;
 
 import jetbrains.jetpad.cell.CellContainer;
+import jetbrains.jetpad.cell.indent.IndentRootCell;
+import jetbrains.jetpad.cell.util.CellFactory;
 import jetbrains.jetpad.lambda.mapper.ContainerMapper;
 import jetbrains.jetpad.lambda.model.*;
 import jetbrains.jetpad.projectional.util.RootController;
@@ -42,6 +44,7 @@ public class LambdaDemo {
   public static CellContainer create() {
     CellContainer cellContainer = new CellContainer();
     RootController.install(cellContainer);
+
     ContainerMapper rootMapper = new ContainerMapper(createModel());
     rootMapper.attachRoot();
     cellContainer.root.children().add(rootMapper.getTarget());
