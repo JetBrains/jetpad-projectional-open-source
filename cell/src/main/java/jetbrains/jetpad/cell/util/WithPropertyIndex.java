@@ -31,24 +31,6 @@ public abstract class WithPropertyIndex {
     };
   }
 
-  public static WithPropertyIndex forTraitProperty(final CellContainer container, final CellTraitPropertySpec<?> prop) {
-    return new WithPropertyIndex() {
-      {
-        init(container);
-      }
-
-      @Override
-      protected boolean isNonTrivialValue(Cell cell) {
-        return !Objects.equal(cell.get(prop), prop.getDefault(cell));
-      }
-
-      @Override
-      protected boolean isProp(CellPropertySpec<?> spec) {
-        return false;
-      }
-    };
-  }
-
   private ObservableSet<Cell> myWithProperty = new ObservableHashSet<Cell>();
   private Registration myReg;
 
