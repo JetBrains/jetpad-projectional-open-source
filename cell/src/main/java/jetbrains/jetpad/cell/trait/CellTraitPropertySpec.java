@@ -40,7 +40,7 @@ public class CellTraitPropertySpec<ValueT> {
     myDefaultValue = defaultValue;
   }
 
-  public ValueT getDefaultValue(Cell cell) {
+  public ValueT getDefault(Cell cell) {
     return myDefaultValue.apply(cell);
   }
 

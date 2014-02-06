@@ -5,25 +5,60 @@ import jetbrains.jetpad.cell.Cell;
 import jetbrains.jetpad.cell.CellContainer;
 import jetbrains.jetpad.cell.CellContainerAdapter;
 import jetbrains.jetpad.cell.CellPropertySpec;
+import jetbrains.jetpad.cell.trait.CellTraitPropertySpec;
 import jetbrains.jetpad.model.collections.CollectionItemEvent;
 import jetbrains.jetpad.model.collections.set.ObservableHashSet;
 import jetbrains.jetpad.model.collections.set.ObservableSet;
 import jetbrains.jetpad.model.event.Registration;
 import jetbrains.jetpad.model.property.PropertyChangeEvent;
 
-public class WithPropertyIndex {
-  private CellPropertySpec<?> myProp;
+public abstract class WithPropertyIndex {
+  public static WithPropertyIndex forCellProperty(final CellContainer container, final CellPropertySpec<?> prop) {
+    return new WithPropertyIndex() {
+      {
+        init(container);
+      }
+
+      @Override
+      protected boolean isNonTrivialValue(Cell cell) {
+        return !Objects.equal(cell.get(prop), prop.getDefault(cell));
+      }
+
+      @Override
+      protected boolean isProp(CellPropertySpec<?> spec) {
+        return  prop == spec;
+      }
+    };
+  }
+
+  public static WithPropertyIndex forTraitProperty(final CellContainer container, final CellTraitPropertySpec<?> prop) {
+    return new WithPropertyIndex() {
+      {
+        init(container);
+      }
+
+      @Override
+      protected boolean isNonTrivialValue(Cell cell) {
+        return !Objects.equal(cell.get(prop), prop.getDefault(cell));
+      }
+
+      @Override
+      protected boolean isProp(CellPropertySpec<?> spec) {
+        return false;
+      }
+    };
+  }
+
   private ObservableSet<Cell> myWithProperty = new ObservableHashSet<Cell>();
   private Registration myReg;
 
-  public WithPropertyIndex(CellContainer cellContainer, CellPropertySpec<?> prop) {
-    myProp = prop;
+  protected void init(CellContainer cellContainer) {
     myReg = cellContainer.addListener(new CellContainerAdapter() {
       @Override
       public void onViewPropertyChanged(Cell cell, CellPropertySpec<?> prop, PropertyChangeEvent<?> change) {
-        if (prop != myProp) return;
+        if (!isProp(prop)) return;
 
-        if (isNonTrivialValue(cell, myProp)) {
+        if (isNonTrivialValue(cell)) {
           myWithProperty.add(cell);
         } else {
           myWithProperty.remove(cell);
@@ -43,16 +78,16 @@ public class WithPropertyIndex {
     onAdd(cellContainer.root);
   }
 
-  private <ValueT> boolean isNonTrivialValue(Cell cell, CellPropertySpec<ValueT> spec) {
-    return !Objects.equal(cell.get(spec), spec.getDefault(cell));
-  }
+  protected abstract boolean isNonTrivialValue(Cell cell);
+
+  protected abstract boolean isProp(CellPropertySpec<?> spec);
 
   public ObservableSet<Cell> withProperty() {
     return myWithProperty;
   }
 
   private void onAdd(Cell cell) {
-    if (isNonTrivialValue(cell, myProp)) {
+    if (isNonTrivialValue(cell)) {
       myWithProperty.add(cell);
     }
 
@@ -66,7 +101,7 @@ public class WithPropertyIndex {
       onRemove(child);
     }
 
-    if (isNonTrivialValue(cell, myProp)) {
+    if (isNonTrivialValue(cell)) {
       myWithProperty.remove(cell);
     }
   }
@@ -75,6 +110,4 @@ public class WithPropertyIndex {
     myWithProperty.clear();
     myReg.remove();
   }
-
-
 }

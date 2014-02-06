@@ -96,7 +96,7 @@ public class WithPropertyIndexTest {
 
 
   private void initIndex() {
-    index = new WithPropertyIndex(container, TEST_PROP);
+    index = WithPropertyIndex.forCellProperty(container, TEST_PROP);
   }
 
   private void disposeIndex() {
