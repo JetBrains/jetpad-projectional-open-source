@@ -51,7 +51,7 @@ public class CellContainer {
   private String myLastSeenText;
   private ClipboardContent myContent = new EmptyClipboardContent();
 
-  {
+  public CellContainer() {
     focusedCell = new ValueProperty<Cell>() {
       @Override
       public void set(Cell value) {
