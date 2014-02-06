@@ -259,8 +259,16 @@ public class CompletionSupport {
     }
 
     final HorizontalCell popup = new HorizontalCell();
-    final TextCell textView = new TextCell();
-    textView.addTrait(new BaseCellTrait() {
+    final TextCell textView = new TextCell() {
+      @Override
+      public Registration addTrait(CellTrait trait) {
+        return super.addTrait(trait);
+      }
+    };
+    final Value<Runnable> dismiss = new Value<Runnable>();
+    final CompletionHelper completion = new CompletionHelper(wrappedItems);
+    textView.focusable().set(true);
+    final Registration traitReg = textView.addTrait(new TextEditingTrait() {
       @Override
       public Object get(Cell cell, CellTraitPropertySpec<?> spec) {
         if (spec == Completion.COMPLETION) {
@@ -274,12 +282,7 @@ public class CompletionSupport {
 
         return super.get(cell, spec);
       }
-    });
 
-    final Value<Runnable> dismiss = new Value<Runnable>();
-    final CompletionHelper completion = new CompletionHelper(wrappedItems);
-    textView.focusable().set(true);
-    final Registration textEditingReg = textView.addTrait(new TextEditingTrait() {
       @Override
       public void onPropertyChanged(Cell cell, CellPropertySpec<?> prop, PropertyChangeEvent<?> e) {
         if (prop == TextCell.TEXT) {
@@ -325,6 +328,12 @@ public class CompletionSupport {
         }
         return true;
       }
+
+      @Override
+      public void onFocusLost(Cell cell, FocusEvent event) {
+        super.onFocusLost(cell, event);
+        dismiss.get().run();
+      }
     });
 
     popup.children().add(textView);
@@ -340,18 +349,10 @@ public class CompletionSupport {
         if (dismissed.get()) return;
         dismissed.set(true);
         popup.removeFromParent();
-        textEditingReg.remove();
+        traitReg.remove();
         if (!completed.get()) {
           state.restore();
         }
-      }
-    });
-
-    textView.addTrait(new BaseCellTrait() {
-      @Override
-      public void onFocusLost(Cell cell, FocusEvent event) {
-        super.onFocusLost(cell, event);
-        dismiss.get().run();
       }
     });
 

@@ -53,31 +53,42 @@ public class CellContainer {
 
   public CellContainer() {
     focusedCell = new ValueProperty<Cell>() {
+      private boolean mySettingValue;
+
       @Override
       public void set(Cell value) {
-        if (value != null) {
-          if (!value.canFocus()) throw new IllegalStateException("cannot set focus: " + value);
-          if (value.cellContainer().get() != CellContainer.this) throw new IllegalArgumentException();
+        if (mySettingValue) {
+//          throw new IllegalStateException("You can't change focus in focusCell change handler");
         }
 
-        Cell oldValue = get();
-        if (oldValue == value) return;
+        mySettingValue = true;
+        try {
+          if (value != null) {
+            if (!value.canFocus()) throw new IllegalStateException("cannot set focus: " + value);
+            if (value.cellContainer().get() != CellContainer.this) throw new IllegalArgumentException();
+          }
 
-        FocusEvent event =  new FocusEvent(oldValue, value);
+          Cell oldValue = get();
+          if (oldValue == value) return;
 
-        if (oldValue != null) {
-          oldValue.set(Cell.FOCUSED, false);
-        }
-        super.set(value);
-        if (oldValue != null) {
-          dispatch(oldValue, event, CellEventSpec.FOCUS_LOST);
-        }
-        if (value != null) {
-          dispatch(value, event, CellEventSpec.FOCUS_GAINED);
-        }
+          FocusEvent event =  new FocusEvent(oldValue, value);
 
-        if (value != null) {
-          value.set(Cell.FOCUSED, true);
+          if (oldValue != null) {
+            oldValue.set(Cell.FOCUSED, false);
+          }
+          super.set(value);
+          if (oldValue != null) {
+            dispatch(oldValue, event, CellEventSpec.FOCUS_LOST);
+          }
+          if (value != null) {
+            dispatch(value, event, CellEventSpec.FOCUS_GAINED);
+          }
+
+          if (value != null) {
+            value.set(Cell.FOCUSED, true);
+          }
+        } finally {
+          mySettingValue = false;
         }
       }
     };
