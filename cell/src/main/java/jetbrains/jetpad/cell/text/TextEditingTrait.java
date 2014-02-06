@@ -159,7 +159,7 @@ public class TextEditingTrait extends TextNavigationTrait {
             }
           });
           if (!rightTransform.isEmpty() && textCell.get(TextEditing.DOT_LIKE_RT)) {
-            if (!(textCell.rightPopup().get() != null)) {
+            if (textCell.rightPopup().get() == null) {
               TextCell popup = CompletionSupport.showSideTransformPopup(textCell, textCell.rightPopup(), rightTransform.getItems());
               popup.get(Completion.COMPLETION_CONTROLLER).setActive(true);
             }
