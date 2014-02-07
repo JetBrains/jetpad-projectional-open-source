@@ -30,10 +30,12 @@
 
 .vertical > div {
   display: block;
+  font-size: 0px;
 }
 
 .horizontal > div > .vertical {
   display: inline-block;
+  font-size: 0px;
 }
 
 .indented {
