@@ -18,7 +18,9 @@ package jetbrains.jetpad.completion;
 public interface CompletionController {
   boolean isActive();
   boolean canActivate();
-  void setActive(boolean active);
+
+  void activate();
+  void deactivate();
 
   boolean hasAmbiguousMatches();
 }

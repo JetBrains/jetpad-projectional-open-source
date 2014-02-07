@@ -45,7 +45,7 @@ public abstract class CompletionHandlerTestCase extends CompletionTestCase {
 
   @Test
   public void completionCanBeActivatedWithCompletionHandler() {
-    getController().setActive(true);
+    getController().activate();
 
     assertTrue(getController().isActive());
   }
@@ -54,7 +54,7 @@ public abstract class CompletionHandlerTestCase extends CompletionTestCase {
   public void completionCanBeDeactivatedWithCompletionHandler() {
     complete();
 
-    getController().setActive(false);
+    getController().deactivate();
     assertFalse(getController().isActive());
   }
 

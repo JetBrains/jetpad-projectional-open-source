@@ -205,7 +205,7 @@ class TokenCompletion {
       public void run() {
         CompletionController ctrl = mySync.tokenCells().get(index).get(Completion.COMPLETION_CONTROLLER);
         if (ctrl.hasAmbiguousMatches()) {
-          ctrl.setActive(true);
+          ctrl.activate();
         }
       }
     };

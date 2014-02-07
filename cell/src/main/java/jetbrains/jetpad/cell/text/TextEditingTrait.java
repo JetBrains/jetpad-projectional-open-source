@@ -62,19 +62,23 @@ public class TextEditingTrait extends TextNavigationTrait {
       }
 
       @Override
-      public void setActive(boolean active) {
-        if (active == isActive()) return;
-        if (active) {
-          CompletionSupport.showCompletion(view, view.get(Completion.COMPLETION).get(new BaseCompletionParameters() {
-            @Override
-            public boolean isMenu() {
-              return true;
-            }
-          }), Registration.EMPTY, CellContainer.NULL_STATE);
-        } else {
-          view.get(CompletionSupport.HIDE_COMPLETION).run();
-        }
+      public void activate() {
+        if (isActive()) throw new IllegalStateException();
+        CompletionSupport.showCompletion(view, view.get(Completion.COMPLETION).get(new BaseCompletionParameters() {
+          @Override
+          public boolean isMenu() {
+            return true;
+          }
+        }), Registration.EMPTY, CellContainer.NULL_STATE);
       }
+
+      @Override
+      public void deactivate() {
+        if (!isActive()) throw new IllegalStateException();
+
+        view.get(CompletionSupport.HIDE_COMPLETION).run();
+      }
+
 
       @Override
       public boolean hasAmbiguousMatches() {
@@ -161,7 +165,7 @@ public class TextEditingTrait extends TextNavigationTrait {
           if (!rightTransform.isEmpty() && textCell.get(TextEditing.DOT_LIKE_RT)) {
             if (textCell.rightPopup().get() == null) {
               TextCell popup = CompletionSupport.showSideTransformPopup(textCell, textCell.rightPopup(), rightTransform.getItems());
-              popup.get(Completion.COMPLETION_CONTROLLER).setActive(true);
+              popup.get(Completion.COMPLETION_CONTROLLER).activate();
             }
             event.consume();
             return;
@@ -174,7 +178,7 @@ public class TextEditingTrait extends TextNavigationTrait {
         prefixed.get(0).complete(prefixText).run();
         event.consume();
       } else if (handler.canActivate()) {
-        handler.setActive(true);
+        handler.activate();
         event.consume();
       }
       return;

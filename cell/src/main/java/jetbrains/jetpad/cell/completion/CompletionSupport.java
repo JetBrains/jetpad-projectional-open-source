@@ -69,20 +69,21 @@ public class CompletionSupport {
           }
 
           @Override
-          public void setActive(boolean active) {
-            boolean isActive = isActive();
-            if (isActive == active) return;
-            if (active) {
-              List<CompletionItem> items = cell.get(Completion.COMPLETION).get(new BaseCompletionParameters() {
-                @Override
-                public boolean isMenu() {
-                  return true;
-                }
-              });
-              showPopup(cell, cell.frontPopup(), items);
-            } else {
-              cell.focus();
-            }
+          public void activate() {
+            if (isActive()) throw new IllegalStateException();
+            List<CompletionItem> items = cell.get(Completion.COMPLETION).get(new BaseCompletionParameters() {
+              @Override
+              public boolean isMenu() {
+                return true;
+              }
+            });
+            showPopup(cell, cell.frontPopup(), items);
+          }
+
+          @Override
+          public void deactivate() {
+            if (!isActive()) throw new IllegalStateException();
+            cell.focus();
           }
 
           @Override
@@ -98,7 +99,7 @@ public class CompletionSupport {
         if (canComplete(cell)) {
           CompletionController handler = getCompletionHandler(cell);
           if (handler.canActivate()) {
-            handler.setActive(true);
+            handler.activate();
           }
           event.consume();
         }

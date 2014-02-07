@@ -216,12 +216,14 @@ class TextNavigationTrait extends BaseCellTrait {
     if (!completion.isEmpty()) {
       final TextCell popup = CompletionSupport.showSideTransformPopup(textCell, popupProp, completion.getItems());
       final CompletionController controller = popup.get(Completion.COMPLETION_CONTROLLER);
-      controller.setActive(true);
+      controller.activate();
+
+      //todo get rid of it
       popup.addTrait(new BaseCellTrait() {
         @Override
         public void onKeyPressed(Cell cell, KeyEvent event) {
           if (event.is(Key.ESCAPE) && Strings.isNullOrEmpty(popup.text().get())) {
-            controller.setActive(false);
+            controller.deactivate();
             textCell.focus();
             event.consume();
             return;
