@@ -70,7 +70,7 @@ public class CompletionSupport {
           }
 
           @Override
-          public void activate(Runnable onDeactivate) {
+          public void activate(Runnable restoreState) {
             if (isActive()) throw new IllegalStateException();
             List<CompletionItem> items = cell.get(Completion.COMPLETION).get(new BaseCompletionParameters() {
               @Override
@@ -78,7 +78,7 @@ public class CompletionSupport {
                 return true;
               }
             });
-            showPopup(cell, cell.frontPopup(), items, onDeactivate);
+            showPopup(cell, cell.frontPopup(), items, restoreState);
           }
 
           @Override
@@ -273,7 +273,7 @@ public class CompletionSupport {
         return super.addTrait(trait);
       }
     };
-    final Value<Runnable> dismiss = new Value<Runnable>();
+    final Value<Handler<Boolean>> dismiss = new Value<Handler<Boolean>>();
     final CompletionHelper completion = new CompletionHelper(wrappedItems);
     textView.focusable().set(true);
     final Registration traitReg = textView.addTrait(new TextEditingTrait() {
@@ -296,7 +296,7 @@ public class CompletionSupport {
         if (prop == TextCell.TEXT) {
           PropertyChangeEvent<String> event = (PropertyChangeEvent<String>) e;
           if (Strings.isNullOrEmpty(event.getNewValue())) {
-            dismiss.get().run();
+            dismiss.get().handle(false);
           }
         }
 
@@ -306,7 +306,7 @@ public class CompletionSupport {
       @Override
       public void onKeyPressed(Cell cell, KeyEvent event) {
         if (event.is(Key.ESCAPE)) {
-          dismiss.get().run();
+          dismiss.get().handle(false);
           event.consume();
           return;
         }
@@ -340,7 +340,7 @@ public class CompletionSupport {
       @Override
       public void onFocusLost(Cell cell, FocusEvent event) {
         super.onFocusLost(cell, event);
-        dismiss.get().run();
+        dismiss.get().handle(true);
       }
     });
 
@@ -351,14 +351,14 @@ public class CompletionSupport {
     targetPopup.set(popup);
     textView.focus();
 
-    dismiss.set(new Runnable() {
+    dismiss.set(new Handler<Boolean>() {
       @Override
-      public void run() {
+      public void handle(Boolean focusLoss) {
         if (dismissed.get()) return;
         dismissed.set(true);
         popup.removeFromParent();
         traitReg.remove();
-        if (!completed.get()) {
+        if (!completed.get() && !focusLoss) {
           restoreState.run();
         }
       }

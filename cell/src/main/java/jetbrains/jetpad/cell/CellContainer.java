@@ -34,12 +34,6 @@ import jetbrains.jetpad.cell.event.FocusEvent;
 import java.util.*;
 
 public class CellContainer {
-  public static final State NULL_STATE = new State() {
-    @Override
-    public void restore() {
-    }
-  };
-
   public final Property<Cell> focusedCell;
   public final RootCell root = new RootCell(this);
 
@@ -58,7 +52,7 @@ public class CellContainer {
       @Override
       public void set(Cell value) {
         if (mySettingValue) {
-//          throw new IllegalStateException("You can't change focus in focusCell change handler");
+          throw new IllegalStateException("You can't change focus in focusCell change handler");
         }
 
         mySettingValue = true;
@@ -349,9 +343,5 @@ public class CellContainer {
 
   public void requestFocus() {
     myCellContainerPeer.requestFocus();
-  }
-
-  public interface State {
-    void restore();
   }
 }

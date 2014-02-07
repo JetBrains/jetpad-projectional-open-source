@@ -63,14 +63,14 @@ public class TextEditingTrait extends TextNavigationTrait {
       }
 
       @Override
-      public void activate(Runnable onDeactivate) {
+      public void activate(Runnable restoreState) {
         if (isActive()) throw new IllegalStateException();
         CompletionSupport.showCompletion(view, view.get(Completion.COMPLETION).get(new BaseCompletionParameters() {
           @Override
           public boolean isMenu() {
             return true;
           }
-        }), Registration.EMPTY, onDeactivate);
+        }), Registration.EMPTY, restoreState);
       }
 
       @Override
