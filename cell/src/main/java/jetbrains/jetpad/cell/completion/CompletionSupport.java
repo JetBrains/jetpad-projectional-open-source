@@ -120,7 +120,7 @@ public class CompletionSupport {
     };
   }
 
-  public static void showCompletion(final TextCell textView, List<CompletionItem> items, Registration removeOnClose, final CellContainer.State prevState) {
+  public static void showCompletion(final TextCell textView, List<CompletionItem> items, Registration removeOnClose, final Runnable restoreState) {
     if (!textView.focused().get()) {
       throw new IllegalArgumentException();
     }
@@ -136,7 +136,7 @@ public class CompletionSupport {
       @Override
       public void handle(CompletionItem item) {
         reg.remove();
-        prevState.restore();
+        restoreState.run();
         item.complete(prefixText.get()).run();
       }
     };
@@ -179,7 +179,7 @@ public class CompletionSupport {
 
         if (event.is(Key.ESCAPE)) {
           reg.remove();
-          prevState.restore();
+          restoreState.run();
           event.consume();
           return;
         }
@@ -194,7 +194,7 @@ public class CompletionSupport {
             @Override
             public void run() {
               reg.remove();
-              prevState.restore();
+              restoreState.run();
             }
           };
         }
@@ -227,7 +227,7 @@ public class CompletionSupport {
 
     popup.children().add(textView);
     targetPopup.set(popup);
-    final CellContainer.State state = container.saveState();
+    final Runnable state = container.saveState();
     textView.focus();
     showCompletion(textView, items, new Registration() {
       @Override
@@ -246,7 +246,7 @@ public class CompletionSupport {
     final CellContainer container = cell.cellContainer().get();
     final Value<Boolean> completed = new Value<Boolean>(false);
     final Value<Boolean> dismissed = new Value<Boolean>(false);
-    final CellContainer.State state = container.saveState();
+    final Runnable restoreState = container.saveState();
 
     final List<CompletionItem> wrappedItems = new ArrayList<CompletionItem>();
     for (CompletionItem i : items) {
@@ -352,7 +352,7 @@ public class CompletionSupport {
         popup.removeFromParent();
         traitReg.remove();
         if (!completed.get()) {
-          state.restore();
+          restoreState.run();
         }
       }
     });

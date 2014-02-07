@@ -94,11 +94,12 @@ public class CellContainer {
     };
   }
 
-  public State saveState() {
+  public Runnable saveState() {
     final Cell oldCell = focusedCell.get();
-    return new State() {
+
+    return new Runnable() {
       @Override
-      public void restore() {
+      public void run() {
         if (oldCell != null) {
           if (!oldCell.canFocus()) {
             throw new IllegalStateException();

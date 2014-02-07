@@ -17,6 +17,7 @@ package jetbrains.jetpad.cell.text;
 
 import com.google.common.base.Strings;
 import com.google.common.base.Supplier;
+import jetbrains.jetpad.base.Runnables;
 import jetbrains.jetpad.cell.util.Cells;
 import jetbrains.jetpad.completion.BaseCompletionParameters;
 import jetbrains.jetpad.completion.CompletionController;
@@ -69,7 +70,7 @@ public class TextEditingTrait extends TextNavigationTrait {
           public boolean isMenu() {
             return true;
           }
-        }), Registration.EMPTY, CellContainer.NULL_STATE);
+        }), Registration.EMPTY, Runnables.EMPTY);
       }
 
       @Override
