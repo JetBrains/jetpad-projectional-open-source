@@ -317,8 +317,8 @@ public class CellContainerToDomMapper extends Mapper<CellContainer, Element> {
           Element target = getElement(cell);
           int x = ceil(target.getAbsoluteLeft());
           int y = ceil(target.getAbsoluteTop());
-          int width = floor(target.getOffsetWidth()) - 1;
-          int height = floor(target.getOffsetHeight()) - 1;
+          int width = Math.max(0, floor(target.getOffsetWidth()) - 1);
+          int height = Math.max(0, floor(target.getOffsetHeight()) - 1);
           return new Rectangle(x, y, width, height);
         }
       }
