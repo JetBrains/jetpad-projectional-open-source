@@ -145,7 +145,7 @@ public class TextEditingTrait extends TextNavigationTrait {
     String currentText = currentText(textCell);
     CompletionController handler = getCompletionController(textCell);
 
-    if (!(textCell.bottomPopup().get() != null)) {
+    if (textCell.bottomPopup().get() == null) {
       CompletionHelper completion = new CompletionHelper(textCell.get(Completion.COMPLETION).get(new BaseCompletionParameters() {
         @Override
         public boolean isMenu() {
