@@ -17,6 +17,7 @@ package jetbrains.jetpad.cell.completion;
 
 import com.google.common.base.Strings;
 import jetbrains.jetpad.base.Handler;
+import jetbrains.jetpad.base.Runnables;
 import jetbrains.jetpad.completion.*;
 import jetbrains.jetpad.model.event.CompositeRegistration;
 import jetbrains.jetpad.model.event.Registration;
@@ -69,7 +70,7 @@ public class CompletionSupport {
           }
 
           @Override
-          public void activate() {
+          public void activate(Runnable onDeactivate) {
             if (isActive()) throw new IllegalStateException();
             List<CompletionItem> items = cell.get(Completion.COMPLETION).get(new BaseCompletionParameters() {
               @Override
@@ -77,7 +78,12 @@ public class CompletionSupport {
                 return true;
               }
             });
-            showPopup(cell, cell.frontPopup(), items);
+            showPopup(cell, cell.frontPopup(), items, onDeactivate);
+          }
+
+          @Override
+          public void activate() {
+            activate(Runnables.EMPTY);
           }
 
           @Override
@@ -217,7 +223,8 @@ public class CompletionSupport {
   public static TextCell showPopup(
       Cell cell,
       Property<Cell> targetPopup,
-      List<CompletionItem> items) {
+      List<CompletionItem> items,
+      Runnable onDeactivate) {
     CellContainer container = cell.cellContainer().get();
     final HorizontalCell popup = new HorizontalCell();
     final TextCell textView = new TextCell();
@@ -235,7 +242,7 @@ public class CompletionSupport {
         popup.removeFromParent();
         textEditingReg.remove();
       }
-    }, state);
+    }, Runnables.seq(state, onDeactivate));
     return textView;
   }
 

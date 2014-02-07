@@ -20,6 +20,7 @@ public interface CompletionController {
   boolean canActivate();
 
   void activate();
+  void activate(Runnable onDeactivate);
   void deactivate();
 
   boolean hasAmbiguousMatches();
