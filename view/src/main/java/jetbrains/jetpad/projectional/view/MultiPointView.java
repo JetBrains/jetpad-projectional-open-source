@@ -27,7 +27,8 @@ import java.util.List;
 
 public abstract class MultiPointView extends View {
   public static final CustomViewFeatureSpec POINTS = new CustomViewFeatureSpec("points");
-  public static final ViewPropertySpec<Color> COLOR = new ViewPropertySpec<Color>("color", ViewPropertyKind.REPAINT, Color.BLACK);
+  public static final ViewPropertySpec<Color> COLOR = new ViewPropertySpec<>("color", ViewPropertyKind.REPAINT, Color.BLACK);
+  public static final ViewPropertySpec<Integer> WIDTH = new ViewPropertySpec<>("width", ViewPropertyKind.RELAYOUT_AND_REPAINT, 1);
 
   public final List<Vector> points;
 
@@ -37,6 +38,10 @@ public abstract class MultiPointView extends View {
 
   public Property<Color> color() {
     return prop(COLOR);
+  }
+
+  public Property<Integer> width() {
+    return prop(WIDTH);
   }
 
   protected Rectangle calculateBounds() {
@@ -62,7 +67,9 @@ public abstract class MultiPointView extends View {
     if (bounds == null) {
       ctx.bounds(Vector.ZERO, 0);
     } else {
-      ctx.bounds(bounds, 0);
+      int width = width().get();
+      Vector widthVec = new Vector(width, width);
+      ctx.bounds(new Rectangle(bounds.origin.sub(widthVec.div(2)), bounds.dimension.add(widthVec)), 0);
     }
   }
 

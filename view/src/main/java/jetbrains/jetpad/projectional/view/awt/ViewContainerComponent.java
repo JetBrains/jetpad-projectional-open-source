@@ -502,6 +502,7 @@ public class ViewContainerComponent extends JComponent implements Scrollable {
     if (view instanceof MultiPointView) {
       MultiPointView multiPoint = (MultiPointView) view;
       g.setColor(toAwtColor(multiPoint.color().get()));
+      g.setStroke(new BasicStroke(multiPoint.width().get()));
 
       int n = multiPoint.points.size();
       int[] xs = new int[n];

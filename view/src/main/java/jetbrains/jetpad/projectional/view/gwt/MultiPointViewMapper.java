@@ -109,5 +109,12 @@ class MultiPointViewMapper extends BaseViewMapper<MultiPointView, Element> {
         }
       }
     }));
+
+    conf.add(Synchronizers.forProperty(getSource().width(), new WritableProperty<Integer>() {
+      @Override
+      public void set(Integer value) {
+        style.setSVGProperty(SVGConstants.SVG_STROKE_WIDTH_ATTRIBUTE, "" + value);
+      }
+    }));
   }
 }
