@@ -89,5 +89,12 @@ class LineViewMapper extends BaseViewMapper<LineView, Element> {
         line.getStyle().setSVGProperty(SVGConstants.SVG_STROKE_ATTRIBUTE, value.toCssColor());
       }
     }));
+
+    conf.add(Synchronizers.forProperty(getSource().width(), new WritableProperty<Integer>() {
+      @Override
+      public void set(Integer value) {
+        line.getStyle().setSVGProperty(SVGConstants.SVG_STROKE_WIDTH_ATTRIBUTE, "" + value);
+      }
+    }));
   }
 }
