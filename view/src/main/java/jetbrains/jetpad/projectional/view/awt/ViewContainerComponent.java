@@ -398,13 +398,11 @@ public class ViewContainerComponent extends JComponent implements Scrollable {
     paint(g, myContainer.root());
   }
 
-  private void paint(Graphics g, View view) {
+  private void paint(Graphics graphics, View view) {
     if (!view.visible().get()) return;
-
+    Graphics2D g = (Graphics2D) graphics;
     java.awt.Rectangle clip = g.getClipBounds();
-
     jetbrains.jetpad.geometry.Rectangle bounds = view.bounds().get();
-
     if (clip != null) {
       jetbrains.jetpad.geometry.Rectangle rect = new jetbrains.jetpad.geometry.Rectangle(clip.x, clip.y, clip.width, clip.height);
 
@@ -412,6 +410,16 @@ public class ViewContainerComponent extends JComponent implements Scrollable {
     }
     g.clipRect(bounds.origin.x, bounds.origin.y, bounds.dimension.x, bounds.dimension.y);
 
+
+    paintContent(view, (Graphics2D) g.create());
+
+    for (View child : view.children()) {
+      paint(g.create(), child);
+    }
+  }
+
+  private void paintContent(View view, Graphics2D g) {
+    jetbrains.jetpad.geometry.Rectangle bounds = view.bounds().get();
     Color background = view.background().get();
     if (background != null) {
       g.setColor(toAwtColor(background));
@@ -434,6 +442,7 @@ public class ViewContainerComponent extends JComponent implements Scrollable {
     if (view instanceof LineView) {
       LineView lineView = (LineView) view;
       g.setColor(toAwtColor(lineView.color().get()));
+      g.setStroke(new BasicStroke(lineView.width().get()));
       Vector start = lineView.start().get();
       Vector end = lineView.end().get();
       g.drawLine(start.x, start.y, end.x, end.y);
@@ -464,10 +473,8 @@ public class ViewContainerComponent extends JComponent implements Scrollable {
         g.setColor(toAwtColor(SELECTION_COLOR));
         g.fillRect(origin.x + xLeft, origin.y, xRight - xLeft - 1, bounds.dimension.y - 1);
 
-
-        Graphics g2 = g.create();
-        g2.setColor(toAwtColor(Color.WHITE));
-        g2.drawString(text.substring(left, right), origin.x + xLeft, origin.y + textView.baseLine());
+        g.setColor(toAwtColor(Color.WHITE));
+        g.drawString(text.substring(left, right), origin.x + xLeft, origin.y + textView.baseLine());
       }
 
       if (textView.caretVisible().get() && myCaretVisible && myFocused) {
@@ -514,13 +521,9 @@ public class ViewContainerComponent extends JComponent implements Scrollable {
         }
       }
     }
-
-    for (View child : view.children()) {
-      paint(g.create(), child);
-    }
   }
 
-  private void paintScroller(Graphics g, ScrollView scrollView, boolean vertical) {
+  private void paintScroller(Graphics2D g, ScrollView scrollView, boolean vertical) {
     jetbrains.jetpad.geometry.Rectangle bounds = scrollView.bounds().get();
 
     Color scrollerBackground = Color.GRAY;

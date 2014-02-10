@@ -18,17 +18,17 @@ package jetbrains.jetpad.projectional.view;
 import jetbrains.jetpad.geometry.DoubleSegment;
 import jetbrains.jetpad.geometry.Rectangle;
 import jetbrains.jetpad.geometry.Vector;
-import jetbrains.jetpad.model.property.DerivedProperty;
 import jetbrains.jetpad.model.property.Property;
 import jetbrains.jetpad.values.Color;
 
 public class LineView extends View {
   static final int THRESHOLD = 5;
 
-  public static final ViewPropertySpec<Color> COLOR = new ViewPropertySpec<Color>("color", ViewPropertyKind.REPAINT, Color.BLACK);
+  public static final ViewPropertySpec<Color> COLOR = new ViewPropertySpec<>("color", ViewPropertyKind.REPAINT, Color.BLACK);
+  public static final ViewPropertySpec<Integer> WIDTH = new ViewPropertySpec<>("width", ViewPropertyKind.REPAINT, 1);
 
-  private static final ViewPropertySpec<Vector> START = new ViewPropertySpec<Vector>("start", ViewPropertyKind.RELAYOUT_AND_REPAINT, Vector.ZERO);
-  private static final ViewPropertySpec<Vector> END = new ViewPropertySpec<Vector>("end", ViewPropertyKind.RELAYOUT_AND_REPAINT, Vector.ZERO);
+  private static final ViewPropertySpec<Vector> START = new ViewPropertySpec<>("start", ViewPropertyKind.RELAYOUT_AND_REPAINT, Vector.ZERO);
+  private static final ViewPropertySpec<Vector> END = new ViewPropertySpec<>("end", ViewPropertyKind.RELAYOUT_AND_REPAINT, Vector.ZERO);
 
   public Property<Vector> start() {
     return toParentOffsetProp(START);
@@ -42,6 +42,10 @@ public class LineView extends View {
     return prop(COLOR);
   }
 
+  public Property<Integer> width() {
+    return prop(WIDTH);
+  }
+
   @Override
   protected void doValidate(ValidationContext ctx) {
     super.doValidate(ctx);
@@ -52,7 +56,10 @@ public class LineView extends View {
     Vector min = start.min(end);
     Vector max = start.max(end);
 
-    ctx.bounds(new Rectangle(min, max.sub(min).add(new Vector(1, 1))), 0);
+    int width = width().get();
+
+    Vector widthVec = new Vector(width, width);
+    ctx.bounds(new Rectangle(min.sub(widthVec.div(2)), max.sub(min).add(widthVec)), 0);
   }
 
   @Override
