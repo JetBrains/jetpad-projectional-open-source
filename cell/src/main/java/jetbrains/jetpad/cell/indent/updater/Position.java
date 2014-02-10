@@ -52,7 +52,7 @@ class Position<SourceCT extends Composite<SourceCT>> {
     return myPart;
   }
 
-  int deltaTo(Position to) {
+  int deltaTo(Position<SourceCT> to) {
     if (to.myPart == myPart) return 0;
     if (Composites.isBefore(myPart, to.myPart)) {
       int count = 0;
@@ -145,7 +145,7 @@ class Position<SourceCT extends Composite<SourceCT>> {
   @Override
   public boolean equals(Object obj) {
     if (!(obj instanceof Position)) return false;
-    return myPart == ((Position) obj).myPart;
+    return myPart == ((Position<SourceCT>) obj).myPart;
   }
 
   @Override
