@@ -23,6 +23,6 @@ import jetbrains.jetpad.model.property.Property;
 import jetbrains.jetpad.model.property.ValueProperty;
 
 public class DiagramNode extends HasParent<SimpleDiagram, DiagramNode> {
-  public final Property<Vector> location = new ValueProperty<Vector>(Vector.ZERO);
-  public final ObservableList<DiagramNodeConnection> connections = new ChildList<DiagramNode, DiagramNodeConnection>(this);
+  public final Property<Vector> location = new ValueProperty<>(Vector.ZERO);
+  public final ObservableList<DiagramNodeConnection> connections = new ChildList<>(this);
 }

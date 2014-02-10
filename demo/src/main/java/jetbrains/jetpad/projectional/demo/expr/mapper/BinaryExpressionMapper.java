@@ -99,7 +99,7 @@ class BinaryExpressionMapper extends Mapper<BinaryExpression, BinaryExpressionCe
 
     @Override
     public List<CompletionItem> get(CompletionParameters cp) {
-      List<CompletionItem> result = new ArrayList<CompletionItem>();
+      List<CompletionItem> result = new ArrayList<>();
       result.add(new SimpleCompletionItem("+") {
         @Override
         public Runnable complete(String text) {

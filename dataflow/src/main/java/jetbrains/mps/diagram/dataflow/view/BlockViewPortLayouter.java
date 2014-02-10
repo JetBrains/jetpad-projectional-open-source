@@ -34,7 +34,7 @@ class BlockViewPortLayouter {
   }
 
   List<Vector> layoutPorts(List<Vector> portDimensions, GridDirection dir) {
-    List<Vector> portOrigins = new ArrayList<Vector>(portDimensions.size());
+    List<Vector> portOrigins = new ArrayList<>(portDimensions.size());
 
     Vector borderDir = dir.turnCounterclockwise().dir();
     Segment border = null;

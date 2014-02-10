@@ -167,7 +167,7 @@ class TokenCompletion {
     return new CompletionSupplier() {
       @Override
       public List<CompletionItem> get(CompletionParameters cp) {
-        List<CompletionItem> result = new ArrayList<CompletionItem>();
+        List<CompletionItem> result = new ArrayList<>();
         result.addAll(positionSpec().getTokenCompletion(new Function<Token, Runnable>() {
           @Override
           public Runnable apply(Token input) {
@@ -183,7 +183,7 @@ class TokenCompletion {
   }
 
   Token completeToken(String text) {
-    final Value<Token> result = new Value<Token>();
+    final Value<Token> result = new Value<>();
     CompletionHelper completion = completion(new Function<Token, Runnable>() {
       @Override
       public Runnable apply(Token token) {

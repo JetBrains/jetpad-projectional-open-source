@@ -24,7 +24,7 @@ import java.util.Set;
 public final class LRTable {
   private Grammar myGrammar;
   private LRState myInitialState;
-  private Set<LRState> myStates = new HashSet<LRState>();
+  private Set<LRState> myStates = new HashSet<>();
 
   public LRTable(Grammar grammar) {
     myGrammar = grammar;

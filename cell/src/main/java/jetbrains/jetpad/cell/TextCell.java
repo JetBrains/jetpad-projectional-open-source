@@ -21,14 +21,14 @@ import jetbrains.jetpad.model.property.ReadableProperty;
 import jetbrains.jetpad.values.Color;
 
 public class TextCell extends Cell {
-  public static final CellPropertySpec<String> TEXT = new CellPropertySpec<String>("text", "");
-  public static final CellPropertySpec<Color> TEXT_COLOR = new CellPropertySpec<Color>("textColor", Color.BLACK);
-  public static final CellPropertySpec<Boolean> CARET_VISIBLE = new CellPropertySpec<Boolean>("caretVisible", false);
-  public static final CellPropertySpec<Integer> CARET_POSITION = new CellPropertySpec<Integer>("caretPosition", 0);
-  public static final CellPropertySpec<Boolean> BOLD = new CellPropertySpec<Boolean>("bold", false);
+  public static final CellPropertySpec<String> TEXT = new CellPropertySpec<>("text", "");
+  public static final CellPropertySpec<Color> TEXT_COLOR = new CellPropertySpec<>("textColor", Color.BLACK);
+  public static final CellPropertySpec<Boolean> CARET_VISIBLE = new CellPropertySpec<>("caretVisible", false);
+  public static final CellPropertySpec<Integer> CARET_POSITION = new CellPropertySpec<>("caretPosition", 0);
+  public static final CellPropertySpec<Boolean> BOLD = new CellPropertySpec<>("bold", false);
 
-  public static final CellPropertySpec<Boolean> SELECTION_VISIBLE = new CellPropertySpec<Boolean>("selectioNVisible", false);
-  public static final CellPropertySpec<Integer> SELECTION_START = new CellPropertySpec<Integer>("selectionStart", 0);
+  public static final CellPropertySpec<Boolean> SELECTION_VISIBLE = new CellPropertySpec<>("selectioNVisible", false);
+  public static final CellPropertySpec<Integer> SELECTION_START = new CellPropertySpec<>("selectionStart", 0);
 
   public TextCell() {
   }

@@ -31,9 +31,9 @@ import jetbrains.jetpad.cell.trait.CellTraitPropertySpec;
 import java.util.List;
 
 public class SelectionSupport<ItemT> {
-  private static final CellTraitPropertySpec<SelectionSupport<?>> SELECTION_SUPPORT = new CellTraitPropertySpec<SelectionSupport<?>>("selectionSupport");
+  private static final CellTraitPropertySpec<SelectionSupport<?>> SELECTION_SUPPORT = new CellTraitPropertySpec<>("selectionSupport");
 
-  private ObservableList<ItemT> mySelectedItems = new ObservableArrayList<ItemT>();
+  private ObservableList<ItemT> mySelectedItems = new ObservableArrayList<>();
   private boolean myChangingSelection;
   private List<ItemT> mySource;
   private Cell myTarget;

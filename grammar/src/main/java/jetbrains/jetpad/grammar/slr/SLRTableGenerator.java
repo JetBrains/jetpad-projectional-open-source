@@ -42,7 +42,7 @@ public class SLRTableGenerator {
 
     LRTable result = new LRTable(myGrammar);
 
-    Map<SLRState, LRState> statesMap = new HashMap<SLRState, LRState>();
+    Map<SLRState, LRState> statesMap = new HashMap<>();
     statesMap.put(states.get(0), result.getInitialState());
     for (SLRState state : states) {
       if (state == states.get(0)) continue;
@@ -52,7 +52,7 @@ public class SLRTableGenerator {
     for (SLRState state : states) {
       LRState lrState = statesMap.get(state);
 
-      Map<Terminal, Set<ActionRecord>> actions = new LinkedHashMap<Terminal, Set<ActionRecord>>();
+      Map<Terminal, Set<ActionRecord>> actions = new LinkedHashMap<>();
 
       for (NonTerminal nt : myGrammar.getNonTerminals()) {
         SLRState nextState = state.getState(nt);
@@ -123,8 +123,8 @@ public class SLRTableGenerator {
   }
 
   private Set<ActionRecord> mergeActions(Set<ActionRecord> records) {
-    Set<ActionRecord> result = new HashSet<ActionRecord>();
-    Map<LRAction, ActionRecord> actions = new HashMap<LRAction, ActionRecord>();
+    Set<ActionRecord> result = new HashSet<>();
+    Map<LRAction, ActionRecord> actions = new HashMap<>();
 
     for (ActionRecord r : records) {
       if (actions.containsKey(r.action)) {
@@ -150,7 +150,7 @@ public class SLRTableGenerator {
       }
     }
 
-    Set<ActionRecord> result = new HashSet<ActionRecord>();
+    Set<ActionRecord> result = new HashSet<>();
     for (ActionRecord rec : records) {
       Integer currentPriority = rec.item.getRule().getPriority();
       if (Objects.equal(currentPriority, highestPriority)) {
@@ -197,17 +197,17 @@ public class SLRTableGenerator {
     NonTerminal initial = myGrammar.getStart();
     if (initial.getRules().size() != 1) throw new IllegalStateException();
 
-    Map<Set<SLRItem>, SLRState> states = new LinkedHashMap<Set<SLRItem>, SLRState>();
+    Map<Set<SLRItem>, SLRState> states = new LinkedHashMap<>();
 
     int index = 0;
     SLRState init = new SLRState(index++, closure(singleton(new SLRItem(initial.getFirstRule(), 0))));
-    Set<SLRState> newItems = new LinkedHashSet<SLRState>();
+    Set<SLRState> newItems = new LinkedHashSet<>();
     newItems.add(init);
     states.put(init.getItems(), init);
 
     while (!newItems.isEmpty()) {
       Set<SLRState> items = newItems;
-      newItems = new LinkedHashSet<SLRState>();
+      newItems = new LinkedHashSet<>();
       for (SLRState state : items) {
         for (Symbol s : myGrammar.getSymbols()) {
           Set<SLRItem> nextSet = nextSet(state.getItems(), s);
@@ -223,15 +223,15 @@ public class SLRTableGenerator {
       }
     }
 
-    return new ArrayList<SLRState>(states.values());
+    return new ArrayList<>(states.values());
   }
 
   private Set<SLRItem> closure(Set<SLRItem> items) {
-    Set<SLRItem> result = new LinkedHashSet<SLRItem>();
+    Set<SLRItem> result = new LinkedHashSet<>();
     result.addAll(items);
     boolean hasChanges = true;
     while (hasChanges) {
-      Set<SLRItem> toAdd = new LinkedHashSet<SLRItem>();
+      Set<SLRItem> toAdd = new LinkedHashSet<>();
       for (SLRItem item : result) {
         if (item.isFinal()) continue;
         if (!(item.getNextSymbol() instanceof NonTerminal)) continue;
@@ -251,7 +251,7 @@ public class SLRTableGenerator {
   }
 
   private Set<SLRItem> nextSet(Set<SLRItem> source, Symbol s) {
-    Set<SLRItem> newSet = new LinkedHashSet<SLRItem>();
+    Set<SLRItem> newSet = new LinkedHashSet<>();
     for (SLRItem item : source) {
       if (item.getNextSymbol() == s) {
         newSet.add(item.getNextItem());
@@ -272,7 +272,7 @@ public class SLRTableGenerator {
 
       System.out.println("Actions:");
 
-      Map<Symbol, Set<String>> actions = new LinkedHashMap<Symbol, Set<String>>();
+      Map<Symbol, Set<String>> actions = new LinkedHashMap<>();
       for (Symbol s : myGrammar.getSymbols()) {
         actions.put(s, new LinkedHashSet<String>());
       }
@@ -310,7 +310,7 @@ public class SLRTableGenerator {
   private class ActionRecord {
     final SLRItem item;
     final LRAction action;
-    private Set<ActionRecord> duplicates = new HashSet<ActionRecord>();
+    private Set<ActionRecord> duplicates = new HashSet<>();
 
     ActionRecord(SLRItem item, LRAction action) {
       this.item = item;
@@ -324,7 +324,7 @@ public class SLRTableGenerator {
     @Override
     public String toString() {
       StringBuilder result = new StringBuilder();
-      List<SLRItem> items = new ArrayList<SLRItem>();
+      List<SLRItem> items = new ArrayList<>();
       items.add(item);
       for (ActionRecord r : duplicates) {
         items.add(r.item);

@@ -19,6 +19,6 @@ import jetbrains.jetpad.model.children.ChildList;
 import jetbrains.jetpad.model.collections.list.ObservableList;
 
 public class Diagram {
-  public final ObservableList<Block> blocks = new ChildList<Diagram, Block>(this);
-  public final ObservableList<Connector> connectors = new ChildList<Diagram, Connector>(this);
+  public final ObservableList<Block> blocks = new ChildList<>(this);
+  public final ObservableList<Connector> connectors = new ChildList<>(this);
 }

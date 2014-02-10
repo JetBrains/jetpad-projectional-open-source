@@ -18,22 +18,22 @@ package jetbrains.jetpad.cell.event;
 import jetbrains.jetpad.event.*;
 
 public class CellEventSpec<EventT extends Event> {
-  public static final CellEventSpec<KeyEvent> KEY_PRESSED = new CellEventSpec<KeyEvent>("keyPressed");
-  public static final CellEventSpec<KeyEvent> KEY_RELEASED = new CellEventSpec<KeyEvent>("keyReleased");
-  public static final CellEventSpec<KeyEvent> KEY_TYPED = new CellEventSpec<KeyEvent>("keyTyped");
+  public static final CellEventSpec<KeyEvent> KEY_PRESSED = new CellEventSpec<>("keyPressed");
+  public static final CellEventSpec<KeyEvent> KEY_RELEASED = new CellEventSpec<>("keyReleased");
+  public static final CellEventSpec<KeyEvent> KEY_TYPED = new CellEventSpec<>("keyTyped");
 
-  public static final CellEventSpec<MouseEvent> MOUSE_PRESSED = new CellEventSpec<MouseEvent>("mousePressed");
-  public static final CellEventSpec<MouseEvent> MOUSE_RELEASED = new CellEventSpec<MouseEvent>("mouseReleased");
-  public static final CellEventSpec<MouseEvent> MOUSE_MOVED = new CellEventSpec<MouseEvent>("mouseReleased");
+  public static final CellEventSpec<MouseEvent> MOUSE_PRESSED = new CellEventSpec<>("mousePressed");
+  public static final CellEventSpec<MouseEvent> MOUSE_RELEASED = new CellEventSpec<>("mouseReleased");
+  public static final CellEventSpec<MouseEvent> MOUSE_MOVED = new CellEventSpec<>("mouseReleased");
 
-  public static final CellEventSpec<FocusEvent> FOCUS_GAINED = new CellEventSpec<FocusEvent>("focusGained");
-  public static final CellEventSpec<FocusEvent> FOCUS_LOST = new CellEventSpec<FocusEvent>("focusLost");
+  public static final CellEventSpec<FocusEvent> FOCUS_GAINED = new CellEventSpec<>("focusGained");
+  public static final CellEventSpec<FocusEvent> FOCUS_LOST = new CellEventSpec<>("focusLost");
 
-  public static final CellEventSpec<CopyCutEvent> COPY = new CellEventSpec<CopyCutEvent>("copy");
-  public static final CellEventSpec<CopyCutEvent> CUT = new CellEventSpec<CopyCutEvent>("cut");
-  public static final CellEventSpec<PasteEvent> PASTE = new CellEventSpec<PasteEvent>("cut");
+  public static final CellEventSpec<CopyCutEvent> COPY = new CellEventSpec<>("copy");
+  public static final CellEventSpec<CopyCutEvent> CUT = new CellEventSpec<>("cut");
+  public static final CellEventSpec<PasteEvent> PASTE = new CellEventSpec<>("cut");
 
-  public static final CellEventSpec<CompletionEvent> COMPLETE = new CellEventSpec<CompletionEvent>("complete");
+  public static final CellEventSpec<CompletionEvent> COMPLETE = new CellEventSpec<>("complete");
 
   private String myName;
 

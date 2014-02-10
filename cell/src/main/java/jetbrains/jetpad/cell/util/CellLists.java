@@ -22,8 +22,8 @@ import jetbrains.jetpad.cell.trait.CellTraitPropertySpec;
 import java.util.List;
 
 public class CellLists {
-  public static final CellTraitPropertySpec<Boolean> NO_SPACE_TO_LEFT = new CellTraitPropertySpec<Boolean>("noSpaceToLeft", false);
-  public static final CellTraitPropertySpec<Boolean> NO_SPACE_TO_RIGHT = new CellTraitPropertySpec<Boolean>("noSpaceToRight", false);
+  public static final CellTraitPropertySpec<Boolean> NO_SPACE_TO_LEFT = new CellTraitPropertySpec<>("noSpaceToLeft", false);
+  public static final CellTraitPropertySpec<Boolean> NO_SPACE_TO_RIGHT = new CellTraitPropertySpec<>("noSpaceToRight", false);
 
   public static List<Cell> separated(List<Cell> list, final String separator) {
     return new SeparatedCellList(list) {

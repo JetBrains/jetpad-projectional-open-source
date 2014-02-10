@@ -162,7 +162,7 @@ public class ExprHybridPositionSpec implements HybridPositionSpec<Expression> {
     return new CompletionSupplier() {
       @Override
       public List<CompletionItem> get(CompletionParameters cp) {
-        List<CompletionItem> result = new ArrayList<CompletionItem>();
+        List<CompletionItem> result = new ArrayList<>();
         TokenCompletionItems items = new TokenCompletionItems(tokenHandler);
         result.addAll(items.forTokens(
           Tokens.PLUS, Tokens.MINUS, Tokens.MUL, Tokens.DIV, Tokens.LEFT_PAREN,
@@ -177,7 +177,7 @@ public class ExprHybridPositionSpec implements HybridPositionSpec<Expression> {
 
   @Override
   public CompletionSupplier getAdditionalCompletion(final CompletionContext ctx, final Completer completer) {
-    List<Token> input = new ArrayList<Token>(ctx.prefix());
+    List<Token> input = new ArrayList<>(ctx.prefix());
     input.add(new IdentifierToken("dummy"));
     Expression result = getParser().parse(new ParsingContext(input));
 
@@ -194,7 +194,7 @@ public class ExprHybridPositionSpec implements HybridPositionSpec<Expression> {
     return new CompletionSupplier() {
       @Override
       public List<CompletionItem> get(CompletionParameters cp) {
-        List<CompletionItem> result = new ArrayList<CompletionItem>();
+        List<CompletionItem> result = new ArrayList<>();
         for (final FieldDescriptor fd : type.getFields()) {
           result.add(new SimpleCompletionItem(fd.getName()) {
             @Override

@@ -56,7 +56,7 @@ public class IntGeomUtil {
 
 
   public static List<Segment> getSegments(List<Vector> path) {
-    List<Segment> segments = new ArrayList<Segment>(path.size() - 1);
+    List<Segment> segments = new ArrayList<>(path.size() - 1);
     Vector prev = null;
     for (Vector v: path) {
       if (prev != null) {

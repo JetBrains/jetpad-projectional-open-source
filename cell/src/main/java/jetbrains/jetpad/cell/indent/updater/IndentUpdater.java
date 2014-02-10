@@ -23,8 +23,8 @@ import java.util.*;
 
 public class IndentUpdater<SourceCT extends Composite<SourceCT>, TargetT> {
   private SourceCT myRoot;
-  private Map<SourceCT, TargetT> myNewLineToLine = new HashMap<SourceCT, TargetT>();
-  private Map<Cell, CellWrapper<TargetT>> myWrappers = new HashMap<Cell, CellWrapper<TargetT>>();
+  private Map<SourceCT, TargetT> myNewLineToLine = new HashMap<>();
+  private Map<Cell, CellWrapper<TargetT>> myWrappers = new HashMap<>();
   private TargetT myTarget;
   private IndentUpdaterSource<SourceCT> myIndentUpdaterSource;
   private IndentUpdaterTarget<TargetT> myIndentUpdaterTarget;
@@ -95,7 +95,7 @@ public class IndentUpdater<SourceCT extends Composite<SourceCT>, TargetT> {
   private void onChildAdd(SourceCT child) {
     if (!isVisible(child)) return;
 
-    Position<SourceCT> insertAt = new Position<SourceCT>(this, child);
+    Position<SourceCT> insertAt = new Position<>(this, child);
     Position<SourceCT> prevNewLinePos = prevNewLine(insertAt.prev());
     Position<SourceCT> nextNewLinePos = nextNewLine(insertAt.next());
 
@@ -105,7 +105,7 @@ public class IndentUpdater<SourceCT extends Composite<SourceCT>, TargetT> {
       myWrappers.put(cell, wrapper);
 
       if (prevNewLinePos == null) {
-        Position<SourceCT> first = new Position<SourceCT>(this, firstLeaf(myRoot));
+        Position<SourceCT> first = new Position<>(this, firstLeaf(myRoot));
         children(children(myTarget).get(0)).add(first.deltaTo(insertAt), wrapper.item());
       } else {
         TargetT targetLine = myNewLineToLine.get(prevNewLinePos.get());
@@ -146,12 +146,12 @@ public class IndentUpdater<SourceCT extends Composite<SourceCT>, TargetT> {
   private void onChildRemove(SourceCT child) {
     if (!isVisible(child)) return;
 
-    Position<SourceCT> removeAt = new Position<SourceCT>(this, child);
+    Position<SourceCT> removeAt = new Position<>(this, child);
     Position<SourceCT> prevNewLinePos = prevNewLine(removeAt.prev());
 
     if (myIndentUpdaterSource.isCell(child)) {
       if (prevNewLinePos == null) {
-        Position<SourceCT> first = new Position<SourceCT>(this, firstLeaf(myRoot));
+        Position<SourceCT> first = new Position<>(this, firstLeaf(myRoot));
         children(children(myTarget).get(0)).remove(first.deltaTo(removeAt));
       } else {
         TargetT line = myNewLineToLine.get(prevNewLinePos.get());
@@ -176,7 +176,7 @@ public class IndentUpdater<SourceCT extends Composite<SourceCT>, TargetT> {
         mergeWith = myNewLineToLine.get(prevNewLinePos.get());
       }
 
-      for (TargetT c : new ArrayList<TargetT>(children(lineCell))) {
+      for (TargetT c : new ArrayList<>(children(lineCell))) {
         removeFromParent(c);
         children(mergeWith).add(c);
       }

@@ -69,7 +69,7 @@ public class OrthogonalRouteWithObstaclesTest {
     Vector s = new Vector(100, 0);
     Vector e = new Vector(200, 0);
     Rectangle rect = new Rectangle(110, 1, 80, 80);
-    List<Rectangle> a = new ArrayList<Rectangle>();
+    List<Rectangle> a = new ArrayList<>();
     a.add(rect);
     o.setObstacles(a);
     List<Vector> r = o.findRoute(s, e);
@@ -84,7 +84,7 @@ public class OrthogonalRouteWithObstaclesTest {
     Vector s = new Vector(100, 0);
     Vector e = new Vector(200, 0);
     Rectangle rect = new Rectangle(110, 0, 80, 80);
-    List<Rectangle> a = new ArrayList<Rectangle>();
+    List<Rectangle> a = new ArrayList<>();
     a.add(rect);
     o.setObstacles(a);
     List<Vector> r = o.findRoute(s, e);
@@ -99,7 +99,7 @@ public class OrthogonalRouteWithObstaclesTest {
     Vector s = new Vector(100, 0);
     Vector e = new Vector(200, 0);
     Rectangle rect = new Rectangle(110, -1, 80, 80);
-    List<Rectangle> a = new ArrayList<Rectangle>();
+    List<Rectangle> a = new ArrayList<>();
     a.add(rect);
     o.setObstacles(a);
     List<Vector> r = o.findRoute(s, e);
@@ -116,7 +116,7 @@ public class OrthogonalRouteWithObstaclesTest {
     Vector s = new Vector(100, 0);
     Vector e = new Vector(200, 0);
     Rectangle rect = new Rectangle(99, -1, 2, 2);
-    List<Rectangle> a = new ArrayList<Rectangle>();
+    List<Rectangle> a = new ArrayList<>();
     a.add(rect);
     o.setObstacles(a);
     List<Vector> r = o.findRoute(s, e);
@@ -131,10 +131,10 @@ public class OrthogonalRouteWithObstaclesTest {
     Vector s = new Vector(100, 0);
     Vector e = new Vector(200, 0);
     Rectangle rect = new Rectangle(110, -1, 80, 2);
-    List<Rectangle> a = new ArrayList<Rectangle>();
+    List<Rectangle> a = new ArrayList<>();
     a.add(rect);
     o.setObstacles(a);
-    List<Segment> forbidden = new ArrayList<Segment>();
+    List<Segment> forbidden = new ArrayList<>();
     forbidden.add(new Segment(new Vector(300, -1), new Vector(-100, -1)));
     o.addForbiddenSegments(forbidden);
     List<Vector> r = o.findRoute(s, e);
@@ -151,10 +151,10 @@ public class OrthogonalRouteWithObstaclesTest {
     Vector s = new Vector(0, 100);
     Vector e = new Vector(0, 200);
     Rectangle rect = new Rectangle(-1, 110, 2, 80);
-    List<Rectangle> a = new ArrayList<Rectangle>();
+    List<Rectangle> a = new ArrayList<>();
     a.add(rect);
     o.setObstacles(a);
-    List<Segment> forbidden = new ArrayList<Segment>();
+    List<Segment> forbidden = new ArrayList<>();
     forbidden.add(new Segment(new Vector(-1, 300), new Vector(-1, -100)));
     o.addForbiddenSegments(forbidden);
     List<Vector> r = o.findRoute(s, e);

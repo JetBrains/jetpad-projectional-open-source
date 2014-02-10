@@ -48,7 +48,7 @@ class IndentRootCellMapper extends BaseCellMapper<IndentCell, VerticalView> {
 
     myCellMappers = createChildSet();
 
-    myIndentUpdater = new IndentUpdater<Cell, View>(getSource(), getTarget(),
+    myIndentUpdater = new IndentUpdater<>(getSource(), getTarget(),
       new CellIndentUpdaterSource() {
         @Override
         protected void visibilityChanged(Cell cell, PropertyChangeEvent<Boolean> event) {

@@ -21,8 +21,8 @@ import jetbrains.jetpad.model.property.Property;
 import jetbrains.jetpad.model.property.ReadableProperty;
 
 public class VerticalView extends View {
-  public static final ViewPropertySpec<Boolean> INDENT = new ViewPropertySpec<Boolean>("indent", ViewPropertyKind.RELAYOUT, false);
-  private static final ViewPropertySpec<Integer> INDENT_WIDTH = new ViewPropertySpec<Integer>("indentWidth", ViewPropertyKind.NONE, 0);
+  public static final ViewPropertySpec<Boolean> INDENT = new ViewPropertySpec<>("indent", ViewPropertyKind.RELAYOUT, false);
+  private static final ViewPropertySpec<Integer> INDENT_WIDTH = new ViewPropertySpec<>("indentWidth", ViewPropertyKind.NONE, 0);
 
   public Property<Boolean> indent() {
     return prop(INDENT);

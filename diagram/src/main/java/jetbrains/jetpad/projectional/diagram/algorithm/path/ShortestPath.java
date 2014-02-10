@@ -22,8 +22,8 @@ import java.util.*;
 
 public class ShortestPath {
   public<NodeT> List<NodeT> getPath(Graph<NodeT> graph, NodeT from, NodeT to) {
-    Queue<NodeT> q = new LinkedList<NodeT>();
-    Map<NodeT, NodeT> prev = new HashMap<NodeT, NodeT>();
+    Queue<NodeT> q = new LinkedList<>();
+    Map<NodeT, NodeT> prev = new HashMap<>();
     q.add(from);
     prev.put(from, from);
     while (!q.isEmpty()) {
@@ -40,10 +40,10 @@ public class ShortestPath {
   }
 
   public<NodeT> List<NodeT> getPathMinWeight(WeightedGraph<NodeT> graph, NodeT from, NodeT to) {
-    Queue<NodeT> q = new LinkedList<NodeT>();
-    Map<NodeT, NodeT> prev = new HashMap<NodeT, NodeT>();
-    Map<NodeT, Integer> num = new HashMap<NodeT, Integer>();
-    Map<NodeT, Integer> dist = new HashMap<NodeT, Integer>();
+    Queue<NodeT> q = new LinkedList<>();
+    Map<NodeT, NodeT> prev = new HashMap<>();
+    Map<NodeT, Integer> num = new HashMap<>();
+    Map<NodeT, Integer> dist = new HashMap<>();
     q.add(from);
     prev.put(from, from);
     num.put(from, 0);
@@ -79,7 +79,7 @@ public class ShortestPath {
     if (!prev.containsKey(to)) {
       return null;
     }
-    List<NodeT> path = new ArrayList<NodeT>();
+    List<NodeT> path = new ArrayList<>();
     NodeT cur = to;
     while (cur != from) {
       path.add(cur);

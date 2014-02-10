@@ -28,7 +28,7 @@ public class MethodDescriptor {
   public MethodDescriptor(Type returnType, String name, Type... parameterTypes) {
     myReturnType = returnType;
     myName = name;
-    myParameterTypes = new ArrayList<Type>(Arrays.asList(parameterTypes));
+    myParameterTypes = new ArrayList<>(Arrays.asList(parameterTypes));
   }
 
   public Type getReturnType() {

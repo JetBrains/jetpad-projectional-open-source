@@ -56,7 +56,7 @@ public class RootDiagramMapper extends Mapper<Diagram, ViewContainer> {
   public static void initRoot(final Diagram diagram, final ViewContainer container) {
     container.root().addTrait(RootTrait.ROOT_TRAIT);
 
-    final Value<Block> newBlock = new Value<Block>(null);
+    final Value<Block> newBlock = new Value<>(null);
     container.root().addTrait(new ViewTraitBuilder().on(ViewEvents.KEY_PRESSED, new ViewEventHandler<KeyEvent>() {
       @Override
       public void handle(View view, KeyEvent e) {

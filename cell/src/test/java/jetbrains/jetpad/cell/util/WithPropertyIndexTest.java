@@ -19,7 +19,7 @@ public class WithPropertyIndexTest {
   private TextCell c = label("c");
   private TextCell b = label("b");
   private TextCell a = label("a");
-  private CellPropertySpec<String> TEST_PROP = new CellPropertySpec<String>("testProp");
+  private CellPropertySpec<String> TEST_PROP = new CellPropertySpec<>("testProp");
   private WithPropertyIndex index;
 
   @Before
@@ -116,7 +116,7 @@ public class WithPropertyIndexTest {
   }
 
   private void assertIndex(Cell... cells) {
-    assertEquals(new HashSet<Cell>(Arrays.asList(cells)), index.withProperty());
+    assertEquals(new HashSet<>(Arrays.asList(cells)), index.withProperty());
   }
 
 

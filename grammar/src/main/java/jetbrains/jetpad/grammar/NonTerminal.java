@@ -18,7 +18,7 @@ package jetbrains.jetpad.grammar;
 import java.util.*;
 
 public class NonTerminal extends Symbol {
-  private Set<Rule> myRules = new LinkedHashSet<Rule>();
+  private Set<Rule> myRules = new LinkedHashSet<>();
 
   NonTerminal(Grammar grammar, String name) {
     super(grammar, name);

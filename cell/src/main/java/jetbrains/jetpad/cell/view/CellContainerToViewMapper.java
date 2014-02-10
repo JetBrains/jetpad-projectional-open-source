@@ -42,8 +42,8 @@ public class CellContainerToViewMapper extends Mapper<CellContainer, View> {
   private View myTargetView;
   private View myPopupView;
   private CellToViewContext myContext;
-  private Set<TextCell> myWithCaret = new HashSet<TextCell>();
-  private Set<Cell> myHighlighted = new HashSet<Cell>();
+  private Set<TextCell> myWithCaret = new HashSet<>();
+  private Set<Cell> myHighlighted = new HashSet<>();
 
   public CellContainerToViewMapper(CellContainer source, View target, View targetView, View popupView) {
     super(source, target);

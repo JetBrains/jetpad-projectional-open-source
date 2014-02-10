@@ -23,8 +23,8 @@ import java.util.Map;
 
 public class LRState {
   private String myName;
-  private Map<Terminal, LRAction> myActions = new HashMap<Terminal, LRAction>();
-  private Map<NonTerminal, LRState> myNextStates = new HashMap<NonTerminal, LRState>();
+  private Map<Terminal, LRAction> myActions = new HashMap<>();
+  private Map<NonTerminal, LRState> myNextStates = new HashMap<>();
 
   LRState(String name) {
     myName = name;

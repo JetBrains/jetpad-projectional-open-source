@@ -84,7 +84,7 @@ public class LambdaHybridPositionSpec implements HybridPositionSpec<Expr> {
     return new CompletionSupplier() {
       @Override
       public List<CompletionItem> get(CompletionParameters cp) {
-        List<CompletionItem> result = new ArrayList<CompletionItem>();
+        List<CompletionItem> result = new ArrayList<>();
         TokenCompletionItems items = new TokenCompletionItems(tokenHandler);
         result.addAll(items.forTokens(Tokens.WILDCARD, Tokens.LP, Tokens.RP));
         result.add(items.forId());

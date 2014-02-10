@@ -707,7 +707,7 @@ public class ProjectionalListSynchronizerTest extends EditingTestCase {
     result.setCompletion(new RoleCompletion<Object, Child>() {
       @Override
       public List<CompletionItem> createRoleCompletion(CompletionParameters ctx, Mapper<?, ?> mapper, Object contextNode, final Role<Child> target) {
-        List<CompletionItem> result = new ArrayList<CompletionItem>();
+        List<CompletionItem> result = new ArrayList<>();
         result.add(new SimpleCompletionItem("item") {
           @Override
           public Runnable complete(String text) {
@@ -728,7 +728,7 @@ public class ProjectionalListSynchronizerTest extends EditingTestCase {
   }
 
   private class Container {
-    final ObservableList<Child> children = new ObservableArrayList<Child>();
+    final ObservableList<Child> children = new ObservableArrayList<>();
   }
 
   private abstract class Child {
@@ -744,7 +744,7 @@ public class ProjectionalListSynchronizerTest extends EditingTestCase {
   }
 
   private class CompositeChild extends Child {
-    final ObservableList<Child> children = new ObservableArrayList<Child>();
+    final ObservableList<Child> children = new ObservableArrayList<>();
   }
 
 

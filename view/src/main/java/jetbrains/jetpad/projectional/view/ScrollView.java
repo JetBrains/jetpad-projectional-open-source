@@ -20,9 +20,9 @@ import jetbrains.jetpad.geometry.Vector;
 import jetbrains.jetpad.model.property.Property;
 
 public class ScrollView extends View {
-  public static final ViewPropertySpec<Vector> MAX_DIMENSION = new ViewPropertySpec<Vector>("maxDimension", ViewPropertyKind.RELAYOUT, Vector.ZERO);
-  public static final ViewPropertySpec<Vector> OFFSET = new ViewPropertySpec<Vector>("offset", ViewPropertyKind.RELAYOUT_AND_REPAINT, Vector.ZERO);
-  public static final ViewPropertySpec<Boolean> SCROLL = new ViewPropertySpec<Boolean>("scroll", ViewPropertyKind.RELAYOUT_AND_REPAINT, false);
+  public static final ViewPropertySpec<Vector> MAX_DIMENSION = new ViewPropertySpec<>("maxDimension", ViewPropertyKind.RELAYOUT, Vector.ZERO);
+  public static final ViewPropertySpec<Vector> OFFSET = new ViewPropertySpec<>("offset", ViewPropertyKind.RELAYOUT_AND_REPAINT, Vector.ZERO);
+  public static final ViewPropertySpec<Boolean> SCROLL = new ViewPropertySpec<>("scroll", ViewPropertyKind.RELAYOUT_AND_REPAINT, false);
 
   private boolean myVerticalScroller;
   private boolean myHorizontalScroller;

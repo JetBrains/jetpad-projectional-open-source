@@ -21,8 +21,8 @@ import java.util.*;
 
 public class SLRState {
   private int myNumber;
-  private Set<SLRItem> myItems = new LinkedHashSet<SLRItem>();
-  private Set<SLRTransition> myTransitions = new LinkedHashSet<SLRTransition>();
+  private Set<SLRItem> myItems = new LinkedHashSet<>();
+  private Set<SLRTransition> myTransitions = new LinkedHashSet<>();
 
   SLRState(int number, Set<SLRItem> items) {
     myNumber = number;
@@ -42,7 +42,7 @@ public class SLRState {
   }
 
   public Set<SLRItem> getKernelItems() {
-    Set<SLRItem> items = new LinkedHashSet<SLRItem>();
+    Set<SLRItem> items = new LinkedHashSet<>();
     for (SLRItem item : myItems) {
       if (item.isKernel()) {
         items.add(item);
@@ -52,7 +52,7 @@ public class SLRState {
   }
 
   public Set<SLRItem> getNonKernelItems() {
-    Set<SLRItem> items = new LinkedHashSet<SLRItem>();
+    Set<SLRItem> items = new LinkedHashSet<>();
     for (SLRItem item : myItems) {
       if (!item.isKernel()) {
         items.add(item);

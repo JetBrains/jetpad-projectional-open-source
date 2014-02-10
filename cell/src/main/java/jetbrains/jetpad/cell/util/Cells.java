@@ -27,7 +27,7 @@ import java.util.List;
 import static jetbrains.jetpad.model.composite.Composites.firstFocusable;
 
 public class Cells {
-  public static final CellTraitEventSpec<Event> BECAME_EMPTY = new CellTraitEventSpec<Event>("becameEmpty", false);
+  public static final CellTraitEventSpec<Event> BECAME_EMPTY = new CellTraitEventSpec<>("becameEmpty", false);
 
   public static Cell getNonPopupAncestor(Cell c) {
     Cell current = c;

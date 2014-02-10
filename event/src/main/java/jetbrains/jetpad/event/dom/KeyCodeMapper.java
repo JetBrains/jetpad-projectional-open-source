@@ -22,7 +22,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 class KeyCodeMapper {
-  private static Map<Integer, Key> ourKeyMap = new HashMap<Integer, Key>();
+  private static Map<Integer, Key> ourKeyMap = new HashMap<>();
 
   static Key getKey(int code) {
     Key result = ourKeyMap.get(code);

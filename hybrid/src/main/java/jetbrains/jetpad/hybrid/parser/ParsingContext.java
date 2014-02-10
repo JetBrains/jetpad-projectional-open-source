@@ -23,7 +23,7 @@ public class ParsingContext {
   private int myPosition;
 
   public ParsingContext(List<Token> tokens) {
-    myTokens = new ArrayList<Token>(tokens);
+    myTokens = new ArrayList<>(tokens);
   }
 
   public Token current() {

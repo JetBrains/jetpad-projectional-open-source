@@ -31,7 +31,7 @@ public abstract class WithPropertyIndex {
     };
   }
 
-  private ObservableSet<Cell> myWithProperty = new ObservableHashSet<Cell>();
+  private ObservableSet<Cell> myWithProperty = new ObservableHashSet<>();
   private Registration myReg;
 
   protected void init(CellContainer cellContainer) {

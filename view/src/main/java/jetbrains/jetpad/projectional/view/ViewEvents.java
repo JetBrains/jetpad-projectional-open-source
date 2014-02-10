@@ -21,16 +21,16 @@ import jetbrains.jetpad.event.MouseEvent;
 import jetbrains.jetpad.event.PasteEvent;
 
 public class ViewEvents {
-  public final static ViewEventSpec<MouseEvent> MOUSE_PRESSED = new ViewEventSpec<MouseEvent>("mousePressed");
-  public final static ViewEventSpec<MouseEvent> MOUSE_RELEASED = new ViewEventSpec<MouseEvent>("mouseReleased");
-  public final static ViewEventSpec<MouseEvent> MOUSE_DRAGGED = new ViewEventSpec<MouseEvent>("mouseDragged");
-  public final static ViewEventSpec<MouseEvent> MOUSE_MOVED = new ViewEventSpec<MouseEvent>("mouseMoved");
+  public final static ViewEventSpec<MouseEvent> MOUSE_PRESSED = new ViewEventSpec<>("mousePressed");
+  public final static ViewEventSpec<MouseEvent> MOUSE_RELEASED = new ViewEventSpec<>("mouseReleased");
+  public final static ViewEventSpec<MouseEvent> MOUSE_DRAGGED = new ViewEventSpec<>("mouseDragged");
+  public final static ViewEventSpec<MouseEvent> MOUSE_MOVED = new ViewEventSpec<>("mouseMoved");
 
-  public final static ViewEventSpec<KeyEvent> KEY_PRESSED = new ViewEventSpec<KeyEvent>("keyPressed");
-  public final static ViewEventSpec<KeyEvent> KEY_RELEASED = new ViewEventSpec<KeyEvent>("keyReleased");
-  public final static ViewEventSpec<KeyEvent> KEY_TYPED = new ViewEventSpec<KeyEvent>("keyTyped");
+  public final static ViewEventSpec<KeyEvent> KEY_PRESSED = new ViewEventSpec<>("keyPressed");
+  public final static ViewEventSpec<KeyEvent> KEY_RELEASED = new ViewEventSpec<>("keyReleased");
+  public final static ViewEventSpec<KeyEvent> KEY_TYPED = new ViewEventSpec<>("keyTyped");
 
-  public static final ViewEventSpec<CopyCutEvent> COPY = new ViewEventSpec<CopyCutEvent>("copy");
-  public static final ViewEventSpec<CopyCutEvent> CUT = new ViewEventSpec<CopyCutEvent>("cut");
-  public static final ViewEventSpec<PasteEvent> PASTE = new ViewEventSpec<PasteEvent>("cut");
+  public static final ViewEventSpec<CopyCutEvent> COPY = new ViewEventSpec<>("copy");
+  public static final ViewEventSpec<CopyCutEvent> CUT = new ViewEventSpec<>("cut");
+  public static final ViewEventSpec<PasteEvent> PASTE = new ViewEventSpec<>("cut");
 }

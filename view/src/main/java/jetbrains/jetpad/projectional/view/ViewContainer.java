@@ -36,8 +36,8 @@ public class ViewContainer {
   private RootView myContentRoot = new RootView();
   private Property<View> myFocusedView = new FocusedViewProperty();
   private View myDragStart;
-  private List<Runnable> myOnValidate = new ArrayList<Runnable>();
-  private Listeners<ViewContainerListener> myListeners = new Listeners<ViewContainerListener>();
+  private List<Runnable> myOnValidate = new ArrayList<>();
+  private Listeners<ViewContainerListener> myListeners = new Listeners<>();
   private boolean myInCommand;
 
   public ViewContainer() {

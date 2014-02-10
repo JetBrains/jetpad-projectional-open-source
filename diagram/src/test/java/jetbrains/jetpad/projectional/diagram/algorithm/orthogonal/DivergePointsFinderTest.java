@@ -27,7 +27,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 public class DivergePointsFinderTest {
-  private Set<List<Vector>> lines = new HashSet<List<Vector>>();
+  private Set<List<Vector>> lines = new HashSet<>();
 
   @Test
   public void sameLines() {
@@ -79,7 +79,7 @@ public class DivergePointsFinderTest {
   }
 
   private List<Vector> create() {
-    List<Vector> list = new ArrayList<Vector>();
+    List<Vector> list = new ArrayList<>();
     lines.add(list);
     return list;
   }

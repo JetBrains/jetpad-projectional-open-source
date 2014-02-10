@@ -32,8 +32,8 @@ public class OrthogonalRouteWithObstacles {
   private int myMinDistToForbiddenSegment = 0;
 
   private List<Rectangle> myObstacles;
-  private Map<MyLine, List<Segment>> mySegmentsMap = new LinkedHashMap<MyLine, List<Segment>>();
-  private List<Segment> myForbiddenSegments = new ArrayList<Segment>();
+  private Map<MyLine, List<Segment>> mySegmentsMap = new LinkedHashMap<>();
+  private List<Segment> myForbiddenSegments = new ArrayList<>();
 
   private Vector myStart;
   private Vector myEnd;
@@ -83,7 +83,7 @@ public class OrthogonalRouteWithObstacles {
   public List<Vector> findRoute(Vector start, Vector end) {
     //it should be tested here, because later we do not recognize equal points
     if (start.equals(end)) {
-      List<Vector> path = new ArrayList<Vector>();
+      List<Vector> path = new ArrayList<>();
       path.add(start);
       return path;
     }
@@ -140,8 +140,8 @@ public class OrthogonalRouteWithObstacles {
 
     myStart = start;
     myEnd = end;
-    myEndpointSegments = new ArrayList<Segment>();
-    myEndpointLines = new HashSet<MyLine>();
+    myEndpointSegments = new ArrayList<>();
+    myEndpointLines = new HashSet<>();
 
     addEndpointLine(myStart.x, true);
     addEndpointLine(myStart.y, false);
@@ -158,7 +158,7 @@ public class OrthogonalRouteWithObstacles {
 
     List<Vector> freeSegments = getFreeSegments(line);
 
-    ArrayList<Segment> segments = new ArrayList<Segment>(freeSegments.size());
+    ArrayList<Segment> segments = new ArrayList<>(freeSegments.size());
     if (ver) {
       for (Vector seg: freeSegments) {
         segments.add(new Segment(new Vector(coord, seg.x), new Vector(coord, seg.y)));
@@ -174,10 +174,10 @@ public class OrthogonalRouteWithObstacles {
   private void removeForbiddenSegment(Segment fs) {
     for (MyLine line: mySegmentsMap.keySet()) {
       if (isVertical(fs) && line.ver && fitsMinDist(fs.start.x, line.coord)) {
-        List<Segment> newSegments = new ArrayList<Segment>();
+        List<Segment> newSegments = new ArrayList<>();
         for (Segment s: mySegmentsMap.get(line)) {
           Vector vs = getYVector(s);
-          ArrayList<Vector> list = new ArrayList<Vector>();
+          ArrayList<Vector> list = new ArrayList<>();
           list.add(vs);
           Vector vfs = getYVector(fs);
           for (Vector v: FreeSegmentsUtil.removeSegment(list, vfs)) {
@@ -186,10 +186,10 @@ public class OrthogonalRouteWithObstacles {
         }
         mySegmentsMap.put(line, newSegments);
       } else if (!isVertical(fs) && !line.ver && fitsMinDist(fs.start.y, line.coord)) {
-        List<Segment> newSegments = new ArrayList<Segment>();
+        List<Segment> newSegments = new ArrayList<>();
         for (Segment s: mySegmentsMap.get(line)) {
           Vector vs = getXVector(s);
-          ArrayList<Vector> list = new ArrayList<Vector>();
+          ArrayList<Vector> list = new ArrayList<>();
           list.add(vs);
           Vector vfs = getXVector(fs);
           for (Vector v: FreeSegmentsUtil.removeSegment(list, vfs)) {
@@ -227,7 +227,7 @@ public class OrthogonalRouteWithObstacles {
 
   private List<Vector> findPath() {
     final GraphBuilder builder = new GraphBuilder();
-    final Set<MyLine> addedLines = new HashSet<MyLine>();
+    final Set<MyLine> addedLines = new HashSet<>();
     builder.buildGraph();
     List<Integer> numPath = new ShortestPath().getPathMinWeight(new WeightedGraph<Integer>() {
       @Override
@@ -258,7 +258,7 @@ public class OrthogonalRouteWithObstacles {
     }, 0, 1);
 
     if (numPath == null) return null;
-    List<Vector> path = new ArrayList<Vector>(numPath.size());
+    List<Vector> path = new ArrayList<>(numPath.size());
     for (Integer num: numPath) {
       path.add(builder.points.get(num));
     }
@@ -287,7 +287,7 @@ public class OrthogonalRouteWithObstacles {
 
     List<Vector> freeSegments = getFreeSegments(line);
 
-    ArrayList<Segment> segments = new ArrayList<Segment>(freeSegments.size());
+    ArrayList<Segment> segments = new ArrayList<>(freeSegments.size());
     if (vertical) {
       for (Vector seg: freeSegments) {
         segments.add(new Segment(new Vector(c, seg.x), new Vector(c, seg.y)));
@@ -301,7 +301,7 @@ public class OrthogonalRouteWithObstacles {
   }
 
   private List<Vector> getFreeSegments(MyLine line) {
-    List<Vector> freeSegments = new ArrayList<Vector>();
+    List<Vector> freeSegments = new ArrayList<>();
     freeSegments.add(new Vector(-INF, INF));
     for (Rectangle r: myObstacles) {
       if (line.ver) {
@@ -364,12 +364,12 @@ public class OrthogonalRouteWithObstacles {
   }
 
   private class GraphBuilder {
-    private List<List<Integer>> segmentsGraph = new ArrayList<List<Integer>>();
-    private List<List<Integer>> segmentsGraphLen = new ArrayList<List<Integer>>();
-    Map<Vector, Integer> pointToNum = new HashMap<Vector, Integer>();
-    List<Vector> points = new ArrayList<Vector>();
+    private List<List<Integer>> segmentsGraph = new ArrayList<>();
+    private List<List<Integer>> segmentsGraphLen = new ArrayList<>();
+    Map<Vector, Integer> pointToNum = new HashMap<>();
+    List<Vector> points = new ArrayList<>();
 
-    Map<Vector, MyLine> pointsToLine = new HashMap<Vector, MyLine>();
+    Map<Vector, MyLine> pointsToLine = new HashMap<>();
 
     private void buildGraph() {
       long time = System.currentTimeMillis();
@@ -377,7 +377,7 @@ public class OrthogonalRouteWithObstacles {
       put(myStart);
       put(myEnd);
       for (Segment seg: myEndpointSegments) {
-        Set<Vector> p = new LinkedHashSet<Vector>();
+        Set<Vector> p = new LinkedHashSet<>();
         if (seg.contains(myStart)) {
           p.add(myStart);
         }
@@ -396,9 +396,9 @@ public class OrthogonalRouteWithObstacles {
     }
 
     private void addLineToGraph(MyLine line) {
-      Map<Segment, List<Vector>> mySegmentPoints = new HashMap<Segment, List<Vector>>();
+      Map<Segment, List<Vector>> mySegmentPoints = new HashMap<>();
       for (Segment lineSeg: mySegmentsMap.get(line)) {
-        ArrayList<Vector> points = new ArrayList<Vector>();
+        ArrayList<Vector> points = new ArrayList<>();
         mySegmentPoints.put(lineSeg, points);
         for (Segment s: myEndpointSegments) {
           addVertex(lineSeg, points, s, null);
@@ -486,7 +486,7 @@ public class OrthogonalRouteWithObstacles {
           }
         }
       }
-      connectList(new ArrayList<Vector>(points));
+      connectList(new ArrayList<>(points));
     }
 
     private void connectList(List<Vector> points) {

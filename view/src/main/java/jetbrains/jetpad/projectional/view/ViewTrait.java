@@ -30,14 +30,14 @@ public final class ViewTrait {
   ViewTrait(Map<ViewPropertySpec<?>, Object> props, Map<ViewEventSpec<?>, List<ViewEventHandler>> handlers) {
     for (Map.Entry<ViewPropertySpec<?>, Object> entry : props.entrySet()) {
       if (myProperties == null) {
-        myProperties = new ListMap<ViewPropertySpec<?>, Object>();
+        myProperties = new ListMap<>();
       }
       myProperties.put(entry.getKey(), entry.getValue());
     }
 
     for (Map.Entry<ViewEventSpec<?>, List<ViewEventHandler>> entry : handlers.entrySet()) {
       if (myHandlers == null) {
-        myHandlers = new ListMap<ViewEventSpec<?>, List<ViewEventHandler>>();
+        myHandlers = new ListMap<>();
       }
       myHandlers.put(entry.getKey(), entry.getValue());
     }

@@ -22,8 +22,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 class KeyCodeMapper {
-  private static final Map<Integer, Key> ourKeysCodeToKeyMap = new HashMap<Integer, Key>();
-  private static final Map<Key, Integer> ourKeyToKeyCodeMap = new HashMap<Key, Integer>();
+  private static final Map<Integer, Key> ourKeysCodeToKeyMap = new HashMap<>();
+  private static final Map<Key, Integer> ourKeyToKeyCodeMap = new HashMap<>();
 
   KeyCodeMapper() {
   }
