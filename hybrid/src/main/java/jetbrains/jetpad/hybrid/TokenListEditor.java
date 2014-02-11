@@ -16,6 +16,7 @@
 package jetbrains.jetpad.hybrid;
 
 import com.google.common.base.Objects;
+import jetbrains.jetpad.hybrid.parser.prettyprint.PrettyPrinter;
 import jetbrains.jetpad.model.collections.CollectionItemEvent;
 import jetbrains.jetpad.model.collections.list.ObservableArrayList;
 import jetbrains.jetpad.model.collections.list.ObservableList;
@@ -134,14 +135,15 @@ class TokenListEditor<SourceT> {
   }
 
   private void update() {
-    PrettyPrinterContext ctx = reprint();
+    PrettyPrinterContext<? super SourceT> ctx = reprint();
     myValid.set(true);
     tokens.clear();
     tokens.addAll(ctx.tokens());
   }
 
-  private PrettyPrinterContext reprint() {
-    PrettyPrinterContext ctx = new PrettyPrinterContext(mySpec.getPrettyPrinter());
+  private PrettyPrinterContext<? super SourceT> reprint() {
+    PrettyPrinter<? super SourceT> printer = mySpec.getPrettyPrinter();
+    PrettyPrinterContext<? super SourceT> ctx = new PrettyPrinterContext<>(printer);
     ctx.print(value.get());
     myParseNode = ctx.result();
     myPrintedTokens = ctx.tokens();
