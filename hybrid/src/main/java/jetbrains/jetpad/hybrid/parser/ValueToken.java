@@ -29,22 +29,12 @@ public class ValueToken extends BaseToken {
     myCloner = cloner;
   }
 
-  @Deprecated
-  public ValueToken(Object val) {
-    this(val, new ValueCloner<Object>() {
-      @Override
-      public Object clone(Object val) {
-        return val;
-      }
-    });
-  }
-
   public Object value() {
     return myValue;
   }
 
   public ValueToken copy() {
-    return new ValueToken(myCloner.clone(myValue));
+    return new ValueToken(myCloner.clone(myValue), myCloner);
   }
 
   @Override

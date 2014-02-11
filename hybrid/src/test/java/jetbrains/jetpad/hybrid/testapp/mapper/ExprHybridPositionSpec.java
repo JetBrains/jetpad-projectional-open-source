@@ -243,12 +243,12 @@ public class ExprHybridPositionSpec implements HybridPositionSpec<Expr> {
         }
 
         if (value instanceof ValueExpr) {
-          ctx.append(new ValueToken(value));
+          ctx.append(new ValueToken(value, new ValueExprCloner()));
           return;
         }
 
         if (value instanceof ComplexValueExpr) {
-          ctx.append(new ValueToken(value));
+          ctx.append(new ValueToken(value, new ValueExprCloner()));
           return;
         }
 
@@ -269,20 +269,20 @@ public class ExprHybridPositionSpec implements HybridPositionSpec<Expr> {
         result.add(new SimpleCompletionItem("value") {
           @Override
           public Runnable complete(String text) {
-            return tokenHandler.apply(new ValueToken(new ValueExpr()));
+            return tokenHandler.apply(new ValueToken(new ValueExpr(), new ValueExprCloner()));
           }
         });
         result.add(new SimpleCompletionItem("aaaa") {
           @Override
           public Runnable complete(String text) {
-            return tokenHandler.apply(new ValueToken(new ComplexValueExpr()));
+            return tokenHandler.apply(new ValueToken(new ComplexValueExpr(), new ValueExprCloner()));
           }
         });
 
         result.add(new SimpleCompletionItem("posValue") {
           @Override
           public Runnable complete(String text) {
-            return tokenHandler.apply(new ValueToken(new PosValueExpr()));
+            return tokenHandler.apply(new ValueToken(new PosValueExpr(), new ValueExprCloner()));
           }
         });
 
@@ -294,5 +294,26 @@ public class ExprHybridPositionSpec implements HybridPositionSpec<Expr> {
   @Override
   public CompletionSupplier getAdditionalCompletion(CompletionContext ctx, Completer complerer) {
     return CompletionSupplier.EMPTY;
+  }
+
+  private static class ValueExprCloner implements ValueToken.ValueCloner<Expr> {
+    @Override
+    public Expr clone(Expr val) {
+      if (val instanceof ValueExpr) {
+        ValueExpr result = new ValueExpr();
+        result.val.set(((ValueExpr) val).val.get());
+        return result;
+      }
+
+      if (val instanceof ComplexValueExpr) {
+        return new ComplexValueExpr();
+      }
+
+      if (val instanceof PosValueExpr) {
+        return new PosValueExpr();
+      }
+
+      throw new IllegalArgumentException(val.toString());
+    }
   }
 }

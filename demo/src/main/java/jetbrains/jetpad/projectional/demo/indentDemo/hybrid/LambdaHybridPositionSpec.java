@@ -73,7 +73,7 @@ public class LambdaHybridPositionSpec implements HybridPositionSpec<Expr> {
           return;
         }
 
-        ctx.append(new ValueToken(value.copy()));
+        ctx.append(new ValueToken(value, new ExprCloner()));
       }
     };
 
@@ -94,7 +94,7 @@ public class LambdaHybridPositionSpec implements HybridPositionSpec<Expr> {
           public Runnable complete(String text) {
             LambdaExpr lambda = new LambdaExpr();
             lambda.varName.set("x");
-            return tokenHandler.apply(new ValueToken(lambda));
+            return tokenHandler.apply(new ValueToken(lambda, new ExprCloner()));
           }
         });
         return result;
@@ -106,4 +106,5 @@ public class LambdaHybridPositionSpec implements HybridPositionSpec<Expr> {
   public CompletionSupplier getAdditionalCompletion(CompletionContext ctx, Completer completer) {
     return CompletionSupplier.EMPTY;
   }
+
 }
