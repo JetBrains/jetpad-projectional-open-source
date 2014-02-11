@@ -308,7 +308,16 @@ public class HybridSynchronizer<SourceT> implements Synchronizer {
       @Override
       public List<Token> saveState(Cell cell) {
         if (valid().get()) return null;
-        return new ArrayList<>(tokens());
+
+        List<Token> result = new ArrayList<>();
+        for (Token t : tokens()) {
+          if (t instanceof ValueToken) {
+            result.add(((ValueToken) t).copy());
+          } else {
+            result.add(t);
+          }
+        }
+        return result;
       }
 
       @Override

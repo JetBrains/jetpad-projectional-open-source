@@ -39,11 +39,14 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import static jetbrains.jetpad.hybrid.SelectionPosition.FIRST;
 import static jetbrains.jetpad.hybrid.SelectionPosition.LAST;
 import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertNull;
 
 public class HybridEditorTest extends EditingTestCase {
   private ExprContainer container = new ExprContainer();
@@ -409,7 +412,7 @@ public class HybridEditorTest extends EditingTestCase {
 
   @Test
   public void valueTokenCompletion() {
-    setTokens(new ValueToken(new ValueExpr()));
+    setTokens(new ValueToken(new ValueExpr(), new ValueExprCloner()));
     select(0, true);
 
     complete();
@@ -429,7 +432,7 @@ public class HybridEditorTest extends EditingTestCase {
 
   @Test
   public void complexValueTokenTransform() {
-    setTokens(new ValueToken(new ComplexValueExpr()));
+    setTokens(new ValueToken(new ComplexValueExpr(), new ComplexValueCloner()));
     select(0, false);
 
     type("+id");
@@ -452,7 +455,7 @@ public class HybridEditorTest extends EditingTestCase {
 
   @Test
   public void valueTokenDelete() {
-    setTokens(new ValueToken(new ValueExpr()), Tokens.RP);
+    setTokens(new ValueToken(new ValueExpr(), new ValueExprCloner()), Tokens.RP);
     select(0, true);
 
     press(Key.BACKSPACE);
@@ -711,6 +714,22 @@ public class HybridEditorTest extends EditingTestCase {
   }
 
   @Test
+  public void valueTokenStatePersistence() {
+    CellStateHandler handler = myTargetCell.get(CellStateHandler.PROPERTY);
+
+    ValueExpr valExpr = new ValueExpr();
+    setTokens(new ValueToken(valExpr, new ValueExprCloner()), Tokens.ID);
+
+    Object state = handler.saveState(myTargetCell);
+    valExpr.val.set("z");
+
+    handler.restoreState(myTargetCell, state);
+
+    ValueToken newVal = (ValueToken) sync.tokens().get(0);
+    assertNull(((ValueExpr) newVal.value()).val.get());
+  }
+
+  @Test
   public void unselectableSelection() {
     setTokens(Tokens.ID, Tokens.DOT, Tokens.ID);
     select(0, true);
@@ -773,5 +792,21 @@ public class HybridEditorTest extends EditingTestCase {
     CompletionController ctrl = focused.get(Completion.COMPLETION_CONTROLLER);
     if (ctrl == null) return false;
     return ctrl.isActive();
+  }
+
+  private static class ValueExprCloner implements ValueToken.ValueCloner<ValueExpr> {
+    @Override
+    public ValueExpr clone(ValueExpr val) {
+      ValueExpr result = new ValueExpr();
+      result.val.set(val.val.get());
+      return result;
+    }
+  }
+
+  private static class ComplexValueCloner implements ValueToken.ValueCloner<ComplexValueExpr> {
+    @Override
+    public ComplexValueExpr clone(ComplexValueExpr val) {
+      return new ComplexValueExpr();
+    }
   }
 }

@@ -22,13 +22,29 @@ package jetbrains.jetpad.hybrid.parser;
  */
 public class ValueToken extends BaseToken {
   private Object myValue;
+  private ValueCloner myCloner;
 
-  public ValueToken(Object value) {
-    myValue = value;
+  public <ValueT> ValueToken(ValueT val, ValueCloner<ValueT> cloner) {
+    myValue = val;
+    myCloner = cloner;
+  }
+
+  @Deprecated
+  public ValueToken(Object val) {
+    this(val, new ValueCloner<Object>() {
+      @Override
+      public Object clone(Object val) {
+        return val;
+      }
+    });
   }
 
   public Object value() {
     return myValue;
+  }
+
+  public ValueToken copy() {
+    return new ValueToken(myCloner.clone(myValue));
   }
 
   @Override
@@ -39,5 +55,10 @@ public class ValueToken extends BaseToken {
   @Override
   public String toString() {
     return "(val " + myValue + ")";
+  }
+
+
+  public interface ValueCloner<ValueT> {
+    ValueT clone(ValueT val);
   }
 }

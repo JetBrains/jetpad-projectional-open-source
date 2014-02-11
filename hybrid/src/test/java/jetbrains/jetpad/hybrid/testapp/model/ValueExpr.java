@@ -15,5 +15,9 @@
  */
 package jetbrains.jetpad.hybrid.testapp.model;
 
+import jetbrains.jetpad.model.property.Property;
+import jetbrains.jetpad.model.property.ValueProperty;
+
 public class ValueExpr extends Expr {
+  public Property<Object> val = new ValueProperty<Object>();
 }
