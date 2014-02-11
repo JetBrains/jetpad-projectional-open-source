@@ -60,6 +60,8 @@ public class CellContainerTest {
     private boolean myMouseIn;
 
     {
+      text().set("Test");
+
       addTrait(new BaseCellTrait() {
         @Override
         public void onMouseEntered(Cell cell, MouseEvent event) {

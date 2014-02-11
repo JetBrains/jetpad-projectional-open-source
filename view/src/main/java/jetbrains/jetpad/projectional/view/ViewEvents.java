@@ -25,6 +25,8 @@ public class ViewEvents {
   public final static ViewEventSpec<MouseEvent> MOUSE_RELEASED = new ViewEventSpec<>("mouseReleased");
   public final static ViewEventSpec<MouseEvent> MOUSE_DRAGGED = new ViewEventSpec<>("mouseDragged");
   public final static ViewEventSpec<MouseEvent> MOUSE_MOVED = new ViewEventSpec<>("mouseMoved");
+  public final static ViewEventSpec<MouseEvent> MOUSE_ENTERED = new ViewEventSpec<>("mouseEntered");
+  public final static ViewEventSpec<MouseEvent> MOUSE_LEFT = new ViewEventSpec<>("mouseLeft");
 
   public final static ViewEventSpec<KeyEvent> KEY_PRESSED = new ViewEventSpec<>("keyPressed");
   public final static ViewEventSpec<KeyEvent> KEY_RELEASED = new ViewEventSpec<>("keyReleased");

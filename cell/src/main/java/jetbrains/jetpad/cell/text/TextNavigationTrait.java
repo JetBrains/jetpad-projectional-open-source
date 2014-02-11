@@ -27,6 +27,7 @@ import jetbrains.jetpad.cell.completion.*;
 import jetbrains.jetpad.cell.event.CompletionEvent;
 import jetbrains.jetpad.cell.trait.BaseCellTrait;
 import jetbrains.jetpad.cell.trait.CellTraitPropertySpec;
+import jetbrains.jetpad.values.Color;
 
 class TextNavigationTrait extends BaseCellTrait {
   static final CellTraitPropertySpec<Boolean> SELECTION_AVAILABLE = new CellTraitPropertySpec<>("selectionAvailable", true);

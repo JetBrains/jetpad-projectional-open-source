@@ -39,6 +39,7 @@ public class ViewContainer {
   private List<Runnable> myOnValidate = new ArrayList<>();
   private Listeners<ViewContainerListener> myListeners = new Listeners<>();
   private boolean myInCommand;
+  private View myViewUnderMouse;
 
   public ViewContainer() {
     myPeer.attach(this);
@@ -107,7 +108,40 @@ public class ViewContainer {
   }
 
   public void mouseMoved(MouseEvent e) {
+    changeCellUnderMouse(e, root().viewAt(e.location()));
     dispatchMouseEvent(e, ViewEvents.MOUSE_MOVED);
+  }
+
+  public void mouseEntered(MouseEvent e) {
+    root().validate();
+    changeCellUnderMouse(e, root().viewAt(e.location()));
+  }
+
+  public void mouseLeft(MouseEvent e) {
+    root().validate();
+    changeCellUnderMouse(e, null);
+  }
+
+  private void changeCellUnderMouse(final MouseEvent e, final View newView) {
+    if (myViewUnderMouse != null) {
+      executeCommand(new Runnable() {
+        @Override
+        public void run() {
+          myViewUnderMouse.dispatch(ViewEvents.MOUSE_LEFT, new MouseEvent(e.location()));
+        }
+      });
+    }
+
+    if (newView != null) {
+      executeCommand(new Runnable() {
+        @Override
+        public void run() {
+          newView.dispatch(ViewEvents.MOUSE_ENTERED, new MouseEvent(e.location()));
+        }
+      });
+    }
+
+    myViewUnderMouse = newView;
   }
 
   public void mouseDragged(final MouseEvent e) {

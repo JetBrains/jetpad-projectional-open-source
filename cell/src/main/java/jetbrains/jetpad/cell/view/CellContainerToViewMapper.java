@@ -233,6 +233,18 @@ public class CellContainerToViewMapper extends Mapper<CellContainer, View> {
           cellContainer.mouseMoved(e);
         }
       })
+      .on(ViewEvents.MOUSE_ENTERED, new ViewEventHandler<MouseEvent>() {
+        @Override
+        public void handle(View view, MouseEvent e) {
+          cellContainer.mouseEntered(e);
+        }
+      })
+      .on(ViewEvents.MOUSE_LEFT, new ViewEventHandler<MouseEvent>() {
+        @Override
+        public void handle(View view, MouseEvent e) {
+          cellContainer.mouseLeft(e);
+        }
+      })
       .on(ViewEvents.MOUSE_DRAGGED, new ViewEventHandler<MouseEvent>() {
         @Override
         public void handle(View view, MouseEvent e) {

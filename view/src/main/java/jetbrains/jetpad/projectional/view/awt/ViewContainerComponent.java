@@ -99,6 +99,26 @@ public class ViewContainerComponent extends JComponent implements Scrollable {
       }
 
       @Override
+      public void mouseEntered(MouseEvent e) {
+        handleMouseEvent(e, new Handler<jetbrains.jetpad.event.MouseEvent>() {
+          @Override
+          public void handle(jetbrains.jetpad.event.MouseEvent e) {
+            myContainer.mouseEntered(e);
+          }
+        }, false);
+      }
+
+      @Override
+      public void mouseExited(MouseEvent e) {
+        handleMouseEvent(e, new Handler<jetbrains.jetpad.event.MouseEvent>() {
+          @Override
+          public void handle(jetbrains.jetpad.event.MouseEvent e) {
+            myContainer.mouseLeft(e);
+          }
+        }, false);
+      }
+
+      @Override
       public void mouseDragged(MouseEvent e) {
         handleMouseEvent(e, new Handler<jetbrains.jetpad.event.MouseEvent>() {
           @Override

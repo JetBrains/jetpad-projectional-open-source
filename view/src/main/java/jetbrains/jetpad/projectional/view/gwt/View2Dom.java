@@ -262,6 +262,21 @@ public class View2Dom {
       }
     })));
 
+    reg.add(eventRegistration(Event.ONMOUSEOVER, $(rootDiv).mouseenter(new Function() {
+      @Override
+      public boolean f(Event e) {
+        container.mouseEntered(toMouseEvent(rootDiv, e));
+        return false;
+      }
+    })));
+    reg.add(eventRegistration(Event.ONMOUSEOUT, $(rootDiv).mouseout(new Function() {
+      @Override
+      public boolean f(Event e) {
+        container.mouseLeft(toMouseEvent(rootDiv, e));
+        return false;
+      }
+    })));
+
     reg.add(eventRegistration(Event.ONKEYDOWN, $(rootDiv).keydown(new Function() {
       @Override
       public boolean f(Event e) {
