@@ -34,14 +34,14 @@ import java.util.List;
 import java.util.Stack;
 
 public class PrettyPrinterContext<NodeT>  {
-  private PrettyPrinter myPrettyPrinter;
+  private PrettyPrinter<NodeT> myPrettyPrinter;
 
   private List<Token> myTokens = new ArrayList<>();
   private Stack<List<BaseParseNode>> myStack = new Stack<>();
   private boolean myPrinted;
   private List<EventSource<?>> myChangeSources = new ArrayList<>();
 
-  public PrettyPrinterContext(PrettyPrinter pp) {
+  public PrettyPrinterContext(PrettyPrinter<NodeT> pp) {
     myPrettyPrinter = pp;
     myStack.add(new ArrayList<BaseParseNode>());
   }
