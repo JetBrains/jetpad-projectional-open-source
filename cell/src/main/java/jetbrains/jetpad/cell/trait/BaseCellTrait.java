@@ -79,7 +79,7 @@ public abstract class BaseCellTrait implements CellTrait {
   @Override
   public void onMouseLeft(Cell cell, MouseEvent event) {
     for (CellTrait t : getBaseTraits(cell)) {
-      t.onMouseEntered(cell, event);
+      t.onMouseLeft(cell, event);
     }
   }
 

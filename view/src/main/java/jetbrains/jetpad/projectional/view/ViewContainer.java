@@ -108,21 +108,23 @@ public class ViewContainer {
   }
 
   public void mouseMoved(MouseEvent e) {
-    changeCellUnderMouse(e, root().viewAt(e.location()));
+    changeViewUnderMouse(e, root().viewAt(e.location()));
     dispatchMouseEvent(e, ViewEvents.MOUSE_MOVED);
   }
 
   public void mouseEntered(MouseEvent e) {
     root().validate();
-    changeCellUnderMouse(e, root().viewAt(e.location()));
+    changeViewUnderMouse(e, root().viewAt(e.location()));
   }
 
   public void mouseLeft(MouseEvent e) {
     root().validate();
-    changeCellUnderMouse(e, null);
+    changeViewUnderMouse(e, null);
   }
 
-  private void changeCellUnderMouse(final MouseEvent e, final View newView) {
+  private void changeViewUnderMouse(final MouseEvent e, final View newView) {
+    if (myViewUnderMouse == newView) return;
+
     if (myViewUnderMouse != null) {
       executeCommand(new Runnable() {
         @Override

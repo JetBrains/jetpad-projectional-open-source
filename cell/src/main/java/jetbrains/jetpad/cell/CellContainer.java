@@ -168,6 +168,8 @@ public class CellContainer {
   }
 
   private void changeCellUnderMouse(MouseEvent e, Cell newCell) {
+    if (newCell == myCellUnderMouse) return;
+
     if (myCellUnderMouse != null) {
       dispatch(myCellUnderMouse, new MouseEvent(e.location()), CellEventSpec.MOUSE_LEFT);
     }
