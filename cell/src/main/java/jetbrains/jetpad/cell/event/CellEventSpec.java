@@ -26,6 +26,9 @@ public class CellEventSpec<EventT extends Event> {
   public static final CellEventSpec<MouseEvent> MOUSE_RELEASED = new CellEventSpec<>("mouseReleased");
   public static final CellEventSpec<MouseEvent> MOUSE_MOVED = new CellEventSpec<>("mouseReleased");
 
+  public static final CellEventSpec<MouseEvent> MOUSE_ENTERED = new CellEventSpec<>("mouseEntered");
+  public static final CellEventSpec<MouseEvent> MOUSE_LEFT = new CellEventSpec<>("mouseLeft");
+
   public static final CellEventSpec<FocusEvent> FOCUS_GAINED = new CellEventSpec<>("focusGained");
   public static final CellEventSpec<FocusEvent> FOCUS_LOST = new CellEventSpec<>("focusLost");
 

@@ -174,6 +174,10 @@ public abstract class Cell implements Composite<Cell>, HasVisibility, HasFocusab
           t.onMouseReleased(this, (MouseEvent) e);
         } else if (spec == CellEventSpec.MOUSE_MOVED) {
           t.onMouseMoved(this, (MouseEvent) e);
+        } else if (spec == CellEventSpec.MOUSE_ENTERED) {
+          t.onMouseEntered(this, (MouseEvent) e);
+        } else if (spec == CellEventSpec.MOUSE_LEFT) {
+          t.onMouseLeft(this, (MouseEvent) e);
         } else if (spec == CellEventSpec.COPY) {
           t.onCopy(this, (CopyCutEvent) e);
         } else if (spec == CellEventSpec.CUT) {
@@ -183,7 +187,7 @@ public abstract class Cell implements Composite<Cell>, HasVisibility, HasFocusab
         } else if (spec == CellEventSpec.COMPLETE) {
           t.onComplete(this, (CompletionEvent) e);
         } else {
-          throw new IllegalStateException("Unknown even type " + e);
+          throw new IllegalStateException("Unknown event type " + e);
         }
 
         if (e.isConsumed()) return;

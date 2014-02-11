@@ -37,6 +37,7 @@ public class CellContainer {
   public final Property<Cell> focusedCell;
   public final RootCell root = new RootCell(this);
 
+  private Cell myCellUnderMouse;
   private List<Cell> myPopups = new ArrayList<>();
   private Listeners<CellContainerListener> myListeners = new Listeners<>();
   private boolean myInCommand;
@@ -155,7 +156,29 @@ public class CellContainer {
 
   public void mouseMoved(MouseEvent e) {
     mouseEventHappened(e, CellEventSpec.MOUSE_MOVED);
+    changeCellUnderMouse(e, findCell(root, e.location()));
   }
+
+  public void mouseEntered(MouseEvent e) {
+    changeCellUnderMouse(e, findCell(root, e.location()));
+  }
+
+  public void mouseLeft(MouseEvent e) {
+    changeCellUnderMouse(e, null);
+  }
+
+  private void changeCellUnderMouse(MouseEvent e, Cell newCell) {
+    if (myCellUnderMouse != null) {
+      dispatch(myCellUnderMouse, new MouseEvent(e.location()), CellEventSpec.MOUSE_LEFT);
+    }
+
+    if (newCell != null) {
+      dispatch(newCell, new MouseEvent(e.location()), CellEventSpec.MOUSE_ENTERED);
+    }
+
+    myCellUnderMouse = newCell;
+  }
+
 
   public void copy(CopyCutEvent e) {
     dispatch(e, CellEventSpec.COPY);

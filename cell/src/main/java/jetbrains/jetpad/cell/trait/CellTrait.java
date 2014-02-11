@@ -34,6 +34,8 @@ public interface CellTrait {
   void onMousePressed(Cell cell, MouseEvent event);
   void onMouseMoved(Cell cell, MouseEvent event);
   void onMouseReleased(Cell cell, MouseEvent event);
+  void onMouseEntered(Cell cell, MouseEvent event);
+  void onMouseLeft(Cell cell, MouseEvent event);
 
   void onKeyPressed(Cell cell, KeyEvent event);
   void onKeyPressedLowPriority(Cell cell, KeyEvent event);

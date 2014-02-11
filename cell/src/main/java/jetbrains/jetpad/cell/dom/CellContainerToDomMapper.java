@@ -381,6 +381,20 @@ public class CellContainerToDomMapper extends Mapper<CellContainer, Element> {
       }
     });
 
+    $(target).mouseenter(new Function() {
+      public boolean f(Event e) {
+        getSource().mouseEntered(toMouseEvent(e));
+        return false;
+      }
+    });
+
+    $(target).mouseleave(new Function() {
+      public boolean f(Event e) {
+        getSource().mouseLeft(toMouseEvent(e));
+        return false;
+      }
+    });
+
     $(focusTarget).keydown(new Function() {
       @Override
       public boolean f(Event e) {

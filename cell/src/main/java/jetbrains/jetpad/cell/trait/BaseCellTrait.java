@@ -70,6 +70,20 @@ public abstract class BaseCellTrait implements CellTrait {
   }
 
   @Override
+  public void onMouseEntered(Cell cell, MouseEvent event) {
+    for (CellTrait t : getBaseTraits(cell)) {
+      t.onMouseEntered(cell, event);
+    }
+  }
+
+  @Override
+  public void onMouseLeft(Cell cell, MouseEvent event) {
+    for (CellTrait t : getBaseTraits(cell)) {
+      t.onMouseEntered(cell, event);
+    }
+  }
+
+  @Override
   public void onKeyPressed(Cell cell, KeyEvent event) {
     for (CellTrait t : getBaseTraits(cell)) {
       t.onKeyPressed(cell, event);
