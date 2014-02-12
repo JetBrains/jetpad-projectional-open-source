@@ -77,21 +77,24 @@ class SLRItem {
 
   @Override
   public String toString() {
+    String dot = "\u2022";
+    String epsilon = "\0395";
+
     StringBuilder result = new StringBuilder();
     result.append(myRule.getHead()).append(" ->");
     List<Symbol> symbols = myRule.getSymbols();
     if (symbols.isEmpty()) {
-      result.append(" ").append(".<eps>");
+      result.append(" ").append(dot).append(epsilon);
     } else {
       for (int i = 0; i < symbols.size(); i++) {
         result.append(" ");
         if (myIndex == i) {
-          result.append(".");
+          result.append(dot);
         }
         result.append(symbols.get(i));
       }
       if (myIndex == symbols.size()) {
-        result.append(" .");
+        result.append(" ").append(dot);
       }
     }
     return result.toString();
