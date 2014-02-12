@@ -22,6 +22,8 @@ import java.util.*;
 class SLRState {
   private int myNumber;
   private Set<SLRItem> myItems = new LinkedHashSet<>();
+  private Map<Symbol, Set<SLRActionRecord>> myActionRecords = new HashMap<>();
+
   private Set<SLRTransition> myTransitions = new LinkedHashSet<>();
 
   SLRState(int number, Set<SLRItem> items) {
@@ -65,6 +67,12 @@ class SLRState {
     return Collections.unmodifiableSet(myTransitions);
   }
 
+  Set<SLRActionRecord> getRecords(Symbol s) {
+    Set<SLRActionRecord> records = myActionRecords.get(s);
+    if (records == null) return Collections.emptySet();
+    return Collections.unmodifiableSet(records);
+  }
+
   SLRState getState(Symbol symbol) {
     for (SLRTransition t : myTransitions) {
       if (t.getSymbol() == symbol) return t.getTarget();
@@ -72,9 +80,15 @@ class SLRState {
     return null;
   }
 
-
   void addTransition(SLRTransition t) {
     myTransitions.add(t);
+  }
+
+  void addRecord(Symbol s, SLRActionRecord rec) {
+    if (!myActionRecords.containsKey(s)) {
+      myActionRecords.put(s, new HashSet<SLRActionRecord>());
+    }
+    myActionRecords.get(s).add(rec);
   }
 
   @Override
