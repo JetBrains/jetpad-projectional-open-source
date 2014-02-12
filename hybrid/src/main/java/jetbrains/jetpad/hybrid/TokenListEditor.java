@@ -118,7 +118,16 @@ class TokenListEditor<SourceT> {
       myChangeReg.remove();
       myChangeReg = Registration.EMPTY;
     } else {
-      SourceT result = mySpec.getParser().parse(new ParsingContext(tokens));
+      List<Token> toParse = new ArrayList<>();
+      for (Token t : tokens) {
+        if (t instanceof ValueToken) {
+          toParse.add(((ValueToken) t).copy());
+        } else {
+          toParse.add(t);
+        }
+      }
+
+      SourceT result = mySpec.getParser().parse(new ParsingContext(toParse));
       if (result != null) {
         value.set(result);
         myValid.set(true);

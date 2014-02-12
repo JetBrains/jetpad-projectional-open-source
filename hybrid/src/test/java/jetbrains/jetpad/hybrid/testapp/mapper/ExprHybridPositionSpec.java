@@ -167,17 +167,17 @@ public class ExprHybridPositionSpec implements HybridPositionSpec<Expr> {
 
         if (current instanceof ValueToken && ((ValueToken) current).value() instanceof ValueExpr) {
           ctx.advance();
-          return new ValueExpr();
+          return (Expr) ((ValueToken) current).value();
         }
 
         if (current instanceof ValueToken && ((ValueToken) current).value() instanceof PosValueExpr) {
           ctx.advance();
-          return new PosValueExpr();
+          return (Expr) ((ValueToken) current).value();
         }
 
         if (current instanceof ValueToken && ((ValueToken) current).value() instanceof ComplexValueExpr) {
           ctx.advance();
-          return new ComplexValueExpr();
+          return (Expr) ((ValueToken) current).value();
         }
 
         return null;
