@@ -195,7 +195,9 @@ public class SLRTableGenerator {
 
   private List<SLRState> generateStates() {
     NonTerminal initial = myGrammar.getStart();
-    if (initial.getRules().size() != 1) throw new IllegalStateException();
+    if (initial.getRules().size() != 1) {
+      throw new IllegalStateException("There should be one rule from inital non terminal");
+    }
 
     Map<Set<SLRItem>, SLRState> states = new LinkedHashMap<>();
 
