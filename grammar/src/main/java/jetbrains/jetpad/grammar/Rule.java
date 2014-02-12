@@ -76,10 +76,13 @@ public class Rule {
 
   @Override
   public String toString() {
+    String arrow = "\u2192";
+    String epsilon = "\u0395" ;
+
     StringBuilder result = new StringBuilder();
-    result.append(myHead).append(" ->");
+    result.append(myHead).append(" ").append(arrow);
     if (mySymbols.isEmpty()) {
-      result.append(" ").append("<eps>");
+      result.append(" ").append(epsilon);
     } else {
       for (Symbol s : mySymbols) {
         result.append(" ").append(s);

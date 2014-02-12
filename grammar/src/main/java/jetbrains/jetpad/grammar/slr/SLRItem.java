@@ -79,9 +79,10 @@ class SLRItem {
   public String toString() {
     String dot = "\u2022";
     String epsilon = "\0395";
+    String arrow = "\u2192";
 
     StringBuilder result = new StringBuilder();
-    result.append(myRule.getHead()).append(" ->");
+    result.append(myRule.getHead()).append(" ").append(arrow);
     List<Symbol> symbols = myRule.getSymbols();
     if (symbols.isEmpty()) {
       result.append(" ").append(dot).append(epsilon);
