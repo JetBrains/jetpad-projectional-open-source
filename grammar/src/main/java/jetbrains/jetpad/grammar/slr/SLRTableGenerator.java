@@ -52,7 +52,7 @@ public class SLRTableGenerator {
     for (SLRState state : states) {
       LRState lrState = statesMap.get(state);
 
-      Map<Terminal, Set<ActionRecord>> actions = new LinkedHashMap<>();
+      Map<Terminal, Set<SLRActionRecord>> actions = new LinkedHashMap<>();
 
       for (NonTerminal nt : myGrammar.getNonTerminals()) {
         SLRState nextState = state.getState(nt);
@@ -62,39 +62,39 @@ public class SLRTableGenerator {
       }
 
       for (Terminal s : myGrammar.getTerminals()) {
-        actions.put(s, new LinkedHashSet<ActionRecord>());
+        actions.put(s, new LinkedHashSet<SLRActionRecord>());
       }
 
       for (SLRItem item : state.getItems()) {
         if (item.isFinal()) {
           for (Terminal t : item.getRule().getHead().getFollow()) {
             if (t == myGrammar.getEnd() && finalItem.equals(item)) {
-              actions.get(t).add(new ActionRecord(item, LRAction.<LRState>accept()));
+              actions.get(t).add(new SLRActionRecord(item, LRAction.<LRState>accept()));
             } else {
-              actions.get(t).add(new ActionRecord(item, LRAction.<LRState>reduce(item.getRule())));
+              actions.get(t).add(new SLRActionRecord(item, LRAction.<LRState>reduce(item.getRule())));
             }
           }
         } else {
           Symbol s = item.getNextSymbol();
           SLRState nextState = state.getState(s);
           if (nextState != null && s instanceof Terminal) {
-            actions.get((Terminal) s).add(new ActionRecord(item, LRAction.shift(statesMap.get(nextState))));
+            actions.get((Terminal) s).add(new SLRActionRecord(item, LRAction.shift(statesMap.get(nextState))));
           }
         }
       }
 
-      for (Map.Entry<Terminal, Set<ActionRecord>> e : actions.entrySet()) {
+      for (Map.Entry<Terminal, Set<SLRActionRecord>> e : actions.entrySet()) {
         if (e.getValue().isEmpty()) continue;
         if (e.getValue().size() > 1) {
-          ActionRecord record = disambiguate(e.getValue());
+          SLRActionRecord record = disambiguate(e.getValue());
           if (record == null) {
             disambiguate(e.getValue());
             throw new IllegalStateException("There's a conflict");
           } else {
-            lrState.addAction(e.getKey(), record.action);
+            lrState.addAction(e.getKey(), record.getAction());
           }
         } else {
-          lrState.addAction(e.getKey(), e.getValue().iterator().next().action);
+          lrState.addAction(e.getKey(), e.getValue().iterator().next().getAction());
         }
       }
     }
@@ -111,37 +111,37 @@ public class SLRTableGenerator {
   }
 
 
-  private ActionRecord disambiguate(Set<ActionRecord> records) {
+  private SLRActionRecord disambiguate(Set<SLRActionRecord> records) {
     records = mergeActions(records); //todo need a test for this ambiguity (it happens in dot operation between .id and .id(args))
     records = filterByPriority(records);
     if (records.size() == 1) {
       return records.iterator().next();
     }
-    ActionRecord result = disambiguateByAssoc(records);
+    SLRActionRecord result = disambiguateByAssoc(records);
     if (result != null) return result;
     return null;
   }
 
-  private Set<ActionRecord> mergeActions(Set<ActionRecord> records) {
-    Set<ActionRecord> result = new HashSet<>();
-    Map<LRAction<LRState>, ActionRecord> actions = new HashMap<>();
+  private Set<SLRActionRecord> mergeActions(Set<SLRActionRecord> records) {
+    Set<SLRActionRecord> result = new HashSet<>();
+    Map<LRAction<LRState>, SLRActionRecord> actions = new HashMap<>();
 
-    for (ActionRecord r : records) {
-      if (actions.containsKey(r.action)) {
-        actions.get(r.action).addDuplicate(r);
+    for (SLRActionRecord r : records) {
+      if (actions.containsKey(r.getAction())) {
+        actions.get(r.getAction()).addDuplicate(r);
         continue;
       }
       result.add(r);
-      actions.put(r.action, r);
+      actions.put(r.getAction(), r);
     }
 
     return result;
   }
 
-  private Set<ActionRecord> filterByPriority(Set<ActionRecord> records) {
+  private Set<SLRActionRecord> filterByPriority(Set<SLRActionRecord> records) {
     Integer highestPriority = null;
-    for (ActionRecord rec : records) {
-      Integer currentPriority = rec.item.getRule().getPriority();
+    for (SLRActionRecord rec : records) {
+      Integer currentPriority = rec.getItem().getRule().getPriority();
       if (currentPriority == null) return records;
       if (highestPriority == null) {
         highestPriority = currentPriority;
@@ -150,9 +150,9 @@ public class SLRTableGenerator {
       }
     }
 
-    Set<ActionRecord> result = new HashSet<>();
-    for (ActionRecord rec : records) {
-      Integer currentPriority = rec.item.getRule().getPriority();
+    Set<SLRActionRecord> result = new HashSet<>();
+    for (SLRActionRecord rec : records) {
+      Integer currentPriority = rec.getItem().getRule().getPriority();
       if (Objects.equal(currentPriority, highestPriority)) {
         result.add(rec);
       }
@@ -160,15 +160,15 @@ public class SLRTableGenerator {
     return result;
   }
 
-  private ActionRecord disambiguateByAssoc(Set<ActionRecord> records) {
+  private SLRActionRecord disambiguateByAssoc(Set<SLRActionRecord> records) {
     Integer priority = null;
     Rule rule = null;
-    for (ActionRecord rec : records) {
-      Integer cp = rec.item.getRule().getPriority();
+    for (SLRActionRecord rec : records) {
+      Integer cp = rec.getItem().getRule().getPriority();
       if (cp == null) return null;
       if (priority == null) {
         priority = cp;
-        rule = rec.item.getRule();
+        rule = rec.getItem().getRule();
       } else if (!cp.equals(priority)) {
         return null;
       }
@@ -177,14 +177,14 @@ public class SLRTableGenerator {
     Associativity assoc = rule.getAssociativity();
     if (assoc == null) return null;
 
-    ActionRecord bestRecord = records.iterator().next();
-    for (ActionRecord rec : records) {
+    SLRActionRecord bestRecord = records.iterator().next();
+    for (SLRActionRecord rec : records) {
       if (assoc == Associativity.LEFT) {
-        if (rec.item.getIndex() > bestRecord.item.getIndex()) {
+        if (rec.getItem().getIndex() > bestRecord.getItem().getIndex()) {
           bestRecord = rec;
         }
       } else {
-        if (rec.item.getIndex() < bestRecord.item.getIndex()) {
+        if (rec.getItem().getIndex() < bestRecord.getItem().getIndex()) {
           bestRecord = rec;
         }
       }
@@ -309,30 +309,4 @@ public class SLRTableGenerator {
     }
   }
 
-  private class ActionRecord {
-    final SLRItem item;
-    final LRAction<LRState> action;
-    private Set<ActionRecord> duplicates = new HashSet<>();
-
-    ActionRecord(SLRItem item, LRAction<LRState> action) {
-      this.item = item;
-      this.action = action;
-    }
-
-    void addDuplicate(ActionRecord rec) {
-      duplicates.add(rec);
-    }
-
-    @Override
-    public String toString() {
-      StringBuilder result = new StringBuilder();
-      List<SLRItem> items = new ArrayList<>();
-      items.add(item);
-      for (ActionRecord r : duplicates) {
-        items.add(r.item);
-      }
-      result.append(items).append(" : ").append(action);
-      return result.toString();
-    }
-  }
 }
