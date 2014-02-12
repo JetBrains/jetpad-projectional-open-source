@@ -128,7 +128,7 @@ public class SLRTableGenerator {
 
     for (ActionRecord r : records) {
       if (actions.containsKey(r.action)) {
-        actions.get(r.action).addDuplciate(r);
+        actions.get(r.action).addDuplicate(r);
         continue;
       }
       result.add(r);
@@ -317,7 +317,7 @@ public class SLRTableGenerator {
       this.action = action;
     }
 
-    void addDuplciate(ActionRecord rec) {
+    void addDuplicate(ActionRecord rec) {
       duplicates.add(rec);
     }
 
