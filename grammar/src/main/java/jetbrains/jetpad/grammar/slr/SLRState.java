@@ -15,7 +15,12 @@
  */
 package jetbrains.jetpad.grammar.slr;
 
+import com.google.common.base.*;
+import jetbrains.jetpad.grammar.Associativity;
+import jetbrains.jetpad.grammar.Rule;
 import jetbrains.jetpad.grammar.Symbol;
+import jetbrains.jetpad.grammar.lr.LRAction;
+import jetbrains.jetpad.grammar.lr.LRState;
 
 import java.util.*;
 
@@ -73,6 +78,28 @@ class SLRState {
     return Collections.unmodifiableSet(records);
   }
 
+  boolean hasRecords(Symbol s) {
+    return myActionRecords.get(s) != null && !myActionRecords.get(s).isEmpty();
+  }
+
+  boolean hasAmbiguity(Symbol s) {
+    Set<SLRActionRecord> records = getRecords(s);
+    if (records.size() == 1) return false;
+    return disambiguate(records) == null;
+  }
+
+  SLRActionRecord getRecord(Symbol s) {
+    Set<SLRActionRecord> records = getRecords(s);
+    if (records.size() == 1) {
+      return records.iterator().next();
+    }
+    SLRActionRecord result = disambiguate(records);
+    if (result == null) {
+      throw new IllegalStateException("There's ambiguity");
+    }
+    return result;
+  }
+
   SLRState getState(Symbol symbol) {
     for (SLRTransition t : myTransitions) {
       if (t.getSymbol() == symbol) return t.getTarget();
@@ -89,6 +116,88 @@ class SLRState {
       myActionRecords.put(s, new HashSet<SLRActionRecord>());
     }
     myActionRecords.get(s).add(rec);
+  }
+
+  private SLRActionRecord disambiguate(Set<SLRActionRecord> records) {
+    records = mergeActions(records); //todo need a test for this ambiguity (it happens in dot operation between .id and .id(args))
+    records = filterByPriority(records);
+    if (records.size() == 1) {
+      return records.iterator().next();
+    }
+    SLRActionRecord result = disambiguateByAssoc(records);
+    if (result != null) return result;
+    return null;
+  }
+
+  private Set<SLRActionRecord> mergeActions(Set<SLRActionRecord> records) {
+    Set<SLRActionRecord> result = new HashSet<>();
+    Map<LRAction<SLRState>, SLRActionRecord> actions = new HashMap<>();
+
+    for (SLRActionRecord r : records) {
+      if (actions.containsKey(r.getAction())) {
+        actions.get(r.getAction()).addDuplicate(r);
+        continue;
+      }
+      result.add(r);
+      actions.put(r.getAction(), r);
+    }
+
+    return result;
+  }
+
+  private Set<SLRActionRecord> filterByPriority(Set<SLRActionRecord> records) {
+    Integer highestPriority = null;
+    for (SLRActionRecord rec : records) {
+      Integer currentPriority = rec.getItem().getRule().getPriority();
+      if (currentPriority == null) return records;
+      if (highestPriority == null) {
+        highestPriority = currentPriority;
+      } else {
+        highestPriority = Math.max(highestPriority, currentPriority);
+      }
+    }
+
+    Set<SLRActionRecord> result = new HashSet<>();
+    for (SLRActionRecord rec : records) {
+      Integer currentPriority = rec.getItem().getRule().getPriority();
+      if (com.google.common.base.Objects.equal(currentPriority, highestPriority)) {
+        result.add(rec);
+      }
+    }
+    return result;
+  }
+
+  private SLRActionRecord disambiguateByAssoc(Set<SLRActionRecord> records) {
+    Integer priority = null;
+    Rule rule = null;
+    for (SLRActionRecord rec : records) {
+      Integer cp = rec.getItem().getRule().getPriority();
+      if (cp == null) return null;
+      if (priority == null) {
+        priority = cp;
+        rule = rec.getItem().getRule();
+      } else if (!cp.equals(priority)) {
+        return null;
+      }
+    }
+
+    Associativity assoc = rule.getAssociativity();
+    if (assoc == null) return null;
+
+    SLRActionRecord bestRecord = records.iterator().next();
+    for (SLRActionRecord rec : records) {
+      if (assoc == Associativity.LEFT) {
+        if (rec.getItem().getIndex() > bestRecord.getItem().getIndex()) {
+          bestRecord = rec;
+        }
+      } else {
+        if (rec.getItem().getIndex() < bestRecord.getItem().getIndex()) {
+          bestRecord = rec;
+        }
+      }
+    }
+
+    return bestRecord;
   }
 
   @Override

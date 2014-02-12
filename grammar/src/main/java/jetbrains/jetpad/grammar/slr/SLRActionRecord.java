@@ -25,10 +25,10 @@ import java.util.Set;
 
 class SLRActionRecord {
   private SLRItem myItem;
-  private LRAction<LRState> myAction;
+  private LRAction<SLRState> myAction;
   private Set<SLRActionRecord> duplicates = new HashSet<>();
 
-  SLRActionRecord(SLRItem item, LRAction<LRState> action) {
+  SLRActionRecord(SLRItem item, LRAction<SLRState> action) {
     this.myItem = item;
     this.myAction = action;
   }
@@ -37,7 +37,7 @@ class SLRActionRecord {
     return myItem;
   }
 
-  LRAction<LRState> getAction() {
+  LRAction<SLRState> getAction() {
     return myAction;
   }
 
