@@ -15,7 +15,6 @@
  */
 package jetbrains.jetpad.grammar.slr;
 
-import com.google.common.base.Objects;
 import jetbrains.jetpad.grammar.*;
 import jetbrains.jetpad.grammar.lr.LRAction;
 import jetbrains.jetpad.grammar.lr.LRState;
@@ -206,11 +205,32 @@ public class SLRTableGenerator {
 
       for (Terminal t : myGrammar.getTerminals()) {
         Set<SLRActionRecord> records = state.getRecords(t);
-        System.out.println("on " + t + " " + records + (state.hasAmbiguity(t) ? "!Conflict!" : "Disambiguated : " + state.getRecord(t)));
+        if (records.isEmpty()) continue;
+
+        StringBuilder text = new StringBuilder();
+        text.append("on ").append(t).append(" ");
+
+        if (!state.hasAmbiguity(t)) {
+          text.append(toString(records.iterator().next().getAction()));
+        } else {
+          List<String> actions = new ArrayList<>();
+          for (SLRActionRecord rec : records) {
+            actions.add(toString(rec.getAction()));
+          }
+          text.append(actions).append("  !CONFLICT!  ");
+        }
+        System.out.println(text);
       }
 
       System.out.println("");
     }
+  }
+
+  private String toString(LRAction<SLRState> action) {
+    if (action instanceof LRAction.Shift) {
+      return "shift " + ((LRAction.Shift<SLRState>) action).getState().getName();
+    }
+    return action.toString();
   }
 
 }
