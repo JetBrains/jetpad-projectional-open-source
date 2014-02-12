@@ -204,37 +204,9 @@ public class SLRTableGenerator {
         System.out.println(t);
       }
 
-      System.out.println("Actions:");
-
-      Map<Symbol, Set<String>> actions = new LinkedHashMap<>();
-      for (Symbol s : myGrammar.getSymbols()) {
-        actions.put(s, new LinkedHashSet<String>());
-      }
-
-      for (SLRItem item : state.getItems()) {
-        if (item.isFinal()) {
-          for (Terminal t : item.getRule().getHead().getFollow()) {
-            actions.get(t).add("reduce " + item.getRule());
-          }
-        } else {
-          Symbol s = item.getNextSymbol();
-          SLRState nextState = state.getState(s);
-          if (nextState != null) {
-            actions.get(s).add("shift " + nextState.getName());
-          }
-        }
-      }
-
-      for (Map.Entry<Symbol, Set<String>> e : actions.entrySet()) {
-        if (e.getValue().isEmpty()) continue;
-
-        System.out.print("on " + e.getKey() + " : " + e.getValue());
-
-        if (e.getValue().size() > 1) {
-          System.out.print("  !!!Conflict!!!");
-        }
-
-        System.out.println();
+      for (Terminal t : myGrammar.getTerminals()) {
+        Set<SLRActionRecord> records = state.getRecords(t);
+        System.out.println("on " + t + " " + records + (state.hasAmbiguity(t) ? "!Conflict!" : "Disambiguated : " + state.getRecord(t)));
       }
 
       System.out.println("");
