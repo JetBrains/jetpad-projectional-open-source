@@ -17,34 +17,34 @@ package jetbrains.jetpad.grammar.lr;
 
 import jetbrains.jetpad.grammar.Rule;
 
-public abstract class LRAction {
-  public static LRAction shift(LRState state) {
-    return new Shift(state);
+public abstract class LRAction<StateT> {
+  public static <StateT> LRAction<StateT> shift(StateT state) {
+    return new Shift<>(state);
   }
 
-  public static LRAction reduce(Rule rule) {
-    return new Reduce(rule);
+  public static <StateT> LRAction<StateT> reduce(Rule rule) {
+    return new Reduce<>(rule);
   }
 
-  public static LRAction accept() {
-    return new Accept();
+  public static <StateT> LRAction<StateT> accept() {
+    return new Accept<>();
   }
 
-  public static LRAction error() {
-    return new Error();
+  public static <StateT> LRAction<StateT> error() {
+    return new Error<>();
   }
 
   private LRAction() {
   }
 
-  public static class Shift extends LRAction {
-    private LRState myState;
+  public static class Shift<StateT> extends LRAction<StateT> {
+    private StateT myState;
 
-    private Shift(LRState state) {
+    private Shift(StateT state) {
       this.myState = state;
     }
 
-    public LRState getState() {
+    public StateT getState() {
       return myState;
     }
 
@@ -57,7 +57,7 @@ public abstract class LRAction {
     public boolean equals(Object obj) {
       if (!(obj instanceof Shift)) return false;
 
-      Shift otherShift = (Shift) obj;
+      Shift<StateT> otherShift = (Shift<StateT>) obj;
       return otherShift.myState == myState;
     }
 
@@ -67,7 +67,7 @@ public abstract class LRAction {
     }
   }
 
-  public static class Reduce extends LRAction {
+  public static class Reduce<StateT> extends LRAction<StateT> {
     private Rule myRule;
 
     private Reduce(Rule rule) {
@@ -86,7 +86,7 @@ public abstract class LRAction {
     @Override
     public boolean equals(Object obj) {
       if (!(obj instanceof Reduce)) return false;
-      Reduce otherReduce = (Reduce) obj;
+      Reduce<StateT> otherReduce = (Reduce<StateT>) obj;
       return otherReduce.myRule == myRule;
     }
 
@@ -96,7 +96,7 @@ public abstract class LRAction {
     }
   }
 
-  public static class Accept extends LRAction {
+  public static class Accept<StateT> extends LRAction<StateT> {
     private Accept() {
     }
 
@@ -116,7 +116,7 @@ public abstract class LRAction {
     }
   }
 
-  public static class Error extends LRAction {
+  public static class Error<StateT> extends LRAction<StateT> {
     private Error() {
     }
 

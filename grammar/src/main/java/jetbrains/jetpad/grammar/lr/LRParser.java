@@ -63,13 +63,13 @@ public class LRParser {
       Lexeme lexeme = pos < input.size() ? input.get(pos) : null;
       Terminal current = lexeme != null ? lexeme.getTerminal() : myTable.getGrammar().getEnd();
       LRState state = stack.peek().state;
-      LRAction action = state.getAction(current);
+      LRAction<LRState> action = state.getAction(current);
       if (action instanceof LRAction.Shift) {
-        LRAction.Shift shift = (LRAction.Shift) action;
+        LRAction.Shift<LRState> shift = (LRAction.Shift<LRState>) action;
         stack.push(new ParseStackItem(shift.getState(), pos, pos + 1, current, lexeme));
         pos++;
       } else if (action instanceof LRAction.Reduce) {
-        LRAction.Reduce reduce = (LRAction.Reduce) action;
+        LRAction.Reduce<LRState> reduce = (LRAction.Reduce<LRState>) action;
 
         List<Object> handlerInput = new ArrayList<>();
         int startOffset = pos;

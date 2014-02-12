@@ -69,9 +69,9 @@ public class SLRTableGenerator {
         if (item.isFinal()) {
           for (Terminal t : item.getRule().getHead().getFollow()) {
             if (t == myGrammar.getEnd() && finalItem.equals(item)) {
-              actions.get(t).add(new ActionRecord(item, LRAction.accept()));
+              actions.get(t).add(new ActionRecord(item, LRAction.<LRState>accept()));
             } else {
-              actions.get(t).add(new ActionRecord(item, LRAction.reduce(item.getRule())));
+              actions.get(t).add(new ActionRecord(item, LRAction.<LRState>reduce(item.getRule())));
             }
           }
         } else {
@@ -124,7 +124,7 @@ public class SLRTableGenerator {
 
   private Set<ActionRecord> mergeActions(Set<ActionRecord> records) {
     Set<ActionRecord> result = new HashSet<>();
-    Map<LRAction, ActionRecord> actions = new HashMap<>();
+    Map<LRAction<LRState>, ActionRecord> actions = new HashMap<>();
 
     for (ActionRecord r : records) {
       if (actions.containsKey(r.action)) {
@@ -311,10 +311,10 @@ public class SLRTableGenerator {
 
   private class ActionRecord {
     final SLRItem item;
-    final LRAction action;
+    final LRAction<LRState> action;
     private Set<ActionRecord> duplicates = new HashSet<>();
 
-    ActionRecord(SLRItem item, LRAction action) {
+    ActionRecord(SLRItem item, LRAction<LRState> action) {
       this.item = item;
       this.action = action;
     }

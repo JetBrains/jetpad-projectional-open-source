@@ -23,15 +23,15 @@ import java.util.Map;
 
 public class LRState {
   private String myName;
-  private Map<Terminal, LRAction> myActions = new HashMap<>();
+  private Map<Terminal, LRAction<LRState>> myActions = new HashMap<>();
   private Map<NonTerminal, LRState> myNextStates = new HashMap<>();
 
   LRState(String name) {
     myName = name;
   }
 
-  public LRAction getAction(Terminal terminal) {
-    LRAction action = myActions.get(terminal);
+  public LRAction<LRState> getAction(Terminal terminal) {
+    LRAction<LRState> action = myActions.get(terminal);
     if (action != null) return action;
     return LRAction.error();
   }
@@ -44,7 +44,7 @@ public class LRState {
     return result;
   }
 
-  public void addAction(Terminal terminal, LRAction action) {
+  public void addAction(Terminal terminal, LRAction<LRState> action) {
     if (myActions.containsKey(terminal)) throw new IllegalStateException();
     myActions.put(terminal, action);
   }
