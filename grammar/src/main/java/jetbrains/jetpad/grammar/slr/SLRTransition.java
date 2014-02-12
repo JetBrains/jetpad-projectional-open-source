@@ -26,11 +26,11 @@ public class SLRTransition {
     mySymbol = symbol;
   }
 
-  public SLRState getTarget() {
+  SLRState getTarget() {
     return myTarget;
   }
 
-  public Symbol getSymbol() {
+  Symbol getSymbol() {
     return mySymbol;
   }
 

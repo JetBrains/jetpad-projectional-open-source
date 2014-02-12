@@ -19,7 +19,7 @@ import jetbrains.jetpad.grammar.Symbol;
 
 import java.util.*;
 
-public class SLRState {
+class SLRState {
   private int myNumber;
   private Set<SLRItem> myItems = new LinkedHashSet<>();
   private Set<SLRTransition> myTransitions = new LinkedHashSet<>();
@@ -29,19 +29,19 @@ public class SLRState {
     myItems.addAll(items);
   }
 
-  public String getName() {
+  String getName() {
     return "S" + myNumber;
   }
 
-  public int getNumber() {
+  int getNumber() {
     return myNumber;
   }
 
-  public Set<SLRItem> getItems() {
+  Set<SLRItem> getItems() {
     return Collections.unmodifiableSet(myItems);
   }
 
-  public Set<SLRItem> getKernelItems() {
+  Set<SLRItem> getKernelItems() {
     Set<SLRItem> items = new LinkedHashSet<>();
     for (SLRItem item : myItems) {
       if (item.isKernel()) {
@@ -51,7 +51,7 @@ public class SLRState {
     return Collections.unmodifiableSet(items);
   }
 
-  public Set<SLRItem> getNonKernelItems() {
+  Set<SLRItem> getNonKernelItems() {
     Set<SLRItem> items = new LinkedHashSet<>();
     for (SLRItem item : myItems) {
       if (!item.isKernel()) {
@@ -61,11 +61,11 @@ public class SLRState {
     return Collections.unmodifiableSet(items);
   }
 
-  public Set<SLRTransition> getTransitions() {
+  Set<SLRTransition> getTransitions() {
     return Collections.unmodifiableSet(myTransitions);
   }
 
-  public SLRState getState(Symbol symbol) {
+  SLRState getState(Symbol symbol) {
     for (SLRTransition t : myTransitions) {
       if (t.getSymbol() == symbol) return t.getTarget();
     }
