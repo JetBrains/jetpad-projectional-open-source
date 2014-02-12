@@ -54,10 +54,10 @@ public class SLRTableGenerator {
 
       Map<Terminal, Set<SLRActionRecord>> actions = new LinkedHashMap<>();
 
-      for (NonTerminal nt : myGrammar.getNonTerminals()) {
-        SLRState nextState = state.getState(nt);
-        if (nextState != null) {
-          lrState.addNextState(nt, statesMap.get(nextState));
+      for (SLRTransition trans : state.getTransitions()) {
+        if (trans.getSymbol() instanceof NonTerminal) {
+          NonTerminal nt = (NonTerminal) trans.getSymbol();
+          lrState.addNextState(nt, statesMap.get(trans.getTarget()));
         }
       }
 
