@@ -7,6 +7,8 @@ import jetbrains.jetpad.grammar.parser.LRParserTable;
 
 import java.util.*;
 
+import static java.util.Collections.singleton;
+
 public abstract class BaseLRTableGenerator<ItemT extends LRItem<ItemT>> {
   private Grammar myGrammar;
 
@@ -15,6 +17,8 @@ public abstract class BaseLRTableGenerator<ItemT extends LRItem<ItemT>> {
   }
 
   protected abstract List<LRState<ItemT>> generateStates();
+
+  protected abstract Set<ItemT> closure(ItemT item);
 
   public LRParserTable generateTable() {
     checkGrammar();
@@ -79,6 +83,29 @@ public abstract class BaseLRTableGenerator<ItemT extends LRItem<ItemT>> {
     return result;
   }
 
+  protected Set<ItemT> nextSet(Set<ItemT> source, Symbol s) {
+    Set<ItemT> newSet = new LinkedHashSet<>();
+    for (ItemT item : source) {
+      if (item.getNextSymbol() == s) {
+        newSet.add(item.getNextItem());
+      }
+    }
+    return closure(newSet);
+  }
+
+  protected Set<ItemT> closure(Set<ItemT> items) {
+    Set<ItemT> result = new LinkedHashSet<>();
+    result.addAll(items);
+    boolean hasChanges = true;
+    while (hasChanges) {
+      Set<ItemT> toAdd = new LinkedHashSet<>();
+      for (ItemT item : result) {
+        toAdd.addAll(closure(item));
+      }
+      hasChanges = result.addAll(toAdd);
+    }
+    return result;
+  }
 
   protected Grammar grammar() {
     return myGrammar;

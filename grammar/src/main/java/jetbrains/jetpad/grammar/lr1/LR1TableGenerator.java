@@ -86,44 +86,27 @@ public class LR1TableGenerator extends BaseLRTableGenerator<LR1Item> {
     return new ArrayList<>(states.values());
   }
 
-  private Set<LR1Item> closure(Set<LR1Item> items) {
-    Set<LR1Item> result = new LinkedHashSet<>();
-    result.addAll(items);
-    boolean hasChanges = true;
-    while (hasChanges) {
-      Set<LR1Item> toAdd = new LinkedHashSet<>();
-      for (LR1Item item : result) {
-        if (item.isFinal()) continue;
-        if (!(item.getNextSymbol() instanceof NonTerminal)) continue;
+  @Override
+  protected Set<LR1Item> closure(LR1Item item) {
+    if (item.isFinal()) return Collections.emptySet();
+    if (!(item.getNextSymbol() instanceof NonTerminal)) return Collections.emptySet();;
 
-        NonTerminal currentNonTerminal = (NonTerminal) item.getNextSymbol();
-        List<Symbol> suffix = new ArrayList<>();
-        List<Symbol> rightPart = item.getRule().getSymbols();
-        suffix.addAll(rightPart.subList(item.getIndex() + 1, rightPart.size()));
-        suffix.add(item.getLookAhead());
-        Set<Terminal> first = grammar().first(suffix);
-        for (Rule rule : currentNonTerminal.getRules()) {
-          for (Terminal t : first) {
-            LR1Item newItem = new LR1Item(rule, 0, t);
-            if (!result.contains(newItem)) {
-              toAdd.add(newItem);
-            }
-          }
-        }
+    NonTerminal currentNonTerminal = (NonTerminal) item.getNextSymbol();
+
+    Set<LR1Item> result = new HashSet<>();
+
+    List<Symbol> suffix = new ArrayList<>();
+    List<Symbol> rightPart = item.getRule().getSymbols();
+    suffix.addAll(rightPart.subList(item.getIndex() + 1, rightPart.size()));
+    suffix.add(item.getLookAhead());
+    Set<Terminal> first = grammar().first(suffix);
+    for (Rule rule : currentNonTerminal.getRules()) {
+      for (Terminal t : first) {
+        LR1Item newItem = new LR1Item(rule, 0, t);
+        result.add(newItem);
       }
-      result.addAll(toAdd);
-      hasChanges = !toAdd.isEmpty();
     }
+
     return result;
-  }
-
-  private Set<LR1Item> nextSet(Set<LR1Item> source, Symbol s) {
-    Set<LR1Item> newSet = new LinkedHashSet<>();
-    for (LR1Item item : source) {
-      if (item.getNextSymbol() == s) {
-        newSet.add(item.getNextItem());
-      }
-    }
-    return closure(newSet);
   }
 }

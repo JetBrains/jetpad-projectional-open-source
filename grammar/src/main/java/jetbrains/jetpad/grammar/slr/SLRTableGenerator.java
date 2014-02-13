@@ -90,37 +90,20 @@ public class SLRTableGenerator extends BaseLRTableGenerator<SLRItem> {
     return new ArrayList<>(states.values());
   }
 
-  private Set<SLRItem> closure(Set<SLRItem> items) {
-    Set<SLRItem> result = new LinkedHashSet<>();
-    result.addAll(items);
-    boolean hasChanges = true;
-    while (hasChanges) {
-      Set<SLRItem> toAdd = new LinkedHashSet<>();
-      for (SLRItem item : result) {
-        if (item.isFinal()) continue;
-        if (!(item.getNextSymbol() instanceof NonTerminal)) continue;
+  @Override
+  protected Set<SLRItem> closure(SLRItem item) {
+    if (item.isFinal()) return Collections.emptySet();
+    if (!(item.getNextSymbol() instanceof NonTerminal)) return Collections.emptySet();
 
-        NonTerminal currentNonTerminal = (NonTerminal) item.getNextSymbol();
-        for (Rule rule : currentNonTerminal.getRules()) {
-          SLRItem newItem = new SLRItem(rule, 0);
-          if (!result.contains(newItem)) {
-            toAdd.add(newItem);
-          }
-        }
+    Set<SLRItem> result = new HashSet<>();
+    NonTerminal currentNonTerminal = (NonTerminal) item.getNextSymbol();
+    for (Rule rule : currentNonTerminal.getRules()) {
+      SLRItem newItem = new SLRItem(rule, 0);
+      if (!result.contains(newItem)) {
+        result.add(newItem);
       }
-      result.addAll(toAdd);
-      hasChanges = !toAdd.isEmpty();
     }
+
     return result;
-  }
-
-  private Set<SLRItem> nextSet(Set<SLRItem> source, Symbol s) {
-    Set<SLRItem> newSet = new LinkedHashSet<>();
-    for (SLRItem item : source) {
-      if (item.getNextSymbol() == s) {
-        newSet.add(item.getNextItem());
-      }
-    }
-    return closure(newSet);
   }
 }
