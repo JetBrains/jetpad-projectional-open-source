@@ -16,6 +16,7 @@
 package jetbrains.jetpad.grammar.slr;
 
 import jetbrains.jetpad.grammar.*;
+import jetbrains.jetpad.grammar.base.BaseLRTableGenerator;
 import jetbrains.jetpad.grammar.base.LRActionRecord;
 import jetbrains.jetpad.grammar.base.LRState;
 import jetbrains.jetpad.grammar.base.LRTransition;
@@ -27,11 +28,9 @@ import java.util.*;
 
 import static java.util.Collections.*;
 
-public class SLRTableGenerator {
-  private Grammar myGrammar;
-
+public class SLRTableGenerator extends BaseLRTableGenerator<SLRItem> {
   public SLRTableGenerator(Grammar grammar) {
-    myGrammar = grammar;
+    super(grammar);
   }
 
   public LRParserTable generateTable() {
@@ -39,7 +38,7 @@ public class SLRTableGenerator {
 
     final List<LRState<SLRItem>> states = generateStates();
 
-    LRParserTable result = new LRParserTable(myGrammar);
+    LRParserTable result = new LRParserTable(grammar());
 
     Map<LRState<SLRItem>, LRParserState> statesMap = new HashMap<>();
     statesMap.put(states.get(0), result.getInitialState());
@@ -59,11 +58,11 @@ public class SLRTableGenerator {
       }
 
       Map<Terminal, Set<LRParserAction<LRParserState>>> actions = new LinkedHashMap<>();
-      for (Terminal s : myGrammar.getTerminals()) {
+      for (Terminal s : grammar().getTerminals()) {
         actions.put(s, new LinkedHashSet<LRParserAction<LRParserState>>());
       }
 
-      for (Symbol s : myGrammar.getSymbols()) {
+      for (Symbol s : grammar().getSymbols()) {
         if (!(s instanceof Terminal)) continue;
 
         Terminal t = (Terminal) s;
@@ -97,16 +96,8 @@ public class SLRTableGenerator {
     return result;
   }
 
-  private void checkGrammar() {
-    NonTerminal start = myGrammar.getStart();
-    if (start.getRules().size() != 1) throw new IllegalArgumentException();
-    Rule firstRule = start.getRules().iterator().next();
-    if (firstRule.getSymbols().size() != 1) throw new IllegalArgumentException();
-    if (!(firstRule.getSymbols().get(0) instanceof NonTerminal)) throw new IllegalArgumentException();
-  }
-
   private List<LRState<SLRItem>> generateStates() {
-    NonTerminal initial = myGrammar.getStart();
+    NonTerminal initial = grammar().getStart();
     if (initial.getRules().size() != 1) {
       throw new IllegalStateException("There should be one rule from inital non terminal");
     }
@@ -123,7 +114,7 @@ public class SLRTableGenerator {
       Set<LRState<SLRItem>> items = newItems;
       newItems = new LinkedHashSet<>();
       for (LRState<SLRItem> state : items) {
-        for (Symbol s : myGrammar.getSymbols()) {
+        for (Symbol s : grammar().getSymbols()) {
           Set<SLRItem> nextSet = nextSet(state.getItems(), s);
           if (nextSet.isEmpty()) continue;
           LRState<SLRItem> targetItem = states.get(nextSet);
@@ -137,13 +128,13 @@ public class SLRTableGenerator {
       }
     }
 
-    Rule firstRule = myGrammar.getStart().getFirstRule();
+    Rule firstRule = grammar().getStart().getFirstRule();
     final SLRItem finalItem = new SLRItem(firstRule, firstRule.getSymbols().size());
     for (LRState<SLRItem> state : states.values()) {
       for (SLRItem item : state.getItems()) {
         if (item.isFinal()) {
           for (Terminal t : item.getRule().getHead().getFollow()) {
-            if (t == myGrammar.getEnd() && finalItem.equals(item)) {
+            if (t == grammar().getEnd() && finalItem.equals(item)) {
               state.addRecord(t, new LRActionRecord<>(item, LRParserAction.<LRState<SLRItem>>accept()));
             } else {
               state.addRecord(t, new LRActionRecord<>(item, LRParserAction.<LRState<SLRItem>>reduce(item.getRule())));
@@ -206,7 +197,7 @@ public class SLRTableGenerator {
         System.out.println(t);
       }
 
-      for (Terminal t : myGrammar.getTerminals()) {
+      for (Terminal t : grammar().getTerminals()) {
         Set<LRActionRecord<SLRItem>> records = state.getRecords(t);
         if (records.isEmpty()) continue;
 

@@ -16,10 +16,7 @@
 package jetbrains.jetpad.grammar.lr1;
 
 import jetbrains.jetpad.grammar.*;
-import jetbrains.jetpad.grammar.base.LRActionRecord;
-import jetbrains.jetpad.grammar.base.LRItem;
-import jetbrains.jetpad.grammar.base.LRState;
-import jetbrains.jetpad.grammar.base.LRTransition;
+import jetbrains.jetpad.grammar.base.*;
 import jetbrains.jetpad.grammar.parser.LRParserAction;
 import jetbrains.jetpad.grammar.parser.LRParserState;
 import jetbrains.jetpad.grammar.parser.LRParserTable;
@@ -28,20 +25,17 @@ import java.util.*;
 
 import static java.util.Collections.singleton;
 
-public class LR1TableGenerator {
-  private Grammar myGrammar;
-
+public class LR1TableGenerator extends BaseLRTableGenerator<LR1Item> {
   public LR1TableGenerator(Grammar grammar) {
-    myGrammar = grammar;
+    super(grammar);
   }
 
   public LRParserTable generateTable() {
     checkGrammar();
 
-
     final List<LRState<LR1Item>> states = generateStates();
 
-    LRParserTable result = new LRParserTable(myGrammar);
+    LRParserTable result = new LRParserTable(grammar());
 
     Map<LRState<LR1Item>, LRParserState> statesMap = new HashMap<>();
     statesMap.put(states.get(0), result.getInitialState());
@@ -61,11 +55,11 @@ public class LR1TableGenerator {
       }
 
       Map<Terminal, Set<LRParserAction<LRParserState>>> actions = new LinkedHashMap<>();
-      for (Terminal s : myGrammar.getTerminals()) {
+      for (Terminal s : grammar().getTerminals()) {
         actions.put(s, new LinkedHashSet<LRParserAction<LRParserState>>());
       }
 
-      for (Symbol s : myGrammar.getSymbols()) {
+      for (Symbol s : grammar().getSymbols()) {
         if (!(s instanceof Terminal)) continue;
 
         Terminal t = (Terminal) s;
@@ -99,16 +93,8 @@ public class LR1TableGenerator {
     return result;
   }
 
-  private void checkGrammar() {
-    NonTerminal start = myGrammar.getStart();
-    if (start.getRules().size() != 1) throw new IllegalArgumentException();
-    Rule firstRule = start.getRules().iterator().next();
-    if (firstRule.getSymbols().size() != 1) throw new IllegalArgumentException();
-    if (!(firstRule.getSymbols().get(0) instanceof NonTerminal)) throw new IllegalArgumentException();
-  }
-
   private List<LRState<LR1Item>> generateStates() {
-    NonTerminal initial = myGrammar.getStart();
+    NonTerminal initial = grammar().getStart();
     if (initial.getRules().size() != 1) {
       throw new IllegalStateException("There should be one rule from inital non terminal");
     }
@@ -116,7 +102,7 @@ public class LR1TableGenerator {
     Map<Set<LR1Item>, LRState<LR1Item>> states = new LinkedHashMap<>();
 
     int index = 0;
-    LRState<LR1Item> init = new LRState<>(index++, closure(singleton(new LR1Item(initial.getFirstRule(), 0, myGrammar.getEnd()))));
+    LRState<LR1Item> init = new LRState<>(index++, closure(singleton(new LR1Item(initial.getFirstRule(), 0, grammar().getEnd()))));
     Set<LRState<LR1Item>> newItems = new LinkedHashSet<>();
     newItems.add(init);
     states.put(init.getItems(), init);
@@ -125,7 +111,7 @@ public class LR1TableGenerator {
       Set<LRState<LR1Item>> items = newItems;
       newItems = new LinkedHashSet<>();
       for (LRState<LR1Item> state : items) {
-        for (Symbol s : myGrammar.getSymbols()) {
+        for (Symbol s : grammar().getSymbols()) {
           Set<LR1Item> nextSet = nextSet(state.getItems(), s);
           if (nextSet.isEmpty()) continue;
           LRState<LR1Item> targetItem = states.get(nextSet);
@@ -139,13 +125,13 @@ public class LR1TableGenerator {
       }
     }
 
-    Rule firstRule = myGrammar.getStart().getFirstRule();
-    final LR1Item finalItem = new LR1Item(firstRule, firstRule.getSymbols().size(), myGrammar.getEnd());
+    Rule firstRule = grammar().getStart().getFirstRule();
+    final LR1Item finalItem = new LR1Item(firstRule, firstRule.getSymbols().size(), grammar().getEnd());
     for (LRState<LR1Item> state : states.values()) {
       for (LR1Item item : state.getItems()) {
         if (item.isFinal()) {
           Terminal t = item.getLookAhead();
-          if (t == myGrammar.getEnd() && finalItem.equals(item)) {
+          if (t == grammar().getEnd() && finalItem.equals(item)) {
             state.addRecord(t, new LRActionRecord<>(item, LRParserAction.<LRState<LR1Item>>accept()));
           } else {
             state.addRecord(t, new LRActionRecord<>(item, LRParserAction.<LRState<LR1Item>>reduce(item.getRule())));
@@ -229,7 +215,7 @@ public class LR1TableGenerator {
         System.out.println(t);
       }
 
-      for (Terminal t : myGrammar.getTerminals()) {
+      for (Terminal t : grammar().getTerminals()) {
         Set<LRActionRecord<LR1Item>> records = state.getMergedRecords(t);
         if (records.isEmpty()) continue;
 
