@@ -18,7 +18,7 @@ package jetbrains.jetpad.projectional.demo.indentDemo.hybrid;
 import com.google.common.base.Predicate;
 import jetbrains.jetpad.base.Handler;
 import jetbrains.jetpad.grammar.*;
-import jetbrains.jetpad.grammar.lr.Lexeme;
+import jetbrains.jetpad.grammar.parser.Lexeme;
 import jetbrains.jetpad.hybrid.parser.IdentifierToken;
 import jetbrains.jetpad.hybrid.parser.Parser;
 import jetbrains.jetpad.hybrid.parser.ValueToken;

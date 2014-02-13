@@ -19,9 +19,9 @@ import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 import jetbrains.jetpad.base.Handler;
 import jetbrains.jetpad.grammar.*;
-import jetbrains.jetpad.grammar.lr.LRParser;
-import jetbrains.jetpad.grammar.lr.LRTable;
-import jetbrains.jetpad.grammar.lr.Lexeme;
+import jetbrains.jetpad.grammar.parser.LRParser;
+import jetbrains.jetpad.grammar.parser.LRTable;
+import jetbrains.jetpad.grammar.parser.Lexeme;
 import jetbrains.jetpad.grammar.slr.SLRTableGenerator;
 import jetbrains.jetpad.hybrid.parser.*;
 

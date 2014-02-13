@@ -15,8 +15,7 @@
  */
 package jetbrains.jetpad.grammar.slr;
 
-import jetbrains.jetpad.grammar.lr.LRAction;
-import jetbrains.jetpad.grammar.lr.LRState;
+import jetbrains.jetpad.grammar.parser.LRAction;
 
 import java.util.ArrayList;
 import java.util.HashSet;

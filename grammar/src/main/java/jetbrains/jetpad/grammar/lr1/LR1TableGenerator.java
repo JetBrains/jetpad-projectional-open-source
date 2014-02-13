@@ -16,9 +16,9 @@
 package jetbrains.jetpad.grammar.lr1;
 
 import jetbrains.jetpad.grammar.*;
-import jetbrains.jetpad.grammar.lr.LRAction;
-import jetbrains.jetpad.grammar.lr.LRState;
-import jetbrains.jetpad.grammar.lr.LRTable;
+import jetbrains.jetpad.grammar.parser.LRAction;
+import jetbrains.jetpad.grammar.parser.LRState;
+import jetbrains.jetpad.grammar.parser.LRTable;
 
 import java.util.*;
 

@@ -17,7 +17,7 @@ package jetbrains.jetpad.projectional.demo.hybridExpr.mapper;
 
 import jetbrains.jetpad.base.Handler;
 import jetbrains.jetpad.grammar.*;
-import jetbrains.jetpad.grammar.lr.Lexeme;
+import jetbrains.jetpad.grammar.parser.Lexeme;
 import jetbrains.jetpad.projectional.demo.hybridExpr.model.*;
 import jetbrains.jetpad.hybrid.parser.IdentifierToken;
 import jetbrains.jetpad.hybrid.parser.IntValueToken;

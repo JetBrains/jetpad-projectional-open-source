@@ -15,12 +15,10 @@
  */
 package jetbrains.jetpad.grammar.slr;
 
-import com.google.common.base.*;
 import jetbrains.jetpad.grammar.Associativity;
 import jetbrains.jetpad.grammar.Rule;
 import jetbrains.jetpad.grammar.Symbol;
-import jetbrains.jetpad.grammar.lr.LRAction;
-import jetbrains.jetpad.grammar.lr.LRState;
+import jetbrains.jetpad.grammar.parser.LRAction;
 
 import java.util.*;
 

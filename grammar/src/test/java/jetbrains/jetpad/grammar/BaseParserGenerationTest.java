@@ -1,11 +1,9 @@
 package jetbrains.jetpad.grammar;
 
 import com.google.common.collect.Range;
-import jetbrains.jetpad.grammar.lr.LRParser;
-import jetbrains.jetpad.grammar.lr.LRTable;
-import jetbrains.jetpad.grammar.lr.Lexeme;
-import jetbrains.jetpad.grammar.lr1.LR1TableGenerator;
-import jetbrains.jetpad.grammar.slr.SLRTableGenerator;
+import jetbrains.jetpad.grammar.parser.LRParser;
+import jetbrains.jetpad.grammar.parser.LRTable;
+import jetbrains.jetpad.grammar.parser.Lexeme;
 import org.junit.Test;
 
 import static jetbrains.jetpad.grammar.GrammarTestUtil.asTokens;

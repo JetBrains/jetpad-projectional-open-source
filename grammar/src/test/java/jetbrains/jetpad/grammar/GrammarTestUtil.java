@@ -15,7 +15,7 @@
  */
 package jetbrains.jetpad.grammar;
 
-import jetbrains.jetpad.grammar.lr.Lexeme;
+import jetbrains.jetpad.grammar.parser.Lexeme;
 
 public class GrammarTestUtil {
   public static Lexeme[] asTokens(Terminal... ts) {

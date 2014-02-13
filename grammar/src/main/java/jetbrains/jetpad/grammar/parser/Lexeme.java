@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package jetbrains.jetpad.grammar.lr;
+package jetbrains.jetpad.grammar.parser;
 
 import jetbrains.jetpad.grammar.Terminal;
 

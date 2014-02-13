@@ -15,7 +15,7 @@
  */
 package jetbrains.jetpad.grammar;
 
-import jetbrains.jetpad.grammar.lr.LRParser;
+import jetbrains.jetpad.grammar.parser.LRParser;
 import jetbrains.jetpad.grammar.slr.SLRTableGenerator;
 import org.junit.Test;
 

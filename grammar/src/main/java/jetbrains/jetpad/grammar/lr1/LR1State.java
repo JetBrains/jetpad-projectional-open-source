@@ -18,7 +18,7 @@ package jetbrains.jetpad.grammar.lr1;
 import jetbrains.jetpad.grammar.Associativity;
 import jetbrains.jetpad.grammar.Rule;
 import jetbrains.jetpad.grammar.Symbol;
-import jetbrains.jetpad.grammar.lr.LRAction;
+import jetbrains.jetpad.grammar.parser.LRAction;
 
 import java.util.*;
 

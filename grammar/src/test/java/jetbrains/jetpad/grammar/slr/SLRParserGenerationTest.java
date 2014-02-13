@@ -15,15 +15,8 @@
  */
 package jetbrains.jetpad.grammar.slr;
 
-import com.google.common.collect.Range;
 import jetbrains.jetpad.grammar.*;
-import jetbrains.jetpad.grammar.lr.LRParser;
-import jetbrains.jetpad.grammar.lr.LRTable;
-import jetbrains.jetpad.grammar.lr.Lexeme;
-import org.junit.Test;
-
-import static jetbrains.jetpad.grammar.GrammarTestUtil.asTokens;
-import static org.junit.Assert.*;
+import jetbrains.jetpad.grammar.parser.LRTable;
 
 public class SLRParserGenerationTest extends BaseParserGenerationTest {
   @Override
