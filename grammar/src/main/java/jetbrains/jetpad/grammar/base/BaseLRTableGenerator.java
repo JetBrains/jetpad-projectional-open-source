@@ -16,9 +16,61 @@ public abstract class BaseLRTableGenerator<ItemT extends LRItem<ItemT>> {
     myGrammar = grammar;
   }
 
-  protected abstract List<LRState<ItemT>> generateStates();
-
   protected abstract Set<ItemT> closure(ItemT item);
+
+  protected abstract ItemT initialItem();
+
+  protected abstract void addFinal(LRState<ItemT> state, ItemT item);
+
+  protected List<LRState<ItemT>> generateStates() {
+    NonTerminal initial = grammar().getStart();
+    if (initial.getRules().size() != 1) {
+      throw new IllegalStateException("There should be one rule from inital non terminal");
+    }
+
+    Map<Set<ItemT>, LRState<ItemT>> states = new LinkedHashMap<>();
+
+    int index = 0;
+    LRState<ItemT> init = new LRState<>(index++, closure(singleton(initialItem())));
+    Set<LRState<ItemT>> newItems = new LinkedHashSet<>();
+    newItems.add(init);
+    states.put(init.getItems(), init);
+
+    while (!newItems.isEmpty()) {
+      Set<LRState<ItemT>> items = newItems;
+      newItems = new LinkedHashSet<>();
+      for (LRState<ItemT> state : items) {
+        for (Symbol s : grammar().getSymbols()) {
+          Set<ItemT> nextSet = nextSet(state.getItems(), s);
+          if (nextSet.isEmpty()) continue;
+          LRState<ItemT> targetItem = states.get(nextSet);
+          if (targetItem == null) {
+            targetItem = new LRState<>(index++, nextSet);
+            states.put(nextSet, targetItem);
+            newItems.add(targetItem);
+          }
+          state.addTransition(new LRTransition<>(targetItem, s));
+        }
+      }
+    }
+
+    Rule firstRule = grammar().getStart().getFirstRule();
+    for (LRState<ItemT> state : states.values()) {
+      for (ItemT item : state.getItems()) {
+        if (item.isFinal()) {
+          addFinal(state, item);
+        } else {
+          Symbol s = item.getNextSymbol();
+          LRState<ItemT> nextState = state.getState(s);
+          if (nextState != null && s instanceof Terminal) {
+            state.addRecord((Symbol) s, new LRActionRecord<>(item, LRParserAction.shift(nextState)));
+          }
+        }
+      }
+    }
+
+    return new ArrayList<>(states.values());
+  }
 
   public LRParserTable generateTable() {
     checkGrammar();

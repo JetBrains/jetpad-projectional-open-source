@@ -30,60 +30,24 @@ public class LR1TableGenerator extends BaseLRTableGenerator<LR1Item> {
     super(grammar);
   }
 
-  protected List<LRState<LR1Item>> generateStates() {
+  @Override
+  protected LR1Item initialItem() {
     NonTerminal initial = grammar().getStart();
-    if (initial.getRules().size() != 1) {
-      throw new IllegalStateException("There should be one rule from inital non terminal");
-    }
+    return new LR1Item(initial.getFirstRule(), 0, grammar().getEnd());
+  }
 
-    Map<Set<LR1Item>, LRState<LR1Item>> states = new LinkedHashMap<>();
-
-    int index = 0;
-    LRState<LR1Item> init = new LRState<>(index++, closure(singleton(new LR1Item(initial.getFirstRule(), 0, grammar().getEnd()))));
-    Set<LRState<LR1Item>> newItems = new LinkedHashSet<>();
-    newItems.add(init);
-    states.put(init.getItems(), init);
-
-    while (!newItems.isEmpty()) {
-      Set<LRState<LR1Item>> items = newItems;
-      newItems = new LinkedHashSet<>();
-      for (LRState<LR1Item> state : items) {
-        for (Symbol s : grammar().getSymbols()) {
-          Set<LR1Item> nextSet = nextSet(state.getItems(), s);
-          if (nextSet.isEmpty()) continue;
-          LRState<LR1Item> targetItem = states.get(nextSet);
-          if (targetItem == null) {
-            targetItem = new LRState<>(index++, nextSet);
-            states.put(nextSet, targetItem);
-            newItems.add(targetItem);
-          }
-          state.addTransition(new LRTransition<>(targetItem, s));
-        }
-      }
-    }
-
-    Rule firstRule = grammar().getStart().getFirstRule();
+  @Override
+  protected void addFinal(LRState<LR1Item> state, LR1Item item) {
+    NonTerminal initial = grammar().getStart();
+    Rule firstRule = initial.getFirstRule();
     final LR1Item finalItem = new LR1Item(firstRule, firstRule.getSymbols().size(), grammar().getEnd());
-    for (LRState<LR1Item> state : states.values()) {
-      for (LR1Item item : state.getItems()) {
-        if (item.isFinal()) {
-          Terminal t = item.getLookAhead();
-          if (t == grammar().getEnd() && finalItem.equals(item)) {
-            state.addRecord(t, new LRActionRecord<>(item, LRParserAction.<LRState<LR1Item>>accept()));
-          } else {
-            state.addRecord(t, new LRActionRecord<>(item, LRParserAction.<LRState<LR1Item>>reduce(item.getRule())));
-          }
-        } else {
-          Symbol s = item.getNextSymbol();
-          LRState<LR1Item> nextState = state.getState(s);
-          if (nextState != null && s instanceof Terminal) {
-            state.addRecord((Symbol) s, new LRActionRecord<>(item, LRParserAction.shift(nextState)));
-          }
-        }
-      }
-    }
 
-    return new ArrayList<>(states.values());
+    Terminal t = item.getLookAhead();
+    if (t == grammar().getEnd() && finalItem.equals(item)) {
+      state.addRecord(t, new LRActionRecord<>(item, LRParserAction.<LRState<LR1Item>>accept()));
+    } else {
+      state.addRecord(t, new LRActionRecord<>(item, LRParserAction.<LRState<LR1Item>>reduce(item.getRule())));
+    }
   }
 
   @Override
