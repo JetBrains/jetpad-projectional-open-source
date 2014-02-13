@@ -30,70 +30,7 @@ public class LR1TableGenerator extends BaseLRTableGenerator<LR1Item> {
     super(grammar);
   }
 
-  public LRParserTable generateTable() {
-    checkGrammar();
-
-    final List<LRState<LR1Item>> states = generateStates();
-
-    LRParserTable result = new LRParserTable(grammar());
-
-    Map<LRState<LR1Item>, LRParserState> statesMap = new HashMap<>();
-    statesMap.put(states.get(0), result.getInitialState());
-    for (LRState<LR1Item> state : states) {
-      if (state == states.get(0)) continue;
-      statesMap.put(state, result.newState(state.getName()));
-    }
-
-    for (LRState<LR1Item> state : states) {
-      LRParserState lrState = statesMap.get(state);
-
-      for (LRTransition<LR1Item> trans : state.getTransitions()) {
-        if (trans.getSymbol() instanceof NonTerminal) {
-          NonTerminal nt = (NonTerminal) trans.getSymbol();
-          lrState.addNextState(nt, statesMap.get(trans.getTarget()));
-        }
-      }
-
-      Map<Terminal, Set<LRParserAction<LRParserState>>> actions = new LinkedHashMap<>();
-      for (Terminal s : grammar().getTerminals()) {
-        actions.put(s, new LinkedHashSet<LRParserAction<LRParserState>>());
-      }
-
-      for (Symbol s : grammar().getSymbols()) {
-        if (!(s instanceof Terminal)) continue;
-
-        Terminal t = (Terminal) s;
-
-        if (!state.hasRecords(s)) continue;
-
-        if (state.hasAmbiguity(t)) {
-          throw new IllegalStateException("There's ambiguity. Can't generate table");
-        }
-        LRActionRecord<LR1Item> rec = state.getRecord(t);
-
-        LRParserAction<LRParserState> action;
-        if (rec.getAction() instanceof LRParserAction.Shift<?>) {
-          LRParserAction.Shift<LRState<LR1Item>> shift = (LRParserAction.Shift<LRState<LR1Item>>) rec.getAction();
-          action = LRParserAction.shift(statesMap.get(shift.getState()));
-        } else if (rec.getAction() instanceof LRParserAction.Reduce<?>) {
-          LRParserAction.Reduce<LRState<LR1Item>> reduce = (LRParserAction.Reduce<LRState<LR1Item>>) rec.getAction();
-          action = LRParserAction.reduce(reduce.getRule());
-        } else if (rec.getAction() instanceof LRParserAction.Accept<?>) {
-          action = LRParserAction.accept();
-        } else if (rec.getAction() instanceof LRParserAction.Error<?>) {
-          action = LRParserAction.error();
-        } else {
-          throw new IllegalStateException();
-        }
-
-        lrState.addAction(t, action);
-      }
-    }
-
-    return result;
-  }
-
-  private List<LRState<LR1Item>> generateStates() {
+  protected List<LRState<LR1Item>> generateStates() {
     NonTerminal initial = grammar().getStart();
     if (initial.getRules().size() != 1) {
       throw new IllegalStateException("There should be one rule from inital non terminal");
