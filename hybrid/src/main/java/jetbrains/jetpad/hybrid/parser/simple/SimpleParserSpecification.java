@@ -39,9 +39,18 @@ public class SimpleParserSpecification<ExprT> {
   private Terminal myError = myGrammar.newTerminal("error");
   private Map<Predicate<Object>, Terminal> myValueTerminals = new HashMap<>();
 
+  private boolean myUserFullLR;
+
   public SimpleParserSpecification() {
-    myGrammar.newRule(myGrammar.getStart(), myExpr);
+    this(false);
   }
+
+
+  public SimpleParserSpecification(boolean userFullLR) {
+    myGrammar.newRule(myGrammar.getStart(), myExpr);
+    myUserFullLR = userFullLR;
+  }
+
 
   public SimpleParserSpecification<ExprT> addBinaryOperator(Token token, final BinaryExpressionFactory<ExprT> factory, int priority, boolean leftAssoc) {
     Terminal term = getOrDeclareTerminal(token);
@@ -153,8 +162,11 @@ public class SimpleParserSpecification<ExprT> {
   }
 
   private LRParserTable buildTable() {
-    LR1TableGenerator generator = new LR1TableGenerator(myGrammar);
-    return generator.generateTable();
+    if (myUserFullLR) {
+      return new LR1TableGenerator(myGrammar).generateTable();
+    } else {
+      return new SLRTableGenerator(myGrammar).generateTable();
+    }
   }
 
   public Function<ParserParameters, Parser<ExprT>> buildParameterizedParser() {
