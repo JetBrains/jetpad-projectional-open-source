@@ -3,8 +3,12 @@ package jetbrains.jetpad.grammar;
 import jetbrains.jetpad.grammar.lr1.LR1TableGenerator;
 import jetbrains.jetpad.grammar.slr.SLRTableGenerator;
 
-public class Test {
+public class TestMain {
   public static void main(String[] args) {
+    testTestGrammar();
+  }
+
+  private static void testFunGrammar() {
     Grammar g = new Grammar();
 
     NonTerminal e = g.newNonTerminal("E");
@@ -28,13 +32,32 @@ public class Test {
 
     LR1TableGenerator lr1gen = new LR1TableGenerator(g);
     lr1gen.dumpTable();
-
-    System.out.println("SLR");
-    SLRTableGenerator slrgen = new SLRTableGenerator(g);
-    slrgen.dumpTable();
-
-
   }
+
+
+  private static void testTestGrammar() {
+    Grammar g = new Grammar();
+
+    Terminal a = g.newTerminal("a");
+    Terminal b = g.newTerminal("b");
+    Terminal c = g.newTerminal("c");
+    Terminal d = g.newTerminal("d");
+
+    NonTerminal ss = g.newNonTerminal("SS");
+    NonTerminal aa = g.newNonTerminal("A");
+
+    g.newRule(g.getStart(), ss);
+    g.newRule(ss, aa, a);
+    g.newRule(ss, b, aa, c);
+    g.newRule(ss, d, c);
+    g.newRule(ss, b, d, a);
+    g.newRule(aa, d);
+
+    new LR1TableGenerator(g).dumpTable();
+//
+//    new SLRTableGenerator(g).dumpTable();
+  }
+
 //
 //  public static void main(String[] args) {
 //    Grammar g = new Grammar();
