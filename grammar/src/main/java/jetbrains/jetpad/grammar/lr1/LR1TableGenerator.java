@@ -224,7 +224,7 @@ public class LR1TableGenerator {
       }
 
       for (Terminal t : myGrammar.getTerminals()) {
-        Set<LR1ActionRecord> records = state.getRecords(t);
+        Set<LR1ActionRecord> records = state.getMergedRecords(t);
         if (records.isEmpty()) continue;
 
         StringBuilder text = new StringBuilder();

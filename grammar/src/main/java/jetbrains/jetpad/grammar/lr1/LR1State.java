@@ -76,6 +76,10 @@ class LR1State {
     return Collections.unmodifiableSet(records);
   }
 
+  Set<LR1ActionRecord> getMergedRecords(Symbol s) {
+    return mergeActions(getRecords(s));
+  }
+
   boolean hasRecords(Symbol s) {
     return myActionRecords.get(s) != null && !myActionRecords.get(s).isEmpty();
   }
@@ -213,6 +217,6 @@ class LR1State {
 
   @Override
   public String toString() {
-    return getName() + " : " + getKernelItems();
+    return getName() + " : " + getKernelItems() + " / " + getItems();
   }
 }

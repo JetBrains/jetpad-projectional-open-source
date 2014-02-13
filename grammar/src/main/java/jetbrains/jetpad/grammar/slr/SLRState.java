@@ -78,6 +78,10 @@ class SLRState {
     return Collections.unmodifiableSet(records);
   }
 
+  Set<SLRActionRecord> getMergedRecords(Symbol s) {
+    return mergeActions(getRecords(s));
+  }
+
   boolean hasRecords(Symbol s) {
     return myActionRecords.get(s) != null && !myActionRecords.get(s).isEmpty();
   }
