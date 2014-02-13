@@ -25,7 +25,7 @@ public class ViewDumpers {
   }
 
   public static void dumpValidationStatus(View v) {
-    new Dumper<>(new Printer<View>() {
+    new Dumper<View>(new Printer<View>() {
       @Override
       public void print(DumpContext ctx, View item) {
         ctx.println(item.toString() + "[" + (item.valid().get() ? "+" : "-") + "]");
