@@ -2,20 +2,20 @@ package jetbrains.jetpad.grammar.base;
 
 import jetbrains.jetpad.grammar.Symbol;
 
-public class LRTransition<ItemT extends LRItem<ItemT>> {
+class LRTransition<ItemT extends LRItem<ItemT>> {
   private LRState<ItemT> myTarget;
   private Symbol mySymbol;
 
-  public LRTransition(LRState<ItemT> target, Symbol symbol) {
+  LRTransition(LRState<ItemT> target, Symbol symbol) {
     myTarget = target;
     mySymbol = symbol;
   }
 
-  public LRState<ItemT> getTarget() {
+  LRState<ItemT> getTarget() {
     return myTarget;
   }
 
-  public Symbol getSymbol() {
+  Symbol getSymbol() {
     return mySymbol;
   }
 

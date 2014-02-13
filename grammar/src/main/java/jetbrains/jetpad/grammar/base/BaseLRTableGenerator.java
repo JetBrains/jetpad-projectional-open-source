@@ -135,7 +135,7 @@ public abstract class BaseLRTableGenerator<ItemT extends LRItem<ItemT>> {
     return result;
   }
 
-  protected Set<ItemT> nextSet(Set<ItemT> source, Symbol s) {
+  private Set<ItemT> nextSet(Set<ItemT> source, Symbol s) {
     Set<ItemT> newSet = new LinkedHashSet<>();
     for (ItemT item : source) {
       if (item.getNextSymbol() == s) {
@@ -145,7 +145,7 @@ public abstract class BaseLRTableGenerator<ItemT extends LRItem<ItemT>> {
     return closure(newSet);
   }
 
-  protected Set<ItemT> closure(Set<ItemT> items) {
+  private Set<ItemT> closure(Set<ItemT> items) {
     Set<ItemT> result = new LinkedHashSet<>();
     result.addAll(items);
     boolean hasChanges = true;

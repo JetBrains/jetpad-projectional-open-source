@@ -19,7 +19,6 @@ import jetbrains.jetpad.grammar.*;
 import jetbrains.jetpad.grammar.base.BaseLRTableGenerator;
 import jetbrains.jetpad.grammar.base.LRActionRecord;
 import jetbrains.jetpad.grammar.base.LRState;
-import jetbrains.jetpad.grammar.base.LRTransition;
 import jetbrains.jetpad.grammar.parser.LRParserAction;
 import jetbrains.jetpad.grammar.parser.LRParserState;
 import jetbrains.jetpad.grammar.parser.LRParserTable;

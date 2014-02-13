@@ -17,7 +17,7 @@ public class LRActionRecord<ItemT extends LRItem<ItemT>> {
     myAction = action;
   }
 
-  ItemT getItem() {
+  public ItemT getItem() {
     return myItem;
   }
 
