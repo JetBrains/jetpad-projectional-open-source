@@ -11,6 +11,7 @@ import static java.util.Collections.singleton;
 
 public abstract class BaseLRTableGenerator<ItemT extends LRItem<ItemT>> {
   private Grammar myGrammar;
+  private Map<Set<ItemT>, Set<ItemT>> myClosureCache = new HashMap<>();
 
   public BaseLRTableGenerator(Grammar grammar) {
     myGrammar = grammar;
@@ -146,7 +147,11 @@ public abstract class BaseLRTableGenerator<ItemT extends LRItem<ItemT>> {
   }
 
   private Set<ItemT> closure(Set<ItemT> items) {
-    Set<ItemT> result = new LinkedHashSet<>();
+    Set<ItemT> result = myClosureCache.get(items);
+    if (result != null) {
+      return result;
+    }
+    result = new LinkedHashSet<>();
     result.addAll(items);
     boolean hasChanges = true;
     while (hasChanges) {
@@ -156,6 +161,7 @@ public abstract class BaseLRTableGenerator<ItemT extends LRItem<ItemT>> {
       }
       hasChanges = result.addAll(toAdd);
     }
+    myClosureCache.put(items, result);
     return result;
   }
 
