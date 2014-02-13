@@ -21,12 +21,12 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-public final class LRTable {
+public final class LRParserTable {
   private Grammar myGrammar;
-  private LRState myInitialState;
-  private Set<LRState> myStates = new HashSet<>();
+  private LRParserState myInitialState;
+  private Set<LRParserState> myStates = new HashSet<>();
 
-  public LRTable(Grammar grammar) {
+  public LRParserTable(Grammar grammar) {
     myGrammar = grammar;
     myInitialState = newState("S0");
   }
@@ -35,16 +35,16 @@ public final class LRTable {
     return myGrammar;
   }
 
-  public LRState getInitialState() {
+  public LRParserState getInitialState() {
     return myInitialState;
   }
 
-  public Set<LRState> getStates() {
+  public Set<LRParserState> getStates() {
     return Collections.unmodifiableSet(myStates);
   }
 
-  public LRState newState(String name) {
-    LRState result = new LRState(name);
+  public LRParserState newState(String name) {
+    LRParserState result = new LRParserState(name);
     myStates.add(result);
     return result;
   }

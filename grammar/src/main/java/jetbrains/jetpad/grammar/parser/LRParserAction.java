@@ -17,27 +17,27 @@ package jetbrains.jetpad.grammar.parser;
 
 import jetbrains.jetpad.grammar.Rule;
 
-public abstract class LRAction<StateT> {
-  public static <StateT> LRAction<StateT> shift(StateT state) {
+public abstract class LRParserAction<StateT> {
+  public static <StateT> LRParserAction<StateT> shift(StateT state) {
     return new Shift<>(state);
   }
 
-  public static <StateT> LRAction<StateT> reduce(Rule rule) {
+  public static <StateT> LRParserAction<StateT> reduce(Rule rule) {
     return new Reduce<>(rule);
   }
 
-  public static <StateT> LRAction<StateT> accept() {
+  public static <StateT> LRParserAction<StateT> accept() {
     return new Accept<>();
   }
 
-  public static <StateT> LRAction<StateT> error() {
+  public static <StateT> LRParserAction<StateT> error() {
     return new Error<>();
   }
 
-  private LRAction() {
+  private LRParserAction() {
   }
 
-  public static class Shift<StateT> extends LRAction<StateT> {
+  public static class Shift<StateT> extends LRParserAction<StateT> {
     private StateT myState;
 
     private Shift(StateT state) {
@@ -67,7 +67,7 @@ public abstract class LRAction<StateT> {
     }
   }
 
-  public static class Reduce<StateT> extends LRAction<StateT> {
+  public static class Reduce<StateT> extends LRParserAction<StateT> {
     private Rule myRule;
 
     private Reduce(Rule rule) {
@@ -96,7 +96,7 @@ public abstract class LRAction<StateT> {
     }
   }
 
-  public static class Accept<StateT> extends LRAction<StateT> {
+  public static class Accept<StateT> extends LRParserAction<StateT> {
     private Accept() {
     }
 
@@ -116,7 +116,7 @@ public abstract class LRAction<StateT> {
     }
   }
 
-  public static class Error<StateT> extends LRAction<StateT> {
+  public static class Error<StateT> extends LRParserAction<StateT> {
     private Error() {
     }
 

@@ -16,9 +16,12 @@
 package jetbrains.jetpad.grammar.slr;
 
 import jetbrains.jetpad.grammar.*;
-import jetbrains.jetpad.grammar.parser.LRAction;
-import jetbrains.jetpad.grammar.parser.LRState;
-import jetbrains.jetpad.grammar.parser.LRTable;
+import jetbrains.jetpad.grammar.base.LRActionRecord;
+import jetbrains.jetpad.grammar.base.LRState;
+import jetbrains.jetpad.grammar.base.LRTransition;
+import jetbrains.jetpad.grammar.parser.LRParserAction;
+import jetbrains.jetpad.grammar.parser.LRParserState;
+import jetbrains.jetpad.grammar.parser.LRParserTable;
 
 import java.util.*;
 
@@ -31,33 +34,33 @@ public class SLRTableGenerator {
     myGrammar = grammar;
   }
 
-  public LRTable generateTable() {
+  public LRParserTable generateTable() {
     checkGrammar();
 
-    final List<SLRState> states = generateStates();
+    final List<LRState<SLRItem>> states = generateStates();
 
-    LRTable result = new LRTable(myGrammar);
+    LRParserTable result = new LRParserTable(myGrammar);
 
-    Map<SLRState, LRState> statesMap = new HashMap<>();
+    Map<LRState<SLRItem>, LRParserState> statesMap = new HashMap<>();
     statesMap.put(states.get(0), result.getInitialState());
-    for (SLRState state : states) {
+    for (LRState<SLRItem> state : states) {
       if (state == states.get(0)) continue;
       statesMap.put(state, result.newState(state.getName()));
     }
 
-    for (SLRState state : states) {
-      LRState lrState = statesMap.get(state);
+    for (LRState<SLRItem> state : states) {
+      LRParserState lrState = statesMap.get(state);
 
-      for (SLRTransition trans : state.getTransitions()) {
+      for (LRTransition<SLRItem> trans : state.getTransitions()) {
         if (trans.getSymbol() instanceof NonTerminal) {
           NonTerminal nt = (NonTerminal) trans.getSymbol();
           lrState.addNextState(nt, statesMap.get(trans.getTarget()));
         }
       }
 
-      Map<Terminal, Set<LRAction<LRState>>> actions = new LinkedHashMap<>();
+      Map<Terminal, Set<LRParserAction<LRParserState>>> actions = new LinkedHashMap<>();
       for (Terminal s : myGrammar.getTerminals()) {
-        actions.put(s, new LinkedHashSet<LRAction<LRState>>());
+        actions.put(s, new LinkedHashSet<LRParserAction<LRParserState>>());
       }
 
       for (Symbol s : myGrammar.getSymbols()) {
@@ -70,19 +73,19 @@ public class SLRTableGenerator {
         if (state.hasAmbiguity(t)) {
           throw new IllegalStateException("There's ambiguity. Can't tgenerate table");
         }
-        SLRActionRecord rec = state.getRecord(t);
+        LRActionRecord<SLRItem> rec = state.getRecord(t);
 
-        LRAction<LRState> action;
-        if (rec.getAction() instanceof LRAction.Shift<?>) {
-          LRAction.Shift<SLRState> shift = (LRAction.Shift<SLRState>) rec.getAction();
-          action = LRAction.shift(statesMap.get(shift.getState()));
-        } else if (rec.getAction() instanceof LRAction.Reduce<?>) {
-          LRAction.Reduce<SLRState> reduce = (LRAction.Reduce<SLRState>) rec.getAction();
-          action = LRAction.reduce(reduce.getRule());
-        } else if (rec.getAction() instanceof LRAction.Accept<?>) {
-          action = LRAction.accept();
-        } else if (rec.getAction() instanceof LRAction.Error<?>) {
-          action = LRAction.error();
+        LRParserAction<LRParserState> action;
+        if (rec.getAction() instanceof LRParserAction.Shift<?>) {
+          LRParserAction.Shift<LRState<SLRItem>> shift = (LRParserAction.Shift<LRState<SLRItem>>) rec.getAction();
+          action = LRParserAction.shift(statesMap.get(shift.getState()));
+        } else if (rec.getAction() instanceof LRParserAction.Reduce<?>) {
+          LRParserAction.Reduce<LRState<SLRItem>> reduce = (LRParserAction.Reduce<LRState<SLRItem>>) rec.getAction();
+          action = LRParserAction.reduce(reduce.getRule());
+        } else if (rec.getAction() instanceof LRParserAction.Accept<?>) {
+          action = LRParserAction.accept();
+        } else if (rec.getAction() instanceof LRParserAction.Error<?>) {
+          action = LRParserAction.error();
         } else {
           throw new IllegalStateException();
         }
@@ -102,55 +105,55 @@ public class SLRTableGenerator {
     if (!(firstRule.getSymbols().get(0) instanceof NonTerminal)) throw new IllegalArgumentException();
   }
 
-  private List<SLRState> generateStates() {
+  private List<LRState<SLRItem>> generateStates() {
     NonTerminal initial = myGrammar.getStart();
     if (initial.getRules().size() != 1) {
       throw new IllegalStateException("There should be one rule from inital non terminal");
     }
 
-    Map<Set<SLRItem>, SLRState> states = new LinkedHashMap<>();
+    Map<Set<SLRItem>, LRState<SLRItem>> states = new LinkedHashMap<>();
 
     int index = 0;
-    SLRState init = new SLRState(index++, closure(singleton(new SLRItem(initial.getFirstRule(), 0))));
-    Set<SLRState> newItems = new LinkedHashSet<>();
+    LRState<SLRItem> init = new LRState<>(index++, closure(singleton(new SLRItem(initial.getFirstRule(), 0))));
+    Set<LRState<SLRItem>> newItems = new LinkedHashSet<>();
     newItems.add(init);
     states.put(init.getItems(), init);
 
     while (!newItems.isEmpty()) {
-      Set<SLRState> items = newItems;
+      Set<LRState<SLRItem>> items = newItems;
       newItems = new LinkedHashSet<>();
-      for (SLRState state : items) {
+      for (LRState<SLRItem> state : items) {
         for (Symbol s : myGrammar.getSymbols()) {
           Set<SLRItem> nextSet = nextSet(state.getItems(), s);
           if (nextSet.isEmpty()) continue;
-          SLRState targetItem = states.get(nextSet);
+          LRState<SLRItem> targetItem = states.get(nextSet);
           if (targetItem == null) {
-            targetItem = new SLRState(index++, nextSet);
+            targetItem = new LRState<>(index++, nextSet);
             states.put(nextSet, targetItem);
             newItems.add(targetItem);
           }
-          state.addTransition(new SLRTransition(targetItem, s));
+          state.addTransition(new LRTransition<>(targetItem, s));
         }
       }
     }
 
     Rule firstRule = myGrammar.getStart().getFirstRule();
     final SLRItem finalItem = new SLRItem(firstRule, firstRule.getSymbols().size());
-    for (SLRState state : states.values()) {
+    for (LRState<SLRItem> state : states.values()) {
       for (SLRItem item : state.getItems()) {
         if (item.isFinal()) {
           for (Terminal t : item.getRule().getHead().getFollow()) {
             if (t == myGrammar.getEnd() && finalItem.equals(item)) {
-              state.addRecord(t, new SLRActionRecord(item, LRAction.<SLRState>accept()));
+              state.addRecord(t, new LRActionRecord<>(item, LRParserAction.<LRState<SLRItem>>accept()));
             } else {
-              state.addRecord(t, new SLRActionRecord(item, LRAction.<SLRState>reduce(item.getRule())));
+              state.addRecord(t, new LRActionRecord<>(item, LRParserAction.<LRState<SLRItem>>reduce(item.getRule())));
             }
           }
         } else {
           Symbol s = item.getNextSymbol();
-          SLRState nextState = state.getState(s);
+          LRState<SLRItem> nextState = state.getState(s);
           if (nextState != null && s instanceof Terminal) {
-            state.addRecord((Symbol) s, new SLRActionRecord(item, LRAction.shift(nextState)));
+            state.addRecord((Symbol) s, new LRActionRecord<>(item, LRParserAction.shift(nextState)));
           }
         }
       }
@@ -194,17 +197,17 @@ public class SLRTableGenerator {
   }
 
   public void dumpTable() {
-    List<SLRState> states = generateStates();
+    List<LRState<SLRItem>> states = generateStates();
     System.out.println("SLR Table : \n");
-    for (SLRState state : states) {
+    for (LRState<SLRItem> state : states) {
       System.out.println(state);
       System.out.println("Transitions:");
-      for (SLRTransition t : state.getTransitions()) {
+      for (LRTransition<SLRItem> t : state.getTransitions()) {
         System.out.println(t);
       }
 
       for (Terminal t : myGrammar.getTerminals()) {
-        Set<SLRActionRecord> records = state.getRecords(t);
+        Set<LRActionRecord<SLRItem>> records = state.getRecords(t);
         if (records.isEmpty()) continue;
 
         StringBuilder text = new StringBuilder();
@@ -214,7 +217,7 @@ public class SLRTableGenerator {
           text.append(toString(records.iterator().next().getAction()));
         } else {
           List<String> actions = new ArrayList<>();
-          for (SLRActionRecord rec : records) {
+          for (LRActionRecord<SLRItem> rec : records) {
             actions.add(toString(rec.getAction()));
           }
           text.append(actions).append("  !CONFLICT!  ");
@@ -226,9 +229,9 @@ public class SLRTableGenerator {
     }
   }
 
-  private String toString(LRAction<SLRState> action) {
-    if (action instanceof LRAction.Shift) {
-      return "shift " + ((LRAction.Shift<SLRState>) action).getState().getName();
+  private String toString(LRParserAction<LRState<SLRItem>> action) {
+    if (action instanceof LRParserAction.Shift) {
+      return "shift " + ((LRParserAction.Shift<LRState<SLRItem>>) action).getState().getName();
     }
     return action.toString();
   }

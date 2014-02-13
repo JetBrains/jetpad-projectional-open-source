@@ -17,10 +17,11 @@ package jetbrains.jetpad.grammar.slr;
 
 import jetbrains.jetpad.grammar.Rule;
 import jetbrains.jetpad.grammar.Symbol;
+import jetbrains.jetpad.grammar.base.LRItem;
 
 import java.util.List;
 
-class SLRItem {
+class SLRItem implements LRItem<SLRItem> {
   private Rule myRule;
   private int myIndex;
 
@@ -31,33 +32,33 @@ class SLRItem {
     myIndex = index;
   }
 
-  Rule getRule() {
+  public Rule getRule() {
     return myRule;
   }
 
-  int getIndex() {
+  public int getIndex() {
     return myIndex;
   }
 
-  boolean isKernel() {
+  public boolean isKernel() {
     if (getRule().getHead() == getRule().getGrammar().getStart()) return true;
     return myIndex > 0;
   }
 
-  boolean isInitial() {
+  public boolean isInitial() {
     return myIndex == 0;
   }
 
-  boolean isFinal() {
+  public boolean isFinal() {
     return myIndex == myRule.getSymbols().size();
   }
 
-  Symbol getNextSymbol() {
+  public Symbol getNextSymbol() {
     if (isFinal()) return null;
     return myRule.getSymbols().get(myIndex);
   }
 
-  SLRItem getNextItem() {
+  public SLRItem getNextItem() {
     if (getNextSymbol() == null) throw new IllegalStateException();
     return new SLRItem(myRule, myIndex + 1);
   }

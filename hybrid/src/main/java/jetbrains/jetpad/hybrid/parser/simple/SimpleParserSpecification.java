@@ -20,7 +20,7 @@ import com.google.common.base.Predicate;
 import jetbrains.jetpad.base.Handler;
 import jetbrains.jetpad.grammar.*;
 import jetbrains.jetpad.grammar.parser.LRParser;
-import jetbrains.jetpad.grammar.parser.LRTable;
+import jetbrains.jetpad.grammar.parser.LRParserTable;
 import jetbrains.jetpad.grammar.parser.Lexeme;
 import jetbrains.jetpad.grammar.slr.SLRTableGenerator;
 import jetbrains.jetpad.hybrid.parser.*;
@@ -151,13 +151,13 @@ public class SimpleParserSpecification<ExprT> {
     return new Lexeme(terminal, token);
   }
 
-  private LRTable buildTable() {
+  private LRParserTable buildTable() {
     SLRTableGenerator generator = new SLRTableGenerator(myGrammar);
     return generator.generateTable();
   }
 
   public Function<ParserParameters, Parser<ExprT>> buildParameterizedParser() {
-    final LRTable table = buildTable();
+    final LRParserTable table = buildTable();
     return new Function<ParserParameters, Parser<ExprT>>() {
       @Override
       public Parser<ExprT> apply(final ParserParameters parserParameters) {

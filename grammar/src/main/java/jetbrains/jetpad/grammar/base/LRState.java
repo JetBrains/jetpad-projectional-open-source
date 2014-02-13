@@ -1,54 +1,40 @@
-/*
- * Copyright 2012-2014 JetBrains s.r.o
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-package jetbrains.jetpad.grammar.lr1;
+package jetbrains.jetpad.grammar.base;
 
 import jetbrains.jetpad.grammar.Associativity;
 import jetbrains.jetpad.grammar.Rule;
 import jetbrains.jetpad.grammar.Symbol;
-import jetbrains.jetpad.grammar.parser.LRAction;
+import jetbrains.jetpad.grammar.parser.LRParserAction;
 
 import java.util.*;
 
-class LR1State {
+public class LRState<ItemT extends LRItem<ItemT>> {
+
   private int myNumber;
-  private Set<LR1Item> myItems = new LinkedHashSet<>();
-  private Map<Symbol, Set<LR1ActionRecord>> myActionRecords = new HashMap<>();
+  private Set<ItemT> myItems = new LinkedHashSet<>();
+  private Map<Symbol, Set<LRActionRecord<ItemT>>> myActionRecords = new HashMap<>();
 
-  private Set<LR1Transition> myTransitions = new LinkedHashSet<>();
+  private Set<LRTransition<ItemT>> myTransitions = new LinkedHashSet<>();
 
-  LR1State(int number, Set<LR1Item> items) {
+  public LRState(int number, Set<ItemT> items) {
     myNumber = number;
     myItems.addAll(items);
   }
 
-  String getName() {
+  public String getName() {
     return "S" + myNumber;
   }
 
-  int getNumber() {
+  public int getNumber() {
     return myNumber;
   }
 
-  Set<LR1Item> getItems() {
+  public Set<ItemT> getItems() {
     return Collections.unmodifiableSet(myItems);
   }
 
-  Set<LR1Item> getKernelItems() {
-    Set<LR1Item> items = new LinkedHashSet<>();
-    for (LR1Item item : myItems) {
+  public Set<ItemT> getKernelItems() {
+    Set<ItemT> items = new LinkedHashSet<>();
+    for (ItemT item : myItems) {
       if (item.isKernel()) {
         items.add(item);
       }
@@ -56,9 +42,9 @@ class LR1State {
     return Collections.unmodifiableSet(items);
   }
 
-  Set<LR1Item> getNonKernelItems() {
-    Set<LR1Item> items = new LinkedHashSet<>();
-    for (LR1Item item : myItems) {
+  public Set<ItemT> getNonKernelItems() {
+    Set<ItemT> items = new LinkedHashSet<>();
+    for (ItemT item : myItems) {
       if (!item.isKernel()) {
         items.add(item);
       }
@@ -66,76 +52,76 @@ class LR1State {
     return Collections.unmodifiableSet(items);
   }
 
-  Set<LR1Transition> getTransitions() {
+  public Set<LRTransition<ItemT>> getTransitions() {
     return Collections.unmodifiableSet(myTransitions);
   }
 
-  Set<LR1ActionRecord> getRecords(Symbol s) {
-    Set<LR1ActionRecord> records = myActionRecords.get(s);
+  public Set<LRActionRecord<ItemT>> getRecords(Symbol s) {
+    Set<LRActionRecord<ItemT>> records = myActionRecords.get(s);
     if (records == null) return Collections.emptySet();
     return Collections.unmodifiableSet(records);
   }
 
-  Set<LR1ActionRecord> getMergedRecords(Symbol s) {
+  public Set<LRActionRecord<ItemT>> getMergedRecords(Symbol s) {
     return mergeActions(getRecords(s));
   }
 
-  boolean hasRecords(Symbol s) {
+  public boolean hasRecords(Symbol s) {
     return myActionRecords.get(s) != null && !myActionRecords.get(s).isEmpty();
   }
 
-  boolean hasAmbiguity(Symbol s) {
-    Set<LR1ActionRecord> records = getRecords(s);
+  public boolean hasAmbiguity(Symbol s) {
+    Set<LRActionRecord<ItemT>> records = getRecords(s);
     if (records.size() == 1) return false;
     return disambiguate(records) == null;
   }
 
-  LR1ActionRecord getRecord(Symbol s) {
-    Set<LR1ActionRecord> records = getRecords(s);
+  public LRActionRecord<ItemT> getRecord(Symbol s) {
+    Set<LRActionRecord<ItemT>> records = getRecords(s);
     if (records.size() == 1) {
       return records.iterator().next();
     }
-    LR1ActionRecord result = disambiguate(records);
+    LRActionRecord<ItemT> result = disambiguate(records);
     if (result == null) {
       throw new IllegalStateException("There's ambiguity");
     }
     return result;
   }
 
-  LR1State getState(Symbol symbol) {
-    for (LR1Transition t : myTransitions) {
+  public LRState<ItemT> getState(Symbol symbol) {
+    for (LRTransition<ItemT> t : myTransitions) {
       if (t.getSymbol() == symbol) return t.getTarget();
     }
     return null;
   }
 
-  void addTransition(LR1Transition t) {
+  public void addTransition(LRTransition<ItemT> t) {
     myTransitions.add(t);
   }
 
-  void addRecord(Symbol s, LR1ActionRecord rec) {
+  public void addRecord(Symbol s, LRActionRecord<ItemT> rec) {
     if (!myActionRecords.containsKey(s)) {
-      myActionRecords.put(s, new HashSet<LR1ActionRecord>());
+      myActionRecords.put(s, new HashSet<LRActionRecord<ItemT>>());
     }
     myActionRecords.get(s).add(rec);
   }
 
-  private LR1ActionRecord disambiguate(Set<LR1ActionRecord> records) {
+  private LRActionRecord<ItemT> disambiguate(Set<LRActionRecord<ItemT>> records) {
     records = mergeActions(records); //todo need a test for this ambiguity (it happens in dot operation between .id and .id(args))
     records = filterByPriority(records);
     if (records.size() == 1) {
       return records.iterator().next();
     }
-    LR1ActionRecord result = disambiguateByAssoc(records);
+    LRActionRecord<ItemT> result = disambiguateByAssoc(records);
     if (result != null) return result;
     return null;
   }
 
-  private Set<LR1ActionRecord> mergeActions(Set<LR1ActionRecord> records) {
-    Set<LR1ActionRecord> result = new HashSet<>();
-    Map<LRAction<LR1State>, LR1ActionRecord> actions = new HashMap<>();
+  private Set<LRActionRecord<ItemT>> mergeActions(Set<LRActionRecord<ItemT>> records) {
+    Set<LRActionRecord<ItemT>> result = new HashSet<>();
+    Map<LRParserAction<LRState<ItemT>>, LRActionRecord<ItemT>> actions = new HashMap<>();
 
-    for (LR1ActionRecord r : records) {
+    for (LRActionRecord<ItemT> r : records) {
       if (actions.containsKey(r.getAction())) {
         actions.get(r.getAction()).addDuplicate(r);
         continue;
@@ -147,9 +133,9 @@ class LR1State {
     return result;
   }
 
-  private Set<LR1ActionRecord> filterByPriority(Set<LR1ActionRecord> records) {
+  private Set<LRActionRecord<ItemT>> filterByPriority(Set<LRActionRecord<ItemT>> records) {
     Integer highestPriority = null;
-    for (LR1ActionRecord rec : records) {
+    for (LRActionRecord<ItemT> rec : records) {
       Integer currentPriority = rec.getItem().getRule().getPriority();
       if (currentPriority == null) return records;
       if (highestPriority == null) {
@@ -159,8 +145,8 @@ class LR1State {
       }
     }
 
-    Set<LR1ActionRecord> result = new HashSet<>();
-    for (LR1ActionRecord rec : records) {
+    Set<LRActionRecord<ItemT>> result = new HashSet<>();
+    for (LRActionRecord<ItemT> rec : records) {
       Integer currentPriority = rec.getItem().getRule().getPriority();
       if (com.google.common.base.Objects.equal(currentPriority, highestPriority)) {
         result.add(rec);
@@ -169,10 +155,10 @@ class LR1State {
     return result;
   }
 
-  private LR1ActionRecord disambiguateByAssoc(Set<LR1ActionRecord> records) {
+  private LRActionRecord<ItemT> disambiguateByAssoc(Set<LRActionRecord<ItemT>> records) {
     Integer priority = null;
     Rule rule = null;
-    for (LR1ActionRecord rec : records) {
+    for (LRActionRecord<ItemT> rec : records) {
       Integer cp = rec.getItem().getRule().getPriority();
       if (cp == null) return null;
       if (priority == null) {
@@ -186,8 +172,8 @@ class LR1State {
     Associativity assoc = rule.getAssociativity();
     if (assoc == null) return null;
 
-    LR1ActionRecord bestRecord = records.iterator().next();
-    for (LR1ActionRecord rec : records) {
+    LRActionRecord<ItemT> bestRecord = records.iterator().next();
+    for (LRActionRecord<ItemT> rec : records) {
       if (assoc == Associativity.LEFT) {
         if (rec.getItem().getIndex() > bestRecord.getItem().getIndex()) {
           bestRecord = rec;
@@ -209,14 +195,15 @@ class LR1State {
 
   @Override
   public boolean equals(Object obj) {
-    if (!(obj instanceof LR1State)) return false;
+    if (!(obj instanceof LRState)) return false;
 
-    LR1State otherState = (LR1State) obj;
+    LRState<ItemT> otherState = (LRState<ItemT>) obj;
     return myItems.equals(otherState.myItems);
   }
 
   @Override
   public String toString() {
-    return getName() + " : " + getKernelItems() + " / " + getItems();
+    return getName() + " : " + getKernelItems()  + " / " + getNonKernelItems();
   }
+
 }

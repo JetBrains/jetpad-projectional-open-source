@@ -21,35 +21,35 @@ import jetbrains.jetpad.grammar.Terminal;
 import java.util.HashMap;
 import java.util.Map;
 
-public class LRState {
+public class LRParserState {
   private String myName;
-  private Map<Terminal, LRAction<LRState>> myActions = new HashMap<>();
-  private Map<NonTerminal, LRState> myNextStates = new HashMap<>();
+  private Map<Terminal, LRParserAction<LRParserState>> myActions = new HashMap<>();
+  private Map<NonTerminal, LRParserState> myNextStates = new HashMap<>();
 
-  LRState(String name) {
+  LRParserState(String name) {
     myName = name;
   }
 
-  public LRAction<LRState> getAction(Terminal terminal) {
-    LRAction<LRState> action = myActions.get(terminal);
+  public LRParserAction<LRParserState> getAction(Terminal terminal) {
+    LRParserAction<LRParserState> action = myActions.get(terminal);
     if (action != null) return action;
-    return LRAction.error();
+    return LRParserAction.error();
   }
 
-  public LRState getNextState(NonTerminal nonTerminal) {
-    LRState result = myNextStates.get(nonTerminal);
+  public LRParserState getNextState(NonTerminal nonTerminal) {
+    LRParserState result = myNextStates.get(nonTerminal);
     if (result == null) {
       throw new IllegalStateException();
     }
     return result;
   }
 
-  public void addAction(Terminal terminal, LRAction<LRState> action) {
+  public void addAction(Terminal terminal, LRParserAction<LRParserState> action) {
     if (myActions.containsKey(terminal)) throw new IllegalStateException();
     myActions.put(terminal, action);
   }
 
-  public void addNextState(NonTerminal nonTerminal, LRState state) {
+  public void addNextState(NonTerminal nonTerminal, LRParserState state) {
     if (myNextStates.containsKey(nonTerminal)) throw new IllegalStateException();
     myNextStates.put(nonTerminal, state);
   }

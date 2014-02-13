@@ -2,7 +2,7 @@ package jetbrains.jetpad.grammar;
 
 import com.google.common.collect.Range;
 import jetbrains.jetpad.grammar.parser.LRParser;
-import jetbrains.jetpad.grammar.parser.LRTable;
+import jetbrains.jetpad.grammar.parser.LRParserTable;
 import jetbrains.jetpad.grammar.parser.Lexeme;
 import org.junit.Test;
 
@@ -12,7 +12,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 public abstract class BaseParserGenerationTest {
-  protected abstract LRTable generateTable(Grammar g);
+  protected abstract LRParserTable generateTable(Grammar g);
 
   @Test(expected = IllegalArgumentException.class)
   public void emptyGrammarInvalid() {
@@ -59,7 +59,7 @@ public abstract class BaseParserGenerationTest {
     g.newRule(fact, id);
     g.newRule(fact, lp, expr, rp);
 
-    LRTable table = generateTable(g);
+    LRParserTable table = generateTable(g);
 
     LRParser parser = new LRParser(table);
 
@@ -117,7 +117,7 @@ public abstract class BaseParserGenerationTest {
     g.mulRule.setAssociativity(Associativity.LEFT);
     g.mulRule.setPriority(1);
 
-    LRTable table = generateTable(g.grammar);
+    LRParserTable table = generateTable(g.grammar);
     LRParser parser = new LRParser(table);
 
     Object parse = parser.parse(asTokens(g.id, g.plus, g.id, g.mul, g.id));
@@ -131,7 +131,7 @@ public abstract class BaseParserGenerationTest {
     g.plusRule.setAssociativity(Associativity.LEFT);
     g.plusRule.setPriority(0);
 
-    LRTable table = generateTable(g.grammar);
+    LRParserTable table = generateTable(g.grammar);
 
     LRParser parser = new LRParser(table);
     BinExpr parse = (BinExpr) parser.parse(asTokens(g.id, g.plus, g.id));

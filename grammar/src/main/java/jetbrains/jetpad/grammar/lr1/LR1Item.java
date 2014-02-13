@@ -18,10 +18,11 @@ package jetbrains.jetpad.grammar.lr1;
 import jetbrains.jetpad.grammar.Rule;
 import jetbrains.jetpad.grammar.Symbol;
 import jetbrains.jetpad.grammar.Terminal;
+import jetbrains.jetpad.grammar.base.LRItem;
 
 import java.util.List;
 
-class LR1Item {
+class LR1Item implements LRItem<LR1Item> {
   private Rule myRule;
   private int myIndex;
   private Terminal myLookAhead;
@@ -34,33 +35,33 @@ class LR1Item {
     myLookAhead = lookAhead;
   }
 
-  Rule getRule() {
+  public Rule getRule() {
     return myRule;
   }
 
-  int getIndex() {
+  public int getIndex() {
     return myIndex;
   }
 
-  boolean isKernel() {
+  public boolean isKernel() {
     if (getRule().getHead() == getRule().getGrammar().getStart()) return true;
     return myIndex > 0;
   }
 
-  boolean isInitial() {
+  public boolean isInitial() {
     return myIndex == 0;
   }
 
-  boolean isFinal() {
+  public boolean isFinal() {
     return myIndex == myRule.getSymbols().size();
   }
 
-  Symbol getNextSymbol() {
+  public Symbol getNextSymbol() {
     if (isFinal()) return null;
     return myRule.getSymbols().get(myIndex);
   }
 
-  LR1Item getNextItem() {
+  public LR1Item getNextItem() {
     if (getNextSymbol() == null) throw new IllegalStateException();
     return new LR1Item(myRule, myIndex + 1, myLookAhead);
   }

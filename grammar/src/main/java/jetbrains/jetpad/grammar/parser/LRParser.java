@@ -22,14 +22,14 @@ import jetbrains.jetpad.grammar.*;
 import java.util.*;
 
 public class LRParser {
-  private LRTable myTable;
+  private LRParserTable myTable;
   private ParserParameters myParameters;
 
-  public LRParser(LRTable table) {
+  public LRParser(LRParserTable table) {
     this(table, ParserParameters.EMPTY);
   }
 
-  public LRParser(LRTable table, ParserParameters params) {
+  public LRParser(LRParserTable table, ParserParameters params) {
     myTable = table;
     myParameters = params;
   }
@@ -62,14 +62,14 @@ public class LRParser {
     while (true) {
       Lexeme lexeme = pos < input.size() ? input.get(pos) : null;
       Terminal current = lexeme != null ? lexeme.getTerminal() : myTable.getGrammar().getEnd();
-      LRState state = stack.peek().state;
-      LRAction<LRState> action = state.getAction(current);
-      if (action instanceof LRAction.Shift) {
-        LRAction.Shift<LRState> shift = (LRAction.Shift<LRState>) action;
+      LRParserState state = stack.peek().state;
+      LRParserAction<LRParserState> action = state.getAction(current);
+      if (action instanceof LRParserAction.Shift) {
+        LRParserAction.Shift<LRParserState> shift = (LRParserAction.Shift<LRParserState>) action;
         stack.push(new ParseStackItem(shift.getState(), pos, pos + 1, current, lexeme));
         pos++;
-      } else if (action instanceof LRAction.Reduce) {
-        LRAction.Reduce<LRState> reduce = (LRAction.Reduce<LRState>) action;
+      } else if (action instanceof LRParserAction.Reduce) {
+        LRParserAction.Reduce<LRParserState> reduce = (LRParserAction.Reduce<LRParserState>) action;
 
         List<Object> handlerInput = new ArrayList<>();
         int startOffset = pos;
@@ -83,13 +83,13 @@ public class LRParser {
         }
         Collections.reverse(handlerInput);
 
-        LRState nextState = stack.peek().state.getNextState(reduce.getRule().getHead());
+        LRParserState nextState = stack.peek().state.getNextState(reduce.getRule().getHead());
         RuleContext ruleContext = new MyRuleContext(Range.closed(startOffset, pos), handlerInput);
         RuleHandler handler = handlerProvider.apply(reduce.getRule());
         Object result = handler != null ? handler.handle(ruleContext) : handlerInput;
 
         stack.push(new ParseStackItem(nextState, startOffset, pos, reduce.getRule().getHead(), result));
-      } else if (action instanceof LRAction.Accept) {
+      } else if (action instanceof LRParserAction.Accept) {
         return stack.peek().result;
       } else {
         return null;
@@ -98,13 +98,13 @@ public class LRParser {
   }
 
   private class ParseStackItem {
-    final LRState state;
+    final LRParserState state;
     final int start;
     final int end;
     final Symbol symbol;
     final Object result;
 
-    ParseStackItem(LRState state, int start, int end, Symbol symbol, Object result) {
+    ParseStackItem(LRParserState state, int start, int end, Symbol symbol, Object result) {
       this.state = state;
       this.start = start;
       this.end = end;

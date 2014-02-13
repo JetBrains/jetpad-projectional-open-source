@@ -16,11 +16,11 @@
 package jetbrains.jetpad.grammar.slr;
 
 import jetbrains.jetpad.grammar.*;
-import jetbrains.jetpad.grammar.parser.LRTable;
+import jetbrains.jetpad.grammar.parser.LRParserTable;
 
 public class SLRParserGenerationTest extends BaseParserGenerationTest {
   @Override
-  protected LRTable generateTable(Grammar g) {
+  protected LRParserTable generateTable(Grammar g) {
     return new SLRTableGenerator(g).generateTable();
   }
 }
