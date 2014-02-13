@@ -1,5 +1,7 @@
 package jetbrains.jetpad.grammar.base;
 
+import com.google.common.base.*;
+import com.google.common.base.Objects;
 import jetbrains.jetpad.grammar.*;
 import jetbrains.jetpad.grammar.parser.LRParserAction;
 import jetbrains.jetpad.grammar.parser.LRParserState;
@@ -41,17 +43,20 @@ public abstract class BaseLRTableGenerator<ItemT extends LRItem<ItemT>> {
       Set<LRState<ItemT>> items = newItems;
       newItems = new LinkedHashSet<>();
       for (LRState<ItemT> state : items) {
-        for (Symbol s : grammar().getSymbols()) {
-          Set<ItemT> nextSet = nextSet(state.getItems(), s);
-          if (nextSet.isEmpty()) continue;
-          LRState<ItemT> targetItem = states.get(nextSet);
+        Set<ItemT> stateItems = state.getItems();
+        Map<Symbol, Set<ItemT>> splitSets = splitSet(stateItems);
+        for (Map.Entry<Symbol, Set<ItemT>> e : splitSets.entrySet()) {
+          Symbol s = e.getKey();
+          Set<ItemT> nextItems = getClosure(e.getValue());
+          LRState<ItemT> targetItem = states.get(nextItems);
           if (targetItem == null) {
-            targetItem = new LRState<>(index++, nextSet);
-            states.put(nextSet, targetItem);
+            targetItem = new LRState<>(index++, nextItems);
+            states.put(nextItems, targetItem);
             newItems.add(targetItem);
           }
           state.addTransition(new LRTransition<>(targetItem, s));
         }
+
       }
     }
 
@@ -71,6 +76,22 @@ public abstract class BaseLRTableGenerator<ItemT extends LRItem<ItemT>> {
     }
 
     return new ArrayList<>(states.values());
+  }
+
+  private Map<Symbol, Set<ItemT>> splitSet(Set<ItemT> items) {
+    Map<Symbol, Set<ItemT>> result = new HashMap<>();
+    for (ItemT item : items) {
+      if (item.isFinal()) continue;
+
+      Symbol symbol = item.getNextSymbol();
+      Set<ItemT> target = result.get(symbol);
+      if (target == null) {
+        target = new HashSet<>();
+        result.put(symbol, target);
+      }
+      target.add(item.getNextItem());
+    }
+    return result;
   }
 
   public LRParserTable generateTable() {
@@ -95,11 +116,6 @@ public abstract class BaseLRTableGenerator<ItemT extends LRItem<ItemT>> {
           NonTerminal nt = (NonTerminal) trans.getSymbol();
           lrState.addNextState(nt, statesMap.get(trans.getTarget()));
         }
-      }
-
-      Map<Terminal, Set<LRParserAction<LRParserState>>> actions = new LinkedHashMap<>();
-      for (Terminal s : grammar().getTerminals()) {
-        actions.put(s, new LinkedHashSet<LRParserAction<LRParserState>>());
       }
 
       for (Symbol s : grammar().getSymbols()) {
@@ -131,16 +147,6 @@ public abstract class BaseLRTableGenerator<ItemT extends LRItem<ItemT>> {
     }
 
     return result;
-  }
-
-  private Set<ItemT> nextSet(Set<ItemT> source, Symbol s) {
-    Set<ItemT> newSet = new LinkedHashSet<>();
-    for (ItemT item : source) {
-      if (item.getNextSymbol() == s) {
-        newSet.add(item.getNextItem());
-      }
-    }
-    return getClosure(newSet);
   }
 
   private Set<ItemT> getClosure(Set<ItemT> items) {
