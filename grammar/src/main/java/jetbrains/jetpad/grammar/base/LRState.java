@@ -15,7 +15,7 @@ public class LRState<ItemT extends LRItem<ItemT>> {
 
   private Set<LRTransition<ItemT>> myTransitions = new LinkedHashSet<>();
 
-  public LRState(int number, Set<ItemT> items) {
+  LRState(int number, Set<ItemT> items) {
     myNumber = number;
     myItems.addAll(items);
   }

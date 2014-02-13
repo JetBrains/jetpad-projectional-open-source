@@ -36,7 +36,6 @@ public abstract class BaseLRTableGenerator<ItemT extends LRItem<ItemT>> {
     newItems.add(init);
     states.put(init.getItems(), init);
 
-    System.out.println("generating states");
     while (!newItems.isEmpty()) {
       Set<LRState<ItemT>> items = newItems;
       newItems = new LinkedHashSet<>();
