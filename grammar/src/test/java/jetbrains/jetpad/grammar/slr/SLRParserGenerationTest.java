@@ -128,7 +128,7 @@ public class SLRParserGenerationTest {
     g.plusRule.setPriority(0);
 
     g.mulRule.setAssociativity(Associativity.LEFT);
-    g. mulRule.setPriority(1);
+    g.mulRule.setPriority(1);
 
     LRTable table = new SLRTableGenerator(g.grammar).generateTable();
     LRParser parser = new LRParser(table);
