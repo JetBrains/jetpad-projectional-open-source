@@ -109,9 +109,6 @@ public abstract class BaseLRTableGenerator<ItemT extends LRItem<ItemT>> {
 
         if (!state.hasRecords(s)) continue;
 
-        if (state.hasAmbiguity(t)) {
-          throw new IllegalStateException("There's ambiguity. Can't generate table");
-        }
         LRActionRecord<ItemT> rec = state.getRecord(t);
 
         LRParserAction<LRParserState> action;
