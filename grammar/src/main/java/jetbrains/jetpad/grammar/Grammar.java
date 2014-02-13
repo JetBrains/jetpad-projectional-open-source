@@ -29,7 +29,7 @@ public final class Grammar {
 
   public Grammar() {
     myEnd = newTerminal("$");
-    myStart = newNonTerminal("S");
+    myStart = newNonTerminal("Start");
   }
 
   public NonTerminal getStart() {
