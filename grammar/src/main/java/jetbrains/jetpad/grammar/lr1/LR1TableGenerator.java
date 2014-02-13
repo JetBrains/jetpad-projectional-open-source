@@ -56,25 +56,20 @@ public class LR1TableGenerator extends BaseLRTableGenerator<LR1Item> {
     if (!(item.getNextSymbol() instanceof NonTerminal)) return Collections.emptySet();
 
     NonTerminal currentNonTerminal = (NonTerminal) item.getNextSymbol();
-
     List<Symbol> suffix = new ArrayList<>();
     List<Symbol> rightPart = item.getRule().getSymbols();
     suffix.addAll(rightPart.subList(item.getIndex() + 1, rightPart.size()));
     suffix.add(item.getLookAhead());
     Set<Terminal> first = grammar().first(suffix);
-    boolean hasChanges = false;
-
     Set<LR1Item> toAdd = new HashSet<>();
     for (Rule rule : currentNonTerminal.getRules()) {
       for (Terminal t : first) {
         LR1Item newItem = new LR1Item(rule, 0, t);
         if (!result.contains(newItem)) {
           toAdd.add(newItem);
-          hasChanges = true;
         }
       }
     }
-
     return toAdd;
   }
 }
