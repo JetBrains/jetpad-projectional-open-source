@@ -153,7 +153,7 @@ public class SimpleParserSpecification<ExprT> {
   }
 
   private LRParserTable buildTable() {
-    SLRTableGenerator generator = new SLRTableGenerator(myGrammar);
+    LR1TableGenerator generator = new LR1TableGenerator(myGrammar);
     return generator.generateTable();
   }
 

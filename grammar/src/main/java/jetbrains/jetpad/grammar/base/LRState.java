@@ -8,7 +8,6 @@ import jetbrains.jetpad.grammar.parser.LRParserAction;
 import java.util.*;
 
 public class LRState<ItemT extends LRItem<ItemT>> {
-
   private int myNumber;
   private Set<ItemT> myItems = new LinkedHashSet<>();
   private Map<Symbol, Set<LRActionRecord<ItemT>>> myActionRecords = new HashMap<>();
@@ -187,19 +186,6 @@ public class LRState<ItemT extends LRItem<ItemT>> {
     }
 
     return bestRecord;
-  }
-
-  @Override
-  public int hashCode() {
-    return myItems.hashCode();
-  }
-
-  @Override
-  public boolean equals(Object obj) {
-    if (!(obj instanceof LRState)) return false;
-
-    LRState<ItemT> otherState = (LRState<ItemT>) obj;
-    return myItems.equals(otherState.myItems);
   }
 
   @Override
