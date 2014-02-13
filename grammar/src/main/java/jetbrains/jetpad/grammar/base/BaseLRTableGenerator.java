@@ -159,7 +159,6 @@ public abstract class BaseLRTableGenerator<ItemT extends LRItem<ItemT>> {
     boolean hasChanges = true;
     while (hasChanges) {
       hasChanges = false;
-      Set<ItemT> toAdd = new LinkedHashSet<>();
       for (ItemT item : new ArrayList<>(result)) {
         if (closure(result, item)) {
           hasChanges = true;
