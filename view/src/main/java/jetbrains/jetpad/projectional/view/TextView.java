@@ -32,18 +32,6 @@ public class TextView extends View {
   public static final ViewPropertySpec<Integer> SELECTION_START = new ViewPropertySpec<>("selectionStart", ViewPropertyKind.REPAINT, 0);
 
   public TextView() {
-
-    addListener(new ViewAdapter() {
-      @Override
-      public void onToRootDeltaChanged(PropertyChangeEvent<Vector> change) {
-        log("Changed : " + change);
-      }
-
-      private native void log(String text) /*-{
-        $wnd.console.log(text);
-      }-*/;
-    });
-
   }
 
   public TextView(String text) {
