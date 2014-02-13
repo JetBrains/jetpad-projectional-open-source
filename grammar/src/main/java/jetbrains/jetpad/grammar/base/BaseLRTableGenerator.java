@@ -17,7 +17,7 @@ public abstract class BaseLRTableGenerator<ItemT extends LRItem<ItemT>> {
     myGrammar = grammar;
   }
 
-  protected abstract Set<ItemT> closure(Set<ItemT> result, ItemT item);
+  protected abstract boolean closure(Set<ItemT> result, ItemT item);
 
   protected abstract ItemT initialItem();
 
@@ -158,11 +158,13 @@ public abstract class BaseLRTableGenerator<ItemT extends LRItem<ItemT>> {
     result.addAll(items);
     boolean hasChanges = true;
     while (hasChanges) {
+      hasChanges = false;
       Set<ItemT> toAdd = new LinkedHashSet<>();
-      for (ItemT item : result) {
-        toAdd.addAll(closure(result, item));
+      for (ItemT item : new ArrayList<>(result)) {
+        if (closure(result, item)) {
+          hasChanges = true;
+        }
       }
-      hasChanges = result.addAll(toAdd);
     }
     return result;
   }

@@ -52,23 +52,24 @@ public class LR1TableGenerator extends BaseLRTableGenerator<LR1Item> {
   }
 
   @Override
-  protected Set<LR1Item> closure(Set<LR1Item> result, LR1Item item) {
-    if (item.isFinal()) return Collections.emptySet();
-    if (!(item.getNextSymbol() instanceof NonTerminal)) return Collections.emptySet();
+  protected boolean closure(Set<LR1Item> result, LR1Item item) {
+    if (item.isFinal()) return false;
+    if (!(item.getNextSymbol() instanceof NonTerminal)) return false;
 
     NonTerminal currentNonTerminal = (NonTerminal) item.getNextSymbol();
     List<Symbol> rightPart = item.getRule().getSymbols();
     Set<Terminal> first = first(rightPart.subList(item.getIndex() + 1, rightPart.size()), item.getLookAhead());
     Set<LR1Item> toAdd = new HashSet<>();
+    boolean changed = false;
     for (Rule rule : currentNonTerminal.getRules()) {
       for (Terminal t : first) {
         LR1Item newItem = new LR1Item(rule, 0, t);
-        if (!result.contains(newItem)) {
-          toAdd.add(newItem);
+        if (result.add(newItem)) {
+          changed = true;
         }
       }
     }
-    return toAdd;
+    return changed;
   }
 
   private Set<Terminal> first(List<Symbol> symbols, Terminal lookAhead) {
