@@ -121,6 +121,21 @@ public final class Grammar {
     return Collections.unmodifiableSet(myRules);
   }
 
+  public Set<Terminal> first(List<Symbol> string) {
+    Set<Terminal> result = new HashSet<>();
+    for (Symbol s : string) {
+      if (s instanceof Terminal) {
+        result.add((Terminal) s);
+        return result;
+      } else if (s instanceof NonTerminal) {
+        NonTerminal nt = (NonTerminal) s;
+        result.addAll(nt.getFirst());
+        if (!nt.isNullable()) return result;
+      }
+    }
+    return result;
+  }
+
   private void invalidateGrammarData() {
     myGrammarData = null;
   }

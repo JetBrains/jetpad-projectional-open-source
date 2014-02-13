@@ -101,7 +101,7 @@ public class LR1TableGenerator extends BaseLRTableGenerator<LR1Item> {
         List<Symbol> rightPart = item.getRule().getSymbols();
         suffix.addAll(rightPart.subList(item.getIndex() + 1, rightPart.size()));
         suffix.add(item.getLookAhead());
-        Set<Terminal> first = first(suffix);
+        Set<Terminal> first = grammar().first(suffix);
         for (Rule rule : currentNonTerminal.getRules()) {
           for (Terminal t : first) {
             LR1Item newItem = new LR1Item(rule, 0, t);
@@ -113,21 +113,6 @@ public class LR1TableGenerator extends BaseLRTableGenerator<LR1Item> {
       }
       result.addAll(toAdd);
       hasChanges = !toAdd.isEmpty();
-    }
-    return result;
-  }
-
-  private Set<Terminal> first(List<Symbol> string) {
-    Set<Terminal> result = new HashSet<>();
-    for (Symbol s : string) {
-      if (s instanceof Terminal) {
-        result.add((Terminal) s);
-        return result;
-      } else if (s instanceof NonTerminal) {
-        NonTerminal nt = (NonTerminal) s;
-        result.addAll(nt.getFirst());
-        if (!nt.isNullable()) return result;
-      }
     }
     return result;
   }
