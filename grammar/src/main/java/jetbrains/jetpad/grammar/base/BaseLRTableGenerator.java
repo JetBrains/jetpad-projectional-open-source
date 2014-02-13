@@ -140,15 +140,21 @@ public abstract class BaseLRTableGenerator<ItemT extends LRItem<ItemT>> {
         newSet.add(item.getNextItem());
       }
     }
-    return closure(newSet);
+    return getClosure(newSet);
   }
 
-  private Set<ItemT> closure(Set<ItemT> items) {
+  private Set<ItemT> getClosure(Set<ItemT> items) {
     Set<ItemT> result = myClosureCache.get(items);
     if (result != null) {
       return result;
     }
-    result = new LinkedHashSet<>();
+    result = closure(items);
+    myClosureCache.put(items, result);
+    return result;
+  }
+
+  private Set<ItemT> closure(Set<ItemT> items) {
+    Set<ItemT> result = new LinkedHashSet<>();
     result.addAll(items);
     boolean hasChanges = true;
     while (hasChanges) {
@@ -158,7 +164,6 @@ public abstract class BaseLRTableGenerator<ItemT extends LRItem<ItemT>> {
       }
       hasChanges = result.addAll(toAdd);
     }
-    myClosureCache.put(items, result);
     return result;
   }
 
