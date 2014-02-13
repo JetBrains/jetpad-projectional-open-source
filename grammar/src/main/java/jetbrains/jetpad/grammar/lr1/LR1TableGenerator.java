@@ -15,6 +15,7 @@
  */
 package jetbrains.jetpad.grammar.lr1;
 
+import com.sun.org.apache.xalan.internal.xsltc.compiler.sym;
 import jetbrains.jetpad.grammar.*;
 import jetbrains.jetpad.grammar.base.*;
 import jetbrains.jetpad.grammar.parser.LRParserAction;
@@ -58,9 +59,7 @@ public class LR1TableGenerator extends BaseLRTableGenerator<LR1Item> {
     NonTerminal currentNonTerminal = (NonTerminal) item.getNextSymbol();
     List<Symbol> suffix = new ArrayList<>();
     List<Symbol> rightPart = item.getRule().getSymbols();
-    suffix.addAll(rightPart.subList(item.getIndex() + 1, rightPart.size()));
-    suffix.add(item.getLookAhead());
-    Set<Terminal> first = grammar().first(suffix);
+    Set<Terminal> first = first(rightPart.subList(item.getIndex() + 1, rightPart.size()), item.getLookAhead());
     Set<LR1Item> toAdd = new HashSet<>();
     for (Rule rule : currentNonTerminal.getRules()) {
       for (Terminal t : first) {
@@ -71,5 +70,21 @@ public class LR1TableGenerator extends BaseLRTableGenerator<LR1Item> {
       }
     }
     return toAdd;
+  }
+
+  private Set<Terminal> first(List<Symbol> symbols, Terminal lookAhead) {
+    Set<Terminal> result = new HashSet<>();
+    for (Symbol s : symbols) {
+      if (s instanceof Terminal) {
+        result.add((Terminal) s);
+        return result;
+      } else if (s instanceof NonTerminal) {
+        NonTerminal nt = (NonTerminal) s;
+        result.addAll(nt.getFirst());
+        if (!nt.isNullable()) return result;
+      }
+    }
+    result.add(lookAhead);
+    return result;
   }
 }
