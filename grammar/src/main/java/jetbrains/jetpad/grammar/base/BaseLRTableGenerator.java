@@ -91,4 +91,44 @@ public abstract class BaseLRTableGenerator<ItemT extends LRItem<ItemT>> {
     if (firstRule.getSymbols().size() != 1) throw new IllegalArgumentException();
     if (!(firstRule.getSymbols().get(0) instanceof NonTerminal)) throw new IllegalArgumentException();
   }
+
+  public void dumpTable() {
+    List<LRState<ItemT>> states = generateStates();
+    System.out.println("Table : \n");
+    for (LRState<ItemT> state : states) {
+      System.out.println(state);
+      System.out.println("Transitions:");
+      for (LRTransition<ItemT> t : state.getTransitions()) {
+        System.out.println(t);
+      }
+
+      for (Terminal t : grammar().getTerminals()) {
+        Set<LRActionRecord<ItemT>> records = state.getMergedRecords(t);
+        if (records.isEmpty()) continue;
+
+        StringBuilder text = new StringBuilder();
+        text.append("on ").append(t).append(" ");
+
+        if (!state.hasAmbiguity(t)) {
+          text.append(toString(records.iterator().next().getAction()));
+        } else {
+          List<String> actions = new ArrayList<>();
+          for (LRActionRecord<ItemT> rec : records) {
+            actions.add(toString(rec.getAction()));
+          }
+          text.append(actions).append("  !CONFLICT!  ");
+        }
+        System.out.println(text);
+      }
+
+      System.out.println("");
+    }
+  }
+
+  private String toString(LRParserAction<LRState<ItemT>> action) {
+    if (action instanceof LRParserAction.Shift) {
+      return "shift " + ((LRParserAction.Shift<LRState<ItemT>>) action).getState().getName();
+    }
+    return action.toString();
+  }
 }

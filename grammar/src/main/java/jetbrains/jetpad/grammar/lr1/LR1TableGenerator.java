@@ -141,45 +141,4 @@ public class LR1TableGenerator extends BaseLRTableGenerator<LR1Item> {
     }
     return closure(newSet);
   }
-
-  public void dumpTable() {
-    List<LRState<LR1Item>> states = generateStates();
-    System.out.println("LR1 Table : \n");
-    for (LRState<LR1Item> state : states) {
-      System.out.println(state);
-      System.out.println("Transitions:");
-      for (LRTransition<LR1Item> t : state.getTransitions()) {
-        System.out.println(t);
-      }
-
-      for (Terminal t : grammar().getTerminals()) {
-        Set<LRActionRecord<LR1Item>> records = state.getMergedRecords(t);
-        if (records.isEmpty()) continue;
-
-        StringBuilder text = new StringBuilder();
-        text.append("on ").append(t).append(" ");
-
-        if (!state.hasAmbiguity(t)) {
-          text.append(toString(records.iterator().next().getAction()));
-        } else {
-          List<String> actions = new ArrayList<>();
-          for (LRActionRecord<LR1Item> rec : records) {
-            actions.add(toString(rec.getAction()));
-          }
-          text.append(actions).append("  !CONFLICT!  ");
-        }
-        System.out.println(text);
-      }
-
-      System.out.println("");
-    }
-  }
-
-  private String toString(LRParserAction<LRState<LR1Item>> action) {
-    if (action instanceof LRParserAction.Shift) {
-      return "shift " + ((LRParserAction.Shift<LRState<LR1Item>>) action).getState().getName();
-    }
-    return action.toString();
-  }
-
 }

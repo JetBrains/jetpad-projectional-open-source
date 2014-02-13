@@ -123,45 +123,4 @@ public class SLRTableGenerator extends BaseLRTableGenerator<SLRItem> {
     }
     return closure(newSet);
   }
-
-  public void dumpTable() {
-    List<LRState<SLRItem>> states = generateStates();
-    System.out.println("SLR Table : \n");
-    for (LRState<SLRItem> state : states) {
-      System.out.println(state);
-      System.out.println("Transitions:");
-      for (LRTransition<SLRItem> t : state.getTransitions()) {
-        System.out.println(t);
-      }
-
-      for (Terminal t : grammar().getTerminals()) {
-        Set<LRActionRecord<SLRItem>> records = state.getRecords(t);
-        if (records.isEmpty()) continue;
-
-        StringBuilder text = new StringBuilder();
-        text.append("on ").append(t).append(" ");
-
-        if (!state.hasAmbiguity(t)) {
-          text.append(toString(records.iterator().next().getAction()));
-        } else {
-          List<String> actions = new ArrayList<>();
-          for (LRActionRecord<SLRItem> rec : records) {
-            actions.add(toString(rec.getAction()));
-          }
-          text.append(actions).append("  !CONFLICT!  ");
-        }
-        System.out.println(text);
-      }
-
-      System.out.println("");
-    }
-  }
-
-  private String toString(LRParserAction<LRState<SLRItem>> action) {
-    if (action instanceof LRParserAction.Shift) {
-      return "shift " + ((LRParserAction.Shift<LRState<SLRItem>>) action).getState().getName();
-    }
-    return action.toString();
-  }
-
 }
