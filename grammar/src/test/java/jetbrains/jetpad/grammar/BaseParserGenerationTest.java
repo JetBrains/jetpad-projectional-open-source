@@ -61,9 +61,6 @@ public abstract class BaseParserGenerationTest {
     g.newRule(fact, id);
     g.newRule(fact, lp, expr, rp);
 
-    new SLRTableGenerator(g).dumpTable();
-    new LR1TableGenerator(g).dumpTable();
-
     LRTable table = generateTable(g);
 
     LRParser parser = new LRParser(table);

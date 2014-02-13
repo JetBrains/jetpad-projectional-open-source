@@ -194,6 +194,7 @@ public class LR1TableGenerator {
     for (Symbol s : string) {
       if (s instanceof Terminal) {
         result.add((Terminal) s);
+        return result;
       } else if (s instanceof NonTerminal) {
         NonTerminal nt = (NonTerminal) s;
         result.addAll(nt.getFirst());

@@ -5,7 +5,7 @@ import jetbrains.jetpad.grammar.slr.SLRTableGenerator;
 
 public class TestMain {
   public static void main(String[] args) {
-    testTestGrammar();
+    testBookGrammar();
   }
 
   private static void testFunGrammar() {
@@ -35,50 +35,28 @@ public class TestMain {
   }
 
 
-  private static void testTestGrammar() {
+  private static void testBookGrammar() {
+
     Grammar g = new Grammar();
 
-    Terminal a = g.newTerminal("a");
-    Terminal b = g.newTerminal("b");
-    Terminal c = g.newTerminal("c");
-    Terminal d = g.newTerminal("d");
+    NonTerminal s = g.newNonTerminal("S");
+    NonTerminal e = g.newNonTerminal("E");
+    NonTerminal t = g.newNonTerminal("T");
 
-    NonTerminal ss = g.newNonTerminal("SS");
-    NonTerminal aa = g.newNonTerminal("A");
+    Terminal min = g.newTerminal("-");
+    Terminal n = g.newTerminal("n");
+    Terminal lp = g.newTerminal("(");
+    Terminal rp = g.newTerminal(")");
 
-    g.newRule(g.getStart(), ss);
-    g.newRule(ss, aa, a);
-    g.newRule(ss, b, aa, c);
-    g.newRule(ss, d, c);
-    g.newRule(ss, b, d, a);
-    g.newRule(aa, d);
+    g.newRule(g.getStart(), s);
 
-    new LR1TableGenerator(g).dumpTable();
-//
-//    new SLRTableGenerator(g).dumpTable();
+    g.newRule(s, e);
+    g.newRule(e, e, min, t);
+    g.newRule(e, t);
+    g.newRule(t, n);
+    g.newRule(t, lp, e, rp);
+
+
+    new SLRTableGenerator(g).dumpTable();
   }
-
-//
-//  public static void main(String[] args) {
-//    Grammar g = new Grammar();
-//
-//    NonTerminal s = g.getStart();
-//    NonTerminal e = g.newNonTerminal("e");
-//    NonTerminal t = g.newNonTerminal("t");
-//
-//    Terminal minus = g.newTerminal("-");
-//    Terminal n = g.newTerminal("n");
-//    Terminal lp = g.newTerminal("(");
-//    Terminal rp = g.newTerminal(")");
-//
-//
-//    g.newRule(s, e);
-//    g.newRule(e, e, minus, t);
-//    g.newRule(e, t);
-//    g.newRule(t, n);
-//    g.newRule(t, lp, e, rp);
-//
-//
-//    new LR1TableGenerator(g).dumpTable();
-//  }
 }
