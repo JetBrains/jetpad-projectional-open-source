@@ -60,7 +60,6 @@ public abstract class BaseLRTableGenerator<ItemT extends LRItem<ItemT>> {
       }
     }
 
-    Rule firstRule = grammar().getStart().getFirstRule();
     for (LRState<ItemT> state : states.values()) {
       for (ItemT item : state.getItems()) {
         if (item.isFinal()) {
@@ -69,7 +68,7 @@ public abstract class BaseLRTableGenerator<ItemT extends LRItem<ItemT>> {
           Symbol s = item.getNextSymbol();
           LRState<ItemT> nextState = state.getState(s);
           if (nextState != null && s instanceof Terminal) {
-            state.addRecord((Symbol) s, new LRActionRecord<>(item, LRParserAction.shift(nextState)));
+            state.addRecord(s, new LRActionRecord<>(item, LRParserAction.shift(nextState)));
           }
         }
       }
