@@ -53,19 +53,19 @@ public class SLRTableGenerator extends BaseLRTableGenerator<SLRItem> {
   }
 
   @Override
-  protected Set<SLRItem> closure(SLRItem item) {
+  protected Set<SLRItem> closure(Set<SLRItem> result, SLRItem item) {
     if (item.isFinal()) return Collections.emptySet();
     if (!(item.getNextSymbol() instanceof NonTerminal)) return Collections.emptySet();
 
-    Set<SLRItem> result = new HashSet<>();
+    Set<SLRItem> toAdd = new HashSet<>();
     NonTerminal currentNonTerminal = (NonTerminal) item.getNextSymbol();
     for (Rule rule : currentNonTerminal.getRules()) {
       SLRItem newItem = new SLRItem(rule, 0);
       if (!result.contains(newItem)) {
-        result.add(newItem);
+        toAdd.add(newItem);
       }
     }
 
-    return result;
+    return toAdd;
   }
 }

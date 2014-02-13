@@ -16,7 +16,7 @@ public abstract class BaseLRTableGenerator<ItemT extends LRItem<ItemT>> {
     myGrammar = grammar;
   }
 
-  protected abstract Set<ItemT> closure(ItemT item);
+  protected abstract Set<ItemT> closure(Set<ItemT> result, ItemT item);
 
   protected abstract ItemT initialItem();
 
@@ -36,6 +36,7 @@ public abstract class BaseLRTableGenerator<ItemT extends LRItem<ItemT>> {
     newItems.add(init);
     states.put(init.getItems(), init);
 
+    System.out.println("generating states");
     while (!newItems.isEmpty()) {
       Set<LRState<ItemT>> items = newItems;
       newItems = new LinkedHashSet<>();
@@ -152,7 +153,7 @@ public abstract class BaseLRTableGenerator<ItemT extends LRItem<ItemT>> {
     while (hasChanges) {
       Set<ItemT> toAdd = new LinkedHashSet<>();
       for (ItemT item : result) {
-        toAdd.addAll(closure(item));
+        toAdd.addAll(closure(result, item));
       }
       hasChanges = result.addAll(toAdd);
     }
