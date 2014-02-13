@@ -122,8 +122,9 @@ public class LRState<ItemT extends LRItem<ItemT>> {
     Map<LRParserAction<LRState<ItemT>>, LRActionRecord<ItemT>> actions = new HashMap<>();
 
     for (LRActionRecord<ItemT> r : records) {
-      if (actions.containsKey(r.getAction())) {
-        actions.get(r.getAction()).addDuplicate(r);
+      LRActionRecord<ItemT> actionRecord = actions.get(r.getAction());
+      if (actionRecord != null) {
+        actionRecord.addDuplicate(r);
         continue;
       }
       result.add(r);
