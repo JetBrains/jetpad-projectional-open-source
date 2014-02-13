@@ -1,5 +1,6 @@
 package jetbrains.jetpad.grammar;
 
+import jetbrains.jetpad.grammar.lr1.LR1TableGenerator;
 import jetbrains.jetpad.grammar.slr.SLRTableGenerator;
 
 public class Test {
@@ -23,12 +24,38 @@ public class Test {
     g.newRule(e, id);
 
 
-    SLRTableGenerator gen = new SLRTableGenerator(g);
+    System.out.println("LR1");
 
-    gen.dumpTable();
+    LR1TableGenerator lr1gen = new LR1TableGenerator(g);
+    lr1gen.dumpTable();
 
-    gen.generateTable();
+    System.out.println("SLR");
+    SLRTableGenerator slrgen = new SLRTableGenerator(g);
+    slrgen.dumpTable();
 
 
   }
+//
+//  public static void main(String[] args) {
+//    Grammar g = new Grammar();
+//
+//    NonTerminal s = g.getStart();
+//    NonTerminal e = g.newNonTerminal("e");
+//    NonTerminal t = g.newNonTerminal("t");
+//
+//    Terminal minus = g.newTerminal("-");
+//    Terminal n = g.newTerminal("n");
+//    Terminal lp = g.newTerminal("(");
+//    Terminal rp = g.newTerminal(")");
+//
+//
+//    g.newRule(s, e);
+//    g.newRule(e, e, minus, t);
+//    g.newRule(e, t);
+//    g.newRule(t, n);
+//    g.newRule(t, lp, e, rp);
+//
+//
+//    new LR1TableGenerator(g).dumpTable();
+//  }
 }
