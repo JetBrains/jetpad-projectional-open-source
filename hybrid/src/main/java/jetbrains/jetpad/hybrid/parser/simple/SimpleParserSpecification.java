@@ -19,6 +19,7 @@ import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 import jetbrains.jetpad.base.Handler;
 import jetbrains.jetpad.grammar.*;
+import jetbrains.jetpad.grammar.lr1.LR1TableGenerator;
 import jetbrains.jetpad.grammar.parser.LRParser;
 import jetbrains.jetpad.grammar.parser.LRParserTable;
 import jetbrains.jetpad.grammar.parser.Lexeme;
