@@ -641,6 +641,18 @@ public class ProjectionalListSynchronizerTest extends EditingTestCase {
     assertTrue(getChild(index).focused().get());
   }
 
+  private void assertFocusedHome(int index) {
+    Cell child = getChild(index);
+    assertTrue(child.focused().get());
+    assertTrue(child.get(PositionHandler.PROPERTY).isHome());
+  }
+
+  private void assertFocusedEnd(int index) {
+    Cell child = getChild(index);
+    assertTrue(child.focused().get());
+    assertTrue(child.get(PositionHandler.PROPERTY).isEnd());
+  }
+
   private void assertSelected(Child... expected) {
     assertEquals(Arrays.asList(expected), rootMapper.mySynchronizer.getSelectedItems());
   }
