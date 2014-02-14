@@ -178,7 +178,7 @@ public class ProjectionalListSynchronizerTest extends EditingTestCase {
 
     del();
 
-    assertFocused(0);
+    assertFocusedEnd(0);
   }
 
   @Test
