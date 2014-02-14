@@ -62,4 +62,9 @@ public class KeyEvent extends Event {
   public String toString() {
     return myKeyStroke.toString();
   }
+
+  @Override
+  public void consume() {
+    super.consume();
+  }
 }

@@ -182,6 +182,17 @@ public class ProjectionalListSynchronizerTest extends EditingTestCase {
   }
 
   @Test
+  public void tailItemDeleteManyItems() {
+    container.children.addAll(Arrays.asList(new NonEmptyChild(), new NonEmptyChild(), new NonEmptyChild()));
+
+    selectChild(2);
+
+    press(Key.DELETE, ModifierKey.CONTROL);
+
+    assertFocusedEnd(1) ;
+  }
+
+  @Test
   public void middleItemDelete() {
     container.children.addAll(Arrays.asList(new NonEmptyChild(), new NonEmptyChild(), new NonEmptyChild()));
     selectChild(1);
