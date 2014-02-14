@@ -132,7 +132,7 @@ public class View2Dom {
         myReg = container.root().valid().addHandler(new EventHandler<PropertyChangeEvent<Boolean>>() {
           @Override
           public void onEvent(PropertyChangeEvent<Boolean> event) {
-            Scheduler.get().scheduleDeferred(new Scheduler.ScheduledCommand() {
+            Scheduler.get().scheduleFinally(new Scheduler.ScheduledCommand() {
               @Override
               public void execute() {
                 container.root().validate();
