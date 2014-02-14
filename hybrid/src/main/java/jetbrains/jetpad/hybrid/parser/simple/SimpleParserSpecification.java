@@ -19,6 +19,7 @@ import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 import jetbrains.jetpad.base.Handler;
 import jetbrains.jetpad.grammar.*;
+import jetbrains.jetpad.grammar.base.BaseLRTableGenerator;
 import jetbrains.jetpad.grammar.lr1.LR1TableGenerator;
 import jetbrains.jetpad.grammar.parser.LRParser;
 import jetbrains.jetpad.grammar.parser.LRParserTable;
@@ -162,11 +163,21 @@ public class SimpleParserSpecification<ExprT> {
   }
 
   private LRParserTable buildTable() {
+    return createGenerator().generateTable();
+  }
+
+  private BaseLRTableGenerator<?> createGenerator() {
+    BaseLRTableGenerator<?> generator;
     if (myUserFullLR) {
-      return new LR1TableGenerator(myGrammar).generateTable();
+      generator = new LR1TableGenerator(myGrammar);
     } else {
-      return new SLRTableGenerator(myGrammar).generateTable();
+      generator = new SLRTableGenerator(myGrammar);
     }
+    return generator;
+  }
+
+  public void dumpTable() {
+    createGenerator().dumpTable();
   }
 
   public Function<ParserParameters, Parser<ExprT>> buildParameterizedParser() {
