@@ -158,7 +158,7 @@ class TokenListEditor<SourceT> {
     myPrintedTokens = ctx.tokens();
 
     myChangeReg.remove();
-    myChangeReg = ctx.changeSource().addHandler(new EventHandler() {
+    myChangeReg = ctx.changeSource().addHandler(new EventHandler<Object>() {
       @Override
       public void onEvent(Object event) {
         sync(new Runnable() {
