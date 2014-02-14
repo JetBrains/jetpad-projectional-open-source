@@ -123,9 +123,7 @@ public abstract class CollectionEditor<ItemT, ViewT> {
     if (isEmpty()) {
       selectPlaceholder();
     } else {
-      if (isLast(index)) {
-        selectHome(index);
-      } else if (isFirst(index)) {
+      if (isLast(index) || isFirst(index)) {
         selectHome(index);
       } else {
         selectEnd(index - 1);
