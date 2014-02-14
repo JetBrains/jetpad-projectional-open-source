@@ -137,12 +137,12 @@ class ProjectionalObservableListSynchronizer<ContextT, SourceItemT> extends Base
 
       @Override
       protected void selectHome(int index) {
-        CellActions.toLastFocusable(childCells().get(index)).run();
+        CellActions.toFirstFocusable(childCells().get(index)).run();
       }
 
       @Override
       protected void selectEnd(int index) {
-        CellActions.toFirstFocusable(childCells().get(index)).run();
+        CellActions.toLastFocusable(childCells().get(index)).run();
       }
 
       @Override

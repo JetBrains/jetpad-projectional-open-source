@@ -100,7 +100,7 @@ public abstract class CollectionEditor<ItemT, ViewT> {
 
     if (event.is(Key.BACKSPACE) && index > 0 && isEmpty(index) && !isEmpty(index - 1)) {
       myItems.remove(index);
-      selectHome(index - 1);
+      selectEnd(index - 1);
       event.consume();
       return;
     }
@@ -124,11 +124,11 @@ public abstract class CollectionEditor<ItemT, ViewT> {
       selectPlaceholder();
     } else {
       if (isLast(index)) {
-        selectEnd(index);
-      } else if (isFirst(index)) {
         selectHome(index);
+      } else if (isFirst(index)) {
+        selectEnd(index);
       } else {
-        selectHome(index - 1);
+        selectEnd(index - 1);
       }
     }
   }
