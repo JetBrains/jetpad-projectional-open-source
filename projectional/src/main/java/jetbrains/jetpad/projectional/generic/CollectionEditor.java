@@ -126,7 +126,7 @@ public abstract class CollectionEditor<ItemT, ViewT> {
       if (isLast(index)) {
         selectHome(index);
       } else if (isFirst(index)) {
-        selectEnd(index);
+        selectHome(index);
       } else {
         selectEnd(index - 1);
       }

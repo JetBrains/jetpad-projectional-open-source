@@ -159,14 +159,14 @@ public class ProjectionalListSynchronizerTest extends EditingTestCase {
   }
 
   @Test
-  public void firstItemDeleteInCaseOfManyChildren() {
+  public void firstItemDeleteInCaseOfTwoChildren() {
     container.children.addAll(Arrays.asList(new ComplexChild(), new NonEmptyChild(), new NonEmptyChild()));
     selectChild(0);
 
     del();
 
     assertEquals(2, container.children.size());
-    assertFocused(0);
+    assertFocusedHome(0);
   }
 
   @Test
