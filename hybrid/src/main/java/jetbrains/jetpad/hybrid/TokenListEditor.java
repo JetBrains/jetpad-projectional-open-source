@@ -118,7 +118,7 @@ class TokenListEditor<SourceT> {
       myChangeReg.remove();
       myChangeReg = Registration.EMPTY;
     } else {
-      List<Token> toParse = new ArrayList<>();
+      List<Token> toParse = new ArrayList<Token>();
       for (Token t : tokens) {
         if (t instanceof ValueToken) {
           toParse.add(((ValueToken) t).copy());
@@ -152,7 +152,7 @@ class TokenListEditor<SourceT> {
 
   private PrettyPrinterContext<? super SourceT> reprint() {
     PrettyPrinter<? super SourceT> printer = mySpec.getPrettyPrinter();
-    PrettyPrinterContext<? super SourceT> ctx = new PrettyPrinterContext<>(printer);
+    PrettyPrinterContext<? super SourceT> ctx = createPrettyPrinterContext(printer);
     ctx.print(value.get());
     myParseNode = ctx.result();
     myPrintedTokens = ctx.tokens();
@@ -170,6 +170,10 @@ class TokenListEditor<SourceT> {
       }
     });
     return ctx;
+  }
+
+  private <SourceSuperT> PrettyPrinterContext<SourceSuperT> createPrettyPrinterContext(PrettyPrinter<SourceSuperT> printer) {
+    return new PrettyPrinterContext<SourceSuperT>(printer);
   }
 
   void updateToPrintedTokens() {

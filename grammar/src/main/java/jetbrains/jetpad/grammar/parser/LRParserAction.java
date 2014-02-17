@@ -19,19 +19,19 @@ import jetbrains.jetpad.grammar.Rule;
 
 public abstract class LRParserAction<StateT> {
   public static <StateT> LRParserAction<StateT> shift(StateT state) {
-    return new Shift<>(state);
+    return new Shift<StateT>(state);
   }
 
   public static <StateT> LRParserAction<StateT> reduce(Rule rule) {
-    return new Reduce<>(rule);
+    return new Reduce<StateT>(rule);
   }
 
   public static <StateT> LRParserAction<StateT> accept() {
-    return new Accept<>();
+    return new Accept<StateT>();
   }
 
   public static <StateT> LRParserAction<StateT> error() {
-    return new Error<>();
+    return new Error<StateT>();
   }
 
   private LRParserAction() {

@@ -24,11 +24,11 @@ import jetbrains.jetpad.values.Color;
 public class LineView extends View {
   static final int THRESHOLD = 5;
 
-  public static final ViewPropertySpec<Color> COLOR = new ViewPropertySpec<>("color", ViewPropertyKind.REPAINT, Color.BLACK);
-  public static final ViewPropertySpec<Integer> WIDTH = new ViewPropertySpec<>("width", ViewPropertyKind.RELAYOUT_AND_REPAINT, 1);
+  public static final ViewPropertySpec<Color> COLOR = new ViewPropertySpec<Color>("color", ViewPropertyKind.REPAINT, Color.BLACK);
+  public static final ViewPropertySpec<Integer> WIDTH = new ViewPropertySpec<Integer>("width", ViewPropertyKind.RELAYOUT_AND_REPAINT, 1);
 
-  private static final ViewPropertySpec<Vector> START = new ViewPropertySpec<>("start", ViewPropertyKind.RELAYOUT_AND_REPAINT, Vector.ZERO);
-  private static final ViewPropertySpec<Vector> END = new ViewPropertySpec<>("end", ViewPropertyKind.RELAYOUT_AND_REPAINT, Vector.ZERO);
+  private static final ViewPropertySpec<Vector> START = new ViewPropertySpec<Vector>("start", ViewPropertyKind.RELAYOUT_AND_REPAINT, Vector.ZERO);
+  private static final ViewPropertySpec<Vector> END = new ViewPropertySpec<Vector>("end", ViewPropertyKind.RELAYOUT_AND_REPAINT, Vector.ZERO);
 
   public Property<Vector> start() {
     return toParentOffsetProp(START);

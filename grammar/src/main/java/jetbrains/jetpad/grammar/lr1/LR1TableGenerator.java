@@ -45,9 +45,9 @@ public class LR1TableGenerator extends BaseLRTableGenerator<LR1Item> {
 
     Terminal t = item.getLookAhead();
     if (t == grammar().getEnd() && finalItem.equals(item)) {
-      state.addRecord(t, new LRActionRecord<>(item, LRParserAction.<LRState<LR1Item>>accept()));
+      state.addRecord(t, new LRActionRecord<LR1Item>(item, LRParserAction.<LRState<LR1Item>>accept()));
     } else {
-      state.addRecord(t, new LRActionRecord<>(item, LRParserAction.<LRState<LR1Item>>reduce(item.getRule())));
+      state.addRecord(t, new LRActionRecord<LR1Item>(item, LRParserAction.<LRState<LR1Item>>reduce(item.getRule())));
     }
   }
 
@@ -72,7 +72,7 @@ public class LR1TableGenerator extends BaseLRTableGenerator<LR1Item> {
   }
 
   private Set<Terminal> first(List<Symbol> symbols, Terminal lookAhead) {
-    Set<Terminal> result = new HashSet<>();
+    Set<Terminal> result = new HashSet<Terminal>();
     for (Symbol s : symbols) {
       if (s instanceof Terminal) {
         result.add((Terminal) s);
