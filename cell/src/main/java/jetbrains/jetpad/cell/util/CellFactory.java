@@ -31,7 +31,7 @@ import java.util.Arrays;
 import java.util.Collections;
 
 public class CellFactory {
-  private static final CellTraitPropertySpec<Cell> PLACEHOLDER_CELL = new CellTraitPropertySpec<>("placeholderCell");
+  private static final CellTraitPropertySpec<Cell> PLACEHOLDER_CELL = new CellTraitPropertySpec<Cell>("placeholderCell");
 
   public static void to(Cell target, Cell... cells) {
     Collections.addAll(target.children(), cells);

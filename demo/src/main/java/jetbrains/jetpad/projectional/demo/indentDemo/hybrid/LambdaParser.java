@@ -29,7 +29,7 @@ class LambdaParser {
   static final Parser<Expr> EXPR;
 
   static {
-    SimpleParserSpecification<Expr> spec = new SimpleParserSpecification<>();
+    SimpleParserSpecification<Expr> spec = new SimpleParserSpecification<Expr>();
     spec.changeGrammar(new Handler<SimpleParserSpecification.SimpleGrammarContext>() {
       @Override
       public void handle(SimpleParserSpecification.SimpleGrammarContext ctx) {

@@ -22,14 +22,14 @@ import jetbrains.jetpad.geometry.Vector;
 import jetbrains.jetpad.projectional.view.*;
 
 public class RootTrait {
-  public static final ViewPropertySpec<MoveHandler> MOVE_HANDLER = new ViewPropertySpec<>("moveHandler");
-  public static final ViewPropertySpec<DeleteHandler> DELETE_HANDLER = new ViewPropertySpec<>("deleteHandler");
+  public static final ViewPropertySpec<MoveHandler> MOVE_HANDLER = new ViewPropertySpec<MoveHandler>("moveHandler");
+  public static final ViewPropertySpec<DeleteHandler> DELETE_HANDLER = new ViewPropertySpec<DeleteHandler>("deleteHandler");
 
   public static final ViewTrait ROOT_TRAIT;
 
   static {
-    final ViewPropertySpec<Vector> prevPoint = new ViewPropertySpec<>("prevLocation");
-    final ViewPropertySpec<MoveHandler> moveHandler = new ViewPropertySpec<>("currentMoveHandler");
+    final ViewPropertySpec<Vector> prevPoint = new ViewPropertySpec<Vector>("prevLocation");
+    final ViewPropertySpec<MoveHandler> moveHandler = new ViewPropertySpec<MoveHandler>("currentMoveHandler");
 
     ViewTraitBuilder builder = new ViewTraitBuilder();
     builder.on(ViewEvents.MOUSE_PRESSED, new ViewEventHandler<MouseEvent>() {

@@ -20,9 +20,9 @@ import java.util.*;
 class GrammarData {
   private Grammar myGrammar;
 
-  private Set<NonTerminal> myNullable = new HashSet<>();
-  private Map<NonTerminal, Set<Terminal>> myFirst = new LinkedHashMap<>();
-  private Map<NonTerminal, Set<Terminal>> myFollow = new LinkedHashMap<>();
+  private Set<NonTerminal> myNullable = new HashSet<NonTerminal>();
+  private Map<NonTerminal, Set<Terminal>> myFirst = new LinkedHashMap<NonTerminal, Set<Terminal>>();
+  private Map<NonTerminal, Set<Terminal>> myFollow = new LinkedHashMap<NonTerminal, Set<Terminal>>();
 
   GrammarData(Grammar grammar) {
     myGrammar = grammar;

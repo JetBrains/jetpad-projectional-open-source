@@ -23,7 +23,7 @@ import jetbrains.jetpad.projectional.view.ViewPropertySpec;
 import jetbrains.jetpad.values.Color;
 
 public class RectView extends View {
-  public static final ViewPropertySpec<Vector> DIMENSION = new ViewPropertySpec<>("dimension", ViewPropertyKind.RELAYOUT, new Vector(10, 10));
+  public static final ViewPropertySpec<Vector> DIMENSION = new ViewPropertySpec<Vector>("dimension", ViewPropertyKind.RELAYOUT, new Vector(10, 10));
 
   public Property<Vector> dimension() {
     return prop(DIMENSION);

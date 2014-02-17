@@ -24,7 +24,7 @@ import jetbrains.jetpad.model.property.ValueProperty;
 import jetbrains.jetpad.projectional.demo.hybridExpr.model.Expression;
 
 public class DiagramNode extends HasParent<SimpleDiagram, DiagramNode> {
-  public final Property<Vector> location = new ValueProperty<>(Vector.ZERO);
-  public final Property<Expression> expression = new ValueProperty<>();
-  public final ObservableList<DiagramNodeConnection> connections = new ChildList<>(this);
+  public final Property<Vector> location = new ValueProperty<Vector>(Vector.ZERO);
+  public final Property<Expression> expression = new ValueProperty<Expression>();
+  public final ObservableList<DiagramNodeConnection> connections = new ChildList<DiagramNode, DiagramNodeConnection>(this);
 }

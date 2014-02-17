@@ -132,7 +132,7 @@ public class IndentCell extends Cell {
     checkRootIndent();
 
     if (myListeners == null) {
-      myListeners = new Listeners<>();
+      myListeners = new Listeners<IndentContainerCellListener>();
     }
     final Registration reg = myListeners.add(l);
     return new Registration() {

@@ -22,7 +22,7 @@ import java.util.List;
 
 public class FreeSegmentsUtil {
   public static List<Vector> removeSegment(List<Vector> freeSegments, Vector occupiedSegment) {
-    List<Vector> res = new ArrayList<>();
+    List<Vector> res = new ArrayList<Vector>();
     for (Vector seg: freeSegments) {
       if (seg.y <= occupiedSegment.x || seg.x >= occupiedSegment.y) {
         res.add(seg);

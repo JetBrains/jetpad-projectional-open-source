@@ -83,7 +83,7 @@ public class ValidTextCompletionTest extends CompletionTestCase {
                 }
               }
 
-              List<CompletionItem> result = new ArrayList<>();
+              List<CompletionItem> result = new ArrayList<CompletionItem>();
               result.addAll(createCompletion("a", "c", "ae", "zz", "d", "u", "q").get(cp));
               result.add(new LowPriorityCompletionItem("d"));
               result.add(new LowPriorityCompletionItem("xx"));
@@ -100,7 +100,7 @@ public class ValidTextCompletionTest extends CompletionTestCase {
           return new CompletionSupplier() {
             @Override
             public List<CompletionItem> get(CompletionParameters cp) {
-              List<CompletionItem> result = new ArrayList<>();
+              List<CompletionItem> result = new ArrayList<CompletionItem>();
               result.add(new SimpleCompletionItem("z") {
                 @Override
                 public Runnable complete(String text) {

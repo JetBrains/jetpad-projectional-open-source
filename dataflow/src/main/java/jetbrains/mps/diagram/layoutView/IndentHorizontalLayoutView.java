@@ -24,8 +24,8 @@ import jetbrains.jetpad.projectional.view.ViewPropertyKind;
 import jetbrains.jetpad.projectional.view.ViewPropertySpec;
 
 public class IndentHorizontalLayoutView extends GroupView {
-  private final ViewPropertySpec<Integer> PADDING = new ViewPropertySpec<>("padding", ViewPropertyKind.RELAYOUT);
-  private final ViewPropertySpec<Integer> INDENT = new ViewPropertySpec<>("indent", ViewPropertyKind.RELAYOUT);
+  private final ViewPropertySpec<Integer> PADDING = new ViewPropertySpec<Integer>("padding", ViewPropertyKind.RELAYOUT);
+  private final ViewPropertySpec<Integer> INDENT = new ViewPropertySpec<Integer>("indent", ViewPropertyKind.RELAYOUT);
 
   public Property<Integer> padding() {
     return prop(PADDING);

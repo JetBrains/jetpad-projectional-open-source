@@ -27,7 +27,7 @@ public class ExprContainerMapper extends Mapper<ExprContainer, HorizontalCell> {
 
   public ExprContainerMapper(ExprContainer source) {
     super(source, new HorizontalCell());
-    hybridSync = new HybridSynchronizer<>(this, getSource().expr, getTarget(), new ExprHybridPositionSpec());
+    hybridSync = new HybridSynchronizer<Expr>(this, getSource().expr, getTarget(), new ExprHybridPositionSpec());
 
     hybridSync.setMapperFactory(new MapperFactory<Object, Cell>() {
       @Override

@@ -34,7 +34,7 @@ public class IndentCell extends VerticalCell {
 
   public IndentCell() {
     myRootPart.setAttached(true);
-    myUpdater = new IndentUpdater<>(myRootPart, this, indentUpdaterSourceForIndentPart(), indentUpdaterTargetForCell());
+    myUpdater = new IndentUpdater<IndentPart, Cell>(myRootPart, this, indentUpdaterSourceForIndentPart(), indentUpdaterTargetForCell());
   }
 
   private IndentUpdaterSource<IndentPart> indentUpdaterSourceForIndentPart() {

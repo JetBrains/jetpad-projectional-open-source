@@ -59,10 +59,10 @@ class BaseCellMapper<SourceT extends Cell, TargetT extends View> extends Mapper<
       childAdded(i, children.get(i));
     }
 
-    updatePopup(new PropertyChangeEvent<>(null, getSource().frontPopup().get()));
-    updatePopup(new PropertyChangeEvent<>(null, getSource().bottomPopup().get()));
-    updatePopup(new PropertyChangeEvent<>(null, getSource().leftPopup().get()));
-    updatePopup(new PropertyChangeEvent<>(null, getSource().rightPopup().get()));
+    updatePopup(new PropertyChangeEvent<Cell>(null, getSource().frontPopup().get()));
+    updatePopup(new PropertyChangeEvent<Cell>(null, getSource().bottomPopup().get()));
+    updatePopup(new PropertyChangeEvent<Cell>(null, getSource().leftPopup().get()));
+    updatePopup(new PropertyChangeEvent<Cell>(null, getSource().rightPopup().get()));
   }
 
   @Override

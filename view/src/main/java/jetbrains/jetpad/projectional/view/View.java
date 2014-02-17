@@ -40,13 +40,13 @@ import java.util.Set;
 
 public abstract class View implements Composite<View>, HasFocusability, HasVisibility, HasBounds {
   //debug attribute which is used in toString
-  public static final ViewPropertySpec<String> NAME = new ViewPropertySpec<>("name", ViewPropertyKind.NONE, "");
+  public static final ViewPropertySpec<String> NAME = new ViewPropertySpec<String>("name", ViewPropertyKind.NONE, "");
 
-  public static final ViewPropertySpec<Boolean> VISIBLE = new ViewPropertySpec<>("visible", ViewPropertyKind.RELAYOUT_PARENT, true);
-  public static final ViewPropertySpec<Boolean> FOCUSED = new ViewPropertySpec<>("focused", ViewPropertyKind.NONE, false);
-  public static final ViewPropertySpec<Boolean> FOCUSABLE = new ViewPropertySpec<>("focusabled", ViewPropertyKind.NONE, false);
-  public static final ViewPropertySpec<Color> BACKGROUND = new ViewPropertySpec<>("background", ViewPropertyKind.REPAINT, null);
-  public static final ViewPropertySpec<Color> BORDER_COLOR = new ViewPropertySpec<>("bordercolor", ViewPropertyKind.REPAINT, null);
+  public static final ViewPropertySpec<Boolean> VISIBLE = new ViewPropertySpec<Boolean>("visible", ViewPropertyKind.RELAYOUT_PARENT, true);
+  public static final ViewPropertySpec<Boolean> FOCUSED = new ViewPropertySpec<Boolean>("focused", ViewPropertyKind.NONE, false);
+  public static final ViewPropertySpec<Boolean> FOCUSABLE = new ViewPropertySpec<Boolean>("focusabled", ViewPropertyKind.NONE, false);
+  public static final ViewPropertySpec<Color> BACKGROUND = new ViewPropertySpec<Color>("background", ViewPropertyKind.REPAINT, null);
+  public static final ViewPropertySpec<Color> BORDER_COLOR = new ViewPropertySpec<Color>("bordercolor", ViewPropertyKind.REPAINT, null);
 
   private View myParent;
   private ObservableList<View> myChildren;
@@ -173,7 +173,7 @@ public abstract class View implements Composite<View>, HasFocusability, HasVisib
 
   public Registration addTrait(final ViewTrait trait) {
     if (myTraits == null) {
-      myTraits = new ArrayList<>();
+      myTraits = new ArrayList<ViewTrait>();
     }
 
     Runnable fire = createFiringRunnable(trait);
@@ -196,7 +196,7 @@ public abstract class View implements Composite<View>, HasFocusability, HasVisib
 
   private Runnable createFiringRunnable(ViewTrait t) {
     Set<ViewPropertySpec<?>> props = t.properties();
-    final List<Runnable> toRun = new ArrayList<>();
+    final List<Runnable> toRun = new ArrayList<Runnable>();
     for (final ViewPropertySpec<?> p : props) {
       final Object val = get(p);
       toRun.add(new Runnable() {
@@ -239,7 +239,7 @@ public abstract class View implements Composite<View>, HasFocusability, HasVisib
 
     if (myProperties == null && value == null) return;
     if (myProperties == null) {
-      myProperties = new ListMap<>();
+      myProperties = new ListMap<ViewPropertySpec<?>, Object>();
     }
 
     if (value == null) {
@@ -253,7 +253,7 @@ public abstract class View implements Composite<View>, HasFocusability, HasVisib
 
     final ValueT newValue = get(prop);
     if (!Objects.equal(newValue, oldValue)) {
-      propertyChanged(prop, new PropertyChangeEvent<>(oldValue, newValue));
+      propertyChanged(prop, new PropertyChangeEvent<ValueT>(oldValue, newValue));
     }
   }
 
@@ -294,7 +294,7 @@ public abstract class View implements Composite<View>, HasFocusability, HasVisib
 
   Registration addListener(ViewListener l) {
     if (myListeners == null) {
-      myListeners = new Listeners<>();
+      myListeners = new Listeners<ViewListener>();
     }
     final Registration reg = myListeners.add(l);
     return new Registration() {
@@ -336,12 +336,12 @@ public abstract class View implements Composite<View>, HasFocusability, HasVisib
         return addListener(new ViewAdapter() {
           @Override
           public void onViewValidated() {
-            handler.onEvent(new PropertyChangeEvent<>(false, true));
+            handler.onEvent(new PropertyChangeEvent<Boolean>(false, true));
           }
 
           @Override
           public void onViewInvalidated() {
-            handler.onEvent(new PropertyChangeEvent<>(true, false));
+            handler.onEvent(new PropertyChangeEvent<Boolean>(true, false));
           }
         });
       }
@@ -409,7 +409,7 @@ public abstract class View implements Composite<View>, HasFocusability, HasVisib
         localBounds(bounds.sub(toRootDelta().get()));
 
         if (!Objects.equal(oldBounds, bounds)) {
-          final PropertyChangeEvent<Rectangle> event = new PropertyChangeEvent<>(oldBounds, bounds);
+          final PropertyChangeEvent<Rectangle> event = new PropertyChangeEvent<Rectangle>(oldBounds, bounds);
           fire(new ListenerCaller<ViewListener>() {
             @Override
             public void call(ViewListener l) {
@@ -492,13 +492,13 @@ public abstract class View implements Composite<View>, HasFocusability, HasVisib
             public void onEvent(PropertyChangeEvent<Vector> event) {
               Vector oldDelta = event.getOldValue();
               Vector newDelta = event.getNewValue();
-              handler.onEvent(new PropertyChangeEvent<>(localBounds().add(oldDelta), localBounds().add(newDelta)));
+              handler.onEvent(new PropertyChangeEvent<Rectangle>(localBounds().add(oldDelta), localBounds().add(newDelta)));
             }
           }),
           addListener(new ViewAdapter() {
             @Override
             public void onBoundsChanged(PropertyChangeEvent<Rectangle> change) {
-              handler.onEvent(new PropertyChangeEvent<>(change.getOldValue(), change.getNewValue()));
+              handler.onEvent(new PropertyChangeEvent<Rectangle>(change.getOldValue(), change.getNewValue()));
             }
           })
         );
@@ -592,7 +592,7 @@ public abstract class View implements Composite<View>, HasFocusability, HasVisib
     if (container() != null) {
       Rectangle newBounds = bounds().get();
       Rectangle oldBounds = newBounds.sub(delta);
-      container().boundsChanged(this, new PropertyChangeEvent<>(oldBounds, newBounds));
+      container().boundsChanged(this, new PropertyChangeEvent<Rectangle>(oldBounds, newBounds));
     }
 
     if (myDeltaListenersCount != 0) {
@@ -605,7 +605,7 @@ public abstract class View implements Composite<View>, HasFocusability, HasVisib
       @Override
       public void call(ViewListener l) {
         Vector toRootDelta = toRootDelta().get();
-        final PropertyChangeEvent<Vector> event = new PropertyChangeEvent<>(toRootDelta.sub(delta), toRootDelta);
+        final PropertyChangeEvent<Vector> event = new PropertyChangeEvent<Vector>(toRootDelta.sub(delta), toRootDelta);
         l.onToRootDeltaChanged(event);
       }
     });
@@ -715,14 +715,14 @@ public abstract class View implements Composite<View>, HasFocusability, HasVisib
       item.fire(new ListenerCaller<ViewListener>() {
         @Override
         public void call(ViewListener l) {
-          l.onParentChanged(new PropertyChangeEvent<>(null, View.this));
+          l.onParentChanged(new PropertyChangeEvent<View>(null, View.this));
         }
       });
       super.add(index, item);
       fire(new ListenerCaller<ViewListener>() {
         @Override
         public void call(ViewListener l) {
-          l.onChildAdded(new CollectionItemEvent<>(item, index, true));
+          l.onChildAdded(new CollectionItemEvent<View>(item, index, true));
         }
       });
     }
@@ -740,14 +740,14 @@ public abstract class View implements Composite<View>, HasFocusability, HasVisib
       item.fire(new ListenerCaller<ViewListener>() {
         @Override
         public void call(ViewListener l) {
-          l.onParentChanged(new PropertyChangeEvent<>(oldParent, null));
+          l.onParentChanged(new PropertyChangeEvent<View>(oldParent, null));
         }
       });
       View result = super.remove(index);
       fire(new ListenerCaller<ViewListener>() {
         @Override
         public void call(ViewListener l) {
-          l.onChildRemoved(new CollectionItemEvent<>(item, index, false));
+          l.onChildRemoved(new CollectionItemEvent<View>(item, index, false));
         }
       });
       invalidate();

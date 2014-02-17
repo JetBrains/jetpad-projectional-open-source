@@ -83,13 +83,13 @@ abstract class BaseCellMapper<SourceT extends Cell> extends Mapper<SourceT, Elem
     myWasPopup = Composites.<Cell>isNonCompositeChild(getSource());
 
     if (getSource().bottomPopup().get() != null) {
-      updatePopup(new PropertyChangeEvent<>(null, getSource().bottomPopup().get()));
+      updatePopup(new PropertyChangeEvent<Cell>(null, getSource().bottomPopup().get()));
     } else if (getSource().frontPopup().get() != null) {
-      updatePopup(new PropertyChangeEvent<>(null, getSource().frontPopup().get()));
+      updatePopup(new PropertyChangeEvent<Cell>(null, getSource().frontPopup().get()));
     } else if (getSource().leftPopup().get() != null) {
-      updatePopup(new PropertyChangeEvent<>(null, getSource().leftPopup().get()));
+      updatePopup(new PropertyChangeEvent<Cell>(null, getSource().leftPopup().get()));
     } else if (getSource().rightPopup().get() != null) {
-      updatePopup(new PropertyChangeEvent<>(null, getSource().rightPopup().get()));
+      updatePopup(new PropertyChangeEvent<Cell>(null, getSource().rightPopup().get()));
     }
   }
 

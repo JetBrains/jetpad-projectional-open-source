@@ -36,15 +36,15 @@ public class PolyLineConnection implements Connection {
   private TargetViewProperty myFromView = new TargetViewProperty();
   private TargetViewProperty myToView = new TargetViewProperty();
 
-  private Property<Vector> myFromLocation = new ValueProperty<>();
-  private final Property<Vector> myToLocation = new ValueProperty<>();
+  private Property<Vector> myFromLocation = new ValueProperty<Vector>();
+  private final Property<Vector> myToLocation = new ValueProperty<Vector>();
 
   private GroupView myGroup = new GroupView();
   private PolyLineView myLinesView = new PolyLineView();
 
   private View myLabel;
 
-  private List<Segment> myLines = new ArrayList<>();
+  private List<Segment> myLines = new ArrayList<Segment>();
 
   public PolyLineConnection() {
     this(new GroupView());
@@ -151,7 +151,7 @@ public class PolyLineConnection implements Connection {
   }
 
   private List<Vector> removeParallel(Vector... points) {
-    List<Vector> res = new ArrayList<>();
+    List<Vector> res = new ArrayList<Vector>();
     Vector last = null;
     Vector prev = null;
     for (Vector p: points) {
@@ -174,7 +174,7 @@ public class PolyLineConnection implements Connection {
   }
 
   public List<LineView> getLines() {
-    List<LineView> res = new ArrayList<>(myLinesView.children().size());
+    List<LineView> res = new ArrayList<LineView>(myLinesView.children().size());
     for (View v: myLinesView.children()) {
       res.add((LineView) v);
     }

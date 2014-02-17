@@ -63,7 +63,7 @@ public class HybridSynchronizer<SourceT> implements Synchronizer {
   private static final ContentKind<List<Token>> TOKENS_CONTENT = new ContentKind<List<Token>>() {
   };
 
-  static final CellTraitPropertySpec<HybridSynchronizer<?>> HYBRID_SYNCHRONIZER = new CellTraitPropertySpec<>("hybridSynchronizer");
+  static final CellTraitPropertySpec<HybridSynchronizer<?>> HYBRID_SYNCHRONIZER = new CellTraitPropertySpec<HybridSynchronizer<?>>("hybridSynchronizer");
 
   private Mapper<?, ?> myContextMapper;
   private Property<SourceT> myProperty;
@@ -73,7 +73,7 @@ public class HybridSynchronizer<SourceT> implements Synchronizer {
   private Cell myTarget;
   private List<Cell> myTargetList;
   private Set<Mapper<?, ? extends Cell>> myValueMappers;
-  private Map<Cell, Mapper<?, ? extends Cell>> myValueCellToMapper = new HashMap<>();
+  private Map<Cell, Mapper<?, ? extends Cell>> myValueCellToMapper = new HashMap<Cell, Mapper<?, ? extends Cell>>();
   private TextCell myPlaceholder;
   private MapperFactory<Object, ? extends Cell> myMapperFactory;
   private SelectionSupport<Cell> mySelectionSupport;
@@ -84,7 +84,7 @@ public class HybridSynchronizer<SourceT> implements Synchronizer {
     myContextMapper = contextMapper;
     myProperty = prop;
     myPositionSpec = spec;
-    myTokenListEditor = new TokenListEditor<>(spec);
+    myTokenListEditor = new TokenListEditor<SourceT>(spec);
     myTarget = target;
 
     myValueMappers = myContextMapper.createChildSet();
@@ -274,7 +274,7 @@ public class HybridSynchronizer<SourceT> implements Synchronizer {
 
       private ClipboardContent copy() {
         final Range<Integer> selection = selection();
-        final List<Token> tokens = new ArrayList<>(tokens().subList(selection.lowerEndpoint(), selection.upperEndpoint()));
+        final List<Token> tokens = new ArrayList<Token>(tokens().subList(selection.lowerEndpoint(), selection.upperEndpoint()));
         return new ClipboardContent() {
           @Override
           public boolean isSupported(ContentKind<?> kind) {
@@ -309,7 +309,7 @@ public class HybridSynchronizer<SourceT> implements Synchronizer {
       public List<Token> saveState(Cell cell) {
         if (valid().get()) return null;
 
-        List<Token> result = new ArrayList<>();
+        List<Token> result = new ArrayList<Token>();
         for (Token t : tokens()) {
           if (t instanceof ValueToken) {
             result.add(((ValueToken) t).copy());
@@ -586,7 +586,7 @@ public class HybridSynchronizer<SourceT> implements Synchronizer {
   }
 
   TokenOperations<SourceT> tokenOperations() {
-    return new TokenOperations<>(this);
+    return new TokenOperations<SourceT>(this);
   }
 
   TokenCompletion tokenCompletion() {
@@ -618,7 +618,7 @@ public class HybridSynchronizer<SourceT> implements Synchronizer {
     ObservableList<Token> tokens = myTokenListEditor.tokens;
     for (int i = 0; i < tokens.size(); i++) {
       Token t = tokens.get(i);
-      tokensListener.onItemAdded(new CollectionItemEvent<>(t, i, true));
+      tokensListener.onItemAdded(new CollectionItemEvent<Token>(t, i, true));
     }
   }
 

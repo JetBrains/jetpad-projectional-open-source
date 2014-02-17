@@ -46,7 +46,7 @@ import java.util.*;
 abstract class BaseProjectionalSynchronizer<SourceT, ContextT, SourceItemT> implements ProjectionalRoleSynchronizer<ContextT, SourceItemT> {
   private RoleSynchronizer<SourceItemT, Cell> myRoleSynchronizer;
   private SelectionSupport<SourceItemT> mySelectionSupport;
-  private ObservableList<SourceItemT> mySelectedItems = new ObservableArrayList<>();
+  private ObservableList<SourceItemT> mySelectedItems = new ObservableArrayList<SourceItemT>();
   private Mapper<? extends ContextT, ? extends Cell> myMapper;
   private Cell myTarget;
   private String myPlaceholderText;
@@ -71,7 +71,7 @@ abstract class BaseProjectionalSynchronizer<SourceT, ContextT, SourceItemT> impl
     myTargetCellList = new TargetViewList();
     myRoleSynchronizer = createSubSynchronizer(myMapper, source, myTargetCellList, factory);
 
-    mySelectionSupport = new SelectionSupport<>(new SourceList(), myTarget, myTargetList);
+    mySelectionSupport = new SelectionSupport<SourceItemT>(new SourceList(), myTarget, myTargetList);
     mySelectedItems = mySelectionSupport.selection();
 
     mySelectedItems.addListener(new CollectionAdapter<SourceItemT>() {
@@ -134,7 +134,7 @@ abstract class BaseProjectionalSynchronizer<SourceT, ContextT, SourceItemT> impl
     return new CompletionSupplier() {
       @Override
       public List<CompletionItem> get(CompletionParameters cp) {
-        if (myCompletion == null) return new ArrayList<>();
+        if (myCompletion == null) return new ArrayList<CompletionItem>();
         ContextT context = myMapper.getSource();
         return myCompletion.createRoleCompletion(cp, myMapper, context, role);
       }
@@ -266,7 +266,7 @@ abstract class BaseProjectionalSynchronizer<SourceT, ContextT, SourceItemT> impl
       }
 
       private ClipboardContent createClipboardContent(List<SourceItemT> items) {
-        final List<SourceItemT> copiedItems = new ArrayList<>();
+        final List<SourceItemT> copiedItems = new ArrayList<SourceItemT>();
         for (SourceItemT item : items) {
           copiedItems.add(myCloner.apply(item));
         }
@@ -287,8 +287,8 @@ abstract class BaseProjectionalSynchronizer<SourceT, ContextT, SourceItemT> impl
               return (T) myCloner.apply(copiedItems.get(0));
             }
 
-            final List<SourceItemT> result = new ArrayList<>();
-            for (SourceItemT item : new ArrayList<>(copiedItems)) {
+            final List<SourceItemT> result = new ArrayList<SourceItemT>();
+            for (SourceItemT item : new ArrayList<SourceItemT>(copiedItems)) {
               result.add(myCloner.apply(item));
             }
             return (T) result;
@@ -298,7 +298,7 @@ abstract class BaseProjectionalSynchronizer<SourceT, ContextT, SourceItemT> impl
 
 
       private List<SourceItemT> itemsToCopy() {
-        final List<SourceItemT> items = new ArrayList<>();
+        final List<SourceItemT> items = new ArrayList<SourceItemT>();
         if (!getSelectedItems().isEmpty()) {
           for (SourceItemT item : getSelectedItems()) {
             items.add(item);
@@ -391,7 +391,7 @@ abstract class BaseProjectionalSynchronizer<SourceT, ContextT, SourceItemT> impl
     return new CompletionSupplier() {
       @Override
       public List<CompletionItem> get(CompletionParameters cp) {
-        if (myCompletion == null) return new ArrayList<>();
+        if (myCompletion == null) return new ArrayList<CompletionItem>();
         return myCompletion.createRoleCompletion(cp, myMapper, myMapper.getSource(), new Role<SourceItemT>() {
           @Override
           public SourceItemT get() {

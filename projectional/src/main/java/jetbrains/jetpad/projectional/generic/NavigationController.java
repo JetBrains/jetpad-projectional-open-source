@@ -27,9 +27,9 @@ import java.util.Stack;
 import static jetbrains.jetpad.model.composite.Composites.*;
 
 public abstract class NavigationController<ViewT extends Composite<ViewT> & HasFocusability & HasBounds & HasVisibility> {
-  private Value<Integer> myPrevXOffset = new Value<>(null);
-  private Value<Boolean> myStackResetEnabled = new Value<>(true);
-  private Stack<ViewT> mySelectionStack = new Stack<>();
+  private Value<Integer> myPrevXOffset = new Value<Integer>(null);
+  private Value<Boolean> myStackResetEnabled = new Value<Boolean>(true);
+  private Stack<ViewT> mySelectionStack = new Stack<ViewT>();
 
   protected NavigationController() {
   }

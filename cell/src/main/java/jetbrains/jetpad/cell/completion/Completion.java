@@ -32,8 +32,8 @@ public class Completion {
     }
   };
 
-  public static final CellTraitPropertySpec<CompletionSupplier> COMPLETION = new CellTraitPropertySpec<>("completion", EMPTY_SUPPLIER);
-  public static final CellTraitPropertySpec<CompletionSupplier> LEFT_TRANSFORM = new CellTraitPropertySpec<>("leftTransform", EMPTY_SUPPLIER);
-  public static final CellTraitPropertySpec<CompletionSupplier> RIGHT_TRANSFORM = new CellTraitPropertySpec<>("rightTransform", EMPTY_SUPPLIER);
-  public static final CellTraitPropertySpec<CompletionController> COMPLETION_CONTROLLER = new CellTraitPropertySpec<>("completionController");
+  public static final CellTraitPropertySpec<CompletionSupplier> COMPLETION = new CellTraitPropertySpec<CompletionSupplier>("completion", EMPTY_SUPPLIER);
+  public static final CellTraitPropertySpec<CompletionSupplier> LEFT_TRANSFORM = new CellTraitPropertySpec<CompletionSupplier>("leftTransform", EMPTY_SUPPLIER);
+  public static final CellTraitPropertySpec<CompletionSupplier> RIGHT_TRANSFORM = new CellTraitPropertySpec<CompletionSupplier>("rightTransform", EMPTY_SUPPLIER);
+  public static final CellTraitPropertySpec<CompletionController> COMPLETION_CONTROLLER = new CellTraitPropertySpec<CompletionController>("completionController");
 }

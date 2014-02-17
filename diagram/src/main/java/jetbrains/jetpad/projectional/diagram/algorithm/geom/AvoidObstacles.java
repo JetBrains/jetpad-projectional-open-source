@@ -25,8 +25,8 @@ import java.util.List;
 
 public class AvoidObstacles {
   public Rectangle findNewPosition(Rectangle rect, List<Rectangle> obstacles) {
-    List<Vector> horObs = new ArrayList<>();
-    List<Vector> verObs = new ArrayList<>();
+    List<Vector> horObs = new ArrayList<Vector>();
+    List<Vector> verObs = new ArrayList<Vector>();
     for (Rectangle o: obstacles) {
       if (o.innerIntersects(rect)) {
         horObs.add(new Vector(o.origin.x, o.origin.add(o.dimension).x));
@@ -76,7 +76,7 @@ public class AvoidObstacles {
     Collections.sort(obs, comparator);
     int res1 = findShift(v.y - v.x, v.x, obs);
 
-    List<Vector> invObs = new ArrayList<>(obs.size());
+    List<Vector> invObs = new ArrayList<Vector>(obs.size());
     for (Vector o: obs) {
       invObs.add(new Vector(-o.y, -o.x));
     }

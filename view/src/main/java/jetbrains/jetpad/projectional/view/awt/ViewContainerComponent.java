@@ -51,14 +51,14 @@ public class ViewContainerComponent extends JComponent implements Scrollable {
   private ViewContainer myContainer;
   private Registration myContainerReg = Registration.EMPTY;
 
-  private Set<View> myMovedViews = new LinkedHashSet<>();
-  private Set<jetbrains.jetpad.geometry.Rectangle> myDirtyAreas = new LinkedHashSet<>();
-  private Set<View> myDirtyViews = new LinkedHashSet<>();
+  private Set<View> myMovedViews = new LinkedHashSet<View>();
+  private Set<jetbrains.jetpad.geometry.Rectangle> myDirtyAreas = new LinkedHashSet<jetbrains.jetpad.geometry.Rectangle>();
+  private Set<View> myDirtyViews = new LinkedHashSet<View>();
   private boolean myCaretVisible;
   private boolean myFocused;
   private Timer myTimer;
   private long myLastActionTime;
-  private Set<TextView> myWithCaretVisible = new HashSet<>();
+  private Set<TextView> myWithCaretVisible = new HashSet<TextView>();
   private MyViewContainerPeer myPeer = new MyViewContainerPeer();
 
   public ViewContainerComponent() {

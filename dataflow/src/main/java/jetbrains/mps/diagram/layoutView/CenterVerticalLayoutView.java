@@ -26,7 +26,7 @@ import jetbrains.jetpad.projectional.view.ViewPropertyKind;
 import jetbrains.jetpad.projectional.view.ViewPropertySpec;
 
 public class CenterVerticalLayoutView extends GroupView {
-  private static final ViewPropertySpec<Rectangle> OUTER_BOUNDS = new ViewPropertySpec<>("outerBounds", ViewPropertyKind.RELAYOUT, new Rectangle(Vector.ZERO, Vector.ZERO));
+  private static final ViewPropertySpec<Rectangle> OUTER_BOUNDS = new ViewPropertySpec<Rectangle>("outerBounds", ViewPropertyKind.RELAYOUT, new Rectangle(Vector.ZERO, Vector.ZERO));
 
   private final boolean myUseOuterBounds;
 

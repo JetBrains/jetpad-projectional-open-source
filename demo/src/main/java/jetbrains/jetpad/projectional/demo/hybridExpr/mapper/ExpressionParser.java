@@ -35,7 +35,7 @@ class ExpressionParser {
   static final Parser<Expression> PARSER;
 
   static {
-    SimpleParserSpecification<Expression> spec = new SimpleParserSpecification<>();
+    SimpleParserSpecification<Expression> spec = new SimpleParserSpecification<Expression>();
 
     spec.addBinaryOperator(Tokens.PLUS, new BinExprFactory() {
       @Override

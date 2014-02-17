@@ -23,7 +23,7 @@ class CellToViewContext {
   private View myRootView;
   private View myTargetView;
   private View myPopupView;
-  private Property<Boolean> myContainerFocused = new ValueProperty<>(false);
+  private Property<Boolean> myContainerFocused = new ValueProperty<Boolean>(false);
 
   CellToViewContext(View rootView, View targetView, View popupView) {
     myRootView = rootView;

@@ -30,6 +30,6 @@ public class ExpressionContainerMapper extends Mapper<ExpressionContainer, Expre
   protected void registerSynchronizers(SynchronizersConfiguration conf) {
     super.registerSynchronizers(conf);
 
-    conf.add(new HybridSynchronizer<>(this, getSource().expression, getTarget().expression, new ExprHybridPositionSpec()));
+    conf.add(new HybridSynchronizer<Expression>(this, getSource().expression, getTarget().expression, new ExprHybridPositionSpec()));
   }
 }

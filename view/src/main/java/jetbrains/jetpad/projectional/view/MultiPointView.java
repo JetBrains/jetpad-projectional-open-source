@@ -74,7 +74,7 @@ public abstract class MultiPointView extends View {
   }
 
   private class PointList extends AbstractList<Vector> {
-    private List<Vector> myRelativePoints = new ArrayList<>();
+    private List<Vector> myRelativePoints = new ArrayList<Vector>();
 
     @Override
     public Vector get(int index) {

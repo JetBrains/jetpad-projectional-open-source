@@ -37,7 +37,7 @@ import java.util.Collections;
 import java.util.List;
 
 class TokenListEditor<SourceT> {
-  private Property<Boolean> myValid = new ValueProperty<>(true);
+  private Property<Boolean> myValid = new ValueProperty<Boolean>(true);
   private ParseNode myParseNode;
   private HybridPositionSpec<SourceT> mySpec;
   private boolean mySyncing;
@@ -45,8 +45,8 @@ class TokenListEditor<SourceT> {
   private boolean myRestoringState;
   private Registration myChangeReg = Registration.EMPTY;
 
-  final ObservableList<Token> tokens = new ObservableArrayList<>();
-  final Property<SourceT> value = new ValueProperty<>();
+  final ObservableList<Token> tokens = new ObservableArrayList<Token>();
+  final Property<SourceT> value = new ValueProperty<SourceT>();
   final ReadableProperty<Boolean> valid = myValid;
 
   TokenListEditor(HybridPositionSpec<SourceT> spec) {
@@ -82,7 +82,7 @@ class TokenListEditor<SourceT> {
 
   List<Object> objects() {
     if (myParseNode == null) return Collections.emptyList();
-    List<Object> result = new ArrayList<>();
+    List<Object> result = new ArrayList<Object>();
     toObjects(myParseNode, result);
     return result;
   }
@@ -114,7 +114,7 @@ class TokenListEditor<SourceT> {
       value.set(null);
       myValid.set(true);
       myParseNode = null;
-      myPrintedTokens = new ArrayList<>();
+      myPrintedTokens = new ArrayList<Token>();
       myChangeReg.remove();
       myChangeReg = Registration.EMPTY;
     } else {

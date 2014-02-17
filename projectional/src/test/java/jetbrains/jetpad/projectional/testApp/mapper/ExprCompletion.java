@@ -29,7 +29,7 @@ import java.util.List;
 class ExprCompletion implements RoleCompletion<ExprNode, Expr> {
   @Override
   public List<CompletionItem> createRoleCompletion(CompletionParameters ctx, Mapper<?, ?> mapper, ExprNode contextNode, final Role<Expr> target) {
-    List<CompletionItem> result = new ArrayList<>();
+    List<CompletionItem> result = new ArrayList<CompletionItem>();
     result.add(new SimpleCompletionItem("id") {
       @Override
       public Runnable complete(String text) {

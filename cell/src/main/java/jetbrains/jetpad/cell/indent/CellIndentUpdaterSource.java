@@ -27,8 +27,8 @@ import java.util.Map;
 import java.util.Set;
 
 public class CellIndentUpdaterSource implements IndentUpdaterSource<Cell> {
-  private Map<Cell, Registration> myVisibilityRegs = new HashMap<>();
-  private Set<Cell> myAttached = new HashSet<>();
+  private Map<Cell, Registration> myVisibilityRegs = new HashMap<Cell, Registration>();
+  private Set<Cell> myAttached = new HashSet<Cell>();
 
   @Override
   public boolean isNewLine(Cell src) {

@@ -21,8 +21,8 @@ import jetbrains.jetpad.model.property.Property;
 import jetbrains.jetpad.model.property.ValueProperty;
 
 public class ConceptDeclaration {
-  public final Property<String> name = new ValueProperty<>();
-  public final Property<Boolean> isAbstract = new ValueProperty<>(false);
+  public final Property<String> name = new ValueProperty<String>();
+  public final Property<Boolean> isAbstract = new ValueProperty<Boolean>(false);
 
-  public final ObservableList<ConceptMember> members = new ChildList<>(this);
+  public final ObservableList<ConceptMember> members = new ChildList<ConceptDeclaration, ConceptMember>(this);
 }

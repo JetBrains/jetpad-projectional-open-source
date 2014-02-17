@@ -36,14 +36,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class LabelView extends CellView {
-  private static final ViewPropertySpec<Vector> LABEL_DELTA = new ViewPropertySpec<>("label delta", ViewPropertyKind.RELAYOUT, Vector.ZERO);
+  private static final ViewPropertySpec<Vector> LABEL_DELTA = new ViewPropertySpec<Vector>("label delta", ViewPropertyKind.RELAYOUT, Vector.ZERO);
   private static final int LABEL_TO_CONNECTION_DIST = 2;
 
   private Property<Vector> myLabelDelta = prop(LABEL_DELTA);
   private LabelPlacement myLabelPlacement = null;
   private PolyLineConnection myConnection;
 
-  private Property<Boolean> myEditing = new ValueProperty<>(false);
+  private Property<Boolean> myEditing = new ValueProperty<Boolean>(false);
 
   private DiagramView myDiagramView;
 
@@ -117,8 +117,8 @@ public class LabelView extends CellView {
   }
 
   private Vector findHorLabel(Segment segment, Vector labelDimension) {
-    List<Vector> above = new ArrayList<>();
-    List<Vector> below = new ArrayList<>();
+    List<Vector> above = new ArrayList<Vector>();
+    List<Vector> below = new ArrayList<Vector>();
     Vector initial = new Vector(Math.min(segment.start.x, segment.end.x), Math.max(segment.start.x, segment.end.x));
     above.add(initial);
     below.add(initial);
@@ -187,8 +187,8 @@ public class LabelView extends CellView {
   }
 
   private Vector findVerLabel(Segment segment, Vector labelDimension) {
-    List<Vector> left = new ArrayList<>();
-    List<Vector> right = new ArrayList<>();
+    List<Vector> left = new ArrayList<Vector>();
+    List<Vector> right = new ArrayList<Vector>();
     Vector initial = new Vector(Math.min(segment.start.y, segment.end.y), Math.max(segment.start.y, segment.end.y));
     left.add(initial);
     right.add(initial);

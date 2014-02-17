@@ -20,10 +20,10 @@ import java.util.*;
 public final class Grammar {
   private Terminal myEnd;
   private NonTerminal myStart;
-  private Map<String, Symbol> mySymbols = new HashMap<>();
-  private Set<Terminal> myTerminals = new LinkedHashSet<>();
-  private Set<NonTerminal> myNonTerminals = new LinkedHashSet<>();
-  private Set<Rule> myRules = new LinkedHashSet<>();
+  private Map<String, Symbol> mySymbols = new HashMap<String, Symbol>();
+  private Set<Terminal> myTerminals = new LinkedHashSet<Terminal>();
+  private Set<NonTerminal> myNonTerminals = new LinkedHashSet<NonTerminal>();
+  private Set<Rule> myRules = new LinkedHashSet<Rule>();
 
   private GrammarData myGrammarData;
 
@@ -111,7 +111,7 @@ public final class Grammar {
   }
 
   public Set<Symbol> getSymbols() {
-    Set<Symbol> symbols = new LinkedHashSet<>();
+    Set<Symbol> symbols = new LinkedHashSet<Symbol>();
     symbols.addAll(myNonTerminals);
     symbols.addAll(myTerminals);
     return Collections.unmodifiableSet(symbols);

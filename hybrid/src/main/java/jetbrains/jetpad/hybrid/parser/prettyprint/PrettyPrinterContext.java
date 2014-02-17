@@ -36,10 +36,10 @@ import java.util.Stack;
 public class PrettyPrinterContext<NodeT>  {
   private PrettyPrinter<NodeT> myPrettyPrinter;
 
-  private List<Token> myTokens = new ArrayList<>();
-  private Stack<List<BaseParseNode>> myStack = new Stack<>();
+  private List<Token> myTokens = new ArrayList<Token>();
+  private Stack<List<BaseParseNode>> myStack = new Stack<List<BaseParseNode>>();
   private boolean myPrinted;
-  private List<EventSource<?>> myChangeSources = new ArrayList<>();
+  private List<EventSource<?>> myChangeSources = new ArrayList<EventSource<?>>();
 
   public PrettyPrinterContext(PrettyPrinter<NodeT> pp) {
     myPrettyPrinter = pp;
@@ -191,7 +191,7 @@ public class PrettyPrinterContext<NodeT>  {
 
   private static class CompositeParseNode extends BaseParseNode {
     private Object myValue;
-    private List<ParseNode> myChildren = new ArrayList<>();
+    private List<ParseNode> myChildren = new ArrayList<ParseNode>();
 
     private CompositeParseNode(Object value, List<BaseParseNode> children) {
       myValue = value;

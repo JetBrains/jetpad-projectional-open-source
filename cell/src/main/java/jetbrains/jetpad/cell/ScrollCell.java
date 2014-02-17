@@ -19,8 +19,8 @@ import jetbrains.jetpad.geometry.Vector;
 import jetbrains.jetpad.model.property.Property;
 
 public class ScrollCell extends Cell {
-  public static final CellPropertySpec<Vector> MAX_DIMENSION = new CellPropertySpec<>("max-dimension", Vector.ZERO);
-  public static final CellPropertySpec<Boolean> SCROLL = new CellPropertySpec<>("scroll", false);
+  public static final CellPropertySpec<Vector> MAX_DIMENSION = new CellPropertySpec<Vector>("max-dimension", Vector.ZERO);
+  public static final CellPropertySpec<Boolean> SCROLL = new CellPropertySpec<Boolean>("scroll", false);
 
   public Property<Vector> maxDimension() {
     return getProp(MAX_DIMENSION);

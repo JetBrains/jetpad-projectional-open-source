@@ -27,7 +27,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 public class BlockViewPortLayouterTest {
-  private List<Vector> dim = new ArrayList<>();
+  private List<Vector> dim = new ArrayList<Vector>();
   private BlockViewPortLayouter layouter = new BlockViewPortLayouter(new Rectangle(100, 100, 100, 100));
 
   @Test

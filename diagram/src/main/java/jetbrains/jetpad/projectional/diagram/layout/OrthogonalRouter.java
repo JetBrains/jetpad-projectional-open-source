@@ -35,7 +35,7 @@ public class OrthogonalRouter implements ConnectionRouter {
 
   @Override
   public void findRoutes(DiagramView diagramView) {
-    Set<Rectangle> invalidChildrenRects = new HashSet<>();
+    Set<Rectangle> invalidChildrenRects = new HashSet<Rectangle>();
     for (View child : getItems(diagramView)) {
       boolean valid = child.valid().get();
       child.validate();
@@ -44,7 +44,7 @@ public class OrthogonalRouter implements ConnectionRouter {
       }
     }
 
-    Set<View> invalidInputs = new HashSet<>();
+    Set<View> invalidInputs = new HashSet<View>();
     for (Connection c: diagramView.connections) {
       if (!isValid(c)) {
         View input = ((PolyLineConnection) c).fromView().get();
@@ -77,15 +77,15 @@ public class OrthogonalRouter implements ConnectionRouter {
   }
 
   private void reroute(DiagramView diagramView) {
-    List<Segment> forbiddenSegments = new ArrayList<>();
-    List<Segment> additionalLines = new ArrayList<>();
+    List<Segment> forbiddenSegments = new ArrayList<Segment>();
+    List<Segment> additionalLines = new ArrayList<Segment>();
     for (Connection c: diagramView.connections) {
       if (isValid(c)) {
         getAdditionalInfo(forbiddenSegments, additionalLines, ((PolyLineConnection) c).getSegments());
       }
     }
 
-    List<Rectangle> obstacleRects = new ArrayList<>();
+    List<Rectangle> obstacleRects = new ArrayList<Rectangle>();
     for(View f: getItems(diagramView)) {
       obstacleRects.add(getLayoutBounds(f.bounds().get()));
     }
@@ -98,8 +98,8 @@ public class OrthogonalRouter implements ConnectionRouter {
 
     Map<View,List<Connection>> connMap = ConnectionUtil.getInputToConnectionsMap(diagramView);
     for (View input: connMap.keySet()) {
-      List<Segment> inputForbiddenSegments = new ArrayList<>();
-      List<Segment> inputAdditionalLines = new ArrayList<>();
+      List<Segment> inputForbiddenSegments = new ArrayList<Segment>();
+      List<Segment> inputAdditionalLines = new ArrayList<Segment>();
       for (Connection c: connMap.get(input)) {
         if (isValid(c)) continue;
         List<Vector> path = routeConnection((PolyLineConnection) c, router);
@@ -140,7 +140,7 @@ public class OrthogonalRouter implements ConnectionRouter {
   }
 
   private List<Segment> createAdditionalLines(Segment s) {
-    List<Segment> res = new ArrayList<>(2);
+    List<Segment> res = new ArrayList<Segment>(2);
     Vector dist;
     if (s.start.x == s.end.x) {
       dist = new Vector(DIST_BETWEEN_EDGES, 0);

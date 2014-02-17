@@ -24,11 +24,11 @@ import jetbrains.jetpad.model.property.ValueProperty;
 import jetbrains.jetpad.values.Color;
 
 public class Block extends HasParent<Diagram, Block> {
-  public final Property<Vector> location = new ValueProperty<>(Vector.ZERO);
-  public final Property<Color> color = new ValueProperty<>(Color.GRAY);
+  public final Property<Vector> location = new ValueProperty<Vector>(Vector.ZERO);
+  public final Property<Color> color = new ValueProperty<Color>(Color.GRAY);
 
-  public final ObservableList<InputPort> inputs = new ChildList<>(this);
-  public final ObservableList<OutputPort> outputs = new ChildList<>(this);
+  public final ObservableList<InputPort> inputs = new ChildList<Block, InputPort>(this);
+  public final ObservableList<OutputPort> outputs = new ChildList<Block, OutputPort>(this);
 
-  public final Property<String> text = new ValueProperty<>();
+  public final Property<String> text = new ValueProperty<String>();
 }

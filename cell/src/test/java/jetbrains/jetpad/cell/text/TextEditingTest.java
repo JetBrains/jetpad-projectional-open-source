@@ -563,7 +563,7 @@ public class TextEditingTest extends EditingTestCase {
     return new CompletionSupplier() {
       @Override
       public List<CompletionItem> get(CompletionParameters cp) {
-        List<CompletionItem> result = new ArrayList<>();
+        List<CompletionItem> result = new ArrayList<CompletionItem>();
         for (int i = 0; i < xCount; i++) {
           result.add(createCompletionItem("x"));
         }

@@ -19,7 +19,7 @@ import jetbrains.jetpad.model.property.Property;
 import jetbrains.jetpad.model.property.ValueProperty;
 
 public class VarExpr extends Expr {
-  public final Property<String> name = new ValueProperty<>();
+  public final Property<String> name = new ValueProperty<String>();
 
   @Override
   public Expr copy() {

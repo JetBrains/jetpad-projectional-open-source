@@ -37,7 +37,7 @@ class TextCellController {
 
   private TextCell myTextCell = new TextCell();
 
-  private Property<Boolean> myEditing = new ValueProperty<>(false);
+  private Property<Boolean> myEditing = new ValueProperty<Boolean>(false);
 
   Registration install(CellView contextView) {
     contextView.cell.set(myTextCell);

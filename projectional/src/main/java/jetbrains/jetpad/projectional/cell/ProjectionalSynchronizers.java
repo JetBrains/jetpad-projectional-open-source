@@ -29,13 +29,13 @@ import jetbrains.jetpad.model.property.Property;
 import java.util.List;
 
 public class ProjectionalSynchronizers {
-  public static final CellTraitPropertySpec<Runnable> ON_CREATE = new CellTraitPropertySpec<>("onCreate", new Function<Cell, Runnable>() {
+  public static final CellTraitPropertySpec<Runnable> ON_CREATE = new CellTraitPropertySpec<Runnable>("onCreate", new Function<Cell, Runnable>() {
     @Override
     public Runnable apply(Cell input) {
       return CellActions.toLastFocusable(input);
     }
   });
-  public static final CellTraitPropertySpec<Boolean> DELETE_ON_EMPTY = new CellTraitPropertySpec<>("deleteOnEmpty", false);
+  public static final CellTraitPropertySpec<Boolean> DELETE_ON_EMPTY = new CellTraitPropertySpec<Boolean>("deleteOnEmpty", false);
 
 
   public static <ContextT, SourceT> ProjectionalRoleSynchronizer<ContextT, SourceT> forRole(
@@ -49,13 +49,13 @@ public class ProjectionalSynchronizers {
       Mapper<? extends ContextT, ? extends Cell> mapper,
       ObservableList<SourceT> source, Cell target, List<Cell> targetList,
       MapperFactory<SourceT, Cell> factory) {
-    return new ProjectionalObservableListSynchronizer<>(mapper, source, target, targetList, factory);
+    return new ProjectionalObservableListSynchronizer<ContextT, SourceT>(mapper, source, target, targetList, factory);
   }
 
   public static <ContextT, SourceT extends ContextT> ProjectionalRoleSynchronizer<ContextT, SourceT> forSingleRole(
       Mapper<? extends ContextT, ? extends Cell> mapper,
       Property<SourceT> source, Cell target, MapperFactory<SourceT, Cell> factory) {
-    return new ProjectionalPropertySynchronizer<>(mapper, source, target, factory);
+    return new ProjectionalPropertySynchronizer<ContextT, SourceT>(mapper, source, target, factory);
   }
 
   public static boolean isAdd(KeyEvent event) {

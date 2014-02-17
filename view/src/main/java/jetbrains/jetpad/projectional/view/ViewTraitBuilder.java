@@ -23,8 +23,8 @@ import java.util.List;
 import java.util.Map;
 
 public class ViewTraitBuilder {
-  private Map<ViewPropertySpec<?>, Object> myProperties = new HashMap<>();
-  private Map<ViewEventSpec<?>, List<ViewEventHandler>> myHandlers = new HashMap<>();
+  private Map<ViewPropertySpec<?>, Object> myProperties = new HashMap<ViewPropertySpec<?>, Object>();
+  private Map<ViewEventSpec<?>, List<ViewEventHandler>> myHandlers = new HashMap<ViewEventSpec<?>, List<ViewEventHandler>>();
 
   public <ValueT> ViewTraitBuilder set(ViewPropertySpec<ValueT> prop, ValueT value) {
     myProperties.put(prop, value);

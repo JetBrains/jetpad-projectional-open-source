@@ -50,9 +50,9 @@ public class ConnectionDivergeDecoration extends GroupView {
   private void update() {
     children().clear();
     for (List<Connection> connections: ConnectionUtil.getInputToConnectionsMap(myContainer.getDecoratedView()).values()) {
-      Set<List<Vector>> lines = new HashSet<>();
+      Set<List<Vector>> lines = new HashSet<List<Vector>>();
       for (Connection connection: connections) {
-        List<Vector> line = new ArrayList<>();
+        List<Vector> line = new ArrayList<Vector>();
         for (Segment s: ((PolyLineConnection) connection).getSegments()) {
           if (line.size() == 0) {
             line.add(s.start);

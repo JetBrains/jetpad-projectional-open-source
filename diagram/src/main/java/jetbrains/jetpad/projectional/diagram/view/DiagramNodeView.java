@@ -30,8 +30,8 @@ import jetbrains.jetpad.projectional.view.*;
 import java.util.List;
 
 public abstract class DiagramNodeView extends GroupView {
-  private static final ViewPropertySpec<Integer> PADDING = new ViewPropertySpec<>("padding", ViewPropertyKind.RELAYOUT, 20);
-  private static final ViewPropertySpec<Vector> MINIMAL_SIZE = new ViewPropertySpec<>("minimalSize", ViewPropertyKind.RELAYOUT, new Vector(20, 20));
+  private static final ViewPropertySpec<Integer> PADDING = new ViewPropertySpec<Integer>("padding", ViewPropertyKind.RELAYOUT, 20);
+  private static final ViewPropertySpec<Vector> MINIMAL_SIZE = new ViewPropertySpec<Vector>("minimalSize", ViewPropertyKind.RELAYOUT, new Vector(20, 20));
 
   public final RectView rect = new RectView();
   public final GroupView inputs = new GroupView();

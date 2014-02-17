@@ -31,7 +31,7 @@ class LambdaSynchronizers {
       Mapper<? extends LambdaNode, ? extends Cell> mapper,
       Property<Expr> exprProp,
       Cell targetCell) {
-    HybridSynchronizer<Expr> result = new HybridSynchronizer<>(mapper, exprProp, targetCell, new LambdaHybridPositionSpec());
+    HybridSynchronizer<Expr> result = new HybridSynchronizer<Expr>(mapper, exprProp, targetCell, new LambdaHybridPositionSpec());
 
     result.setMapperFactory(new MapperFactory<Object, Cell>() {
       @Override

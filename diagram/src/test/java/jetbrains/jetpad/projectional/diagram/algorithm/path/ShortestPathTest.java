@@ -27,8 +27,8 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 public class ShortestPathTest {
-  List<List<Integer>> graph = new ArrayList<>();
-  List<List<Integer>> len = new ArrayList<>();
+  List<List<Integer>> graph = new ArrayList<List<Integer>>();
+  List<List<Integer>> len = new ArrayList<List<Integer>>();
   WeightedGraph<Integer> wg = new WeightedGraph<Integer>() {
     @Override
     public Iterable<Integer> getEdgeWeights(Integer node) {
@@ -122,8 +122,8 @@ public class ShortestPathTest {
   }
 
   private void createGraph(int num) {
-    graph = new ArrayList<>();
-    len = new ArrayList<>();
+    graph = new ArrayList<List<Integer>>();
+    len = new ArrayList<List<Integer>>();
     for (int i = 0; i < num; i++) {
       graph.add(new ArrayList<Integer>());
       len.add(new ArrayList<Integer>());

@@ -20,14 +20,14 @@ import java.util.List;
 
 class PersistentList<ValueT> extends AbstractList<ValueT> {
   static <ValueT> PersistentList<ValueT> nil() {
-    PersistentList<ValueT> result = new PersistentList<>();
+    PersistentList<ValueT> result = new PersistentList<ValueT>();
     result.myNil = true;
     result.mySize = 0;
     return result;
   }
 
   static <ValueT> PersistentList<ValueT> cons(ValueT head, PersistentList<ValueT> tail) {
-    PersistentList<ValueT> result = new PersistentList<>();
+    PersistentList<ValueT> result = new PersistentList<ValueT>();
     result.myHead = head;
     result.myTail = tail;
     result.mySize = tail.size() + 1;

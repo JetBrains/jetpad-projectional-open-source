@@ -41,7 +41,7 @@ public class PolygonView extends MultiPointView {
   }
 
   private List<Segment> getSegments() {
-    List<Segment> segments = new ArrayList<>();
+    List<Segment> segments = new ArrayList<Segment>();
     int n = points.size();
 
     for (int i = 1; i < n; i++) {

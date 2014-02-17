@@ -27,9 +27,9 @@ import jetbrains.jetpad.model.transform.Transformers;
 import java.util.Comparator;
 
 public class CompletionMenuModel {
-  public final Property<String> text = new ValueProperty<>();
-  public final ObservableList<CompletionItem> items = new ObservableArrayList<>();
-  public final Property<CompletionItem> selectedItem = new ValueProperty<>();
+  public final Property<String> text = new ValueProperty<String>();
+  public final ObservableList<CompletionItem> items = new ObservableArrayList<CompletionItem>();
+  public final Property<CompletionItem> selectedItem = new ValueProperty<CompletionItem>();
 
   public final ObservableList<CompletionItem> visibleItems;
 

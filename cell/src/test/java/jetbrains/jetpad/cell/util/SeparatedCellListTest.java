@@ -25,7 +25,7 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 
 public class SeparatedCellListTest {
-  private List<Cell> targetList = new ArrayList<>();
+  private List<Cell> targetList = new ArrayList<Cell>();
   private List<Cell> separatedList = new MySeparatedCellList(targetList);
 
   @Test

@@ -32,7 +32,7 @@ public class Rule {
   Rule(Grammar grammar, NonTerminal head, Symbol... symbols) {
     myGrammar = grammar;
     myHead = head;
-    mySymbols = new ArrayList<>(Arrays.asList(symbols));
+    mySymbols = new ArrayList<Symbol>(Arrays.asList(symbols));
   }
 
   public NonTerminal getHead() {

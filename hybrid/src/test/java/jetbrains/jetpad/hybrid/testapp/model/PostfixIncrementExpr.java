@@ -19,5 +19,5 @@ import jetbrains.jetpad.model.property.Property;
 import jetbrains.jetpad.model.property.ValueProperty;
 
 public class PostfixIncrementExpr extends Expr {
-  public final Property<Expr> expr = new ValueProperty<>();
+  public final Property<Expr> expr = new ValueProperty<Expr>();
 }

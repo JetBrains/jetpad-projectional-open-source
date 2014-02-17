@@ -36,7 +36,7 @@ public class ConnectionRoutingView extends DiagramView implements DecorationCont
   private ConnectionRouter myRouter;
 
   private View myMovingView = null;
-  private Map<View, List<Vector>> myOldPositions = new HashMap<>();
+  private Map<View, List<Vector>> myOldPositions = new HashMap<View, List<Vector>>();
 
   private RoutingViewConfiguration myConfiguration;
 
@@ -80,9 +80,9 @@ public class ConnectionRoutingView extends DiagramView implements DecorationCont
     if (moved == null) {
       return;
     }
-    List<Rectangle> viewRects = new ArrayList<>();
+    List<Rectangle> viewRects = new ArrayList<Rectangle>();
     viewRects.add(getRect(moved));
-    List<View> childrenByDist = new ArrayList<>(getNodes());
+    List<View> childrenByDist = new ArrayList<View>(getNodes());
     childrenByDist.remove(moved);
 
     final Vector movedCenter = moved.bounds().get().center();
@@ -98,7 +98,7 @@ public class ConnectionRoutingView extends DiagramView implements DecorationCont
       List<Vector> oldPos = myOldPositions.get(f);
       Rectangle bounds = f.bounds().get();
       if (oldPos != null) {
-        List<Vector> newPos = new ArrayList<>();
+        List<Vector> newPos = new ArrayList<Vector>();
         Vector foundPos = null;
         for(Vector pos: oldPos) {
           if (posFree(new Rectangle(pos, bounds.dimension), viewRects)) {

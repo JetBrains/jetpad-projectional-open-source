@@ -81,9 +81,9 @@ public class View2Canvas {
   private boolean myRepaintRequested;
   private Rectangle myRepaintArea;
   private boolean myValidationRequested;
-  private Set<View> myDirtyViews = new HashSet<>();
-  private Set<View> myMovedViews = new HashSet<>();
-  private List<Rectangle> myDirtyAreas = new ArrayList<>();
+  private Set<View> myDirtyViews = new HashSet<View>();
+  private Set<View> myMovedViews = new HashSet<View>();
+  private List<Rectangle> myDirtyAreas = new ArrayList<Rectangle>();
 
   private View2Canvas(final ViewContainer container, final Element element) {
     myContainer = container;
@@ -165,8 +165,8 @@ public class View2Canvas {
   }
 
   private void registerListeners() {
-    final Value<Boolean> pressed = new Value<>(false);
-    final Value<Boolean> pressedOutside = new Value<>(false);
+    final Value<Boolean> pressed = new Value<Boolean>(false);
+    final Value<Boolean> pressedOutside = new Value<Boolean>(false);
 
     myOnDispose.add(eventRegistration(Event.ONMOUSEDOWN, $(Document.get()).mousedown(new Function() {
       @Override

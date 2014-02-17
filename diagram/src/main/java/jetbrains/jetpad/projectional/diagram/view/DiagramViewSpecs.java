@@ -21,6 +21,6 @@ import jetbrains.jetpad.projectional.diagram.base.GridDirection;
 import jetbrains.jetpad.projectional.view.ViewPropertySpec;
 
 public class DiagramViewSpecs {
-  public static final ViewPropertySpec<GridDirection> CONNECTOR_DIR = new ViewPropertySpec<>("connectorDir");
-  public static final ViewPropertySpec<Handler<Rectangle>> CONTENT_RECT_HANDLER = new ViewPropertySpec<>("contentDimension");
+  public static final ViewPropertySpec<GridDirection> CONNECTOR_DIR = new ViewPropertySpec<GridDirection>("connectorDir");
+  public static final ViewPropertySpec<Handler<Rectangle>> CONTENT_RECT_HANDLER = new ViewPropertySpec<Handler<Rectangle>>("contentDimension");
 }

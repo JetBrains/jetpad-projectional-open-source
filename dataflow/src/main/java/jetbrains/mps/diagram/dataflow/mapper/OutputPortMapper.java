@@ -32,7 +32,7 @@ public class OutputPortMapper extends Mapper<OutputPort, RectView> {
     getTarget().background().set(Color.GRAY);
     getTarget().focusable().set(true);
 
-    final Value<Connector> connector = new Value<>();
+    final Value<Connector> connector = new Value<Connector>();
     getTarget().addTrait(new ViewTraitBuilder().on(ViewEvents.MOUSE_DRAGGED, new ViewEventHandler<MouseEvent>() {
       @Override
       public void handle(View view, MouseEvent e) {

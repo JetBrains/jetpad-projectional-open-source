@@ -29,7 +29,7 @@ public class EventTranslator {
   private static KeyEvent toKeyEvent(Event e) {
     Key key = KeyCodeMapper.getKey(e.getKeyCode());
 
-    Set<ModifierKey> modifiers = new HashSet<>();
+    Set<ModifierKey> modifiers = new HashSet<ModifierKey>();
     if (e.getCtrlKey()) {
       modifiers.add(ModifierKey.CONTROL);
     }

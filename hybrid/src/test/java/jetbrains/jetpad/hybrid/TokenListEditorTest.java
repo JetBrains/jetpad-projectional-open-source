@@ -29,7 +29,7 @@ import java.util.Arrays;
 import static org.junit.Assert.*;
 
 public class TokenListEditorTest {
-  private TokenListEditor<Expr> editor = new TokenListEditor<>(new ExprHybridPositionSpec());
+  private TokenListEditor<Expr> editor = new TokenListEditor<Expr>(new ExprHybridPositionSpec());
 
   @Test
   public void updating() {

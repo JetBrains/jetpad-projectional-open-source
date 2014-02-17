@@ -208,7 +208,7 @@ public class ProjectionalPropertySynchronizerTest extends EditingTestCase {
 
   @Test
   public void becameEmptyEventIfAllowed() {
-    final Value<Boolean> becameEmptyFired = new Value<>(false);
+    final Value<Boolean> becameEmptyFired = new Value<Boolean>(false);
     rootMapper.getTarget().addTrait(new BaseCellTrait() {
 
       @Override
@@ -255,7 +255,7 @@ public class ProjectionalPropertySynchronizerTest extends EditingTestCase {
   }
 
   private class Container {
-    final Property<Child> child = new ValueProperty<>();
+    final Property<Child> child = new ValueProperty<Child>();
   }
 
   private abstract class Child {
@@ -306,7 +306,7 @@ public class ProjectionalPropertySynchronizerTest extends EditingTestCase {
       sync.setCompletion(new RoleCompletion<Object, Child>() {
         @Override
         public List<CompletionItem> createRoleCompletion(CompletionParameters ctx, final Mapper<?, ?> mapper, final Object contextNode, final Role<Child> target) {
-          List<CompletionItem> result = new ArrayList<>();
+          List<CompletionItem> result = new ArrayList<CompletionItem>();
           result.add(new SimpleCompletionItem("c1") {
             @Override
             public Runnable complete(String text) {

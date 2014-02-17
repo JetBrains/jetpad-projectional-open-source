@@ -54,7 +54,7 @@ public class KeyStrokeSpecs {
   }
 
   private static Set<ModifierKey> add(ModifierKey key, ModifierKey... otherKeys) {
-    Set<ModifierKey> result = new HashSet<>(Arrays.asList(otherKeys));
+    Set<ModifierKey> result = new HashSet<ModifierKey>(Arrays.asList(otherKeys));
     result.add(key);
     return result;
   }
@@ -71,7 +71,7 @@ public class KeyStrokeSpecs {
 
       @Override
       public Set<KeyStroke> keyStrokes() {
-        Set<KeyStroke> result = new LinkedHashSet<>();
+        Set<KeyStroke> result = new LinkedHashSet<KeyStroke>();
         for (KeyStrokeSpec s : specs) {
           result.addAll(s.keyStrokes());
         }

@@ -20,7 +20,7 @@ import jetbrains.jetpad.model.property.Property;
 import jetbrains.jetpad.model.property.ValueProperty;
 
 class CellToDomContext {
-  final Property<Boolean> focused = new ValueProperty<>(false);
+  final Property<Boolean> focused = new ValueProperty<Boolean>(false);
   final Element rootElement;
 
   CellToDomContext(Element rootElement) {

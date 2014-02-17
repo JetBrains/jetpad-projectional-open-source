@@ -27,7 +27,7 @@ import static org.junit.Assert.assertTrue;
 public class FreeSegmentsUtilTest {
   @Test
   public void notIntersecting() {
-    List<Vector> seg = new ArrayList<>();
+    List<Vector> seg = new ArrayList<Vector>();
     seg.add(new Vector(0, 10));
 
     List<Vector> res = FreeSegmentsUtil.removeSegment(seg, new Vector(-10, 0));
@@ -41,7 +41,7 @@ public class FreeSegmentsUtilTest {
 
   @Test
   public void occupiedPoint() {
-    List<Vector> seg = new ArrayList<>();
+    List<Vector> seg = new ArrayList<Vector>();
     seg.add(new Vector(0, 10));
 
     List<Vector> res = FreeSegmentsUtil.removeSegment(seg, new Vector(5, 5));
@@ -52,7 +52,7 @@ public class FreeSegmentsUtilTest {
 
   @Test
   public void occupiedIntersectsMany() {
-    List<Vector> seg = new ArrayList<>();
+    List<Vector> seg = new ArrayList<Vector>();
     seg.add(new Vector(0, 2));
     seg.add(new Vector(4, 6));
     seg.add(new Vector(8, 10));

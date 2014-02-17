@@ -36,7 +36,7 @@ class Position<SourceCT extends Composite<SourceCT>> {
       current = next(current);
     }
     if (current == null) return null;
-    return new Position<>(myUpdater, current);
+    return new Position<SourceCT>(myUpdater, current);
   }
 
   Position<SourceCT> prev() {
@@ -45,7 +45,7 @@ class Position<SourceCT extends Composite<SourceCT>> {
       current = prev(current);
     }
     if (current == null) return null;
-    return new Position<>(myUpdater, current);
+    return new Position<SourceCT>(myUpdater, current);
   }
 
   SourceCT get() {

@@ -33,7 +33,7 @@ public class RootSimpleDiagramMapper extends Mapper<SimpleDiagram, ViewContainer
 
     getTarget().root().addTrait(RootTrait.ROOT_TRAIT);
 
-    final Value<Boolean> newItem = new Value<>(false);
+    final Value<Boolean> newItem = new Value<Boolean>(false);
     getTarget().root().addTrait(new ViewTraitBuilder()
       .on(ViewEvents.KEY_PRESSED, new ViewEventHandler<KeyEvent>() {
         @Override

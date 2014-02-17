@@ -32,7 +32,7 @@ public class BlockView extends DiagramNodeView {
 
   @Override
   public void layoutPorts(List<View> views, GridDirection dir) {
-    List<Vector> viewDimensions = new ArrayList<>(views.size());
+    List<Vector> viewDimensions = new ArrayList<Vector>(views.size());
     for (View v : views) {
       viewDimensions.add(v.bounds().get().dimension);
     }

@@ -45,7 +45,7 @@ public class TokenCompletionItems {
   }
 
   public List<CompletionItem> forTokens(Token ...tokens) {
-    List<CompletionItem> result = new ArrayList<>();
+    List<CompletionItem> result = new ArrayList<CompletionItem>();
     for (Token t : tokens) {
       result.add(forToken(t));
     }

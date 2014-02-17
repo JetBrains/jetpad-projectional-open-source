@@ -24,8 +24,8 @@ import jetbrains.jetpad.projectional.demo.hybridExpr.model.types.Type;
 import jetbrains.jetpad.projectional.demo.hybridExpr.model.types.Types;
 
 public class MethodCallOperation extends Operation {
-  public final Property<String> methodName = new ValueProperty<>();
-  public final ObservableList<Expression> arguments = new ObservableArrayList<>();
+  public final Property<String> methodName = new ValueProperty<String>();
+  public final ObservableList<Expression> arguments = new ObservableArrayList<Expression>();
 
   @Override
   public Type getType(Type operandType) {

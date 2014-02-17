@@ -71,7 +71,7 @@ public class ValueEditors {
           return new CompletionSupplier() {
             @Override
             public List<CompletionItem> get(CompletionParameters cp) {
-              List<CompletionItem> result = new ArrayList<>();
+              List<CompletionItem> result = new ArrayList<CompletionItem>();
               for (final EnumT v : cls.getEnumConstants()) {
                 result.add(new SimpleCompletionItem(v.toString()) {
                   @Override
@@ -140,7 +140,7 @@ public class ValueEditors {
           return new CompletionSupplier() {
             @Override
             public List<CompletionItem> get(CompletionParameters cp) {
-              List<CompletionItem> result = new ArrayList<>();
+              List<CompletionItem> result = new ArrayList<CompletionItem>();
               result.add(new SimpleCompletionItem("true") {
                 @Override
                 public Runnable complete(String text) {

@@ -50,13 +50,13 @@ class IndentRootCellMapper extends BaseCellMapper<IndentCell> {
   private IndentUpdater<Cell, Node> myIndentUpdater;
   private Registration myRegistration;
   private Timer myPositionUpdater;
-  private Map<Mapper<?, ?>, Runnable> myPositionUpdaters = new HashMap<>();
+  private Map<Mapper<?, ?>, Runnable> myPositionUpdaters = new HashMap<Mapper<?, ?>, Runnable>();
 
   IndentRootCellMapper(IndentCell source, CellToDomContext ctx) {
     super(source, ctx, DOM.createDiv());
     myCellMappers = createChildSet();
 
-    myIndentUpdater = new IndentUpdater<>(
+    myIndentUpdater = new IndentUpdater<Cell, Node>(
       getSource(),
       getTarget(),
       new CellIndentUpdaterSource() {

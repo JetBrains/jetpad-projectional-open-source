@@ -18,7 +18,7 @@ package jetbrains.jetpad.cell;
 import jetbrains.jetpad.model.property.Property;
 
 public class VerticalCell extends Cell {
-  public static final CellPropertySpec<Boolean> INDENT = new CellPropertySpec<>("indent", false);
+  public static final CellPropertySpec<Boolean> INDENT = new CellPropertySpec<Boolean>("indent", false);
 
   public Property<Boolean> indent() {
     return getProp(INDENT);

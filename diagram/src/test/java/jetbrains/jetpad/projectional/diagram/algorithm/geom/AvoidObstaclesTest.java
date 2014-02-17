@@ -33,7 +33,7 @@ public class AvoidObstaclesTest {
   @Test
   public void notIntersecting() {
     Rectangle r = new Rectangle(0, 0, 10, 10);
-    ArrayList<Rectangle> obs = new ArrayList<>();
+    ArrayList<Rectangle> obs = new ArrayList<Rectangle>();
     obs.add(new Rectangle(-100, 10, 210, 100));
     Rectangle pos = new AvoidObstacles().findNewPosition(r, obs);
     assertEquals(r, pos);
@@ -42,7 +42,7 @@ public class AvoidObstaclesTest {
   @Test
   public void between() {
     Rectangle r = new Rectangle(0, 0, 10, 10);
-    ArrayList<Rectangle> obs = new ArrayList<>();
+    ArrayList<Rectangle> obs = new ArrayList<Rectangle>();
     obs.add(new Rectangle(-1, 1, 1, 1));
     obs.add(new Rectangle(10, 2, 1, 1));
     Rectangle pos = new AvoidObstacles().findNewPosition(r, obs);
@@ -52,7 +52,7 @@ public class AvoidObstaclesTest {
   @Test
      public void oneObstacleShiftLeft() {
     Rectangle r = new Rectangle(0, 0, 10, 100);
-    ArrayList<Rectangle> obs = new ArrayList<>();
+    ArrayList<Rectangle> obs = new ArrayList<Rectangle>();
     obs.add(new Rectangle(-2, 50, 13, 1));
     Rectangle pos = new AvoidObstacles().findNewPosition(r, obs);
     assertEquals(new Rectangle(11, 0, 10, 100), pos);
@@ -61,7 +61,7 @@ public class AvoidObstaclesTest {
   @Test
   public void oneObstacleShiftRight() {
     Rectangle r = new Rectangle(0, 0, 10, 100);
-    ArrayList<Rectangle> obs = new ArrayList<>();
+    ArrayList<Rectangle> obs = new ArrayList<Rectangle>();
     obs.add(new Rectangle(-1, 50, 13, 1));
     Rectangle pos = new AvoidObstacles().findNewPosition(r, obs);
     assertEquals(new Rectangle(-11, 0, 10, 100), pos);
@@ -70,7 +70,7 @@ public class AvoidObstaclesTest {
   @Test
   public void oneObstacleShiftUp() {
     Rectangle r = new Rectangle(0, 0, 100, 10);
-    ArrayList<Rectangle> obs = new ArrayList<>();
+    ArrayList<Rectangle> obs = new ArrayList<Rectangle>();
     obs.add(new Rectangle(50, -2, 1, 13));
     Rectangle pos = new AvoidObstacles().findNewPosition(r, obs);
     assertEquals(new Rectangle(0, 11, 100, 10), pos);
@@ -79,7 +79,7 @@ public class AvoidObstaclesTest {
   @Test
   public void oneObstacleShiftDown() {
     Rectangle r = new Rectangle(0, 0, 100, 10);
-    ArrayList<Rectangle> obs = new ArrayList<>();
+    ArrayList<Rectangle> obs = new ArrayList<Rectangle>();
     obs.add(new Rectangle(50, -1, 1, 13));
     Rectangle pos = new AvoidObstacles().findNewPosition(r, obs);
     assertEquals(new Rectangle(0, -11, 100, 10), pos);

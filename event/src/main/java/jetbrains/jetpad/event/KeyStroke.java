@@ -29,7 +29,7 @@ public class KeyStroke implements KeyStrokeSpec {
 
   public KeyStroke(Key key, Collection<ModifierKey> modifiers) {
     myKey = key;
-    myModifiers = new HashSet<>(modifiers);
+    myModifiers = new HashSet<ModifierKey>(modifiers);
   }
 
   public Key key() {
@@ -59,7 +59,7 @@ public class KeyStroke implements KeyStrokeSpec {
   }
 
   public KeyStroke addModifier(ModifierKey key) {
-    Set<ModifierKey> keys = new HashSet<>(myModifiers);
+    Set<ModifierKey> keys = new HashSet<ModifierKey>(myModifiers);
     keys.add(key);
     return new KeyStroke(myKey, keys);
   }

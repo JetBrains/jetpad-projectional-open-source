@@ -20,8 +20,8 @@ import jetbrains.jetpad.model.property.Property;
 import jetbrains.jetpad.model.property.ValueProperty;
 
 public class LambdaExpr extends Expr {
-  public final Property<String> varName = new ValueProperty<>();
-  public final Property<Expr> body = new ChildProperty<>(this);
+  public final Property<String> varName = new ValueProperty<String>();
+  public final Property<Expr> body = new ChildProperty<LambdaExpr, Expr>(this);
 
   @Override
   public Expr copy() {

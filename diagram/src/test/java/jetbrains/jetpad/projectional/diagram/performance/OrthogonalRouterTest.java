@@ -28,7 +28,7 @@ import java.util.List;
 
 public class OrthogonalRouterTest {
   public static void main(String[] args) {
-    final Value<Integer> connectionsNum = new Value<>(0);
+    final Value<Integer> connectionsNum = new Value<Integer>(0);
     OrthogonalRouter router = new OrthogonalRouter() {
       @Override
       public void findRoutes(DiagramView view) {

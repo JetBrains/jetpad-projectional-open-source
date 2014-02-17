@@ -19,7 +19,7 @@ import jetbrains.jetpad.cell.Cell;
 import jetbrains.jetpad.cell.trait.CellTraitPropertySpec;
 
 public interface CellStateHandler<CellT extends Cell, T> {
-  public static final CellTraitPropertySpec<CellStateHandler<?, ?>> PROPERTY = new CellTraitPropertySpec<>("cellStateHandler");
+  public static final CellTraitPropertySpec<CellStateHandler<?, ?>> PROPERTY = new CellTraitPropertySpec<CellStateHandler<?, ?>>("cellStateHandler");
 
   T saveState(CellT cell);
   void restoreState(CellT cell, T state);

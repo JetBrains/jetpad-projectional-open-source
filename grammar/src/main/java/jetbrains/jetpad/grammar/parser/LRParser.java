@@ -35,7 +35,7 @@ public class LRParser {
   }
 
   public boolean parse(Terminal... input) {
-    List<Lexeme> lexemes = new ArrayList<>();
+    List<Lexeme> lexemes = new ArrayList<Lexeme>();
     for (Terminal t : input) {
       lexemes.add(new Lexeme(t, t.toString()));
     }
@@ -56,7 +56,7 @@ public class LRParser {
   }
 
   public Object parse(List<Lexeme> input, Function<Rule, RuleHandler> handlerProvider) {
-    Stack<ParseStackItem> stack = new Stack<>();
+    Stack<ParseStackItem> stack = new Stack<ParseStackItem>();
     stack.push(new ParseStackItem(myTable.getInitialState(), -1, -1, null, null));
     int pos = 0;
     while (true) {
@@ -71,7 +71,7 @@ public class LRParser {
       } else if (action instanceof LRParserAction.Reduce) {
         LRParserAction.Reduce<LRParserState> reduce = (LRParserAction.Reduce<LRParserState>) action;
 
-        List<Object> handlerInput = new ArrayList<>();
+        List<Object> handlerInput = new ArrayList<Object>();
         int startOffset = pos;
         List<Symbol> symbols = reduce.getRule().getSymbols();
         for (int i = 0; i < symbols.size(); i++) {

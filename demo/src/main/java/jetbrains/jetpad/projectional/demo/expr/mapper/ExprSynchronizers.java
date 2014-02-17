@@ -87,7 +87,7 @@ public class ExprSynchronizers {
   }
 
   private static List<CompletionItem> exprCompletion(final Role<Expression> target) {
-    List<CompletionItem> result = new ArrayList<>();
+    List<CompletionItem> result = new ArrayList<CompletionItem>();
     result.add(new SimpleCompletionItem("+") {
       @Override
       public Runnable complete(String text) {

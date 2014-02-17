@@ -61,7 +61,7 @@ class BaseViewMapper<ViewT extends View, ElementT extends Element> extends Mappe
 
   protected void whenValid(final Runnable r) {
     if (getSource().container() == null) {
-      final Value<Registration> reg = new Value<>();
+      final Value<Registration> reg = new Value<Registration>();
       reg.set(getSource().attachEvents().addHandler(new EventHandler<Object>() {
         @Override
         public void onEvent(Object event) {
@@ -102,7 +102,7 @@ class BaseViewMapper<ViewT extends View, ElementT extends Element> extends Mappe
         positionInParent = getSource().bounds();
       }
 
-      final Value<Boolean> valid = new Value<>(false);
+      final Value<Boolean> valid = new Value<Boolean>(false);
       conf.add(Synchronizers.forProperty(positionInParent, new WritableProperty<Rectangle>() {
         @Override
         public void set(final Rectangle value) {
