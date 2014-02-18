@@ -19,7 +19,7 @@ import jetbrains.jetpad.model.property.Property;
 import jetbrains.jetpad.model.property.ValueProperty;
 
 public abstract class NamedMember extends ConceptMember {
-  public final Property<String> name = new ValueProperty<String>("");
+  public final Property<String> name = new ValueProperty<>("");
 
   @Override
   public String toString() {

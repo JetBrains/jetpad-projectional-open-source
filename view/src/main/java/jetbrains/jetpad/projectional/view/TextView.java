@@ -23,13 +23,13 @@ import jetbrains.jetpad.projectional.view.spi.ViewContainerPeer;
 import jetbrains.jetpad.values.Color;
 
 public class TextView extends View {
-  public static final ViewPropertySpec<String> TEXT = new ViewPropertySpec<String>("text", ViewPropertyKind.RELAYOUT, "");
-  public static final ViewPropertySpec<Color> TEXT_COLOR = new ViewPropertySpec<Color>("color", ViewPropertyKind.REPAINT, Color.BLACK);
-  public static final ViewPropertySpec<Boolean> CARET_VISIBLE = new ViewPropertySpec<Boolean>("caretVisible", ViewPropertyKind.REPAINT, false);
-  public static final ViewPropertySpec<Integer> CARET_POSITION = new ViewPropertySpec<Integer>("caretPositiong", ViewPropertyKind.REPAINT, 0);
-  public static final ViewPropertySpec<Boolean> BOLD = new ViewPropertySpec<Boolean>("bold", ViewPropertyKind.REPAINT, false);
-  public static final ViewPropertySpec<Boolean> SELECTION_VISIBLE = new ViewPropertySpec<Boolean>("selectionVisible", ViewPropertyKind.REPAINT, false);
-  public static final ViewPropertySpec<Integer> SELECTION_START = new ViewPropertySpec<Integer>("selectionStart", ViewPropertyKind.REPAINT, 0);
+  public static final ViewPropertySpec<String> TEXT = new ViewPropertySpec<>("text", ViewPropertyKind.RELAYOUT, "");
+  public static final ViewPropertySpec<Color> TEXT_COLOR = new ViewPropertySpec<>("color", ViewPropertyKind.REPAINT, Color.BLACK);
+  public static final ViewPropertySpec<Boolean> CARET_VISIBLE = new ViewPropertySpec<>("caretVisible", ViewPropertyKind.REPAINT, false);
+  public static final ViewPropertySpec<Integer> CARET_POSITION = new ViewPropertySpec<>("caretPositiong", ViewPropertyKind.REPAINT, 0);
+  public static final ViewPropertySpec<Boolean> BOLD = new ViewPropertySpec<>("bold", ViewPropertyKind.REPAINT, false);
+  public static final ViewPropertySpec<Boolean> SELECTION_VISIBLE = new ViewPropertySpec<>("selectionVisible", ViewPropertyKind.REPAINT, false);
+  public static final ViewPropertySpec<Integer> SELECTION_START = new ViewPropertySpec<>("selectionStart", ViewPropertyKind.REPAINT, 0);
 
   public TextView() {
   }

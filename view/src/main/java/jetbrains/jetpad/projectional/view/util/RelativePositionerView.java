@@ -25,9 +25,9 @@ import jetbrains.jetpad.projectional.view.ViewPropertySpec;
 import java.util.Arrays;
 
 public class RelativePositionerView extends View {
-  private final ViewPropertySpec<Vector> RELATIVE_TO = new ViewPropertySpec<Vector>("relativeTo", ViewPropertyKind.RELAYOUT, Vector.ZERO);
-  private final ViewPropertySpec<HorizontalAnchor> HORIZONTAL_ANCHOR = new ViewPropertySpec<HorizontalAnchor>("horizontalAnchor", ViewPropertyKind.RELAYOUT, HorizontalAnchor.LEFT);
-  private final ViewPropertySpec<VerticalAnchor> VERTICAL_ANCHOR = new ViewPropertySpec<VerticalAnchor>("verticalAnchor", ViewPropertyKind.RELAYOUT, VerticalAnchor.BASELINE);
+  private final ViewPropertySpec<Vector> RELATIVE_TO = new ViewPropertySpec<>("relativeTo", ViewPropertyKind.RELAYOUT, Vector.ZERO);
+  private final ViewPropertySpec<HorizontalAnchor> HORIZONTAL_ANCHOR = new ViewPropertySpec<>("horizontalAnchor", ViewPropertyKind.RELAYOUT, HorizontalAnchor.LEFT);
+  private final ViewPropertySpec<VerticalAnchor> VERTICAL_ANCHOR = new ViewPropertySpec<>("verticalAnchor", ViewPropertyKind.RELAYOUT, VerticalAnchor.BASELINE);
 
   public RelativePositionerView(View... views) {
     children().addAll(Arrays.asList(views));

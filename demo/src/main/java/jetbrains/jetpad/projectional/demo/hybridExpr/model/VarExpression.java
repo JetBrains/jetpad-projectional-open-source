@@ -21,7 +21,7 @@ import jetbrains.jetpad.projectional.demo.hybridExpr.model.types.Type;
 import jetbrains.jetpad.projectional.demo.hybridExpr.model.types.Types;
 
 public class VarExpression extends Expression {
-  public final Property<String> name = new ValueProperty<String>();
+  public final Property<String> name = new ValueProperty<>();
 
   public VarExpression() {
   }

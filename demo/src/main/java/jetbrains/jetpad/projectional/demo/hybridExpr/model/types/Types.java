@@ -45,7 +45,7 @@ public class Types {
   public static final Type STRING = new Type() {
     @Override
     public List<FieldDescriptor> getFields() {
-      List<FieldDescriptor> result = new ArrayList<FieldDescriptor>();
+      List<FieldDescriptor> result = new ArrayList<>();
       result.addAll(OBJECT.getFields());
       result.add(new FieldDescriptor(INT, "length"));
       return result;
@@ -53,7 +53,7 @@ public class Types {
 
     @Override
     public List<MethodDescriptor> getMethods() {
-      List<MethodDescriptor> result = new ArrayList<MethodDescriptor>();
+      List<MethodDescriptor> result = new ArrayList<>();
       result.addAll(OBJECT.getMethods());
       result.add(new MethodDescriptor(STRING, "substring", INT));
       result.add(new MethodDescriptor(BOOL, "startsWith", STRING));
@@ -70,14 +70,14 @@ public class Types {
   public static final Type INT = new Type() {
     @Override
     public List<FieldDescriptor> getFields() {
-      List<FieldDescriptor> result = new ArrayList<FieldDescriptor>();
+      List<FieldDescriptor> result = new ArrayList<>();
       result.addAll(OBJECT.getFields());
       return result;
     }
 
     @Override
     public List<MethodDescriptor> getMethods() {
-      List<MethodDescriptor> result = new ArrayList<MethodDescriptor>();
+      List<MethodDescriptor> result = new ArrayList<>();
       result.addAll(OBJECT.getMethods());
       result.add(new MethodDescriptor(INT, "add", INT, INT));
       result.add(new MethodDescriptor(INT, "sub", INT, INT));
@@ -98,14 +98,14 @@ public class Types {
   public static final Type BOOL = new Type() {
     @Override
     public List<FieldDescriptor> getFields() {
-      List<FieldDescriptor> result = new ArrayList<FieldDescriptor>();
+      List<FieldDescriptor> result = new ArrayList<>();
       result.addAll(OBJECT.getFields());
       return result;
     }
 
     @Override
     public List<MethodDescriptor> getMethods() {
-      List<MethodDescriptor> result = new ArrayList<MethodDescriptor>();
+      List<MethodDescriptor> result = new ArrayList<>();
       result.addAll(OBJECT.getMethods());
       result.add(new MethodDescriptor(BOOL, "and", BOOL, BOOL));
       result.add(new MethodDescriptor(BOOL, "or", BOOL, BOOL));

@@ -23,7 +23,7 @@ import jetbrains.jetpad.projectional.demo.hybridExpr.model.types.Types;
 
 
 public class FieldReferenceOperation extends Operation {
-  public final Property<String> fieldName = new ValueProperty<String>();
+  public final Property<String> fieldName = new ValueProperty<>();
 
 
   @Override

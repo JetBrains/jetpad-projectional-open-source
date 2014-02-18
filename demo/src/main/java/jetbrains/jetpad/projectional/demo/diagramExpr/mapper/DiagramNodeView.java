@@ -27,7 +27,7 @@ import jetbrains.jetpad.projectional.view.ViewPropertySpec;
 import jetbrains.jetpad.values.Color;
 
 class DiagramNodeView extends VerticalView {
-  static final ViewPropertySpec<Integer> PADDING = new ViewPropertySpec<Integer>("padding", ViewPropertyKind.RELAYOUT, 20);
+  static final ViewPropertySpec<Integer> PADDING = new ViewPropertySpec<>("padding", ViewPropertyKind.RELAYOUT, 20);
 
   final CellView cellView;
 

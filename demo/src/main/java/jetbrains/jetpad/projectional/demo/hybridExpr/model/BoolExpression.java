@@ -21,7 +21,7 @@ import jetbrains.jetpad.projectional.demo.hybridExpr.model.types.Type;
 import jetbrains.jetpad.projectional.demo.hybridExpr.model.types.Types;
 
 public class BoolExpression extends Expression {
-  public final Property<Boolean> value = new ValueProperty<Boolean>(false);
+  public final Property<Boolean> value = new ValueProperty<>(false);
 
   @Override
   public Type getType() {

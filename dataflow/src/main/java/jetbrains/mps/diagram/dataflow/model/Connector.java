@@ -21,10 +21,10 @@ import jetbrains.jetpad.model.property.Property;
 import jetbrains.jetpad.model.property.ValueProperty;
 
 public class Connector extends HasParent<Diagram, Connector> {
-  public final Property<OutputPort> output = new ValueProperty<OutputPort>();
-  public final Property<InputPort> input = new ValueProperty<InputPort>();
+  public final Property<OutputPort> output = new ValueProperty<>();
+  public final Property<InputPort> input = new ValueProperty<>();
 
-  public final Property<Vector> inputLocation = new ValueProperty<Vector>(Vector.ZERO);
+  public final Property<Vector> inputLocation = new ValueProperty<>(Vector.ZERO);
 
-  public final Property<String> text = new ValueProperty<String>();
+  public final Property<String> text = new ValueProperty<>();
 }

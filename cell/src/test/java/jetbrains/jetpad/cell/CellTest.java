@@ -65,7 +65,7 @@ public class CellTest {
 
     v.focus();
 
-    final Value<Boolean> focusLostCalled = new Value<Boolean>(false);
+    final Value<Boolean> focusLostCalled = new Value<>(false);
 
     container.root.addTrait(new BaseCellTrait() {
       @Override
@@ -149,7 +149,7 @@ public class CellTest {
 
   @Test
   public void externalProperties() {
-    CellPropertySpec<String> prop = new CellPropertySpec<String>("aaa");
+    CellPropertySpec<String> prop = new CellPropertySpec<>("aaa");
 
     TextCell v = new TextCell();
 
@@ -162,7 +162,7 @@ public class CellTest {
 
   @Test
   public void externalPropertiesAsObjects() {
-    CellPropertySpec<String> prop = new CellPropertySpec<String>("aaa");
+    CellPropertySpec<String> prop = new CellPropertySpec<>("aaa");
 
     TextCell v = new TextCell();
     Property<String> property = v.getProp(prop);
@@ -205,7 +205,7 @@ public class CellTest {
 
     container.root.children().add(cell);
 
-    verify(listener).onEvent(new PropertyChangeEvent<CellContainer>(null, container));
+    verify(listener).onEvent(new PropertyChangeEvent<>(null, container));
   }
 
 
@@ -219,6 +219,6 @@ public class CellTest {
 
     container.root.children().remove(cell);
 
-    verify(listener).onEvent(new PropertyChangeEvent<CellContainer>(container, null));
+    verify(listener).onEvent(new PropertyChangeEvent<>(container, null));
   }
 }

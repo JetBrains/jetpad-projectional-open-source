@@ -27,7 +27,7 @@ import jetbrains.jetpad.projectional.view.HorizontalView;
 import jetbrains.jetpad.projectional.view.View;
 
 public class CellView extends HorizontalView {
-  public final Property<Cell> cell = new ValueProperty<Cell>();
+  public final Property<Cell> cell = new ValueProperty<>();
   public final CellContainer container = new CellContainer();
 
   private GroupView myPopupView = new GroupView();

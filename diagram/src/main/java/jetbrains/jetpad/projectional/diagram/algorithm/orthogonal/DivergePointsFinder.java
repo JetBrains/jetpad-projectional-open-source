@@ -22,9 +22,9 @@ import java.util.*;
 
 public class DivergePointsFinder {
   public List<Vector> find(Set<List<Vector>> lines) {
-    List<Vector> divergePoints = new ArrayList<Vector>();
+    List<Vector> divergePoints = new ArrayList<>();
 
-    Map<Vector, List<Vector>> directions = new HashMap<Vector, List<Vector>>();
+    Map<Vector, List<Vector>> directions = new HashMap<>();
     for (List<Vector> line: lines) {
       Vector prev = null;
       for (Vector p: line) {

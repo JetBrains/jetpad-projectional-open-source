@@ -45,9 +45,9 @@ public class SLRTableGenerator extends BaseLRTableGenerator<SLRItem> {
 
     for (Terminal t : item.getRule().getHead().getFollow()) {
       if (t == grammar().getEnd() && finalItem.equals(item)) {
-        state.addRecord(t, new LRActionRecord<SLRItem>(item, LRParserAction.<LRState<SLRItem>>accept()));
+        state.addRecord(t, new LRActionRecord<>(item, LRParserAction.<LRState<SLRItem>>accept()));
       } else {
-        state.addRecord(t, new LRActionRecord<SLRItem>(item, LRParserAction.<LRState<SLRItem>>reduce(item.getRule())));
+        state.addRecord(t, new LRActionRecord<>(item, LRParserAction.<LRState<SLRItem>>reduce(item.getRule())));
       }
     }
   }

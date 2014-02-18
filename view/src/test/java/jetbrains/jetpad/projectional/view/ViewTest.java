@@ -36,7 +36,7 @@ import static junit.framework.Assert.*;
 import static org.mockito.Mockito.*;
 
 public class ViewTest {
-  static final ViewPropertySpec<String> NAME = new ViewPropertySpec<String>("name");
+  static final ViewPropertySpec<String> NAME = new ViewPropertySpec<>("name");
 
   static final ViewTrait X_NAME_TRAIT = new ViewTraitBuilder().set(NAME, "x").build();
 
@@ -163,7 +163,7 @@ public class ViewTest {
     View view = newView();
     view.validate();
 
-    view.set(new ViewPropertySpec<Object>("a", ViewPropertyKind.RELAYOUT), new Object());
+    view.set(new ViewPropertySpec<>("a", ViewPropertyKind.RELAYOUT), new Object());
 
     assertFalse(view.valid().get());
   }
@@ -171,7 +171,7 @@ public class ViewTest {
 
   @Test
   public void repaintPropertySetLeadsToInvalidation() {
-    final Value<Boolean> repaintCalled = new Value<Boolean>(false);
+    final Value<Boolean> repaintCalled = new Value<>(false);
 
     View view = new MyView() {
       @Override
@@ -181,7 +181,7 @@ public class ViewTest {
       }
     };
 
-    view.set(new ViewPropertySpec<Object>("b", ViewPropertyKind.REPAINT), new Object());
+    view.set(new ViewPropertySpec<>("b", ViewPropertyKind.REPAINT), new Object());
 
     assertTrue(repaintCalled.get());
   }
@@ -190,7 +190,7 @@ public class ViewTest {
   public void simpleMove() {
     View view = newView();
 
-    List<Vector> origins = new ArrayList<Vector>();
+    List<Vector> origins = new ArrayList<>();
     Registration reg = view.bounds().addHandler(originTracker(origins));
     view.move(new Vector(10, 10));
     view.move(new Vector(0, 0));
@@ -207,7 +207,7 @@ public class ViewTest {
     View child = newView();
     parent.children().add(child);
 
-    List<Vector> origins = new ArrayList<Vector>();
+    List<Vector> origins = new ArrayList<>();
     Registration reg = child.bounds().addHandler(originTracker(origins));
 
     parent.move(new Vector(10, 10));
@@ -269,7 +269,7 @@ public class ViewTest {
     View child = newFocusableView();
     view.children().add(child);
 
-    verify(listener).onItemAdded(new CollectionItemEvent<View>(child, 0, true));
+    verify(listener).onItemAdded(new CollectionItemEvent<>(child, 0, true));
   }
 
   @Test
@@ -283,7 +283,7 @@ public class ViewTest {
     view.children().addListener(listener);
     view.children().remove(child);
 
-    verify(listener).onItemRemoved(new CollectionItemEvent<View>(child, 0, false));
+    verify(listener).onItemRemoved(new CollectionItemEvent<>(child, 0, false));
   }
 
   @Test
@@ -296,7 +296,7 @@ public class ViewTest {
     View parent = newFocusableView();
     parent.children().add(child);
 
-    verify(handler).onEvent(new PropertyChangeEvent<View>(null, parent));
+    verify(handler).onEvent(new PropertyChangeEvent<>(null, parent));
   }
 
   @Test
@@ -311,7 +311,7 @@ public class ViewTest {
 
     parent.children().remove(child);
 
-    verify(handler).onEvent(new PropertyChangeEvent<View>(parent, null));
+    verify(handler).onEvent(new PropertyChangeEvent<>(parent, null));
   }
 
   @Test

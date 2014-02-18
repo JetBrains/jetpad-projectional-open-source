@@ -24,7 +24,7 @@ import java.util.Map;
 
 public class ConnectionUtil {
   public static Map<View, List<Connection>> getInputToConnectionsMap(DiagramView diagramView) {
-    Map<View, List<Connection>> res = new LinkedHashMap<View, List<Connection>>();
+    Map<View, List<Connection>> res = new LinkedHashMap<>();
     for (Connection c: diagramView.connections) {
       PolyLineConnection bc = (PolyLineConnection) c;
       View input = bc.fromView().get();

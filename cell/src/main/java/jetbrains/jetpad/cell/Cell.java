@@ -48,21 +48,21 @@ public abstract class Cell implements Composite<Cell>, HasVisibility, HasFocusab
   public static final Color HIGHLIGHT_COLOR = new Color(200, 200, 200);
   public static final Color SELECTION_COLOR = Color.LIGHT_BLUE;
 
-  public static final CellPropertySpec<Boolean> FOCUSED = new CellPropertySpec<Boolean>("focused", false);
+  public static final CellPropertySpec<Boolean> FOCUSED = new CellPropertySpec<>("focused", false);
 
-  public static final CellPropertySpec<Cell> BOTTOM_POPUP = new CellPropertySpec<Cell>("bottomPopup");
-  public static final CellPropertySpec<Cell> FRONT_POPUP = new CellPropertySpec<Cell>("frontPopup");
-  public static final CellPropertySpec<Cell> LEFT_POPUP = new CellPropertySpec<Cell>("leftPopup");
-  public static final CellPropertySpec<Cell> RIGHT_POPUP = new CellPropertySpec<Cell>("rightPopup");
+  public static final CellPropertySpec<Cell> BOTTOM_POPUP = new CellPropertySpec<>("bottomPopup");
+  public static final CellPropertySpec<Cell> FRONT_POPUP = new CellPropertySpec<>("frontPopup");
+  public static final CellPropertySpec<Cell> LEFT_POPUP = new CellPropertySpec<>("leftPopup");
+  public static final CellPropertySpec<Cell> RIGHT_POPUP = new CellPropertySpec<>("rightPopup");
 
   private static final CellPropertySpec<Cell>[] POPUP_SPECS = new CellPropertySpec[]{LEFT_POPUP, RIGHT_POPUP, BOTTOM_POPUP, FRONT_POPUP};
 
-  public static final CellPropertySpec<Boolean> VISIBLE = new CellPropertySpec<Boolean>("visible", true);
-  public static final CellPropertySpec<Boolean> SELECTED = new CellPropertySpec<Boolean>("selected", false);
-  public static final CellPropertySpec<Boolean> HIGHLIGHTED = new CellPropertySpec<Boolean>("highlighted", false);
-  public static final CellPropertySpec<Boolean> FOCUSABLE = new CellPropertySpec<Boolean>("focusable", false);
-  public static final CellPropertySpec<Color> BACKGROUND = new CellPropertySpec<Color>("background");
-  public static final CellPropertySpec<Color> BORDER_COLOR = new CellPropertySpec<Color>("borderColor");
+  public static final CellPropertySpec<Boolean> VISIBLE = new CellPropertySpec<>("visible", true);
+  public static final CellPropertySpec<Boolean> SELECTED = new CellPropertySpec<>("selected", false);
+  public static final CellPropertySpec<Boolean> HIGHLIGHTED = new CellPropertySpec<>("highlighted", false);
+  public static final CellPropertySpec<Boolean> FOCUSABLE = new CellPropertySpec<>("focusable", false);
+  public static final CellPropertySpec<Color> BACKGROUND = new CellPropertySpec<>("background");
+  public static final CellPropertySpec<Color> BORDER_COLOR = new CellPropertySpec<>("borderColor");
 
   public static boolean isPopupProp(CellPropertySpec<?> prop) {
     return prop == BOTTOM_POPUP || prop == FRONT_POPUP || prop == LEFT_POPUP || prop == RIGHT_POPUP;
@@ -260,12 +260,12 @@ public abstract class Cell implements Composite<Cell>, HasVisibility, HasFocusab
         return addListener(new CellAdapter() {
           @Override
           public void onAttach(CellContainer container) {
-            handler.onEvent(new PropertyChangeEvent<CellContainer>(null, container));
+            handler.onEvent(new PropertyChangeEvent<>(null, container));
           }
 
           @Override
           public void onDetach(CellContainer container) {
-            handler.onEvent(new PropertyChangeEvent<CellContainer>(container, null));
+            handler.onEvent(new PropertyChangeEvent<>(container, null));
           }
         });
       }
@@ -313,7 +313,7 @@ public abstract class Cell implements Composite<Cell>, HasVisibility, HasFocusab
 
   public Registration addListener(CellListener l) {
     if (myListeners == null) {
-      myListeners = new Listeners<CellListener>();
+      myListeners = new Listeners<>();
     }
     return myListeners.add(l);
   }
@@ -330,7 +330,7 @@ public abstract class Cell implements Composite<Cell>, HasVisibility, HasFocusab
 
     if (Objects.equal(value, old)) return Registration.EMPTY;
 
-    final PropertyChangeEvent<ValueT> event = new PropertyChangeEvent<ValueT>(old, value);
+    final PropertyChangeEvent<ValueT> event = new PropertyChangeEvent<>(old, value);
 
     beforePropertySet(prop, event);
 
@@ -341,7 +341,7 @@ public abstract class Cell implements Composite<Cell>, HasVisibility, HasFocusab
       }
     } else {
       if (myProperties == null) {
-        myProperties = new ListMap<CellPropertySpec<?>, Object>();
+        myProperties = new ListMap<>();
       }
       myProperties.put(prop, value);
     }
@@ -437,7 +437,7 @@ public abstract class Cell implements Composite<Cell>, HasVisibility, HasFocusab
 
   public List<Cell> popups() {
     if (myProperties == null) return Collections.emptyList();
-    List<Cell> result = new ArrayList<Cell>();
+    List<Cell> result = new ArrayList<>();
     for (CellPropertySpec<Cell> ps : POPUP_SPECS) {
       Cell cell = (Cell) myProperties.get(ps);
       if (cell != null) {
@@ -558,7 +558,7 @@ public abstract class Cell implements Composite<Cell>, HasVisibility, HasFocusab
   }
 
   private void changeParent(Cell newParent) {
-    final PropertyChangeEvent<Cell> event = myListeners != null ? new PropertyChangeEvent<Cell>(myParent, newParent) : null;
+    final PropertyChangeEvent<Cell> event = myListeners != null ? new PropertyChangeEvent<>(myParent, newParent) : null;
     myParent = newParent;
     if (myListeners != null) {
       myListeners.fire(new ListenerCaller<CellListener>() {
@@ -598,7 +598,7 @@ public abstract class Cell implements Composite<Cell>, HasVisibility, HasFocusab
     public void add(final int index, final Cell item) {
       if (item.parent().get() != null) throw new IllegalStateException();
 
-      final CollectionItemEvent<Cell> event = new CollectionItemEvent<Cell>(item, index, true);
+      final CollectionItemEvent<Cell> event = new CollectionItemEvent<>(item, index, true);
 
       onBeforeChildAdded(event);
 
@@ -629,7 +629,7 @@ public abstract class Cell implements Composite<Cell>, HasVisibility, HasFocusab
     @Override
     public Cell remove(final int index) {
       final Cell item = get(index);
-      final CollectionItemEvent<Cell> event = new CollectionItemEvent<Cell>(item, index, false);
+      final CollectionItemEvent<Cell> event = new CollectionItemEvent<>(item, index, false);
 
       if (isAttached() && myContainer.focusedCell.get() != null && Composites.isDescendant(item, myContainer.focusedCell.get())) {
         myContainer.focusedCell.set(null);

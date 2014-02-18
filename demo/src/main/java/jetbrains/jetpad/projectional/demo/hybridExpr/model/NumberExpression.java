@@ -21,7 +21,7 @@ import jetbrains.jetpad.projectional.demo.hybridExpr.model.types.Type;
 import jetbrains.jetpad.projectional.demo.hybridExpr.model.types.Types;
 
 public class NumberExpression extends Expression {
-  public final Property<Integer> value = new ValueProperty<Integer>(0);
+  public final Property<Integer> value = new ValueProperty<>(0);
 
   @Override
   public String toString() {

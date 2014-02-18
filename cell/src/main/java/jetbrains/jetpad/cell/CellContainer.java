@@ -38,8 +38,8 @@ public class CellContainer {
   public final RootCell root = new RootCell(this);
 
   private Cell myCellUnderMouse;
-  private List<Cell> myPopups = new ArrayList<Cell>();
-  private Listeners<CellContainerListener> myListeners = new Listeners<CellContainerListener>();
+  private List<Cell> myPopups = new ArrayList<>();
+  private Listeners<CellContainerListener> myListeners = new Listeners<>();
   private boolean myInCommand;
   private CellContainerPeer myCellContainerPeer = CellContainerPeer.NULL;
 

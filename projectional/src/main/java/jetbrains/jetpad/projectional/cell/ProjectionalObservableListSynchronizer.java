@@ -195,7 +195,7 @@ class ProjectionalObservableListSynchronizer<ContextT, SourceItemT> extends Base
   @Override
   protected void clear(List<SourceItemT> items) {
     int firstIndex = mySource.indexOf(items.get(0));
-    for (SourceItemT item : new ArrayList<SourceItemT>(items)) {
+    for (SourceItemT item : new ArrayList<>(items)) {
       mySource.remove(item);
     }
     selectAfterClear(firstIndex);

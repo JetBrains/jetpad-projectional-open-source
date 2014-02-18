@@ -28,7 +28,7 @@ public class EventTranslator {
   }
 
   public static KeyEvent translate(java.awt.event.KeyEvent e) {
-    Set<ModifierKey> modifiers = new HashSet<ModifierKey>();
+    Set<ModifierKey> modifiers = new HashSet<>();
     if (e.isControlDown()) {
       modifiers.add(ModifierKey.CONTROL);
     }

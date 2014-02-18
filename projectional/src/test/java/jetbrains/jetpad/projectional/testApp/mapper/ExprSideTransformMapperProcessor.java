@@ -53,7 +53,7 @@ class ExprSideTransformMapperProcessor implements MapperProcessor<Expr, Cell> {
             return new CompletionSupplier() {
               @Override
               public List<CompletionItem> get(CompletionParameters cp) {
-                List<CompletionItem> result = new ArrayList<CompletionItem>();
+                List<CompletionItem> result = new ArrayList<>();
                 result.add(new SimpleCompletionItem("+") {
                   @Override
                   public Runnable complete(String text) {
@@ -108,7 +108,7 @@ class ExprSideTransformMapperProcessor implements MapperProcessor<Expr, Cell> {
             return new CompletionSupplier() {
               @Override
               public List<CompletionItem> get(CompletionParameters cp) {
-                List<CompletionItem> result = new ArrayList<CompletionItem>();
+                List<CompletionItem> result = new ArrayList<>();
                 result.add(new SimpleCompletionItem("+") {
                   @Override
                   public Runnable complete(String text) {

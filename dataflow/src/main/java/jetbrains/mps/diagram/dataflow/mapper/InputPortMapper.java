@@ -23,7 +23,7 @@ import jetbrains.jetpad.values.Color;
 import jetbrains.mps.diagram.dataflow.model.InputPort;
 
 public class InputPortMapper extends Mapper<InputPort, RectView> {
-  static final ViewPropertySpec<InputPort> PORT = new ViewPropertySpec<InputPort>("inputPort");
+  static final ViewPropertySpec<InputPort> PORT = new ViewPropertySpec<>("inputPort");
 
   InputPortMapper(InputPort source) {
     super(source, new RectView());

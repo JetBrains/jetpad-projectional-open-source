@@ -21,6 +21,6 @@ import jetbrains.jetpad.model.collections.list.ObservableArrayList;
 import jetbrains.jetpad.model.collections.list.ObservableList;
 
 public class SimpleDiagram {
-  public final ObservableList<DiagramNode> nodes = new ChildList<SimpleDiagram, DiagramNode>(this);
-  public final ObservableList<DiagramConnection> connections = new ChildList<SimpleDiagram, DiagramConnection>(this);
+  public final ObservableList<DiagramNode> nodes = new ChildList<>(this);
+  public final ObservableList<DiagramConnection> connections = new ChildList<>(this);
 }

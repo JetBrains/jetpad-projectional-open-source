@@ -46,7 +46,7 @@ public class ContentRootMapper extends Mapper<Diagram, ViewContainer> {
   private VerticalView myView = new VerticalView();
 
   private ContentProperties myProperties;
-  private List<Runnable> myViewAdders = new ArrayList<Runnable>();
+  private List<Runnable> myViewAdders = new ArrayList<>();
 
   public ContentRootMapper(Diagram diagram, Content content) {
     super(diagram, new ViewContainer());
@@ -65,11 +65,11 @@ public class ContentRootMapper extends Mapper<Diagram, ViewContainer> {
     super.registerSynchronizers(conf);
 
     Property<String> text = createCell("test", null);
-    Property<Integer> x = new ValueProperty<Integer>(75);
+    Property<Integer> x = new ValueProperty<>(75);
     createCell("75", new IntegerHandler(x));
-    Property<Integer> y = new ValueProperty<Integer>(75);
+    Property<Integer> y = new ValueProperty<>(75);
     createCell("75", new IntegerHandler(y));
-    final Property<Integer> num = new ValueProperty<Integer>(2);
+    final Property<Integer> num = new ValueProperty<>(2);
     createCell("2", new IntegerHandler(num));
 
     myProperties = new ContentProperties(x, y);

@@ -62,7 +62,7 @@ public class IndentPart extends HasParent<IndentPart, IndentPart> implements Com
     if (myVisible == visible) return;
     myVisible = visible;
     if (indentCell() != null) {
-      indentCell().visibilityChanged(this, new PropertyChangeEvent<Boolean>(!visible, visible));
+      indentCell().visibilityChanged(this, new PropertyChangeEvent<>(!visible, visible));
     }
   }
 

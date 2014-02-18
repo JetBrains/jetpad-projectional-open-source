@@ -43,7 +43,7 @@ import java.util.Collections;
 import java.util.List;
 
 public class CompletionSupport {
-  public static final CellTraitPropertySpec<Runnable> HIDE_COMPLETION = new CellTraitPropertySpec<Runnable>("hideCompletion");
+  public static final CellTraitPropertySpec<Runnable> HIDE_COMPLETION = new CellTraitPropertySpec<>("hideCompletion");
 
   public static CellTrait trait() {
     return new BaseCellTrait() {
@@ -251,11 +251,11 @@ public class CompletionSupport {
       final Property<Cell> targetPopup,
       List<CompletionItem> items) {
     final CellContainer container = cell.cellContainer().get();
-    final Value<Boolean> completed = new Value<Boolean>(false);
-    final Value<Boolean> dismissed = new Value<Boolean>(false);
+    final Value<Boolean> completed = new Value<>(false);
+    final Value<Boolean> dismissed = new Value<>(false);
     final Runnable restoreState = container.saveState();
 
-    final List<CompletionItem> wrappedItems = new ArrayList<CompletionItem>();
+    final List<CompletionItem> wrappedItems = new ArrayList<>();
     for (CompletionItem i : items) {
       wrappedItems.add(new CompletionItemWrapper(i) {
         @Override
@@ -273,7 +273,7 @@ public class CompletionSupport {
         return super.addTrait(trait);
       }
     };
-    final Value<Handler<Boolean>> dismiss = new Value<Handler<Boolean>>();
+    final Value<Handler<Boolean>> dismiss = new Value<>();
     final CompletionHelper completion = new CompletionHelper(wrappedItems);
     textView.focusable().set(true);
     final Registration traitReg = textView.addTrait(new TextEditingTrait() {

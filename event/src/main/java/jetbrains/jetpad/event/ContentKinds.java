@@ -30,7 +30,7 @@ public class ContentKinds {
   }
 
   public static <T> ContentKind<List<T>> listOf(ContentKind<T> kind) {
-    return new ListContentKind<T>(kind);
+    return new ListContentKind<>(kind);
   }
 
   static class ListContentKind<T> implements ContentKind<List<T>> {

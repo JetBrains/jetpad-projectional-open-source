@@ -20,5 +20,5 @@ import jetbrains.jetpad.model.property.Property;
 import jetbrains.jetpad.model.property.ValueProperty;
 
 public class ContentItem {
-  public final Property<Vector> size = new ValueProperty<Vector>(new Vector(15, 15));
+  public final Property<Vector> size = new ValueProperty<>(new Vector(15, 15));
 }

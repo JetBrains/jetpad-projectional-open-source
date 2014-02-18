@@ -20,5 +20,5 @@ import jetbrains.jetpad.model.property.Property;
 import jetbrains.jetpad.model.property.ValueProperty;
 
 public class DiagramNodeConnection extends HasParent<DiagramNode, DiagramNodeConnection> {
-  public final Property<DiagramNode> target = new ValueProperty<DiagramNode>();
+  public final Property<DiagramNode> target = new ValueProperty<>();
 }

@@ -42,7 +42,7 @@ public class CompletionHelper {
     return new CompletionHelper(cell.get(prop).get(cp));
   }
 
-  private List<CompletionItem> myCompletionItems = new ArrayList<CompletionItem>();
+  private List<CompletionItem> myCompletionItems = new ArrayList<>();
 
   public CompletionHelper(List<CompletionItem> items) {
     myCompletionItems.addAll(items);
@@ -57,7 +57,7 @@ public class CompletionHelper {
   }
 
   public List<CompletionItem> prefixedBy(String prefix) {
-    List<CompletionItem> result = new ArrayList<CompletionItem>();
+    List<CompletionItem> result = new ArrayList<>();
     for (CompletionItem item : myCompletionItems) {
       if (item.isMatchPrefix(prefix)) {
         result.add(item);
@@ -67,7 +67,7 @@ public class CompletionHelper {
   }
 
   public List<CompletionItem> strictlyPrefixedBy(String prefix) {
-    List<CompletionItem> result = new ArrayList<CompletionItem>();
+    List<CompletionItem> result = new ArrayList<>();
     for (CompletionItem item : myCompletionItems) {
       if (item.isStrictMatchPrefix(prefix)) {
         result.add(item);
@@ -77,7 +77,7 @@ public class CompletionHelper {
   }
 
   public List<CompletionItem> matches(String text) {
-    List<CompletionItem> result = new ArrayList<CompletionItem>();
+    List<CompletionItem> result = new ArrayList<>();
     for (CompletionItem item : myCompletionItems) {
       if (item.isMatch(text)) {
         result.add(item);
@@ -87,8 +87,8 @@ public class CompletionHelper {
   }
 
   private List<CompletionItem> reduce(List<CompletionItem> items) {
-    List<CompletionItem> lowPriority = new ArrayList<CompletionItem>();
-    List<CompletionItem> result = new ArrayList<CompletionItem>();
+    List<CompletionItem> lowPriority = new ArrayList<>();
+    List<CompletionItem> result = new ArrayList<>();
     for (CompletionItem item : items) {
       if (item.isLowPriority()) {
         lowPriority.add(item);
@@ -108,7 +108,7 @@ public class CompletionHelper {
       if (eager) return true;
       if (matches.containsAll(strictlyPrefixed)) return true;
 
-      List<CompletionItem> allItems = new ArrayList<CompletionItem>();
+      List<CompletionItem> allItems = new ArrayList<>();
       allItems.addAll(matches);
       allItems.addAll(strictlyPrefixed);
 

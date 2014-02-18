@@ -72,7 +72,7 @@ public class View2Dom {
     rootDivStyle.setOverflow(Style.Overflow.VISIBLE);
     rootDivStyle.setOutlineStyle(Style.OutlineStyle.NONE);
 
-    final ValueProperty<Rectangle> visibleArea = new ValueProperty<Rectangle>();
+    final ValueProperty<Rectangle> visibleArea = new ValueProperty<>();
     final Runnable update = new Runnable() {
       @Override
       public void run() {
@@ -198,8 +198,8 @@ public class View2Dom {
       }
     }));
 
-    final Value<Boolean> pressed = new Value<Boolean>(false);
-    final Value<Boolean> pressedOutside = new Value<Boolean>(false);
+    final Value<Boolean> pressed = new Value<>(false);
+    final Value<Boolean> pressedOutside = new Value<>(false);
 
     reg.add(eventRegistration(Event.ONMOUSEDOWN, $(rootDiv).mousedown(new Function() {
       @Override

@@ -32,13 +32,13 @@ import java.util.*;
 public class SimpleParserSpecification<ExprT> {
   private Grammar myGrammar =  new Grammar();
   private NonTerminal myExpr = myGrammar.newNonTerminal("E");
-  private Map<Token, Terminal> myTokenToTerminal = new HashMap<Token, Terminal>();
+  private Map<Token, Terminal> myTokenToTerminal = new HashMap<>();
 
   private Terminal myId = myGrammar.newTerminal("id");
   private Terminal myIntNumber =  myGrammar.newTerminal("int");
   private Terminal myBool = myGrammar.newTerminal("bool");
   private Terminal myError = myGrammar.newTerminal("error");
-  private Map<Predicate<Object>, Terminal> myValueTerminals = new HashMap<Predicate<Object>, Terminal>();
+  private Map<Predicate<Object>, Terminal> myValueTerminals = new HashMap<>();
 
   private boolean myUserFullLR;
 
@@ -197,7 +197,7 @@ public class SimpleParserSpecification<ExprT> {
   }
 
   private List<Lexeme> toLexemes(ParsingContext ctx) {
-    List<Lexeme> lexemes = new ArrayList<Lexeme>();
+    List<Lexeme> lexemes = new ArrayList<>();
     while (ctx.current() != null) {
       lexemes.add(getLexeme(ctx.current()));
       ctx.advance();

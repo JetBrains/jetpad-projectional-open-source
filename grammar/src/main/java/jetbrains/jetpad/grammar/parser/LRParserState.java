@@ -23,8 +23,8 @@ import java.util.Map;
 
 public class LRParserState {
   private String myName;
-  private Map<Terminal, LRParserAction<LRParserState>> myActions = new HashMap<Terminal, LRParserAction<LRParserState>>();
-  private Map<NonTerminal, LRParserState> myNextStates = new HashMap<NonTerminal, LRParserState>();
+  private Map<Terminal, LRParserAction<LRParserState>> myActions = new HashMap<>();
+  private Map<NonTerminal, LRParserState> myNextStates = new HashMap<>();
 
   LRParserState(String name) {
     myName = name;

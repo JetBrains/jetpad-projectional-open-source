@@ -90,6 +90,6 @@ class DiagramNodeMapper extends Mapper<DiagramNode, DiagramNodeView> {
 
     HorizontalCell cell = new HorizontalCell();
     getTarget().cellView.cell.set(cell);
-    conf.add(new HybridSynchronizer<Expression>(this, getSource().expression, cell, new ExprHybridPositionSpec()));
+    conf.add(new HybridSynchronizer<>(this, getSource().expression, cell, new ExprHybridPositionSpec()));
   }
 }

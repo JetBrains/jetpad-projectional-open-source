@@ -24,7 +24,7 @@ import java.util.Set;
 public final class LRParserTable {
   private Grammar myGrammar;
   private LRParserState myInitialState;
-  private Set<LRParserState> myStates = new HashSet<LRParserState>();
+  private Set<LRParserState> myStates = new HashSet<>();
 
   public LRParserTable(Grammar grammar) {
     myGrammar = grammar;

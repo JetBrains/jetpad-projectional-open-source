@@ -21,6 +21,6 @@ import jetbrains.jetpad.model.property.Property;
 import jetbrains.jetpad.model.property.ValueProperty;
 
 public class Content {
-  public final Property<String> name = new ValueProperty<String>();
-  public final ObservableList<ContentItem> items = new ObservableArrayList<ContentItem>();
+  public final Property<String> name = new ValueProperty<>();
+  public final ObservableList<ContentItem> items = new ObservableArrayList<>();
 }
