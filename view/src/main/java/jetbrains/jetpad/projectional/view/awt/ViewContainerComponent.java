@@ -201,9 +201,7 @@ public class ViewContainerComponent extends JComponent implements Scrollable {
                   myContainer.paste(new PasteEvent(new TextClipboardContent(text)));
                   e.consume();
                   return;
-                } catch (UnsupportedFlavorException ex) {
-                  throw new RuntimeException(ex);
-                } catch (IOException ex) {
+                } catch (UnsupportedFlavorException | IOException ex) {
                   throw new RuntimeException(ex);
                 }
               }

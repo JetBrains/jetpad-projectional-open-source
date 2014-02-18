@@ -13,7 +13,7 @@ import static java.util.Collections.singleton;
 
 public abstract class BaseLRTableGenerator<ItemT extends LRItem<ItemT>> {
   private Grammar myGrammar;
-  private Map<Set<ItemT>, Set<ItemT>> myClosureCache = new HashMap<Set<ItemT>, Set<ItemT>>();
+  private Map<Set<ItemT>, Set<ItemT>> myClosureCache = new HashMap<>();
 
   public BaseLRTableGenerator(Grammar grammar) {
     myGrammar = grammar;
@@ -31,17 +31,17 @@ public abstract class BaseLRTableGenerator<ItemT extends LRItem<ItemT>> {
       throw new IllegalStateException("There should be one rule from inital non terminal");
     }
 
-    Map<Set<ItemT>, LRState<ItemT>> states = new LinkedHashMap<Set<ItemT>, LRState<ItemT>>();
+    Map<Set<ItemT>, LRState<ItemT>> states = new LinkedHashMap<>();
 
     int index = 0;
-    LRState<ItemT> init = new LRState<ItemT>(index++, closure(singleton(initialItem())));
-    Set<LRState<ItemT>> newItems = new LinkedHashSet<LRState<ItemT>>();
+    LRState<ItemT> init = new LRState<>(index++, closure(singleton(initialItem())));
+    Set<LRState<ItemT>> newItems = new LinkedHashSet<>();
     newItems.add(init);
     states.put(init.getItems(), init);
 
     while (!newItems.isEmpty()) {
       Set<LRState<ItemT>> items = newItems;
-      newItems = new LinkedHashSet<LRState<ItemT>>();
+      newItems = new LinkedHashSet<>();
       for (LRState<ItemT> state : items) {
         Set<ItemT> stateItems = state.getItems();
         Map<Symbol, Set<ItemT>> splitSets = splitSet(stateItems);
@@ -50,11 +50,11 @@ public abstract class BaseLRTableGenerator<ItemT extends LRItem<ItemT>> {
           Set<ItemT> nextItems = getClosure(e.getValue());
           LRState<ItemT> targetItem = states.get(nextItems);
           if (targetItem == null) {
-            targetItem = new LRState<ItemT>(index++, nextItems);
+            targetItem = new LRState<>(index++, nextItems);
             states.put(nextItems, targetItem);
             newItems.add(targetItem);
           }
-          state.addTransition(new LRTransition<ItemT>(targetItem, s));
+          state.addTransition(new LRTransition<>(targetItem, s));
         }
 
       }
@@ -68,24 +68,24 @@ public abstract class BaseLRTableGenerator<ItemT extends LRItem<ItemT>> {
           Symbol s = item.getNextSymbol();
           LRState<ItemT> nextState = state.getState(s);
           if (nextState != null && s instanceof Terminal) {
-            state.addRecord(s, new LRActionRecord<ItemT>(item, LRParserAction.shift(nextState)));
+            state.addRecord(s, new LRActionRecord<>(item, LRParserAction.shift(nextState)));
           }
         }
       }
     }
 
-    return new ArrayList<LRState<ItemT>>(states.values());
+    return new ArrayList<>(states.values());
   }
 
   private Map<Symbol, Set<ItemT>> splitSet(Set<ItemT> items) {
-    Map<Symbol, Set<ItemT>> result = new HashMap<Symbol, Set<ItemT>>();
+    Map<Symbol, Set<ItemT>> result = new HashMap<>();
     for (ItemT item : items) {
       if (item.isFinal()) continue;
 
       Symbol symbol = item.getNextSymbol();
       Set<ItemT> target = result.get(symbol);
       if (target == null) {
-        target = new HashSet<ItemT>();
+        target = new HashSet<>();
         result.put(symbol, target);
       }
       target.add(item.getNextItem());
@@ -100,7 +100,7 @@ public abstract class BaseLRTableGenerator<ItemT extends LRItem<ItemT>> {
 
     LRParserTable result = new LRParserTable(grammar());
 
-    Map<LRState<ItemT>, LRParserState> statesMap = new HashMap<LRState<ItemT>, LRParserState>();
+    Map<LRState<ItemT>, LRParserState> statesMap = new HashMap<>();
     statesMap.put(states.get(0), result.getInitialState());
     for (LRState<ItemT> state : states) {
       if (state == states.get(0)) continue;
@@ -159,12 +159,12 @@ public abstract class BaseLRTableGenerator<ItemT extends LRItem<ItemT>> {
   }
 
   private Set<ItemT> closure(Set<ItemT> items) {
-    Set<ItemT> result = new LinkedHashSet<ItemT>();
+    Set<ItemT> result = new LinkedHashSet<>();
     result.addAll(items);
     boolean hasChanges = true;
     while (hasChanges) {
       hasChanges = false;
-      for (ItemT item : new ArrayList<ItemT>(result)) {
+      for (ItemT item : new ArrayList<>(result)) {
         if (closure(result, item)) {
           hasChanges = true;
         }
@@ -205,7 +205,7 @@ public abstract class BaseLRTableGenerator<ItemT extends LRItem<ItemT>> {
         if (!state.hasAmbiguity(t)) {
           text.append(toString(records.iterator().next().getAction()));
         } else {
-          List<String> actions = new ArrayList<String>();
+          List<String> actions = new ArrayList<>();
           for (LRActionRecord<ItemT> rec : records) {
             actions.add(toString(rec.getAction()));
           }

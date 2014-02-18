@@ -9,10 +9,10 @@ import java.util.*;
 
 public class LRState<ItemT extends LRItem<ItemT>> {
   private int myNumber;
-  private Set<ItemT> myItems = new LinkedHashSet<ItemT>();
-  private Map<Symbol, Set<LRActionRecord<ItemT>>> myActionRecords = new HashMap<Symbol, Set<LRActionRecord<ItemT>>>();
+  private Set<ItemT> myItems = new LinkedHashSet<>();
+  private Map<Symbol, Set<LRActionRecord<ItemT>>> myActionRecords = new HashMap<>();
 
-  private Set<LRTransition<ItemT>> myTransitions = new LinkedHashSet<LRTransition<ItemT>>();
+  private Set<LRTransition<ItemT>> myTransitions = new LinkedHashSet<>();
 
   LRState(int number, Set<ItemT> items) {
     myNumber = number;
@@ -32,7 +32,7 @@ public class LRState<ItemT extends LRItem<ItemT>> {
   }
 
   public Set<ItemT> getKernelItems() {
-    Set<ItemT> items = new LinkedHashSet<ItemT>();
+    Set<ItemT> items = new LinkedHashSet<>();
     for (ItemT item : myItems) {
       if (item.isKernel()) {
         items.add(item);
@@ -42,7 +42,7 @@ public class LRState<ItemT extends LRItem<ItemT>> {
   }
 
   public Set<ItemT> getNonKernelItems() {
-    Set<ItemT> items = new LinkedHashSet<ItemT>();
+    Set<ItemT> items = new LinkedHashSet<>();
     for (ItemT item : myItems) {
       if (!item.isKernel()) {
         items.add(item);
@@ -117,8 +117,8 @@ public class LRState<ItemT extends LRItem<ItemT>> {
   }
 
   private Set<LRActionRecord<ItemT>> mergeActions(Set<LRActionRecord<ItemT>> records) {
-    Set<LRActionRecord<ItemT>> result = new HashSet<LRActionRecord<ItemT>>();
-    Map<LRParserAction<LRState<ItemT>>, LRActionRecord<ItemT>> actions = new HashMap<LRParserAction<LRState<ItemT>>, LRActionRecord<ItemT>>();
+    Set<LRActionRecord<ItemT>> result = new HashSet<>();
+    Map<LRParserAction<LRState<ItemT>>, LRActionRecord<ItemT>> actions = new HashMap<>();
 
     for (LRActionRecord<ItemT> r : records) {
       LRActionRecord<ItemT> actionRecord = actions.get(r.getAction());
@@ -145,7 +145,7 @@ public class LRState<ItemT extends LRItem<ItemT>> {
       }
     }
 
-    Set<LRActionRecord<ItemT>> result = new HashSet<LRActionRecord<ItemT>>();
+    Set<LRActionRecord<ItemT>> result = new HashSet<>();
     for (LRActionRecord<ItemT> rec : records) {
       Integer currentPriority = rec.getItem().getRule().getPriority();
       if (com.google.common.base.Objects.equal(currentPriority, highestPriority)) {
