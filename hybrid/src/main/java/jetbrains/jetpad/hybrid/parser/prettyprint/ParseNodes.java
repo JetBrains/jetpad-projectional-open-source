@@ -54,4 +54,13 @@ public class ParseNodes {
 
     return null;
   }
+
+  public static ParseNode findNodeFor(ParseNode parent, Object model) {
+    if (parent.value() == model) return parent;
+    for (ParseNode child : parent.children()) {
+      ParseNode result = findNodeFor(child, model);
+      if (result != null) return result;
+    }
+    return null;
+  }
 }
