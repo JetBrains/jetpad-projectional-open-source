@@ -529,13 +529,13 @@ public class HybridSynchronizer<SourceT> implements Synchronizer {
     return !mySelectionSupport.selection().isEmpty();
   }
 
-  Range<Integer> selection() {
+  public Range<Integer> selection() {
     ObservableList<Cell> selection = mySelectionSupport.selection();
     if (selection.isEmpty()) throw new IllegalStateException();
     return Range.closed(myTargetList.indexOf(selection.get(0)), myTargetList.indexOf(selection.get(selection.size() - 1)) + 1);
   }
 
-  void select(Range<Integer> sel) {
+  public void select(Range<Integer> sel) {
     mySelectionSupport.select(myTargetList.get(sel.lowerEndpoint()), myTargetList.get(sel.upperEndpoint() - 1));
   }
 
