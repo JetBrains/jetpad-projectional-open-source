@@ -20,6 +20,7 @@ import com.google.common.collect.Range;
 import jetbrains.jetpad.base.Handler;
 import jetbrains.jetpad.base.Runnables;
 import jetbrains.jetpad.event.*;
+import jetbrains.jetpad.hybrid.parser.prettyprint.ParseNodeProperty;
 import jetbrains.jetpad.mapper.Mapper;
 import jetbrains.jetpad.mapper.MapperFactory;
 import jetbrains.jetpad.mapper.Synchronizer;
@@ -60,10 +61,11 @@ import static jetbrains.jetpad.model.composite.Composites.firstFocusable;
 import static jetbrains.jetpad.model.composite.Composites.lastFocusable;
 
 public class HybridSynchronizer<SourceT> implements Synchronizer {
-  private static final ContentKind<List<Token>> TOKENS_CONTENT = new ContentKind<List<Token>>() {
-  };
+  public static final ParseNodeProperty<CellTrait> TRAIT = new ParseNodeProperty<>("trait", null);
 
   static final CellTraitPropertySpec<HybridSynchronizer<?>> HYBRID_SYNCHRONIZER = new CellTraitPropertySpec<>("hybridSynchronizer");
+
+  private static final ContentKind<List<Token>> TOKENS_CONTENT = new ContentKind<List<Token>>() {};
 
   private Mapper<?, ?> myContextMapper;
   private Property<SourceT> myProperty;
@@ -338,6 +340,26 @@ public class HybridSynchronizer<SourceT> implements Synchronizer {
         final Token token = event.getItem();
         Cell tokenCell = createTokenCell(token);
 
+        tokenCell.addTrait(new BaseCellTrait() {
+          @Override
+          protected CellTrait[] getBaseTraits(Cell cell) {
+            List<CellTrait> result = new ArrayList<>();
+            int index = myTargetList.indexOf(cell);
+            ParseNode parseNode = tokenListEditor().parseNode();
+            if (parseNode != null) {
+              ParseNode node = ParseNodes.findForRange(parseNode, Range.closed(index, index + 1));
+              while (node != null) {
+                CellTrait trait = node.get(TRAIT);
+                if (trait != null) {
+                  result.add(trait);
+                }
+                node = node.parent();
+              }
+            }
+            return result.toArray(new CellTrait[result.size()]);
+          }
+        });
+
         int index = event.getIndex();
         if (index == 0) {
           if (tokenCell instanceof TextTokenCell) {
@@ -366,7 +388,6 @@ public class HybridSynchronizer<SourceT> implements Synchronizer {
         }
 
         myTargetList.add(index, tokenCell);
-
       }
 
       @Override
