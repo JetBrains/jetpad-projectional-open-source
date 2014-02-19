@@ -25,4 +25,6 @@ public interface ParseNode {
   Object value();
   List<ParseNode> children();
   Range<Integer> range();
+
+  <ValueT> ValueT get(ParseNodeProperty<ValueT> prop);
 }

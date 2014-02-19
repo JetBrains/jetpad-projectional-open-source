@@ -57,4 +57,13 @@ public class TokenListEditorTest {
     assertNotNull(editor.value.get());
     assertTrue(editor.valid.get());
   }
+
+  @Test
+  public void prettyPrintingSetsPropsCorrectly() {
+    editor.tokens.add(new IntValueToken(2));
+
+    assertTrue(editor.parseNode().get(ExprHybridPositionSpec.SOURCE_EXPR) instanceof NumberExpr);
+  }
+
+
 }

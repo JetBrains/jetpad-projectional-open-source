@@ -4,6 +4,10 @@ public class ParseNodeProperty<ValueT> {
   private String myName;
   private ValueT myValue;
 
+  public ParseNodeProperty(String name) {
+    this(name, null);
+  }
+
   public ParseNodeProperty(String name, ValueT value) {
     myName = name;
     myValue = value;
