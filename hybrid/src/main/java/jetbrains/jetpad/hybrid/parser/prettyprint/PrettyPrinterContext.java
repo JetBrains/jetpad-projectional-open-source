@@ -35,7 +35,6 @@ public class PrettyPrinterContext<NodeT>  {
   private PrettyPrinter<NodeT> myPrettyPrinter;
 
   private List<Token> myTokens = new ArrayList<>();
-  private List<TokenMetaData> myTokenMetaData = new ArrayList<>();
   private Stack<List<BaseParseNode>> myStack = new Stack<>();
   private boolean myPrinted;
   private List<EventSource<?>> myChangeSources = new ArrayList<>();
@@ -58,18 +57,15 @@ public class PrettyPrinterContext<NodeT>  {
     myPrinted = true;
   }
 
-  public TokenProperties append(Token token) {
-    MyTokenMetaData data = new MyTokenMetaData();
+  public void append(Token token) {
     myTokens.add(token);
-    myTokenMetaData.add(data);
     myStack.peek().add(new TokenParseNode(token, myTokens.size() - 1));
-    return data.getProperties();
   }
 
-  public <ValueT> TokenProperties append(Property<ValueT> prop, Function<ValueT, Token> f) {
+  public <ValueT> void append(Property<ValueT> prop, Function<ValueT, Token> f) {
     myChangeSources.add(prop);
 
-    return append(f.apply(prop.get()));
+    append(f.apply(prop.get()));
   }
 
   public void append(Property<? extends NodeT> prop) {
@@ -115,8 +111,8 @@ public class PrettyPrinterContext<NodeT>  {
     }
   }
 
-  public TokenProperties appendInt(Property<Integer> prop) {
-    return append(prop, new Function<Integer, Token>() {
+  public void appendInt(Property<Integer> prop) {
+    append(prop, new Function<Integer, Token>() {
       @Override
       public Token apply(Integer input) {
         return new IntValueToken(input != null ? input : 0);
@@ -124,8 +120,8 @@ public class PrettyPrinterContext<NodeT>  {
     });
   }
 
-  public TokenProperties appendBool(Property<Boolean> prop) {
-    return append(prop, new Function<Boolean, Token>() {
+  public void appendBool(Property<Boolean> prop) {
+    append(prop, new Function<Boolean, Token>() {
       @Override
       public Token apply(Boolean input) {
         return new BoolValueToken(input != null ? input : Boolean.FALSE);
@@ -133,8 +129,8 @@ public class PrettyPrinterContext<NodeT>  {
     });
   }
 
-  public TokenProperties appendId(Property<String> prop) {
-    return append(prop, new Function<String, Token>() {
+  public void appendId(Property<String> prop) {
+    append(prop, new Function<String, Token>() {
       @Override
       public Token apply(String input) {
         return new IdentifierToken(input != null ? input : "");
@@ -284,31 +280,6 @@ public class PrettyPrinterContext<NodeT>  {
     @Override
     public String toString() {
       return "" + myToken;
-    }
-  }
-
-  private static class MyTokenMetaData implements TokenMetaData {
-    private Map<TokenProperty<?>, Object> myProperties = new HashMap<>();
-
-    @Override
-    public <ValueT> ValueT get(TokenProperty<ValueT> prop) {
-      if (myProperties.containsKey(prop)) {
-        return (ValueT) myProperties.get(prop);
-      }
-      return prop.getDefaultValue();
-    }
-
-    TokenProperties getProperties() {
-      return new TokenProperties() {
-        @Override
-        public <ValueT> void set(TokenProperty<ValueT> prop, ValueT val) {
-          if (Objects.equal(prop.getDefaultValue(), val)) {
-            myProperties.remove(prop);
-          } else {
-            myProperties.put(prop, val);
-          }
-        }
-      };
     }
   }
 }
