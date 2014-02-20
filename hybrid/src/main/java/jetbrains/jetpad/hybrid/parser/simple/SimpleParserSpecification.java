@@ -104,6 +104,11 @@ public class SimpleParserSpecification<ExprT> {
       }
 
       @Override
+      public Terminal error() {
+        return myError;
+      }
+
+      @Override
       public Terminal id() {
         return myId;
       }
@@ -216,6 +221,7 @@ public class SimpleParserSpecification<ExprT> {
     Terminal terminal(Token token);
 
     NonTerminal expr();
+    Terminal error();
     Terminal id();
     Terminal number();
     Terminal bool();

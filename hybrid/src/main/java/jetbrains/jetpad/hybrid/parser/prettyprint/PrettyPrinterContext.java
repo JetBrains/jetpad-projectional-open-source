@@ -17,16 +17,13 @@ package jetbrains.jetpad.hybrid.parser.prettyprint;
 
 import com.google.common.base.*;
 import com.google.common.collect.Range;
+import jetbrains.jetpad.hybrid.parser.*;
 import jetbrains.jetpad.model.collections.list.ObservableList;
 import jetbrains.jetpad.model.event.CompositeRegistration;
 import jetbrains.jetpad.model.event.EventHandler;
 import jetbrains.jetpad.model.event.EventSource;
 import jetbrains.jetpad.model.event.Registration;
 import jetbrains.jetpad.model.property.Property;
-import jetbrains.jetpad.hybrid.parser.BoolValueToken;
-import jetbrains.jetpad.hybrid.parser.IdentifierToken;
-import jetbrains.jetpad.hybrid.parser.IntValueToken;
-import jetbrains.jetpad.hybrid.parser.Token;
 import com.google.common.base.Objects;
 import jetbrains.jetpad.model.property.WritableProperty;
 
@@ -138,6 +135,15 @@ public class PrettyPrinterContext<NodeT>  {
       @Override
       public Token apply(String input) {
         return new IdentifierToken(input != null ? input : "");
+      }
+    });
+  }
+
+  public ParseNodeBuilder appendError(Property<String> prop) {
+    return append(prop, new Function<String, Token>() {
+      @Override
+      public Token apply(String input) {
+        return new ErrorToken(input != null ? input : "");
       }
     });
   }
