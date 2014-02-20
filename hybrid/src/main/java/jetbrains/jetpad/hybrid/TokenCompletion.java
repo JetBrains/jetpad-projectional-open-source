@@ -267,7 +267,7 @@ class TokenCompletion {
 
     @Override
     public List<Cell> getViews() {
-      return Collections.unmodifiableList(mySync.tokenCells().subList(0, myTargetIndex));
+      return Collections.unmodifiableList(mySync.tokenCells());
     }
 
     @Override
@@ -277,7 +277,7 @@ class TokenCompletion {
 
     @Override
     public List<Object> getObjects() {
-      return tokenListEditor().objects();
+      return Collections.unmodifiableList(tokenListEditor().objects());
     }
 
     @Override
