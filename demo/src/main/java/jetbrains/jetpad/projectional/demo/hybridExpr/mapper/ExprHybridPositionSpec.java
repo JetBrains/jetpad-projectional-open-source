@@ -177,13 +177,13 @@ public class ExprHybridPositionSpec implements HybridPositionSpec<Expression> {
 
   @Override
   public CompletionSupplier getAdditionalCompletion(final CompletionContext ctx, final Completer completer) {
-    List<Token> input = new ArrayList<>(ctx.prefix());
+    List<Token> input = new ArrayList<>(ctx.getPrefix());
     input.add(new IdentifierToken("dummy"));
     Expression result = getParser().parse(new ParsingContext(input));
 
     final Type type;
-    if (ctx.targetIndex() < ctx.views().size() && ctx.objects().get(ctx.targetIndex()) instanceof Operation) {
-      Operation op = (Operation) ctx.objects().get(ctx.targetIndex());
+    if (ctx.getTargetIndex() < ctx.getViews().size() && ctx.getObjects().get(ctx.getTargetIndex()) instanceof Operation) {
+      Operation op = (Operation) ctx.getObjects().get(ctx.getTargetIndex());
       DotExpression dotExpr = (DotExpression) op.parent().get();
       Expression operand = dotExpr.operand.get();
       type = operand == null ? Types.OBJECT : operand.getType();
@@ -208,7 +208,7 @@ public class ExprHybridPositionSpec implements HybridPositionSpec<Expression> {
           result.add(new SimpleCompletionItem(md.getName(), md.toString()) {
             @Override
             public Runnable complete(String text) {
-              if (ctx.targetIndex() + 1 < ctx.views().size() && ctx.tokens().get(ctx.targetIndex() + 1) == Tokens.LEFT_PARENT_METHOD_CALL) {
+              if (ctx.getTargetIndex() + 1 < ctx.getViews().size() && ctx.getTokens().get(ctx.getTargetIndex() + 1) == Tokens.LEFT_PARENT_METHOD_CALL) {
                 return completer.complete(new IdentifierToken(md.getName()));
               }
 

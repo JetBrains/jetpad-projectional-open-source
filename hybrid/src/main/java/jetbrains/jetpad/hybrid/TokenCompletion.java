@@ -213,37 +213,37 @@ class TokenCompletion {
 
   private class PlaceholderCompletionContext implements CompletionContext {
     @Override
-    public int targetIndex() {
+    public int getTargetIndex() {
       return 0;
     }
 
     @Override
-    public List<Token> prefix() {
+    public List<Token> getPrefix() {
       return Collections.emptyList();
     }
 
     @Override
-    public List<Cell> views() {
+    public List<Cell> getViews() {
       return Collections.emptyList();
     }
 
     @Override
-    public List<Token> tokens() {
+    public List<Token> getTokens() {
       return Collections.emptyList();
     }
 
     @Override
-    public List<Object> objects() {
+    public List<Object> getObjects() {
       return Collections.emptyList();
     }
 
     @Override
-    public Mapper<?, ?> contextMapper() {
+    public Mapper<?, ?> getContextMapper() {
       return mySync.contextMapper();
     }
 
     @Override
-    public Object target() {
+    public Object getTarget() {
       return null;
     }
   }
@@ -256,37 +256,37 @@ class TokenCompletion {
     }
 
     @Override
-    public int targetIndex() {
+    public int getTargetIndex() {
       return myTargetIndex;
     }
 
     @Override
-    public List<Token> prefix() {
+    public List<Token> getPrefix() {
       return Collections.unmodifiableList(tokenListEditor().tokens.subList(0, myTargetIndex));
     }
 
     @Override
-    public List<Cell> views() {
+    public List<Cell> getViews() {
       return Collections.unmodifiableList(mySync.tokenCells().subList(0, myTargetIndex));
     }
 
     @Override
-    public List<Token> tokens() {
+    public List<Token> getTokens() {
       return Collections.unmodifiableList(tokenListEditor().tokens);
     }
 
     @Override
-    public List<Object> objects() {
+    public List<Object> getObjects() {
       return tokenListEditor().objects();
     }
 
     @Override
-    public Mapper<?, ?> contextMapper() {
+    public Mapper<?, ?> getContextMapper() {
       return mySync.contextMapper();
     }
 
     @Override
-    public Object target() {
+    public Object getTarget() {
       return mySync.property().get();
     }
   }
