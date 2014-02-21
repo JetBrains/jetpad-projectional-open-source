@@ -539,6 +539,18 @@ public class HybridSynchronizer<SourceT> implements Synchronizer {
     mySelectionSupport.select(myTargetList.get(sel.lowerEndpoint()), myTargetList.get(sel.upperEndpoint() - 1));
   }
 
+  public Range<Integer> rangeFor(Object object) {
+    ParseNode parseNode = tokenListEditor().parseNode();
+    if (parseNode == null) {
+      throw new IllegalStateException("Hybrid Synchronizer is in invalid state");
+    }
+    ParseNode result = ParseNodes.findNodeFor(parseNode, object);
+    if (result == null) {
+      throw new IllegalStateException("Can't find parse node for " + object);
+    }
+    return result.range();
+  }
+
   public Runnable select(int index, SelectionPosition pos) {
     return tokenOperations().select(index, pos);
   }
