@@ -620,6 +620,8 @@ public class HybridSynchronizer<SourceT> implements Synchronizer {
 
   @Override
   public void attach(SynchronizerContext ctx) {
+    myController.attach(this);
+
     for (Synchronizer sync : mySynchronizers) {
       sync.attach(ctx);
     }
@@ -650,6 +652,8 @@ public class HybridSynchronizer<SourceT> implements Synchronizer {
     for (Synchronizer sync : mySynchronizers) {
       sync.detach();
     }
+
+    myController.detach();
   }
 
 }

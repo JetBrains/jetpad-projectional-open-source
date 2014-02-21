@@ -20,10 +20,7 @@ import jetbrains.jetpad.completion.CompletionItem;
 import jetbrains.jetpad.completion.CompletionParameters;
 import jetbrains.jetpad.completion.CompletionSupplier;
 import jetbrains.jetpad.completion.SimpleCompletionItem;
-import jetbrains.jetpad.hybrid.Completer;
-import jetbrains.jetpad.hybrid.CompletionContext;
-import jetbrains.jetpad.hybrid.HybridPositionController;
-import jetbrains.jetpad.hybrid.TokenCompletionItems;
+import jetbrains.jetpad.hybrid.*;
 import jetbrains.jetpad.hybrid.parser.IdentifierToken;
 import jetbrains.jetpad.hybrid.parser.Parser;
 import jetbrains.jetpad.hybrid.parser.Token;
@@ -35,7 +32,7 @@ import jetbrains.jetpad.projectional.demo.indentDemo.model.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class LambdaHybridPositionController implements HybridPositionController<Expr> {
+public class LambdaHybridPositionController extends BaseHybridPositionController<Expr> {
   @Override
   public Parser<Expr> getParser() {
     return LambdaParser.EXPR;

@@ -22,6 +22,9 @@ import jetbrains.jetpad.hybrid.parser.prettyprint.PrettyPrinter;
 import jetbrains.jetpad.completion.CompletionSupplier;
 
 public interface HybridPositionController<SourceT> {
+  void attach(HybridSynchronizer<SourceT> sync);
+  void detach();
+
   Parser<SourceT> getParser();
   PrettyPrinter<? super SourceT> getPrettyPrinter();
 

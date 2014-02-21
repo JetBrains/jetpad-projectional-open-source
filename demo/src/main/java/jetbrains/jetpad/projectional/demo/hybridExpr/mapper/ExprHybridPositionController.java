@@ -17,23 +17,20 @@ package jetbrains.jetpad.projectional.demo.hybridExpr.mapper;
 
 import com.google.common.base.Function;
 import jetbrains.jetpad.completion.*;
-import jetbrains.jetpad.hybrid.TokenCompletionItems;
+import jetbrains.jetpad.hybrid.*;
 import jetbrains.jetpad.hybrid.parser.*;
 import jetbrains.jetpad.projectional.demo.hybridExpr.model.*;
 import jetbrains.jetpad.projectional.demo.hybridExpr.model.types.FieldDescriptor;
 import jetbrains.jetpad.projectional.demo.hybridExpr.model.types.MethodDescriptor;
 import jetbrains.jetpad.projectional.demo.hybridExpr.model.types.Type;
 import jetbrains.jetpad.projectional.demo.hybridExpr.model.types.Types;
-import jetbrains.jetpad.hybrid.Completer;
-import jetbrains.jetpad.hybrid.CompletionContext;
-import jetbrains.jetpad.hybrid.HybridPositionController;
 import jetbrains.jetpad.hybrid.parser.prettyprint.PrettyPrinter;
 import jetbrains.jetpad.hybrid.parser.prettyprint.PrettyPrinterContext;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ExprHybridPositionController implements HybridPositionController<Expression> {
+public class ExprHybridPositionController extends BaseHybridPositionController<Expression> {
   @Override
   public Parser<Expression> getParser() {
     return ExpressionParser.PARSER;
