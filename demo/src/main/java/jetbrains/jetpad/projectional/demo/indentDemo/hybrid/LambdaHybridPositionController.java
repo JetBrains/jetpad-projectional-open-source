@@ -73,7 +73,6 @@ public class LambdaHybridPositionController extends BaseHybridPositionController
         ctx.append(new ValueToken(value, new ExprCloner()));
       }
     };
-
   }
 
   @Override
