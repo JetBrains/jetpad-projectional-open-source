@@ -22,7 +22,7 @@ import jetbrains.jetpad.completion.CompletionSupplier;
 import jetbrains.jetpad.completion.SimpleCompletionItem;
 import jetbrains.jetpad.hybrid.Completer;
 import jetbrains.jetpad.hybrid.CompletionContext;
-import jetbrains.jetpad.hybrid.HybridPositionSpec;
+import jetbrains.jetpad.hybrid.HybridPositionController;
 import jetbrains.jetpad.hybrid.TokenCompletionItems;
 import jetbrains.jetpad.hybrid.parser.*;
 import jetbrains.jetpad.hybrid.parser.prettyprint.ParseNodeProperty;
@@ -33,7 +33,7 @@ import jetbrains.jetpad.hybrid.testapp.model.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ExprHybridPositionSpec implements HybridPositionSpec<Expr> {
+public class ExprHybridPositionController implements HybridPositionController<Expr> {
   public static final ParseNodeProperty<Expr> SOURCE_EXPR = new ParseNodeProperty<>("sourceExpr");
 
   @Override

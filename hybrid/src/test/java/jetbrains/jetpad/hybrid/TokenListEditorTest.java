@@ -15,13 +15,12 @@
  */
 package jetbrains.jetpad.hybrid;
 
-import jetbrains.jetpad.hybrid.testapp.mapper.ExprHybridPositionSpec;
+import jetbrains.jetpad.hybrid.testapp.mapper.ExprHybridPositionController;
 import jetbrains.jetpad.hybrid.testapp.mapper.Tokens;
 import jetbrains.jetpad.hybrid.testapp.model.Expr;
 import jetbrains.jetpad.hybrid.testapp.model.NumberExpr;
 import jetbrains.jetpad.hybrid.testapp.model.PlusExpr;
 import jetbrains.jetpad.hybrid.parser.IntValueToken;
-import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.Arrays;
@@ -29,7 +28,7 @@ import java.util.Arrays;
 import static org.junit.Assert.*;
 
 public class TokenListEditorTest {
-  private TokenListEditor<Expr> editor = new TokenListEditor<>(new ExprHybridPositionSpec());
+  private TokenListEditor<Expr> editor = new TokenListEditor<>(new ExprHybridPositionController());
 
   @Test
   public void updating() {
@@ -62,7 +61,7 @@ public class TokenListEditorTest {
   public void prettyPrintingSetsPropsCorrectly() {
     editor.tokens.add(new IntValueToken(2));
 
-    assertTrue(editor.parseNode().get(ExprHybridPositionSpec.SOURCE_EXPR) instanceof NumberExpr);
+    assertTrue(editor.parseNode().get(ExprHybridPositionController.SOURCE_EXPR) instanceof NumberExpr);
   }
 
 

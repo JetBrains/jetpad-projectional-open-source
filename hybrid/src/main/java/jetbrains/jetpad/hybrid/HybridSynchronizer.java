@@ -69,7 +69,7 @@ public class HybridSynchronizer<SourceT> implements Synchronizer {
 
   private Mapper<?, ?> myContextMapper;
   private Property<SourceT> myProperty;
-  private HybridPositionSpec<SourceT> myPositionSpec;
+  private HybridPositionController<SourceT> myController;
   private TokenListEditor<SourceT> myTokenListEditor;
   private Registration myRegistration;
   private Cell myTarget;
@@ -82,11 +82,11 @@ public class HybridSynchronizer<SourceT> implements Synchronizer {
   private Runnable myLastItemDeleted;
   private Synchronizer[] mySynchronizers = Synchronizer.EMPTY_ARRAY;
 
-  public HybridSynchronizer(Mapper<?, ?> contextMapper, Property<SourceT> prop, Cell target, HybridPositionSpec<SourceT> spec) {
+  public HybridSynchronizer(Mapper<?, ?> contextMapper, Property<SourceT> prop, Cell target, HybridPositionController<SourceT> controller) {
     myContextMapper = contextMapper;
     myProperty = prop;
-    myPositionSpec = spec;
-    myTokenListEditor = new TokenListEditor<>(spec);
+    myController = controller;
+    myTokenListEditor = new TokenListEditor<>(controller);
     myTarget = target;
 
     myValueMappers = myContextMapper.createChildSet();
@@ -586,8 +586,8 @@ public class HybridSynchronizer<SourceT> implements Synchronizer {
     return Collections.unmodifiableList(myTargetList);
   }
 
-  HybridPositionSpec<SourceT> positionSpec() {
-    return myPositionSpec;
+  HybridPositionController<SourceT> positionSpec() {
+    return myController;
   }
 
   public Cell placeholder() {

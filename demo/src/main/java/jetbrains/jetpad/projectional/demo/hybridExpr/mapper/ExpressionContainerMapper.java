@@ -16,7 +16,6 @@
 package jetbrains.jetpad.projectional.demo.hybridExpr.mapper;
 
 import jetbrains.jetpad.mapper.Mapper;
-import jetbrains.jetpad.projectional.demo.hybridExpr.model.Expression;
 import jetbrains.jetpad.projectional.demo.hybridExpr.model.ExpressionContainer;
 import jetbrains.jetpad.hybrid.HybridSynchronizer;
 
@@ -30,6 +29,6 @@ public class ExpressionContainerMapper extends Mapper<ExpressionContainer, Expre
   protected void registerSynchronizers(SynchronizersConfiguration conf) {
     super.registerSynchronizers(conf);
 
-    conf.add(new HybridSynchronizer<>(this, getSource().expression, getTarget().expression, new ExprHybridPositionSpec()));
+    conf.add(new HybridSynchronizer<>(this, getSource().expression, getTarget().expression, new ExprHybridPositionController()));
   }
 }

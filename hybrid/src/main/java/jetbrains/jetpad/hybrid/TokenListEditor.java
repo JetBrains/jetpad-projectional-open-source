@@ -39,7 +39,7 @@ import java.util.List;
 class TokenListEditor<SourceT> {
   private Property<Boolean> myValid = new ValueProperty<>(true);
   private ParseNode myParseNode;
-  private HybridPositionSpec<SourceT> mySpec;
+  private HybridPositionController<SourceT> mySpec;
   private boolean mySyncing;
   private List<Token> myPrintedTokens;
   private boolean myRestoringState;
@@ -49,7 +49,7 @@ class TokenListEditor<SourceT> {
   final Property<SourceT> value = new ValueProperty<>();
   final ReadableProperty<Boolean> valid = myValid;
 
-  TokenListEditor(HybridPositionSpec<SourceT> spec) {
+  TokenListEditor(HybridPositionController<SourceT> spec) {
     mySpec = spec;
 
     tokens.addHandler(new EventHandler<CollectionItemEvent<Token>>() {

@@ -21,7 +21,7 @@ import jetbrains.jetpad.hybrid.parser.Token;
 import jetbrains.jetpad.hybrid.parser.prettyprint.PrettyPrinter;
 import jetbrains.jetpad.completion.CompletionSupplier;
 
-public interface HybridPositionSpec<SourceT> {
+public interface HybridPositionController<SourceT> {
   Parser<SourceT> getParser();
   PrettyPrinter<? super SourceT> getPrettyPrinter();
 

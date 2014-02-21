@@ -26,14 +26,14 @@ import jetbrains.jetpad.projectional.demo.hybridExpr.model.types.Type;
 import jetbrains.jetpad.projectional.demo.hybridExpr.model.types.Types;
 import jetbrains.jetpad.hybrid.Completer;
 import jetbrains.jetpad.hybrid.CompletionContext;
-import jetbrains.jetpad.hybrid.HybridPositionSpec;
+import jetbrains.jetpad.hybrid.HybridPositionController;
 import jetbrains.jetpad.hybrid.parser.prettyprint.PrettyPrinter;
 import jetbrains.jetpad.hybrid.parser.prettyprint.PrettyPrinterContext;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ExprHybridPositionSpec implements HybridPositionSpec<Expression> {
+public class ExprHybridPositionController implements HybridPositionController<Expression> {
   @Override
   public Parser<Expression> getParser() {
     return ExpressionParser.PARSER;
