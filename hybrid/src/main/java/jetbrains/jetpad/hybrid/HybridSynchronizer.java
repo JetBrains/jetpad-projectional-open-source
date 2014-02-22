@@ -174,12 +174,18 @@ public class HybridSynchronizer<SourceT> implements Synchronizer {
   private BaseCellTrait createTargetTrait() {
     return new BaseCellTrait() {
       @Override
-      public Object get(Cell cell, CellTraitPropertySpec<?> spec) {
+      public Object get(Cell cell, CellPropertySpec<?> spec) {
         if (spec == CellStateHandler.PROPERTY) return getCellStateHandler();
 
         return super.get(cell, spec);
       }
 
+      @Override
+      public Set<CellPropertySpec<?>> getChangedProperties(Cell cell) {
+        Set<CellPropertySpec<?>> result = super.getChangedProperties(cell);
+        result.add(CellStateHandler.PROPERTY);
+        return result;
+      }
 
       @Override
       public void onKeyPressed(Cell cell, KeyEvent event) {

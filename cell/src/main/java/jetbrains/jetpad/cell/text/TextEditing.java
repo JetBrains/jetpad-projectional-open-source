@@ -64,10 +64,6 @@ public class TextEditing {
           return lastAllowed;
         }
 
-        if (spec == CellStateHandler.PROPERTY) {
-          return TEXT_VIEW_STATE_HANDLER;
-        }
-
         return super.get(cell, spec);
       }
 
@@ -77,6 +73,10 @@ public class TextEditing {
           return true;
         }
 
+        if (spec == CellStateHandler.PROPERTY) {
+          return TEXT_VIEW_STATE_HANDLER;
+        }
+
         return super.get(cell, spec);
       }
 
@@ -84,6 +84,7 @@ public class TextEditing {
       public Set<CellPropertySpec<?>> getChangedProperties(Cell cell) {
         Set<CellPropertySpec<?>> result = super.getChangedProperties(cell);
         result.add(Cell.FOCUSABLE);
+        result.add(CellStateHandler.PROPERTY);
         return  result;
       }
     };
@@ -98,15 +99,15 @@ public class TextEditing {
 
       @Override
       public Object get(Cell cell, CellTraitPropertySpec<?> spec) {
-        if (spec == CellStateHandler.PROPERTY) {
-          return TEXT_VIEW_STATE_HANDLER;
-        }
-
         return super.get(cell, spec);
       }
 
       @Override
       public Object get(Cell cell, CellPropertySpec<?> spec) {
+        if (spec == CellStateHandler.PROPERTY) {
+          return TEXT_VIEW_STATE_HANDLER;
+        }
+
         if (spec == Cell.FOCUSABLE) {
           return true;
         }
@@ -118,6 +119,7 @@ public class TextEditing {
       public Set<CellPropertySpec<?>> getChangedProperties(Cell cell) {
         Set<CellPropertySpec<?>> result = super.getChangedProperties(cell);
         result.add(Cell.FOCUSABLE);
+        result.add(CellStateHandler.PROPERTY);
         return result;
       }
     };
@@ -176,10 +178,6 @@ public class TextEditing {
           return validator;
         }
 
-        if (spec == CellStateHandler.PROPERTY) {
-          return EDITABLE_TEXT_VIEW_STATE_HANDLER;
-        }
-
         return super.get(cell, spec);
       }
 
@@ -189,6 +187,10 @@ public class TextEditing {
           return true;
         }
 
+        if (spec == CellStateHandler.PROPERTY) {
+          return EDITABLE_TEXT_VIEW_STATE_HANDLER;
+        }
+
         return super.get(cell, spec);
       }
 
@@ -196,6 +198,7 @@ public class TextEditing {
       public Set<CellPropertySpec<?>> getChangedProperties(Cell cell) {
         Set<CellPropertySpec<?>> result = super.getChangedProperties(cell);
         result.add(Cell.FOCUSABLE);
+        result.add(CellStateHandler.PROPERTY);
         return result;
       }
     };
