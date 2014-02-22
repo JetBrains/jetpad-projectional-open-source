@@ -25,6 +25,8 @@ import jetbrains.jetpad.cell.trait.CellTraitPropertySpec;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.Set;
+
 public class ValidTextEditingEagerCompletionTest extends CompletionTestCase {
   private TextCell text = new TextCell();
 
@@ -47,11 +49,23 @@ public class ValidTextEditingEagerCompletionTest extends CompletionTestCase {
           return createCompletion("a", "aaa", "b");
         }
 
+        return super.get(cell, spec);
+      }
+
+      @Override
+      public Object get(Cell cell, CellPropertySpec<?> spec) {
         if (spec == TextEditing.EAGER_COMPLETION) {
           return true;
         }
 
         return super.get(cell, spec);
+      }
+
+      @Override
+      public Set<CellPropertySpec<?>> getChangedProperties(Cell cell) {
+        Set<CellPropertySpec<?>> changedProperties = super.getChangedProperties(cell);
+        changedProperties.add(TextEditing.EAGER_COMPLETION);
+        return changedProperties;
       }
     });
 

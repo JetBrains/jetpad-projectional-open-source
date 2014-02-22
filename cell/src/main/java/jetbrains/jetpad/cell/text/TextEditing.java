@@ -42,7 +42,7 @@ public class TextEditing {
   public static final CellPropertySpec<Function<String, Runnable>> EXPAND_RIGHT = new CellPropertySpec<>("expandRight", expansionProvider(Side.RIGHT));
   public static final CellPropertySpec<Supplier<Boolean>> AFTER_TYPE = new CellPropertySpec<>("afterType");
 
-  public static final CellTraitPropertySpec<Boolean> EAGER_COMPLETION = new CellTraitPropertySpec<>("eagerCompletion", false);
+  public static final CellPropertySpec<Boolean> EAGER_COMPLETION = new CellPropertySpec<>("eagerCompletion", false);
 
   private static final TextCellStateHandler TEXT_VIEW_STATE_HANDLER = new TextCellStateHandler(false);
   private static final TextCellStateHandler EDITABLE_TEXT_VIEW_STATE_HANDLER = new TextCellStateHandler(true);

@@ -519,11 +519,23 @@ public class HybridSynchronizer<SourceT> implements Synchronizer {
 
       @Override
       public Object get(Cell cell, CellTraitPropertySpec<?> spec) {
-        if (spec == TextEditing.EAGER_COMPLETION) return true;
-
         if (spec == Completion.COMPLETION) return tokenCompletion().placeholderCompletion();
 
         return super.get(cell, spec);
+      }
+
+      @Override
+      public Object get(Cell cell, CellPropertySpec<?> spec) {
+        if (spec == TextEditing.EAGER_COMPLETION) return true;
+
+        return super.get(cell, spec);
+      }
+
+      @Override
+      public Set<CellPropertySpec<?>> getChangedProperties(Cell cell) {
+        Set<CellPropertySpec<?>> result = super.getChangedProperties(cell);
+        result.add(TextEditing.EAGER_COMPLETION);
+        return result;
       }
     });
     return result;

@@ -239,12 +239,19 @@ public class ValidTextCompletionTest extends CompletionTestCase {
   public void eagerCompletionCompletes() {
     text.addTrait(new BaseCellTrait() {
       @Override
-      public Object get(Cell cell, CellTraitPropertySpec<?> spec) {
+      public Object get(Cell cell, CellPropertySpec<?> spec) {
         if (spec == TextEditing.EAGER_COMPLETION) {
           return true;
         }
 
         return super.get(cell, spec);
+      }
+
+      @Override
+      public Set<CellPropertySpec<?>> getChangedProperties(Cell cell) {
+        Set<CellPropertySpec<?>> result = super.getChangedProperties(cell);
+        result.add(TextEditing.EAGER_COMPLETION);
+        return result;
       }
     });
 

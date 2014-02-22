@@ -99,6 +99,8 @@ class TextTokenCell extends TextCell {
           if (spec == CellLists.NO_SPACE_TO_RIGHT) return noSpaceToRight();
           if (spec == ProjectionalSynchronizers.DELETE_ON_EMPTY) return true;
         }
+        if (spec == TextEditing.EAGER_COMPLETION) return true;
+
 
         return super.get(cell, spec);
       }
@@ -107,15 +109,9 @@ class TextTokenCell extends TextCell {
       public Set<CellPropertySpec<?>> getChangedProperties(Cell cell) {
         Set<CellPropertySpec<?>> result = super.getChangedProperties(cell);
         result.addAll(Arrays.asList(TextEditing.FIRST_ALLOWED, TextEditing.LAST_ALLOWED, TextEditing.DOT_LIKE_RT,
-          TextEditing.AFTER_TYPE, ProjectionalSynchronizers.DELETE_ON_EMPTY, CellLists.NO_SPACE_TO_LEFT, CellLists.NO_SPACE_TO_RIGHT));
+          TextEditing.AFTER_TYPE, ProjectionalSynchronizers.DELETE_ON_EMPTY, CellLists.NO_SPACE_TO_LEFT, CellLists.NO_SPACE_TO_RIGHT,
+          TextEditing.EAGER_COMPLETION));
         return result;
-      }
-
-      @Override
-      public Object get(final Cell cell, CellTraitPropertySpec<?> spec) {
-        if (spec == TextEditing.EAGER_COMPLETION) return true;
-
-        return super.get(cell, spec);
       }
     };
   }
