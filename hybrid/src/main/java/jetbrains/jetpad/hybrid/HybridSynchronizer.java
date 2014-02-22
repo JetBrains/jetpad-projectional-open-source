@@ -30,6 +30,7 @@ import jetbrains.jetpad.model.collections.CollectionAdapter;
 import jetbrains.jetpad.model.collections.CollectionItemEvent;
 import jetbrains.jetpad.model.collections.CollectionListener;
 import jetbrains.jetpad.model.collections.list.ObservableList;
+import jetbrains.jetpad.model.composite.Composites;
 import jetbrains.jetpad.model.event.CompositeRegistration;
 import jetbrains.jetpad.model.event.EventHandler;
 import jetbrains.jetpad.model.event.Registration;
@@ -561,6 +562,20 @@ public class HybridSynchronizer<SourceT> implements Synchronizer {
 
   public void setOnLastItemDeleted(Runnable action) {
     myLastItemDeleted = action;
+  }
+
+  public int focusedToken() {
+    Cell focusedCell = myTarget.cellContainer().get().focusedCell.get();
+    if (focusedCell == null) return -1;
+    for (int i = 0; i < myTargetList.size(); i++) {
+      if (Composites.isDescendant(myTargetList.get(i), focusedCell)) return i;
+    }
+    return -1;
+  }
+
+  public Object objectAt(int index) {
+    if (myTokenListEditor.objects().isEmpty()) return null;
+    return myTokenListEditor.objects().get(index);
   }
 
   void clearSelection() {
