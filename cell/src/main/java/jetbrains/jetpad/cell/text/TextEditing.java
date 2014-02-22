@@ -134,6 +134,9 @@ public class TextEditing {
         if (spec == ValidTextEditingTrait.VALID_TEXT_COLOR) {
           return validColor;
         }
+        if (spec == TextNavigationTrait.SELECTION_AVAILABLE) {
+          return selectionAvailable;
+        }
 
         return super.get(cell, spec);
       }
@@ -142,16 +145,8 @@ public class TextEditing {
       public Set<CellPropertySpec<?>> getChangedProperties(Cell cell) {
         Set<CellPropertySpec<?>> result = super.getChangedProperties(cell);
         result.add(ValidTextEditingTrait.VALID_TEXT_COLOR);
+        result.add(TextNavigationTrait.SELECTION_AVAILABLE);
         return result;
-      }
-
-      @Override
-      public Object get(Cell cell, CellTraitPropertySpec<?> spec) {
-        if (spec == TextNavigationTrait.SELECTION_AVAILABLE) {
-          return selectionAvailable;
-        }
-
-        return super.get(cell, spec);
       }
     };
   }
