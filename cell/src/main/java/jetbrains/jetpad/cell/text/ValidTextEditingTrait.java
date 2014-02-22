@@ -34,8 +34,8 @@ import java.util.Collections;
 import java.util.List;
 
 class ValidTextEditingTrait extends TextEditingTrait {
-  static final CellTraitPropertySpec<Predicate<String>> VALIDATOR = new CellTraitPropertySpec<>("validator");
-  static final CellTraitPropertySpec<Color> VALID_TEXT_COLOR = new CellTraitPropertySpec<>("validTextColor", Color.BLACK);
+  static final CellPropertySpec<Predicate<String>> VALIDATOR = new CellPropertySpec<>("validator");
+  static final CellPropertySpec<Color> VALID_TEXT_COLOR = new CellPropertySpec<>("validTextColor", Color.BLACK);
 
   ValidTextEditingTrait() {
   }

@@ -130,11 +130,23 @@ public class TextEditing {
       }
 
       @Override
-      public Object get(Cell cell, CellTraitPropertySpec<?> spec) {
+      public Object get(Cell cell, CellPropertySpec<?> spec) {
         if (spec == ValidTextEditingTrait.VALID_TEXT_COLOR) {
           return validColor;
         }
 
+        return super.get(cell, spec);
+      }
+
+      @Override
+      public Set<CellPropertySpec<?>> getChangedProperties(Cell cell) {
+        Set<CellPropertySpec<?>> result = super.getChangedProperties(cell);
+        result.add(ValidTextEditingTrait.VALID_TEXT_COLOR);
+        return result;
+      }
+
+      @Override
+      public Object get(Cell cell, CellTraitPropertySpec<?> spec) {
         if (spec == TextNavigationTrait.SELECTION_AVAILABLE) {
           return selectionAvailable;
         }
@@ -152,12 +164,19 @@ public class TextEditing {
       }
 
       @Override
-      public Object get(Cell cell, CellTraitPropertySpec<?> spec) {
+      public Object get(Cell cell, CellPropertySpec<?> spec) {
         if (spec == ValidTextEditingTrait.VALID_TEXT_COLOR) {
           return validColor;
         }
 
         return super.get(cell, spec);
+      }
+
+      @Override
+      public Set<CellPropertySpec<?>> getChangedProperties(Cell cell) {
+        Set<CellPropertySpec<?>> result = super.getChangedProperties(cell);
+        result.add(ValidTextEditingTrait.VALID_TEXT_COLOR);
+        return result;
       }
     };
   }
@@ -170,16 +189,11 @@ public class TextEditing {
       }
 
       @Override
-      public Object get(Cell cell, CellTraitPropertySpec<?> spec) {
+      public Object get(Cell cell, CellPropertySpec<?> spec) {
         if (spec == ValidTextEditingTrait.VALIDATOR) {
           return validator;
         }
 
-        return super.get(cell, spec);
-      }
-
-      @Override
-      public Object get(Cell cell, CellPropertySpec<?> spec) {
         if (spec == Cell.FOCUSABLE) {
           return true;
         }
@@ -196,6 +210,7 @@ public class TextEditing {
         Set<CellPropertySpec<?>> result = super.getChangedProperties(cell);
         result.add(Cell.FOCUSABLE);
         result.add(CellStateHandler.PROPERTY);
+        result.add(ValidTextEditingTrait.VALID_TEXT_COLOR);
         return result;
       }
     };
