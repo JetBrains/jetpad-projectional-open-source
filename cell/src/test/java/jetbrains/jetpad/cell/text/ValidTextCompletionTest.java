@@ -31,7 +31,6 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 import static org.junit.Assert.*;
 
@@ -114,18 +113,6 @@ public class ValidTextCompletionTest extends CompletionTestCase {
           };
         }
 
-        return super.get(cell, spec);
-      }
-
-      @Override
-      public Set<CellPropertySpec<?>> getChangedProperties(Cell cell) {
-        Set<CellPropertySpec<?>> result = super.getChangedProperties(cell);
-        result.add(TextEditing.DOT_LIKE_RT);
-        return result;
-      }
-
-      @Override
-      public Object get(Cell cell, CellPropertySpec<?> spec) {
         if (spec == TextEditing.DOT_LIKE_RT) {
           return true;
         }
@@ -239,19 +226,12 @@ public class ValidTextCompletionTest extends CompletionTestCase {
   public void eagerCompletionCompletes() {
     text.addTrait(new BaseCellTrait() {
       @Override
-      public Object get(Cell cell, CellPropertySpec<?> spec) {
+      public Object get(Cell cell, CellTraitPropertySpec<?> spec) {
         if (spec == TextEditing.EAGER_COMPLETION) {
           return true;
         }
 
         return super.get(cell, spec);
-      }
-
-      @Override
-      public Set<CellPropertySpec<?>> getChangedProperties(Cell cell) {
-        Set<CellPropertySpec<?>> result = super.getChangedProperties(cell);
-        result.add(TextEditing.EAGER_COMPLETION);
-        return result;
       }
     });
 

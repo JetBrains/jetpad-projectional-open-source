@@ -64,7 +64,7 @@ public class HybridSynchronizer<SourceT> implements Synchronizer {
   //todo this trait may be used only to handle exceptions. setting property with it is unreliable
   public static final ParseNodeProperty<CellTrait> TRAIT = new ParseNodeProperty<>("trait", null);
 
-  static final CellPropertySpec<HybridSynchronizer<?>> HYBRID_SYNCHRONIZER = new CellPropertySpec<>("hybridSynchronizer");
+  static final CellTraitPropertySpec<HybridSynchronizer<?>> HYBRID_SYNCHRONIZER = new CellTraitPropertySpec<>("hybridSynchronizer");
 
   private static final ContentKind<List<Token>> TOKENS_CONTENT = new ContentKind<List<Token>>() {};
 
@@ -102,8 +102,6 @@ public class HybridSynchronizer<SourceT> implements Synchronizer {
         return new TextCell(" ");
       }
     };
-
-    myTarget.set(HYBRID_SYNCHRONIZER, this);
     myTarget.addTrait(createTargetTrait());
 
     addPlaceholder();
@@ -174,18 +172,13 @@ public class HybridSynchronizer<SourceT> implements Synchronizer {
   private BaseCellTrait createTargetTrait() {
     return new BaseCellTrait() {
       @Override
-      public Object get(Cell cell, CellPropertySpec<?> spec) {
+      public Object get(Cell cell, CellTraitPropertySpec<?> spec) {
+        if (spec == HYBRID_SYNCHRONIZER) return HybridSynchronizer.this;
         if (spec == CellStateHandler.PROPERTY) return getCellStateHandler();
 
         return super.get(cell, spec);
       }
 
-      @Override
-      public Set<CellPropertySpec<?>> getChangedProperties(Cell cell) {
-        Set<CellPropertySpec<?>> result = super.getChangedProperties(cell);
-        result.add(CellStateHandler.PROPERTY);
-        return result;
-      }
 
       @Override
       public void onKeyPressed(Cell cell, KeyEvent event) {
@@ -519,23 +512,11 @@ public class HybridSynchronizer<SourceT> implements Synchronizer {
 
       @Override
       public Object get(Cell cell, CellTraitPropertySpec<?> spec) {
+        if (spec == TextEditing.EAGER_COMPLETION) return true;
+
         if (spec == Completion.COMPLETION) return tokenCompletion().placeholderCompletion();
 
         return super.get(cell, spec);
-      }
-
-      @Override
-      public Object get(Cell cell, CellPropertySpec<?> spec) {
-        if (spec == TextEditing.EAGER_COMPLETION) return true;
-
-        return super.get(cell, spec);
-      }
-
-      @Override
-      public Set<CellPropertySpec<?>> getChangedProperties(Cell cell) {
-        Set<CellPropertySpec<?>> result = super.getChangedProperties(cell);
-        result.add(TextEditing.EAGER_COMPLETION);
-        return result;
       }
     });
     return result;

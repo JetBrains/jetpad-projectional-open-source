@@ -31,7 +31,6 @@ import jetbrains.jetpad.hybrid.parser.Token;
 import jetbrains.jetpad.cell.*;
 
 import java.util.List;
-import java.util.Set;
 
 class TokenCellTraits {
   static class BaseTokenCellTrait extends BaseCellTrait {
@@ -172,12 +171,6 @@ class TokenCellTraits {
     public Object get(final Cell cell, CellTraitPropertySpec<?> spec) {
       if (spec == Completion.LEFT_TRANSFORM) return tokenCompletion(cell).sideTransform(tokenView(cell), 0);
 
-
-      return super.get(cell, spec);
-    }
-
-    @Override
-    public Object get(final Cell cell, CellPropertySpec<?> spec) {
       if (spec == TextEditing.EXPAND_LEFT) {
         return new Function<String, Runnable>() {
           @Override
@@ -189,13 +182,6 @@ class TokenCellTraits {
 
       return super.get(cell, spec);
     }
-
-    @Override
-    public Set<CellPropertySpec<?>> getChangedProperties(Cell cell) {
-      Set<CellPropertySpec<?>> result = super.getChangedProperties(cell);
-      result.add(TextEditing.EXPAND_LEFT);
-      return result;
-    }
   }
 
   static class RightLeafTokenCellTrait extends BaseTokenCellTrait {
@@ -203,11 +189,6 @@ class TokenCellTraits {
     public Object get(final Cell cell, CellTraitPropertySpec<?> spec) {
       if (spec == Completion.RIGHT_TRANSFORM) return tokenCompletion(cell).sideTransform(tokenView(cell), 1);
 
-      return super.get(cell, spec);
-    }
-
-    @Override
-    public Object get(final Cell cell, CellPropertySpec<?> spec) {
       if (spec == TextEditing.EXPAND_RIGHT) {
         return new Function<String, Runnable>() {
           @Override
@@ -216,14 +197,8 @@ class TokenCellTraits {
           }
         };
       }
-      return super.get(cell, spec);
-    }
 
-    @Override
-    public Set<CellPropertySpec<?>> getChangedProperties(Cell cell) {
-      Set<CellPropertySpec<?>> result = super.getChangedProperties(cell);
-      result.add(TextEditing.EXPAND_RIGHT);
-      return result;
+      return super.get(cell, spec);
     }
   }
 }

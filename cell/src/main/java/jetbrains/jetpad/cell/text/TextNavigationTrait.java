@@ -28,7 +28,7 @@ import jetbrains.jetpad.cell.event.CompletionEvent;
 import jetbrains.jetpad.cell.trait.CellTraitPropertySpec;
 
 class TextNavigationTrait extends BaseCellTrait {
-  static final CellPropertySpec<Boolean> SELECTION_AVAILABLE = new CellPropertySpec<>("selectionAvailable", true);
+  static final CellTraitPropertySpec<Boolean> SELECTION_AVAILABLE = new CellTraitPropertySpec<>("selectionAvailable", true);
 
   static int getMinPos(TextCell tv) {
     if (isFirstAllowed(tv)) {

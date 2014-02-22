@@ -17,7 +17,6 @@ package jetbrains.jetpad.projectional.cell;
 
 import com.google.common.base.Function;
 import jetbrains.jetpad.cell.Cell;
-import jetbrains.jetpad.cell.CellPropertySpec;
 import jetbrains.jetpad.cell.action.CellActions;
 import jetbrains.jetpad.cell.trait.CellTraitPropertySpec;
 import jetbrains.jetpad.event.KeyEvent;
@@ -30,13 +29,13 @@ import jetbrains.jetpad.model.property.Property;
 import java.util.List;
 
 public class ProjectionalSynchronizers {
-  public static final CellPropertySpec<Runnable> ON_CREATE = new CellPropertySpec<>("onCreate", new Function<Cell, Runnable>() {
+  public static final CellTraitPropertySpec<Runnable> ON_CREATE = new CellTraitPropertySpec<>("onCreate", new Function<Cell, Runnable>() {
     @Override
     public Runnable apply(Cell input) {
       return CellActions.toLastFocusable(input);
     }
   });
-  public static final CellPropertySpec<Boolean> DELETE_ON_EMPTY = new CellPropertySpec<>("deleteOnEmpty", false);
+  public static final CellTraitPropertySpec<Boolean> DELETE_ON_EMPTY = new CellTraitPropertySpec<>("deleteOnEmpty", false);
 
 
   public static <ContextT, SourceT> ProjectionalRoleSynchronizer<ContextT, SourceT> forRole(

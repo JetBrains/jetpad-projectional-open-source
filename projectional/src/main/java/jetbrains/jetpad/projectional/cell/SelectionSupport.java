@@ -31,7 +31,7 @@ import jetbrains.jetpad.cell.trait.CellTraitPropertySpec;
 import java.util.List;
 
 public class SelectionSupport<ItemT> {
-  private static final CellPropertySpec<SelectionSupport<?>> SELECTION_SUPPORT = new CellPropertySpec<>("selectionSupport");
+  private static final CellTraitPropertySpec<SelectionSupport<?>> SELECTION_SUPPORT = new CellTraitPropertySpec<>("selectionSupport");
 
   private ObservableList<ItemT> mySelectedItems = new ObservableArrayList<>();
   private boolean myChangingSelection;
@@ -47,7 +47,6 @@ public class SelectionSupport<ItemT> {
     myTarget = target;
     myTargetList = targetList;
 
-    myTarget.set(SELECTION_SUPPORT, this);
     myTarget.addTrait(new BaseCellTrait() {
       @Override
       public void onFocusGained(Cell cell, FocusEvent event) {
@@ -67,6 +66,12 @@ public class SelectionSupport<ItemT> {
         if (event.isConsumed()) return;
 
         super.onKeyPressed(cell, event);
+      }
+
+      @Override
+      public Object get(Cell cell, CellTraitPropertySpec<?> spec) {
+        if (spec == SELECTION_SUPPORT) return SelectionSupport.this;
+        return super.get(cell, spec);
       }
     });
   }

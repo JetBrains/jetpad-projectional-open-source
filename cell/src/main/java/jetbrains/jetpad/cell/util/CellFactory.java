@@ -32,7 +32,7 @@ import java.util.Collections;
 import java.util.Set;
 
 public class CellFactory {
-  private static final CellPropertySpec<Cell> PLACEHOLDER_CELL = new CellPropertySpec<>("placeholderCell");
+  private static final CellTraitPropertySpec<Cell> PLACEHOLDER_CELL = new CellTraitPropertySpec<>("placeholderCell");
 
   public static void to(Cell target, Cell... cells) {
     Collections.addAll(target.children(), cells);
@@ -149,8 +149,16 @@ public class CellFactory {
         event.consume();
       }
     });
-    textCell.set(PLACEHOLDER_CELL, result);
     textCell.addTrait(new BaseCellTrait() {
+      @Override
+      public Object get(Cell cell, CellTraitPropertySpec<?> spec) {
+        if (spec == PLACEHOLDER_CELL) {
+          return result;
+        }
+
+        return super.get(cell, spec);
+      }
+
       @Override
       public void onPropertyChanged(Cell c, CellPropertySpec<?> prop, PropertyChangeEvent<?> e) {
         if (prop == Cell.SELECTED) {

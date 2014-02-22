@@ -34,15 +34,15 @@ import jetbrains.jetpad.values.Color;
 import java.util.Set;
 
 public class TextEditing {
-  public static final CellPropertySpec<Boolean> FIRST_ALLOWED = new CellPropertySpec<>("firstAllowed", true);
-  public static final CellPropertySpec<Boolean> LAST_ALLOWED = new CellPropertySpec<>("firstAllowed", true);
-  public static final CellPropertySpec<Boolean> DOT_LIKE_RT = new CellPropertySpec<>("dotLikeRt", false);
+  public static final CellTraitPropertySpec<Boolean> FIRST_ALLOWED = new CellTraitPropertySpec<>("firstAllowed", true);
+  public static final CellTraitPropertySpec<Boolean> LAST_ALLOWED = new CellTraitPropertySpec<>("firstAllowed", true);
+  public static final CellTraitPropertySpec<Boolean> DOT_LIKE_RT = new CellTraitPropertySpec<>("dotLikeRt", false);
 
-  public static final CellPropertySpec<Function<String, Runnable>> EXPAND_LEFT = new CellPropertySpec<>("expandLeft", expansionProvider(Side.LEFT));
-  public static final CellPropertySpec<Function<String, Runnable>> EXPAND_RIGHT = new CellPropertySpec<>("expandRight", expansionProvider(Side.RIGHT));
-  public static final CellPropertySpec<Supplier<Boolean>> AFTER_TYPE = new CellPropertySpec<>("afterType");
+  public static final CellTraitPropertySpec<Function<String, Runnable>> EXPAND_LEFT = new CellTraitPropertySpec<>("expandLeft", expansionProvider(Side.LEFT));
+  public static final CellTraitPropertySpec<Function<String, Runnable>> EXPAND_RIGHT = new CellTraitPropertySpec<>("expandRight", expansionProvider(Side.RIGHT));
+  public static final CellTraitPropertySpec<Supplier<Boolean>> AFTER_TYPE = new CellTraitPropertySpec<>("afterType");
 
-  public static final CellPropertySpec<Boolean> EAGER_COMPLETION = new CellPropertySpec<>("eagerCompletion", false);
+  public static final CellTraitPropertySpec<Boolean> EAGER_COMPLETION = new CellTraitPropertySpec<>("eagerCompletion", false);
 
   private static final TextCellStateHandler TEXT_VIEW_STATE_HANDLER = new TextCellStateHandler(false);
   private static final TextCellStateHandler EDITABLE_TEXT_VIEW_STATE_HANDLER = new TextCellStateHandler(true);
@@ -55,11 +55,7 @@ public class TextEditing {
       }
 
       @Override
-      public Object get(Cell cell, CellPropertySpec<?> spec) {
-        if (spec == Cell.FOCUSABLE) {
-          return true;
-        }
-
+      public Object get(Cell cell, CellTraitPropertySpec<?> spec) {
         if (spec == FIRST_ALLOWED) {
           return firstAllowed;
         }
@@ -76,12 +72,18 @@ public class TextEditing {
       }
 
       @Override
+      public Object get(Cell cell, CellPropertySpec<?> spec) {
+        if (spec == Cell.FOCUSABLE) {
+          return true;
+        }
+
+        return super.get(cell, spec);
+      }
+
+      @Override
       public Set<CellPropertySpec<?>> getChangedProperties(Cell cell) {
         Set<CellPropertySpec<?>> result = super.getChangedProperties(cell);
         result.add(Cell.FOCUSABLE);
-        result.add(CellStateHandler.PROPERTY);
-        result.add(FIRST_ALLOWED);
-        result.add(LAST_ALLOWED);
         return  result;
       }
     };
@@ -96,15 +98,15 @@ public class TextEditing {
 
       @Override
       public Object get(Cell cell, CellTraitPropertySpec<?> spec) {
+        if (spec == CellStateHandler.PROPERTY) {
+          return TEXT_VIEW_STATE_HANDLER;
+        }
+
         return super.get(cell, spec);
       }
 
       @Override
       public Object get(Cell cell, CellPropertySpec<?> spec) {
-        if (spec == CellStateHandler.PROPERTY) {
-          return TEXT_VIEW_STATE_HANDLER;
-        }
-
         if (spec == Cell.FOCUSABLE) {
           return true;
         }
@@ -116,7 +118,6 @@ public class TextEditing {
       public Set<CellPropertySpec<?>> getChangedProperties(Cell cell) {
         Set<CellPropertySpec<?>> result = super.getChangedProperties(cell);
         result.add(Cell.FOCUSABLE);
-        result.add(CellStateHandler.PROPERTY);
         return result;
       }
     };
@@ -130,23 +131,16 @@ public class TextEditing {
       }
 
       @Override
-      public Object get(Cell cell, CellPropertySpec<?> spec) {
+      public Object get(Cell cell, CellTraitPropertySpec<?> spec) {
         if (spec == ValidTextEditingTrait.VALID_TEXT_COLOR) {
           return validColor;
         }
+
         if (spec == TextNavigationTrait.SELECTION_AVAILABLE) {
           return selectionAvailable;
         }
 
         return super.get(cell, spec);
-      }
-
-      @Override
-      public Set<CellPropertySpec<?>> getChangedProperties(Cell cell) {
-        Set<CellPropertySpec<?>> result = super.getChangedProperties(cell);
-        result.add(ValidTextEditingTrait.VALID_TEXT_COLOR);
-        result.add(TextNavigationTrait.SELECTION_AVAILABLE);
-        return result;
       }
     };
   }
@@ -159,19 +153,12 @@ public class TextEditing {
       }
 
       @Override
-      public Object get(Cell cell, CellPropertySpec<?> spec) {
+      public Object get(Cell cell, CellTraitPropertySpec<?> spec) {
         if (spec == ValidTextEditingTrait.VALID_TEXT_COLOR) {
           return validColor;
         }
 
         return super.get(cell, spec);
-      }
-
-      @Override
-      public Set<CellPropertySpec<?>> getChangedProperties(Cell cell) {
-        Set<CellPropertySpec<?>> result = super.getChangedProperties(cell);
-        result.add(ValidTextEditingTrait.VALID_TEXT_COLOR);
-        return result;
       }
     };
   }
@@ -184,13 +171,9 @@ public class TextEditing {
       }
 
       @Override
-      public Object get(Cell cell, CellPropertySpec<?> spec) {
+      public Object get(Cell cell, CellTraitPropertySpec<?> spec) {
         if (spec == ValidTextEditingTrait.VALIDATOR) {
           return validator;
-        }
-
-        if (spec == Cell.FOCUSABLE) {
-          return true;
         }
 
         if (spec == CellStateHandler.PROPERTY) {
@@ -201,11 +184,18 @@ public class TextEditing {
       }
 
       @Override
+      public Object get(Cell cell, CellPropertySpec<?> spec) {
+        if (spec == Cell.FOCUSABLE) {
+          return true;
+        }
+
+        return super.get(cell, spec);
+      }
+
+      @Override
       public Set<CellPropertySpec<?>> getChangedProperties(Cell cell) {
         Set<CellPropertySpec<?>> result = super.getChangedProperties(cell);
         result.add(Cell.FOCUSABLE);
-        result.add(CellStateHandler.PROPERTY);
-        result.add(ValidTextEditingTrait.VALID_TEXT_COLOR);
         return result;
       }
     };

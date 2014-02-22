@@ -15,7 +15,6 @@
  */
 package jetbrains.jetpad.cell.completion;
 
-import jetbrains.jetpad.cell.CellPropertySpec;
 import jetbrains.jetpad.cell.trait.CellTraitPropertySpec;
 import jetbrains.jetpad.completion.CompletionController;
 import jetbrains.jetpad.completion.CompletionItem;
@@ -36,5 +35,5 @@ public class Completion {
   public static final CellTraitPropertySpec<CompletionSupplier> COMPLETION = new CellTraitPropertySpec<>("completion", EMPTY_SUPPLIER);
   public static final CellTraitPropertySpec<CompletionSupplier> LEFT_TRANSFORM = new CellTraitPropertySpec<>("leftTransform", EMPTY_SUPPLIER);
   public static final CellTraitPropertySpec<CompletionSupplier> RIGHT_TRANSFORM = new CellTraitPropertySpec<>("rightTransform", EMPTY_SUPPLIER);
-  public static final CellPropertySpec<CompletionController> COMPLETION_CONTROLLER = new CellPropertySpec<>("completionController");
+  public static final CellTraitPropertySpec<CompletionController> COMPLETION_CONTROLLER = new CellTraitPropertySpec<>("completionController");
 }

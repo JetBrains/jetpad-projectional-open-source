@@ -16,11 +16,10 @@
 package jetbrains.jetpad.cell.util;
 
 import jetbrains.jetpad.cell.Cell;
-import jetbrains.jetpad.cell.CellPropertySpec;
 import jetbrains.jetpad.cell.trait.CellTraitPropertySpec;
 
 public interface CellStateHandler<CellT extends Cell, T> {
-  public static final CellPropertySpec<CellStateHandler<?, ?>> PROPERTY = new CellPropertySpec<>("cellStateHandler");
+  public static final CellTraitPropertySpec<CellStateHandler<?, ?>> PROPERTY = new CellTraitPropertySpec<>("cellStateHandler");
 
   T saveState(CellT cell);
   void restoreState(CellT cell, T state);
