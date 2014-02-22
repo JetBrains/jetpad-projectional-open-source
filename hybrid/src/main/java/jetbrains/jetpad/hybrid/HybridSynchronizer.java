@@ -64,7 +64,7 @@ public class HybridSynchronizer<SourceT> implements Synchronizer {
   //todo this trait may be used only to handle exceptions. setting property with it is unreliable
   public static final ParseNodeProperty<CellTrait> TRAIT = new ParseNodeProperty<>("trait", null);
 
-  static final CellTraitPropertySpec<HybridSynchronizer<?>> HYBRID_SYNCHRONIZER = new CellTraitPropertySpec<>("hybridSynchronizer");
+  static final CellPropertySpec<HybridSynchronizer<?>> HYBRID_SYNCHRONIZER = new CellPropertySpec<>("hybridSynchronizer");
 
   private static final ContentKind<List<Token>> TOKENS_CONTENT = new ContentKind<List<Token>>() {};
 
@@ -102,6 +102,8 @@ public class HybridSynchronizer<SourceT> implements Synchronizer {
         return new TextCell(" ");
       }
     };
+
+    myTarget.set(HYBRID_SYNCHRONIZER, this);
     myTarget.addTrait(createTargetTrait());
 
     addPlaceholder();
@@ -173,7 +175,6 @@ public class HybridSynchronizer<SourceT> implements Synchronizer {
     return new BaseCellTrait() {
       @Override
       public Object get(Cell cell, CellTraitPropertySpec<?> spec) {
-        if (spec == HYBRID_SYNCHRONIZER) return HybridSynchronizer.this;
         if (spec == CellStateHandler.PROPERTY) return getCellStateHandler();
 
         return super.get(cell, spec);
