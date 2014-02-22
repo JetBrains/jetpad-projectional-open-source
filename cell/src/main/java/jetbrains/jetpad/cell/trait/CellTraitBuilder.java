@@ -1,5 +1,6 @@
 package jetbrains.jetpad.cell.trait;
 
+import jetbrains.jetpad.cell.Cell;
 import jetbrains.jetpad.cell.CellPropertySpec;
 import jetbrains.jetpad.cell.event.CellEventHandler;
 import jetbrains.jetpad.cell.event.CellEventSpec;
@@ -24,6 +25,10 @@ public class CellTraitBuilder {
   }
 
   public <ValueT> CellTraitBuilder set(CellPropertySpec<ValueT> prop, ValueT value) {
+    if (Cell.isPopupProp(prop)) {
+      throw new IllegalArgumentException("You can't set popup props in traits");
+    }
+
     myProperties.put(prop, value);
     return this;
   }

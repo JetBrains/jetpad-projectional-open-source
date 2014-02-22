@@ -16,7 +16,10 @@
 package jetbrains.jetpad.cell;
 
 import jetbrains.jetpad.cell.trait.BaseCellTraitOld;
+import jetbrains.jetpad.cell.trait.CellTrait;
+import jetbrains.jetpad.cell.trait.CellTraitBuilder;
 import jetbrains.jetpad.model.event.EventHandler;
+import jetbrains.jetpad.model.event.Registration;
 import jetbrains.jetpad.model.property.Property;
 import jetbrains.jetpad.base.Value;
 import jetbrains.jetpad.model.property.PropertyChangeEvent;
@@ -29,6 +32,9 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 public class CellTest {
+  static final CellPropertySpec<String> NAME = new CellPropertySpec<>("name");
+  static final CellTrait NAME_TRAIT = new CellTraitBuilder().set(NAME, "name").build();
+
   CellContainer container = new CellContainer();
 
   @Test
@@ -220,5 +226,30 @@ public class CellTest {
     container.root.children().remove(cell);
 
     verify(listener).onEvent(new PropertyChangeEvent<>(container, null));
+  }
+
+  @Test
+  public void addTraitLeadsToPropEvent() {
+    TextCell cell = new TextCell();
+
+    EventHandler<PropertyChangeEvent<String>> eh = mock(EventHandler.class);
+    cell.getProp(NAME).addHandler(eh);
+
+    cell.addTrait(NAME_TRAIT);
+
+    verify(eh).onEvent(new PropertyChangeEvent<>(null, "name"));
+  }
+
+  @Test
+  public void removeTraitLeadsToPropEvent() {
+    TextCell cell = new TextCell();
+    Registration reg = cell.addTrait(NAME_TRAIT);
+
+    EventHandler<PropertyChangeEvent<String>> eh = mock(EventHandler.class);
+    cell.getProp(NAME).addHandler(eh);
+
+    reg.remove();
+
+    verify(eh).onEvent(new PropertyChangeEvent<>("name", null));
   }
 }

@@ -34,16 +34,16 @@ public class CellTrait {
     }
   }
 
-  CellTrait parent() {
+  public CellTrait parent() {
     return myParent;
   }
 
-  Set<CellPropertySpec<?>> properties() {
+  public Set<CellPropertySpec<?>> properties() {
     if (myProperties == null) return Collections.emptySet();
     return Collections.unmodifiableSet(myProperties.keySet());
   }
 
-  boolean hasValue(CellPropertySpec<?> prop) {
+  public boolean hasValue(CellPropertySpec<?> prop) {
     if (myProperties == null) return false;
     return myProperties.containsKey(prop);
   }
@@ -52,7 +52,7 @@ public class CellTrait {
     return (ValueT) myProperties.get(prop);
   }
 
-  <EventT extends Event> void dispatch(Cell cell, CellEventSpec<EventT> spec, EventT event) {
+  public <EventT extends Event> void dispatch(Cell cell, CellEventSpec<EventT> spec, EventT event) {
     if (myHandlers != null && myHandlers.containsKey(spec)) {
       for (CellEventHandler handler : myHandlers.get(spec)) {
         handler.handle(cell, event);

@@ -16,7 +16,14 @@
 package jetbrains.jetpad.cell;
 
 import com.google.common.base.Objects;
+import jetbrains.jetpad.cell.event.CellEventSpec;
+import jetbrains.jetpad.cell.event.CompletionEvent;
+import jetbrains.jetpad.cell.event.EventPriority;
+import jetbrains.jetpad.cell.event.FocusEvent;
+import jetbrains.jetpad.cell.trait.CellTrait;
+import jetbrains.jetpad.cell.trait.CellTraitEventSpec;
 import jetbrains.jetpad.cell.trait.CellTraitOld;
+import jetbrains.jetpad.cell.trait.CellTraitPropertySpec;
 import jetbrains.jetpad.event.*;
 import jetbrains.jetpad.geometry.Rectangle;
 import jetbrains.jetpad.geometry.Vector;
@@ -33,14 +40,8 @@ import jetbrains.jetpad.model.property.BaseReadableProperty;
 import jetbrains.jetpad.model.property.Property;
 import jetbrains.jetpad.model.property.PropertyChangeEvent;
 import jetbrains.jetpad.model.property.ReadableProperty;
-import jetbrains.jetpad.cell.event.CellEventSpec;
-import jetbrains.jetpad.cell.event.CompletionEvent;
-import jetbrains.jetpad.cell.event.EventPriority;
-import jetbrains.jetpad.cell.event.FocusEvent;
-import jetbrains.jetpad.cell.trait.CellTraitEventSpec;
-import jetbrains.jetpad.cell.trait.CellTraitPropertySpec;
-import jetbrains.jetpad.values.Color;
 import jetbrains.jetpad.model.util.ListMap;
+import jetbrains.jetpad.values.Color;
 
 import java.util.*;
 
@@ -69,6 +70,8 @@ public abstract class Cell implements Composite<Cell>, HasVisibility, HasFocusab
   }
 
   private CellTraitOld[] myCellTraitOlds = CellTraitOld.EMPTY_ARRAY;
+  private List<CellTrait> myCellTraits;
+
   private List<Cell> myChildren;
   private CellContainer myContainer;
   private Cell myParent;
@@ -193,6 +196,12 @@ public abstract class Cell implements Composite<Cell>, HasVisibility, HasFocusab
         if (e.isConsumed()) return;
       }
     }
+
+    if (myCellTraits != null) {
+      for (CellTrait t : myCellTraits) {
+        t.dispatch(this, spec, e);
+      }
+    }
   }
 
   public <EventT extends Event> void dispatch(EventT e, CellTraitEventSpec<EventT> spec) {
@@ -205,6 +214,59 @@ public abstract class Cell implements Composite<Cell>, HasVisibility, HasFocusab
       parent().get().dispatch(e, spec);
     }
   }
+
+  public Registration addTrait(final CellTrait trait) {
+    if (myCellTraits == null) {
+      myCellTraits = new ArrayList<>(1);
+    }
+    Runnable r = createFiringRunnable(trait);
+    myCellTraits.add(trait);
+    r.run();
+    return new Registration() {
+      @Override
+      public void remove() {
+        Runnable r = createFiringRunnable(trait);
+        myCellTraits.remove(trait);
+        if (myCellTraits.isEmpty()) {
+          myCellTraits = null;
+        }
+        r.run();
+      }
+    };
+  }
+
+  private Runnable createFiringRunnable(CellTrait t) {
+    Set<CellPropertySpec<?>> props = new HashSet<>();
+    final List<Runnable> toRun = new ArrayList<>();
+
+    CellTrait current = t;
+    while (current != null) {
+      for (final CellPropertySpec<?> p : current.properties()) {
+        if (props.contains(p)) continue;
+        final Object val = get(p);
+        toRun.add(new Runnable() {
+          @Override
+          public void run() {
+            final Object newVal = get(p);
+            if (Objects.equal(val, newVal)) return;
+            firePropertyChange(p, new PropertyChangeEvent(val, newVal));
+          }
+        });
+        props.add(p);
+      }
+      current = current.parent();
+    }
+
+    return new Runnable() {
+      @Override
+      public void run() {
+        for (Runnable r : toRun) {
+          r.run();
+        }
+      }
+    };
+  }
+
 
   public Registration addTrait(final CellTraitOld trait) {
     //todo we might change properties here. need to fire events
@@ -320,6 +382,13 @@ public abstract class Cell implements Composite<Cell>, HasVisibility, HasFocusab
 
   public <ValueT> ValueT get(CellPropertySpec<ValueT> prop) {
     if (myProperties == null || !myProperties.containsKey(prop)) {
+      if (myCellTraits != null) {
+        for (CellTrait t : myCellTraits) {
+          if (t.hasValue(prop)) {
+            return t.get(prop);
+          }
+        }
+      }
       return getDefaultValue(prop);
     }
     return (ValueT) myProperties.get(prop);
@@ -346,6 +415,17 @@ public abstract class Cell implements Composite<Cell>, HasVisibility, HasFocusab
       myProperties.put(prop, value);
     }
 
+    firePropertyChange(prop, event);
+
+    return new Registration() {
+      @Override
+      public void remove() {
+        set(prop, old);
+      }
+    };
+  }
+
+  private <ValueT> void firePropertyChange(final CellPropertySpec<ValueT> prop, final PropertyChangeEvent<ValueT> event) {
     propertySet(prop, event);
     onPropertySet(prop, event);
 
@@ -365,13 +445,6 @@ public abstract class Cell implements Composite<Cell>, HasVisibility, HasFocusab
     if (myContainer != null) {
       myContainer.viewPropertyChanged(this, prop, event);
     }
-
-    return new Registration() {
-      @Override
-      public void remove() {
-        set(prop, old);
-      }
-    };
   }
 
   private <ValueT> ValueT getDefaultValue(CellPropertySpec<ValueT> prop) {
