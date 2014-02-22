@@ -49,12 +49,19 @@ public class CompletionSupport {
   public static CellTrait trait() {
     return new BaseCellTrait() {
       @Override
-      public Object get(Cell cell, CellTraitPropertySpec<?> spec) {
+      public Object get(Cell cell, CellPropertySpec<?> spec) {
         if (spec == Completion.COMPLETION_CONTROLLER) {
           return getCompletionHandler(cell);
         }
 
         return super.get(cell, spec);
+      }
+
+      @Override
+      public Set<CellPropertySpec<?>> getChangedProperties(Cell cell) {
+        Set<CellPropertySpec<?>> result = super.getChangedProperties(cell);
+        result.add(Completion.COMPLETION_CONTROLLER);
+        return result;
       }
 
       private CompletionController getCompletionHandler(final Cell cell) {

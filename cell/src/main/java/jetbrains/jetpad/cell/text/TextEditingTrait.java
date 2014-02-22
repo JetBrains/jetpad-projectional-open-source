@@ -31,18 +31,26 @@ import jetbrains.jetpad.cell.event.CompletionEvent;
 import jetbrains.jetpad.cell.trait.CellTraitPropertySpec;
 
 import java.util.List;
+import java.util.Set;
 
 public class TextEditingTrait extends TextNavigationTrait {
   public TextEditingTrait() {
   }
 
   @Override
-  public Object get(Cell cell, CellTraitPropertySpec<?> spec) {
+  public Object get(Cell cell, CellPropertySpec<?> spec) {
     if (spec == Completion.COMPLETION_CONTROLLER) {
       return getCompletionController((TextCell) cell);
     }
 
     return super.get(cell, spec);
+  }
+
+  @Override
+  public Set<CellPropertySpec<?>> getChangedProperties(Cell cell) {
+    Set<CellPropertySpec<?>> result = super.getChangedProperties(cell);
+    result.add(Completion.COMPLETION_CONTROLLER);
+    return result;
   }
 
   private CompletionController getCompletionController(final TextCell view) {
