@@ -22,6 +22,9 @@ import jetbrains.jetpad.cell.CellPropertySpec;
 import jetbrains.jetpad.cell.event.CompletionEvent;
 import jetbrains.jetpad.cell.event.FocusEvent;
 
+import java.util.List;
+import java.util.Set;
+
 public interface CellTrait {
   public static final Object NULL = new Object();
   public static final CellTrait[] EMPTY_ARRAY = new CellTrait[0];
@@ -54,6 +57,13 @@ public interface CellTrait {
 
   void onViewTraitEvent(Cell cell, CellTraitEventSpec<?> spec, Event event);
 
+  /**
+   * This is a very low level optimisation method. Don't use it unless you have to. If you override it,
+   * don't forget to override getChangedProperties()
+   */
   Object get(Cell cell, CellPropertySpec<?> spec);
+  Set<CellPropertySpec<?>> getChangedProperties(Cell cell);
+
+
   Object get(Cell cell, CellTraitPropertySpec<?> spec);
 }

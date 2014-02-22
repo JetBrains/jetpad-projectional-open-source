@@ -29,6 +29,7 @@ import jetbrains.jetpad.values.Color;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Set;
 
 public class CellFactory {
   private static final CellTraitPropertySpec<Cell> PLACEHOLDER_CELL = new CellTraitPropertySpec<>("placeholderCell");
@@ -114,6 +115,13 @@ public class CellFactory {
         }
 
         return super.get(cell, spec);
+      }
+
+      @Override
+      public Set<CellPropertySpec<?>> getChangedProperties(Cell cell) {
+        Set<CellPropertySpec<?>> result = super.getChangedProperties(cell);
+        result.addAll(Arrays.asList(TextCell.TEXT_COLOR, TextCell.TEXT, TextCell.BOLD));
+        return result;
       }
     });
     return result;

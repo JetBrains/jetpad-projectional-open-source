@@ -22,6 +22,9 @@ import jetbrains.jetpad.cell.CellPropertySpec;
 import jetbrains.jetpad.cell.event.CompletionEvent;
 import jetbrains.jetpad.cell.event.FocusEvent;
 
+import java.util.HashSet;
+import java.util.Set;
+
 public abstract class BaseCellTrait implements CellTrait {
   protected CellTrait[] getBaseTraits(Cell cell) {
     return CellTrait.EMPTY_ARRAY;
@@ -155,6 +158,15 @@ public abstract class BaseCellTrait implements CellTrait {
 
   @Override
   public void onViewTraitEvent(Cell cell, CellTraitEventSpec<?> spec, Event event) {
+  }
+
+  @Override
+  public Set<CellPropertySpec<?>> getChangedProperties(Cell cell) {
+    Set<CellPropertySpec<?>> result = new HashSet<>();
+    for (CellTrait t : getBaseTraits(cell)) {
+      result.addAll(t.getChangedProperties(cell));
+    }
+    return result;
   }
 
   @Override

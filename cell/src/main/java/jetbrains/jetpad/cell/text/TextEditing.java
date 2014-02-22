@@ -31,6 +31,8 @@ import jetbrains.jetpad.cell.completion.Side;
 import jetbrains.jetpad.cell.trait.CellTraitPropertySpec;
 import jetbrains.jetpad.values.Color;
 
+import java.util.Set;
+
 public class TextEditing {
   public static final CellTraitPropertySpec<Boolean> FIRST_ALLOWED = new CellTraitPropertySpec<>("firstAllowed", true);
   public static final CellTraitPropertySpec<Boolean> LAST_ALLOWED = new CellTraitPropertySpec<>("firstAllowed", true);
@@ -77,6 +79,13 @@ public class TextEditing {
 
         return super.get(cell, spec);
       }
+
+      @Override
+      public Set<CellPropertySpec<?>> getChangedProperties(Cell cell) {
+        Set<CellPropertySpec<?>> result = super.getChangedProperties(cell);
+        result.add(Cell.FOCUSABLE);
+        return  result;
+      }
     };
   }
 
@@ -103,6 +112,13 @@ public class TextEditing {
         }
 
         return super.get(cell, spec);
+      }
+
+      @Override
+      public Set<CellPropertySpec<?>> getChangedProperties(Cell cell) {
+        Set<CellPropertySpec<?>> result = super.getChangedProperties(cell);
+        result.add(Cell.FOCUSABLE);
+        return result;
       }
     };
   }
@@ -174,6 +190,13 @@ public class TextEditing {
         }
 
         return super.get(cell, spec);
+      }
+
+      @Override
+      public Set<CellPropertySpec<?>> getChangedProperties(Cell cell) {
+        Set<CellPropertySpec<?>> result = super.getChangedProperties(cell);
+        result.add(Cell.FOCUSABLE);
+        return result;
       }
     };
   }
