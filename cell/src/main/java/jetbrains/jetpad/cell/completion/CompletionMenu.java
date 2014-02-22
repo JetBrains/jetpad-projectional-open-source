@@ -16,6 +16,7 @@
 package jetbrains.jetpad.cell.completion;
 
 import jetbrains.jetpad.base.Handler;
+import jetbrains.jetpad.cell.trait.BaseCellTraitOld;
 import jetbrains.jetpad.completion.CompletionItem;
 import jetbrains.jetpad.completion.CompletionMenuModel;
 import jetbrains.jetpad.geometry.Vector;
@@ -26,7 +27,6 @@ import jetbrains.jetpad.model.property.ReadableProperty;
 import jetbrains.jetpad.model.property.WritableProperty;
 import jetbrains.jetpad.event.MouseEvent;
 import jetbrains.jetpad.cell.*;
-import jetbrains.jetpad.cell.trait.BaseCellTrait;
 import jetbrains.jetpad.values.Color;
 
 class CompletionMenu {
@@ -76,7 +76,7 @@ class CompletionMenu {
     private CompletionItemMapper(CompletionItem source) {
       super(source, new HorizontalCell());
       getTarget().children().add(myText = new TextCell());
-      getTarget().addTrait(new BaseCellTrait() {
+      getTarget().addTrait(new BaseCellTraitOld() {
         @Override
         public void onMousePressed(Cell cell, MouseEvent event) {
           CompletionMenuModelMapper parentMapper = (CompletionMenuModelMapper) getParent();

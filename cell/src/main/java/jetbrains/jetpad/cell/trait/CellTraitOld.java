@@ -22,9 +22,9 @@ import jetbrains.jetpad.cell.CellPropertySpec;
 import jetbrains.jetpad.cell.event.CompletionEvent;
 import jetbrains.jetpad.cell.event.FocusEvent;
 
-public interface CellTrait {
+public interface CellTraitOld {
   public static final Object NULL = new Object();
-  public static final CellTrait[] EMPTY_ARRAY = new CellTrait[0];
+  public static final CellTraitOld[] EMPTY_ARRAY = new CellTraitOld[0];
 
   void onPropertyChanged(Cell cell, CellPropertySpec<?> property, PropertyChangeEvent<?> event);
 

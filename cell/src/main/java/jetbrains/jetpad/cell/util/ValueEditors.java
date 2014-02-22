@@ -18,6 +18,8 @@ package jetbrains.jetpad.cell.util;
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 import jetbrains.jetpad.base.Runnables;
+import jetbrains.jetpad.cell.trait.BaseCellTraitOld;
+import jetbrains.jetpad.cell.trait.CellTraitOld;
 import jetbrains.jetpad.completion.CompletionItem;
 import jetbrains.jetpad.completion.CompletionParameters;
 import jetbrains.jetpad.completion.CompletionSupplier;
@@ -27,8 +29,6 @@ import jetbrains.jetpad.model.property.Property;
 import jetbrains.jetpad.cell.action.CellActions;
 import jetbrains.jetpad.cell.completion.*;
 import jetbrains.jetpad.cell.text.TextEditing;
-import jetbrains.jetpad.cell.trait.BaseCellTrait;
-import jetbrains.jetpad.cell.trait.CellTrait;
 import jetbrains.jetpad.cell.trait.CellTraitPropertySpec;
 import jetbrains.jetpad.cell.*;
 import jetbrains.jetpad.values.Color;
@@ -59,10 +59,10 @@ public class ValueEditors {
       }
     }
 
-    textView.addTrait(new BaseCellTrait() {
+    textView.addTrait(new BaseCellTraitOld() {
       @Override
-      protected CellTrait[] getBaseTraits(Cell cell) {
-        return new CellTrait[] { TextEditing.validTextEditing(new MyEnumValidator(), color) };
+      protected CellTraitOld[] getBaseTraits(Cell cell) {
+        return new CellTraitOld[] { TextEditing.validTextEditing(new MyEnumValidator(), color) };
       }
 
       @Override
@@ -128,10 +128,10 @@ public class ValueEditors {
 
   public static Property<Boolean> booleanProperty(final TextCell textView, final boolean completion) {
     final Color color = textView.textColor().get();
-    textView.addTrait(new BaseCellTrait() {
+    textView.addTrait(new BaseCellTraitOld() {
       @Override
-      protected CellTrait[] getBaseTraits(Cell cell) {
-        return new CellTrait[] { TextEditing.validTextEditing(Validators.bool(), color) };
+      protected CellTraitOld[] getBaseTraits(Cell cell) {
+        return new CellTraitOld[] { TextEditing.validTextEditing(Validators.bool(), color) };
       }
 
       @Override

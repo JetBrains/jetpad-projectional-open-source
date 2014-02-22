@@ -15,7 +15,7 @@
  */
 package jetbrains.jetpad.cell.text;
 
-import com.google.common.base.Strings;
+import jetbrains.jetpad.cell.trait.BaseCellTraitOld;
 import jetbrains.jetpad.completion.CompletionController;
 import jetbrains.jetpad.completion.CompletionParameters;
 import jetbrains.jetpad.completion.CompletionSupplier;
@@ -25,11 +25,9 @@ import jetbrains.jetpad.model.property.PropertyChangeEvent;
 import jetbrains.jetpad.cell.*;
 import jetbrains.jetpad.cell.completion.*;
 import jetbrains.jetpad.cell.event.CompletionEvent;
-import jetbrains.jetpad.cell.trait.BaseCellTrait;
 import jetbrains.jetpad.cell.trait.CellTraitPropertySpec;
-import jetbrains.jetpad.values.Color;
 
-class TextNavigationTrait extends BaseCellTrait {
+class TextNavigationTrait extends BaseCellTraitOld {
   static final CellTraitPropertySpec<Boolean> SELECTION_AVAILABLE = new CellTraitPropertySpec<>("selectionAvailable", true);
 
   static int getMinPos(TextCell tv) {

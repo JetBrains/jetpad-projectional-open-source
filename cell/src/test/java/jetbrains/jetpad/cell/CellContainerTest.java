@@ -15,13 +15,10 @@
  */
 package jetbrains.jetpad.cell;
 
-import jetbrains.jetpad.cell.trait.BaseCellTrait;
-import jetbrains.jetpad.cell.trait.CellTrait;
-import jetbrains.jetpad.cell.view.CellContainerToViewMapper;
+import jetbrains.jetpad.cell.trait.BaseCellTraitOld;
 import jetbrains.jetpad.cell.view.MapperCell2View;
 import jetbrains.jetpad.event.MouseEvent;
 import jetbrains.jetpad.geometry.Vector;
-import jetbrains.jetpad.model.event.Registration;
 import jetbrains.jetpad.projectional.view.ViewContainer;
 import org.junit.Before;
 import org.junit.Test;
@@ -77,7 +74,7 @@ public class CellContainerTest {
     {
       text().set("Test");
 
-      addTrait(new BaseCellTrait() {
+      addTrait(new BaseCellTraitOld() {
         @Override
         public void onMouseEntered(Cell cell, MouseEvent event) {
           super.onMouseEntered(cell, event);

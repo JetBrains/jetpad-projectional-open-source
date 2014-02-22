@@ -15,6 +15,8 @@
  */
 package jetbrains.jetpad.projectional.cell;
 
+import jetbrains.jetpad.cell.trait.BaseCellTraitOld;
+import jetbrains.jetpad.cell.trait.CellTraitOld;
 import jetbrains.jetpad.cell.util.Cells;
 import jetbrains.jetpad.completion.CompletionItem;
 import jetbrains.jetpad.completion.CompletionParameters;
@@ -30,8 +32,6 @@ import jetbrains.jetpad.event.Event;
 import jetbrains.jetpad.event.KeyEvent;
 import jetbrains.jetpad.cell.*;
 import jetbrains.jetpad.cell.completion.*;
-import jetbrains.jetpad.cell.trait.BaseCellTrait;
-import jetbrains.jetpad.cell.trait.CellTrait;
 import jetbrains.jetpad.cell.trait.CellTraitEventSpec;
 import jetbrains.jetpad.cell.trait.CellTraitPropertySpec;
 import jetbrains.jetpad.projectional.generic.Role;
@@ -65,11 +65,11 @@ class ProjectionalPropertySynchronizer<ContextT, SourceItemT extends ContextT> e
 
   @Override
   protected Registration registerChild(SourceItemT child, Cell childCell) {
-    return childCell.addTrait(new BaseCellTrait() {
+    return childCell.addTrait(new BaseCellTraitOld() {
       @Override
-      protected CellTrait[] getBaseTraits(Cell cell) {
+      protected CellTraitOld[] getBaseTraits(Cell cell) {
         if (!(cell instanceof TextCell)) {
-          return new CellTrait[] { CompletionSupport.trait() };
+          return new CellTraitOld[] { CompletionSupport.trait() };
         }
         return super.getBaseTraits(cell);
       }

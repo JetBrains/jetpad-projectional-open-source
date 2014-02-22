@@ -16,6 +16,7 @@
 package jetbrains.jetpad.projectional.cell;
 
 import jetbrains.jetpad.base.Runnables;
+import jetbrains.jetpad.cell.trait.BaseCellTraitOld;
 import jetbrains.jetpad.event.KeyStrokeSpecs;
 import jetbrains.jetpad.model.composite.Composites;
 import jetbrains.jetpad.model.collections.list.ObservableArrayList;
@@ -25,7 +26,6 @@ import jetbrains.jetpad.cell.*;
 import jetbrains.jetpad.cell.action.CellActions;
 import jetbrains.jetpad.cell.event.FocusEvent;
 import jetbrains.jetpad.cell.position.Positions;
-import jetbrains.jetpad.cell.trait.BaseCellTrait;
 import jetbrains.jetpad.cell.trait.CellTraitPropertySpec;
 
 import java.util.List;
@@ -47,7 +47,7 @@ public class SelectionSupport<ItemT> {
     myTarget = target;
     myTargetList = targetList;
 
-    myTarget.addTrait(new BaseCellTrait() {
+    myTarget.addTrait(new BaseCellTraitOld() {
       @Override
       public void onFocusGained(Cell cell, FocusEvent event) {
         super.onFocusGained(cell, event);

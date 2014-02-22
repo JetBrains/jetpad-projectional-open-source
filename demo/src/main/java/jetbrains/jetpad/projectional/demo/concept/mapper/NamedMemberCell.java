@@ -18,11 +18,11 @@ package jetbrains.jetpad.projectional.demo.concept.mapper;
 import jetbrains.jetpad.cell.*;
 import jetbrains.jetpad.cell.indent.IndentCell;
 import jetbrains.jetpad.cell.action.CellActions;
+import jetbrains.jetpad.cell.trait.BaseCellTraitOld;
 import jetbrains.jetpad.cell.util.CellFactory;
 import jetbrains.jetpad.cell.util.Validators;
 import jetbrains.jetpad.projectional.cell.ProjectionalSynchronizers;
 import jetbrains.jetpad.cell.text.TextEditing;
-import jetbrains.jetpad.cell.trait.BaseCellTrait;
 import jetbrains.jetpad.cell.trait.CellTraitPropertySpec;
 
 import static jetbrains.jetpad.cell.util.CellFactory.placeHolder;
@@ -39,7 +39,7 @@ class NamedMemberCell extends IndentCell {
     name.addTrait(TextEditing.validTextEditing(Validators.identifier()));
     focusable().set(true);
 
-    addTrait(new BaseCellTrait() {
+    addTrait(new BaseCellTraitOld() {
       @Override
       public Object get(Cell cell, CellTraitPropertySpec<?> spec) {
         if (spec == ProjectionalSynchronizers.ON_CREATE) {

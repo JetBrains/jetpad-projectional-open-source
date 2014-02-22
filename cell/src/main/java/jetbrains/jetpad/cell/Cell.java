@@ -16,6 +16,7 @@
 package jetbrains.jetpad.cell;
 
 import com.google.common.base.Objects;
+import jetbrains.jetpad.cell.trait.CellTraitOld;
 import jetbrains.jetpad.event.*;
 import jetbrains.jetpad.geometry.Rectangle;
 import jetbrains.jetpad.geometry.Vector;
@@ -36,7 +37,6 @@ import jetbrains.jetpad.cell.event.CellEventSpec;
 import jetbrains.jetpad.cell.event.CompletionEvent;
 import jetbrains.jetpad.cell.event.EventPriority;
 import jetbrains.jetpad.cell.event.FocusEvent;
-import jetbrains.jetpad.cell.trait.CellTrait;
 import jetbrains.jetpad.cell.trait.CellTraitEventSpec;
 import jetbrains.jetpad.cell.trait.CellTraitPropertySpec;
 import jetbrains.jetpad.values.Color;
@@ -68,7 +68,7 @@ public abstract class Cell implements Composite<Cell>, HasVisibility, HasFocusab
     return prop == BOTTOM_POPUP || prop == FRONT_POPUP || prop == LEFT_POPUP || prop == RIGHT_POPUP;
   }
 
-  private CellTrait[] myCellTraits = CellTrait.EMPTY_ARRAY;
+  private CellTraitOld[] myCellTraitOlds = CellTraitOld.EMPTY_ARRAY;
   private List<Cell> myChildren;
   private CellContainer myContainer;
   private Cell myParent;
@@ -141,7 +141,7 @@ public abstract class Cell implements Composite<Cell>, HasVisibility, HasFocusab
   private <EventT extends Event> void dispatchStep(EventT e, CellEventSpec<EventT> spec) {
     if (spec == CellEventSpec.KEY_PRESSED || spec == CellEventSpec.KEY_RELEASED || spec == CellEventSpec.KEY_TYPED) {
       for (EventPriority p : EventPriority.values()) {
-        for (CellTrait t : myCellTraits) {
+        for (CellTraitOld t : myCellTraitOlds) {
           if (p == EventPriority.LOW) {
             if (spec == CellEventSpec.KEY_PRESSED) {
               t.onKeyPressedLowPriority(this, (KeyEvent) e);
@@ -163,7 +163,7 @@ public abstract class Cell implements Composite<Cell>, HasVisibility, HasFocusab
         }
       }
     } else {
-      for (CellTrait t : myCellTraits) {
+      for (CellTraitOld t : myCellTraitOlds) {
         if (spec == CellEventSpec.FOCUS_GAINED) {
           t.onFocusGained(this, (FocusEvent) e);
         } else if (spec == CellEventSpec.FOCUS_LOST) {
@@ -196,7 +196,7 @@ public abstract class Cell implements Composite<Cell>, HasVisibility, HasFocusab
   }
 
   public <EventT extends Event> void dispatch(EventT e, CellTraitEventSpec<EventT> spec) {
-    for (CellTrait t : myCellTraits) {
+    for (CellTraitOld t : myCellTraitOlds) {
       t.onViewTraitEvent(this, spec, e);
       if (e.isConsumed()) return;
     }
@@ -206,20 +206,20 @@ public abstract class Cell implements Composite<Cell>, HasVisibility, HasFocusab
     }
   }
 
-  public Registration addTrait(final CellTrait trait) {
+  public Registration addTrait(final CellTraitOld trait) {
     //todo we might change properties here. need to fire events
-    CellTrait[] newTraits = new CellTrait[myCellTraits.length + 1];
+    CellTraitOld[] newTraits = new CellTraitOld[myCellTraitOlds.length + 1];
     newTraits[0] = trait;
-    System.arraycopy(myCellTraits, 0, newTraits, 1, myCellTraits.length);
-    myCellTraits = newTraits;
+    System.arraycopy(myCellTraitOlds, 0, newTraits, 1, myCellTraitOlds.length);
+    myCellTraitOlds = newTraits;
     return new Registration() {
       @Override
       public void remove() {
-        int index = Arrays.asList(myCellTraits).indexOf(trait);
-        CellTrait[] newTraits = new CellTrait[myCellTraits.length - 1];
-        System.arraycopy(myCellTraits, 0, newTraits, 0, index);
-        System.arraycopy(myCellTraits, index + 1, newTraits, index, myCellTraits.length - index - 1);
-        myCellTraits = newTraits;
+        int index = Arrays.asList(myCellTraitOlds).indexOf(trait);
+        CellTraitOld[] newTraits = new CellTraitOld[myCellTraitOlds.length - 1];
+        System.arraycopy(myCellTraitOlds, 0, newTraits, 0, index);
+        System.arraycopy(myCellTraitOlds, index + 1, newTraits, index, myCellTraitOlds.length - index - 1);
+        myCellTraitOlds = newTraits;
       }
     };
   }
@@ -349,7 +349,7 @@ public abstract class Cell implements Composite<Cell>, HasVisibility, HasFocusab
     propertySet(prop, event);
     onPropertySet(prop, event);
 
-    for (CellTrait t : myCellTraits) {
+    for (CellTraitOld t : myCellTraitOlds) {
       t.onPropertyChanged(this, prop, event);
     }
 
@@ -375,9 +375,9 @@ public abstract class Cell implements Composite<Cell>, HasVisibility, HasFocusab
   }
 
   private <ValueT> ValueT getDefaultValue(CellPropertySpec<ValueT> prop) {
-    for (CellTrait t : myCellTraits) {
+    for (CellTraitOld t : myCellTraitOlds) {
       Object result = t.get(this, prop);
-      if (result == CellTrait.NULL) return null;
+      if (result == CellTraitOld.NULL) return null;
       if (result != null) {
         return (ValueT) result;
       }
@@ -393,9 +393,9 @@ public abstract class Cell implements Composite<Cell>, HasVisibility, HasFocusab
   }
 
   public <ValueT> ValueT getRaw(CellTraitPropertySpec<ValueT> prop) {
-    for (CellTrait t : myCellTraits) {
+    for (CellTraitOld t : myCellTraitOlds) {
       Object result = t.get(this, prop);
-      if (result == CellTrait.NULL) return null;
+      if (result == CellTraitOld.NULL) return null;
       if (result != null) {
         return (ValueT) result;
       }

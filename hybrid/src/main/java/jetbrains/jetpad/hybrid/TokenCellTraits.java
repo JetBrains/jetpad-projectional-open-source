@@ -16,13 +16,13 @@
 package jetbrains.jetpad.hybrid;
 
 import com.google.common.base.Function;
+import jetbrains.jetpad.cell.trait.BaseCellTraitOld;
 import jetbrains.jetpad.event.Event;
 import jetbrains.jetpad.event.Key;
 import jetbrains.jetpad.event.KeyEvent;
 import jetbrains.jetpad.cell.completion.Completion;
 import jetbrains.jetpad.cell.position.Positions;
 import jetbrains.jetpad.cell.text.TextEditing;
-import jetbrains.jetpad.cell.trait.BaseCellTrait;
 import jetbrains.jetpad.cell.trait.CellTraitEventSpec;
 import jetbrains.jetpad.cell.trait.CellTraitPropertySpec;
 import jetbrains.jetpad.cell.util.Cells;
@@ -33,7 +33,7 @@ import jetbrains.jetpad.cell.*;
 import java.util.List;
 
 class TokenCellTraits {
-  static class BaseTokenCellTrait extends BaseCellTrait {
+  static class BaseTokenCellTrait extends BaseCellTraitOld {
     protected HybridSynchronizer<?> hybridSync(Cell cell) {
       HybridSynchronizer<?> sync = cell.get(HybridSynchronizer.HYBRID_SYNCHRONIZER);
       if (sync != null) return sync;

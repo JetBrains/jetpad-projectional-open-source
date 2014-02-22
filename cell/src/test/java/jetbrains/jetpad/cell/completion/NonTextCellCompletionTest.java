@@ -18,7 +18,7 @@ package jetbrains.jetpad.cell.completion;
 import com.google.common.base.Predicates;
 import jetbrains.jetpad.cell.*;
 import jetbrains.jetpad.cell.text.TextEditing;
-import jetbrains.jetpad.cell.trait.BaseCellTrait;
+import jetbrains.jetpad.cell.trait.BaseCellTraitOld;
 import jetbrains.jetpad.cell.trait.CellTraitPropertySpec;
 import jetbrains.jetpad.cell.util.CellFactory;
 import jetbrains.jetpad.completion.CompletionController;
@@ -34,7 +34,7 @@ public class NonTextCellCompletionTest extends CompletionTestCase {
 
   @Before
   public void init() {
-    target.addTrait(new BaseCellTrait() {
+    target.addTrait(new BaseCellTraitOld() {
       @Override
       public Object get(Cell cell, CellTraitPropertySpec<?> spec) {
         if (spec == Completion.COMPLETION) {

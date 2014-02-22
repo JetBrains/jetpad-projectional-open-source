@@ -15,13 +15,13 @@
  */
 package jetbrains.jetpad.hybrid.testapp.mapper;
 
+import jetbrains.jetpad.cell.trait.BaseCellTraitOld;
 import jetbrains.jetpad.mapper.Mapper;
 import jetbrains.jetpad.hybrid.testapp.model.ComplexValueExpr;
 import jetbrains.jetpad.cell.*;
 import jetbrains.jetpad.cell.action.CellActions;
 import jetbrains.jetpad.cell.util.CellFactory;
 import jetbrains.jetpad.projectional.cell.ProjectionalSynchronizers;
-import jetbrains.jetpad.cell.trait.BaseCellTrait;
 import jetbrains.jetpad.cell.trait.CellTraitPropertySpec;
 
 class ComplexValueExprMapper extends Mapper<ComplexValueExpr, HorizontalCell> {
@@ -34,7 +34,7 @@ class ComplexValueExprMapper extends Mapper<ComplexValueExpr, HorizontalCell> {
     target.children().add(second);
     target.children().add(CellFactory.label("cccc"));
 
-    target.addTrait(new BaseCellTrait() {
+    target.addTrait(new BaseCellTraitOld() {
       @Override
       public Object get(Cell cell, CellTraitPropertySpec<?> spec) {
         if (spec == ProjectionalSynchronizers.ON_CREATE) return CellActions.toFirstFocusable(second);

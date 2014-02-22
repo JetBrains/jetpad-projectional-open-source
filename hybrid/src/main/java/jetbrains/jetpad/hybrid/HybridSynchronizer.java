@@ -19,6 +19,8 @@ import com.google.common.base.Predicates;
 import com.google.common.collect.Range;
 import jetbrains.jetpad.base.Handler;
 import jetbrains.jetpad.base.Runnables;
+import jetbrains.jetpad.cell.trait.BaseCellTraitOld;
+import jetbrains.jetpad.cell.trait.CellTraitOld;
 import jetbrains.jetpad.event.*;
 import jetbrains.jetpad.hybrid.parser.prettyprint.ParseNodeProperty;
 import jetbrains.jetpad.mapper.Mapper;
@@ -43,8 +45,6 @@ import jetbrains.jetpad.cell.completion.CompletionSupport;
 import jetbrains.jetpad.cell.position.Positions;
 import jetbrains.jetpad.projectional.cell.*;
 import jetbrains.jetpad.cell.text.TextEditing;
-import jetbrains.jetpad.cell.trait.BaseCellTrait;
-import jetbrains.jetpad.cell.trait.CellTrait;
 import jetbrains.jetpad.cell.trait.CellTraitPropertySpec;
 import jetbrains.jetpad.cell.util.*;
 import jetbrains.jetpad.hybrid.parser.Token;
@@ -61,7 +61,7 @@ import static jetbrains.jetpad.model.composite.Composites.firstFocusable;
 import static jetbrains.jetpad.model.composite.Composites.lastFocusable;
 
 public class HybridSynchronizer<SourceT> implements Synchronizer {
-  public static final ParseNodeProperty<CellTrait> TRAIT = new ParseNodeProperty<>("trait", null);
+  public static final ParseNodeProperty<CellTraitOld> TRAIT = new ParseNodeProperty<>("trait", null);
 
   static final CellTraitPropertySpec<HybridSynchronizer<?>> HYBRID_SYNCHRONIZER = new CellTraitPropertySpec<>("hybridSynchronizer");
 
@@ -168,8 +168,8 @@ public class HybridSynchronizer<SourceT> implements Synchronizer {
     });
   }
 
-  private BaseCellTrait createTargetTrait() {
-    return new BaseCellTrait() {
+  private BaseCellTraitOld createTargetTrait() {
+    return new BaseCellTraitOld() {
       @Override
       public Object get(Cell cell, CellTraitPropertySpec<?> spec) {
         if (spec == HYBRID_SYNCHRONIZER) return HybridSynchronizer.this;
@@ -340,23 +340,23 @@ public class HybridSynchronizer<SourceT> implements Synchronizer {
         final Token token = event.getItem();
         Cell tokenCell = createTokenCell(token);
 
-        tokenCell.addTrait(new BaseCellTrait() {
+        tokenCell.addTrait(new BaseCellTraitOld() {
           @Override
-          protected CellTrait[] getBaseTraits(Cell cell) {
-            List<CellTrait> result = new ArrayList<>();
+          protected CellTraitOld[] getBaseTraits(Cell cell) {
+            List<CellTraitOld> result = new ArrayList<>();
             int index = myTargetList.indexOf(cell);
             ParseNode parseNode = tokenListEditor().parseNode();
             if (parseNode != null) {
               ParseNode node = ParseNodes.findForRange(parseNode, Range.closed(index, index + 1));
               while (node != null) {
-                CellTrait trait = node.get(TRAIT);
+                CellTraitOld trait = node.get(TRAIT);
                 if (trait != null) {
                   result.add(trait);
                 }
                 node = node.parent();
               }
             }
-            return result.toArray(new CellTrait[result.size()]);
+            return result.toArray(new CellTraitOld[result.size()]);
           }
         });
 
@@ -475,8 +475,8 @@ public class HybridSynchronizer<SourceT> implements Synchronizer {
 
       target.addTrait(new TokenCellTraits.TokenCellTrait(true) {
         @Override
-        protected CellTrait[] getBaseTraits(Cell cell) {
-          return new CellTrait[] { CompletionSupport.trait() };
+        protected CellTraitOld[] getBaseTraits(Cell cell) {
+          return new CellTraitOld[] { CompletionSupport.trait() };
         }
       });
 
@@ -503,10 +503,10 @@ public class HybridSynchronizer<SourceT> implements Synchronizer {
 
   private TextCell createPlaceholder() {
     TextCell result = new TextCell();
-    result.addTrait(new BaseCellTrait() {
+    result.addTrait(new BaseCellTraitOld() {
       @Override
-      protected CellTrait[] getBaseTraits(Cell cell) {
-        return new CellTrait[] { TextEditing.validTextEditing(Predicates.equalTo("")) };
+      protected CellTraitOld[] getBaseTraits(Cell cell) {
+        return new CellTraitOld[] { TextEditing.validTextEditing(Predicates.equalTo("")) };
       }
 
       @Override

@@ -18,6 +18,8 @@ package jetbrains.jetpad.projectional.cell;
 import com.google.common.base.Function;
 import com.google.common.base.Objects;
 import com.google.common.base.Supplier;
+import jetbrains.jetpad.cell.trait.BaseCellTraitOld;
+import jetbrains.jetpad.cell.trait.CellTraitOld;
 import jetbrains.jetpad.event.*;
 import jetbrains.jetpad.mapper.*;
 import jetbrains.jetpad.model.collections.CollectionAdapter;
@@ -33,8 +35,6 @@ import jetbrains.jetpad.completion.CompletionSupplier;
 import jetbrains.jetpad.cell.indent.IndentCell;
 import jetbrains.jetpad.cell.position.Positions;
 import jetbrains.jetpad.cell.text.TextEditing;
-import jetbrains.jetpad.cell.trait.BaseCellTrait;
-import jetbrains.jetpad.cell.trait.CellTrait;
 import jetbrains.jetpad.cell.trait.CellTraitPropertySpec;
 import jetbrains.jetpad.cell.util.CellFactory;
 import jetbrains.jetpad.cell.util.Validators;
@@ -226,7 +226,7 @@ abstract class BaseProjectionalSynchronizer<SourceT, ContextT, SourceItemT> impl
 
     myRoleSynchronizer.attach(ctx);
 
-    myTarget.addTrait(new BaseCellTrait() {
+    myTarget.addTrait(new BaseCellTraitOld() {
       @Override
       public void onCopy(Cell cell, CopyCutEvent event) {
         if (canCopy()) {
@@ -435,10 +435,10 @@ abstract class BaseProjectionalSynchronizer<SourceT, ContextT, SourceItemT> impl
 
     private Cell createPlaceholder() {
       TextCell placeHolder = new TextCell();
-      placeHolder.addTrait(new BaseCellTrait() {
+      placeHolder.addTrait(new BaseCellTraitOld() {
         @Override
-        protected CellTrait[] getBaseTraits(Cell cell) {
-          return new CellTrait[] { TextEditing.validTextEditing(Validators.equalsTo("")) };
+        protected CellTraitOld[] getBaseTraits(Cell cell) {
+          return new CellTraitOld[] { TextEditing.validTextEditing(Validators.equalsTo("")) };
         }
 
         @Override

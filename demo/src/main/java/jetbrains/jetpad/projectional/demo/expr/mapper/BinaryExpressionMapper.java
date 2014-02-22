@@ -15,6 +15,7 @@
  */
 package jetbrains.jetpad.projectional.demo.expr.mapper;
 
+import jetbrains.jetpad.cell.trait.BaseCellTraitOld;
 import jetbrains.jetpad.completion.CompletionItem;
 import jetbrains.jetpad.completion.CompletionParameters;
 import jetbrains.jetpad.completion.CompletionSupplier;
@@ -23,7 +24,6 @@ import jetbrains.jetpad.mapper.Mapper;
 import jetbrains.jetpad.mapper.Mappers;
 import jetbrains.jetpad.cell.action.CellActions;
 import jetbrains.jetpad.cell.completion.*;
-import jetbrains.jetpad.cell.trait.BaseCellTrait;
 import jetbrains.jetpad.cell.trait.CellTraitPropertySpec;
 import jetbrains.jetpad.projectional.demo.expr.ExprBinOpTransformer;
 import jetbrains.jetpad.projectional.demo.expr.model.*;
@@ -36,7 +36,7 @@ import java.util.List;
 class BinaryExpressionMapper extends Mapper<BinaryExpression, BinaryExpressionCell> {
   BinaryExpressionMapper(String sign, BinaryExpression source) {
     super(source, new BinaryExpressionCell(sign));
-    getTarget().sign.addTrait(new BaseCellTrait() {
+    getTarget().sign.addTrait(new BaseCellTraitOld() {
       @Override
       public Object get(Cell cell, CellTraitPropertySpec<?> spec) {
         if (spec == Completion.COMPLETION) {
