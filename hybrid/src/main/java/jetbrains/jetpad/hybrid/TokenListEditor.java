@@ -38,7 +38,7 @@ import java.util.List;
 
 class TokenListEditor<SourceT> {
   private Property<Boolean> myValid = new ValueProperty<>(true);
-  private ParseNode myParseNode;
+  private Property<ParseNode> myParseNode = new ValueProperty<>();
   private HybridPositionController<SourceT> mySpec;
   private boolean mySyncing;
   private List<Token> myPrintedTokens;
@@ -76,14 +76,14 @@ class TokenListEditor<SourceT> {
     });
   }
 
-  ParseNode parseNode() {
+  ReadableProperty<ParseNode> parseNode() {
     return myParseNode;
   }
 
   List<Object> objects() {
-    if (myParseNode == null) return Collections.emptyList();
+    if (myParseNode.get() == null) return Collections.emptyList();
     List<Object> result = new ArrayList<>();
-    toObjects(myParseNode, result);
+    toObjects(myParseNode.get(), result);
     return result;
   }
 
@@ -154,7 +154,7 @@ class TokenListEditor<SourceT> {
     PrettyPrinter<? super SourceT> printer = mySpec.getPrettyPrinter();
     PrettyPrinterContext<? super SourceT> ctx = new PrettyPrinterContext<>(printer);
     ctx.print(value.get());
-    myParseNode = ctx.result();
+    myParseNode.set(ctx.result());
     myPrintedTokens = ctx.tokens();
 
     myChangeReg.remove();

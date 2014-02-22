@@ -190,7 +190,7 @@ public class HybridSynchronizer<SourceT> implements Synchronizer {
         } else {
           Range<Integer> currentRange = selection();
           if (event.is(KeyStrokeSpecs.SELECT_UP)) {
-            ParseNode parseNode = myTokenListEditor.parseNode();
+            ParseNode parseNode = myTokenListEditor.parseNode().get();
             if (parseNode != null) {
               if (!currentRange.equals(parseNode.range())) {
                 ParseNode node = ParseNodes.findForRange(parseNode, currentRange);
@@ -209,7 +209,7 @@ public class HybridSynchronizer<SourceT> implements Synchronizer {
           }
 
           if (event.is(KeyStrokeSpecs.SELECT_DOWN)) {
-            ParseNode parseNode = myTokenListEditor.parseNode();
+            ParseNode parseNode = myTokenListEditor.parseNode().get();
             if (parseNode != null) {
               ParseNode node = ParseNodes.findForRange(parseNode, currentRange);
               ParseNode childNode = ParseNodes.nonSameRangeChild(node, myTargetList.indexOf(mySelectionSupport.currentCell()));
@@ -345,7 +345,7 @@ public class HybridSynchronizer<SourceT> implements Synchronizer {
           protected CellTrait[] getBaseTraits(Cell cell) {
             List<CellTrait> result = new ArrayList<>();
             int index = myTargetList.indexOf(cell);
-            ParseNode parseNode = tokenListEditor().parseNode();
+            ParseNode parseNode = tokenListEditor().parseNode().get();
             if (parseNode != null) {
               ParseNode node = ParseNodes.findForRange(parseNode, Range.closed(index, index + 1));
               while (node != null) {
@@ -540,7 +540,7 @@ public class HybridSynchronizer<SourceT> implements Synchronizer {
   }
 
   public Range<Integer> rangeFor(Object object) {
-    ParseNode parseNode = tokenListEditor().parseNode();
+    ParseNode parseNode = tokenListEditor().parseNode().get();
     if (parseNode == null) {
       throw new IllegalStateException("Hybrid Synchronizer is in invalid state");
     }
