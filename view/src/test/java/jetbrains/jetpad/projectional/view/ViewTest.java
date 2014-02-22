@@ -37,11 +37,16 @@ import static org.mockito.Mockito.*;
 
 public class ViewTest {
   static final ViewPropertySpec<String> NAME = new ViewPropertySpec<>("name");
+  static final ViewPropertySpec<String> ID = new ViewPropertySpec<>("id");
 
   static final ViewTrait X_NAME_TRAIT = new ViewTraitBuilder().set(NAME, "x").build();
+  static final ViewTrait ID_TRAIT = new ViewTraitBuilder(X_NAME_TRAIT).set(ID, "id").build();
+  static final ViewTrait OVERRIDE_NAME_TRAIT = new ViewTraitBuilder(X_NAME_TRAIT).set(NAME, "xx").build();
 
-  private String myPrevValue;
-  private String myCurrentValue;
+  private String myPrevNameValue;
+  private String myCurrentNameValue;
+  private String myPrevIdValue;
+  private String myCurrentIdValue;
 
   private ViewContainer container = new ViewContainer();
 
@@ -75,7 +80,7 @@ public class ViewTest {
     v.set(NAME, "aaa");
     assertEquals("aaa", v.get(NAME));
 
-    assertFired(null, "aaa");
+    assertNameFired(null, "aaa");
   }
 
   @Test
@@ -86,7 +91,22 @@ public class ViewTest {
     v.addTrait(X_NAME_TRAIT);
     assertEquals("x", v.get(NAME));
 
-    assertFired(null, "x");
+    assertNameFired(null, "x");
+  }
+
+  @Test
+  public void propChangeWithAdditngTraitWithParent() {
+    View v = newView();
+    v.prop(NAME).addHandler(nameChangeListener());
+    v.prop(ID).addHandler(idChangeListener());
+
+    v.addTrait(ID_TRAIT);
+
+    assertNameFired(null, "x");
+    assertIdFired(null, "id");
+
+    assertEquals("id", v.get(ID));
+    assertEquals("x", v.get(NAME));
   }
 
   @Test
@@ -100,7 +120,31 @@ public class ViewTest {
 
     assertNull(v.get(NAME));
 
-    assertFired("x", null);
+    assertNameFired("x", null);
+  }
+
+  @Test
+  public void propChangeWithRemovingTraitWithParent() {
+    View v = newView();
+    v.prop(NAME).addHandler(nameChangeListener());
+    v.prop(ID).addHandler(idChangeListener());
+
+    v.addTrait(ID_TRAIT).remove();
+
+    assertNameFired("x", null);
+    assertIdFired("id", null);
+
+    assertEquals(null, v.get(ID));
+    assertEquals(null, v.get(NAME));
+  }
+
+  @Test
+  public void oneTraitOverridesOther() {
+    View v = newView();
+    v.prop(NAME).addHandler(nameChangeListener());
+    v.addTrait(OVERRIDE_NAME_TRAIT);
+
+    assertNameFired(null, "xx");
   }
 
   @Test
@@ -382,15 +426,30 @@ public class ViewTest {
     return new EventHandler<PropertyChangeEvent<String>>() {
       @Override
       public void onEvent(PropertyChangeEvent<String> event) {
-        myPrevValue = event.getOldValue();
-        myCurrentValue = event.getNewValue();
+        myPrevNameValue = event.getOldValue();
+        myCurrentNameValue = event.getNewValue();
       }
     };
   }
 
-  private void assertFired(String oldValue, String newValue) {
-    assertEquals(oldValue, myPrevValue);
-    assertEquals(newValue, myCurrentValue);
+  private EventHandler<PropertyChangeEvent<String>> idChangeListener() {
+    return new EventHandler<PropertyChangeEvent<String>>() {
+      @Override
+      public void onEvent(PropertyChangeEvent<String> event) {
+        myPrevIdValue = event.getOldValue();
+        myCurrentIdValue = event.getNewValue();
+      }
+    };
+  }
+
+  private void assertNameFired(String oldValue, String newValue) {
+    assertEquals(oldValue, myPrevNameValue);
+    assertEquals(newValue, myCurrentNameValue);
+  }
+
+  private void assertIdFired(String oldValue, String newValue) {
+    assertEquals(oldValue, myPrevIdValue);
+    assertEquals(newValue, myCurrentIdValue);
   }
 
   private View newView() {

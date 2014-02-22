@@ -24,10 +24,12 @@ import java.util.Map;
 import java.util.Set;
 
 public final class ViewTrait {
+  private ViewTrait myParent;
   private ListMap<ViewPropertySpec<?>, Object> myProperties;
   private ListMap<ViewEventSpec<?>, List<ViewEventHandler>> myHandlers;
 
-  ViewTrait(Map<ViewPropertySpec<?>, Object> props, Map<ViewEventSpec<?>, List<ViewEventHandler>> handlers) {
+  ViewTrait(ViewTrait parent, Map<ViewPropertySpec<?>, Object> props, Map<ViewEventSpec<?>, List<ViewEventHandler>> handlers) {
+    myParent = parent;
     for (Map.Entry<ViewPropertySpec<?>, Object> entry : props.entrySet()) {
       if (myProperties == null) {
         myProperties = new ListMap<>();
@@ -41,6 +43,10 @@ public final class ViewTrait {
       }
       myHandlers.put(entry.getKey(), entry.getValue());
     }
+  }
+
+  ViewTrait parent() {
+    return myParent;
   }
 
   Set<ViewPropertySpec<?>> properties() {

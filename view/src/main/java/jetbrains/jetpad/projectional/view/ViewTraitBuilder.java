@@ -23,8 +23,17 @@ import java.util.List;
 import java.util.Map;
 
 public class ViewTraitBuilder {
+  private ViewTrait myParent;
   private Map<ViewPropertySpec<?>, Object> myProperties = new HashMap<>();
   private Map<ViewEventSpec<?>, List<ViewEventHandler>> myHandlers = new HashMap<>();
+
+  public ViewTraitBuilder() {
+    this(null);
+  }
+
+  public ViewTraitBuilder(ViewTrait parent) {
+    myParent = parent;
+  }
 
   public <ValueT> ViewTraitBuilder set(ViewPropertySpec<ValueT> prop, ValueT value) {
     myProperties.put(prop, value);
@@ -40,6 +49,6 @@ public class ViewTraitBuilder {
   }
 
   public ViewTrait build() {
-    return new ViewTrait(myProperties, myHandlers);
+    return new ViewTrait(myParent, myProperties, myHandlers);
   }
 }

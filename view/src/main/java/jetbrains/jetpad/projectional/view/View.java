@@ -33,10 +33,7 @@ import jetbrains.jetpad.model.property.*;
 import jetbrains.jetpad.model.util.ListMap;
 import jetbrains.jetpad.values.Color;
 
-import java.util.AbstractList;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public abstract class View implements Composite<View>, HasFocusability, HasVisibility, HasBounds {
   //debug attribute which is used in toString
@@ -195,19 +192,27 @@ public abstract class View implements Composite<View>, HasFocusability, HasVisib
   }
 
   private Runnable createFiringRunnable(ViewTrait t) {
-    Set<ViewPropertySpec<?>> props = t.properties();
+    Set<ViewPropertySpec<?>> props = new HashSet<>();
     final List<Runnable> toRun = new ArrayList<>();
-    for (final ViewPropertySpec<?> p : props) {
-      final Object val = get(p);
-      toRun.add(new Runnable() {
-        @Override
-        public void run() {
-          final Object newVal = get(p);
-          if (Objects.equal(val, newVal)) return;
-          propertyChanged(p, new PropertyChangeEvent(val, newVal));
-        }
-      });
+
+    ViewTrait current = t;
+    while (current != null) {
+      for (final ViewPropertySpec<?> p : current.properties()) {
+        if (props.contains(p)) continue;
+        final Object val = get(p);
+        toRun.add(new Runnable() {
+          @Override
+          public void run() {
+            final Object newVal = get(p);
+            if (Objects.equal(val, newVal)) return;
+            propertyChanged(p, new PropertyChangeEvent(val, newVal));
+          }
+        });
+        props.add(p);
+      }
+      current = current.parent();
     }
+
     return new Runnable() {
       @Override
       public void run() {
@@ -225,8 +230,12 @@ public abstract class View implements Composite<View>, HasFocusability, HasVisib
 
     if (myTraits != null) {
       for (ViewTrait vt : myTraits) {
-        if (vt.hasValue(prop)) {
-          return vt.get(prop);
+        ViewTrait current = vt;
+        while (current != null) {
+          if (current.hasValue(prop)) {
+            return current.get(prop);
+          }
+          current = current.parent();
         }
       }
     }
@@ -619,8 +628,12 @@ public abstract class View implements Composite<View>, HasFocusability, HasVisib
   public <EventT extends Event> void dispatch(ViewEventSpec<EventT> spec, EventT event) {
     if (myTraits != null) {
       for (ViewTrait t : myTraits) {
-        t.dispatch(this, spec, event);
-        if (event.isConsumed()) return;
+        ViewTrait current = t;
+        while (current != null) {
+          current.dispatch(this, spec, event);
+          if (event.isConsumed()) return;
+          current = current.parent();
+        }
       }
     }
 
