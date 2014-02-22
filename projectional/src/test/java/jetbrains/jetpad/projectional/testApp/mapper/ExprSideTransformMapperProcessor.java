@@ -15,7 +15,7 @@
  */
 package jetbrains.jetpad.projectional.testApp.mapper;
 
-import jetbrains.jetpad.cell.trait.BaseCellTraitOld;
+import jetbrains.jetpad.cell.trait.BaseCellTrait;
 import jetbrains.jetpad.completion.CompletionItem;
 import jetbrains.jetpad.completion.CompletionParameters;
 import jetbrains.jetpad.completion.CompletionSupplier;
@@ -45,7 +45,7 @@ class ExprSideTransformMapperProcessor implements MapperProcessor<Expr, Cell> {
     Cell lastLeaf = lastFocusable(cell);
 
     if (firstLeaf != null) {
-      firstLeaf.addTrait(new BaseCellTraitOld() {
+      firstLeaf.addTrait(new BaseCellTrait() {
 
         @Override
         public Object get(Cell cell, CellTraitPropertySpec<?> spec) {
@@ -101,7 +101,7 @@ class ExprSideTransformMapperProcessor implements MapperProcessor<Expr, Cell> {
     }
 
     if (lastLeaf != null) {
-      lastLeaf.addTrait(new BaseCellTraitOld() {
+      lastLeaf.addTrait(new BaseCellTrait() {
         @Override
         public Object get(Cell cell, CellTraitPropertySpec<?> spec) {
           if (spec == Completion.LEFT_TRANSFORM) {

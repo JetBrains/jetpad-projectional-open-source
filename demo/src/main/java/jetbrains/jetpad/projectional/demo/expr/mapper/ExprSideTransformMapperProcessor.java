@@ -19,7 +19,7 @@ import jetbrains.jetpad.base.Handler;
 import jetbrains.jetpad.cell.Cell;
 import jetbrains.jetpad.cell.action.CellActions;
 import jetbrains.jetpad.cell.completion.*;
-import jetbrains.jetpad.cell.trait.BaseCellTraitOld;
+import jetbrains.jetpad.cell.trait.BaseCellTrait;
 import jetbrains.jetpad.cell.trait.CellTraitPropertySpec;
 import jetbrains.jetpad.completion.CompletionItem;
 import jetbrains.jetpad.completion.CompletionParameters;
@@ -47,7 +47,7 @@ class ExprSideTransformMapperProcessor implements MapperProcessor<Expression, Ce
     Cell lastFocusable = Composites.lastFocusable(cell);
 
     if (lastFocusable != null) {
-      lastFocusable.addTrait(new BaseCellTraitOld() {
+      lastFocusable.addTrait(new BaseCellTrait() {
         @Override
         public Object get(Cell cell, CellTraitPropertySpec<?> spec) {
           if (spec == Completion.RIGHT_TRANSFORM) {
@@ -91,7 +91,7 @@ class ExprSideTransformMapperProcessor implements MapperProcessor<Expression, Ce
 
     if (firstFocusable != null) {
 
-      firstFocusable.addTrait(new BaseCellTraitOld() {
+      firstFocusable.addTrait(new BaseCellTrait() {
         @Override
         public Object get(Cell cell, CellTraitPropertySpec<?> spec) {
           if (spec == Completion.LEFT_TRANSFORM) {

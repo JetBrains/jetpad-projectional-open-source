@@ -1,65 +1,59 @@
+/*
+ * Copyright 2012-2014 JetBrains s.r.o
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package jetbrains.jetpad.cell.trait;
 
+import jetbrains.jetpad.event.*;
+import jetbrains.jetpad.model.property.PropertyChangeEvent;
 import jetbrains.jetpad.cell.Cell;
 import jetbrains.jetpad.cell.CellPropertySpec;
-import jetbrains.jetpad.cell.event.CellEventHandler;
-import jetbrains.jetpad.cell.event.CellEventSpec;
-import jetbrains.jetpad.event.Event;
-import jetbrains.jetpad.model.util.ListMap;
+import jetbrains.jetpad.cell.event.CompletionEvent;
+import jetbrains.jetpad.cell.event.FocusEvent;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+public interface CellTrait {
+  public static final Object NULL = new Object();
+  public static final CellTrait[] EMPTY_ARRAY = new CellTrait[0];
 
-public class CellTrait {
-  private CellTrait myParent;
-  private ListMap<CellPropertySpec<?>, Object> myProperties;
-  private ListMap<CellEventSpec<?>, List<CellEventHandler>> myHandlers;
+  void onPropertyChanged(Cell cell, CellPropertySpec<?> property, PropertyChangeEvent<?> event);
 
-  CellTrait(CellTrait parent, Map<CellPropertySpec<?>, Object> props, Map<CellEventSpec<?>, List<CellEventHandler>> handlers) {
-    myParent = parent;
-    for (Map.Entry<CellPropertySpec<?>, Object> entry : props.entrySet()) {
-      if (myProperties == null) {
-        myProperties = new ListMap<>();
-      }
-      myProperties.put(entry.getKey(), entry.getValue());
-    }
+  void onFocusGained(Cell cell, FocusEvent event);
+  void onFocusLost(Cell cell, FocusEvent event);
 
-    for (Map.Entry<CellEventSpec<?>, List<CellEventHandler>> entry : handlers.entrySet()) {
-      if (myHandlers == null) {
-        myHandlers = new ListMap<>();
-      }
-      myHandlers.put(entry.getKey(), entry.getValue());
-    }
-  }
+  void onMousePressed(Cell cell, MouseEvent event);
+  void onMouseMoved(Cell cell, MouseEvent event);
+  void onMouseReleased(Cell cell, MouseEvent event);
+  void onMouseEntered(Cell cell, MouseEvent event);
+  void onMouseLeft(Cell cell, MouseEvent event);
 
-  public CellTrait parent() {
-    return myParent;
-  }
+  void onKeyPressed(Cell cell, KeyEvent event);
+  void onKeyPressedLowPriority(Cell cell, KeyEvent event);
 
-  public Set<CellPropertySpec<?>> properties() {
-    if (myProperties == null) return Collections.emptySet();
-    return Collections.unmodifiableSet(myProperties.keySet());
-  }
+  void onKeyReleased(Cell cell, KeyEvent event);
+  void onKeyReleasedLowPriority(Cell cell, KeyEvent event);
 
-  public boolean hasValue(CellPropertySpec<?> prop) {
-    if (myProperties == null) return false;
-    return myProperties.containsKey(prop);
-  }
+  void onKeyTyped(Cell cell, KeyEvent event);
+  void onKeyTypedLowPriority(Cell cell, KeyEvent event);
 
-  public <ValueT> ValueT get(CellPropertySpec<ValueT> prop) {
-    return (ValueT) myProperties.get(prop);
-  }
+  void onCopy(Cell cell, CopyCutEvent event);
+  void onCut(Cell cell, CopyCutEvent event);
+  void onPaste(Cell cell, PasteEvent event);
 
-  public <EventT extends Event> void dispatch(Cell cell, CellEventSpec<EventT> spec, EventT event) {
-    if (myHandlers != null && myHandlers.containsKey(spec)) {
-      for (CellEventHandler handler : myHandlers.get(spec)) {
-        handler.handle(cell, event);
-        if (event.isConsumed()) return;
-      }
-    }
-  }
+  void onComplete(Cell cell, CompletionEvent event);
 
+  void onViewTraitEvent(Cell cell, CellTraitEventSpec<?> spec, Event event);
 
+  Object get(Cell cell, CellPropertySpec<?> spec);
+  Object get(Cell cell, CellTraitPropertySpec<?> spec);
 }

@@ -15,8 +15,8 @@
  */
 package jetbrains.jetpad.projectional.cell;
 
-import jetbrains.jetpad.cell.trait.BaseCellTraitOld;
-import jetbrains.jetpad.cell.trait.CellTraitOld;
+import jetbrains.jetpad.cell.trait.BaseCellTrait;
+import jetbrains.jetpad.cell.trait.CellTrait;
 import jetbrains.jetpad.cell.util.Cells;
 import jetbrains.jetpad.completion.CompletionItem;
 import jetbrains.jetpad.completion.CompletionParameters;
@@ -65,11 +65,11 @@ class ProjectionalPropertySynchronizer<ContextT, SourceItemT extends ContextT> e
 
   @Override
   protected Registration registerChild(SourceItemT child, Cell childCell) {
-    return childCell.addTrait(new BaseCellTraitOld() {
+    return childCell.addTrait(new BaseCellTrait() {
       @Override
-      protected CellTraitOld[] getBaseTraits(Cell cell) {
+      protected CellTrait[] getBaseTraits(Cell cell) {
         if (!(cell instanceof TextCell)) {
-          return new CellTraitOld[] { CompletionSupport.trait() };
+          return new CellTrait[] { CompletionSupport.trait() };
         }
         return super.getBaseTraits(cell);
       }

@@ -15,7 +15,7 @@
  */
 package jetbrains.jetpad.cell.completion;
 
-import jetbrains.jetpad.cell.trait.BaseCellTraitOld;
+import jetbrains.jetpad.cell.trait.BaseCellTrait;
 import jetbrains.jetpad.cell.trait.CellTraitPropertySpec;
 import jetbrains.jetpad.cell.HorizontalCell;
 import jetbrains.jetpad.cell.Cell;
@@ -26,7 +26,7 @@ public class NonTextCellCompletionHandlerTest extends CompletionHandlerTestCase 
 
   @Before
   public void init() {
-    target.addTrait(new BaseCellTraitOld() {
+    target.addTrait(new BaseCellTrait() {
       @Override
       public Object get(Cell cell, CellTraitPropertySpec<?> spec) {
         if (spec == Completion.COMPLETION) {

@@ -17,7 +17,7 @@ package jetbrains.jetpad.hybrid;
 
 import com.google.common.base.Predicates;
 import com.google.common.base.Supplier;
-import jetbrains.jetpad.cell.trait.CellTraitOld;
+import jetbrains.jetpad.cell.trait.CellTrait;
 import jetbrains.jetpad.cell.trait.CellTraitPropertySpec;
 import jetbrains.jetpad.hybrid.parser.ErrorToken;
 import jetbrains.jetpad.hybrid.parser.SimpleToken;
@@ -65,11 +65,11 @@ class TextTokenCell extends TextCell {
     focusable().set(posCount > 0);
   }
 
-  private CellTraitOld createTrait() {
+  private CellTrait createTrait() {
     return new TokenCellTraits.TokenCellTrait(false) {
       @Override
-      protected CellTraitOld[] getBaseTraits(Cell cell) {
-        return new CellTraitOld[] {
+      protected CellTrait[] getBaseTraits(Cell cell) {
+        return new CellTrait[] {
           new TokenCellTraits.LeftLeafTokenCellTrait(),
           new TokenCellTraits.RightLeafTokenCellTrait(),
           TextEditing.validTextEditing(myToken instanceof ErrorToken ? Predicates.<String>alwaysFalse() : Predicates.equalTo(myToken.text()), tokenTextColor(), false)

@@ -22,133 +22,133 @@ import jetbrains.jetpad.cell.CellPropertySpec;
 import jetbrains.jetpad.cell.event.CompletionEvent;
 import jetbrains.jetpad.cell.event.FocusEvent;
 
-public abstract class BaseCellTraitOld implements CellTraitOld {
-  protected CellTraitOld[] getBaseTraits(Cell cell) {
-    return CellTraitOld.EMPTY_ARRAY;
+public abstract class BaseCellTrait implements CellTrait {
+  protected CellTrait[] getBaseTraits(Cell cell) {
+    return CellTrait.EMPTY_ARRAY;
   }
 
   @Override
   public void onPropertyChanged(Cell cell, CellPropertySpec<?> prop, PropertyChangeEvent<?> event) {
-    for (CellTraitOld t : getBaseTraits(cell)) {
+    for (CellTrait t : getBaseTraits(cell)) {
       t.onPropertyChanged(cell, prop, event);
     }
   }
 
   @Override
   public void onFocusGained(Cell cell, FocusEvent event) {
-    for (CellTraitOld t : getBaseTraits(cell)) {
+    for (CellTrait t : getBaseTraits(cell)) {
       t.onFocusGained(cell, event);
     }
   }
 
   @Override
   public void onFocusLost(Cell cell, FocusEvent event) {
-    for (CellTraitOld t : getBaseTraits(cell)) {
+    for (CellTrait t : getBaseTraits(cell)) {
       t.onFocusLost(cell, event);
     }
   }
 
   @Override
   public void onMousePressed(Cell cell, MouseEvent event) {
-    for (CellTraitOld t : getBaseTraits(cell)) {
+    for (CellTrait t : getBaseTraits(cell)) {
       t.onMousePressed(cell, event);
     }
   }
 
   @Override
   public void onMouseReleased(Cell cell, MouseEvent event) {
-    for (CellTraitOld t : getBaseTraits(cell)) {
+    for (CellTrait t : getBaseTraits(cell)) {
       t.onMouseReleased(cell, event);
     }
   }
 
   @Override
   public void onMouseMoved(Cell cell, MouseEvent event) {
-    for (CellTraitOld t : getBaseTraits(cell)) {
+    for (CellTrait t : getBaseTraits(cell)) {
       t.onMouseMoved(cell, event);
     }
   }
 
   @Override
   public void onMouseEntered(Cell cell, MouseEvent event) {
-    for (CellTraitOld t : getBaseTraits(cell)) {
+    for (CellTrait t : getBaseTraits(cell)) {
       t.onMouseEntered(cell, event);
     }
   }
 
   @Override
   public void onMouseLeft(Cell cell, MouseEvent event) {
-    for (CellTraitOld t : getBaseTraits(cell)) {
+    for (CellTrait t : getBaseTraits(cell)) {
       t.onMouseLeft(cell, event);
     }
   }
 
   @Override
   public void onKeyPressed(Cell cell, KeyEvent event) {
-    for (CellTraitOld t : getBaseTraits(cell)) {
+    for (CellTrait t : getBaseTraits(cell)) {
       t.onKeyPressed(cell, event);
     }
   }
 
   @Override
   public void onKeyPressedLowPriority(Cell cell, KeyEvent event) {
-    for (CellTraitOld t : getBaseTraits(cell)) {
+    for (CellTrait t : getBaseTraits(cell)) {
       t.onKeyReleasedLowPriority(cell, event);
     }
   }
 
   @Override
   public void onKeyReleased(Cell cell, KeyEvent event) {
-    for (CellTraitOld t : getBaseTraits(cell)) {
+    for (CellTrait t : getBaseTraits(cell)) {
       t.onKeyReleased(cell, event);
     }
   }
 
   @Override
   public void onKeyReleasedLowPriority(Cell cell, KeyEvent event) {
-    for (CellTraitOld t : getBaseTraits(cell)) {
+    for (CellTrait t : getBaseTraits(cell)) {
       t.onKeyReleasedLowPriority(cell, event);
     }
   }
 
   @Override
   public void onKeyTyped(Cell cell, KeyEvent event) {
-    for (CellTraitOld t : getBaseTraits(cell)) {
+    for (CellTrait t : getBaseTraits(cell)) {
       t.onKeyTyped(cell, event);
     }
   }
 
   @Override
   public void onKeyTypedLowPriority(Cell cell, KeyEvent event) {
-    for (CellTraitOld t : getBaseTraits(cell)) {
+    for (CellTrait t : getBaseTraits(cell)) {
       t.onKeyTypedLowPriority(cell, event);
     }
   }
 
   @Override
   public void onCopy(Cell cell, CopyCutEvent event) {
-    for (CellTraitOld t : getBaseTraits(cell)) {
+    for (CellTrait t : getBaseTraits(cell)) {
       t.onCopy(cell, event);
     }
   }
 
   @Override
   public void onCut(Cell cell, CopyCutEvent event) {
-    for (CellTraitOld t : getBaseTraits(cell)) {
+    for (CellTrait t : getBaseTraits(cell)) {
       t.onCut(cell, event);
     }
   }
 
   @Override
   public void onPaste(Cell cell, PasteEvent event) {
-    for (CellTraitOld t : getBaseTraits(cell)) {
+    for (CellTrait t : getBaseTraits(cell)) {
       t.onPaste(cell, event);
     }
   }
 
   @Override
   public void onComplete(Cell cell, CompletionEvent event) {
-    for (CellTraitOld t : getBaseTraits(cell)) {
+    for (CellTrait t : getBaseTraits(cell)) {
       t.onComplete(cell, event);
     }
   }
@@ -159,7 +159,7 @@ public abstract class BaseCellTraitOld implements CellTraitOld {
 
   @Override
   public Object get(Cell cell, CellPropertySpec<?> spec) {
-    for (CellTraitOld t : getBaseTraits(cell)) {
+    for (CellTrait t : getBaseTraits(cell)) {
       Object result = t.get(cell, spec);
       if (result != null) return result;
     }
@@ -168,7 +168,7 @@ public abstract class BaseCellTraitOld implements CellTraitOld {
 
   @Override
   public Object get(Cell cell, CellTraitPropertySpec<?> spec) {
-    for (CellTraitOld t : getBaseTraits(cell)) {
+    for (CellTrait t : getBaseTraits(cell)) {
       Object result = t.get(cell, spec);
       if (result != null) return result;
     }

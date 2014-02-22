@@ -18,7 +18,7 @@ package jetbrains.jetpad.projectional.util;
 import jetbrains.jetpad.cell.Cell;
 import jetbrains.jetpad.cell.CellContainer;
 import jetbrains.jetpad.cell.position.PositionHandler;
-import jetbrains.jetpad.cell.trait.BaseCellTraitOld;
+import jetbrains.jetpad.cell.trait.BaseCellTrait;
 import jetbrains.jetpad.event.KeyEvent;
 import jetbrains.jetpad.event.MouseEvent;
 import jetbrains.jetpad.model.event.CompositeRegistration;
@@ -44,7 +44,7 @@ public class CellNavigationController extends NavigationController<Cell> {
   @Override
   public CompositeRegistration install() {
     CompositeRegistration result = super.install();
-    result.add(myContainer.root.addTrait(new BaseCellTraitOld() {
+    result.add(myContainer.root.addTrait(new BaseCellTrait() {
       @Override
       public void onKeyPressed(Cell cell, KeyEvent event) {
         handleKeyPress(event);

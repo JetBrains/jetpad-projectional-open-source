@@ -17,8 +17,8 @@ package jetbrains.jetpad.projectional.cell;
 
 import com.google.common.base.Function;
 import com.google.common.base.Supplier;
-import jetbrains.jetpad.cell.trait.BaseCellTraitOld;
-import jetbrains.jetpad.cell.trait.CellTraitOld;
+import jetbrains.jetpad.cell.trait.BaseCellTrait;
+import jetbrains.jetpad.cell.trait.CellTrait;
 import jetbrains.jetpad.cell.util.Cells;
 import jetbrains.jetpad.event.*;
 import jetbrains.jetpad.mapper.Mapper;
@@ -209,7 +209,7 @@ public class ProjectionalPropertySynchronizerTest extends EditingTestCase {
   @Test
   public void becameEmptyEventIfAllowed() {
     final Value<Boolean> becameEmptyFired = new Value<>(false);
-    rootMapper.getTarget().addTrait(new BaseCellTraitOld() {
+    rootMapper.getTarget().addTrait(new BaseCellTrait() {
 
       @Override
       public Object get(Cell cell, CellTraitPropertySpec<?> spec) {
@@ -345,10 +345,10 @@ public class ProjectionalPropertySynchronizerTest extends EditingTestCase {
 
       getTarget().text().set(myText);
 
-      getTarget().addTrait(new BaseCellTraitOld() {
+      getTarget().addTrait(new BaseCellTrait() {
         @Override
-        protected CellTraitOld[] getBaseTraits(Cell cell) {
-          return new CellTraitOld[] {
+        protected CellTrait[] getBaseTraits(Cell cell) {
+          return new CellTrait[] {
             myEditable ? TextEditing.validTextEditing(Validators.equalsTo(myText)) : TextEditing.textNavigation(true, true)
           };
         }

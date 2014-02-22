@@ -18,8 +18,8 @@ package jetbrains.jetpad.cell.completion;
 import com.google.common.base.Strings;
 import jetbrains.jetpad.base.Handler;
 import jetbrains.jetpad.base.Runnables;
-import jetbrains.jetpad.cell.trait.BaseCellTraitOld;
-import jetbrains.jetpad.cell.trait.CellTraitOld;
+import jetbrains.jetpad.cell.trait.BaseCellTrait;
+import jetbrains.jetpad.cell.trait.CellTrait;
 import jetbrains.jetpad.completion.*;
 import jetbrains.jetpad.model.event.CompositeRegistration;
 import jetbrains.jetpad.model.event.Registration;
@@ -45,8 +45,8 @@ import java.util.List;
 public class CompletionSupport {
   public static final CellTraitPropertySpec<Runnable> HIDE_COMPLETION = new CellTraitPropertySpec<>("hideCompletion");
 
-  public static CellTraitOld trait() {
-    return new BaseCellTraitOld() {
+  public static CellTrait trait() {
+    return new BaseCellTrait() {
       @Override
       public Object get(Cell cell, CellTraitPropertySpec<?> spec) {
         if (spec == Completion.COMPLETION_CONTROLLER) {
@@ -147,7 +147,7 @@ public class CompletionSupport {
       }
     };
 
-    reg.add(textView.addTrait(new BaseCellTraitOld() {
+    reg.add(textView.addTrait(new BaseCellTrait() {
       @Override
       public void onPropertyChanged(Cell cell, CellPropertySpec<?> propery, PropertyChangeEvent<?> event) {
         if (propery == Cell.FOCUSED) {
@@ -269,7 +269,7 @@ public class CompletionSupport {
     final HorizontalCell popup = new HorizontalCell();
     final TextCell textView = new TextCell() {
       @Override
-      public Registration addTrait(CellTraitOld trait) {
+      public Registration addTrait(CellTrait trait) {
         return super.addTrait(trait);
       }
     };

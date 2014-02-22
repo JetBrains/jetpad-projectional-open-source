@@ -15,7 +15,7 @@
  */
 package jetbrains.jetpad.cell;
 
-import jetbrains.jetpad.cell.trait.BaseCellTraitOld;
+import jetbrains.jetpad.cell.trait.BaseCellTrait;
 import jetbrains.jetpad.cell.view.MapperCell2View;
 import jetbrains.jetpad.event.MouseEvent;
 import jetbrains.jetpad.geometry.Vector;
@@ -74,7 +74,7 @@ public class CellContainerTest {
     {
       text().set("Test");
 
-      addTrait(new BaseCellTraitOld() {
+      addTrait(new BaseCellTrait() {
         @Override
         public void onMouseEntered(Cell cell, MouseEvent event) {
           super.onMouseEntered(cell, event);
