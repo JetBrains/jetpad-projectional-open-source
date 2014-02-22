@@ -15,7 +15,7 @@
  */
 package jetbrains.jetpad.hybrid.parser.prettyprint;
 
-import com.google.common.base.*;
+import com.google.common.base.Function;
 import com.google.common.collect.Range;
 import jetbrains.jetpad.hybrid.parser.*;
 import jetbrains.jetpad.model.collections.list.ObservableList;
@@ -24,8 +24,6 @@ import jetbrains.jetpad.model.event.EventHandler;
 import jetbrains.jetpad.model.event.EventSource;
 import jetbrains.jetpad.model.event.Registration;
 import jetbrains.jetpad.model.property.Property;
-import com.google.common.base.Objects;
-import jetbrains.jetpad.model.property.WritableProperty;
 
 import java.util.*;
 
@@ -34,7 +32,6 @@ public class PrettyPrinterContext<NodeT>  {
 
   private List<Token> myTokens = new ArrayList<>();
   private Stack<List<BaseParseNode>> myStack = new Stack<>();
-  private Stack<ParseNodeBuilder> myNodeBuilders = new Stack<>();
   private boolean myPrinted;
   private List<EventSource<?>> myChangeSources = new ArrayList<>();
 
@@ -56,17 +53,16 @@ public class PrettyPrinterContext<NodeT>  {
     myPrinted = true;
   }
 
-  public ParseNodeBuilder append(Token token) {
+  public void append(Token token) {
     myTokens.add(token);
     TokenParseNode result = new TokenParseNode(token, myTokens.size() - 1);
     myStack.peek().add(result);
-    return new MyParseNodeBuilder(result);
   }
 
-  public <ValueT> ParseNodeBuilder append(Property<ValueT> prop, Function<ValueT, Token> f) {
+  public <ValueT> void append(Property<ValueT> prop, Function<ValueT, Token> f) {
     myChangeSources.add(prop);
 
-    return append(f.apply(prop.get()));
+    append(f.apply(prop.get()));
   }
 
   public void append(Property<? extends NodeT> prop) {
@@ -112,8 +108,8 @@ public class PrettyPrinterContext<NodeT>  {
     }
   }
 
-  public ParseNodeBuilder appendInt(Property<Integer> prop) {
-    return append(prop, new Function<Integer, Token>() {
+  public void appendInt(Property<Integer> prop) {
+    append(prop, new Function<Integer, Token>() {
       @Override
       public Token apply(Integer input) {
         return new IntValueToken(input != null ? input : 0);
@@ -121,8 +117,8 @@ public class PrettyPrinterContext<NodeT>  {
     });
   }
 
-  public ParseNodeBuilder appendBool(Property<Boolean> prop) {
-    return append(prop, new Function<Boolean, Token>() {
+  public void appendBool(Property<Boolean> prop) {
+    append(prop, new Function<Boolean, Token>() {
       @Override
       public Token apply(Boolean input) {
         return new BoolValueToken(input != null ? input : Boolean.FALSE);
@@ -130,8 +126,8 @@ public class PrettyPrinterContext<NodeT>  {
     });
   }
 
-  public ParseNodeBuilder appendId(Property<String> prop) {
-    return append(prop, new Function<String, Token>() {
+  public void appendId(Property<String> prop) {
+    append(prop, new Function<String, Token>() {
       @Override
       public Token apply(String input) {
         return new IdentifierToken(input != null ? input : "");
@@ -139,8 +135,8 @@ public class PrettyPrinterContext<NodeT>  {
     });
   }
 
-  public ParseNodeBuilder appendError(Property<String> prop) {
-    return append(prop, new Function<String, Token>() {
+  public void appendError(Property<String> prop) {
+    append(prop, new Function<String, Token>() {
       @Override
       public Token apply(String input) {
         return new ErrorToken(input != null ? input : "");
@@ -148,27 +144,10 @@ public class PrettyPrinterContext<NodeT>  {
     });
   }
 
-  private ParseNodeBuilder print(NodeT obj, Runnable r) {
+  private void print(NodeT obj, Runnable r) {
     myStack.push(new ArrayList<BaseParseNode>());
-    final Map<ParseNodeProperty<?>, Object> props = new HashMap<>();
-    myNodeBuilders.push(new BaseParseNodeBuilder() {
-      @Override
-      Map<ParseNodeProperty<?>, Object> getProps() {
-        return props;
-      }
-
-      @Override
-      void initProps() {
-      }
-
-      @Override
-      void clearProps() {
-      }
-    });
-
     r.run();
     List<BaseParseNode> nodes = myStack.pop();
-    myNodeBuilders.pop();
 
     BaseParseNode result;
     if (nodes.isEmpty()) {
@@ -176,14 +155,7 @@ public class PrettyPrinterContext<NodeT>  {
     } else {
       result = new CompositeParseNode(obj, nodes);
     }
-    result.myProperties = props;
     myStack.peek().add(result);
-
-    return new MyParseNodeBuilder(result);
-  }
-
-  public ParseNodeBuilder currentNodeBuilder() {
-    return myNodeBuilders.peek();
   }
 
   public List<Token> tokens() {
@@ -216,17 +188,10 @@ public class PrettyPrinterContext<NodeT>  {
 
   private static abstract class BaseParseNode implements ParseNode {
     private BaseParseNode myParent;
-    private Map<ParseNodeProperty<?>, Object> myProperties;
 
     @Override
     public ParseNode parent() {
       return myParent;
-    }
-
-    @Override
-    public <ValueT> ValueT get(ParseNodeProperty<ValueT> prop) {
-      if (myProperties == null || !myProperties.containsKey(prop)) return prop.getDefaultValue();
-      return (ValueT) myProperties.get(prop);
     }
   }
 
@@ -323,56 +288,6 @@ public class PrettyPrinterContext<NodeT>  {
     @Override
     public String toString() {
       return "" + myToken;
-    }
-  }
-
-  public static interface ParseNodeBuilder {
-    <ValueT> void set(ParseNodeProperty<ValueT> prop, ValueT val);
-  }
-
-  private static abstract class BaseParseNodeBuilder implements ParseNodeBuilder {
-    abstract Map<ParseNodeProperty<?>, Object> getProps();
-    abstract void initProps();
-    abstract void clearProps();
-
-    @Override
-    public <ValueT> void set(ParseNodeProperty<ValueT> prop, ValueT val) {
-      if (Objects.equal(prop.getDefaultValue(), val)) {
-        if (getProps() != null) {
-          getProps().remove(prop);
-          if (getProps().isEmpty()) {
-            clearProps();
-          }
-        }
-        return;
-      }
-      if (getProps() == null) {
-        initProps();
-      }
-      getProps().put(prop, val);
-    }
-  }
-
-  private static class MyParseNodeBuilder extends BaseParseNodeBuilder {
-    private BaseParseNode myNode;
-
-    private MyParseNodeBuilder(BaseParseNode node) {
-      myNode = node;
-    }
-
-    @Override
-    Map<ParseNodeProperty<?>, Object> getProps() {
-      return myNode.myProperties;
-    }
-
-    @Override
-    void initProps() {
-      myNode.myProperties = new HashMap<>(1);
-    }
-
-    @Override
-    void clearProps() {
-      myNode.myProperties = null;
     }
   }
 }

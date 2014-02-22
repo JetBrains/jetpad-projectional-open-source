@@ -22,7 +22,6 @@ import jetbrains.jetpad.completion.CompletionSupplier;
 import jetbrains.jetpad.completion.SimpleCompletionItem;
 import jetbrains.jetpad.hybrid.*;
 import jetbrains.jetpad.hybrid.parser.*;
-import jetbrains.jetpad.hybrid.parser.prettyprint.ParseNodeProperty;
 import jetbrains.jetpad.hybrid.parser.prettyprint.PrettyPrinter;
 import jetbrains.jetpad.hybrid.parser.prettyprint.PrettyPrinterContext;
 import jetbrains.jetpad.hybrid.testapp.model.*;
@@ -31,8 +30,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ExprHybridPositionController extends BaseHybridPositionController<Expr> {
-  public static final ParseNodeProperty<Expr> SOURCE_EXPR = new ParseNodeProperty<>("sourceExpr");
-
   @Override
   public Parser<Expr> getParser() {
     return new Parser<Expr>() {
@@ -190,8 +187,6 @@ public class ExprHybridPositionController extends BaseHybridPositionController<E
     return new PrettyPrinter<Expr>() {
       @Override
       public void print(final Expr value, final PrettyPrinterContext<Expr> ctx) {
-        ctx.currentNodeBuilder().set(SOURCE_EXPR, value);
-
         if (value instanceof BinExpr) {
           BinExpr expr = (BinExpr) value;
           ctx.append(expr.left);
