@@ -22,7 +22,6 @@ import com.google.common.base.Supplier;
 import jetbrains.jetpad.cell.*;
 import jetbrains.jetpad.cell.action.CellActions;
 import jetbrains.jetpad.cell.completion.CompletionHelper;
-import jetbrains.jetpad.cell.trait.BaseCellTrait;
 import jetbrains.jetpad.cell.trait.CellTrait;
 import jetbrains.jetpad.completion.CompletionParameters;
 import jetbrains.jetpad.cell.completion.CompletionSupport;
@@ -48,7 +47,7 @@ public class TextEditing {
   private static final TextCellStateHandler EDITABLE_TEXT_VIEW_STATE_HANDLER = new TextCellStateHandler(true);
 
   public static CellTrait textNavigation(final boolean firstAllowed, final boolean lastAllowed) {
-    return new BaseCellTrait() {
+    return new CellTrait() {
       @Override
       protected CellTrait[] getBaseTraits(Cell cell) {
         return new CellTrait[] { new TextNavigationTrait() };
@@ -90,7 +89,7 @@ public class TextEditing {
   }
 
   public static CellTrait textEditing() {
-    return new BaseCellTrait() {
+    return new CellTrait() {
       @Override
       protected CellTrait[] getBaseTraits(Cell cell) {
         return new CellTrait[] { new TextEditingTrait() };
@@ -124,7 +123,7 @@ public class TextEditing {
   }
 
   public static CellTrait validTextEditing(final Predicate<String> validator, final Color validColor, final boolean selectionAvailable) {
-    return new BaseCellTrait() {
+    return new CellTrait() {
       @Override
       protected CellTrait[] getBaseTraits(Cell cell) {
         return new CellTrait[] { validTextEditing(validator) };
@@ -146,7 +145,7 @@ public class TextEditing {
   }
 
   public static CellTrait validTextEditing(final Predicate<String> validator, final Color validColor) {
-    return new BaseCellTrait() {
+    return new CellTrait() {
       @Override
       protected CellTrait[] getBaseTraits(Cell cell) {
         return new CellTrait[] { validTextEditing(validator) };
@@ -164,7 +163,7 @@ public class TextEditing {
   }
 
   public static CellTrait validTextEditing(final Predicate<String> validator) {
-    return new BaseCellTrait() {
+    return new CellTrait() {
       @Override
       protected CellTrait[] getBaseTraits(Cell cell) {
         return new CellTrait[] { new ValidTextEditingTrait() };

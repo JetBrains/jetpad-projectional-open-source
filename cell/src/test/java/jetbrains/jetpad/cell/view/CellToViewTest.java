@@ -15,7 +15,7 @@
  */
 package jetbrains.jetpad.cell.view;
 
-import jetbrains.jetpad.cell.trait.BaseCellTrait;
+import jetbrains.jetpad.cell.trait.CellTrait;
 import jetbrains.jetpad.event.MouseEvent;
 import jetbrains.jetpad.cell.Cell;
 import jetbrains.jetpad.cell.TextCell;
@@ -37,7 +37,7 @@ public class CellToViewTest {
   @Test
   public void cellContainerRemovalInHandlers() {
     TextCell testCell = new TextCell();
-    testCell.addTrait(new BaseCellTrait() {
+    testCell.addTrait(new CellTrait() {
       @Override
       public void onMousePressed(Cell cell, MouseEvent event) {
         targetViewContainer.contentRoot().children().clear();

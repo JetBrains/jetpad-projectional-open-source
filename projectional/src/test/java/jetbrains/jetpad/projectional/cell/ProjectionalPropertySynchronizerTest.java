@@ -17,7 +17,6 @@ package jetbrains.jetpad.projectional.cell;
 
 import com.google.common.base.Function;
 import com.google.common.base.Supplier;
-import jetbrains.jetpad.cell.trait.BaseCellTrait;
 import jetbrains.jetpad.cell.trait.CellTrait;
 import jetbrains.jetpad.cell.util.Cells;
 import jetbrains.jetpad.event.*;
@@ -209,7 +208,7 @@ public class ProjectionalPropertySynchronizerTest extends EditingTestCase {
   @Test
   public void becameEmptyEventIfAllowed() {
     final Value<Boolean> becameEmptyFired = new Value<>(false);
-    rootMapper.getTarget().addTrait(new BaseCellTrait() {
+    rootMapper.getTarget().addTrait(new CellTrait() {
 
       @Override
       public Object get(Cell cell, CellTraitPropertySpec<?> spec) {
@@ -345,7 +344,7 @@ public class ProjectionalPropertySynchronizerTest extends EditingTestCase {
 
       getTarget().text().set(myText);
 
-      getTarget().addTrait(new BaseCellTrait() {
+      getTarget().addTrait(new CellTrait() {
         @Override
         protected CellTrait[] getBaseTraits(Cell cell) {
           return new CellTrait[] {

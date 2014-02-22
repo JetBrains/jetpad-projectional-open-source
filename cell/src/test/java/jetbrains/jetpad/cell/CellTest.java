@@ -17,7 +17,7 @@ package jetbrains.jetpad.cell;
 
 import jetbrains.jetpad.base.Value;
 import jetbrains.jetpad.cell.event.FocusEvent;
-import jetbrains.jetpad.cell.trait.BaseCellTrait;
+import jetbrains.jetpad.cell.trait.CellTrait;
 import jetbrains.jetpad.model.event.EventHandler;
 import jetbrains.jetpad.model.event.Registration;
 import jetbrains.jetpad.model.property.Property;
@@ -70,7 +70,7 @@ public class CellTest {
 
     final Value<Boolean> focusLostCalled = new Value<>(false);
 
-    container.root.addTrait(new BaseCellTrait() {
+    container.root.addTrait(new CellTrait() {
       @Override
       public void onFocusLost(Cell cell, FocusEvent event) {
         super.onFocusLost(cell, event);
@@ -251,7 +251,7 @@ public class CellTest {
     verify(listener).onEvent(new PropertyChangeEvent<>("xxx", null));
   }
 
-  static class TestTrait extends BaseCellTrait {
+  static class TestTrait extends CellTrait {
     static final CellPropertySpec<String> NAME = new CellPropertySpec<>("name");
 
     @Override

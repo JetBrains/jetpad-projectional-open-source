@@ -18,7 +18,6 @@ package jetbrains.jetpad.cell.completion;
 import com.google.common.base.Strings;
 import jetbrains.jetpad.base.Handler;
 import jetbrains.jetpad.base.Runnables;
-import jetbrains.jetpad.cell.trait.BaseCellTrait;
 import jetbrains.jetpad.cell.trait.CellTrait;
 import jetbrains.jetpad.completion.*;
 import jetbrains.jetpad.model.event.CompositeRegistration;
@@ -46,7 +45,7 @@ public class CompletionSupport {
   public static final CellTraitPropertySpec<Runnable> HIDE_COMPLETION = new CellTraitPropertySpec<>("hideCompletion");
 
   public static CellTrait trait() {
-    return new BaseCellTrait() {
+    return new CellTrait() {
       @Override
       public Object get(Cell cell, CellTraitPropertySpec<?> spec) {
         if (spec == Completion.COMPLETION_CONTROLLER) {
@@ -147,7 +146,7 @@ public class CompletionSupport {
       }
     };
 
-    reg.add(textView.addTrait(new BaseCellTrait() {
+    reg.add(textView.addTrait(new CellTrait() {
       @Override
       public void onPropertyChanged(Cell cell, CellPropertySpec<?> propery, PropertyChangeEvent<?> event) {
         if (propery == Cell.FOCUSED) {

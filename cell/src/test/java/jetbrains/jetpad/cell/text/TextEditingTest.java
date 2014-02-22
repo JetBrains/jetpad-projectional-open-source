@@ -16,7 +16,7 @@
 package jetbrains.jetpad.cell.text;
 
 import jetbrains.jetpad.base.Runnables;
-import jetbrains.jetpad.cell.trait.BaseCellTrait;
+import jetbrains.jetpad.cell.trait.CellTrait;
 import jetbrains.jetpad.completion.CompletionItem;
 import jetbrains.jetpad.completion.CompletionParameters;
 import jetbrains.jetpad.completion.CompletionSupplier;
@@ -524,7 +524,7 @@ public class TextEditingTest extends EditingTestCase {
     final TextCell navText = new TextCell();
 
     navText.text().set("x");
-    navText.addTrait(new BaseCellTrait() {
+    navText.addTrait(new CellTrait() {
       @Override
       public Object get(Cell cell, CellTraitPropertySpec<?> spec) {
         if ((spec == Completion.LEFT_TRANSFORM && left) || (spec == Completion.RIGHT_TRANSFORM && !left)) {

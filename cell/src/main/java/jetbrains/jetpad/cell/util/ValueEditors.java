@@ -18,7 +18,6 @@ package jetbrains.jetpad.cell.util;
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 import jetbrains.jetpad.base.Runnables;
-import jetbrains.jetpad.cell.trait.BaseCellTrait;
 import jetbrains.jetpad.cell.trait.CellTrait;
 import jetbrains.jetpad.completion.CompletionItem;
 import jetbrains.jetpad.completion.CompletionParameters;
@@ -59,7 +58,7 @@ public class ValueEditors {
       }
     }
 
-    textView.addTrait(new BaseCellTrait() {
+    textView.addTrait(new CellTrait() {
       @Override
       protected CellTrait[] getBaseTraits(Cell cell) {
         return new CellTrait[] { TextEditing.validTextEditing(new MyEnumValidator(), color) };
@@ -128,7 +127,7 @@ public class ValueEditors {
 
   public static Property<Boolean> booleanProperty(final TextCell textView, final boolean completion) {
     final Color color = textView.textColor().get();
-    textView.addTrait(new BaseCellTrait() {
+    textView.addTrait(new CellTrait() {
       @Override
       protected CellTrait[] getBaseTraits(Cell cell) {
         return new CellTrait[] { TextEditing.validTextEditing(Validators.bool(), color) };

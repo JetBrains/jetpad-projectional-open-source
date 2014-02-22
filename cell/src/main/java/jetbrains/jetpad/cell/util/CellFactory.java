@@ -16,7 +16,6 @@
 package jetbrains.jetpad.cell.util;
 
 import com.google.common.base.Strings;
-import jetbrains.jetpad.cell.trait.BaseCellTrait;
 import jetbrains.jetpad.cell.trait.CellTrait;
 import jetbrains.jetpad.model.property.PropertyChangeEvent;
 import jetbrains.jetpad.event.MouseEvent;
@@ -94,7 +93,7 @@ public class CellFactory {
 
   public static TextCell keyword(final String text) {
     TextCell result = new TextCell();
-    result.addTrait(new BaseCellTrait() {
+    result.addTrait(new CellTrait() {
       @Override
       protected CellTrait[] getBaseTraits(Cell cell) {
         return new CellTrait[] { TextEditing.textNavigation(true, true) };
@@ -141,7 +140,7 @@ public class CellFactory {
     final TextCell result = new TextCell();
     result.text().set(text);
 
-    result.addTrait(new BaseCellTrait() {
+    result.addTrait(new CellTrait() {
 
       @Override
       public void onMousePressed(Cell cell, MouseEvent event) {
@@ -149,7 +148,7 @@ public class CellFactory {
         event.consume();
       }
     });
-    textCell.addTrait(new BaseCellTrait() {
+    textCell.addTrait(new CellTrait() {
       @Override
       public Object get(Cell cell, CellTraitPropertySpec<?> spec) {
         if (spec == PLACEHOLDER_CELL) {

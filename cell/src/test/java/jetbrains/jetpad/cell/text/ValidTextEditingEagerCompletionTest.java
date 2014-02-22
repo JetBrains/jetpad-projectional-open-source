@@ -19,7 +19,6 @@ import com.google.common.base.Predicates;
 import jetbrains.jetpad.cell.*;
 import jetbrains.jetpad.cell.completion.Completion;
 import jetbrains.jetpad.cell.completion.CompletionTestCase;
-import jetbrains.jetpad.cell.trait.BaseCellTrait;
 import jetbrains.jetpad.cell.trait.CellTrait;
 import jetbrains.jetpad.cell.trait.CellTraitPropertySpec;
 import org.junit.Before;
@@ -35,7 +34,7 @@ public class ValidTextEditingEagerCompletionTest extends CompletionTestCase {
     text.text().set("");
     text.focusable().set(true);
 
-    text.addTrait(new BaseCellTrait() {
+    text.addTrait(new CellTrait() {
       @Override
       protected CellTrait[] getBaseTraits(Cell cell) {
         return new CellTrait[] { TextEditing.validTextEditing(Predicates.<String>alwaysTrue()) };

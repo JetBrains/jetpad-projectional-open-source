@@ -18,7 +18,6 @@ package jetbrains.jetpad.projectional.cell;
 import com.google.common.base.Function;
 import com.google.common.base.Objects;
 import com.google.common.base.Supplier;
-import jetbrains.jetpad.cell.trait.BaseCellTrait;
 import jetbrains.jetpad.cell.trait.CellTrait;
 import jetbrains.jetpad.event.*;
 import jetbrains.jetpad.mapper.*;
@@ -226,7 +225,7 @@ abstract class BaseProjectionalSynchronizer<SourceT, ContextT, SourceItemT> impl
 
     myRoleSynchronizer.attach(ctx);
 
-    myTarget.addTrait(new BaseCellTrait() {
+    myTarget.addTrait(new CellTrait() {
       @Override
       public void onCopy(Cell cell, CopyCutEvent event) {
         if (canCopy()) {
@@ -435,7 +434,7 @@ abstract class BaseProjectionalSynchronizer<SourceT, ContextT, SourceItemT> impl
 
     private Cell createPlaceholder() {
       TextCell placeHolder = new TextCell();
-      placeHolder.addTrait(new BaseCellTrait() {
+      placeHolder.addTrait(new CellTrait() {
         @Override
         protected CellTrait[] getBaseTraits(Cell cell) {
           return new CellTrait[] { TextEditing.validTextEditing(Validators.equalsTo("")) };

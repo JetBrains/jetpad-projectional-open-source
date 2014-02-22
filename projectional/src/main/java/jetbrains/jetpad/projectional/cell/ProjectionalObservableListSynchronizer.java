@@ -16,7 +16,6 @@
 package jetbrains.jetpad.projectional.cell;
 
 import jetbrains.jetpad.base.Runnables;
-import jetbrains.jetpad.cell.trait.BaseCellTrait;
 import jetbrains.jetpad.cell.trait.CellTrait;
 import jetbrains.jetpad.completion.CompletionItem;
 import jetbrains.jetpad.completion.CompletionParameters;
@@ -60,7 +59,7 @@ class ProjectionalObservableListSynchronizer<ContextT, SourceItemT> extends Base
 
   @Override
   protected Registration registerChild(SourceItemT child, final Cell childCell) {
-    return childCell.addTrait(new BaseCellTrait() {
+    return childCell.addTrait(new CellTrait() {
       @Override
       protected CellTrait[] getBaseTraits(Cell cell) {
         if (!(cell instanceof TextCell)) {

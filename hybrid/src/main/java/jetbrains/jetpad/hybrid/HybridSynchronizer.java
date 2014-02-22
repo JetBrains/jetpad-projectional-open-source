@@ -19,7 +19,6 @@ import com.google.common.base.Predicates;
 import com.google.common.collect.Range;
 import jetbrains.jetpad.base.Handler;
 import jetbrains.jetpad.base.Runnables;
-import jetbrains.jetpad.cell.trait.BaseCellTrait;
 import jetbrains.jetpad.cell.trait.CellTrait;
 import jetbrains.jetpad.event.*;
 import jetbrains.jetpad.hybrid.parser.prettyprint.ParseNodeProperty;
@@ -169,8 +168,8 @@ public class HybridSynchronizer<SourceT> implements Synchronizer {
     });
   }
 
-  private BaseCellTrait createTargetTrait() {
-    return new BaseCellTrait() {
+  private CellTrait createTargetTrait() {
+    return new CellTrait() {
       @Override
       public Object get(Cell cell, CellTraitPropertySpec<?> spec) {
         if (spec == HYBRID_SYNCHRONIZER) return HybridSynchronizer.this;
@@ -341,7 +340,7 @@ public class HybridSynchronizer<SourceT> implements Synchronizer {
         final Token token = event.getItem();
         Cell tokenCell = createTokenCell(token);
 
-        tokenCell.addTrait(new BaseCellTrait() {
+        tokenCell.addTrait(new CellTrait() {
           @Override
           protected CellTrait[] getBaseTraits(Cell cell) {
             List<CellTrait> result = new ArrayList<>();
@@ -504,7 +503,7 @@ public class HybridSynchronizer<SourceT> implements Synchronizer {
 
   private TextCell createPlaceholder() {
     TextCell result = new TextCell();
-    result.addTrait(new BaseCellTrait() {
+    result.addTrait(new CellTrait() {
       @Override
       protected CellTrait[] getBaseTraits(Cell cell) {
         return new CellTrait[] { TextEditing.validTextEditing(Predicates.equalTo("")) };
