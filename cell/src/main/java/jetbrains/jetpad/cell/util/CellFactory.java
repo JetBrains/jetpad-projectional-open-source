@@ -100,27 +100,11 @@ public class CellFactory {
       }
 
       @Override
-      public Object get(Cell cell, CellPropertySpec<?> spec) {
-        if (spec == TextCell.TEXT_COLOR) {
-          return Color.DARK_BLUE;
-        }
-
-        if (spec == TextCell.TEXT) {
-          return text;
-        }
-
-        if (spec == TextCell.BOLD) {
-          return true;
-        }
-
-        return super.get(cell, spec);
-      }
-
-      @Override
-      public Set<CellPropertySpec<?>> getChangedProperties(Cell cell) {
-        Set<CellPropertySpec<?>> result = super.getChangedProperties(cell);
-        result.addAll(Arrays.asList(TextCell.TEXT_COLOR, TextCell.TEXT, TextCell.BOLD));
-        return result;
+      protected void provideProperties(Cell cell, PropertyCollector collector) {
+        collector.add(TextCell.TEXT_COLOR, Color.DARK_BLUE);
+        collector.add(TextCell.TEXT, text);
+        collector.add(TextCell.BOLD, true);
+        super.provideProperties(cell, collector);
       }
     });
     return result;

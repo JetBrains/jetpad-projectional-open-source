@@ -15,6 +15,8 @@
  */
 package jetbrains.jetpad.cell.trait;
 
+import com.google.common.base.Supplier;
+import jetbrains.jetpad.base.Value;
 import jetbrains.jetpad.event.*;
 import jetbrains.jetpad.model.property.PropertyChangeEvent;
 import jetbrains.jetpad.cell.Cell;
@@ -144,21 +146,48 @@ public abstract class CellTrait {
   public void onViewTraitEvent(Cell cell, CellTraitEventSpec<?> spec, Event event) {
   }
 
-  public Set<CellPropertySpec<?>> getChangedProperties(Cell cell) {
-    Set<CellPropertySpec<?>> result = new HashSet<>();
-    for (CellTrait t : getBaseTraits(cell)) {
-      result.addAll(t.getChangedProperties(cell));
-    }
+  public final Set<CellPropertySpec<?>> getChangedProperties(Cell cell) {
+    final Set<CellPropertySpec<?>> result = new HashSet<>();
+    provideProperties(cell, new PropertyCollector() {
+      @Override
+      public <ValueT> void add(CellPropertySpec<ValueT> prop, Supplier<ValueT> supplier) {
+        result.add(prop);
+      }
+
+      @Override
+      public <ValueT> void add(CellPropertySpec<ValueT> prop, ValueT val) {
+        result.add(prop);
+      }
+    });
     return result;
   }
 
-  public Object get(Cell cell, CellPropertySpec<?> spec) {
-    for (CellTrait t : getBaseTraits(cell)) {
-      Object result = t.get(cell, spec);
-      if (result != null) return result;
-    }
-    return null;
+  public final Object get(Cell cell, final CellPropertySpec<?> spec) {
+    final Value<Object> result = new Value<>();
+    provideProperties(cell, new PropertyCollector() {
+      @Override
+      public <ValueT> void add(CellPropertySpec<ValueT> prop, Supplier<ValueT> supplier) {
+        if (prop == spec) {
+          result.set(supplier.get());
+        }
+      }
+
+      @Override
+      public <ValueT> void add(CellPropertySpec<ValueT> prop, ValueT val) {
+        if (prop == spec) {
+          result.set(val);
+        }
+      }
+    });
+    return result.get();
   }
+
+  protected void provideProperties(Cell cell, PropertyCollector collector) {
+    for (CellTrait t : getBaseTraits(cell)) {
+      t.provideProperties(cell, collector);
+    }
+  }
+
 
   public Object get(Cell cell, CellTraitPropertySpec<?> spec) {
     for (CellTrait t : getBaseTraits(cell)) {
@@ -166,5 +195,10 @@ public abstract class CellTrait {
       if (result != null) return result;
     }
     return null;
+  }
+
+  public static interface PropertyCollector {
+    <ValueT> void add(CellPropertySpec<ValueT> prop, Supplier<ValueT> supplier);
+    <ValueT> void add(CellPropertySpec<ValueT> prop, ValueT val);
   }
 }

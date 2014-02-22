@@ -255,19 +255,10 @@ public class CellTest {
     static final CellPropertySpec<String> NAME = new CellPropertySpec<>("name");
 
     @Override
-    public Object get(Cell cell, CellPropertySpec<?> spec) {
-      if (spec == NAME) {
-        return "xxx";
-      }
+    protected void provideProperties(Cell cell, PropertyCollector collector) {
+      collector.add(NAME, "xxx");
 
-      return super.get(cell, spec);
-    }
-
-    @Override
-    public Set<CellPropertySpec<?>> getChangedProperties(Cell cell) {
-      Set<CellPropertySpec<?>> result = super.getChangedProperties(cell);
-      result.add(NAME);
-      return result;
+      super.provideProperties(cell, collector);
     }
   }
 }

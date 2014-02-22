@@ -71,19 +71,10 @@ public class TextEditing {
       }
 
       @Override
-      public Object get(Cell cell, CellPropertySpec<?> spec) {
-        if (spec == Cell.FOCUSABLE) {
-          return true;
-        }
+      protected void provideProperties(Cell cell, PropertyCollector collector) {
+        collector.add(Cell.FOCUSABLE, true);
 
-        return super.get(cell, spec);
-      }
-
-      @Override
-      public Set<CellPropertySpec<?>> getChangedProperties(Cell cell) {
-        Set<CellPropertySpec<?>> result = super.getChangedProperties(cell);
-        result.add(Cell.FOCUSABLE);
-        return  result;
+        super.provideProperties(cell, collector);
       }
     };
   }
@@ -105,19 +96,10 @@ public class TextEditing {
       }
 
       @Override
-      public Object get(Cell cell, CellPropertySpec<?> spec) {
-        if (spec == Cell.FOCUSABLE) {
-          return true;
-        }
+      protected void provideProperties(Cell cell, PropertyCollector collector) {
+        collector.add(Cell.FOCUSABLE, true);
 
-        return super.get(cell, spec);
-      }
-
-      @Override
-      public Set<CellPropertySpec<?>> getChangedProperties(Cell cell) {
-        Set<CellPropertySpec<?>> result = super.getChangedProperties(cell);
-        result.add(Cell.FOCUSABLE);
-        return result;
+        super.provideProperties(cell, collector);
       }
     };
   }
@@ -183,19 +165,10 @@ public class TextEditing {
       }
 
       @Override
-      public Object get(Cell cell, CellPropertySpec<?> spec) {
-        if (spec == Cell.FOCUSABLE) {
-          return true;
-        }
+      protected void provideProperties(Cell cell, PropertyCollector collector) {
+        collector.add(Cell.FOCUSABLE, true);
 
-        return super.get(cell, spec);
-      }
-
-      @Override
-      public Set<CellPropertySpec<?>> getChangedProperties(Cell cell) {
-        Set<CellPropertySpec<?>> result = super.getChangedProperties(cell);
-        result.add(Cell.FOCUSABLE);
-        return result;
+        super.provideProperties(cell, collector);
       }
     };
   }
