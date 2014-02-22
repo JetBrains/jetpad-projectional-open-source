@@ -25,6 +25,8 @@ import jetbrains.jetpad.projectional.cell.ProjectionalSynchronizers;
 import jetbrains.jetpad.cell.text.TextEditing;
 import jetbrains.jetpad.cell.trait.CellTraitPropertySpec;
 
+import java.util.Set;
+
 import static jetbrains.jetpad.cell.util.CellFactory.placeHolder;
 import static jetbrains.jetpad.cell.util.CellFactory.space;
 
@@ -41,12 +43,19 @@ class NamedMemberCell extends IndentCell {
 
     addTrait(new BaseCellTrait() {
       @Override
-      public Object get(Cell cell, CellTraitPropertySpec<?> spec) {
+      public Object get(Cell cell, CellPropertySpec<?> spec) {
         if (spec == ProjectionalSynchronizers.ON_CREATE) {
           return CellActions.toEnd(name);
         }
 
         return super.get(cell, spec);
+      }
+
+      @Override
+      public Set<CellPropertySpec<?>> getChangedProperties(Cell cell) {
+        Set<CellPropertySpec<?>> result = super.getChangedProperties(cell);
+        result.add(ProjectionalSynchronizers.ON_CREATE);
+        return result;
       }
     });
   }

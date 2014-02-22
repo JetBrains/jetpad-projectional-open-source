@@ -34,12 +34,6 @@ class ComplexValueExprMapper extends Mapper<ComplexValueExpr, HorizontalCell> {
     target.children().add(second);
     target.children().add(CellFactory.label("cccc"));
 
-    target.addTrait(new BaseCellTrait() {
-      @Override
-      public Object get(Cell cell, CellTraitPropertySpec<?> spec) {
-        if (spec == ProjectionalSynchronizers.ON_CREATE) return CellActions.toFirstFocusable(second);
-        return super.get(cell, spec);
-      }
-    });
+    target.set(ProjectionalSynchronizers.ON_CREATE, CellActions.toFirstFocusable(second));
   }
 }

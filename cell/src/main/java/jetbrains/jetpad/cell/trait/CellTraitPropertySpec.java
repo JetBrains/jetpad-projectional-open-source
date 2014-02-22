@@ -22,10 +22,6 @@ public class CellTraitPropertySpec<ValueT> {
   private String myName;
   private Function<Cell, ValueT> myDefaultValue;
 
-  public CellTraitPropertySpec(String name) {
-    this(name, (ValueT) null);
-  }
-
   public CellTraitPropertySpec(String name, final ValueT defaultValue) {
     this(name, new Function<Cell, ValueT>() {
       @Override

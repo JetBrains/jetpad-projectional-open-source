@@ -347,6 +347,11 @@ public abstract class Cell implements Composite<Cell>, HasVisibility, HasFocusab
     return myListeners.add(l);
   }
 
+  public <ValueT> ValueT getRaw(CellPropertySpec<ValueT> prop) {
+    if (myProperties == null) return null;
+    return (ValueT) myProperties.get(prop);
+  }
+
   public <ValueT> ValueT get(CellPropertySpec<ValueT> prop) {
     if (myProperties == null || !myProperties.containsKey(prop)) {
       return getDefaultValue(prop);

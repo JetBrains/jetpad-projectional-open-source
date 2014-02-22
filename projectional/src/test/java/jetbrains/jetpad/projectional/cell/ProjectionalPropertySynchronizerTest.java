@@ -43,6 +43,7 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import static org.junit.Assert.*;
 
@@ -212,12 +213,19 @@ public class ProjectionalPropertySynchronizerTest extends EditingTestCase {
     rootMapper.getTarget().addTrait(new BaseCellTrait() {
 
       @Override
-      public Object get(Cell cell, CellTraitPropertySpec<?> spec) {
+      public Object get(Cell cell, CellPropertySpec<?> spec) {
         if (spec == ProjectionalSynchronizers.DELETE_ON_EMPTY) {
           return true;
         }
 
         return super.get(cell, spec);
+      }
+
+      @Override
+      public Set<CellPropertySpec<?>> getChangedProperties(Cell cell) {
+        Set<CellPropertySpec<?>> result = super.getChangedProperties(cell);
+        result.add(ProjectionalSynchronizers.DELETE_ON_EMPTY);
+        return result;
       }
 
       @Override
@@ -354,12 +362,19 @@ public class ProjectionalPropertySynchronizerTest extends EditingTestCase {
         }
 
         @Override
-        public Object get(Cell cell, CellTraitPropertySpec<?> spec) {
+        public Object get(Cell cell, CellPropertySpec<?> spec) {
           if (spec == ProjectionalSynchronizers.DELETE_ON_EMPTY && myAutoDelete) {
             return true;
           }
 
           return super.get(cell, spec);
+        }
+
+        @Override
+        public Set<CellPropertySpec<?>> getChangedProperties(Cell cell) {
+          Set<CellPropertySpec<?>> result = super.getChangedProperties(cell);
+          result.add(ProjectionalSynchronizers.DELETE_ON_EMPTY);
+          return result;
         }
       });
     }

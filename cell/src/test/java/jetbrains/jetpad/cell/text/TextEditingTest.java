@@ -182,6 +182,8 @@ public class TextEditingTest extends EditingTestCase {
   public void navigateInNullText() {
     textView.text().set(null);
 
+    textView.text().get();
+
     left();
 
     assertText(null);
