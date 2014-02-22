@@ -61,6 +61,8 @@ public class TokenListEditorTest {
   public void prettyPrintingSetsPropsCorrectly() {
     editor.tokens.add(new IntValueToken(2));
 
-    assertTrue(editor.parseNode().get().get(ExprHybridPositionController.SOURCE_EXPR) instanceof NumberExpr);
+    assertTrue(editor.parseNode().get(ExprHybridPositionController.SOURCE_EXPR) instanceof NumberExpr);
   }
+
+
 }
