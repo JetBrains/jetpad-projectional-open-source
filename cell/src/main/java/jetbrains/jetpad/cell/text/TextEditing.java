@@ -34,13 +34,13 @@ import jetbrains.jetpad.values.Color;
 import java.util.Set;
 
 public class TextEditing {
-  public static final CellTraitPropertySpec<Boolean> FIRST_ALLOWED = new CellTraitPropertySpec<>("firstAllowed", true);
-  public static final CellTraitPropertySpec<Boolean> LAST_ALLOWED = new CellTraitPropertySpec<>("firstAllowed", true);
-  public static final CellTraitPropertySpec<Boolean> DOT_LIKE_RT = new CellTraitPropertySpec<>("dotLikeRt", false);
+  public static final CellPropertySpec<Boolean> FIRST_ALLOWED = new CellPropertySpec<>("firstAllowed", true);
+  public static final CellPropertySpec<Boolean> LAST_ALLOWED = new CellPropertySpec<>("firstAllowed", true);
+  public static final CellPropertySpec<Boolean> DOT_LIKE_RT = new CellPropertySpec<>("dotLikeRt", false);
 
-  public static final CellTraitPropertySpec<Function<String, Runnable>> EXPAND_LEFT = new CellTraitPropertySpec<>("expandLeft", expansionProvider(Side.LEFT));
-  public static final CellTraitPropertySpec<Function<String, Runnable>> EXPAND_RIGHT = new CellTraitPropertySpec<>("expandRight", expansionProvider(Side.RIGHT));
-  public static final CellTraitPropertySpec<Supplier<Boolean>> AFTER_TYPE = new CellTraitPropertySpec<>("afterType");
+  public static final CellPropertySpec<Function<String, Runnable>> EXPAND_LEFT = new CellPropertySpec<>("expandLeft", expansionProvider(Side.LEFT));
+  public static final CellPropertySpec<Function<String, Runnable>> EXPAND_RIGHT = new CellPropertySpec<>("expandRight", expansionProvider(Side.RIGHT));
+  public static final CellPropertySpec<Supplier<Boolean>> AFTER_TYPE = new CellPropertySpec<>("afterType");
 
   public static final CellTraitPropertySpec<Boolean> EAGER_COMPLETION = new CellTraitPropertySpec<>("eagerCompletion", false);
 
@@ -55,22 +55,17 @@ public class TextEditing {
       }
 
       @Override
-      public Object get(Cell cell, CellTraitPropertySpec<?> spec) {
+      public Object get(Cell cell, CellPropertySpec<?> spec) {
+        if (spec == Cell.FOCUSABLE) {
+          return true;
+        }
+
         if (spec == FIRST_ALLOWED) {
           return firstAllowed;
         }
 
         if (spec == LAST_ALLOWED) {
           return lastAllowed;
-        }
-
-        return super.get(cell, spec);
-      }
-
-      @Override
-      public Object get(Cell cell, CellPropertySpec<?> spec) {
-        if (spec == Cell.FOCUSABLE) {
-          return true;
         }
 
         if (spec == CellStateHandler.PROPERTY) {
@@ -85,6 +80,8 @@ public class TextEditing {
         Set<CellPropertySpec<?>> result = super.getChangedProperties(cell);
         result.add(Cell.FOCUSABLE);
         result.add(CellStateHandler.PROPERTY);
+        result.add(FIRST_ALLOWED);
+        result.add(LAST_ALLOWED);
         return  result;
       }
     };

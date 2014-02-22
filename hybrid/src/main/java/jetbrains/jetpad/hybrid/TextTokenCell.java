@@ -17,6 +17,7 @@ package jetbrains.jetpad.hybrid;
 
 import com.google.common.base.Predicates;
 import com.google.common.base.Supplier;
+import jetbrains.jetpad.cell.CellPropertySpec;
 import jetbrains.jetpad.cell.trait.CellTrait;
 import jetbrains.jetpad.cell.trait.CellTraitPropertySpec;
 import jetbrains.jetpad.hybrid.parser.ErrorToken;
@@ -28,6 +29,9 @@ import jetbrains.jetpad.cell.util.CellLists;
 import jetbrains.jetpad.projectional.cell.ProjectionalSynchronizers;
 import jetbrains.jetpad.cell.text.TextEditing;
 import jetbrains.jetpad.values.Color;
+
+import java.util.Arrays;
+import java.util.Set;
 
 class TextTokenCell extends TextCell {
   private boolean myFirst;
@@ -77,18 +81,10 @@ class TextTokenCell extends TextCell {
       }
 
       @Override
-      public Object get(final Cell cell, CellTraitPropertySpec<?> spec) {
+      public Object get(final Cell cell, CellPropertySpec<?> spec) {
         if (spec == TextEditing.FIRST_ALLOWED) return !noSpaceToLeft();
         if (spec == TextEditing.LAST_ALLOWED) return !noSpaceToRight();
         if (spec == TextEditing.DOT_LIKE_RT) return myToken.isDotLike();
-        if (spec == TextEditing.EAGER_COMPLETION) return true;
-
-        if (myToken.noSpaceToLeft() || myToken.noSpaceToRight()) {
-          if (spec == ProjectionalSynchronizers.DELETE_ON_EMPTY) return true;
-          if (spec == CellLists.NO_SPACE_TO_LEFT) return noSpaceToLeft();
-          if (spec == CellLists.NO_SPACE_TO_RIGHT) return noSpaceToRight();
-        }
-
         if (spec == TextEditing.AFTER_TYPE) {
           return new Supplier<Boolean>() {
             @Override
@@ -96,6 +92,25 @@ class TextTokenCell extends TextCell {
               return tokenOperations(cell).afterType(TextTokenCell.this);
             }
           };
+        }
+        return super.get(cell, spec);
+      }
+
+      @Override
+      public Set<CellPropertySpec<?>> getChangedProperties(Cell cell) {
+        Set<CellPropertySpec<?>> result = super.getChangedProperties(cell);
+        result.addAll(Arrays.asList(TextEditing.FIRST_ALLOWED, TextEditing.LAST_ALLOWED, TextEditing.DOT_LIKE_RT, TextEditing.AFTER_TYPE));
+        return result;
+      }
+
+      @Override
+      public Object get(final Cell cell, CellTraitPropertySpec<?> spec) {
+        if (spec == TextEditing.EAGER_COMPLETION) return true;
+
+        if (myToken.noSpaceToLeft() || myToken.noSpaceToRight()) {
+          if (spec == ProjectionalSynchronizers.DELETE_ON_EMPTY) return true;
+          if (spec == CellLists.NO_SPACE_TO_LEFT) return noSpaceToLeft();
+          if (spec == CellLists.NO_SPACE_TO_RIGHT) return noSpaceToRight();
         }
 
         return super.get(cell, spec);
