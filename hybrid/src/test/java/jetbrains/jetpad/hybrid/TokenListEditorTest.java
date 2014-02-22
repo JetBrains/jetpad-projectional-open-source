@@ -15,7 +15,7 @@
  */
 package jetbrains.jetpad.hybrid;
 
-import jetbrains.jetpad.hybrid.testapp.mapper.ExprHybridPositionController;
+import jetbrains.jetpad.hybrid.testapp.mapper.ExprHybridPositionSpec;
 import jetbrains.jetpad.hybrid.testapp.mapper.Tokens;
 import jetbrains.jetpad.hybrid.testapp.model.Expr;
 import jetbrains.jetpad.hybrid.testapp.model.NumberExpr;
@@ -28,7 +28,7 @@ import java.util.Arrays;
 import static org.junit.Assert.*;
 
 public class TokenListEditorTest {
-  private TokenListEditor<Expr> editor = new TokenListEditor<>(new ExprHybridPositionController());
+  private TokenListEditor<Expr> editor = new TokenListEditor<>(new ExprHybridPositionSpec());
 
   @Test
   public void updating() {

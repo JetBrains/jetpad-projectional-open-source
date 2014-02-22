@@ -29,7 +29,7 @@ import jetbrains.jetpad.hybrid.testapp.model.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ExprHybridPositionController extends BaseHybridPositionController<Expr> {
+public class ExprHybridPositionSpec implements HybridPositionSpec<Expr> {
   @Override
   public Parser<Expr> getParser() {
     return new Parser<Expr>() {

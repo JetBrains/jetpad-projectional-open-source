@@ -26,7 +26,7 @@ import jetbrains.jetpad.cell.HorizontalCell;
 import jetbrains.jetpad.hybrid.HybridSynchronizer;
 import jetbrains.jetpad.projectional.demo.diagramExpr.model.DiagramNode;
 import jetbrains.jetpad.projectional.demo.diagramExpr.model.DiagramNodeConnection;
-import jetbrains.jetpad.projectional.demo.hybridExpr.mapper.ExprHybridPositionController;
+import jetbrains.jetpad.projectional.demo.hybridExpr.mapper.ExprHybridPositionSpec;
 import jetbrains.jetpad.projectional.diagram.view.*;
 import jetbrains.jetpad.values.Color;
 
@@ -88,6 +88,6 @@ class DiagramNodeMapper extends Mapper<DiagramNode, DiagramNodeView> {
 
     HorizontalCell cell = new HorizontalCell();
     getTarget().cellView.cell.set(cell);
-    conf.add(new HybridSynchronizer<>(this, getSource().expression, cell, new ExprHybridPositionController()));
+    conf.add(new HybridSynchronizer<>(this, getSource().expression, cell, new ExprHybridPositionSpec()));
   }
 }

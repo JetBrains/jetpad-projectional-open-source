@@ -32,7 +32,7 @@ import jetbrains.jetpad.projectional.demo.indentDemo.model.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class LambdaHybridPositionController extends BaseHybridPositionController<Expr> {
+public class LambdaHybridPositionSpec implements HybridPositionSpec<Expr> {
   @Override
   public Parser<Expr> getParser() {
     return LambdaParser.EXPR;

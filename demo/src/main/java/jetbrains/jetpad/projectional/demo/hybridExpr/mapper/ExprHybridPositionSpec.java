@@ -30,7 +30,7 @@ import jetbrains.jetpad.hybrid.parser.prettyprint.PrettyPrinterContext;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ExprHybridPositionController extends BaseHybridPositionController<Expression> {
+public class ExprHybridPositionSpec implements HybridPositionSpec<Expression> {
   @Override
   public Parser<Expression> getParser() {
     return ExpressionParser.PARSER;

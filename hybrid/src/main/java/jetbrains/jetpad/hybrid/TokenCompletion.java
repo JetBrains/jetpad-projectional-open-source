@@ -43,7 +43,7 @@ class TokenCompletion {
     mySync = sync;
   }
 
-  private HybridPositionController<?> positionSpec() {
+  private HybridPositionSpec<?> positionSpec() {
     return mySync.positionSpec();
   }
 

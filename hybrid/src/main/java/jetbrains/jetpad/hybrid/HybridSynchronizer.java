@@ -66,7 +66,7 @@ public class HybridSynchronizer<SourceT> implements Synchronizer {
 
   private Mapper<?, ?> myContextMapper;
   private Property<SourceT> myProperty;
-  private HybridPositionController<SourceT> myController;
+  private HybridPositionSpec<SourceT> myController;
   private TokenListEditor<SourceT> myTokenListEditor;
   private Registration myRegistration;
   private Cell myTarget;
@@ -79,7 +79,7 @@ public class HybridSynchronizer<SourceT> implements Synchronizer {
   private Runnable myLastItemDeleted;
   private Synchronizer[] mySynchronizers = Synchronizer.EMPTY_ARRAY;
 
-  public HybridSynchronizer(Mapper<?, ?> contextMapper, Property<SourceT> prop, Cell target, HybridPositionController<SourceT> controller) {
+  public HybridSynchronizer(Mapper<?, ?> contextMapper, Property<SourceT> prop, Cell target, HybridPositionSpec<SourceT> controller) {
     myContextMapper = contextMapper;
     myProperty = prop;
     myController = controller;
@@ -589,7 +589,7 @@ public class HybridSynchronizer<SourceT> implements Synchronizer {
     return Collections.unmodifiableList(myTargetList);
   }
 
-  HybridPositionController<SourceT> positionSpec() {
+  HybridPositionSpec<SourceT> positionSpec() {
     return myController;
   }
 
@@ -623,8 +623,6 @@ public class HybridSynchronizer<SourceT> implements Synchronizer {
 
   @Override
   public void attach(SynchronizerContext ctx) {
-    myController.attach(this);
-
     for (Synchronizer sync : mySynchronizers) {
       sync.attach(ctx);
     }
@@ -655,8 +653,6 @@ public class HybridSynchronizer<SourceT> implements Synchronizer {
     for (Synchronizer sync : mySynchronizers) {
       sync.detach();
     }
-
-    myController.detach();
   }
 
 }
