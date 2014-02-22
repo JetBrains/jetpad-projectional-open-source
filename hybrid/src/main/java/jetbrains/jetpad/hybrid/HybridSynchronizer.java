@@ -61,6 +61,7 @@ import static jetbrains.jetpad.model.composite.Composites.firstFocusable;
 import static jetbrains.jetpad.model.composite.Composites.lastFocusable;
 
 public class HybridSynchronizer<SourceT> implements Synchronizer {
+  //todo this trait may be used only to handle exceptions. setting property with it is unreliable
   public static final ParseNodeProperty<CellTrait> TRAIT = new ParseNodeProperty<>("trait", null);
 
   static final CellTraitPropertySpec<HybridSynchronizer<?>> HYBRID_SYNCHRONIZER = new CellTraitPropertySpec<>("hybridSynchronizer");
