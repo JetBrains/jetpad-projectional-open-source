@@ -18,32 +18,33 @@ package jetbrains.jetpad.cell.completion;
 import com.google.common.base.Strings;
 import jetbrains.jetpad.base.Handler;
 import jetbrains.jetpad.base.Runnables;
+import jetbrains.jetpad.base.Value;
+import jetbrains.jetpad.cell.*;
+import jetbrains.jetpad.cell.event.CompletionEvent;
+import jetbrains.jetpad.cell.event.FocusEvent;
+import jetbrains.jetpad.cell.text.TextEditing;
+import jetbrains.jetpad.cell.text.TextEditingTrait;
 import jetbrains.jetpad.cell.trait.BaseCellTrait;
 import jetbrains.jetpad.cell.trait.CellTrait;
+import jetbrains.jetpad.cell.trait.CellTraitPropertySpec;
 import jetbrains.jetpad.completion.*;
+import jetbrains.jetpad.event.Key;
+import jetbrains.jetpad.event.KeyEvent;
+import jetbrains.jetpad.event.ModifierKey;
 import jetbrains.jetpad.model.event.CompositeRegistration;
 import jetbrains.jetpad.model.event.Registration;
 import jetbrains.jetpad.model.property.Property;
 import jetbrains.jetpad.model.property.PropertyBinding;
 import jetbrains.jetpad.model.property.PropertyChangeEvent;
 import jetbrains.jetpad.model.property.ReadableProperty;
-import jetbrains.jetpad.event.Key;
-import jetbrains.jetpad.event.KeyEvent;
-import jetbrains.jetpad.event.ModifierKey;
-import jetbrains.jetpad.cell.*;
-import jetbrains.jetpad.base.Value;
-import jetbrains.jetpad.cell.event.CompletionEvent;
-import jetbrains.jetpad.cell.event.FocusEvent;
-import jetbrains.jetpad.cell.text.TextEditing;
-import jetbrains.jetpad.cell.text.TextEditingTrait;
-import jetbrains.jetpad.cell.trait.CellTraitPropertySpec;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 public class CompletionSupport {
-  public static final CellTraitPropertySpec<Runnable> HIDE_COMPLETION = new CellTraitPropertySpec<>("hideCompletion");
+  public static final CellPropertySpec<Runnable> HIDE_COMPLETION = new CellPropertySpec<>("hideCompletion");
 
   public static CellTrait trait() {
     return new BaseCellTrait() {
@@ -194,7 +195,7 @@ public class CompletionSupport {
       }
 
       @Override
-      public Object get(Cell cell, CellTraitPropertySpec<?> spec) {
+      public Object get(Cell cell, CellPropertySpec<?> spec) {
         if (spec == HIDE_COMPLETION) {
           return new Runnable() {
             @Override
@@ -206,6 +207,13 @@ public class CompletionSupport {
         }
 
         return super.get(cell, spec);
+      }
+
+      @Override
+      public Set<CellPropertySpec<?>> getChangedProperties(Cell cell) {
+        Set<CellPropertySpec<?>> result = super.getChangedProperties(cell);
+        result.add(HIDE_COMPLETION);
+        return result;
       }
     }));
     final Cell completionCell = CompletionMenu.createView(menuModel, completer);
