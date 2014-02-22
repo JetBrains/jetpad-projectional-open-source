@@ -19,11 +19,13 @@ import jetbrains.jetpad.base.Value;
 import jetbrains.jetpad.cell.event.FocusEvent;
 import jetbrains.jetpad.cell.trait.BaseCellTrait;
 import jetbrains.jetpad.model.event.EventHandler;
+import jetbrains.jetpad.model.event.Registration;
 import jetbrains.jetpad.model.property.Property;
 import jetbrains.jetpad.model.property.PropertyChangeEvent;
 import org.junit.Test;
 
 import java.util.Arrays;
+import java.util.Set;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
@@ -221,5 +223,51 @@ public class CellTest {
     container.root.children().remove(cell);
 
     verify(listener).onEvent(new PropertyChangeEvent<>(container, null));
+  }
+
+  @Test
+  public void addTraitEvents() {
+    TextCell cell = new TextCell();
+
+    EventHandler<PropertyChangeEvent<String>> listener = mock(EventHandler.class);
+    cell.getProp(TestTrait.NAME).addHandler(listener);
+
+    cell.addTrait(new TestTrait());
+
+    verify(listener).onEvent(new PropertyChangeEvent<>(null, "xxx"));
+  }
+
+  @Test
+  public void removeTraitEvents() {
+    TextCell cell = new TextCell();
+
+    Registration reg = cell.addTrait(new TestTrait());
+
+    EventHandler<PropertyChangeEvent<String>> listener = mock(EventHandler.class);
+    cell.getProp(TestTrait.NAME).addHandler(listener);
+
+    reg.remove();
+
+    verify(listener).onEvent(new PropertyChangeEvent<>("xxx", null));
+  }
+
+  static class TestTrait extends BaseCellTrait {
+    static final CellPropertySpec<String> NAME = new CellPropertySpec<>("name");
+
+    @Override
+    public Object get(Cell cell, CellPropertySpec<?> spec) {
+      if (spec == NAME) {
+        return "xxx";
+      }
+
+      return super.get(cell, spec);
+    }
+
+    @Override
+    public Set<CellPropertySpec<?>> getChangedProperties(Cell cell) {
+      Set<CellPropertySpec<?>> result = super.getChangedProperties(cell);
+      result.add(NAME);
+      return result;
+    }
   }
 }

@@ -208,19 +208,47 @@ public abstract class Cell implements Composite<Cell>, HasVisibility, HasFocusab
   }
 
   public Registration addTrait(final CellTrait trait) {
-    //todo we might change properties here. need to fire events
+    Runnable r = createFiringRunnable(trait);
     CellTrait[] newTraits = new CellTrait[myCellTraits.length + 1];
     newTraits[0] = trait;
     System.arraycopy(myCellTraits, 0, newTraits, 1, myCellTraits.length);
     myCellTraits = newTraits;
+    r.run();
     return new Registration() {
       @Override
       public void remove() {
+        Runnable r = createFiringRunnable(trait);
         int index = Arrays.asList(myCellTraits).indexOf(trait);
         CellTrait[] newTraits = new CellTrait[myCellTraits.length - 1];
         System.arraycopy(myCellTraits, 0, newTraits, 0, index);
         System.arraycopy(myCellTraits, index + 1, newTraits, index, myCellTraits.length - index - 1);
         myCellTraits = newTraits;
+        r.run();
+      }
+    };
+  }
+
+  private Runnable createFiringRunnable(CellTrait t) {
+    final List<Runnable> toRun = new ArrayList<>();
+
+    for (final CellPropertySpec<?> p : t.getChangedProperties(this)) {
+      final Object val = get(p);
+      toRun.add(new Runnable() {
+        @Override
+        public void run() {
+          final Object newVal = get(p);
+          if (Objects.equal(val, newVal)) return;
+          firePropertyChange(p, new PropertyChangeEvent(val, newVal));
+        }
+      });
+    }
+
+    return new Runnable() {
+      @Override
+      public void run() {
+        for (Runnable r : toRun) {
+          r.run();
+        }
       }
     };
   }
