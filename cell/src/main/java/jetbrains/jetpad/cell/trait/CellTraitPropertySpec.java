@@ -18,6 +18,10 @@ package jetbrains.jetpad.cell.trait;
 import com.google.common.base.Function;
 import jetbrains.jetpad.cell.Cell;
 
+/**
+ * Specification for a property which doesn't require change notification. Typically they are used
+ * as configuration properties.
+ */
 public class CellTraitPropertySpec<ValueT> {
   private String myName;
   private Function<Cell, ValueT> myDefaultValue;
