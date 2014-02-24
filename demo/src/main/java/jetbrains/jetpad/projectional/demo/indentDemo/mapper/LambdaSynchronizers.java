@@ -20,11 +20,14 @@ import jetbrains.jetpad.hybrid.HybridSynchronizer;
 import jetbrains.jetpad.mapper.Mapper;
 import jetbrains.jetpad.mapper.MapperFactory;
 import jetbrains.jetpad.mapper.Synchronizer;
+import jetbrains.jetpad.mapper.Synchronizers;
+import jetbrains.jetpad.model.property.Properties;
 import jetbrains.jetpad.model.property.Property;
 import jetbrains.jetpad.projectional.demo.indentDemo.hybrid.LambdaHybridPositionSpec;
 import jetbrains.jetpad.projectional.demo.indentDemo.model.Expr;
 import jetbrains.jetpad.projectional.demo.indentDemo.model.LambdaExpr;
 import jetbrains.jetpad.projectional.demo.indentDemo.model.LambdaNode;
+import jetbrains.jetpad.values.Color;
 
 class LambdaSynchronizers {
   static Synchronizer exprSynchronizer(
@@ -43,6 +46,8 @@ class LambdaSynchronizers {
         return null;
       }
     });
+
+    result.addPart(Synchronizers.forProperty(result.valid(), Properties.ifProp(targetCell.borderColor(), null, Color.RED)));
 
     return result;
   }
