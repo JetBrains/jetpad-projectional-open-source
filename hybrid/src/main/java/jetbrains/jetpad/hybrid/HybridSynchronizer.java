@@ -630,12 +630,6 @@ public class HybridSynchronizer<SourceT> implements Synchronizer {
     CollectionListener<Token> tokensListener = createTokensListener();
     myRegistration = new CompositeRegistration(
       PropertyBinding.bind(myProperty, myTokenListEditor.value),
-      PropertyBinding.bind(myTokenListEditor.valid, new WritableProperty<Boolean>() {
-        @Override
-        public void set(Boolean value) {
-          myTarget.background().set(value ? null : Color.LIGHT_PINK);
-        }
-      }),
       myTokenListEditor.tokens.addListener(tokensListener)
     );
 
