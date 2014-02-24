@@ -44,20 +44,23 @@ public class IndentPropertiesTest extends ViewContainer {
   public void highlightingUpdate() {
     c1.highlighted().set(true);
 
-    assertEquals(Cell.HIGHLIGHT_COLOR, getView(l11).background().get());
-    assertEquals(Cell.HIGHLIGHT_COLOR, getView(l12).background().get());
-    assertNull(getView(l21).background().get());
-    assertNull(getView(l22).background().get());
+    assertHighlighted(l11, l12);
+    assertBlank(l21, l22);
+  }
+
+  @Test
+  public void overlappingHighlightUpdate() {
+    indentCell.highlighted().set(true);
+    c1.highlighted().set(true);
+    indentCell.highlighted().set(false);
   }
 
   @Test
   public void selectionUpdate() {
     c1.selected().set(true);
 
-    assertEquals(Cell.SELECTION_COLOR, getView(l11).background().get());
-    assertEquals(Cell.SELECTION_COLOR, getView(l12).background().get());
-    assertNull(getView(l21).background().get());
-    assertNull(getView(l22).background().get());
+    assertSelected(l11, l12);
+    assertBlank(l21, l22);
   }
 
   @Test
@@ -65,7 +68,7 @@ public class IndentPropertiesTest extends ViewContainer {
     c1.selected().set(true);
     c1.highlighted().set(true);
 
-    assertEquals(Cell.SELECTION_COLOR, getView(l11).background().get());
+    assertSelected(l11);
   }
 
   View getView(Cell cell) {
@@ -73,5 +76,23 @@ public class IndentPropertiesTest extends ViewContainer {
     return (View) mapper.getTarget();
   }
 
+
+  private void assertSelected(Cell... cs) {
+    for (Cell c : cs) {
+      assertEquals(Cell.SELECTION_COLOR, getView(c).background().get());
+    }
+  }
+
+  private void assertHighlighted(Cell... cs) {
+    for (Cell c : cs) {
+      assertEquals(Cell.HIGHLIGHT_COLOR, getView(c).background().get());
+    }
+  }
+
+  private void assertBlank(Cell... cs) {
+    for (Cell c : cs) {
+      assertNull(getView(c).background().get());
+    }
+  }
 
 }
