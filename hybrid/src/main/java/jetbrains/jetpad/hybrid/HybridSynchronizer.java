@@ -540,7 +540,7 @@ public class HybridSynchronizer<SourceT> implements Synchronizer {
     myLastItemDeleted = action;
   }
 
-  public int focusedToken() {
+  public int focusedIndex() {
     Cell focusedCell = myTarget.cellContainer().get().focusedCell.get();
     if (focusedCell == null) return -1;
     for (int i = 0; i < myTargetList.size(); i++) {
