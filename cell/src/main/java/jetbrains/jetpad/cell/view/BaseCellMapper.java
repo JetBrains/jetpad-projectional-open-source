@@ -31,8 +31,8 @@ class BaseCellMapper<SourceT extends Cell, TargetT extends View> extends Mapper<
 
   private ObservableList<BaseCellMapper<?, ?>> myChildMappers;
   private ObservableSet<BaseCellMapper<?, ?>> myPopupMappers;
-  private int myExternalHighlightCount;
-  private int myExternalSelectCount;
+  private boolean myExternallyHighlighted;
+  private boolean myExternallySelected;
   private Registration myPopupUpdateReg;
   
   BaseCellMapper(SourceT source, TargetT target, CellToViewContext ctx) {
@@ -78,21 +78,22 @@ class BaseCellMapper<SourceT extends Cell, TargetT extends View> extends Mapper<
     super.onDetach();
   }
 
-  void changeExternalHighlight(int delta) {
-    myExternalHighlightCount += delta;
+
+  public void setExternallyHighlighted(boolean externallyHighlighted) {
+    myExternallyHighlighted = externallyHighlighted;
   }
 
-  void changeExternalSelect(int delta) {
-    myExternalSelectCount += delta;
+  public void setExternallySelected(boolean externallySelected) {
+    myExternallySelected = externallySelected;
   }
 
   void refreshProperties() {
     Cell cell = getSource();
     View view = getTarget();
 
-    if (cell.selected().get() || myExternalSelectCount > 0) {
+    if (cell.selected().get() || myExternallySelected) {
       view.background().set(Cell.SELECTION_COLOR);
-    } else if ((cell.highlighted().get() || myExternalHighlightCount > 0) && myContext.containerFocused().get()) {
+    } else if ((cell.highlighted().get() || myExternallyHighlighted) && myContext.containerFocused().get()) {
       view.background().set(Cell.HIGHLIGHT_COLOR);
     } else {
       view.background().set(cell.background().get());

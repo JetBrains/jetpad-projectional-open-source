@@ -130,24 +130,15 @@ class IndentRootCellMapper extends BaseCellMapper<IndentCell, VerticalView> {
         if (prop == Cell.HIGHLIGHTED || prop == Cell.SELECTED) {
           iterateLeaves(cell, new Handler<Cell>() {
             @Override
-            public void handle(Cell item) {
-              BaseCellMapper<?, ?> mapper = (BaseCellMapper<?, ?>) getDescendantMapper(item);
+            public void handle(Cell leaf) {
+              BaseCellMapper<?, ?> mapper = (BaseCellMapper<?, ?>) getDescendantMapper(leaf);
               if (mapper == null) throw new IllegalStateException();
               if (prop == Cell.HIGHLIGHTED) {
-                if ((Boolean) event.getNewValue()) {
-                  mapper.changeExternalHighlight(1);
-                } else {
-                  mapper.changeExternalHighlight(-1);
-                }
-                mapper.refreshProperties();
+                mapper.setExternallyHighlighted(isHighlighted(leaf));
               } else if (prop == Cell.SELECTED) {
-                if ((Boolean) event.getNewValue()) {
-                  mapper.changeExternalSelect(1);
-                } else {
-                  mapper.changeExternalSelect(-1);
-                }
-                mapper.refreshProperties();
+                mapper.setExternallySelected(isSelected(leaf));
               }
+              mapper.refreshProperties();
             }
           });
         } else if (prop == Cell.VISIBLE) {
@@ -169,6 +160,26 @@ class IndentRootCellMapper extends BaseCellMapper<IndentCell, VerticalView> {
       }
     });
   }
+
+  private boolean isHighlighted(Cell leaf) {
+    Cell current = leaf.parent().get();
+    while (current != getSource()) {
+      if (current.highlighted().get()) return true;
+      current = current.parent().get();
+    }
+    return false;
+  }
+
+  private boolean isSelected(Cell leaf) {
+    Cell current = leaf.parent().get();
+    while (current != getSource()) {
+      if (current.selected().get()) return true;
+      current = current.parent().get();
+    }
+    return false;
+  }
+
+
 
   private void updateIndentCellPopup(Cell targetCell ,PropertyChangeEvent<Cell> event) {
     if (event.getOldValue() != null) {
