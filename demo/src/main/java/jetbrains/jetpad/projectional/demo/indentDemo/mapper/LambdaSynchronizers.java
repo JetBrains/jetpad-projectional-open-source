@@ -46,9 +46,6 @@ class LambdaSynchronizers {
         return null;
       }
     });
-
-    result.addPart(Synchronizers.forProperty(result.valid(), Properties.ifProp(targetCell.borderColor(), null, Color.RED)));
-
     return result;
   }
 }
