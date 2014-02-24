@@ -10,7 +10,6 @@
     <exclude name="ContainerDemoMain.java" />
     <exclude name="HybridExprDemoMain.java" />
     <exclude name="IndentDemoMain.java" />
-    <exclude name="LambdaDemoMain.java" />
     <exclude name="diagram/DiagramDemoMain.java" />
     <exclude name="diagramExpr/DiagramDemoMain.java" />
   </source>

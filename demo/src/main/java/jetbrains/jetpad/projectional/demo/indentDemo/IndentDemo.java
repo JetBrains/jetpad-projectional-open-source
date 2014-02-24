@@ -20,7 +20,7 @@ import jetbrains.jetpad.projectional.demo.indentDemo.mapper.ContainerMapper;
 import jetbrains.jetpad.projectional.demo.indentDemo.model.*;
 import jetbrains.jetpad.projectional.util.RootController;
 
-public class LambdaDemo {
+public class IndentDemo {
   private static Container createModel() {
     Container root = new Container();
     LambdaExpr lambda = new LambdaExpr();
