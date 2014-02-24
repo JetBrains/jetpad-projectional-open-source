@@ -26,7 +26,7 @@ import java.util.Arrays;
 import static jetbrains.jetpad.cell.indent.CellUtil.*;
 import static org.junit.Assert.assertEquals;
 
-public class IndentCellTest {
+public class IndentUpdaterTest {
   private IndentCell indentCell = new IndentCell();
   private ObservableList<IndentPart> children = indentCell.root().children;
 
