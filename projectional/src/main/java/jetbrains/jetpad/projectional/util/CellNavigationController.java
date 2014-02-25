@@ -15,36 +15,56 @@
  */
 package jetbrains.jetpad.projectional.util;
 
+import jetbrains.jetpad.base.Value;
 import jetbrains.jetpad.cell.Cell;
 import jetbrains.jetpad.cell.CellContainer;
 import jetbrains.jetpad.cell.position.PositionHandler;
 import jetbrains.jetpad.cell.trait.CellTrait;
-import jetbrains.jetpad.event.KeyEvent;
-import jetbrains.jetpad.event.MouseEvent;
+import jetbrains.jetpad.event.*;
+import jetbrains.jetpad.model.composite.Composites;
 import jetbrains.jetpad.model.event.CompositeRegistration;
 import jetbrains.jetpad.model.event.EventHandler;
 import jetbrains.jetpad.model.event.Registration;
-import jetbrains.jetpad.model.property.Property;
-import jetbrains.jetpad.model.property.PropertyChangeEvent;
-import jetbrains.jetpad.model.property.ReadableProperty;
-import jetbrains.jetpad.model.property.Selector;
-import jetbrains.jetpad.projectional.generic.NavigationController;
+import jetbrains.jetpad.model.property.*;
 
-public class CellNavigationController extends NavigationController<Cell> {
+import java.util.Stack;
+
+import static jetbrains.jetpad.model.composite.Composites.*;
+
+public class CellNavigationController {
   static Registration install(final CellContainer container) {
     final CellNavigationController controller = new CellNavigationController(container);
     return controller.install();
   }
 
   private CellContainer myContainer;
+  private Value<Integer> myPrevXOffset = new Value<>(null);
+  private Value<Boolean> myStackResetEnabled = new Value<>(true);
+  private Stack<Cell> mySelectionStack = new Stack<>();
+
 
   private CellNavigationController(final CellContainer container) {
     myContainer = container;
   }
 
-  @Override
   public CompositeRegistration install() {
-    CompositeRegistration result = super.install();
+    CompositeRegistration result = new CompositeRegistration();
+    result.add(
+      selectedCaretOffset().addHandler(new EventHandler<PropertyChangeEvent<Integer>>() {
+        @Override
+        public void onEvent(PropertyChangeEvent<Integer> event) {
+          myPrevXOffset.set(null);
+        }
+      }),
+      focusedView().addHandler(new EventHandler<PropertyChangeEvent<Cell>>() {
+        @Override
+        public void onEvent(PropertyChangeEvent<Cell> event) {
+          //todo we should reset the stuff on every view structure change
+          if (myStackResetEnabled.get()) {
+            mySelectionStack.clear();
+          }
+        }
+      }));
     result.add(myContainer.root.addTrait(new CellTrait() {
       @Override
       public void onKeyPressed(Cell cell, KeyEvent event) {
@@ -77,28 +97,23 @@ public class CellNavigationController extends NavigationController<Cell> {
     return result;
   }
 
-  @Override
-  protected Property<Cell> focusedView() {
+  private Property<Cell> focusedView() {
     return myContainer.focusedCell;
   }
 
-  @Override
-  protected void scrollTo(Cell view) {
+  private void scrollTo(Cell view) {
     view.scrollTo();
   }
 
-  @Override
-  protected Cell root() {
+  private Cell root() {
     return myContainer.root;
   }
 
-  @Override
-  protected void moveCaretTo(Cell view, int offset) {
+  private void moveCaretTo(Cell view, int offset) {
     view.get(PositionHandler.PROPERTY).caretOffset().set(offset);
   }
 
-  @Override
-  protected Selector<Cell, ReadableProperty<Integer>> caretPositionSelector() {
+  private Selector<Cell, ReadableProperty<Integer>> caretPositionSelector() {
     return new Selector<Cell, ReadableProperty<Integer>>() {
       @Override
       public ReadableProperty<Integer> select(Cell source) {
@@ -107,15 +122,104 @@ public class CellNavigationController extends NavigationController<Cell> {
     };
   }
 
-  protected void moveToHome(Cell next) {
+  private void moveToHome(Cell next) {
     if (next != null) {
       next.get(PositionHandler.PROPERTY).home();
     }
   }
 
-  protected void moveToEnd(Cell next) {
+  private void moveToEnd(Cell next) {
     if (next != null) {
       next.get(PositionHandler.PROPERTY).end();
     }
   }
+
+  private int selectedXOffset() {
+    return selectedCaretOffset().get() + focusedView().get().getBounds().origin.x;
+  }
+
+  private ReadableProperty<Integer> selectedCaretOffset() {
+    return Properties.select(focusedView(), caretPositionSelector());
+  }
+
+  protected void handleKeyPress(KeyEvent event) {
+    Cell current = focusedView().get();
+    Integer currentOffset = null;
+
+    if (event.is(Key.UP) || event.is(Key.DOWN)) {
+      currentOffset = myPrevXOffset.get();
+      if (currentOffset == null) {
+        currentOffset = selectedXOffset();
+      }
+    }
+
+    Cell next = null;
+    boolean restoreOffset = false;
+
+    if (event.is(Key.RIGHT) || event.is(Key.TAB)) {
+      next = nextFocusable(current);
+      moveToHome(next);
+    } else if (event.is(Key.RIGHT, ModifierKey.ALT) || event.is(Key.RIGHT, ModifierKey.CONTROL)) {
+      next = nextFocusable(current);
+      moveToEnd(next);
+    } else if (event.is(Key.LEFT) || event.is(Key.TAB, ModifierKey.SHIFT)) {
+      next = prevFocusable(current);
+      moveToEnd(next);
+    } else if (event.is(Key.LEFT, ModifierKey.ALT) || event.is(Key.LEFT, ModifierKey.CONTROL)) {
+      next = prevFocusable(current);
+      moveToHome(next);
+    } else if (event.is(Key.UP)) {
+      next = upperFocusable(current, currentOffset);
+      restoreOffset = true;
+    } else if (event.is(Key.DOWN)) {
+      next = lowerFocusable(current, currentOffset);
+      restoreOffset = true;
+    } else if (event.is(KeyStrokeSpecs.HOME)) {
+      next = Composites.homeElement(current);
+      moveToHome(next);
+    } else if (event.is(KeyStrokeSpecs.END)) {
+      next = Composites.endElement(current);
+      moveToEnd(next);
+    } else if (event.is(KeyStrokeSpecs.SELECT_UP)) {
+      Cell focusableParent = Composites.focusableParent(current);
+      if (focusableParent != null) {
+        mySelectionStack.push(current);
+        next = focusableParent;
+        myStackResetEnabled.set(false);
+      }
+    } else if (event.is(KeyStrokeSpecs.SELECT_DOWN)) {
+      if (mySelectionStack.isEmpty()) {
+        next = Composites.firstFocusable(current, false);
+      } else {
+        next = mySelectionStack.pop();
+      }
+      myStackResetEnabled.set(false);
+    }
+    if (next != null) {
+      focusedView().set(next);
+      scrollTo(next);
+
+      if (restoreOffset) {
+        moveCaretTo(next, currentOffset - next.getBounds().origin.x);
+        myPrevXOffset.set(currentOffset);
+      }
+
+      event.consume();
+    }
+    myStackResetEnabled.set(true);
+  }
+
+  protected void handleMousePress(MouseEvent event) {
+    Cell closest = Composites.findClosest(root(), event.location());
+    if (closest != null) {
+      focusedView().set(closest);
+      if (event.x() < closest.getBounds().origin.x) {
+        moveToHome(closest);
+      } else {
+        moveToEnd(closest);
+      }
+      event.consume();
+    }
+  }
+
 }
