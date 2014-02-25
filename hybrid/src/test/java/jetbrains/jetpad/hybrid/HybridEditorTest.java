@@ -26,6 +26,7 @@ import jetbrains.jetpad.completion.CompletionController;
 import jetbrains.jetpad.cell.position.Positions;
 import jetbrains.jetpad.cell.util.CellStateHandler;
 import jetbrains.jetpad.event.KeyStrokeSpecs;
+import jetbrains.jetpad.model.composite.Composites;
 import jetbrains.jetpad.projectional.util.RootController;
 import jetbrains.jetpad.event.Key;
 import jetbrains.jetpad.event.KeyEvent;
@@ -575,6 +576,19 @@ public class HybridEditorTest extends EditingTestCase {
   }
 
   @Test
+  public void altUpInsideOfComplexValueToken() {
+    ComplexValueExpr complexExpr = new ComplexValueExpr();
+    setTokens(new ValueToken(complexExpr, new ComplexValueCloner()));
+
+    Cell first = Composites.firstFocusable(sync.tokenCells().get(0));
+    first.focus();
+
+    press(Key.UP, ModifierKey.ALT);
+
+    assertNoSelection();
+  }
+
+  @Test
   public void altDownClearsSelection() {
     setTokens(Tokens.ID, Tokens.INCREMENT, Tokens.INCREMENT);
 
@@ -785,7 +799,7 @@ public class HybridEditorTest extends EditingTestCase {
   }
 
   private void assertSelection(int start, int end) {
-    junit.framework.Assert.assertEquals(Range.closed(start, end), sync.selection());
+    assertEquals(Range.closed(start, end), sync.selection());
   }
 
   private void assertNoSelection() {

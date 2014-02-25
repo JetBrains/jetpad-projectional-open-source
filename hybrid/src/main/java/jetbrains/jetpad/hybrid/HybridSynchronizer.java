@@ -175,51 +175,53 @@ public class HybridSynchronizer<SourceT> implements Synchronizer {
         return super.get(cell, spec);
       }
 
-
       @Override
       public void onKeyPressed(Cell cell, KeyEvent event) {
-        if (!hasSelection()) {
-          Cell currentCell = mySelectionSupport.currentCell();
-          if (event.is(KeyStrokeSpecs.SELECT_UP) && currentCell != null) {
-            mySelectionSupport.select(currentCell, currentCell);
-            event.consume();
-          }
-        } else {
-          Range<Integer> currentRange = selection();
-          if (event.is(KeyStrokeSpecs.SELECT_UP)) {
-            ParseNode parseNode = myTokenListEditor.parseNode();
-            if (parseNode != null) {
-              if (!currentRange.equals(parseNode.range())) {
-                ParseNode node = ParseNodes.findForRange(parseNode, currentRange);
-                ParseNode parentNode = ParseNodes.nonSameRangeParent(node);
-                if (parentNode != null) {
-                  select(parentNode.range());
+        Cell focusedCell = cell.cellContainer().get().focusedCell.get();
+        if (myTargetList.contains(focusedCell)) {
+          Cell currentCell = cell.cellContainer().get().focusedCell.get();
+          if (!hasSelection()) {
+            if (event.is(KeyStrokeSpecs.SELECT_UP) && currentCell != null) {
+              mySelectionSupport.select(currentCell, currentCell);
+              event.consume();
+            }
+          } else {
+            Range<Integer> currentRange = selection();
+            if (event.is(KeyStrokeSpecs.SELECT_UP)) {
+              ParseNode parseNode = myTokenListEditor.parseNode();
+              if (parseNode != null) {
+                if (!currentRange.equals(parseNode.range())) {
+                  ParseNode node = ParseNodes.findForRange(parseNode, currentRange);
+                  ParseNode parentNode = ParseNodes.nonSameRangeParent(node);
+                  if (parentNode != null) {
+                    select(parentNode.range());
+                    event.consume();
+                  }
+                }
+              } else {
+                if (!currentRange.equals(Range.closed(0, tokens().size()))) {
+                  select(Range.closed(0, tokens().size()));
                   event.consume();
                 }
               }
-            } else {
-              if (!currentRange.equals(Range.closed(0, tokens().size()))) {
-                select(Range.closed(0, tokens().size()));
-                event.consume();
-              }
             }
-          }
 
-          if (event.is(KeyStrokeSpecs.SELECT_DOWN)) {
-            ParseNode parseNode = myTokenListEditor.parseNode();
-            if (parseNode != null) {
-              ParseNode node = ParseNodes.findForRange(parseNode, currentRange);
-              ParseNode childNode = ParseNodes.nonSameRangeChild(node, myTargetList.indexOf(mySelectionSupport.currentCell()));
-              if (childNode != null) {
-                select(childNode.range());
-                event.consume();
+            if (event.is(KeyStrokeSpecs.SELECT_DOWN)) {
+              ParseNode parseNode = myTokenListEditor.parseNode();
+              if (parseNode != null) {
+                ParseNode node = ParseNodes.findForRange(parseNode, currentRange);
+                ParseNode childNode = ParseNodes.nonSameRangeChild(node, myTargetList.indexOf(mySelectionSupport.currentCell()));
+                if (childNode != null) {
+                  select(childNode.range());
+                  event.consume();
+                } else {
+                  mySelectionSupport.clearSelection();
+                  event.consume();
+                }
               } else {
                 mySelectionSupport.clearSelection();
                 event.consume();
               }
-            } else {
-              mySelectionSupport.clearSelection();
-              event.consume();
             }
           }
         }
