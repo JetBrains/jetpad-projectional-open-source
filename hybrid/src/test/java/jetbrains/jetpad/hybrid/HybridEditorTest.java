@@ -534,56 +534,56 @@ public class HybridEditorTest extends EditingTestCase {
   }
 
   @Test
-  public void altUpWithoutSelection() {
+  public void selectUpWithoutSelection() {
     setTokens(Tokens.ID, Tokens.PLUS, Tokens.ID);
     select(0, true);
 
-    press(Key.UP, ModifierKey.ALT);
+    press(KeyStrokeSpecs.SELECT_UP);
 
     assertSelection(0, 1);
   }
 
   @Test
-  public void altUpWithSelectionNoParse() {
+  public void selectUpWithSelectionNoParse() {
     setTokens(Tokens.ID, Tokens.ID, Tokens.ID);
     select(0, true);
 
-    press(Key.UP, ModifierKey.ALT);
-    press(Key.UP, ModifierKey.ALT);
+    press(KeyStrokeSpecs.SELECT_UP);
+    press(KeyStrokeSpecs.SELECT_UP);
 
     assertSelection(0, 3);
   }
 
   @Test
-  public void altUpDoesntConsumeInEmpty() {
+  public void selectUpDoesntConsumeInEmpty() {
     setTokens();
     sync.placeholder().focus();
 
-    KeyEvent event = press(Key.UP, ModifierKey.ALT);
+    KeyEvent event = press(KeyStrokeSpecs.SELECT_UP);;
     assertFalse(event.isConsumed());
   }
 
   @Test
-  public void altUpSelctionWithParse() {
+  public void selectUpSelctionWithParse() {
     setTokens(Tokens.ID, Tokens.INCREMENT, Tokens.INCREMENT);
 
     select(0, true);
 
-    press(Key.UP, ModifierKey.ALT);
-    press(Key.UP, ModifierKey.ALT);
+    press(KeyStrokeSpecs.SELECT_UP);
+    press(KeyStrokeSpecs.SELECT_UP);
 
     assertSelection(0, 2);
   }
 
   @Test
-  public void altUpInsideOfComplexValueToken() {
+  public void selectUpInsideOfComplexValueToken() {
     ComplexValueExpr complexExpr = new ComplexValueExpr();
     setTokens(new ValueToken(complexExpr, new ComplexValueCloner()));
 
     Cell first = Composites.firstFocusable(sync.tokenCells().get(0));
     first.focus();
 
-    press(Key.UP, ModifierKey.ALT);
+    press(KeyStrokeSpecs.SELECT_UP);
 
     assertNoSelection();
   }
