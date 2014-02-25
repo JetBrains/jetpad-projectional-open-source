@@ -54,6 +54,7 @@ public abstract class NavigationController<ViewT extends Composite<ViewT> & HasF
       focusedView().addHandler(new EventHandler<PropertyChangeEvent<ViewT>>() {
         @Override
         public void onEvent(PropertyChangeEvent<ViewT> event) {
+          //todo we should reset the stuff on every view structure change
           if (myStackResetEnabled.get()) {
             mySelectionStack.clear();
           }
