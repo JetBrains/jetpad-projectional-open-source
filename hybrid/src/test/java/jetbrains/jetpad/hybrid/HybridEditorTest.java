@@ -589,39 +589,39 @@ public class HybridEditorTest extends EditingTestCase {
   }
 
   @Test
-  public void altDownClearsSelection() {
+  public void selectDownClearsSelection() {
     setTokens(Tokens.ID, Tokens.INCREMENT, Tokens.INCREMENT);
 
     select(0, true);
     sync.select(Range.closed(0, 1));
 
-    press(Key.DOWN, ModifierKey.ALT);
+    press(KeyStrokeSpecs.SELECT_DOWN);
 
     assertNoSelection();
     assertSelected(0);
   }
 
   @Test
-  public void altDownNoParse() {
+  public void selectDownNoParse() {
     setTokens(Tokens.ID, Tokens.ID);
     select(0, true);
 
     sync.select(Range.closed(0, 2));
 
-    press(Key.DOWN, ModifierKey.ALT);
+    press(KeyStrokeSpecs.SELECT_DOWN);
 
     assertNoSelection();
     assertSelected(0);
   }
 
   @Test
-  public void altDownDownWithParse() {
+  public void selectDownDownWithParse() {
     setTokens(Tokens.ID, Tokens.INCREMENT, Tokens.INCREMENT);
 
     select(0, true);
     sync.select(Range.closed(0, 3));
 
-    press(Key.DOWN, ModifierKey.ALT);
+    press(KeyStrokeSpecs.SELECT_DOWN);
 
     assertSelection(0, 2);
     assertSelected(0);
