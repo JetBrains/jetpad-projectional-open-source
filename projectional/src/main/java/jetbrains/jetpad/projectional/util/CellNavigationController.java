@@ -22,13 +22,14 @@ import jetbrains.jetpad.cell.trait.CellTrait;
 import jetbrains.jetpad.event.KeyEvent;
 import jetbrains.jetpad.event.MouseEvent;
 import jetbrains.jetpad.model.event.CompositeRegistration;
+import jetbrains.jetpad.model.event.EventHandler;
 import jetbrains.jetpad.model.event.Registration;
 import jetbrains.jetpad.model.property.Property;
+import jetbrains.jetpad.model.property.PropertyChangeEvent;
 import jetbrains.jetpad.model.property.ReadableProperty;
 import jetbrains.jetpad.model.property.Selector;
 import jetbrains.jetpad.projectional.generic.NavigationController;
 
-//todo move it out of cell module
 public class CellNavigationController extends NavigationController<Cell> {
   static Registration install(final CellContainer container) {
     final CellNavigationController controller = new CellNavigationController(container);
@@ -57,6 +58,20 @@ public class CellNavigationController extends NavigationController<Cell> {
         handleMousePress(event);
         if (event.isConsumed()) return;
         super.onMousePressed(cell, event);
+      }
+    }));
+    result.add(myContainer.focusedCell.addHandler(new EventHandler<PropertyChangeEvent<Cell>>() {
+      @Override
+      public void onEvent(PropertyChangeEvent<Cell> event) {
+        Cell oldCell = event.getOldValue();
+        if (oldCell != null) {
+          oldCell.highlighted().set(false);
+        }
+
+        Cell newCell = event.getNewValue();
+        if (newCell != null) {
+          newCell.highlighted().set(true);
+        }
       }
     }));
     return result;
