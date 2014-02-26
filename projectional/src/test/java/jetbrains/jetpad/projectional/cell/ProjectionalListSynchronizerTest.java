@@ -351,8 +351,8 @@ public class ProjectionalListSynchronizerTest extends EditingTestCase {
 
     assertSelected(get(0));
   }
-  @Test
 
+  @Test
   public void selectDownResetsSelection() {
     add3ComplexItems();
 
@@ -371,6 +371,28 @@ public class ProjectionalListSynchronizerTest extends EditingTestCase {
     press(KeyStrokeSpecs.SELECT_AFTER);
 
     assertSelected(get(0));
+  }
+
+  @Test
+  public void selectAfterInComplexChild() {
+    add3ComplexItems();
+
+    selectChild(0);
+
+    press(KeyStrokeSpecs.SELECT_AFTER);
+
+    assertSelected(get(0), get(1));
+  }
+
+  @Test
+  public void selectBeforeInComplexChild() {
+    add3ComplexItems();
+
+    selectChild(1);
+
+    press(KeyStrokeSpecs.SELECT_BEFORE);
+
+    assertSelected(get(0), get(1));
   }
 
   @Test

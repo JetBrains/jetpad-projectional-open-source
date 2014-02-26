@@ -95,6 +95,11 @@ public class SelectionSupport<ItemT> {
     return null;
   }
 
+  private boolean isWholeSelection() {
+    Cell current = currentCell();
+    return current.focused().get() && !Cells.isLeaf(current);
+  }
+
   public void select(ItemT from, ItemT to) {
     final int start = mySource.indexOf(from);
     final int end = mySource.indexOf(to);
@@ -162,7 +167,7 @@ public class SelectionSupport<ItemT> {
           int currentIndex = myTargetList.indexOf(currentCell);
           ItemT currentItem = mySource.get(currentIndex);
 
-          if (!Positions.isEndPosition(currentCell)) {
+          if (!Positions.isEndPosition(currentCell) && !isWholeSelection()) {
             if (!mySelectedItems.contains(currentItem)) {
               mySelectedItems.add(currentItem);
               focusAndScrollTo(currentIndex, false).run();
@@ -210,7 +215,7 @@ public class SelectionSupport<ItemT> {
           int currentIndex = myTargetList.indexOf(currentCell);
           ItemT currentItem = mySource.get(currentIndex);
 
-          if (!Positions.isHomePosition(currentCell)) {
+          if (!Positions.isHomePosition(currentCell) && !isWholeSelection()) {
             if (!mySelectedItems.contains(currentItem)) {
               mySelectedItems.add(0, currentItem);
               focusAndScrollTo(currentIndex, true).run();
