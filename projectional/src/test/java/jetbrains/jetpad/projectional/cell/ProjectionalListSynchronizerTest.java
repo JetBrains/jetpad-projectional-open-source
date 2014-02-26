@@ -343,6 +343,26 @@ public class ProjectionalListSynchronizerTest extends EditingTestCase {
   }
 
   @Test
+  public void selectUpChangesSelectionInCaseOfComplexChild() {
+    add3ComplexItems();
+
+    selectFirst(0);
+    press(KeyStrokeSpecs.SELECT_UP);
+
+    assertSelected(get(0));
+  }
+  @Test
+
+  public void selectDownResetsSelection() {
+    add3ComplexItems();
+
+    selectChild(0);
+    press(KeyStrokeSpecs.SELECT_DOWN);
+
+    assertSelected();
+  }
+
+  @Test
   public void selectDownInCaseOfComplexChild() {
     add3ComplexItems();
 
