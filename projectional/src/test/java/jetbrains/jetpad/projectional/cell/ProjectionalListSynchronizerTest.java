@@ -308,7 +308,7 @@ public class ProjectionalListSynchronizerTest extends EditingTestCase {
     add3Items();
     selectFirst(0);
 
-    press(Key.DOWN, ModifierKey.SHIFT);
+    press(KeyStrokeSpecs.SELECT_AFTER);
 
     assertSelected(get(0));
   }
@@ -317,7 +317,7 @@ public class ProjectionalListSynchronizerTest extends EditingTestCase {
   public void selectDownInEmptyList() {
     CellActions.toFirstFocusable(rootMapper.getTarget()).run();
 
-    press(Key.DOWN, ModifierKey.SHIFT);
+    press(KeyStrokeSpecs.SELECT_AFTER);
 
     assertTrue(rootMapper.mySynchronizer.getSelectedItems().isEmpty());
   }
@@ -326,7 +326,7 @@ public class ProjectionalListSynchronizerTest extends EditingTestCase {
   public void selectUpInEmptyList() {
     CellActions.toFirstFocusable(rootMapper.getTarget()).run();
 
-    press(Key.UP, ModifierKey.SHIFT);
+    press(KeyStrokeSpecs.SELECT_BEFORE);
 
     assertTrue(rootMapper.mySynchronizer.getSelectedItems().isEmpty());
   }
@@ -336,8 +336,8 @@ public class ProjectionalListSynchronizerTest extends EditingTestCase {
     add3Items();
     selectLast(2);
 
-    press(Key.UP, ModifierKey.SHIFT);
-    press(Key.DOWN, ModifierKey.SHIFT);
+    press(KeyStrokeSpecs.SELECT_BEFORE);
+    press(KeyStrokeSpecs.SELECT_AFTER);
 
     assertSelected();
   }
@@ -368,7 +368,7 @@ public class ProjectionalListSynchronizerTest extends EditingTestCase {
 
     selectFirst(0);
 
-    press(Key.DOWN, ModifierKey.SHIFT);
+    press(KeyStrokeSpecs.SELECT_AFTER);
 
     assertSelected(get(0));
   }
@@ -379,8 +379,8 @@ public class ProjectionalListSynchronizerTest extends EditingTestCase {
 
     selectFirst(0);
 
-    press(Key.DOWN, ModifierKey.SHIFT);
-    press(Key.DOWN, ModifierKey.SHIFT);
+    press(KeyStrokeSpecs.SELECT_AFTER);
+    press(KeyStrokeSpecs.SELECT_AFTER);
 
     assertSelected(get(0), get(1));
   }
@@ -411,8 +411,8 @@ public class ProjectionalListSynchronizerTest extends EditingTestCase {
     add3Items();
     selectChild(2);
 
-    press(Key.UP, ModifierKey.SHIFT);
-    press(Key.DOWN, ModifierKey.SHIFT);
+    press(KeyStrokeSpecs.SELECT_BEFORE);
+    press(KeyStrokeSpecs.SELECT_AFTER);
 
     assertSelected();
   }
@@ -422,8 +422,8 @@ public class ProjectionalListSynchronizerTest extends EditingTestCase {
     add3Items();
     selectChild(0);
 
-    press(Key.DOWN, ModifierKey.SHIFT);
-    press(Key.UP, ModifierKey.SHIFT);
+    press(KeyStrokeSpecs.SELECT_AFTER);
+    press(KeyStrokeSpecs.SELECT_BEFORE);
 
     assertSelected();
   }
@@ -435,7 +435,7 @@ public class ProjectionalListSynchronizerTest extends EditingTestCase {
 
     assertTrue(rootMapper.mySynchronizer.getSelectedItems().isEmpty());
 
-    press(Key.DOWN, ModifierKey.SHIFT);
+    press(KeyStrokeSpecs.SELECT_AFTER);
 
     assertSelected(get(0));
   }
@@ -448,7 +448,7 @@ public class ProjectionalListSynchronizerTest extends EditingTestCase {
 
     CellActions.toFirstFocusable(getChild(0)).run();
 
-    press(Key.DOWN, ModifierKey.SHIFT);
+    press(KeyStrokeSpecs.SELECT_AFTER);
 
     assertSelected(get(0));
   }
@@ -464,8 +464,8 @@ public class ProjectionalListSynchronizerTest extends EditingTestCase {
 
     getChild(0).focus();
 
-    press(Key.DOWN, ModifierKey.SHIFT);
-    press(Key.DOWN, ModifierKey.SHIFT);
+    press(KeyStrokeSpecs.SELECT_AFTER);
+    press(KeyStrokeSpecs.SELECT_AFTER);
 
     assertEquals(4, (int) lastChild.caretPosition().get());
   }
@@ -479,8 +479,8 @@ public class ProjectionalListSynchronizerTest extends EditingTestCase {
     TextCell lastChild = (TextCell) getChild(1);
     lastChild.focus();
 
-    press(Key.UP, ModifierKey.SHIFT);
-    press(Key.DOWN, ModifierKey.SHIFT);
+    press(KeyStrokeSpecs.SELECT_BEFORE);
+    press(KeyStrokeSpecs.SELECT_AFTER);
 
     assertEquals(0, (int) lastChild.caretPosition().get());
   }
@@ -496,7 +496,7 @@ public class ProjectionalListSynchronizerTest extends EditingTestCase {
 
     getChild(1).focus();
 
-    press(Key.UP, ModifierKey.SHIFT);
+    press(KeyStrokeSpecs.SELECT_BEFORE);
 
     assertEquals(0, (int) firstChild.caretPosition().get());
   }
@@ -510,9 +510,9 @@ public class ProjectionalListSynchronizerTest extends EditingTestCase {
     TextCell firstChild = (TextCell) getChild(0);
     firstChild.focus();
 
-    press(Key.DOWN, ModifierKey.SHIFT);
-    press(Key.DOWN, ModifierKey.SHIFT);
-    press(Key.UP, ModifierKey.SHIFT);
+    press(KeyStrokeSpecs.SELECT_AFTER);
+    press(KeyStrokeSpecs.SELECT_AFTER);
+    press(KeyStrokeSpecs.SELECT_BEFORE);
 
     assertEquals(4, (int) firstChild.caretPosition().get());
   }
@@ -549,7 +549,7 @@ public class ProjectionalListSynchronizerTest extends EditingTestCase {
     container.children.addAll(Arrays.asList(new EmptyChild(), c2, c3));
     selectFirst(0);
 
-    press(Key.DOWN, ModifierKey.SHIFT);
+    press(KeyStrokeSpecs.SELECT_AFTER);
     del();
 
     assertEquals(Arrays.<Child>asList(c3), container.children);
@@ -563,7 +563,7 @@ public class ProjectionalListSynchronizerTest extends EditingTestCase {
 
     selectFirst(1);
 
-    press(Key.UP, ModifierKey.SHIFT);
+    press(KeyStrokeSpecs.SELECT_BEFORE);
 
     assertSelected(c1, c2);
   }
@@ -576,7 +576,7 @@ public class ProjectionalListSynchronizerTest extends EditingTestCase {
 
     selectFirst(0);
 
-    press(Key.DOWN, ModifierKey.SHIFT);
+    press(KeyStrokeSpecs.SELECT_AFTER);
 
     assertSelected(c1, c2);
   }
@@ -585,7 +585,7 @@ public class ProjectionalListSynchronizerTest extends EditingTestCase {
   public void selectDownInPlaceholder() {
     CellActions.toFirstFocusable(rootMapper.getTarget()).run();
 
-    press(Key.DOWN, ModifierKey.SHIFT);
+    press(KeyStrokeSpecs.SELECT_AFTER);
 
     assertSelected();
   }
@@ -597,10 +597,10 @@ public class ProjectionalListSynchronizerTest extends EditingTestCase {
     container.children.addAll(Arrays.<Child>asList(new NonEmptyChild(), cc));
     selectFirst(0);
 
-    press(Key.DOWN, ModifierKey.SHIFT);
-    press(Key.DOWN, ModifierKey.SHIFT);
+    press(KeyStrokeSpecs.SELECT_AFTER);
+    press(KeyStrokeSpecs.SELECT_AFTER);
 
-    press(Key.UP, ModifierKey.SHIFT);
+    press(KeyStrokeSpecs.SELECT_BEFORE);
 
     assertSelected(get(0));
   }
@@ -610,7 +610,7 @@ public class ProjectionalListSynchronizerTest extends EditingTestCase {
     container.children.add(new EmptyChild());
     selectChild(0);
 
-    press(Key.DOWN, ModifierKey.SHIFT);
+    press(KeyStrokeSpecs.SELECT_AFTER);
     press(KeyStrokeSpecs.COPY);
     press(KeyStrokeSpecs.PASTE);
 
@@ -634,7 +634,7 @@ public class ProjectionalListSynchronizerTest extends EditingTestCase {
     container.children.add(new EmptyChild());
     selectChild(0);
 
-    press(Key.DOWN, ModifierKey.SHIFT);
+    press(KeyStrokeSpecs.SELECT_AFTER);
     press(KeyStrokeSpecs.CUT);
 
     assertTrue(container.children.isEmpty());
