@@ -47,16 +47,15 @@ public class ValidTextCompletionTest extends CompletionTestCase {
 
     text.addTrait(new CellTrait() {
       @Override
-      protected CellTrait[] getBaseTraits(Cell cell) {
-        return new CellTrait[] {
+      protected CellTrait getBaseTrait(Cell cell) {
+        return
           TextEditing.validTextEditing(
             new Predicate<String>() {
               @Override
               public boolean apply(String input) {
                 return "".equals(input) || "u".equals(input);
               }
-            })
-        };
+            });
       }
 
       @Override

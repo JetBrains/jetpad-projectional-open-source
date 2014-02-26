@@ -436,8 +436,8 @@ abstract class BaseProjectionalSynchronizer<SourceT, ContextT, SourceItemT> impl
       TextCell placeHolder = new TextCell();
       placeHolder.addTrait(new CellTrait() {
         @Override
-        protected CellTrait[] getBaseTraits(Cell cell) {
-          return new CellTrait[] { TextEditing.validTextEditing(Validators.equalsTo("")) };
+        protected CellTrait getBaseTrait(Cell cell) {
+          return TextEditing.validTextEditing(Validators.equalsTo(""));
         }
 
         @Override

@@ -346,10 +346,8 @@ public class ProjectionalPropertySynchronizerTest extends EditingTestCase {
 
       getTarget().addTrait(new CellTrait() {
         @Override
-        protected CellTrait[] getBaseTraits(Cell cell) {
-          return new CellTrait[] {
-            myEditable ? TextEditing.validTextEditing(Validators.equalsTo(myText)) : TextEditing.textNavigation(true, true)
-          };
+        protected CellTrait getBaseTrait(Cell cell) {
+          return myEditable ? TextEditing.validTextEditing(Validators.equalsTo(myText)) : TextEditing.textNavigation(true, true);
         }
 
         @Override

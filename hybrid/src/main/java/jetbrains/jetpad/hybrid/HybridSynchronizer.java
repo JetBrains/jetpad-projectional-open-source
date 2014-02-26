@@ -454,8 +454,8 @@ public class HybridSynchronizer<SourceT> implements Synchronizer {
 
       target.addTrait(new TokenCellTraits.TokenCellTrait(true) {
         @Override
-        protected CellTrait[] getBaseTraits(Cell cell) {
-          return new CellTrait[] { CompletionSupport.trait() };
+        protected CellTrait getBaseTrait(Cell cell) {
+          return CompletionSupport.trait();
         }
       });
 
@@ -484,8 +484,8 @@ public class HybridSynchronizer<SourceT> implements Synchronizer {
     TextCell result = new TextCell();
     result.addTrait(new CellTrait() {
       @Override
-      protected CellTrait[] getBaseTraits(Cell cell) {
-        return new CellTrait[] { TextEditing.validTextEditing(Predicates.equalTo("")) };
+      protected CellTrait getBaseTrait(Cell cell) {
+        return TextEditing.validTextEditing(Predicates.equalTo(""));
       }
 
       @Override

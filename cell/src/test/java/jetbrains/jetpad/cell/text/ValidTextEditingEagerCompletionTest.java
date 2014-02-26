@@ -36,8 +36,8 @@ public class ValidTextEditingEagerCompletionTest extends CompletionTestCase {
 
     text.addTrait(new CellTrait() {
       @Override
-      protected CellTrait[] getBaseTraits(Cell cell) {
-        return new CellTrait[] { TextEditing.validTextEditing(Predicates.<String>alwaysTrue()) };
+      protected CellTrait getBaseTrait(Cell cell) {
+        return TextEditing.validTextEditing(Predicates.<String>alwaysTrue());
       }
 
       @Override

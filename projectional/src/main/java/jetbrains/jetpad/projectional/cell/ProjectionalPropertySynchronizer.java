@@ -66,11 +66,11 @@ class ProjectionalPropertySynchronizer<ContextT, SourceItemT extends ContextT> e
   protected Registration registerChild(SourceItemT child, Cell childCell) {
     return childCell.addTrait(new CellTrait() {
       @Override
-      protected CellTrait[] getBaseTraits(Cell cell) {
+      protected CellTrait getBaseTrait(Cell cell) {
         if (!(cell instanceof TextCell)) {
-          return new CellTrait[] { CompletionSupport.trait() };
+          return CompletionSupport.trait();
         }
-        return super.getBaseTraits(cell);
+        return null;
       }
 
       @Override

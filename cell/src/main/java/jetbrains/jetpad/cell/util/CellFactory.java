@@ -95,8 +95,8 @@ public class CellFactory {
     TextCell result = new TextCell();
     result.addTrait(new CellTrait() {
       @Override
-      protected CellTrait[] getBaseTraits(Cell cell) {
-        return new CellTrait[] { TextEditing.textNavigation(true, true) };
+      protected CellTrait getBaseTrait(Cell cell) {
+        return TextEditing.textNavigation(true, true);
       }
 
       @Override

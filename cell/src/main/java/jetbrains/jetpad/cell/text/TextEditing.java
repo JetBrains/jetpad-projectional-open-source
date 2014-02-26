@@ -49,8 +49,8 @@ public class TextEditing {
   public static CellTrait textNavigation(final boolean firstAllowed, final boolean lastAllowed) {
     return new CellTrait() {
       @Override
-      protected CellTrait[] getBaseTraits(Cell cell) {
-        return new CellTrait[] { new TextNavigationTrait() };
+      protected CellTrait getBaseTrait(Cell cell) {
+        return new TextNavigationTrait();
       }
 
       @Override
@@ -82,8 +82,8 @@ public class TextEditing {
   public static CellTrait textEditing() {
     return new CellTrait() {
       @Override
-      protected CellTrait[] getBaseTraits(Cell cell) {
-        return new CellTrait[] { new TextEditingTrait() };
+      protected CellTrait getBaseTrait(Cell cell) {
+        return new TextEditingTrait();
       }
 
       @Override
@@ -107,8 +107,8 @@ public class TextEditing {
   public static CellTrait validTextEditing(final Predicate<String> validator, final Color validColor, final boolean selectionAvailable) {
     return new CellTrait() {
       @Override
-      protected CellTrait[] getBaseTraits(Cell cell) {
-        return new CellTrait[] { validTextEditing(validator) };
+      protected CellTrait getBaseTrait(Cell cell) {
+        return validTextEditing(validator);
       }
 
       @Override
@@ -129,8 +129,8 @@ public class TextEditing {
   public static CellTrait validTextEditing(final Predicate<String> validator, final Color validColor) {
     return new CellTrait() {
       @Override
-      protected CellTrait[] getBaseTraits(Cell cell) {
-        return new CellTrait[] { validTextEditing(validator) };
+      protected CellTrait getBaseTrait(Cell cell) {
+        return validTextEditing(validator);
       }
 
       @Override
@@ -147,8 +147,8 @@ public class TextEditing {
   public static CellTrait validTextEditing(final Predicate<String> validator) {
     return new CellTrait() {
       @Override
-      protected CellTrait[] getBaseTraits(Cell cell) {
-        return new CellTrait[] { new ValidTextEditingTrait() };
+      protected CellTrait getBaseTrait(Cell cell) {
+        return new ValidTextEditingTrait();
       }
 
       @Override

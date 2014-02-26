@@ -32,7 +32,15 @@ public abstract class CellTrait {
   public static final CellTrait[] EMPTY_ARRAY = new CellTrait[0];
 
   protected CellTrait[] getBaseTraits(Cell cell) {
-    return CellTrait.EMPTY_ARRAY;
+    CellTrait next = getBaseTrait(cell);
+    if (next == null) {
+      return CellTrait.EMPTY_ARRAY;
+    }
+    return new CellTrait[] { next };
+  }
+
+  protected CellTrait getBaseTrait(Cell cell) {
+    return null;
   }
 
   public void onPropertyChanged(Cell cell, CellPropertySpec<?> prop, PropertyChangeEvent<?> event) {

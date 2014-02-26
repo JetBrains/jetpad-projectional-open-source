@@ -60,8 +60,8 @@ public class ValueEditors {
 
     textView.addTrait(new CellTrait() {
       @Override
-      protected CellTrait[] getBaseTraits(Cell cell) {
-        return new CellTrait[] { TextEditing.validTextEditing(new MyEnumValidator(), color) };
+      protected CellTrait getBaseTrait(Cell cell) {
+        return TextEditing.validTextEditing(new MyEnumValidator(), color);
       }
 
       @Override
@@ -129,8 +129,8 @@ public class ValueEditors {
     final Color color = textView.textColor().get();
     textView.addTrait(new CellTrait() {
       @Override
-      protected CellTrait[] getBaseTraits(Cell cell) {
-        return new CellTrait[] { TextEditing.validTextEditing(Validators.bool(), color) };
+      protected CellTrait getBaseTrait(Cell cell) {
+        return TextEditing.validTextEditing(Validators.bool(), color);
       }
 
       @Override
