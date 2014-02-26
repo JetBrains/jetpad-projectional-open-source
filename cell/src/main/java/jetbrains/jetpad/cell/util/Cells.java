@@ -55,4 +55,8 @@ public class Cells {
     }
     return Positions.isFirstPosition(cell) && Positions.isLastPosition(cell);
   }
+
+  public static boolean isLeaf(Cell cell) {
+    return cell instanceof TextCell;
+  }
 }

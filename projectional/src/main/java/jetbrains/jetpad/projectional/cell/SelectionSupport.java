@@ -17,6 +17,7 @@ package jetbrains.jetpad.projectional.cell;
 
 import jetbrains.jetpad.base.Runnables;
 import jetbrains.jetpad.cell.trait.CellTrait;
+import jetbrains.jetpad.cell.util.Cells;
 import jetbrains.jetpad.event.KeyStrokeSpecs;
 import jetbrains.jetpad.model.composite.Composites;
 import jetbrains.jetpad.model.collections.list.ObservableArrayList;
@@ -134,8 +135,8 @@ public class SelectionSupport<ItemT> {
 
   private void handleFocusGain(FocusEvent event) {
     Cell newValue = event.getNewValue();
-    newValue = newValue != null ? normalizeFocus(newValue) : null;
-    if (newValue == null || !myTargetList.contains(newValue)) return;
+    Cell normalizedNewValue = newValue != null ? normalizeFocus(newValue) : null;
+    if (normalizedNewValue == null || !myTargetList.contains(normalizedNewValue)) return;
 
     if (myChangingSelection) return;
 
