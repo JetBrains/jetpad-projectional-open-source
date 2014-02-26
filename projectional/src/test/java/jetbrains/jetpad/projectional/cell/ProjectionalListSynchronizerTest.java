@@ -31,6 +31,7 @@ import jetbrains.jetpad.cell.position.PositionHandler;
 import jetbrains.jetpad.cell.text.TextEditing;
 import jetbrains.jetpad.cell.util.CellFactory;
 import jetbrains.jetpad.cell.util.CellLists;
+import jetbrains.jetpad.model.composite.Composites;
 import jetbrains.jetpad.projectional.generic.Role;
 import jetbrains.jetpad.projectional.generic.RoleCompletion;
 import jetbrains.jetpad.projectional.util.RootController;
@@ -636,16 +637,16 @@ public class ProjectionalListSynchronizerTest extends EditingTestCase {
   }
 
   private void selectFirst(int index) {
-    Cell child = getChild(index);
-    child.get(PositionHandler.PROPERTY).home();
-    child.focus();
+    Cell target = Composites.firstFocusable(getChild(index));
+    target.get(PositionHandler.PROPERTY).home();
+    target.focus();
   }
 
 
   private void selectLast(int index) {
-    Cell child = getChild(index);
-    child.get(PositionHandler.PROPERTY).end();
-    child.focus();
+    Cell target = Composites.lastFocusable(getChild(index));
+    target.get(PositionHandler.PROPERTY).end();
+    target.focus();
   }
 
   private void assertFocused(int index) {

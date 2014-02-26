@@ -585,7 +585,7 @@ public class HybridEditorTest extends EditingTestCase {
 
     press(KeyStrokeSpecs.SELECT_UP);
 
-    assertNoSelection();
+    assertSelection(0, 1);
   }
 
   @Test
