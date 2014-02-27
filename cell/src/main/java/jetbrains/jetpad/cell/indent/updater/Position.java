@@ -85,6 +85,7 @@ class Position<SourceCT extends Composite<SourceCT>> {
   private SourceCT nextVisibleLeaf(SourceCT item) {
     SourceCT current = Composites.nextLeaf(item);
     while (current != null) {
+      if (!Composites.isDescendant(myUpdater.root(), current)) return null;
       if (myUpdater.isVisible(current)) return current;
       current = Composites.nextLeaf(current);
     }
@@ -94,6 +95,7 @@ class Position<SourceCT extends Composite<SourceCT>> {
   private SourceCT prevVisibleLeaf(SourceCT item) {
     SourceCT current = Composites.prevLeaf(item);
     while (current != null) {
+      if (!Composites.isDescendant(myUpdater.root(), current)) return null;
       if (myUpdater.isVisible(current)) return current;
       current = Composites.prevLeaf(current);
     }

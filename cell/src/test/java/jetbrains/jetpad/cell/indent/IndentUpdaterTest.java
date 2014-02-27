@@ -32,8 +32,7 @@ import org.junit.Test;
 
 import java.util.Arrays;
 
-import static jetbrains.jetpad.cell.util.CellFactory.indent;
-import static jetbrains.jetpad.cell.util.CellFactory.newLine;
+import static jetbrains.jetpad.cell.util.CellFactory.*;
 import static org.junit.Assert.assertEquals;
 
 public class IndentUpdaterTest {
@@ -256,6 +255,21 @@ public class IndentUpdaterTest {
 
     assertTarget("[['1'], ['a', 'd']]");
   }
+
+  @Test
+  public void mixingIndentWithOtherContainers() {
+    cellContainer.root.children().clear();
+
+    HorizontalCell target = new HorizontalCell();
+    cellContainer.root.children().add(horizontal(label("aaa"), target, label("bbb")));
+
+    indentCell.children().addAll(Arrays.asList(text("b"), text("c")));
+
+    init(target);
+
+    assertTarget("[['b', 'c']]");
+  }
+
 
   private Cell composite(String text) {
     Cell result = new HorizontalCell();
