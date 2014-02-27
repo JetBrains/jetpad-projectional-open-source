@@ -38,7 +38,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class CellContainerToViewMapper extends Mapper<CellContainer, View> {
-  private CellContainerView myCellContainerView;
   private View myTargetView;
   private View myPopupView;
   private CellToViewContext myContext;
@@ -57,22 +56,13 @@ public class CellContainerToViewMapper extends Mapper<CellContainer, View> {
   @Override
   protected void onAttach(MappingContext ctx) {
     super.onAttach(ctx);
-
     getSource().setCellContainerPeer(createContainerPeer());
-
-    if (myCellContainerView != null) {
-      getTarget().children().add(myCellContainerView);
-    }
   }
 
   @Override
   protected void onDetach() {
     super.onDetach();
-
     getSource().resetContainerPeer();
-    if (myCellContainerView != null) {
-      getTarget().children().remove(myCellContainerView);
-    }
   }
 
   @Override
