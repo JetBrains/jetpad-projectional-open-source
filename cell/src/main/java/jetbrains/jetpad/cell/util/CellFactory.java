@@ -28,7 +28,6 @@ import jetbrains.jetpad.values.Color;
 
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Set;
 
 public class CellFactory {
   private static final CellTraitPropertySpec<Cell> PLACEHOLDER_CELL = new CellTraitPropertySpec<>("placeholderCell");
@@ -49,7 +48,7 @@ public class CellFactory {
 
   public static VerticalCell vertical(boolean indent, Cell... cells) {
     VerticalCell result = new VerticalCell();
-    result.indent().set(indent);
+    result.indented().set(indent);
     to(result, cells);
     return result;
   }
