@@ -430,7 +430,7 @@ public class HybridEditorTest extends EditingTestCase {
 
   @Test
   public void complexValueTokenTransform() {
-    setTokens(new ValueToken(new ComplexValueExpr(), new ComplexValueCloner()));
+    setTokens(createComplexToken());
     select(0, false);
 
     type("+id");
@@ -476,12 +476,40 @@ public class HybridEditorTest extends EditingTestCase {
     setTokens(Tokens.ID, Tokens.DOT, Tokens.ID);
     select(2, false);
 
-    press(Key.UP, ModifierKey.SHIFT);
-    press(Key.UP, ModifierKey.SHIFT);
-    press(Key.UP, ModifierKey.SHIFT);
+    press(KeyStrokeSpecs.SELECT_UP);
+    press(KeyStrokeSpecs.SELECT_UP);
+    press(KeyStrokeSpecs.SELECT_UP);
 
     assertSelection(0, 3);
   }
+
+  @Test
+  public void selectUpFromComplexToken() {
+    setTokens(createComplexToken());
+
+    select(0, true);
+
+    assertNoSelection();
+
+    press(KeyStrokeSpecs.SELECT_UP);
+
+    assertSelected(0);
+  }
+
+  @Test
+  public void selectDownFromComplexToken() {
+    setTokens(createComplexToken());
+
+    select(0, true);
+    press(KeyStrokeSpecs.SELECT_UP);
+
+    assertSelected(0);
+
+    press(KeyStrokeSpecs.SELECT_DOWN);
+
+    assertNoSelection();
+  }
+
 
   @Test
   public void selectionDeleteWithDelDeleteAll() {
@@ -768,6 +796,10 @@ public class HybridEditorTest extends EditingTestCase {
     select(1, false);
 
     assertEquals(1, sync.focusedIndex());
+  }
+
+  private ValueToken createComplexToken() {
+    return new ValueToken(new ComplexValueExpr(), new ComplexValueCloner());
   }
 
   private void assertTokens(Token... tokens) {

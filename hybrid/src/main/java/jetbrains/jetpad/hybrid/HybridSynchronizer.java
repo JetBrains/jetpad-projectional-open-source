@@ -214,11 +214,11 @@ public class HybridSynchronizer<SourceT> implements Synchronizer {
                 if (childNode != null) {
                   select(childNode.range());
                   event.consume();
-                } else {
-                  mySelectionSupport.clearSelection();
-                  event.consume();
+                  return;
                 }
-              } else {
+              }
+
+              if (!mySelectionSupport.isCurrentCompletelySelected()) {
                 mySelectionSupport.clearSelection();
                 event.consume();
               }
