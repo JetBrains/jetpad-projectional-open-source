@@ -21,7 +21,9 @@ import jetbrains.jetpad.cell.HorizontalCell;
 import jetbrains.jetpad.cell.TextCell;
 import jetbrains.jetpad.cell.view.CellContainerToViewMapper;
 import jetbrains.jetpad.cell.view.MapperCell2View;
+import jetbrains.jetpad.mapper.MappingContext;
 import jetbrains.jetpad.model.collections.list.ObservableList;
+import jetbrains.jetpad.model.composite.Composites;
 import jetbrains.jetpad.projectional.view.TextView;
 import jetbrains.jetpad.projectional.view.View;
 import jetbrains.jetpad.projectional.view.ViewContainer;
@@ -40,14 +42,20 @@ public class IndentUpdaterTest {
   private IndentCell indentCell = new IndentCell();
   private View indentView;
   private ObservableList<Cell> children = indentCell.children();
+  private CellContainerToViewMapper rootMapper;
 
   @Before
   public void init() {
-    final CellContainerToViewMapper mapper = new CellContainerToViewMapper(cellContainer, viewContainer.root(), viewContainer.contentRoot(), viewContainer.decorationRoot());
-    mapper.attachRoot();
+    rootMapper = new CellContainerToViewMapper(cellContainer, viewContainer.root(), viewContainer.contentRoot(), viewContainer.decorationRoot());
+    rootMapper.attachRoot();
 
-    cellContainer.root.children().add(indentCell);
-    indentView = (View) mapper.getMappingContext().getMapper(mapper, indentCell).getTarget();
+    init(cellContainer.root);
+  }
+
+  private void init(Cell target) {
+    Composites.<Cell>removeFromParent(indentCell);
+    target.children().add(indentCell);
+    indentView = (View) rootMapper.getDescendantMapper(indentCell).getTarget();
   }
 
   @Test
