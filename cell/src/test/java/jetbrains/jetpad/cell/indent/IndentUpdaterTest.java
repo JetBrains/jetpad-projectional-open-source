@@ -15,47 +15,69 @@
  */
 package jetbrains.jetpad.cell.indent;
 
+import jetbrains.jetpad.cell.Cell;
+import jetbrains.jetpad.cell.CellContainer;
+import jetbrains.jetpad.cell.HorizontalCell;
+import jetbrains.jetpad.cell.TextCell;
+import jetbrains.jetpad.cell.view.CellContainerToViewMapper;
+import jetbrains.jetpad.cell.view.MapperCell2View;
 import jetbrains.jetpad.model.collections.list.ObservableList;
-import jetbrains.jetpad.cell.indent.test.IndentCell;
-import jetbrains.jetpad.cell.indent.test.IndentPart;
-import jetbrains.jetpad.cell.indent.test.NewLinePart;
+import jetbrains.jetpad.projectional.view.TextView;
+import jetbrains.jetpad.projectional.view.View;
+import jetbrains.jetpad.projectional.view.ViewContainer;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Arrays;
 
-import static jetbrains.jetpad.cell.indent.CellUtil.*;
+import static jetbrains.jetpad.cell.util.CellFactory.indent;
+import static jetbrains.jetpad.cell.util.CellFactory.newLine;
 import static org.junit.Assert.assertEquals;
 
 public class IndentUpdaterTest {
+  private ViewContainer viewContainer = new ViewContainer();
+  private CellContainer cellContainer = new CellContainer();
   private IndentCell indentCell = new IndentCell();
-  private ObservableList<IndentPart> children = indentCell.root().children;
+  private View indentView;
+  private ObservableList<Cell> children = indentCell.children();
+
+  @Before
+  public void init() {
+    final CellContainerToViewMapper mapper = new CellContainerToViewMapper(cellContainer, viewContainer.root(), viewContainer.contentRoot(), viewContainer.decorationRoot());
+    mapper.attachRoot();
+
+    MapperCell2View.map(cellContainer, viewContainer);
+    cellContainer.root.children().add(indentCell);
+    indentView = (View) mapper.getMappingContext().getMapper(mapper, indentCell).getTarget();
+  }
 
   @Test
   public void singleLineAdd() {
+
     children.addAll(Arrays.asList(text("a"), text("b")));
 
-    assertCell("[['a', 'b']]");
+    assertTarget("[['a', 'b']]");
   }
 
   @Test
   public void collectionAdd() {
-    children.addAll(Arrays.asList(list(text("a"), text("b")), list(text("c"))));
+    children.addAll(Arrays.asList(indent(text("a"), text("b")), indent(text("c"))));
 
-    assertCell("[['a', 'b', 'c']]");
+    assertTarget("[['a', 'b', 'c']]");
   }
 
   @Test
   public void newLineAdd() {
     children.addAll(Arrays.asList(text("a"), newLine(), text("b")));
 
-    assertCell("[['a'], ['b']]");
+    assertTarget("[['a'], ['b']]");
   }
 
   @Test
   public void collectionWithNewLinesAdd() {
-    children.add(list(text("a"), newLine(), text("b"), newLine(), text("c")));
+    children.add(indent(text("a"), newLine(), text("b"), newLine(), text("c")));
 
-    assertCell("[['a'], ['b'], ['c']]");
+    assertTarget("[['a'], ['b'], ['c']]");
   }
 
   @Test
@@ -64,7 +86,7 @@ public class IndentUpdaterTest {
 
     children.add(1, text("z"));
 
-    assertCell("[['a', 'z', 'b']]");
+    assertTarget("[['a', 'z', 'b']]");
   }
 
   @Test
@@ -73,7 +95,7 @@ public class IndentUpdaterTest {
 
     children.add(3, text("z"));
 
-    assertCell("[['a'], ['b', 'z', 'c']]");
+    assertTarget("[['a'], ['b', 'z', 'c']]");
   }
 
   @Test
@@ -82,7 +104,7 @@ public class IndentUpdaterTest {
 
     children.add(1, newLine());
 
-    assertCell("[['a'], ['b']]");
+    assertTarget("[['a'], ['b']]");
   }
 
   @Test
@@ -90,7 +112,7 @@ public class IndentUpdaterTest {
     children.addAll(Arrays.asList(text("a"), text("b"), newLine(), text("c")));
 
     children.add(1, newLine());
-    assertCell("[['a'], ['b'], ['c']]");
+    assertTarget("[['a'], ['b'], ['c']]");
   }
 
   @Test
@@ -98,7 +120,7 @@ public class IndentUpdaterTest {
     children.addAll(Arrays.asList(text("a"), text("b")));
     children.remove(0);
 
-    assertCell("[['b']]");
+    assertTarget("[['b']]");
   }
 
   @Test
@@ -106,7 +128,7 @@ public class IndentUpdaterTest {
     children.addAll(Arrays.asList(text("a"), text("b")));
     children.remove(1);
 
-    assertCell("[['a']]");
+    assertTarget("[['a']]");
   }
 
   @Test
@@ -114,7 +136,7 @@ public class IndentUpdaterTest {
     children.addAll(Arrays.asList(text("a"), newLine(), text("b"), text("c")));
     children.remove(2);
 
-    assertCell("[['a'], ['c']]");
+    assertTarget("[['a'], ['c']]");
   }
 
   @Test
@@ -122,7 +144,7 @@ public class IndentUpdaterTest {
     children.addAll(Arrays.asList(text("a"), newLine(), text("b")));
     children.remove(1);
 
-    assertCell("[['a', 'b']]");
+    assertTarget("[['a', 'b']]");
   }
 
   @Test
@@ -130,112 +152,140 @@ public class IndentUpdaterTest {
     children.addAll(Arrays.asList(text("a"), newLine(), text("b"), newLine(), text("c")));
     children.remove(3);
 
-    assertCell("[['a'], ['b', 'c']]");
+    assertTarget("[['a'], ['b', 'c']]");
   }
 
   @Test
   public void deleteNewLineBeforeIndent() {
-    IndentPart list = list(true, newLine(), text("b"), newLine(), text("c"));
+    IndentCell list = indent(true, newLine(), text("b"), newLine(), text("c"));
     children.addAll(Arrays.asList(text("a"), list));
 
-    list.children.remove(2);
+    list.children().remove(2);
 
-    assertCell("[['a'], ['  ', 'b', 'c']]");
+    assertTarget("[['a'], ['  ', 'b', 'c']]");
   }
 
   @Test
   public void deleteIndentedLeaf() {
-    IndentPart list = list(true, newLine(), text("b"), text("c"));
+    IndentCell list = indent(true, newLine(), text("b"), text("c"));
     children.addAll(Arrays.asList(text("a"), list));
 
-    list.children.remove(1);
+    list.children().remove(1);
 
-    assertCell("[['a'], ['  ', 'c']]");
+    assertTarget("[['a'], ['  ', 'c']]");
   }
 
   @Test
   public void collectionRemove() {
-    children.addAll(Arrays.asList(text("a"), list(newLine(), text("b"), newLine()), text("c")));
+    children.addAll(Arrays.asList(text("a"), indent(newLine(), text("b"), newLine()), text("c")));
     children.remove(1);
 
-    assertCell("[['a', 'c']]");
+    assertTarget("[['a', 'c']]");
   }
 
   @Test
   public void indentedSequence() {
-    children.addAll(Arrays.asList(text("a"), list(true, text("b"), newLine(), text("c"))));
+    children.addAll(Arrays.asList(text("a"), indent(true, text("b"), newLine(), text("c"))));
 
-    assertCell("[['a', 'b'], ['  ', 'c']]");
+    assertTarget("[['a', 'b'], ['  ', 'c']]");
   }
 
   @Test
   public void nestedIndentSequence() {
-    children.addAll(Arrays.asList(text("a"), list(true, newLine(), text("b"), list(true, newLine(), text("c")))));
+    children.addAll(Arrays.asList(text("a"), indent(true, newLine(), text("b"), indent(true, newLine(), text("c")))));
 
-    assertCell("[['a'], ['  ', 'b'], ['    ', 'c']]");
-  }
-
-  @Test
-  public void cellChildrenAreIngored() {
-    children.addAll(Arrays.asList(text("a"), composite("b"), newLine(), text("c")));
-
-    assertCell("[['a', 'b'], ['c']]");
+    assertTarget("[['a'], ['  ', 'b'], ['    ', 'c']]");
   }
 
   @Test
   public void cellChildrenExceptionFirstPosition() {
     children.addAll(Arrays.asList(composite("b")));
 
-    assertCell("[['b']]");
+    assertTarget("[[['composite', 'b']]]");
   }
 
   @Test
   public void compositesOneAfterOther() {
     children.addAll(Arrays.asList(composite("a"), composite("b")));
 
-    assertCell("[['a', 'b']]");
+    assertTarget("[[['composite', 'a'], ['composite', 'b']]]");
   }
 
   @Test
   public void exceptionOnDeeplyNestedCompositesInsideOfCells() {
-    IndentPart c = composite("z");
+    Cell c = composite("z");
     c.children().add(0, composite("zz"));
 
     children.addAll(Arrays.asList(newLine(), c));
 
-    assertCell("[[], ['z']]");
+    assertTarget("[[], [[['composite', 'zz'], 'composite', 'z']]]");
   }
 
   @Test
   public void visibilityChange() {
-    IndentPart ta = text("a");
+    Cell ta = text("a");
     children.addAll(Arrays.asList(ta, text("b")));
-    ta.setVisible(false);
+    ta.visible().set(false);
 
-    assertCell("[['b']]");
+    assertTarget("[['b']]");
   }
 
   @Test
   public void newLineVisibilityChange() {
-    NewLinePart nl = newLine();
-    nl.setVisible(false);
+    NewLineCell nl = newLine();
+    nl.visible().set(false);
     children.addAll(Arrays.asList(text("a"), nl, text("b")));
-    assertCell("[['a', 'b']]");
+    assertTarget("[['a', 'b']]");
 
-    nl.setVisible(true);
-    assertCell("[['a'], ['b']]");
+    nl.visible().set(true);
+    assertTarget("[['a'], ['b']]");
   }
 
   @Test
   public void nestedVisibility() {
-    IndentPart l = list(text("b"), text("c"));
-    l.setVisible(false);
+    IndentCell l = indent(text("b"), text("c"));
+    l.visible().set(false);
     children.addAll(Arrays.asList(text("1"), newLine(), text("a"), l, text("d")));
 
-    assertCell("[['1'], ['a', 'd']]");
+    assertTarget("[['1'], ['a', 'd']]");
   }
 
-  private void assertCell(String presentation) {
-    assertEquals(presentation, CellUtil.toString(indentCell));
+  private Cell composite(String text) {
+    Cell result = new HorizontalCell();
+    result.children().addAll(Arrays.asList(text("composite"), text(text)));
+    return result;
+  }
+
+  private Cell text(String text) {
+    return new TextCell(text);
+  }
+
+
+  private void assertTarget(String presentation) {
+    assertEquals(presentation, toString(indentView));
+  }
+
+  static String toString(View view) {
+    StringBuilder builder = new StringBuilder();
+    toString(view, builder);
+    return builder.toString();
+  }
+
+  private static void toString(View view, StringBuilder result) {
+    if (view instanceof TextView) {
+      result.append("'").append(((TextView) view).text().get()).append("'");
+    } else {
+      result.append("[");
+      boolean first = true;
+      for (View child : view.children()) {
+        if (first) {
+          first = false;
+        } else {
+          result.append(", ");
+        }
+        toString(child, result);
+      }
+      result.append("]");
+    }
   }
 }
