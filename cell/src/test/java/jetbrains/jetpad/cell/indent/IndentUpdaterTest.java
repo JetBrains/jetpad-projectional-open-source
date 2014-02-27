@@ -46,7 +46,6 @@ public class IndentUpdaterTest {
     final CellContainerToViewMapper mapper = new CellContainerToViewMapper(cellContainer, viewContainer.root(), viewContainer.contentRoot(), viewContainer.decorationRoot());
     mapper.attachRoot();
 
-    MapperCell2View.map(cellContainer, viewContainer);
     cellContainer.root.children().add(indentCell);
     indentView = (View) mapper.getMappingContext().getMapper(mapper, indentCell).getTarget();
   }
