@@ -304,7 +304,7 @@ public class ProjectionalListSynchronizerTest extends EditingTestCase {
   }
 
   @Test
-  public void selectDown() {
+  public void selectAfter() {
     add3Items();
     selectFirst(0);
 
@@ -314,7 +314,7 @@ public class ProjectionalListSynchronizerTest extends EditingTestCase {
   }
 
   @Test
-  public void selectDownInEmptyList() {
+  public void selectAfterInEmptyList() {
     CellActions.toFirstFocusable(rootMapper.getTarget()).run();
 
     press(KeyStrokeSpecs.SELECT_AFTER);
@@ -323,7 +323,7 @@ public class ProjectionalListSynchronizerTest extends EditingTestCase {
   }
 
   @Test
-  public void selectUpInEmptyList() {
+  public void selectBeforeInEmptyList() {
     CellActions.toFirstFocusable(rootMapper.getTarget()).run();
 
     press(KeyStrokeSpecs.SELECT_BEFORE);
@@ -332,7 +332,7 @@ public class ProjectionalListSynchronizerTest extends EditingTestCase {
   }
 
   @Test
-  public void unselectDownLast() {
+  public void unselectBeforeLast() {
     add3Items();
     selectLast(2);
 
@@ -363,7 +363,7 @@ public class ProjectionalListSynchronizerTest extends EditingTestCase {
   }
 
   @Test
-  public void selectDownInCaseOfComplexChild() {
+  public void selectAfterInCaseOfComplexChild() {
     add3ComplexItems();
 
     selectFirst(0);
@@ -396,7 +396,7 @@ public class ProjectionalListSynchronizerTest extends EditingTestCase {
   }
 
   @Test
-  public void multiSelectDownInCaseOfComplexChild() {
+  public void multiSelectAfterInCaseOfComplexChild() {
     add3ComplexItems();
 
     selectFirst(0);
@@ -408,12 +408,12 @@ public class ProjectionalListSynchronizerTest extends EditingTestCase {
   }
 
   @Test
-  public void selectDownInComplexNonSelectableChild() {
+  public void selectAfterInComplexNonSelectableChild() {
     container.children.add(new ComplexNonSelectableChild());
 
     CellActions.toFirstFocusable(getChild(0)).run();
 
-    press(Key.DOWN, ModifierKey.SHIFT);
+    press(KeyStrokeSpecs.SELECT_AFTER);
 
     assertSelected(get(0));
   }
@@ -429,7 +429,7 @@ public class ProjectionalListSynchronizerTest extends EditingTestCase {
   }
 
   @Test
-  public void unSelectDownInEnd() {
+  public void unSelectAfterInEnd() {
     add3Items();
     selectChild(2);
 
@@ -451,7 +451,7 @@ public class ProjectionalListSynchronizerTest extends EditingTestCase {
   }
 
   @Test
-  public void selectDownInsideSelectsChildViewFirst() {
+  public void selectAfterInsideSelectsChildViewFirst() {
     container.children.add(new ComplexChild());
     CellActions.toFirstFocusable(getChild(0)).run();
 
@@ -463,7 +463,7 @@ public class ProjectionalListSynchronizerTest extends EditingTestCase {
   }
 
   @Test
-  public void selectDownUnselectableChildManyItems() {
+  public void selectAfterUnselectableChildManyItems() {
     ObservableList<Child> children = container.children;
     children.add(new NonSelectableChild());
     children.add(new NonSelectableChild());
@@ -476,7 +476,7 @@ public class ProjectionalListSynchronizerTest extends EditingTestCase {
   }
 
   @Test
-  public void selectDownsMovesCaretToEndInCaseOfExtension() {
+  public void selectAfterMovesCaretToEndInCaseOfExtension() {
     ObservableList<Child> children = container.children;
     children.add(new NonEmptyChild());
     children.add(new NonEmptyChild());
@@ -493,7 +493,7 @@ public class ProjectionalListSynchronizerTest extends EditingTestCase {
   }
 
   @Test
-  public void selectDownsMovesCaretToEndInCaseOfReduction() {
+  public void selectAfterMovesCaretToEndInCaseOfReduction() {
     ObservableList<Child> children = container.children;
     children.add(new NonEmptyChild());
     children.add(new NonEmptyChild());
@@ -508,7 +508,7 @@ public class ProjectionalListSynchronizerTest extends EditingTestCase {
   }
 
   @Test
-  public void selectUpMovesCaretToEndInCaseOfExtension() {
+  public void selectBeforeMovesCaretToEndInCaseOfExtension() {
     ObservableList<Child> children = container.children;
     children.add(new NonEmptyChild());
     children.add(new NonEmptyChild());
@@ -524,7 +524,7 @@ public class ProjectionalListSynchronizerTest extends EditingTestCase {
   }
 
   @Test
-  public void selectUpMovesCaretToEndInCaseOfReduction() {
+  public void selectBeforeMovesCaretToEndInCaseOfReduction() {
     ObservableList<Child> children = container.children;
     children.add(new NonEmptyChild());
     children.add(new NonEmptyChild());
@@ -578,7 +578,7 @@ public class ProjectionalListSynchronizerTest extends EditingTestCase {
   }
 
   @Test
-  public void selectUpInEmpty() {
+  public void selectBeforeInEmpty() {
     EmptyChild c1 = new EmptyChild();
     EmptyChild c2 = new EmptyChild();
     container.children.addAll(Arrays.asList(c1, c2));
@@ -591,7 +591,7 @@ public class ProjectionalListSynchronizerTest extends EditingTestCase {
   }
 
   @Test
-  public void selectDownInEmptyChilden() {
+  public void selectAfterInEmptyChilden() {
     EmptyChild c1 = new EmptyChild();
     EmptyChild c2 = new EmptyChild();
     container.children.addAll(Arrays.asList(c1, c2));
@@ -604,7 +604,7 @@ public class ProjectionalListSynchronizerTest extends EditingTestCase {
   }
 
   @Test
-  public void selectDownInPlaceholder() {
+  public void selectAfterInPlaceholder() {
     CellActions.toFirstFocusable(rootMapper.getTarget()).run();
 
     press(KeyStrokeSpecs.SELECT_AFTER);
@@ -613,7 +613,7 @@ public class ProjectionalListSynchronizerTest extends EditingTestCase {
   }
 
   @Test
-  public void selectUpAndNestedSelection() {
+  public void selectBeforeAndNestedSelection() {
     CompositeChild cc = new CompositeChild();
     cc.children.add(new NonEmptyChild());
     container.children.addAll(Arrays.<Child>asList(new NonEmptyChild(), cc));
