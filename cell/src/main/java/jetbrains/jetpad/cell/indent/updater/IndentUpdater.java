@@ -290,7 +290,9 @@ public class IndentUpdater<SourceCT extends Composite<SourceCT>, TargetT> {
   boolean isVisible(SourceCT source) {
     SourceCT current = source;
     while (current != myRoot) {
-      if (current == null) throw new IllegalStateException();
+      if (current == null) {
+        throw new IllegalStateException("Can't find a root indent container for " + source);
+      }
       if (!myIndentUpdaterSource.isVisible(current) && current != myJustBecameInvisible) return false;
       current = current.parent().get();
     }
