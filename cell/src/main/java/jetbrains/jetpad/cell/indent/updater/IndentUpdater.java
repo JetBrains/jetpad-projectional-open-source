@@ -48,9 +48,6 @@ public class IndentUpdater<SourceCT extends Composite<SourceCT>, TargetT> {
   }
 
   private void childAdded(SourceCT child, boolean setAttached) {
-    if (setAttached) {
-      myIndentUpdaterSource.setAttached(child, true);
-    }
     onChildAdd(child);
     if (!myIndentUpdaterSource.isCell(child)) {
       List<SourceCT> children = child.children();
@@ -74,9 +71,6 @@ public class IndentUpdater<SourceCT extends Composite<SourceCT>, TargetT> {
       }
     }
     onChildRemove(child);
-    if (setAttached) {
-      myIndentUpdaterSource.setAttached(child, false);
-    }
   }
 
   public void visibilityChanged(SourceCT item, PropertyChangeEvent<Boolean> change) {
@@ -94,6 +88,7 @@ public class IndentUpdater<SourceCT extends Composite<SourceCT>, TargetT> {
 
   private void onChildAdd(SourceCT child) {
     if (!isVisible(child)) return;
+    myIndentUpdaterSource.setAttached(child, true);
 
     Position<SourceCT> insertAt = new Position<>(this, child);
     Position<SourceCT> prevNewLinePos = prevNewLine(insertAt.prev());
@@ -145,6 +140,7 @@ public class IndentUpdater<SourceCT extends Composite<SourceCT>, TargetT> {
 
   private void onChildRemove(SourceCT child) {
     if (!isVisible(child)) return;
+    myIndentUpdaterSource.setAttached(child, false);
 
     Position<SourceCT> removeAt = new Position<>(this, child);
     Position<SourceCT> prevNewLinePos = prevNewLine(removeAt.prev());

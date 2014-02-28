@@ -257,6 +257,19 @@ public class IndentUpdaterTest {
   }
 
   @Test
+  public void changeVisibilityOfCollectionWithNewLine() {
+    IndentCell l = indent(newLine(), text("z"));
+    l.visible().set(false);
+
+    children.add(l);
+
+    l.visible().set(true);
+
+    assertTarget("[[], ['z']]");
+  }
+
+
+  @Test
   public void mixingIndentWithOtherContainers() {
     cellContainer.root.children().clear();
 
