@@ -56,7 +56,7 @@ public abstract class MultiPointView extends View {
     if (min == null) {
       return null;
     } else {
-      return new Rectangle(min, max.sub(min).add(new Vector(1, 1)));
+      return new Rectangle(min, max.sub(min));
     }
   }
 
