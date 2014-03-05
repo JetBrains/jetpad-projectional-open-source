@@ -95,7 +95,7 @@ public abstract class MultiPointView extends View {
 
     @Override
     public void add(int index, Vector element) {
-      Vector relative = element.add(toRootDelta().get());
+      Vector relative = element.sub(toRootDelta().get());
       myRelativePoints.add(index, relative);
       invalidate();
       firePointsChange();
