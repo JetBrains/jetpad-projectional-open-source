@@ -22,6 +22,7 @@ import jetbrains.jetpad.model.collections.list.ObservableList;
 import jetbrains.jetpad.projectional.demo.diagram.model.DiagramConnection;
 import jetbrains.jetpad.projectional.demo.diagram.model.DiagramNode;
 import jetbrains.jetpad.projectional.demo.diagram.model.SimpleDiagram;
+import jetbrains.jetpad.projectional.diagram.util.SubList;
 import jetbrains.jetpad.projectional.view.View;
 import jetbrains.jetpad.projectional.diagram.view.Connection;
 import jetbrains.jetpad.projectional.diagram.view.DiagramView;

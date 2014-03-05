@@ -24,6 +24,7 @@ import jetbrains.jetpad.model.property.Properties;
 import jetbrains.jetpad.model.property.WritableProperty;
 import jetbrains.jetpad.projectional.demo.diagram.model.DiagramNode;
 import jetbrains.jetpad.projectional.demo.diagram.model.DiagramNodeConnection;
+import jetbrains.jetpad.projectional.diagram.util.SubList;
 import jetbrains.jetpad.projectional.diagram.view.*;
 import jetbrains.jetpad.projectional.view.RectView;
 import jetbrains.jetpad.values.Color;

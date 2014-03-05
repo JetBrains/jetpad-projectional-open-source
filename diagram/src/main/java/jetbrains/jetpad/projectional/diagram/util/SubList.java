@@ -13,12 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package jetbrains.jetpad.projectional.demo.diagram.mapper;
+package jetbrains.jetpad.projectional.diagram.util;
 
 import jetbrains.jetpad.model.collections.list.ObservableArrayList;
 import jetbrains.jetpad.model.collections.list.ObservableList;
 
-abstract class SubList<ItemT> extends ObservableArrayList<ItemT> {
+public abstract class SubList<ItemT> extends ObservableArrayList<ItemT> {
   protected abstract ObservableList<ItemT> getBaseList();
 
   @Override
