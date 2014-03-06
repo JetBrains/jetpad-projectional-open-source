@@ -59,7 +59,7 @@ public class LineView extends View {
     int width = width().get();
 
     Vector widthVec = new Vector(width, width);
-    ctx.bounds(new Rectangle(min.sub(widthVec.div(2)), max.sub(min).add(widthVec)), 0);
+    ctx.bounds(new Rectangle(min.sub(widthVec), max.sub(min).add(widthVec.mul(2))), 0);
   }
 
   @Override
