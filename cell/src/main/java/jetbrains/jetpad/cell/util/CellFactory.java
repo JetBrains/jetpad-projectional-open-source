@@ -32,8 +32,9 @@ import java.util.Collections;
 public class CellFactory {
   private static final CellTraitPropertySpec<Cell> PLACEHOLDER_CELL = new CellTraitPropertySpec<>("placeholderCell");
 
-  public static void to(Cell target, Cell... cells) {
+  public static Cell to(Cell target, Cell... cells) {
     Collections.addAll(target.children(), cells);
+    return target;
   }
 
   public static HorizontalCell horizontal(Cell... cells) {
