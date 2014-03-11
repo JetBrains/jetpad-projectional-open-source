@@ -144,10 +144,13 @@ class TokenCellTraits {
       if (spec == Cells.BECAME_EMPTY) {
         int index = tokenViews(cell).indexOf(cell);
 
+        Token current = tokens(cell).get(index);
         Token prev = index == 0 ? null : tokens(cell).get(index - 1);
         Token next = index == tokens(cell).size() - 1 ? null : tokens(cell).get(index + 1);
 
-        if ((prev != null && prev.noSpaceToRight()) || (next != null && next.noSpaceToLeft())) {
+        if (
+            (prev != null && (prev.noSpaceToRight() || current.noSpaceToLeft()) ||
+            (next != null && (next.noSpaceToLeft()) || current.noSpaceToRight()))) {
           tokenOperations(cell).deleteToken(cell, 0).run();
           event.consume();
           return;

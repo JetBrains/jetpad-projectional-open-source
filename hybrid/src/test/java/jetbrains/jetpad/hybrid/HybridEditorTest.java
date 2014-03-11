@@ -295,6 +295,28 @@ public class HybridEditorTest extends EditingTestCase {
   }
 
   @Test
+  public void backspaceInSeqOfRP() {
+    setTokens(Tokens.RP, Tokens.RP);
+    select(1, false);
+
+    backspace();
+
+    assertSelectedEnd(0);
+    assertTokens(Tokens.RP);
+  }
+
+  @Test
+  public void delInSeqOnLP() {
+    setTokens(Tokens.LP, Tokens.LP);
+    select(0, true);
+
+    del();
+
+    assertSelected(0);
+    assertTokens(Tokens.LP);
+  }
+
+  @Test
   public void splitTokenWithSpace() {
     setTokens(Tokens.INCREMENT);
     select(0, 1);
