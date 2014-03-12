@@ -453,7 +453,6 @@ public class TextEditingTest extends EditingTestCase {
     assertSelection(false);
   }
 
-
   @Test
   public void nullTextTypingNPE() {
     textView.text().set(null);
@@ -462,6 +461,26 @@ public class TextEditingTest extends EditingTestCase {
     type("z");
 
     assertEquals("z", textView.text().get());
+  }
+
+
+  @Test
+  public void textClear() {
+    textView.addTrait(new CellTrait() {
+      @Override
+      public Object get(Cell cell, CellTraitPropertySpec<?> spec) {
+        if (spec == TextEditing.CLEAR_ON_DELETE) {
+          return true;
+        }
+
+        return super.get(cell, spec);
+      }
+    });
+
+    textView.text().set("TestText");
+    press(KeyStrokeSpecs.DELETE_CURRENT);
+
+    assertEquals("", textView.text().get());
   }
 
   @Test

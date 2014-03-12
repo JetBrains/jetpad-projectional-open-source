@@ -136,6 +136,12 @@ public class TextEditingTrait extends TextNavigationTrait {
       return;
     }
 
+    if (event.is(KeyStrokeSpecs.DELETE_CURRENT) && cell.get(TextEditing.CLEAR_ON_DELETE)) {
+      setText(textCell, "");
+      onAfterDelete(textCell);
+      event.consume();
+    }
+
     super.onKeyPressed(textCell, event);
   }
 
