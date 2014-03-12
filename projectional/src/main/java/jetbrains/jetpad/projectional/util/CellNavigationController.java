@@ -159,13 +159,13 @@ public class CellNavigationController {
     if (event.is(Key.RIGHT) || event.is(Key.TAB)) {
       next = nextFocusable(current);
       moveToHome(next);
-    } else if (event.is(Key.RIGHT, ModifierKey.ALT) || event.is(Key.RIGHT, ModifierKey.CONTROL)) {
+    } else if (event.is(KeyStrokeSpecs.NEXT_WORD)) {
       next = nextFocusable(current);
       moveToEnd(next);
     } else if (event.is(Key.LEFT) || event.is(Key.TAB, ModifierKey.SHIFT)) {
       next = prevFocusable(current);
       moveToEnd(next);
-    } else if (event.is(Key.LEFT, ModifierKey.ALT) || event.is(Key.LEFT, ModifierKey.CONTROL)) {
+    } else if (event.is(KeyStrokeSpecs.PREV_WORD)) {
       next = prevFocusable(current);
       moveToHome(next);
     } else if (event.is(Key.UP)) {

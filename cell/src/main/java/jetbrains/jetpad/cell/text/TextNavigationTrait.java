@@ -100,13 +100,19 @@ class TextNavigationTrait extends CellTrait {
         return;
       }
 
-      if ((isCaretKey(selectionAvailable, event, Key.LEFT, ModifierKey.ALT) || event.is(KeyStrokeSpecs.HOME) || event.is(KeyStrokeSpecs.SELECT_HOME)) && caret > 0) {
+      if ((isCaretKey(selectionAvailable, event, Key.LEFT, ModifierKey.ALT) ||
+          event.is(KeyStrokeSpecs.HOME) ||
+          (event.is(KeyStrokeSpecs.SELECT_HOME) && selectionAvailable) ||
+          event.is(KeyStrokeSpecs.PREV_WORD)) && caret > 0) {
         view.caretPosition().set(0);
         event.consume();
         return;
       }
 
-      if ((isCaretKey(selectionAvailable, event, Key.RIGHT, ModifierKey.ALT) || event.is(KeyStrokeSpecs.END) || event.is(KeyStrokeSpecs.SELECT_END)) && caret < maxCaret) {
+      if ((isCaretKey(selectionAvailable, event, Key.RIGHT, ModifierKey.ALT) ||
+          event.is(KeyStrokeSpecs.END) ||
+          (event.is(KeyStrokeSpecs.SELECT_END) && selectionAvailable) ||
+          event.is(KeyStrokeSpecs.NEXT_WORD)) && caret < maxCaret) {
         view.caretPosition().set(maxCaret);
         event.consume();
         return;
