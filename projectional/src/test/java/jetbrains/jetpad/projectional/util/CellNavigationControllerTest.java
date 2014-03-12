@@ -83,7 +83,7 @@ public class CellNavigationControllerTest extends EditingTestCase {
     press(Key.RIGHT, ModifierKey.ALT);
 
     assertFocused(c42);
-    assertEquals((Integer) 6, c42.caretPosition().get());
+    assertEquals((Integer) 0, c42.caretPosition().get());
   }
 
   @Test

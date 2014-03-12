@@ -112,7 +112,7 @@ class TextNavigationTrait extends CellTrait {
       if ((isCaretKey(selectionAvailable, event, Key.RIGHT, ModifierKey.ALT) ||
           event.is(KeyStrokeSpecs.END) ||
           (event.is(KeyStrokeSpecs.SELECT_END) && selectionAvailable) ||
-          event.is(KeyStrokeSpecs.NEXT_WORD)) && caret < maxCaret) {
+          event.is(KeyStrokeSpecs.NEXT_WORD_ALT)) && caret < maxCaret) {
         view.caretPosition().set(maxCaret);
         event.consume();
         return;

@@ -161,7 +161,7 @@ public class CellNavigationController {
       moveToHome(next);
     } else if (event.is(KeyStrokeSpecs.NEXT_WORD)) {
       next = nextFocusable(current);
-      moveToEnd(next);
+      moveToHome(next);
     } else if (event.is(Key.LEFT) || event.is(Key.TAB, ModifierKey.SHIFT)) {
       next = prevFocusable(current);
       moveToEnd(next);
