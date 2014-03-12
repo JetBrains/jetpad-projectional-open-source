@@ -87,6 +87,10 @@ public class ValueEditors {
           };
         }
 
+        if (spec == TextEditing.CLEAR_ON_DELETE) {
+          return true;
+        }
+
         return super.get(cell, spec);
       }
     });

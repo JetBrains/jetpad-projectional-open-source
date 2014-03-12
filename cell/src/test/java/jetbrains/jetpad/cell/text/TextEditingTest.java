@@ -484,6 +484,27 @@ public class TextEditingTest extends EditingTestCase {
   }
 
   @Test
+  public void textClearOnEmpty() {
+    textView.addTrait(new CellTrait() {
+      @Override
+      public Object get(Cell cell, CellTraitPropertySpec<?> spec) {
+        if (spec == TextEditing.CLEAR_ON_DELETE) {
+          return true;
+        }
+
+        return super.get(cell, spec);
+      }
+    });
+
+    textView.text().set("");
+    KeyEvent event = press(KeyStrokeSpecs.DELETE_CURRENT);
+
+    assertFalse(event.isConsumed());
+    assertEquals("", textView.text().get());
+  }
+
+
+  @Test
   public void textPaste() {
     textView.text().set("xy");
     textView.caretPosition().set(1);
