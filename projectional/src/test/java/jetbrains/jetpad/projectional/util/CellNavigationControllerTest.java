@@ -97,6 +97,18 @@ public class CellNavigationControllerTest extends EditingTestCase {
     assertEquals((Integer) 0, c41.caretPosition().get());
   }
 
+
+  @Test
+  public void ctrlRightInLastPos() {
+    c42.focus();
+    c42.get(PositionHandler.PROPERTY).home();
+
+    press(Key.RIGHT, ModifierKey.CONTROL);
+
+    assertFocused(c42);
+    assertTrue(c42.get(PositionHandler.PROPERTY).isEnd());
+  }
+
   @Test
   public void tabWorks() {
     c13.focus();
