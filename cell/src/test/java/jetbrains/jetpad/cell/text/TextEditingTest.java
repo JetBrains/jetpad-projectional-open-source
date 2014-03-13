@@ -404,6 +404,17 @@ public class TextEditingTest extends EditingTestCase {
     assertCaret(2);
   }
 
+
+  @Test
+  public void selectionWithCtrlShiftRight() {
+    textView.caretPosition().set(0);
+
+    press(Key.RIGHT, ModifierKey.CONTROL, ModifierKey.SHIFT);
+
+    assertTrue(textView.selectionVisible().get());
+    assertCaret(textView.text().get().length());
+  }
+
   @Test
   public void selectAll() {
     press(Key.A, ModifierKey.CONTROL);
