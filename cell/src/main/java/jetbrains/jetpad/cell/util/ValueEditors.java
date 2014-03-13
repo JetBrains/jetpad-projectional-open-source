@@ -17,6 +17,7 @@ package jetbrains.jetpad.cell.util;
 
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
+import com.google.common.base.Strings;
 import jetbrains.jetpad.base.Runnables;
 import jetbrains.jetpad.cell.trait.CellTrait;
 import jetbrains.jetpad.completion.CompletionItem;
@@ -45,12 +46,11 @@ public class ValueEditors {
     return enumProperty(textView, cls, Color.BLACK);
   }
 
-
   public static <EnumT extends Enum<EnumT>> Property<EnumT> enumProperty(final TextCell textView, final Class<EnumT> cls, final Color color) {
     class MyEnumValidator implements Predicate<String> {
       @Override
       public boolean apply(String input) {
-        if (input == null) return true;
+        if (Strings.isNullOrEmpty(input)) return true;
         try {
           Enum.valueOf(cls, input);
           return true;
@@ -98,7 +98,7 @@ public class ValueEditors {
     return Properties.map(validatedProperty(textView.text(), new MyEnumValidator()), new Function<String, EnumT>() {
         @Override
         public EnumT apply(String s) {
-          return s == null ? null : Enum.valueOf(cls, s);
+          return Strings.isNullOrEmpty(s) ? null : Enum.valueOf(cls, s);
         }
       }, new Function<EnumT, String>() {
         @Override

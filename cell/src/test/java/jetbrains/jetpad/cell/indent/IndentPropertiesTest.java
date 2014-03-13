@@ -14,7 +14,7 @@ import java.util.Arrays;
 
 import static org.junit.Assert.*;
 
-public class IndentPropertiesTest extends ViewContainer {
+public class IndentPropertiesTest {
   private ViewContainer viewContainer = new ViewContainer();
   private CellContainer cellContainer = new CellContainer();
   private IndentCell indentCell = new IndentCell();
