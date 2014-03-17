@@ -134,6 +134,10 @@ public class SimpleParserSpecification<ExprT> {
   }
 
   private Terminal getOrDeclareTerminal(Token token) {
+    if (token instanceof IdentifierToken || token instanceof IntValueToken || token instanceof BoolValueToken || token instanceof ValueToken) {
+      throw new IllegalArgumentException();
+    }
+
     Terminal result = myTokenToTerminal.get(token);
     if (result != null) return result;
     result = myGrammar.newTerminal(myGrammar.uniqueName(token.text(), false));
