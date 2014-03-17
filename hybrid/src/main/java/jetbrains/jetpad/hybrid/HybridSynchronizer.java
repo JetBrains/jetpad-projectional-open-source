@@ -78,6 +78,7 @@ public class HybridSynchronizer<SourceT> implements Synchronizer {
   private SelectionSupport<Cell> mySelectionSupport;
   private Runnable myLastItemDeleted;
   private Synchronizer[] mySynchronizers = Synchronizer.EMPTY_ARRAY;
+  private String myPlaceHolderText = "empty";
 
   public HybridSynchronizer(Mapper<?, ?> contextMapper, Property<SourceT> prop, Cell target, HybridPositionSpec<SourceT> controller) {
     myContextMapper = contextMapper;
@@ -471,7 +472,7 @@ public class HybridSynchronizer<SourceT> implements Synchronizer {
   private void addPlaceholder() {
     if (myPlaceholder != null) throw new IllegalStateException();
     myPlaceholder = createPlaceholder();
-    myTargetList.add(CellFactory.horizontal(myPlaceholder, CellFactory.placeHolder(myPlaceholder, "empty")));
+    myTargetList.add(CellFactory.horizontal(myPlaceholder, CellFactory.placeHolder(myPlaceholder, myPlaceHolderText)));
   }
 
   private void removePlaceholder() {
@@ -554,6 +555,14 @@ public class HybridSynchronizer<SourceT> implements Synchronizer {
   public Object objectAt(int index) {
     if (myTokenListEditor.objects().isEmpty()) return null;
     return myTokenListEditor.objects().get(index);
+  }
+
+  public void setPlaceHolderText(String text) {
+    myPlaceHolderText = text;
+    if (myPlaceholder != null) {
+      TextCell placeHolder = (TextCell) Composites.<Cell>nextLeaf(myPlaceholder);
+      placeHolder.text().set(text);
+    }
   }
 
   void clearSelection() {
@@ -645,10 +654,14 @@ public class HybridSynchronizer<SourceT> implements Synchronizer {
   @Override
   public void detach() {
     myRegistration.remove();
-
+    myRegistration = null;
     for (Synchronizer sync : mySynchronizers) {
       sync.detach();
     }
+  }
+
+  private boolean isAttached() {
+    return myRegistration != null;
   }
 
 }
