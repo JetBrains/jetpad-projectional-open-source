@@ -19,6 +19,7 @@ import com.google.common.base.Function;
 import com.google.common.base.Objects;
 import com.google.common.base.Predicate;
 import com.google.common.base.Strings;
+import jetbrains.jetpad.base.Enums;
 import jetbrains.jetpad.base.Runnables;
 import jetbrains.jetpad.cell.trait.CellTrait;
 import jetbrains.jetpad.completion.CompletionItem;
@@ -53,7 +54,7 @@ public class ValueEditors {
       public boolean apply(String input) {
         if (Strings.isNullOrEmpty(input)) return true;
         try {
-          valueOf(cls, input);
+          Enums.valueOf(cls, input);
           return true;
         } catch (IllegalArgumentException e) {
           return false;
@@ -99,7 +100,7 @@ public class ValueEditors {
     return Properties.map(validatedProperty(textView.text(), new MyEnumValidator()), new Function<String, EnumT>() {
         @Override
         public EnumT apply(String s) {
-          return Strings.isNullOrEmpty(s) ? null : valueOf(cls, s);
+          return Strings.isNullOrEmpty(s) ? null : Enums.valueOf(cls, s);
         }
       }, new Function<EnumT, String>() {
         @Override
@@ -183,15 +184,5 @@ public class ValueEditors {
         }
       }
     );
-  }
-
-  private static <EnumT extends Enum<EnumT>> EnumT valueOf(Class<EnumT> cls, String name) {
-    for (EnumT e : cls.getEnumConstants()) {
-      if (Objects.equal(name, e.toString())) {
-        return e;
-      }
-    }
-
-    throw new IllegalArgumentException(name);
   }
 }
