@@ -18,6 +18,7 @@ package jetbrains.jetpad.projectional.demo.hybridExpr.mapper;
 import jetbrains.jetpad.base.Handler;
 import jetbrains.jetpad.grammar.*;
 import jetbrains.jetpad.grammar.parser.Lexeme;
+import jetbrains.jetpad.hybrid.parser.BoolValueToken;
 import jetbrains.jetpad.projectional.demo.hybridExpr.model.*;
 import jetbrains.jetpad.hybrid.parser.IdentifierToken;
 import jetbrains.jetpad.hybrid.parser.IntValueToken;
@@ -110,19 +111,13 @@ class ExpressionParser {
         Symbol lp = oneOf(ctx.terminal(Tokens.LEFT_PAREN), ctx.terminal(Tokens.LEFT_PARENT_METHOD_CALL));
         Symbol rp = ctx.terminal(Tokens.RIGHT_PAREN);
 
-        g.newRule(expr, ctx.terminal(Tokens.TRUE)).setHandler(new RuleHandler() {
+        g.newRule(expr, ctx.bool()).setHandler(new RuleHandler() {
           @Override
           public Object handle(RuleContext ctx) {
             BoolExpression boolExpr = new BoolExpression();
-            boolExpr.value.set(true);
-            return boolExpr;
-          }
-        });
-        g.newRule(expr, ctx.terminal(Tokens.FALSE)).setHandler(new RuleHandler() {
-          @Override
-          public Object handle(RuleContext ctx) {
-            BoolExpression boolExpr = new BoolExpression();
-            boolExpr.value.set(false);
+            Lexeme lexeme = (Lexeme) ctx.get(0);
+            BoolValueToken token = (BoolValueToken) lexeme.getValue();
+            boolExpr.value.set(token.getValue());
             return boolExpr;
           }
         });
