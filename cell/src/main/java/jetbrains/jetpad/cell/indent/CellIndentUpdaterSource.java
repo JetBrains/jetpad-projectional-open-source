@@ -15,19 +15,16 @@
  */
 package jetbrains.jetpad.cell.indent;
 
+import jetbrains.jetpad.cell.Cell;
+import jetbrains.jetpad.cell.indent.updater.IndentUpdaterSource;
 import jetbrains.jetpad.model.event.EventHandler;
 import jetbrains.jetpad.model.event.Registration;
 import jetbrains.jetpad.model.property.PropertyChangeEvent;
-import jetbrains.jetpad.cell.Cell;
-import jetbrains.jetpad.cell.indent.updater.IndentUpdaterSource;
 
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 
 public class CellIndentUpdaterSource implements IndentUpdaterSource<Cell> {
-  private Map<Cell, Registration> myVisibilityRegs = new HashMap<>();
   private Set<Cell> myAttached = new HashSet<>();
 
   @Override
@@ -71,18 +68,19 @@ public class CellIndentUpdaterSource implements IndentUpdaterSource<Cell> {
     } else {
       myAttached.remove(src);
     }
+  }
 
-    if (isCell(src)) {
-      if (value) {
-        myVisibilityRegs.put(src, src.visible().addHandler(new EventHandler<PropertyChangeEvent<Boolean>>() {
-          @Override
-          public void onEvent(PropertyChangeEvent<Boolean> event) {
-            visibilityChanged(src, event);
-          }
-        }));
-      } else {
-        myVisibilityRegs.remove(src).remove();
-      }
+  @Override
+  public Registration watch(final Cell child) {
+    if (isCell(child)) {
+      return child.visible().addHandler(new EventHandler<PropertyChangeEvent<Boolean>>() {
+        @Override
+        public void onEvent(PropertyChangeEvent<Boolean> event) {
+          visibilityChanged(child, event);
+        }
+      });
+    } else {
+      return Registration.EMPTY;
     }
   }
 

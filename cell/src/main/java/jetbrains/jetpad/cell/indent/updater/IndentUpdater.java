@@ -15,9 +15,10 @@
  */
 package jetbrains.jetpad.cell.indent.updater;
 
-import jetbrains.jetpad.model.composite.Composite;
-import jetbrains.jetpad.model.property.PropertyChangeEvent;
 import jetbrains.jetpad.cell.Cell;
+import jetbrains.jetpad.model.composite.Composite;
+import jetbrains.jetpad.model.event.Registration;
+import jetbrains.jetpad.model.property.PropertyChangeEvent;
 
 import java.util.*;
 
@@ -29,6 +30,7 @@ public class IndentUpdater<SourceCT extends Composite<SourceCT>, TargetT> {
   private IndentUpdaterSource<SourceCT> myIndentUpdaterSource;
   private IndentUpdaterTarget<TargetT> myIndentUpdaterTarget;
   private SourceCT myJustBecameInvisible;
+  private Map<SourceCT, Registration> myChildRegistrations = new HashMap<>();
 
   public IndentUpdater(
       SourceCT root,
@@ -47,27 +49,39 @@ public class IndentUpdater<SourceCT extends Composite<SourceCT>, TargetT> {
     childAdded(child, true);
   }
 
-  private void childAdded(SourceCT child, boolean setAttached) {
+  private void childAdded(SourceCT child, boolean real) {
     onChildAdd(child);
+
+    if (real) {
+      if (myChildRegistrations.containsKey(child)) {
+        throw new IllegalStateException();
+      }
+      myChildRegistrations.put(child, myIndentUpdaterSource.watch(child));
+    }
+
     if (!myIndentUpdaterSource.isCell(child)) {
       List<SourceCT> children = child.children();
       for (SourceCT c : children) {
-        childAdded(c, setAttached);
+        childAdded(c, real);
       }
     }
   }
-
 
   public void childRemoved(SourceCT child) {
     childRemoved(child, true);
   }
 
-  private void childRemoved(SourceCT child, boolean setAttached) {
+  private void childRemoved(SourceCT child, boolean real) {
     List<SourceCT> children = child.children();
+
+    if (real) {
+      myChildRegistrations.remove(child).remove();
+    }
+
     if (!myIndentUpdaterSource.isCell(child)) {
       for (int i = children.size() - 1; i >= 0; i--) {
         SourceCT c = children.get(i);
-        childRemoved(c, setAttached);
+        childRemoved(c, real);
       }
     }
     onChildRemove(child);

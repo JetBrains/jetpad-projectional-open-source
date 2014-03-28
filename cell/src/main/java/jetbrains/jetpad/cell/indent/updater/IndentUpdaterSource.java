@@ -17,6 +17,7 @@ package jetbrains.jetpad.cell.indent.updater;
 
 import jetbrains.jetpad.model.composite.Composite;
 import jetbrains.jetpad.cell.Cell;
+import jetbrains.jetpad.model.event.Registration;
 
 public interface IndentUpdaterSource<SourceCT extends Composite<SourceCT>> {
   boolean isNewLine(SourceCT src);
@@ -28,4 +29,6 @@ public interface IndentUpdaterSource<SourceCT extends Composite<SourceCT>> {
 
   boolean isAttached(SourceCT src);
   void setAttached(SourceCT src, boolean value);
+
+  Registration watch(SourceCT child);
 }

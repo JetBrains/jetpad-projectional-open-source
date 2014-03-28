@@ -252,7 +252,6 @@ class IndentRootCellMapper extends BaseCellMapper<IndentCell> {
   @Override
   protected void onDetach() {
     super.onDetach();
-    myRegistration.remove();
 
     myPositionUpdater.cancel();
   }

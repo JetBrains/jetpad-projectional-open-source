@@ -20,8 +20,6 @@ import jetbrains.jetpad.cell.CellContainer;
 import jetbrains.jetpad.cell.HorizontalCell;
 import jetbrains.jetpad.cell.TextCell;
 import jetbrains.jetpad.cell.view.CellContainerToViewMapper;
-import jetbrains.jetpad.cell.view.MapperCell2View;
-import jetbrains.jetpad.mapper.MappingContext;
 import jetbrains.jetpad.model.collections.list.ObservableList;
 import jetbrains.jetpad.model.composite.Composites;
 import jetbrains.jetpad.projectional.view.TextView;
@@ -281,6 +279,19 @@ public class IndentUpdaterTest {
     init(target);
 
     assertTarget("[['b', 'c']]");
+  }
+
+  @Test
+  public void toggleLeafVisibility() {
+    Cell t = text("a");
+    children.addAll(Arrays.asList(t));
+
+    t.visible().set(false);
+    t.visible().set(true);
+
+    assertTarget("[['a']]");
+
+
   }
 
 
