@@ -170,6 +170,21 @@ class IndentRootCellMapper extends BaseCellMapper<IndentCell, VerticalView> {
     });
   }
 
+  @Override
+  protected void onDetach() {
+    List<Cell> children = getSource().children();
+    for (int i = children.size() - 1; i >= 0; i--) {
+      Cell c = children.get(i);
+      myIndentUpdater.childRemoved(c);
+    }
+
+    myRegistration.remove();
+
+    super.onDetach();
+  }
+
+
+
   private void updateIndentCellPopup(Cell targetCell ,PropertyChangeEvent<Cell> event) {
     if (event.getOldValue() != null) {
       BaseCellMapper<?, ?> popupMapper = (BaseCellMapper<?, ?>) getDescendantMapper(event.getOldValue());
@@ -184,11 +199,4 @@ class IndentRootCellMapper extends BaseCellMapper<IndentCell, VerticalView> {
       updatePopupPositions(targetCell);
     }
   }
-
-  @Override
-  protected void onDetach() {
-    super.onDetach();
-    myRegistration.remove();
-  }
-
 }

@@ -251,8 +251,13 @@ class IndentRootCellMapper extends BaseCellMapper<IndentCell> {
 
   @Override
   protected void onDetach() {
-    super.onDetach();
-
+    List<Cell> children = getSource().children();
+    for (int i = children.size() - 1; i >= 0; i--) {
+      Cell c = children.get(i);
+      myIndentUpdater.childRemoved(c);
+    }
     myPositionUpdater.cancel();
+    myRegistration.remove();
+    super.onDetach();
   }
 }
