@@ -18,7 +18,7 @@ package jetbrains.jetpad.projectional.view.awt;
 import jetbrains.jetpad.base.Handler;
 import jetbrains.jetpad.event.*;
 import jetbrains.jetpad.event.awt.EventTranslator;
-import jetbrains.jetpad.geometry.*;
+import jetbrains.jetpad.geometry.Vector;
 import jetbrains.jetpad.model.event.CompositeRegistration;
 import jetbrains.jetpad.model.event.EventHandler;
 import jetbrains.jetpad.model.event.Registration;
@@ -26,12 +26,10 @@ import jetbrains.jetpad.model.property.PropertyChangeEvent;
 import jetbrains.jetpad.projectional.view.*;
 import jetbrains.jetpad.projectional.view.spi.NullViewContainerPeer;
 import jetbrains.jetpad.projectional.view.spi.ViewContainerPeer;
-import jetbrains.jetpad.projectional.view.util.RelativePositionerView;
 import jetbrains.jetpad.values.Color;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.Rectangle;
 import java.awt.datatransfer.*;
 import java.awt.event.*;
 import java.awt.event.KeyEvent;
@@ -41,7 +39,7 @@ import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-import static jetbrains.jetpad.projectional.view.awt.AwtConverters.*;
+import static jetbrains.jetpad.projectional.view.awt.AwtConverters.toAwtColor;
 
 public class ViewContainerComponent extends JComponent implements Scrollable {
   static final Font FONT = new Font(Font.MONOSPACED, Font.PLAIN, 15);
@@ -474,6 +472,9 @@ public class ViewContainerComponent extends JComponent implements Scrollable {
       Font font = FONT;
       if (textView.bold().get()) {
         font = font.deriveFont(Font.BOLD, font.getSize());
+      }
+      if (textView.italic().get()) {
+        font = font.deriveFont(Font.ITALIC, font.getSize());
       }
       g.setFont(font);
 

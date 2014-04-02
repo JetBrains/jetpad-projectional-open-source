@@ -50,6 +50,7 @@ public class DomTextEditor {
   private boolean myCaretVisible;
   private Color myTextColor;
   private boolean myBold;
+  private boolean myItalic;
 
   private Element myTextContainer;
   private Element myCaretDiv;
@@ -93,6 +94,15 @@ public class DomTextEditor {
 
   public void bold(boolean bold) {
     myBold = bold;
+    updateText();
+  }
+
+  public boolean italic() {
+    return myItalic;
+  }
+
+  public void italic(boolean italic) {
+    myItalic = italic;
     updateText();
   }
 
@@ -196,6 +206,12 @@ public class DomTextEditor {
       myTextContainer.getStyle().setFontWeight(Style.FontWeight.BOLD);
     } else {
       myTextContainer.getStyle().setFontWeight(Style.FontWeight.NORMAL);
+    }
+
+    if (myItalic) {
+      myTextContainer.getStyle().setFontStyle(Style.FontStyle.ITALIC);
+    } else {
+      myTextContainer.getStyle().setFontStyle(Style.FontStyle.NORMAL);
     }
 
     if (newValue == null || newValue.isEmpty()) {

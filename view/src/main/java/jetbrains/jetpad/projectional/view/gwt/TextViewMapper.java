@@ -85,5 +85,11 @@ class TextViewMapper extends BaseViewMapper<TextView, Element> {
         editor.bold(value);
       }
     }));
+    conf.add(Synchronizers.forProperty(getSource().italic(), new WritableProperty<Boolean>() {
+      @Override
+      public void set(Boolean value) {
+        editor.italic(value);
+      }
+    }));
   }
 }

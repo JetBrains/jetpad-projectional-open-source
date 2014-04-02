@@ -16,9 +16,7 @@
 package jetbrains.jetpad.projectional.view;
 
 import jetbrains.jetpad.geometry.Vector;
-import jetbrains.jetpad.model.event.EventHandler;
 import jetbrains.jetpad.model.property.Property;
-import jetbrains.jetpad.model.property.PropertyChangeEvent;
 import jetbrains.jetpad.projectional.view.spi.ViewContainerPeer;
 import jetbrains.jetpad.values.Color;
 
@@ -28,6 +26,7 @@ public class TextView extends View {
   public static final ViewPropertySpec<Boolean> CARET_VISIBLE = new ViewPropertySpec<>("caretVisible", ViewPropertyKind.REPAINT, false);
   public static final ViewPropertySpec<Integer> CARET_POSITION = new ViewPropertySpec<>("caretPositiong", ViewPropertyKind.REPAINT, 0);
   public static final ViewPropertySpec<Boolean> BOLD = new ViewPropertySpec<>("bold", ViewPropertyKind.REPAINT, false);
+  public static final ViewPropertySpec<Boolean> ITALIC = new ViewPropertySpec<>("italic", ViewPropertyKind.REPAINT, false);
   public static final ViewPropertySpec<Boolean> SELECTION_VISIBLE = new ViewPropertySpec<>("selectionVisible", ViewPropertyKind.REPAINT, false);
   public static final ViewPropertySpec<Integer> SELECTION_START = new ViewPropertySpec<>("selectionStart", ViewPropertyKind.REPAINT, 0);
 
@@ -56,6 +55,10 @@ public class TextView extends View {
 
   public Property<Boolean> bold() {
     return prop(BOLD);
+  }
+
+  public Property<Boolean> italic() {
+    return prop(ITALIC);
   }
 
   public Property<Boolean> selectionVisible() {

@@ -419,11 +419,18 @@ public class View2Canvas {
       String text = textView.text().get();
       Vector origin = bounds.origin;
 
+      StringBuilder font = new StringBuilder();
+
       if (textView.bold().get()) {
-        ctx.setFont("bold " + font());
-      } else {
-        ctx.setFont(font());
+        font.append("bold ");
       }
+
+      if (textView.italic().get()) {
+        font.append("italic ");
+      }
+
+      font.append(font());
+      ctx.setFont(font.toString());
 
       ctx.setFillStyle(textView.textColor().get().toCssColor());
       ctx.fillText(text, origin.x, origin.y + myMetrics.baseLine());
