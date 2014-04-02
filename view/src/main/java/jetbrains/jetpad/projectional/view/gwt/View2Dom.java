@@ -42,7 +42,7 @@ import jetbrains.jetpad.model.property.*;
 import jetbrains.jetpad.projectional.domUtil.Scrolling;
 import jetbrains.jetpad.projectional.domUtil.TextMetrics;
 import jetbrains.jetpad.projectional.domUtil.TextMetricsCalculator;
-import jetbrains.jetpad.projectional.view.Font;
+import jetbrains.jetpad.values.Font;
 import jetbrains.jetpad.projectional.view.View;
 import jetbrains.jetpad.projectional.view.ViewContainer;
 import jetbrains.jetpad.projectional.view.spi.ViewContainerPeer;

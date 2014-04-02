@@ -20,6 +20,7 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.user.client.DOM;
 import jetbrains.jetpad.values.Color;
+import sun.font.FontFamily;
 
 public class DomTextEditor {
   public static final String FONT_FAMILY = "monospace";
@@ -51,6 +52,8 @@ public class DomTextEditor {
   private Color myTextColor;
   private boolean myBold;
   private boolean myItalic;
+  private FontFamily myFontFamily;
+  private int myFontSize;
 
   private Element myTextContainer;
   private Element myCaretDiv;

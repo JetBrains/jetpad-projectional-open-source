@@ -23,11 +23,12 @@ import jetbrains.jetpad.model.event.CompositeRegistration;
 import jetbrains.jetpad.model.event.EventHandler;
 import jetbrains.jetpad.model.event.Registration;
 import jetbrains.jetpad.model.property.PropertyChangeEvent;
-import jetbrains.jetpad.projectional.view.Font;
+import jetbrains.jetpad.values.Font;
 import jetbrains.jetpad.projectional.view.*;
 import jetbrains.jetpad.projectional.view.spi.NullViewContainerPeer;
 import jetbrains.jetpad.projectional.view.spi.ViewContainerPeer;
 import jetbrains.jetpad.values.Color;
+import jetbrains.jetpad.values.FontFamily;
 
 import javax.swing.*;
 import java.awt.*;

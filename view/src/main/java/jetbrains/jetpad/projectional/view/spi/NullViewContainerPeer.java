@@ -17,7 +17,7 @@ package jetbrains.jetpad.projectional.view.spi;
 
 import jetbrains.jetpad.geometry.Rectangle;
 import jetbrains.jetpad.model.property.PropertyChangeEvent;
-import jetbrains.jetpad.projectional.view.Font;
+import jetbrains.jetpad.values.Font;
 import jetbrains.jetpad.projectional.view.View;
 import jetbrains.jetpad.projectional.view.ViewContainer;
 

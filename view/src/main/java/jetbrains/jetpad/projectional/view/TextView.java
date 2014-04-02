@@ -21,6 +21,8 @@ import jetbrains.jetpad.model.property.Property;
 import jetbrains.jetpad.model.property.ReadableProperty;
 import jetbrains.jetpad.projectional.view.spi.ViewContainerPeer;
 import jetbrains.jetpad.values.Color;
+import jetbrains.jetpad.values.Font;
+import jetbrains.jetpad.values.FontFamily;
 
 public class TextView extends View {
   public static final Font DEFAULT_FONT = new Font(FontFamily.MONOSPACED, 15);
