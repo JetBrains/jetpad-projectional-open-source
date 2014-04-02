@@ -23,6 +23,7 @@ import jetbrains.jetpad.model.event.CompositeRegistration;
 import jetbrains.jetpad.model.event.EventHandler;
 import jetbrains.jetpad.model.event.Registration;
 import jetbrains.jetpad.model.property.PropertyChangeEvent;
+import jetbrains.jetpad.projectional.view.Font;
 import jetbrains.jetpad.projectional.view.*;
 import jetbrains.jetpad.projectional.view.spi.NullViewContainerPeer;
 import jetbrains.jetpad.projectional.view.spi.ViewContainerPeer;
@@ -42,7 +43,15 @@ import java.util.Set;
 import static jetbrains.jetpad.projectional.view.awt.AwtConverters.toAwtColor;
 
 public class ViewContainerComponent extends JComponent implements Scrollable {
-  static final Font FONT = new Font(Font.MONOSPACED, Font.PLAIN, 15);
+  private static final String MONOSPACED_FONT = java.awt.Font.MONOSPACED;
+
+  private static String toFontName(FontFamily fontFamily) {
+    if (fontFamily == FontFamily.MONOSPACED) {
+      return MONOSPACED_FONT;
+    } else {
+      return fontFamily.toString();
+    }
+  }
 
   static final Color SELECTION_COLOR = Color.DARK_BLUE;
 
@@ -152,7 +161,7 @@ public class ViewContainerComponent extends JComponent implements Scrollable {
           if (current instanceof ScrollView) {
             ScrollView scrollView = (ScrollView) current;
             if (scrollView.scroll().get() && scrollView.isVerticalScroller()) {
-              Vector offset = scrollView.offset().get().sub(new Vector(0, getFontMetrics().getHeight() * e.getWheelRotation()));
+              Vector offset = scrollView.offset().get().sub(new Vector(0, getDefaultFontMetrics().getHeight() * e.getWheelRotation()));
               offset = offset.min(Vector.ZERO);
               offset = offset.max(scrollView.internalsBounds().sub(scrollView.maxDimension().get()).max(Vector.ZERO).negate());
               scrollView.offset().set(offset);
@@ -469,12 +478,12 @@ public class ViewContainerComponent extends JComponent implements Scrollable {
       String text = textView.text().get();
       Vector origin = bounds.origin;
 
-      Font font = FONT;
+      java.awt.Font font = new java.awt.Font(toFontName(textView.fontFamily().get()), java.awt.Font.PLAIN, textView.fontSize().get());
       if (textView.bold().get()) {
-        font = font.deriveFont(Font.BOLD, font.getSize());
+        font = font.deriveFont(java.awt.Font.BOLD, font.getSize());
       }
       if (textView.italic().get()) {
-        font = font.deriveFont(Font.ITALIC, font.getSize());
+        font = font.deriveFont(java.awt.Font.ITALIC, font.getSize());
       }
       g.setFont(font);
 
@@ -591,8 +600,15 @@ public class ViewContainerComponent extends JComponent implements Scrollable {
     return Math.max(0, g.getFontMetrics().stringWidth(text.substring(0, pos)));
   }
 
-  private FontMetrics getFontMetrics() {
-    return Toolkit.getDefaultToolkit().getFontMetrics(FONT);
+  private FontMetrics getFontMetrics(Font font) {
+    int style = java.awt.Font.PLAIN;
+    if (font.isBold()) {
+      style |= java.awt.Font.BOLD;
+    }
+    if (font.isItalic()) {
+      style |= java.awt.Font.ITALIC;
+    }
+    return Toolkit.getDefaultToolkit().getFontMetrics(new java.awt.Font(toFontName(font.getFamily()), style, font.getSize()));
   }
 
   @Override
@@ -602,7 +618,11 @@ public class ViewContainerComponent extends JComponent implements Scrollable {
 
   @Override
   public int getScrollableUnitIncrement(java.awt.Rectangle visibleRect, int orientation, int direction) {
-    return getFontMetrics().getHeight();
+    return getDefaultFontMetrics().getHeight();
+  }
+
+  private FontMetrics getDefaultFontMetrics() {
+    return getFontMetrics(TextView.DEFAULT_FONT);
   }
 
   @Override
@@ -675,19 +695,19 @@ public class ViewContainerComponent extends JComponent implements Scrollable {
     }
 
     @Override
-    public int textHeight() {
-      return getFontMetrics().getHeight();
+    public int textHeight(Font font) {
+      return getFontMetrics(font).getHeight();
     }
 
     @Override
-    public int textBaseLine() {
-      FontMetrics fm = getFontMetrics();
+    public int textBaseLine(Font font) {
+      FontMetrics fm = getFontMetrics(font);
       return fm.getLeading() + fm.getAscent();
     }
 
     @Override
-    public int textWidth(String text) {
-      return getFontMetrics().stringWidth(text);
+    public int textWidth(Font font, String text) {
+      return getFontMetrics(font).stringWidth(text);
     }
 
     @Override

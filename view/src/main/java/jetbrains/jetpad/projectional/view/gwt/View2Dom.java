@@ -18,13 +18,13 @@ package jetbrains.jetpad.projectional.view.gwt;
 import com.google.common.base.Strings;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.dom.client.Document;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.logical.shared.ResizeEvent;
 import com.google.gwt.event.logical.shared.ResizeHandler;
 import com.google.gwt.query.client.Function;
 import com.google.gwt.query.client.GQuery;
 import com.google.gwt.user.client.DOM;
-import com.google.gwt.dom.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Window;
 import jetbrains.jetpad.base.Handler;
@@ -42,6 +42,7 @@ import jetbrains.jetpad.model.property.*;
 import jetbrains.jetpad.projectional.domUtil.Scrolling;
 import jetbrains.jetpad.projectional.domUtil.TextMetrics;
 import jetbrains.jetpad.projectional.domUtil.TextMetricsCalculator;
+import jetbrains.jetpad.projectional.view.Font;
 import jetbrains.jetpad.projectional.view.View;
 import jetbrains.jetpad.projectional.view.ViewContainer;
 import jetbrains.jetpad.projectional.view.spi.ViewContainerPeer;
@@ -169,17 +170,17 @@ public class View2Dom {
       }
 
       @Override
-      public int textHeight() {
+      public int textHeight(Font font) {
         return fontHeight;
       }
 
       @Override
-      public int textBaseLine() {
+      public int textBaseLine(Font font) {
         return baseLine;
       }
 
       @Override
-      public int textWidth(String text) {
+      public int textWidth(Font font, String text) {
         return text.length() * fontWidth;
       }
 

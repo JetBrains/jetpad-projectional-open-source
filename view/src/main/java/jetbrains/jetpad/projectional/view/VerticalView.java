@@ -39,7 +39,7 @@ public class VerticalView extends View {
     Vector origin = ctx.origin();
     int width = 0;
     int height = 0;
-    int indentWidth = indent().get() ? container().peer().textWidth("x") * 2 : 0;
+    int indentWidth = indent().get() ? container().peer().textWidth(TextView.DEFAULT_FONT, "x") * 2 : 0;
     prop(INDENT_WIDTH).set(indentWidth);
 
     for (View child : children()) {

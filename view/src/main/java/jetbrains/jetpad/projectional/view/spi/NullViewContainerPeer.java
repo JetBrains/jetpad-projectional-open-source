@@ -17,6 +17,7 @@ package jetbrains.jetpad.projectional.view.spi;
 
 import jetbrains.jetpad.geometry.Rectangle;
 import jetbrains.jetpad.model.property.PropertyChangeEvent;
+import jetbrains.jetpad.projectional.view.Font;
 import jetbrains.jetpad.projectional.view.View;
 import jetbrains.jetpad.projectional.view.ViewContainer;
 
@@ -51,17 +52,17 @@ public class NullViewContainerPeer implements ViewContainerPeer {
   }
 
   @Override
-  public int textHeight() {
+  public int textHeight(Font font) {
     return 10;
   }
 
   @Override
-  public int textBaseLine() {
+  public int textBaseLine(Font font) {
     return 5;
   }
 
   @Override
-  public int textWidth(String text) {
+  public int textWidth(Font font, String text) {
     return text.length() * 5;
   }
 

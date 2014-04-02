@@ -17,6 +17,7 @@ package jetbrains.jetpad.projectional.view.spi;
 
 import jetbrains.jetpad.geometry.Rectangle;
 import jetbrains.jetpad.model.property.PropertyChangeEvent;
+import jetbrains.jetpad.projectional.view.Font;
 import jetbrains.jetpad.projectional.view.View;
 import jetbrains.jetpad.projectional.view.ViewContainer;
 
@@ -31,9 +32,9 @@ public interface ViewContainerPeer {
 
   void boundsChanged(View view, PropertyChangeEvent<Rectangle> change);
 
-  int textHeight();
-  int textBaseLine();
-  int textWidth(String text);
+  int textHeight(Font font);
+  int textBaseLine(Font font);
+  int textWidth(Font font, String text);
 
   void requestFocus();
 }

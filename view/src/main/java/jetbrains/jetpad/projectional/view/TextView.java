@@ -16,17 +16,26 @@
 package jetbrains.jetpad.projectional.view;
 
 import jetbrains.jetpad.geometry.Vector;
+import jetbrains.jetpad.model.property.DerivedProperty;
 import jetbrains.jetpad.model.property.Property;
+import jetbrains.jetpad.model.property.ReadableProperty;
 import jetbrains.jetpad.projectional.view.spi.ViewContainerPeer;
 import jetbrains.jetpad.values.Color;
 
 public class TextView extends View {
+  public static final Font DEFAULT_FONT = new Font(FontFamily.forName("Arial"), 15);
+
   public static final ViewPropertySpec<String> TEXT = new ViewPropertySpec<>("text", ViewPropertyKind.RELAYOUT, "");
   public static final ViewPropertySpec<Color> TEXT_COLOR = new ViewPropertySpec<>("color", ViewPropertyKind.REPAINT, Color.BLACK);
-  public static final ViewPropertySpec<Boolean> CARET_VISIBLE = new ViewPropertySpec<>("caretVisible", ViewPropertyKind.REPAINT, false);
-  public static final ViewPropertySpec<Integer> CARET_POSITION = new ViewPropertySpec<>("caretPositiong", ViewPropertyKind.REPAINT, 0);
+
   public static final ViewPropertySpec<Boolean> BOLD = new ViewPropertySpec<>("bold", ViewPropertyKind.REPAINT, false);
   public static final ViewPropertySpec<Boolean> ITALIC = new ViewPropertySpec<>("italic", ViewPropertyKind.REPAINT, false);
+  public static final ViewPropertySpec<FontFamily> FONT_FAMILY = new ViewPropertySpec<>("fontFamily", ViewPropertyKind.RELAYOUT_AND_REPAINT, DEFAULT_FONT.getFamily());
+  public static final ViewPropertySpec<Integer> FONT_SIZE = new ViewPropertySpec<>("fontSize", ViewPropertyKind.RELAYOUT_AND_REPAINT, DEFAULT_FONT.getSize());
+
+  public static final ViewPropertySpec<Boolean> CARET_VISIBLE = new ViewPropertySpec<>("caretVisible", ViewPropertyKind.REPAINT, false);
+  public static final ViewPropertySpec<Integer> CARET_POSITION = new ViewPropertySpec<>("caretPositiong", ViewPropertyKind.REPAINT, 0);
+
   public static final ViewPropertySpec<Boolean> SELECTION_VISIBLE = new ViewPropertySpec<>("selectionVisible", ViewPropertyKind.REPAINT, false);
   public static final ViewPropertySpec<Integer> SELECTION_START = new ViewPropertySpec<>("selectionStart", ViewPropertyKind.REPAINT, 0);
 
@@ -61,6 +70,23 @@ public class TextView extends View {
     return prop(ITALIC);
   }
 
+  public Property<FontFamily> fontFamily() {
+    return prop(FONT_FAMILY);
+  }
+
+  public Property<Integer> fontSize() {
+    return prop(FONT_SIZE);
+  }
+
+  public ReadableProperty<Font> font() {
+    return new DerivedProperty<Font>(fontFamily(), fontSize(), bold(), italic()) {
+      @Override
+      public Font get() {
+        return new Font(fontFamily().get(), fontSize().get(), bold().get(), italic().get());
+      }
+    };
+  }
+
   public Property<Boolean> selectionVisible() {
     return prop(SELECTION_VISIBLE);
   }
@@ -70,30 +96,44 @@ public class TextView extends View {
   }
 
   public int getCaretAt(int xOffset) {
-    ViewContainerPeer peer = container().peer();
+
     String text = this.text().get();
     if (text == null) return 0;
     for (int i = 0; i < text.length(); i++) {
-      int width = (peer.textWidth(text.substring(0, i)) + peer.textWidth(text.substring(0, i + 1))) / 2;
+      int width = (textWidth(text.substring(0, i)) + textWidth(text.substring(0, i + 1))) / 2;
       if (width >= xOffset) return i;
     }
     return text.length();
   }
 
+
   public int getCaretOffset(int caret) {
     if (container() == null) throw new IllegalStateException();
     if (text().get() == null) return 0;
-    ViewContainerPeer peer = container().peer();
-    return peer.textWidth(text().get().substring(0, caret));
+    return textWidth(text().get().substring(0, caret));
   }
 
   @Override
   protected void doValidate(ValidationContext ctx) {
     super.doValidate(ctx);
-    ViewContainerPeer peer = container().peer();
     String text = text().get();
-    Vector bounds = new Vector(peer.textWidth(text) + 1, peer.textHeight());
-    ctx.bounds(new Vector(bounds.x, bounds.y), peer.textBaseLine());
+    Vector bounds = new Vector(textWidth(text) + 1, textHeight());
+    ctx.bounds(new Vector(bounds.x, bounds.y), textBaseLine());
+  }
+
+  private int textWidth(String text) {
+    ViewContainerPeer peer = container().peer();
+    return peer.textWidth(font().get(), text);
+  }
+
+  private int textHeight() {
+    ViewContainerPeer peer = container().peer();
+    return peer.textHeight(font().get());
+  }
+
+  private int textBaseLine() {
+    ViewContainerPeer peer = container().peer();
+    return peer.textBaseLine(font().get());
   }
 
   @Override

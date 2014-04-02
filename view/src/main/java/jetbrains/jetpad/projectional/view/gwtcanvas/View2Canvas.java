@@ -524,17 +524,17 @@ public class View2Canvas {
     }
 
     @Override
-    public int textHeight() {
+    public int textHeight(Font font) {
       return myMetrics.dimension().y;
     }
 
     @Override
-    public int textBaseLine() {
+    public int textBaseLine(Font font) {
       return myMetrics.baseLine();
     }
 
     @Override
-    public int textWidth(String text) {
+    public int textWidth(Font font, String text) {
       return text.length() * myMetrics.dimension().x;
     }
 
