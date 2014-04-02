@@ -20,7 +20,7 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.user.client.DOM;
 import jetbrains.jetpad.values.Color;
-import sun.font.FontFamily;
+import jetbrains.jetpad.values.FontFamily;
 
 public class DomTextEditor {
   public static final String FONT_FAMILY = "monospace";
