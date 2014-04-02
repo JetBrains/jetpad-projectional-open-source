@@ -23,6 +23,33 @@ import jetbrains.jetpad.geometry.Vector;
 
 
 public class TextMetricsCalculator {
+  public static TextMetrics calculateAprox(final String fontName, final int fontSize, String text) {
+    Canvas canvas = Canvas.createIfSupported();
+    if (canvas == null) throw new IllegalStateException();
+    Context2d ctx = canvas.getContext2d();
+    ctx.setFont(font(fontName, fontSize));
+    final int width = (int) ctx.measureText(normalize(text)).getWidth();
+    String agent = Window.Navigator.getUserAgent().toLowerCase();
+    int height = fontSize;
+    if (agent.contains("firefox")) {
+      height += 1;
+    } else if (agent.contains("chrome")) {
+      height += 2;
+    }
+    final Vector dimension = new Vector(width, height);
+    return new TextMetrics() {
+      @Override
+      public Vector dimension() {
+        return dimension;
+      }
+
+      @Override
+      public int baseLine() {
+        return (2 * fontSize) / 3 ;
+      }
+    };
+  }
+
   public static TextMetrics calculate(final String fontName, final int fontSize, String text) {
     Canvas canvas = Canvas.createIfSupported();
     if (canvas == null) throw new IllegalStateException();

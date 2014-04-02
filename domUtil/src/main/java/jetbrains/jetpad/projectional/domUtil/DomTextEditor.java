@@ -23,18 +23,14 @@ import jetbrains.jetpad.values.Color;
 import jetbrains.jetpad.values.FontFamily;
 
 public class DomTextEditor {
-  public static final String FONT_FAMILY = "monospace";
-  public static final int FONT_SIZE = 15;
+  public static final String DEFAULT_FONT_FAMILY = "monospace";
+  public static final int DEFAULT_FONT_SIZE = 15;
 
-  static String font() {
-    return DomTextEditor.FONT_SIZE + "px " + DomTextEditor.FONT_FAMILY;
-  }
-
-  private static int ourCharWidth;
-  private static int ourLineHeight;
+  private static final int ourCharWidth;
+  private static final int ourLineHeight;
 
   static {
-    TextMetrics bounds = TextMetricsCalculator.calculate(FONT_FAMILY, FONT_SIZE, "x");
+    TextMetrics bounds = TextMetricsCalculator.calculate(DEFAULT_FONT_FAMILY, DEFAULT_FONT_SIZE, "x");
     ourCharWidth = bounds.dimension().x;
     ourLineHeight = bounds.dimension().y;
   }
@@ -52,8 +48,8 @@ public class DomTextEditor {
   private Color myTextColor;
   private boolean myBold;
   private boolean myItalic;
-  private FontFamily myFontFamily;
-  private int myFontSize;
+  private FontFamily myFontFamily = FontFamily.MONOSPACED;
+  private int myFontSize = 15;
 
   private Element myTextContainer;
   private Element myCaretDiv;
@@ -64,7 +60,6 @@ public class DomTextEditor {
     myRoot = root;
 
     Style rootStyle = myRoot.getStyle();
-    rootStyle.setProperty("font", font());
     rootStyle.setDisplay(Style.Display.INLINE_BLOCK);
     rootStyle.setPosition(Style.Position.RELATIVE);
 
@@ -243,15 +238,30 @@ public class DomTextEditor {
     }
 
     myTextContainer.setInnerText(normalize(newValue));
+
+    myRoot.getStyle().setProperty("font", myFontSize + "px " + getFontFamilyName());
+  }
+
+  private String getFontFamilyName() {
+    return (myFontFamily == FontFamily.MONOSPACED ? DEFAULT_FONT_FAMILY : myFontFamily.toString());
   }
 
   public int caretOffset(int caretOffset) {
     if (caretOffset == 0) return 0;
-    return caretOffset * ourCharWidth;
+    if (isDefaultFont()) {
+      return caretOffset * ourCharWidth;
+    } else {
+      return TextMetricsCalculator.calculateAprox(getFontFamilyName(), myFontSize, myText.substring(0, caretOffset)).dimension().x;
+    }
+
   }
 
   private int lineHeight() {
-    return ourLineHeight;
+    if (isDefaultFont()) {
+      return ourLineHeight;
+    } else {
+      return TextMetricsCalculator.calculateAprox(getFontFamilyName(), myFontSize, "x").dimension().y;
+    }
   }
 
   public int caretPositionAt(int caretOffset) {
@@ -259,16 +269,28 @@ public class DomTextEditor {
     if (caretOffset <= 0) return 0;
     if (textValue == null) return 0;
 
-    int pos = caretOffset / ourCharWidth;
-    int tail = caretOffset - pos * ourCharWidth;
+    if (isDefaultFont()) {
+      int pos = caretOffset / ourCharWidth;
+      int tail = caretOffset - pos * ourCharWidth;
 
-    if (tail > ourCharWidth / 2) {
-      pos += 1;
+      if (tail > ourCharWidth / 2) {
+        pos += 1;
+      }
+
+      int len = textValue.length();
+      if (pos > len) return len;
+
+      return pos;
+    } else {
+      for (int i = 0; i <= myText.length(); i++) {
+        int len = TextMetricsCalculator.calculateAprox(getFontFamilyName(), myFontSize, myText.substring(0, i)).dimension().x;
+        if (len >= caretOffset) return i;
+      }
+      return myText.length();
     }
+  }
 
-    int len = textValue.length();
-    if (pos > len) return len;
-
-    return pos;
+  private boolean isDefaultFont() {
+    return myFontFamily.equals(FontFamily.MONOSPACED) && myFontSize == DEFAULT_FONT_SIZE;
   }
 }

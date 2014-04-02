@@ -25,7 +25,7 @@ import jetbrains.jetpad.values.Font;
 import jetbrains.jetpad.values.FontFamily;
 
 public class TextView extends View {
-  public static final Font DEFAULT_FONT = new Font(FontFamily.MONOSPACED, 15);
+  public static final Font DEFAULT_FONT = new Font(FontFamily.forName("Arial"), 15);
 
   public static final ViewPropertySpec<String> TEXT = new ViewPropertySpec<>("text", ViewPropertyKind.RELAYOUT, "");
   public static final ViewPropertySpec<Color> TEXT_COLOR = new ViewPropertySpec<>("color", ViewPropertyKind.REPAINT, Color.BLACK);
