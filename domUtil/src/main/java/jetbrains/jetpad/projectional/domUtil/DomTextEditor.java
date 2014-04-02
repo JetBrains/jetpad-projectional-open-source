@@ -20,17 +20,17 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.user.client.DOM;
 import jetbrains.jetpad.values.Color;
+import jetbrains.jetpad.values.Font;
 import jetbrains.jetpad.values.FontFamily;
 
 public class DomTextEditor {
-  public static final String DEFAULT_FONT_FAMILY = "monospace";
   public static final int DEFAULT_FONT_SIZE = 15;
 
   private static final int ourCharWidth;
   private static final int ourLineHeight;
 
   static {
-    TextMetrics bounds = TextMetricsCalculator.calculate(DEFAULT_FONT_FAMILY, DEFAULT_FONT_SIZE, "x");
+    TextMetrics bounds = TextMetricsCalculator.calculate(new Font(FontFamily.MONOSPACED, DEFAULT_FONT_SIZE), "x");
     ourCharWidth = bounds.dimension().x;
     ourLineHeight = bounds.dimension().y;
   }
@@ -239,11 +239,11 @@ public class DomTextEditor {
 
     myTextContainer.setInnerText(normalize(newValue));
 
-    myRoot.getStyle().setProperty("font", myFontSize + "px " + getFontFamilyName());
+    myRoot.getStyle().setProperty("font", myFontSize + "px " + TextMetricsCalculator.getFontName(myFontFamily));
   }
 
-  private String getFontFamilyName() {
-    return (myFontFamily == FontFamily.MONOSPACED ? DEFAULT_FONT_FAMILY : myFontFamily.toString());
+  private Font getFont() {
+    return new Font(myFontFamily, myFontSize, myBold, myItalic);
   }
 
   public int caretOffset(int caretOffset) {
@@ -251,7 +251,7 @@ public class DomTextEditor {
     if (isDefaultFont()) {
       return caretOffset * ourCharWidth;
     } else {
-      return TextMetricsCalculator.calculateAprox(getFontFamilyName(), myFontSize, myText.substring(0, caretOffset)).dimension().x;
+      return TextMetricsCalculator.calculateAprox(getFont(), myText.substring(0, caretOffset)).dimension().x;
     }
 
   }
@@ -260,7 +260,7 @@ public class DomTextEditor {
     if (isDefaultFont()) {
       return ourLineHeight;
     } else {
-      return TextMetricsCalculator.calculateAprox(getFontFamilyName(), myFontSize, "x").dimension().y;
+      return TextMetricsCalculator.calculateAprox(getFont(), "x").dimension().y;
     }
   }
 
@@ -283,7 +283,7 @@ public class DomTextEditor {
       return pos;
     } else {
       for (int i = 0; i <= myText.length(); i++) {
-        int len = TextMetricsCalculator.calculateAprox(getFontFamilyName(), myFontSize, myText.substring(0, i)).dimension().x;
+        int len = TextMetricsCalculator.calculateAprox(getFont(), myText.substring(0, i)).dimension().x;
         if (len >= caretOffset) return i;
       }
       return myText.length();

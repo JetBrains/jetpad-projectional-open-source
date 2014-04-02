@@ -20,17 +20,27 @@ import com.google.gwt.canvas.dom.client.Context2d;
 import com.google.gwt.canvas.dom.client.ImageData;
 import com.google.gwt.user.client.Window;
 import jetbrains.jetpad.geometry.Vector;
+import jetbrains.jetpad.values.Font;
+import jetbrains.jetpad.values.FontFamily;
 
 
 public class TextMetricsCalculator {
-  public static TextMetrics calculateAprox(final String fontName, final int fontSize, String text) {
+  public static String getFontName(FontFamily family) {
+    if (family == FontFamily.MONOSPACED) {
+      return "monospace";
+    } else {
+      return family.toString();
+    }
+  }
+
+  public static TextMetrics calculateAprox(final Font font, String text) {
     Canvas canvas = Canvas.createIfSupported();
     if (canvas == null) throw new IllegalStateException();
     Context2d ctx = canvas.getContext2d();
-    ctx.setFont(font(fontName, fontSize));
+    ctx.setFont(getFontString(font));
     final int width = (int) ctx.measureText(normalize(text)).getWidth();
     String agent = Window.Navigator.getUserAgent().toLowerCase();
-    int height = fontSize;
+    int height = font.getSize();
     if (agent.contains("firefox")) {
       height += 1;
     } else if (agent.contains("chrome")) {
@@ -45,20 +55,20 @@ public class TextMetricsCalculator {
 
       @Override
       public int baseLine() {
-        return (2 * fontSize) / 3 ;
+        return (2 * font.getSize()) / 3 ;
       }
     };
   }
 
-  public static TextMetrics calculate(final String fontName, final int fontSize, String text) {
+  public static TextMetrics calculate(final Font font, String text) {
     Canvas canvas = Canvas.createIfSupported();
     if (canvas == null) throw new IllegalStateException();
     Context2d ctx = canvas.getContext2d();
-    ctx.setFont(font(fontName, fontSize));
+    ctx.setFont(getFontString(font));
     final int width = (int) ctx.measureText(normalize(text)).getWidth();
 
     String agent = Window.Navigator.getUserAgent().toLowerCase();
-    int height = fontSize;
+    int height = font.getSize();
     if (agent.contains("firefox")) {
       height += 1;
     } else if (agent.contains("chrome")) {
@@ -66,8 +76,7 @@ public class TextMetricsCalculator {
     }
     final Vector dimension = new Vector(width, height);
 
-    final int baseLine = fontBaseLine(fontName, fontSize);
-
+    final int baseLine = fontBaseLine(font);
     return new TextMetrics() {
       @Override
       public Vector dimension() {
@@ -81,12 +90,12 @@ public class TextMetricsCalculator {
     };
   }
 
-  private static int fontBaseLine(String fontName, int fontSize) {
-    int allCharsHeight = measureFontRange(fontName, fontSize, allCharsString()).height();
-    int capsHeight = measureFontRange(fontName, fontSize, allCharsString().toUpperCase()).height();
+  private static int fontBaseLine(Font font) {
+    int allCharsHeight = measureFontRange(font, allCharsString()).height();
+    int capsHeight = measureFontRange(font, allCharsString().toUpperCase()).height();
     int descent = allCharsHeight - capsHeight;
     int ascent = allCharsHeight - descent;
-    int lineSpace = fontSize - allCharsHeight;
+    int lineSpace = font.getSize() - allCharsHeight;
     return lineSpace / 2 + ascent;
   }
 
@@ -107,26 +116,25 @@ public class TextMetricsCalculator {
     return allChars.toString();
   }
 
-  private static Metrics measureFontRange(String fontName, int fontSize, String text) {
+  private static Metrics measureFontRange(Font font, String text) {
     Canvas canvas = Canvas.createIfSupported();
     if (canvas == null) throw new IllegalStateException();
 
     Context2d ctx = canvas.getContext2d();
-    String font = font(fontName, fontSize);
 
-    ctx.setFont(font);
+    ctx.setFont(getFontString(font));
     ctx.setFillStyle("rgb(255, 0, 0)");
 
     int width = (int) ctx.measureText(text).getWidth();
-    canvas.setHeight(fontSize * 2 + "px");
+    canvas.setHeight(font.getSize() * 2 + "px");
     canvas.setWidth(width + "px");
 
-    ctx.fillText(text, 0, fontSize);
-    ImageData data = ctx.getImageData(0, 0, width, fontSize * 2);
-    int[] counts = new int[fontSize * 2];
+    ctx.fillText(text, 0, font.getSize());
+    ImageData data = ctx.getImageData(0, 0, width, font.getSize() * 2);
+    int[] counts = new int[font.getSize() * 2];
 
     for (int x = 0; x < width; x++) {
-      for (int y = 0; y < fontSize * 2; y++) {
+      for (int y = 0; y < font.getSize() * 2; y++) {
         int red = data.getRedAt(x, y);
         if (red > 0) {
           counts[y]++;
@@ -139,8 +147,16 @@ public class TextMetricsCalculator {
     return new Metrics(firstNonZero, lastNonZero, width);
   }
 
-  private static String font(String fontName, int fontSize) {
-    return fontSize + "px " + fontName;
+  private static String getFontString(Font font) {
+    StringBuilder result = new StringBuilder();
+    if (font.isBold()) {
+      result.append(" bold");
+    }
+    if (font.isItalic()) {
+      result.append(" italic");
+    }
+    result.append(font.getSize()).append("px ").append(getFontName(font.getFamily()));
+    return result.toString();
   }
 
   private static int firstNonZero(int[] counts) {

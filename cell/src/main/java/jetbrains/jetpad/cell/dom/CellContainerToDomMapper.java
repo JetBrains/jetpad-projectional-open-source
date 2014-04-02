@@ -27,6 +27,8 @@ import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import jetbrains.jetpad.base.Handler;
+import jetbrains.jetpad.cell.*;
+import jetbrains.jetpad.cell.event.CompletionEvent;
 import jetbrains.jetpad.event.*;
 import jetbrains.jetpad.event.dom.ClipboardSupport;
 import jetbrains.jetpad.event.dom.EventTranslator;
@@ -39,12 +41,15 @@ import jetbrains.jetpad.mapper.Synchronizers;
 import jetbrains.jetpad.model.collections.CollectionItemEvent;
 import jetbrains.jetpad.model.event.EventHandler;
 import jetbrains.jetpad.model.event.Registration;
-import jetbrains.jetpad.model.property.*;
-import jetbrains.jetpad.cell.*;
-import jetbrains.jetpad.cell.event.CompletionEvent;
-import jetbrains.jetpad.projectional.domUtil.DomTextEditor;
+import jetbrains.jetpad.model.property.Properties;
+import jetbrains.jetpad.model.property.PropertyChangeEvent;
+import jetbrains.jetpad.model.property.ReadableProperty;
+import jetbrains.jetpad.model.property.WritableProperty;
 import jetbrains.jetpad.projectional.domUtil.Scrolling;
 import jetbrains.jetpad.projectional.domUtil.TextMetricsCalculator;
+import jetbrains.jetpad.projectional.view.TextView;
+import jetbrains.jetpad.values.Font;
+import jetbrains.jetpad.values.FontFamily;
 
 import java.util.Collections;
 
@@ -71,7 +76,7 @@ public class CellContainerToDomMapper extends Mapper<CellContainer, Element> {
 
     StyleInjector.flush();
 
-    int width = TextMetricsCalculator.calculate(DomTextEditor.DEFAULT_FONT_FAMILY, DomTextEditor.DEFAULT_FONT_SIZE, "xx").dimension().x;
+    int width = TextMetricsCalculator.calculate(TextView.DEFAULT_FONT, "xx").dimension().x;
     StyleInjector.inject("." + CSS.indented() + "{ padding-left: " + width + "px }", true);
     ourIndentInjected = true;
   }

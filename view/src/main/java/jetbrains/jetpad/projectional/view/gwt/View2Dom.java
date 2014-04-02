@@ -42,6 +42,7 @@ import jetbrains.jetpad.model.property.*;
 import jetbrains.jetpad.projectional.domUtil.Scrolling;
 import jetbrains.jetpad.projectional.domUtil.TextMetrics;
 import jetbrains.jetpad.projectional.domUtil.TextMetricsCalculator;
+import jetbrains.jetpad.projectional.view.TextView;
 import jetbrains.jetpad.values.Font;
 import jetbrains.jetpad.projectional.view.View;
 import jetbrains.jetpad.projectional.view.ViewContainer;
@@ -52,13 +53,6 @@ import java.util.Collections;
 import static com.google.gwt.query.client.GQuery.$;
 
 public class View2Dom {
-  public static final String FONT_FAMILY = "monospace";
-  public static final int FONT_SIZE = 15;
-
-  public static String font() {
-    return FONT_SIZE + "px " + FONT_FAMILY;
-  }
-
   public static Registration showDemo(final ViewContainer container, final Element element) {
     CompositeRegistration reg = new CompositeRegistration();
 
@@ -118,7 +112,7 @@ public class View2Dom {
     rootMapper.attachRoot();
     rootDiv.appendChild(rootMapper.getTarget());
 
-    TextMetrics metrics = TextMetricsCalculator.calculate(FONT_FAMILY, FONT_SIZE, "x");
+    TextMetrics metrics = TextMetricsCalculator.calculate(TextView.DEFAULT_FONT, "x");
     final int baseLine = metrics.baseLine();
     final int fontWidth = metrics.dimension().x;
     final int fontHeight = metrics.dimension().y;
@@ -171,17 +165,30 @@ public class View2Dom {
 
       @Override
       public int textHeight(Font font) {
-        return fontHeight;
+        if (font.equals(TextView.DEFAULT_FONT)) {
+          return fontHeight;
+        } else {
+          return TextMetricsCalculator.calculateAprox(font, "x").dimension().y;
+        }
+
       }
 
       @Override
       public int textBaseLine(Font font) {
-        return baseLine;
+        if (font.equals(TextView.DEFAULT_FONT)) {
+          return baseLine;
+        } else {
+          return TextMetricsCalculator.calculateAprox(font, "x").baseLine();
+        }
       }
 
       @Override
       public int textWidth(Font font, String text) {
-        return text.length() * fontWidth;
+        if (font.equals(TextView.DEFAULT_FONT)) {
+          return text.length() * fontWidth;
+        } else {
+          return TextMetricsCalculator.calculateAprox(font, text).dimension().x;
+        }
       }
 
       @Override
