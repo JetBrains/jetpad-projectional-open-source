@@ -23,6 +23,7 @@ import jetbrains.jetpad.projectional.domUtil.DomTextEditor;
 import jetbrains.jetpad.projectional.view.TextView;
 import com.google.gwt.dom.client.Element;
 import jetbrains.jetpad.values.Color;
+import jetbrains.jetpad.values.FontFamily;
 
 class TextViewMapper extends BaseViewMapper<TextView, Element> {
   TextViewMapper(View2DomContext ctx, TextView source) {
@@ -89,6 +90,18 @@ class TextViewMapper extends BaseViewMapper<TextView, Element> {
       @Override
       public void set(Boolean value) {
         editor.italic(value);
+      }
+    }));
+    conf.add(Synchronizers.forProperty(getSource().fontFamily(), new WritableProperty<FontFamily>() {
+      @Override
+      public void set(FontFamily value) {
+        editor.fontFamily(value);
+      }
+    }));
+    conf.add(Synchronizers.forProperty(getSource().fontSize(), new WritableProperty<Integer>() {
+      @Override
+      public void set(Integer value) {
+        editor.fontSize(value);
       }
     }));
   }

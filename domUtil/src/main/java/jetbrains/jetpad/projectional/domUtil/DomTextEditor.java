@@ -109,6 +109,24 @@ public class DomTextEditor {
     updateText();
   }
 
+  public FontFamily fontFamily() {
+    return myFontFamily;
+  }
+
+  public void fontFamily(FontFamily family) {
+    myFontFamily = family;
+    updateText();
+  }
+
+  public int fontSize() {
+    return myFontSize;
+  }
+
+  public void fontSize(int size) {
+    myFontSize = size;
+    updateText();
+  }
+
   public Color textColor() {
     return myTextColor;
   }
