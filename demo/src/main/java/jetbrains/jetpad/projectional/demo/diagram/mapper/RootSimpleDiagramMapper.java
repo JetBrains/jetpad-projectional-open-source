@@ -34,12 +34,6 @@ public class RootSimpleDiagramMapper extends Mapper<SimpleDiagram, ViewContainer
 
     getTarget().root().addTrait(RootTrait.ROOT_TRAIT);
 
-
-    EllipseView ev = new EllipseView();
-    ev.center().set(new Vector(100, 100));
-    ev.radius().set(new Vector(50, 10));
-    ev.to().set(Math.PI);
-
     getTarget().decorationRoot().children().add(ev);
 
     final Value<Boolean> newItem = new Value<>(false);
