@@ -15,7 +15,6 @@
  */
 package jetbrains.jetpad.projectional.view.awt;
 
-import javafx.scene.shape.Ellipse;
 import jetbrains.jetpad.base.Handler;
 import jetbrains.jetpad.event.*;
 import jetbrains.jetpad.event.awt.EventTranslator;
