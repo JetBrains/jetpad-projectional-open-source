@@ -15,6 +15,7 @@
  */
 package jetbrains.jetpad.projectional.view.awt;
 
+import javafx.scene.shape.Ellipse;
 import jetbrains.jetpad.base.Handler;
 import jetbrains.jetpad.event.*;
 import jetbrains.jetpad.event.awt.EventTranslator;
@@ -22,6 +23,7 @@ import jetbrains.jetpad.geometry.Vector;
 import jetbrains.jetpad.model.event.CompositeRegistration;
 import jetbrains.jetpad.model.event.EventHandler;
 import jetbrains.jetpad.model.event.Registration;
+import jetbrains.jetpad.model.property.Property;
 import jetbrains.jetpad.model.property.PropertyChangeEvent;
 import jetbrains.jetpad.values.Font;
 import jetbrains.jetpad.projectional.view.*;
@@ -446,12 +448,6 @@ public class ViewContainerComponent extends JComponent implements Scrollable {
 
   private void paintContent(View view, Graphics2D g) {
     jetbrains.jetpad.geometry.Rectangle bounds = view.bounds().get();
-    Color background = view.background().get();
-    if (background != null) {
-      g.setColor(toAwtColor(background));
-      g.fillRect(bounds.origin.x, bounds.origin.y, bounds.dimension.x, bounds.dimension.y);
-    }
-
     Color border = view.border().get();
     if (border != null) {
       g.setColor(toAwtColor(border));
@@ -463,6 +459,12 @@ public class ViewContainerComponent extends JComponent implements Scrollable {
       g.setColor(toAwtColor(rectView.background().get()));
 
       g.fillRect(bounds.origin.x, bounds.origin.y, bounds.dimension.x, bounds.dimension.y);
+    }
+
+    if (view instanceof EllipseView) {
+      EllipseView ellipseView = (EllipseView) view;
+      g.setColor(toAwtColor(ellipseView.background().get()));
+      g.fillOval(bounds.origin.x, bounds.origin.y, bounds.dimension.x, bounds.dimension.y);
     }
 
     if (view instanceof LineView) {

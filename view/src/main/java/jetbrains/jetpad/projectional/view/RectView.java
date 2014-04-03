@@ -25,6 +25,10 @@ import jetbrains.jetpad.values.Color;
 public class RectView extends View {
   public static final ViewPropertySpec<Vector> DIMENSION = new ViewPropertySpec<>("dimension", ViewPropertyKind.RELAYOUT, new Vector(10, 10));
 
+  public RectView() {
+    background().set(Color.BLACK);
+  }
+
   public Property<Vector> dimension() {
     return prop(DIMENSION);
   }
