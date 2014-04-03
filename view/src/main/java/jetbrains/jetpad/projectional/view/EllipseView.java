@@ -36,7 +36,13 @@ public class EllipseView extends View {
   protected boolean contains(Vector loc) {
     Vector r = radius().get();
     Vector nl = loc.sub(center().get());
-    return r.x * r.x * nl.x * nl.y + r.y * r.y * nl.y * nl.y <= r.x * r.x * r.y * r.y;
+    double eps = 0.001;
+    if (nl.length() <= eps) return true;
+    if (!(r.x * r.x * nl.x * nl.y + r.y * r.y * nl.y * nl.y <= r.x * r.x * r.y * r.y)) return false;
+
+    //todo write contains for sectors
+
+    return true;
   }
 
   @Override
