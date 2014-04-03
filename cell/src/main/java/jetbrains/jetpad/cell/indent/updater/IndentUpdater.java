@@ -88,6 +88,8 @@ public class IndentUpdater<SourceCT extends Composite<SourceCT>, TargetT> {
   }
 
   public void visibilityChanged(SourceCT item, PropertyChangeEvent<Boolean> change) {
+    if (item == root()) return;
+
     if (change.getNewValue()) {
       childAdded(item, false);
     } else {

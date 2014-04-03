@@ -290,10 +290,18 @@ public class IndentUpdaterTest {
     t.visible().set(true);
 
     assertTarget("[['a']]");
-
-
   }
 
+  @Test
+  public void rootVisibilityChangeDoesntLeadToException() {
+    IndentCell root = new IndentCell();
+    root.children().add(text("a"));
+    root.visible().set(false);
+
+    cellContainer.root.children().add(root);
+
+    root.visible().set(true);
+  }
 
   private Cell composite(String text) {
     Cell result = new HorizontalCell();
