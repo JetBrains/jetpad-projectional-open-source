@@ -9,6 +9,9 @@ public class EllipseView extends View {
   private static final ViewPropertySpec<Vector> CENTER = new ViewPropertySpec<>("center", ViewPropertyKind.RELAYOUT_PARENT, new Vector(0, 0));
   public static final ViewPropertySpec<Vector> RADIUS = new ViewPropertySpec<>("dimension", ViewPropertyKind.RELAYOUT, new Vector(10, 10));
 
+  public static final ViewPropertySpec<Double> FROM = new ViewPropertySpec<>("from", ViewPropertyKind.RELAYOUT, 0.0);
+  public static final ViewPropertySpec<Double> TO = new ViewPropertySpec<>("to", ViewPropertyKind.RELAYOUT, 2 * Math.PI);
+
   public EllipseView() {
     background().set(Color.BLACK);
   }
@@ -19,6 +22,14 @@ public class EllipseView extends View {
 
   public Property<Vector> center() {
     return toParentOffsetProp(CENTER);
+  }
+
+  public Property<Double> from() {
+    return prop(FROM);
+  }
+
+  public Property<Double> to() {
+    return prop(TO);
   }
 
   @Override

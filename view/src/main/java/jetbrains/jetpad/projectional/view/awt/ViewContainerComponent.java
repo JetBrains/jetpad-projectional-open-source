@@ -463,7 +463,11 @@ public class ViewContainerComponent extends JComponent implements Scrollable {
     if (view instanceof EllipseView) {
       EllipseView ellipseView = (EllipseView) view;
       g.setColor(toAwtColor(ellipseView.background().get()));
-      g.fillOval(bounds.origin.x, bounds.origin.y, bounds.dimension.x, bounds.dimension.y);
+
+      double from = (ellipseView.from().get() * 360) / (2 * Math.PI);
+      double to = (ellipseView.to().get() * 360) / (2 * Math.PI);
+
+      g.fillArc(bounds.origin.x, bounds.origin.y, bounds.dimension.x, bounds.dimension.y, (int) from, (int) to);
     }
 
     if (view instanceof LineView) {
