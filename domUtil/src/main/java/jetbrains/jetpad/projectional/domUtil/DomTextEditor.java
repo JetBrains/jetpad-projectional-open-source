@@ -240,6 +240,7 @@ public class DomTextEditor {
     myTextContainer.setInnerText(normalize(newValue));
 
     myRoot.getStyle().setProperty("font", myFontSize + "px " + TextMetricsCalculator.getFontName(myFontFamily));
+    myRoot.getStyle().setHeight(lineHeight(), Style.Unit.PX);
   }
 
   private Font getFont() {
