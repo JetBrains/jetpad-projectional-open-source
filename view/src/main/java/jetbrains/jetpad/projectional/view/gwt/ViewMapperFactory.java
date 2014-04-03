@@ -42,6 +42,8 @@ class ViewMapperFactory {
           result = new HorizontalViewMapper(ctx, (HorizontalView) source);
         } else if (source instanceof ScrollView) {
           result = new ScrollViewMapper(ctx, (ScrollView) source);
+        } else if (source instanceof EllipseView) {
+          result = new EllipseViewMapper(ctx, (EllipseView) source);
         } else {
           result = new CompositeViewMapper<View, Element>(ctx, source, DOM.createDiv());
         }

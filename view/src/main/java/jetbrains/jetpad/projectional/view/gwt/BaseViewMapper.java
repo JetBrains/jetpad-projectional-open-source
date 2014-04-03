@@ -130,17 +130,19 @@ class BaseViewMapper<ViewT extends View, ElementT extends Element> extends Mappe
       }));
     }
 
-    conf.add(Synchronizers.forProperty(getSource().background(), new WritableProperty<Color>() {
-      @Override
-      public void set(Color value) {
-        Style style = getTarget().getStyle();
-        if (value == null) {
-          style.setBackgroundColor(null);
-        } else {
-          style.setBackgroundColor(value.toCssColor());
+    if (!isCustomBackgroundSync()) {
+      conf.add(Synchronizers.forProperty(getSource().background(), new WritableProperty<Color>() {
+        @Override
+        public void set(Color value) {
+          Style style = getTarget().getStyle();
+          if (value == null) {
+            style.setBackgroundColor(null);
+          } else {
+            style.setBackgroundColor(value.toCssColor());
+          }
         }
-      }
-    }));
+      }));
+    }
 
     conf.add(Synchronizers.forProperty(getSource().border(), new WritableProperty<Color>() {
       @Override
@@ -179,5 +181,9 @@ class BaseViewMapper<ViewT extends View, ElementT extends Element> extends Mappe
     style.setLeft(0, Style.Unit.PX);
     style.setTop(0, Style.Unit.PX);
     return svg;
+  }
+
+  protected boolean isCustomBackgroundSync() {
+    return false;
   }
 }
