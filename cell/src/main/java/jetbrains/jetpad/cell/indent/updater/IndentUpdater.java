@@ -102,6 +102,11 @@ public class IndentUpdater<SourceCT extends Composite<SourceCT>, TargetT> {
 
   private void onChildAdd(SourceCT child) {
     if (!isVisible(child)) return;
+
+    if (myIndentUpdaterSource.isAttached(child)) {
+      throw new IllegalStateException("child " + child + " is already attached");
+    }
+
     myIndentUpdaterSource.setAttached(child, true);
 
     Position<SourceCT> insertAt = new Position<>(this, child);
@@ -154,6 +159,10 @@ public class IndentUpdater<SourceCT extends Composite<SourceCT>, TargetT> {
 
   private void onChildRemove(SourceCT child) {
     if (!isVisible(child)) return;
+
+    if (!myIndentUpdaterSource.isAttached(child)) {
+      throw new IllegalStateException("child " + child + " is already detached");
+    }
     myIndentUpdaterSource.setAttached(child, false);
 
     Position<SourceCT> removeAt = new Position<>(this, child);
