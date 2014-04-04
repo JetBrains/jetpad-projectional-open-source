@@ -467,7 +467,7 @@ public class ViewContainerComponent extends JComponent implements Scrollable {
       double from = (ellipseView.from().get() * 360) / (2 * Math.PI);
       double to = (ellipseView.to().get() * 360) / (2 * Math.PI);
 
-      g.fillArc(bounds.origin.x, bounds.origin.y, bounds.dimension.x, bounds.dimension.y, (int) from, (int) to);
+      g.fillArc(bounds.origin.x, bounds.origin.y, bounds.dimension.x, bounds.dimension.y, (int) from, (int) (to - from));
     }
 
     if (view instanceof LineView) {

@@ -19,6 +19,7 @@ import jetbrains.jetpad.base.Value;
 import jetbrains.jetpad.event.Key;
 import jetbrains.jetpad.event.KeyEvent;
 import jetbrains.jetpad.event.MouseEvent;
+import jetbrains.jetpad.geometry.Vector;
 import jetbrains.jetpad.mapper.Mapper;
 import jetbrains.jetpad.mapper.MapperFactory;
 import jetbrains.jetpad.mapper.Synchronizers;
@@ -26,12 +27,43 @@ import jetbrains.jetpad.projectional.demo.diagram.model.DiagramNode;
 import jetbrains.jetpad.projectional.demo.diagram.model.SimpleDiagram;
 import jetbrains.jetpad.projectional.diagram.view.RootTrait;
 import jetbrains.jetpad.projectional.view.*;
+import jetbrains.jetpad.values.Color;
 
 public class RootSimpleDiagramMapper extends Mapper<SimpleDiagram, ViewContainer> {
   public RootSimpleDiagramMapper(SimpleDiagram source) {
     super(source, new ViewContainer());
 
     getTarget().root().addTrait(RootTrait.ROOT_TRAIT);
+
+    final EllipseView ellipseView = new EllipseView();
+    ellipseView.from().set(- Math.PI / 4);
+    ellipseView.to().set(Math.PI / 4);
+    ellipseView.radius().set(new Vector(50, 50));
+
+    ellipseView.addTrait(new ViewTraitBuilder()
+      .on(ViewEvents.MOUSE_PRESSED, new ViewEventHandler<MouseEvent>() {
+        boolean toggle = false;
+
+        @Override
+        public void handle(View view, MouseEvent e) {
+          toggle = !toggle;
+
+          if (toggle) {
+            view.background().set(Color.RED);
+          } else {
+            view.background().set(Color.BLACK);
+          }
+
+
+          ellipseView.contains(e.location());
+        }
+      }).build());
+
+
+      getTarget().decorationRoot().children().add(ellipseView);
+
+    ellipseView.moveTo(new Vector(100, 100));
+
 
     final Value<Boolean> newItem = new Value<>(false);
     getTarget().root().addTrait(new ViewTraitBuilder()

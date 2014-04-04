@@ -53,8 +53,8 @@ class EllipseViewMapper extends BaseViewMapper<EllipseView, Element> {
     segList.clear();
     Vector radius = getSource().radius().get();
 
-    double from = getSource().from().get() - (Math.PI / 2);
-    double to = getSource().to().get() - (Math.PI / 2);
+    double from = getSource().from().get();
+    double to = getSource().to().get();
     double eps = 0.0001;
 
     if (Math.abs(2 * Math.PI - (to - from)) < eps) {
