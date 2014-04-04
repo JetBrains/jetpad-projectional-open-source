@@ -199,6 +199,7 @@ public class DomTextEditor {
     caretStyle.setLeft(caretOffset(myCaretPosition), Style.Unit.PX);
     caretStyle.setTop(0, Style.Unit.PX);
     caretStyle.setWidth(1, Style.Unit.PX);
+    caretStyle.setHeight(lineHeight(), Style.Unit.PX);
     caretStyle.setBackgroundColor("black");
 
     int left = Math.min(myCaretPosition, mySelectionStart);
