@@ -453,10 +453,9 @@ public class ViewContainerComponent extends JComponent implements Scrollable {
       g.drawRect(bounds.origin.x, bounds.origin.y, bounds.dimension.x - 1, bounds.dimension.y - 1);
     }
 
-    if (view instanceof RectView) {
-      RectView rectView = (RectView) view;
-      g.setColor(toAwtColor(rectView.background().get()));
-
+    Color background = view.background().get();
+    if (!(view instanceof EllipseView) && background != null) {
+      g.setColor(toAwtColor(background));
       g.fillRect(bounds.origin.x, bounds.origin.y, bounds.dimension.x, bounds.dimension.y);
     }
 
