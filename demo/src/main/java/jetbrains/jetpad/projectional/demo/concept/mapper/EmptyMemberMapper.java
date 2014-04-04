@@ -15,7 +15,7 @@
  */
 package jetbrains.jetpad.projectional.demo.concept.mapper;
 
-import jetbrains.jetpad.cell.util.Validators;
+import jetbrains.jetpad.base.Validators;
 import jetbrains.jetpad.mapper.Mapper;
 import jetbrains.jetpad.projectional.demo.concept.model.EmptyMember;
 import jetbrains.jetpad.cell.TextCell;

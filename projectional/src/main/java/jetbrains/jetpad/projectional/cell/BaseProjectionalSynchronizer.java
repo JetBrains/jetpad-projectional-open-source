@@ -36,7 +36,7 @@ import jetbrains.jetpad.cell.position.Positions;
 import jetbrains.jetpad.cell.text.TextEditing;
 import jetbrains.jetpad.cell.trait.CellTraitPropertySpec;
 import jetbrains.jetpad.cell.util.CellFactory;
-import jetbrains.jetpad.cell.util.Validators;
+import jetbrains.jetpad.base.Validators;
 import jetbrains.jetpad.projectional.generic.Role;
 import jetbrains.jetpad.projectional.generic.RoleCompletion;
 

@@ -16,7 +16,7 @@
 package jetbrains.jetpad.projectional.demo.expr.mapper;
 
 import com.google.common.base.Supplier;
-import jetbrains.jetpad.cell.util.Validators;
+import jetbrains.jetpad.base.Validators;
 import jetbrains.jetpad.mapper.*;
 import jetbrains.jetpad.model.property.Property;
 import jetbrains.jetpad.completion.BaseCompletionItem;

@@ -16,18 +16,16 @@
 package jetbrains.jetpad.cell.util;
 
 import com.google.common.base.Function;
-import com.google.common.base.Objects;
 import com.google.common.base.Predicate;
 import com.google.common.base.Strings;
 import jetbrains.jetpad.base.Enums;
 import jetbrains.jetpad.base.Runnables;
+import jetbrains.jetpad.base.Validators;
 import jetbrains.jetpad.cell.trait.CellTrait;
 import jetbrains.jetpad.completion.CompletionItem;
 import jetbrains.jetpad.completion.CompletionParameters;
 import jetbrains.jetpad.completion.CompletionSupplier;
 import jetbrains.jetpad.completion.SimpleCompletionItem;
-import jetbrains.jetpad.event.KeyEvent;
-import jetbrains.jetpad.event.KeyStrokeSpecs;
 import jetbrains.jetpad.model.property.Properties;
 import jetbrains.jetpad.model.property.Property;
 import jetbrains.jetpad.cell.action.CellActions;

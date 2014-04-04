@@ -19,7 +19,7 @@ import jetbrains.jetpad.cell.TextCell;
 import jetbrains.jetpad.cell.indent.IndentCell;
 import jetbrains.jetpad.cell.util.CellFactory;
 import jetbrains.jetpad.cell.text.TextEditing;
-import jetbrains.jetpad.cell.util.Validators;
+import jetbrains.jetpad.base.Validators;
 
 import static jetbrains.jetpad.cell.util.CellFactory.*;
 

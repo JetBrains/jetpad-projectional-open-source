@@ -16,7 +16,7 @@
 package jetbrains.jetpad.hybrid;
 
 import com.google.common.base.Function;
-import jetbrains.jetpad.cell.util.Validators;
+import jetbrains.jetpad.base.Validators;
 import jetbrains.jetpad.completion.BaseCompletionItem;
 import jetbrains.jetpad.completion.CompletionItem;
 import jetbrains.jetpad.completion.SimpleCompletionItem;

@@ -17,7 +17,7 @@ package jetbrains.jetpad.projectional.demo.concept.mapper;
 
 import com.google.common.base.Function;
 import com.google.common.base.Supplier;
-import jetbrains.jetpad.cell.util.Validators;
+import jetbrains.jetpad.base.Validators;
 import jetbrains.jetpad.event.ContentKinds;
 import jetbrains.jetpad.mapper.Mapper;
 import jetbrains.jetpad.mapper.MapperFactory;

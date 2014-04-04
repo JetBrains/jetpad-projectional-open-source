@@ -19,7 +19,7 @@ import jetbrains.jetpad.mapper.Mapper;
 import jetbrains.jetpad.cell.TextCell;
 import jetbrains.jetpad.cell.text.TextEditing;
 import jetbrains.jetpad.projectional.testApp.model.IdExpr;
-import jetbrains.jetpad.cell.util.Validators;
+import jetbrains.jetpad.base.Validators;
 
 public class IdExprMapper extends Mapper<IdExpr, TextCell> {
   IdExprMapper(IdExpr source) {
