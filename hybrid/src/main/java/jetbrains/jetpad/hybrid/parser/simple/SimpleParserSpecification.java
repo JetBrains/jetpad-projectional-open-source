@@ -27,7 +27,10 @@ import jetbrains.jetpad.grammar.parser.Lexeme;
 import jetbrains.jetpad.grammar.slr.SLRTableGenerator;
 import jetbrains.jetpad.hybrid.parser.*;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class SimpleParserSpecification<ExprT> {
   private Grammar myGrammar =  new Grammar();
@@ -38,7 +41,7 @@ public class SimpleParserSpecification<ExprT> {
   private Terminal myIntNumber =  myGrammar.newTerminal("int");
   private Terminal myBool = myGrammar.newTerminal("bool");
   private Terminal myError = myGrammar.newTerminal("error");
-  private Map<Predicate<Object>, Terminal> myValueTerminals = new HashMap<>();
+  private Map<Predicate<Token>, Terminal> myCustomTokens = new HashMap<>();
 
   private boolean myUserFullLR;
 
@@ -124,9 +127,22 @@ public class SimpleParserSpecification<ExprT> {
       }
 
       @Override
-      public Terminal value(String name, Predicate<Object> predicate) {
+      public Terminal value(String name, final Predicate<Object> predicate) {
+        return customToken(name, new Predicate<Token>() {
+          @Override
+          public boolean apply(Token input) {
+            if (input instanceof ValueToken) {
+              return predicate.apply(((ValueToken) input).value());
+            }
+            return false;
+          }
+        });
+      }
+
+      @Override
+      public Terminal customToken(String name, Predicate<Token> predicate) {
         Terminal terminal = myGrammar.newTerminal(name);
-        myValueTerminals.put(predicate, terminal);
+        myCustomTokens.put(predicate, terminal);
         return terminal;
       }
     });
@@ -146,22 +162,23 @@ public class SimpleParserSpecification<ExprT> {
   }
 
   private Lexeme getLexeme(Token token) {
-    Terminal terminal = null;
+    Terminal terminal;
     if (token instanceof IdentifierToken) {
       terminal = myId;
     } else if (token instanceof IntValueToken) {
       terminal = myIntNumber;
     } else if (token instanceof BoolValueToken) {
       terminal = myBool;
-    } else if (token instanceof ValueToken) {
-      for (Map.Entry<Predicate<Object>, Terminal> e : myValueTerminals.entrySet()) {
-        if (e.getKey().apply(((ValueToken) token).value())) {
-          terminal = e.getValue();
-          break;
-        }
-      }
     } else {
       terminal = myTokenToTerminal.get(token);
+      if (terminal == null) {
+        for (Map.Entry<Predicate<Token>, Terminal> e : myCustomTokens.entrySet()) {
+          if (e.getKey().apply(token)) {
+            terminal = e.getValue();
+            break;
+          }
+        }
+      }
     }
 
     if (terminal == null) {
@@ -230,5 +247,6 @@ public class SimpleParserSpecification<ExprT> {
     Terminal number();
     Terminal bool();
     Terminal value(String name, Predicate<Object> predicate);
+    Terminal customToken(String name, Predicate<Token> predicate);
   }
 }
