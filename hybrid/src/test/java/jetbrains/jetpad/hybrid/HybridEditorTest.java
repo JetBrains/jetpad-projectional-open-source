@@ -820,6 +820,14 @@ public class HybridEditorTest extends EditingTestCase {
     assertEquals(1, sync.focusedIndex());
   }
 
+  @Test
+  public void valueTokenShouldBeFromModel() {
+    ValueExpr expr = new ValueExpr();
+    container.expr.set(expr);
+
+    assertNotNull(mapper.getDescendantMapper(expr));
+  }
+
   private ValueToken createComplexToken() {
     return new ValueToken(new ComplexValueExpr(), new ComplexValueCloner());
   }
