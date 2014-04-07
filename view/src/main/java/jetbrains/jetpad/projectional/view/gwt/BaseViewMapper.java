@@ -21,6 +21,7 @@ import jetbrains.jetpad.base.Value;
 import jetbrains.jetpad.geometry.Rectangle;
 import jetbrains.jetpad.mapper.Mapper;
 import jetbrains.jetpad.mapper.Synchronizers;
+import jetbrains.jetpad.model.event.CompositeEventSource;
 import jetbrains.jetpad.model.event.EventHandler;
 import jetbrains.jetpad.model.event.Registration;
 import jetbrains.jetpad.model.property.DerivedProperty;
@@ -103,9 +104,10 @@ class BaseViewMapper<ViewT extends View, ElementT extends Element> extends Mappe
       }
 
       final Value<Boolean> valid = new Value<>(false);
-      conf.add(Synchronizers.forProperty(positionInParent, new WritableProperty<Rectangle>() {
+
+      conf.add(Synchronizers.forEventSource(new CompositeEventSource<Object>(positionInParent, getSource().border()), new Runnable() {
         @Override
-        public void set(final Rectangle value) {
+        public void run() {
           valid.set(false);
           whenValid(new Runnable() {
             @Override
@@ -120,8 +122,11 @@ class BaseViewMapper<ViewT extends View, ElementT extends Element> extends Mappe
               }
 
               if (!isDomLayout()) {
-                style.setWidth(value.dimension.x, Style.Unit.PX);
-                style.setHeight(value.dimension.y, Style.Unit.PX);
+                int width = value.dimension.x;
+                int height = value.dimension.y;
+
+                style.setWidth(width, Style.Unit.PX);
+                style.setHeight(height, Style.Unit.PX);
               }
               valid.set(true);
             }
@@ -149,12 +154,12 @@ class BaseViewMapper<ViewT extends View, ElementT extends Element> extends Mappe
       public void set(Color value) {
         Style style = getTarget().getStyle();
         if (value != null) {
-          style.setBorderColor(value.toCssColor());
-          style.setBorderWidth(1, Style.Unit.PX);
-          style.setBorderStyle(Style.BorderStyle.SOLID);
+          style.setOutlineColor(value.toCssColor());
+          style.setOutlineWidth(1, Style.Unit.PX);
+          style.setOutlineStyle(Style.OutlineStyle.SOLID);
         } else {
-          style.clearBorderStyle();
-          style.clearBorderColor();
+          style.clearOutlineStyle();
+          style.clearOutlineColor();
           style.clearBorderWidth();
         }
       }
