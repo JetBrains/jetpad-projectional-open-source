@@ -828,6 +828,14 @@ public class HybridEditorTest extends EditingTestCase {
     assertNotNull(mapper.getDescendantMapper(expr));
   }
 
+  @Test
+  public void valueTokensShouldBeFromModelOnReparse() {
+    setTokens(new ValueToken(new ValueExpr(), new ValueExprCloner()));
+
+    Expr expr = container.expr.get();
+    assertNotNull(mapper.getDescendantMapper(expr));
+  }
+
   private ValueToken createComplexToken() {
     return new ValueToken(new ComplexValueExpr(), new ComplexValueCloner());
   }
@@ -839,6 +847,7 @@ public class HybridEditorTest extends EditingTestCase {
   private void setTokens(Token... tokens) {
     sync.tokens().clear();
     sync.tokens().addAll(Arrays.asList(tokens));
+    sync.tokenListEditor().updateToPrintedTokens();
   }
 
   private void select(int index, boolean first) {

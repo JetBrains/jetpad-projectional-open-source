@@ -175,15 +175,20 @@ class TokenListEditor<SourceT> {
   void updateToPrintedTokens() {
     if (myPrintedTokens == null) return;
 
-    List<Token> newTokens = myPrintedTokens;
-    for (int i = 0; i < newTokens.size(); i++) {
-      Token newToken = newTokens.get(i);
-      Token token = tokens.get(i);
-      if (newToken instanceof ValueToken) continue;
-      if (!Objects.equal(newToken, token)) {
-        tokens.set(i, newToken);
+    sync(new Runnable() {
+      @Override
+      public void run() {
+        List<Token> newTokens = myPrintedTokens;
+        for (int i = 0; i < newTokens.size(); i++) {
+          Token newToken = newTokens.get(i);
+          Token token = tokens.get(i);
+          if (!Objects.equal(newToken, token)) {
+            tokens.set(i, newToken);
+          }
+        }
       }
-    }
+    });
+
   }
 
   void restoreState(List<Token> state) {
