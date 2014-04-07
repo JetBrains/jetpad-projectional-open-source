@@ -15,6 +15,7 @@
  */
 package jetbrains.jetpad.projectional.view.spi;
 
+import jetbrains.jetpad.base.edt.EventDispatchThread;
 import jetbrains.jetpad.geometry.Rectangle;
 import jetbrains.jetpad.model.property.PropertyChangeEvent;
 import jetbrains.jetpad.values.Font;
@@ -37,4 +38,6 @@ public interface ViewContainerPeer {
   int textWidth(Font font, String text);
 
   void requestFocus();
+
+  EventDispatchThread getEdt();
 }

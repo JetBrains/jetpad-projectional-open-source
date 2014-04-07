@@ -16,6 +16,7 @@
 package jetbrains.jetpad.projectional.view.awt;
 
 import jetbrains.jetpad.base.Handler;
+import jetbrains.jetpad.base.edt.*;
 import jetbrains.jetpad.event.*;
 import jetbrains.jetpad.event.awt.EventTranslator;
 import jetbrains.jetpad.geometry.Vector;
@@ -718,6 +719,11 @@ public class ViewContainerComponent extends JComponent implements Scrollable {
     @Override
     public void requestFocus() {
       ViewContainerComponent.this.requestFocus();
+    }
+
+    @Override
+    public EventDispatchThread getEdt() {
+      return AwtEventDispatchThread.INSTANCE;
     }
   }
 }

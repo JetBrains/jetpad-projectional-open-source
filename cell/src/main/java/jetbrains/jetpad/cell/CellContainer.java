@@ -16,6 +16,7 @@
 package jetbrains.jetpad.cell;
 
 import com.google.common.base.Objects;
+import jetbrains.jetpad.base.edt.EventDispatchThread;
 import jetbrains.jetpad.event.*;
 import jetbrains.jetpad.event.TextClipboardContent;
 import jetbrains.jetpad.geometry.Vector;
@@ -368,5 +369,9 @@ public class CellContainer {
 
   public void requestFocus() {
     myCellContainerPeer.requestFocus();
+  }
+
+  public EventDispatchThread getEdt() {
+    return myCellContainerPeer.getEdt();
   }
 }

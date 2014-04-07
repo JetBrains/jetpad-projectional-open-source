@@ -29,6 +29,8 @@ import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Window;
 import jetbrains.jetpad.base.Handler;
 import jetbrains.jetpad.base.Value;
+import jetbrains.jetpad.base.edt.EventDispatchThread;
+import jetbrains.jetpad.base.edt.JsEventDispatchThread;
 import jetbrains.jetpad.event.*;
 import jetbrains.jetpad.event.dom.ClipboardSupport;
 import jetbrains.jetpad.event.dom.EventTranslator;
@@ -43,10 +45,10 @@ import jetbrains.jetpad.projectional.domUtil.Scrolling;
 import jetbrains.jetpad.projectional.domUtil.TextMetrics;
 import jetbrains.jetpad.projectional.domUtil.TextMetricsCalculator;
 import jetbrains.jetpad.projectional.view.TextView;
-import jetbrains.jetpad.values.Font;
 import jetbrains.jetpad.projectional.view.View;
 import jetbrains.jetpad.projectional.view.ViewContainer;
 import jetbrains.jetpad.projectional.view.spi.ViewContainerPeer;
+import jetbrains.jetpad.values.Font;
 
 import java.util.Collections;
 
@@ -194,6 +196,11 @@ public class View2Dom {
       @Override
       public void requestFocus() {
         rootDiv.focus();
+      }
+
+      @Override
+      public EventDispatchThread getEdt() {
+        return JsEventDispatchThread.INSTANCE;
       }
     });
 

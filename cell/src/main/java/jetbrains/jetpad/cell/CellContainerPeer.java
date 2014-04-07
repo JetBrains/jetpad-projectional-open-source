@@ -15,6 +15,7 @@
  */
 package jetbrains.jetpad.cell;
 
+import jetbrains.jetpad.base.edt.EventDispatchThread;
 import jetbrains.jetpad.geometry.Rectangle;
 import jetbrains.jetpad.model.property.Properties;
 import jetbrains.jetpad.model.property.ReadableProperty;
@@ -48,6 +49,11 @@ public interface CellContainerPeer {
     public ReadableProperty<Boolean> focused() {
       return Properties.constant(true);
     }
+
+    @Override
+    public EventDispatchThread getEdt() {
+      throw new UnsupportedOperationException();
+    }
   };
 
   int getCaretAt(TextCell tv, int x);
@@ -57,4 +63,6 @@ public interface CellContainerPeer {
   ReadableProperty<Boolean> focused();
 
   void requestFocus();
+
+  EventDispatchThread getEdt();
 }

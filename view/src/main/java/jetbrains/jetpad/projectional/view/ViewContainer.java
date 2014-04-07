@@ -15,6 +15,7 @@
  */
 package jetbrains.jetpad.projectional.view;
 
+import jetbrains.jetpad.base.edt.EventDispatchThread;
 import jetbrains.jetpad.event.*;
 import jetbrains.jetpad.geometry.Rectangle;
 import jetbrains.jetpad.geometry.Vector;
@@ -276,6 +277,10 @@ public class ViewContainer {
 
   public void requestFocus() {
     myPeer.requestFocus();
+  }
+
+  public EventDispatchThread getEdt() {
+    return myPeer.getEdt();
   }
 
   private class RootView extends View {

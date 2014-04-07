@@ -27,6 +27,8 @@ import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import jetbrains.jetpad.base.Handler;
+import jetbrains.jetpad.base.edt.EventDispatchThread;
+import jetbrains.jetpad.base.edt.JsEventDispatchThread;
 import jetbrains.jetpad.cell.*;
 import jetbrains.jetpad.cell.event.CompletionEvent;
 import jetbrains.jetpad.event.*;
@@ -48,8 +50,6 @@ import jetbrains.jetpad.model.property.WritableProperty;
 import jetbrains.jetpad.projectional.domUtil.Scrolling;
 import jetbrains.jetpad.projectional.domUtil.TextMetricsCalculator;
 import jetbrains.jetpad.projectional.view.TextView;
-import jetbrains.jetpad.values.Font;
-import jetbrains.jetpad.values.FontFamily;
 
 import java.util.Collections;
 
@@ -353,6 +353,11 @@ public class CellContainerToDomMapper extends Mapper<CellContainer, Element> {
       @Override
       public ReadableProperty<Boolean> focused() {
         return myCellToDomContext.focused;
+      }
+
+      @Override
+      public EventDispatchThread getEdt() {
+        return JsEventDispatchThread.INSTANCE;
       }
     };
   }

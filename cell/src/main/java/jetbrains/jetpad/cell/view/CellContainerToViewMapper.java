@@ -16,6 +16,7 @@
 package jetbrains.jetpad.cell.view;
 
 import com.google.common.base.Supplier;
+import jetbrains.jetpad.base.edt.EventDispatchThread;
 import jetbrains.jetpad.event.*;
 import jetbrains.jetpad.geometry.Rectangle;
 import jetbrains.jetpad.geometry.Vector;
@@ -189,6 +190,11 @@ public class CellContainerToViewMapper extends Mapper<CellContainer, View> {
       @Override
       public ReadableProperty<Boolean> focused() {
         return getTarget().focused();
+      }
+
+      @Override
+      public EventDispatchThread getEdt() {
+        return myTargetView.container().getEdt();
       }
     };
   }
