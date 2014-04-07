@@ -16,6 +16,7 @@
 package jetbrains.jetpad.cell;
 
 import jetbrains.jetpad.base.edt.EventDispatchThread;
+import jetbrains.jetpad.base.edt.NullEventDispatchThread;
 import jetbrains.jetpad.geometry.Rectangle;
 import jetbrains.jetpad.model.property.Properties;
 import jetbrains.jetpad.model.property.ReadableProperty;
@@ -52,7 +53,7 @@ public interface CellContainerPeer {
 
     @Override
     public EventDispatchThread getEdt() {
-      throw new UnsupportedOperationException();
+      return new NullEventDispatchThread();
     }
   };
 

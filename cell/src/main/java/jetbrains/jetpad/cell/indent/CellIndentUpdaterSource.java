@@ -18,7 +18,7 @@ package jetbrains.jetpad.cell.indent;
 import jetbrains.jetpad.cell.Cell;
 import jetbrains.jetpad.cell.indent.updater.IndentUpdaterSource;
 import jetbrains.jetpad.model.event.EventHandler;
-import jetbrains.jetpad.model.event.Registration;
+import jetbrains.jetpad.base.Registration;
 import jetbrains.jetpad.model.property.PropertyChangeEvent;
 
 import java.util.HashSet;

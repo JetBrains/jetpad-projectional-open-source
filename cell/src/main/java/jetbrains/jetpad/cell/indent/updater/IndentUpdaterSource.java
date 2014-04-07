@@ -17,7 +17,7 @@ package jetbrains.jetpad.cell.indent.updater;
 
 import jetbrains.jetpad.model.composite.Composite;
 import jetbrains.jetpad.cell.Cell;
-import jetbrains.jetpad.model.event.Registration;
+import jetbrains.jetpad.base.Registration;
 
 public interface IndentUpdaterSource<SourceCT extends Composite<SourceCT>> {
   boolean isNewLine(SourceCT src);

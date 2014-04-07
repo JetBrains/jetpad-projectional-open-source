@@ -16,6 +16,7 @@
 package jetbrains.jetpad.projectional.view.spi;
 
 import jetbrains.jetpad.base.edt.EventDispatchThread;
+import jetbrains.jetpad.base.edt.NullEventDispatchThread;
 import jetbrains.jetpad.geometry.Rectangle;
 import jetbrains.jetpad.model.property.PropertyChangeEvent;
 import jetbrains.jetpad.values.Font;
@@ -73,6 +74,6 @@ public class NullViewContainerPeer implements ViewContainerPeer {
 
   @Override
   public EventDispatchThread getEdt() {
-    throw new UnsupportedOperationException();
+    return new NullEventDispatchThread();
   }
 }

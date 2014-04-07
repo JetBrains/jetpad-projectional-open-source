@@ -15,12 +15,8 @@
  */
 package jetbrains.jetpad.projectional.util;
 
-import jetbrains.jetpad.cell.Cell;
-import jetbrains.jetpad.model.event.CompositeRegistration;
-import jetbrains.jetpad.model.event.EventHandler;
-import jetbrains.jetpad.model.event.Registration;
+import jetbrains.jetpad.base.Registration;
 import jetbrains.jetpad.cell.CellContainer;
-import jetbrains.jetpad.model.property.PropertyChangeEvent;
 
 public class RootController {
   public static Registration install(CellContainer container) {

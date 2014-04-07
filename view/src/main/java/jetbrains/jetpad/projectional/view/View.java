@@ -17,6 +17,7 @@ package jetbrains.jetpad.projectional.view;
 
 import com.google.common.base.Objects;
 import com.google.common.base.Strings;
+import jetbrains.jetpad.base.Registration;
 import jetbrains.jetpad.event.Event;
 import jetbrains.jetpad.geometry.Rectangle;
 import jetbrains.jetpad.geometry.Vector;

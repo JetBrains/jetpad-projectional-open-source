@@ -21,7 +21,7 @@ import jetbrains.jetpad.base.Runnables;
 import jetbrains.jetpad.cell.trait.CellTrait;
 import jetbrains.jetpad.completion.*;
 import jetbrains.jetpad.model.event.CompositeRegistration;
-import jetbrains.jetpad.model.event.Registration;
+import jetbrains.jetpad.base.Registration;
 import jetbrains.jetpad.model.property.Property;
 import jetbrains.jetpad.model.property.PropertyBinding;
 import jetbrains.jetpad.model.property.PropertyChangeEvent;

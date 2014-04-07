@@ -19,13 +19,12 @@ import jetbrains.jetpad.base.Value;
 import jetbrains.jetpad.cell.event.FocusEvent;
 import jetbrains.jetpad.cell.trait.CellTrait;
 import jetbrains.jetpad.model.event.EventHandler;
-import jetbrains.jetpad.model.event.Registration;
+import jetbrains.jetpad.base.Registration;
 import jetbrains.jetpad.model.property.Property;
 import jetbrains.jetpad.model.property.PropertyChangeEvent;
 import org.junit.Test;
 
 import java.util.Arrays;
-import java.util.Set;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;

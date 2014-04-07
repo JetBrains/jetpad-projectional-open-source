@@ -15,7 +15,7 @@
  */
 package jetbrains.jetpad.cell.view;
 
-import jetbrains.jetpad.model.event.Registration;
+import jetbrains.jetpad.base.Registration;
 import jetbrains.jetpad.cell.*;
 import jetbrains.jetpad.projectional.view.*;
 
