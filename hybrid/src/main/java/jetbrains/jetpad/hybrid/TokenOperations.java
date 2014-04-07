@@ -16,22 +16,22 @@
 package jetbrains.jetpad.hybrid;
 
 import com.google.common.base.Function;
-import jetbrains.jetpad.cell.action.CellActions;
 import jetbrains.jetpad.base.Runnables;
+import jetbrains.jetpad.cell.Cell;
+import jetbrains.jetpad.cell.TextCell;
+import jetbrains.jetpad.cell.action.CellActions;
 import jetbrains.jetpad.cell.completion.CompletionHelper;
-import jetbrains.jetpad.completion.CompletionItem;
 import jetbrains.jetpad.cell.util.CellLists;
+import jetbrains.jetpad.completion.CompletionItem;
 import jetbrains.jetpad.hybrid.parser.ErrorToken;
 import jetbrains.jetpad.hybrid.parser.Token;
 import jetbrains.jetpad.hybrid.parser.ValueToken;
-import jetbrains.jetpad.cell.TextCell;
-import jetbrains.jetpad.cell.Cell;
-import jetbrains.jetpad.projectional.cell.*;
+import jetbrains.jetpad.projectional.cell.ProjectionalSynchronizers;
 
 import java.util.List;
 
-import static jetbrains.jetpad.hybrid.SelectionPosition.*;
-import static jetbrains.jetpad.cell.action.CellActions.toPosition;
+import static jetbrains.jetpad.hybrid.SelectionPosition.FIRST;
+import static jetbrains.jetpad.hybrid.SelectionPosition.LAST;
 
 class TokenOperations<SourceT> {
   private HybridSynchronizer<SourceT> mySync;
@@ -45,7 +45,7 @@ class TokenOperations<SourceT> {
   }
 
   private List<Token> tokens() {
-    return mySync.tokens();
+    return mySync.tokenListEditor().tokens;
   }
 
   Runnable selectOnCreation(int index, SelectionPosition pos) {

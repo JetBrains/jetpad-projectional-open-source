@@ -29,6 +29,7 @@ import jetbrains.jetpad.model.collections.CollectionAdapter;
 import jetbrains.jetpad.model.collections.CollectionItemEvent;
 import jetbrains.jetpad.model.collections.CollectionListener;
 import jetbrains.jetpad.model.collections.list.ObservableList;
+import jetbrains.jetpad.model.collections.list.UnmodifiableObservableList;
 import jetbrains.jetpad.model.composite.Composites;
 import jetbrains.jetpad.model.event.CompositeRegistration;
 import jetbrains.jetpad.model.event.EventHandler;
@@ -264,7 +265,8 @@ public class HybridSynchronizer<SourceT> implements Synchronizer {
         Cell currentCell = mySelectionSupport.currentCell();
         int currentCellIndex = myTargetList.indexOf(currentCell);
         int targetIndex = Positions.isHomePosition(currentCell) ? currentCellIndex : currentCellIndex + 1;
-        tokens().addAll(targetIndex, tokens);
+        myTokenListEditor.tokens.addAll(targetIndex, tokens);
+        myTokenListEditor.updateToPrintedTokens();
         tokenOperations().select(targetIndex + tokens.size() - 1, LAST).run();
       }
 
@@ -499,8 +501,14 @@ public class HybridSynchronizer<SourceT> implements Synchronizer {
     return result;
   }
 
+  public void setTokens(List<Token> tokens) {
+    myTokenListEditor.tokens.clear();
+    myTokenListEditor.tokens.addAll(tokens);
+    myTokenListEditor.updateToPrintedTokens();
+  }
+
   public ObservableList<Token> tokens() {
-    return myTokenListEditor.tokens;
+    return new UnmodifiableObservableList<>(myTokenListEditor.tokens);
   }
 
   boolean hasSelection() {
@@ -572,7 +580,7 @@ public class HybridSynchronizer<SourceT> implements Synchronizer {
 
     mySelectionSupport.clearSelection();
 
-    tokens().subList(firstIndex, lastIndex).clear();
+    myTokenListEditor.tokens.subList(firstIndex, lastIndex).clear();
 
     if (tokens().isEmpty()) {
       lastItemDeleted().run();

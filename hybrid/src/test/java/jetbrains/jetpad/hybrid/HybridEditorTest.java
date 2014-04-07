@@ -845,9 +845,7 @@ public class HybridEditorTest extends EditingTestCase {
   }
 
   private void setTokens(Token... tokens) {
-    sync.tokens().clear();
-    sync.tokens().addAll(Arrays.asList(tokens));
-    sync.tokenListEditor().updateToPrintedTokens();
+    sync.setTokens(Arrays.asList(tokens));
   }
 
   private void select(int index, boolean first) {
