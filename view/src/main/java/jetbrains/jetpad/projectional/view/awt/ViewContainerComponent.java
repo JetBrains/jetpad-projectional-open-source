@@ -447,16 +447,16 @@ public class ViewContainerComponent extends JComponent implements Scrollable {
 
   private void paintContent(View view, Graphics2D g) {
     jetbrains.jetpad.geometry.Rectangle bounds = view.bounds().get();
-    Color border = view.border().get();
-    if (border != null) {
-      g.setColor(toAwtColor(border));
-      g.drawRect(bounds.origin.x, bounds.origin.y, bounds.dimension.x - 1, bounds.dimension.y - 1);
-    }
 
     Color background = view.background().get();
     if (!(view instanceof EllipseView) && background != null) {
       g.setColor(toAwtColor(background));
       g.fillRect(bounds.origin.x, bounds.origin.y, bounds.dimension.x, bounds.dimension.y);
+    }
+    Color border = view.border().get();
+    if (border != null) {
+      g.setColor(toAwtColor(border));
+      g.drawRect(bounds.origin.x, bounds.origin.y, bounds.dimension.x - 1, bounds.dimension.y - 1);
     }
 
     if (view instanceof EllipseView) {
