@@ -36,7 +36,6 @@ import jetbrains.jetpad.model.event.Registration;
 import jetbrains.jetpad.model.property.Property;
 import jetbrains.jetpad.model.property.PropertyBinding;
 import jetbrains.jetpad.model.property.ReadableProperty;
-import jetbrains.jetpad.model.property.WritableProperty;
 import jetbrains.jetpad.cell.*;
 import jetbrains.jetpad.cell.action.CellActions;
 import jetbrains.jetpad.cell.completion.Completion;
@@ -50,7 +49,6 @@ import jetbrains.jetpad.hybrid.parser.Token;
 import jetbrains.jetpad.hybrid.parser.ValueToken;
 import jetbrains.jetpad.hybrid.parser.prettyprint.ParseNode;
 import jetbrains.jetpad.hybrid.parser.prettyprint.ParseNodes;
-import jetbrains.jetpad.values.Color;
 
 import java.util.*;
 
@@ -66,7 +64,7 @@ public class HybridSynchronizer<SourceT> implements Synchronizer {
 
   private Mapper<?, ?> myContextMapper;
   private Property<SourceT> myProperty;
-  private HybridPositionSpec<SourceT> myController;
+  private HybridPositionSpec<SourceT> mySpec;
   private TokenListEditor<SourceT> myTokenListEditor;
   private Registration myRegistration;
   private Cell myTarget;
@@ -80,11 +78,11 @@ public class HybridSynchronizer<SourceT> implements Synchronizer {
   private Synchronizer[] mySynchronizers = Synchronizer.EMPTY_ARRAY;
   private String myPlaceHolderText = "empty";
 
-  public HybridSynchronizer(Mapper<?, ?> contextMapper, Property<SourceT> prop, Cell target, HybridPositionSpec<SourceT> controller) {
+  public HybridSynchronizer(Mapper<?, ?> contextMapper, Property<SourceT> prop, Cell target, HybridPositionSpec<SourceT> spec) {
     myContextMapper = contextMapper;
     myProperty = prop;
-    myController = controller;
-    myTokenListEditor = new TokenListEditor<>(controller);
+    mySpec = spec;
+    myTokenListEditor = new TokenListEditor<>(spec);
     myTarget = target;
 
     myValueMappers = myContextMapper.createChildSet();
@@ -601,7 +599,7 @@ public class HybridSynchronizer<SourceT> implements Synchronizer {
   }
 
   HybridPositionSpec<SourceT> positionSpec() {
-    return myController;
+    return mySpec;
   }
 
   public Cell placeholder() {
