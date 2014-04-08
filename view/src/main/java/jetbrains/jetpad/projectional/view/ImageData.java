@@ -11,6 +11,10 @@ public class ImageData {
     return new BinaryImageData(dim, data);
   }
 
+  public static ImageData urlImageData(Vector dim, String url) {
+    return new UrlImageData(dim, url);
+  }
+
   private Vector myDimension;
 
   private ImageData(Vector dim) {
@@ -40,6 +44,19 @@ public class ImageData {
       byte[] result = new byte[myData.length];
       System.arraycopy(myData, 0, result, 0, myData.length);
       return result;
+    }
+  }
+
+  public static class UrlImageData extends ImageData {
+    private String myUrl;
+
+    UrlImageData(Vector dim, String url) {
+      super(dim);
+      myUrl = url;
+    }
+
+    public String getUrl() {
+      return myUrl;
     }
   }
 }

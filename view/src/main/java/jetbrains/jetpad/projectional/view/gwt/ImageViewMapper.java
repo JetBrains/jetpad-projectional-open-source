@@ -22,10 +22,12 @@ class ImageViewMapper extends BaseViewMapper<ImageView, Element> {
         getTarget().setPropertyInt("width", value.getDimension().x);
         getTarget().setPropertyInt("height", value.getDimension().y);
 
-        if (value instanceof ImageData.BinaryImageData) {
-          //todo
-        } else {
+        if (value instanceof ImageData.UrlImageData) {
+          getTarget().setPropertyString("src", ((ImageData.UrlImageData) value).getUrl());
+        } else if (value instanceof ImageData.EmptyImageData) {
           getTarget().setPropertyString("src", null);
+        } else {
+          throw new UnsupportedOperationException();
         }
       }
     }));
