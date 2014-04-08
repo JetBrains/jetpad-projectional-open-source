@@ -194,6 +194,9 @@ public class CellContainerToViewMapper extends Mapper<CellContainer, View> {
 
       @Override
       public EventDispatchThread getEdt() {
+        if (myTargetView.container() == null) {
+          throw new IllegalStateException("Target View Isn't Attached");
+        }
         return myTargetView.container().getEdt();
       }
     };
