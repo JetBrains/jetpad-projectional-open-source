@@ -31,12 +31,16 @@ import jetbrains.jetpad.projectional.view.spi.ViewContainerPeer;
 import jetbrains.jetpad.values.Color;
 import jetbrains.jetpad.values.FontFamily;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.datatransfer.*;
 import java.awt.event.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
+import java.awt.image.BufferedImage;
+import java.awt.image.ImageObserver;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
@@ -553,6 +557,31 @@ public class ViewContainerComponent extends JComponent implements Scrollable {
         } else {
           g.fillPolygon(xs, ys, n);
         }
+      }
+    }
+
+    if (view instanceof ImageView) {
+      ImageView imageView = (ImageView) view;
+      ImageData imageData = imageView.image.get();
+
+      if (imageData instanceof ImageData.EmptyImageData) {
+        //ignore
+      } else if (imageData instanceof ImageData.BinaryImageData) {
+        ImageData.BinaryImageData data = (ImageData.BinaryImageData) imageData;
+        try {
+          BufferedImage image = ImageIO.read(new ByteArrayInputStream(data.getData()));
+          g.drawImage(image, bounds.origin.x, bounds.origin.y, new ImageObserver() {
+            @Override
+            public boolean imageUpdate(Image img, int infoflags, int x, int y, int width, int height) {
+              return true;
+            }
+          });
+        } catch (IOException e) {
+          throw new RuntimeException(e);
+        }
+
+      } else {
+        throw new UnsupportedOperationException("Unsupported Image : " + imageData);
       }
     }
   }

@@ -29,8 +29,6 @@ import jetbrains.mps.diagram.dataflow.model.Blocks;
 import jetbrains.mps.diagram.dataflow.model.Diagram;
 
 public class RootDiagramMapper extends Mapper<Diagram, ViewContainer> {
-
-
   public RootDiagramMapper(Diagram source) {
     super(source, new ViewContainer());
     initRoot(getSource(), getTarget());

@@ -15,7 +15,6 @@ import org.vectomatic.dom.svg.OMSVGSVGElement;
 import org.vectomatic.dom.svg.utils.OMSVGParser;
 import org.vectomatic.dom.svg.utils.SVGConstants;
 
-class EllipseViewMapper extends BaseViewMapper<EllipseView, Element> {
   EllipseViewMapper(View2DomContext ctx, EllipseView source) {
     super(ctx, source, DOM.createDiv());
   }
