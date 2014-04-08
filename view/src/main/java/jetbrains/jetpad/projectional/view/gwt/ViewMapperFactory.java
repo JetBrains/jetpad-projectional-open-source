@@ -44,6 +44,8 @@ class ViewMapperFactory {
           result = new ScrollViewMapper(ctx, (ScrollView) source);
         } else if (source instanceof EllipseView) {
           result = new EllipseViewMapper(ctx, (EllipseView) source);
+        } else if (source instanceof ImageView) {
+          result = new ImageViewMapper(ctx, (ImageView) source);
         } else {
           result = new CompositeViewMapper<View, Element>(ctx, source, DOM.createDiv());
         }
