@@ -42,6 +42,7 @@ import java.awt.image.BufferedImage;
 import java.awt.image.ImageObserver;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.net.URL;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -566,21 +567,27 @@ public class ViewContainerComponent extends JComponent implements Scrollable {
 
       if (imageData instanceof ImageData.EmptyImageData) {
         //ignore
-      } else if (imageData instanceof ImageData.BinaryImageData) {
-        ImageData.BinaryImageData data = (ImageData.BinaryImageData) imageData;
+      } else if (imageData instanceof ImageData.BinaryImageData || imageData instanceof ImageData.UrlImageData) {
+        BufferedImage image;
         try {
-          BufferedImage image = ImageIO.read(new ByteArrayInputStream(data.getData()));
-          g.drawImage(image, bounds.origin.x, bounds.origin.y, new ImageObserver() {
-            @Override
-            public boolean imageUpdate(Image img, int infoflags, int x, int y, int width, int height) {
-              return true;
-            }
-          });
+          if (imageData instanceof ImageData.BinaryImageData) {
+            ImageData.BinaryImageData data = (ImageData.BinaryImageData) imageData;
+            image = ImageIO.read(new ByteArrayInputStream(data.getData()));
+          } else {
+            image = ImageIO.read(new URL(((ImageData.UrlImageData) imageData).getUrl()));
+          }
         } catch (IOException e) {
           throw new RuntimeException(e);
         }
 
-      } else {
+        g.drawImage(image, bounds.origin.x, bounds.origin.y, new ImageObserver() {
+          @Override
+          public boolean imageUpdate(Image img, int infoflags, int x, int y, int width, int height) {
+            return true;
+          }
+        });
+
+        } else {
         throw new UnsupportedOperationException("Unsupported Image : " + imageData);
       }
     }
