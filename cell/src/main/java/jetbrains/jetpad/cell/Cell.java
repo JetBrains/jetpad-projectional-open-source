@@ -730,7 +730,9 @@ public abstract class Cell implements Composite<Cell>, HasVisibility, HasFocusab
 
     @Override
     public Cell remove(int index) {
-      if (myChildren == null) throw new IndexOutOfBoundsException();
+      if (myChildren == null) {
+        throw new IndexOutOfBoundsException();
+      }
       Cell result = myChildren.remove(index);
       if (myChildren.isEmpty()) {
         myChildren = null;
