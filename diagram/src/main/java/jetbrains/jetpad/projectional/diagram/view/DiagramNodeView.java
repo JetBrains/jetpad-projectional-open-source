@@ -16,12 +16,12 @@
 package jetbrains.jetpad.projectional.diagram.view;
 
 import jetbrains.jetpad.base.Handler;
+import jetbrains.jetpad.base.Registration;
 import jetbrains.jetpad.geometry.Rectangle;
 import jetbrains.jetpad.geometry.Vector;
 import jetbrains.jetpad.model.collections.CollectionItemEvent;
 import jetbrains.jetpad.model.collections.CollectionListener;
 import jetbrains.jetpad.model.event.EventHandler;
-import jetbrains.jetpad.base.Registration;
 import jetbrains.jetpad.model.property.Property;
 import jetbrains.jetpad.model.property.PropertyChangeEvent;
 import jetbrains.jetpad.projectional.diagram.base.GridDirection;
@@ -142,5 +142,5 @@ public abstract class DiagramNodeView extends GroupView {
     super.doValidate(ctx);
   }
 
-  public abstract void layoutPorts(List<View> ports, GridDirection dir);
+  protected abstract void layoutPorts(List<View> ports, GridDirection dir);
 }
