@@ -26,13 +26,13 @@ import jetbrains.jetpad.model.property.WritableProperty;
 import jetbrains.jetpad.projectional.diagram.view.DeleteHandler;
 import jetbrains.jetpad.projectional.diagram.view.MoveHandler;
 import jetbrains.jetpad.projectional.diagram.view.RootTrait;
+import jetbrains.jetpad.projectional.diagram.view.block.BlockView;
 import jetbrains.jetpad.projectional.view.View;
 import jetbrains.jetpad.projectional.view.ViewEventHandler;
 import jetbrains.jetpad.projectional.view.ViewEvents;
 import jetbrains.jetpad.projectional.view.ViewTraitBuilder;
 import jetbrains.jetpad.values.Color;
 import jetbrains.mps.diagram.dataflow.model.*;
-import jetbrains.mps.diagram.dataflow.view.BlockView;
 
 import java.util.Iterator;
 

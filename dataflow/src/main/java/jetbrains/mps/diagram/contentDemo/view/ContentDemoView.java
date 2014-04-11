@@ -15,10 +15,10 @@
  */
 package jetbrains.mps.diagram.contentDemo.view;
 
+import jetbrains.jetpad.projectional.diagram.view.layout.CenterVerticalLayoutView;
+import jetbrains.jetpad.projectional.diagram.view.layout.IndentHorizontalLayoutView;
 import jetbrains.jetpad.projectional.view.TextView;
 import jetbrains.jetpad.values.Color;
-import jetbrains.mps.diagram.layoutView.CenterVerticalLayoutView;
-import jetbrains.mps.diagram.layoutView.IndentHorizontalLayoutView;
 
 public class ContentDemoView extends CenterVerticalLayoutView {
   public final TextView nameView = new TextView();

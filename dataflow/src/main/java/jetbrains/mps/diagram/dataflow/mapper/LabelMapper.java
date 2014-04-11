@@ -15,19 +15,19 @@
  */
 package jetbrains.mps.diagram.dataflow.mapper;
 
+import jetbrains.jetpad.base.Registration;
 import jetbrains.jetpad.geometry.Vector;
 import jetbrains.jetpad.mapper.Mapper;
 import jetbrains.jetpad.mapper.Synchronizer;
 import jetbrains.jetpad.mapper.SynchronizerContext;
 import jetbrains.jetpad.mapper.Synchronizers;
-import jetbrains.jetpad.base.Registration;
 import jetbrains.jetpad.projectional.diagram.view.DiagramView;
 import jetbrains.jetpad.projectional.diagram.view.MoveHandler;
 import jetbrains.jetpad.projectional.diagram.view.PolyLineConnection;
 import jetbrains.jetpad.projectional.diagram.view.RootTrait;
+import jetbrains.jetpad.projectional.diagram.view.block.LabelView;
 import jetbrains.jetpad.projectional.view.View;
 import jetbrains.mps.diagram.dataflow.model.Connector;
-import jetbrains.mps.diagram.dataflow.view.LabelView;
 
 class LabelMapper extends Mapper<Connector, LabelView> {
   private static int ourConnectorCounter = 0;

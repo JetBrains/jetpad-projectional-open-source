@@ -23,13 +23,13 @@ import jetbrains.jetpad.projectional.diagram.view.Connection;
 import jetbrains.jetpad.projectional.diagram.view.ConnectionRoutingView;
 import jetbrains.jetpad.projectional.diagram.view.DiagramView;
 import jetbrains.jetpad.projectional.diagram.view.PolyLineConnection;
+import jetbrains.jetpad.projectional.diagram.view.block.LabelsView;
 import jetbrains.jetpad.projectional.diagram.view.decoration.ConnectionDivergeDecoration;
 import jetbrains.jetpad.projectional.diagram.view.decoration.DecorationContainer;
 import jetbrains.jetpad.projectional.view.View;
 import jetbrains.mps.diagram.dataflow.model.Block;
 import jetbrains.mps.diagram.dataflow.model.Connector;
 import jetbrains.mps.diagram.dataflow.model.Diagram;
-import jetbrains.mps.diagram.dataflow.view.LabelsView;
 
 public class DiagramMapper extends Mapper<Diagram, DiagramView> {
   LabelsView myLabelsView;

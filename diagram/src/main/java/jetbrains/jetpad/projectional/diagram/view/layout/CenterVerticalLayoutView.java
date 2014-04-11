@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package jetbrains.mps.diagram.layoutView;
+package jetbrains.jetpad.projectional.diagram.view.layout;
 
 import jetbrains.jetpad.base.Handler;
 import jetbrains.jetpad.geometry.Rectangle;
