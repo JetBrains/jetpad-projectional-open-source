@@ -54,6 +54,10 @@ public class PrettyPrinterContext<NodeT>  {
   }
 
   public void append(Token token) {
+    if (token == null) {
+      throw new NullPointerException("Token can't be null");
+    }
+
     myTokens.add(token);
     TokenParseNode result = new TokenParseNode(token, myTokens.size() - 1);
     myStack.peek().add(result);
