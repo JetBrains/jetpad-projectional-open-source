@@ -60,12 +60,9 @@ public class CenterVerticalLayoutView extends GroupView {
     } else {
       int width = 0;
       int height = 0;
-      Vector origin = null;
+      Vector origin = bounds().get().origin;
       for (View childView: children()) {
         if (!childView.visible().get()) continue;
-        if (origin == null) {
-          origin = childView.bounds().get().origin;
-        }
         width = Math.max(width, childView.bounds().get().dimension.x);
         height += childView.bounds().get().dimension.y;
       }
