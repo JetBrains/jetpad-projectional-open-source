@@ -37,6 +37,7 @@ import jetbrains.jetpad.event.dom.EventTranslator;
 import jetbrains.jetpad.geometry.Rectangle;
 import jetbrains.jetpad.geometry.Vector;
 import jetbrains.jetpad.mapper.Mapper;
+import jetbrains.jetpad.mapper.gwt.DomUtil;
 import jetbrains.jetpad.model.event.CompositeRegistration;
 import jetbrains.jetpad.model.event.EventHandler;
 import jetbrains.jetpad.base.Registration;
@@ -57,6 +58,14 @@ import static com.google.gwt.query.client.GQuery.$;
 public class View2Dom {
   public static Registration showDemo(final ViewContainer container, final Element element) {
     CompositeRegistration reg = new CompositeRegistration();
+
+
+    DomUtil.dimension(Document.get().getBody()).addHandler(new EventHandler<PropertyChangeEvent<Vector>>() {
+      @Override
+      public void onEvent(PropertyChangeEvent<Vector> event) {
+        System.out.println("change ; " + event);
+      }
+    });
 
     final Element rootDiv = DOM.createDiv();
     disablePopup(rootDiv);
