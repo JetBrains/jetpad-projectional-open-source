@@ -602,7 +602,7 @@ public class HybridSynchronizer<SourceT> implements Synchronizer {
     return myTokenListEditor.valid;
   }
 
-  List<Cell> tokenCells() {
+  public List<Cell> tokenCells() {
     return Collections.unmodifiableList(myTargetList);
   }
 
