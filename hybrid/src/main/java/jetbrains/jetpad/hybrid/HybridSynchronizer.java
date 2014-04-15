@@ -614,7 +614,7 @@ public class HybridSynchronizer<SourceT> implements Synchronizer {
     return myPlaceholder;
   }
 
-  Cell target() {
+  public Cell target() {
     return myTarget;
   }
 
