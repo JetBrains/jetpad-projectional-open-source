@@ -28,6 +28,7 @@ import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Window;
 import jetbrains.jetpad.base.Handler;
+import jetbrains.jetpad.base.Registration;
 import jetbrains.jetpad.base.Value;
 import jetbrains.jetpad.base.edt.EventDispatchThread;
 import jetbrains.jetpad.base.edt.JsEventDispatchThread;
@@ -37,10 +38,8 @@ import jetbrains.jetpad.event.dom.EventTranslator;
 import jetbrains.jetpad.geometry.Rectangle;
 import jetbrains.jetpad.geometry.Vector;
 import jetbrains.jetpad.mapper.Mapper;
-import jetbrains.jetpad.mapper.gwt.DomUtil;
 import jetbrains.jetpad.model.event.CompositeRegistration;
 import jetbrains.jetpad.model.event.EventHandler;
-import jetbrains.jetpad.base.Registration;
 import jetbrains.jetpad.model.property.*;
 import jetbrains.jetpad.projectional.domUtil.Scrolling;
 import jetbrains.jetpad.projectional.domUtil.TextMetrics;
@@ -58,14 +57,6 @@ import static com.google.gwt.query.client.GQuery.$;
 public class View2Dom {
   public static Registration showDemo(final ViewContainer container, final Element element) {
     CompositeRegistration reg = new CompositeRegistration();
-
-
-    DomUtil.dimension(Document.get().getBody()).addHandler(new EventHandler<PropertyChangeEvent<Vector>>() {
-      @Override
-      public void onEvent(PropertyChangeEvent<Vector> event) {
-        System.out.println("change ; " + event);
-      }
-    });
 
     final Element rootDiv = DOM.createDiv();
     disablePopup(rootDiv);
