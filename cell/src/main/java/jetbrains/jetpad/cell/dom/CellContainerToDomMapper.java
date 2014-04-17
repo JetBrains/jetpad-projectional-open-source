@@ -341,8 +341,8 @@ public class CellContainerToDomMapper extends Mapper<CellContainer, Element> {
       }
 
       @Override
-      public void scrollTo(Cell cell) {
-        Scrolling.scrollTo(getElement(cell));
+      public void scrollTo(Rectangle rect, Cell cell) {
+        Scrolling.scrollTo(rect, getElement(cell));
       }
 
       @Override

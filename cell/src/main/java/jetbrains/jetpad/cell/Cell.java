@@ -332,7 +332,11 @@ public abstract class Cell implements Composite<Cell>, HasVisibility, HasFocusab
   }
 
   public void scrollTo() {
-    getViewContainerPeer().scrollTo(this);
+    scrollTo(new Rectangle(Vector.ZERO, getBounds().dimension));
+  }
+
+  public void scrollTo(Rectangle rect) {
+    getViewContainerPeer().scrollTo(rect, this);
   }
 
   protected CellContainerPeer getViewContainerPeer() {

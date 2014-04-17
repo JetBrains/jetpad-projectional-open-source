@@ -39,7 +39,7 @@ public interface CellContainerPeer {
     }
 
     @Override
-    public void scrollTo(Cell cell) {
+    public void scrollTo(Rectangle rect, Cell cell) {
     }
 
     @Override
@@ -60,7 +60,7 @@ public interface CellContainerPeer {
   int getCaretAt(TextCell tv, int x);
   int getCaretOffset(TextCell tv, int caret);
   Rectangle getBounds(Cell cell);
-  void scrollTo(Cell cell);
+  void scrollTo(Rectangle rect, Cell cell);
   ReadableProperty<Boolean> focused();
 
   void requestFocus();

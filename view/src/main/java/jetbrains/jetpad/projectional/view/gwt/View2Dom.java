@@ -158,7 +158,7 @@ public class View2Dom {
 
       @Override
       public void scrollTo(View view) {
-        Scrolling.scrollTo((Element) rootMapper.getDescendantMapper(view).getTarget());
+        Scrolling.scrollTo(new Rectangle(Vector.ZERO, view.getBounds().dimension), (Element) rootMapper.getDescendantMapper(view).getTarget());
       }
 
       @Override

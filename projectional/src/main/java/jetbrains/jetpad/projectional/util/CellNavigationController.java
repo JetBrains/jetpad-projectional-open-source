@@ -15,16 +15,18 @@
  */
 package jetbrains.jetpad.projectional.util;
 
+import jetbrains.jetpad.base.Registration;
 import jetbrains.jetpad.base.Value;
 import jetbrains.jetpad.cell.Cell;
 import jetbrains.jetpad.cell.CellContainer;
 import jetbrains.jetpad.cell.position.PositionHandler;
 import jetbrains.jetpad.cell.trait.CellTrait;
 import jetbrains.jetpad.event.*;
+import jetbrains.jetpad.geometry.Rectangle;
+import jetbrains.jetpad.geometry.Vector;
 import jetbrains.jetpad.model.composite.Composites;
 import jetbrains.jetpad.model.event.CompositeRegistration;
 import jetbrains.jetpad.model.event.EventHandler;
-import jetbrains.jetpad.base.Registration;
 import jetbrains.jetpad.model.property.*;
 
 import java.util.Stack;
@@ -101,16 +103,32 @@ public class CellNavigationController {
     return myContainer.focusedCell;
   }
 
-  private void scrollTo(Cell view) {
-    view.scrollTo();
+  private void scrollTo(Cell cell) {
+    if (cell.parent().get() != null) {
+      Cell parent = cell.parent().get();
+
+      Rectangle parentBounds = parent.getBounds();
+      Rectangle cellBounds = cell.getBounds();
+
+      Vector delta = new Vector(10, 10);
+
+      Rectangle bounds = new Rectangle(
+        cellBounds.origin.sub(parentBounds.origin.add(delta)),
+        cellBounds.dimension.add(delta.mul(2))
+      );
+
+      parent.scrollTo(bounds.intersect(new Rectangle(Vector.ZERO, parent.getBounds().dimension)));
+    } else {
+      cell.scrollTo();
+    }
   }
 
   private Cell root() {
     return myContainer.root;
   }
 
-  private void moveCaretTo(Cell view, int offset) {
-    view.get(PositionHandler.PROPERTY).caretOffset().set(offset);
+  private void moveCaretTo(Cell cell, int offset) {
+    cell.get(PositionHandler.PROPERTY).caretOffset().set(offset);
   }
 
   private Selector<Cell, ReadableProperty<Integer>> caretPositionSelector() {

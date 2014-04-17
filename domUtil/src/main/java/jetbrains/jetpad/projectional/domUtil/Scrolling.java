@@ -22,15 +22,18 @@ import jetbrains.jetpad.geometry.Rectangle;
 import static com.google.gwt.query.client.GQuery.$;
 
 public class Scrolling {
-  public static void scrollTo(Element element) {
-    adjustScrollers(element);
+  public static void scrollTo(Rectangle rect, Element element) {
+    if (!new Rectangle(0, 0, element.getOffsetWidth(), element.getOffsetHeight()).contains(rect)) {
+      throw new IllegalArgumentException();
+    }
+    adjustScrollers(rect, element);
     Rectangle visibleArea = new Rectangle(getScrollX(), getScrollY(), getScrollWidth(), getScrollHeight());
     Rectangle bounds = getBounds(element);
     if (!visibleArea.contains(bounds)) {
-      int top = element.getAbsoluteTop();
-      int left = element.getAbsoluteLeft();
-      int height = element.getOffsetHeight();
-      int width = element.getOffsetWidth();
+      int top = element.getAbsoluteTop() + rect.origin.x;
+      int left = element.getAbsoluteLeft() + rect.origin.y;
+      int width = rect.dimension.x;
+      int height = rect.dimension.y;
 
       int winTop = getScrollY();
       int winLeft = getScrollX();
@@ -43,7 +46,11 @@ public class Scrolling {
         y = top;
       }
       if (left < winLeft) {
-        x = left;
+        if (left + width < winWidth) {
+          x = 0;
+        } else {
+          x = left;
+        }
       }
       if (top + height > winTop + winHeigh) {
         y = top + height - winHeigh;
@@ -63,11 +70,11 @@ public class Scrolling {
     return new Rectangle(x, y, width, height);
   }
 
-  private static void adjustScrollers(Element element) {
-    int top = element.getOffsetTop();
-    int left = element.getOffsetLeft();
-    int height = element.getOffsetHeight();
-    int width = element.getOffsetWidth();
+  private static void adjustScrollers(Rectangle rect, Element element) {
+    int left = element.getOffsetLeft() + rect.origin.x;
+    int top = element.getOffsetTop() + rect.origin.y;
+    int width = rect.dimension.x;
+    int height = rect.dimension.y;
 
     while (element.getParentElement() != null) {
       Element parent = element.getParentElement();
@@ -84,7 +91,11 @@ public class Scrolling {
           parent.setScrollTop(top);
         }
         if (left < parentLeft) {
-          parent.setScrollLeft(left);
+          if (left + width < clientWidth) {
+            parent.setScrollLeft(0);
+          } else {
+            parent.setScrollLeft(left);
+          }
         }
         if (top + height > parentTop + clientHeight) {
           parent.setScrollTop(top + height - clientHeight);
