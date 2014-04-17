@@ -19,7 +19,7 @@ import jetbrains.jetpad.base.Handler;
 import jetbrains.jetpad.base.edt.*;
 import jetbrains.jetpad.event.*;
 import jetbrains.jetpad.event.awt.EventTranslator;
-import jetbrains.jetpad.geometry.Vector;
+import jetbrains.jetpad.geometry.*;
 import jetbrains.jetpad.model.event.CompositeRegistration;
 import jetbrains.jetpad.model.event.EventHandler;
 import jetbrains.jetpad.base.Registration;
@@ -34,6 +34,7 @@ import jetbrains.jetpad.values.FontFamily;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.Rectangle;
 import java.awt.datatransfer.*;
 import java.awt.event.*;
 import java.awt.event.KeyEvent;
@@ -718,10 +719,11 @@ public class ViewContainerComponent extends JComponent implements Scrollable {
     }
 
     @Override
-    public void scrollTo(View view) {
+    public void scrollTo(jetbrains.jetpad.geometry.Rectangle rect, View view) {
       myContainer.root().validate();
 
-      jetbrains.jetpad.geometry.Rectangle bounds = view.bounds().get();
+      jetbrains.jetpad.geometry.Rectangle viewBounds = view.bounds().get();
+      jetbrains.jetpad.geometry.Rectangle bounds = new jetbrains.jetpad.geometry.Rectangle(viewBounds.origin.add(rect.origin), viewBounds.dimension);
       scrollRectToVisible(new Rectangle(bounds.origin.x, bounds.origin.y, bounds.dimension.x, bounds.dimension.y));
     }
 

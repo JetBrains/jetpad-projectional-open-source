@@ -46,7 +46,7 @@ public class NullViewContainerPeer implements ViewContainerPeer {
   }
 
   @Override
-  public void scrollTo(View view) {
+  public void scrollTo(Rectangle rect, View view) {
   }
 
   @Override

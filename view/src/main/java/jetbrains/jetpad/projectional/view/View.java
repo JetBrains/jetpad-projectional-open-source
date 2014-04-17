@@ -657,10 +657,14 @@ public abstract class View implements Composite<View>, HasFocusability, HasVisib
   }
 
   public void scrollTo() {
+    scrollTo(new Rectangle(Vector.ZERO, getBounds().dimension));
+  }
+
+  public void scrollTo(Rectangle rect) {
     scrollInScrollViews();
 
     if (container() != null) {
-      container().peer().scrollTo(this);
+      container().peer().scrollTo(rect, this);
     }
   }
 

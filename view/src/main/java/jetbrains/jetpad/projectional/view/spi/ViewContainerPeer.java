@@ -27,7 +27,7 @@ public interface ViewContainerPeer {
   void detach();
 
   void repaint(View view);
-  void scrollTo(View view);
+  void scrollTo(Rectangle rect, View view);
 
   Rectangle visibleRect();
 
