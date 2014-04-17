@@ -32,6 +32,7 @@ public class CellActions {
           throw new IllegalStateException();
         }
         cell.focus();
+        cell.scrollTo();
       }
     };
   }
@@ -47,6 +48,7 @@ public class CellActions {
         }
         cell.get(PositionHandler.PROPERTY).home();
         cell.focus();
+        cell.scrollTo();
       }
     };
   }
@@ -62,6 +64,7 @@ public class CellActions {
         }
         cell.get(PositionHandler.PROPERTY).end();
         cell.focus();
+        cell.scrollTo();
       }
     };
   }
@@ -105,6 +108,7 @@ public class CellActions {
       public void run() {
         cell.focus();
         cell.caretPosition().set(pos);
+        cell.scrollTo();
       }
     };
   }
