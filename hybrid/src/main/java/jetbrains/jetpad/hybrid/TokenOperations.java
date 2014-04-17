@@ -59,7 +59,7 @@ class TokenOperations<SourceT> {
     return select(index, pos);
   }
 
-  public Runnable select(int index, SelectionPosition pos) {
+  Runnable select(int index, SelectionPosition pos) {
     final Cell cell = tokenViews().get(index);
 
     boolean noSpaceToLeft = cell.get(CellLists.NO_SPACE_TO_LEFT) || !cell.focusable().get();
@@ -82,7 +82,7 @@ class TokenOperations<SourceT> {
     }
   }
 
-  public Runnable select(int index, int pos) {
+  Runnable select(int index, int pos) {
     if (pos == 0) {
       return select(index, FIRST);
     }
