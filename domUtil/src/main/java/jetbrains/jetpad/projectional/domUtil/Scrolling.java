@@ -16,6 +16,7 @@
 package jetbrains.jetpad.projectional.domUtil;
 
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.user.client.Window;
 import jetbrains.jetpad.geometry.Rectangle;
 
 import static com.google.gwt.query.client.GQuery.$;
@@ -26,7 +27,31 @@ public class Scrolling {
     Rectangle visibleArea = new Rectangle(getScrollX(), getScrollY(), getScrollWidth(), getScrollHeight());
     Rectangle bounds = getBounds(element);
     if (!visibleArea.contains(bounds)) {
-      scrollToView(element);
+      int top = element.getAbsoluteTop();
+      int left = element.getAbsoluteLeft();
+      int height = element.getOffsetHeight();
+      int width = element.getOffsetWidth();
+
+      int winTop = getScrollY();
+      int winLeft = getScrollX();
+      int winWidth = getScrollWidth();
+      int winHeigh = getScrollHeight();
+
+      int x = winLeft;
+      int y = winTop;
+      if (top < winTop) {
+        y = top;
+      }
+      if (left < winLeft) {
+        x = left;
+      }
+      if (top + height > winTop + winHeigh) {
+        y = top + height - winHeigh;
+      }
+      if (left + width > winLeft + winWidth) {
+        x = left + width - winWidth;
+      }
+      Window.scrollTo(x, y);
     }
   }
 
@@ -92,9 +117,4 @@ public class Scrolling {
   private static native int getScrollHeight() /*-{
     return $wnd.innerHeight;
   }-*/;
-
-  private static native void scrollToView(Element el) /*-{
-    el.scrollIntoView(false);
-  }-*/;
-
 }
