@@ -18,6 +18,8 @@ package jetbrains.jetpad.projectional.domUtil;
 import com.google.gwt.dom.client.Element;
 import jetbrains.jetpad.geometry.Rectangle;
 
+import static com.google.gwt.query.client.GQuery.$;
+
 public class Scrolling {
   public static void scrollTo(Element element) {
     adjustScrollers(element);
@@ -46,8 +48,8 @@ public class Scrolling {
       Element parent = element.getParentElement();
       Element offsetParent = element.getOffsetParent();
 
-      String scroll = parent.getStyle().getOverflow();
-      if ("scroll".equals(scroll) || "auto".equals(scroll)) {
+      String overflow = $(parent).css("overflow");
+      if ("scroll".equals(overflow) || "auto".equals(overflow)) {
         int parentTop = parent.getScrollTop();
         int parentLeft = parent.getScrollLeft();
         int clientWidth = parent.getClientWidth();
