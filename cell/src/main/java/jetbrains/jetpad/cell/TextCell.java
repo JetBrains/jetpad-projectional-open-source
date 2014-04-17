@@ -15,9 +15,9 @@
  */
 package jetbrains.jetpad.cell;
 
+import jetbrains.jetpad.geometry.Rectangle;
 import jetbrains.jetpad.model.property.DerivedProperty;
 import jetbrains.jetpad.model.property.Property;
-import jetbrains.jetpad.model.property.PropertyChangeEvent;
 import jetbrains.jetpad.model.property.ReadableProperty;
 import jetbrains.jetpad.values.Color;
 
@@ -84,6 +84,13 @@ public class TextCell extends Cell {
 
   public int getCaretOffset(int caret) {
     return getViewContainerPeer().getCaretOffset(this, caret);
+  }
+
+  public void scrollToCaret() {
+    int delta = 50;
+    int offset = getCaretOffset(caretPosition().get());
+    Rectangle bounds = getBounds();
+    scrollTo(new Rectangle(offset - delta, bounds.origin.y, 2 * delta, bounds.dimension.y));
   }
 
   public ReadableProperty<String> prefixText() {

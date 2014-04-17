@@ -227,6 +227,7 @@ public class TextEditingTrait extends TextNavigationTrait {
 
     String text = "" + event.keyChar();
     pasteText(textCell, text);
+    textCell.scrollToCaret();
     onAfterType(textCell);
     event.consume();
   }

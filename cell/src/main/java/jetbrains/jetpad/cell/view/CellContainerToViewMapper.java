@@ -179,7 +179,7 @@ public class CellContainerToViewMapper extends Mapper<CellContainer, View> {
       public void scrollTo(Rectangle rect, Cell cell) {
         BaseCellMapper<?, ?> mapper = (BaseCellMapper<?, ?>) rootMapper.getDescendantMapper(cell);
         if (mapper == null) return;
-        mapper.getTarget().scrollTo();
+        mapper.getTarget().scrollTo(rect);
       }
 
       @Override

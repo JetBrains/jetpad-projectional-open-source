@@ -90,12 +90,14 @@ class TextNavigationTrait extends CellTrait {
     try {
       if (isCaretKey(selectionAvailable, event, Key.LEFT) && caret > minCaret) {
         view.caretPosition().set(caret - 1);
+        view.scrollToCaret();
         event.consume();
         return;
       }
 
       if (isCaretKey(selectionAvailable, event, Key.RIGHT) && caret < maxCaret) {
         view.caretPosition().set(caret + 1);
+        view.scrollToCaret();
         event.consume();
         return;
       }
@@ -105,6 +107,7 @@ class TextNavigationTrait extends CellTrait {
           (event.is(KeyStrokeSpecs.SELECT_HOME) && selectionAvailable) ||
           event.is(KeyStrokeSpecs.PREV_WORD)) && caret > 0) {
         view.caretPosition().set(0);
+        view.scrollToCaret();
         event.consume();
         return;
       }
@@ -115,6 +118,7 @@ class TextNavigationTrait extends CellTrait {
           event.is(KeyStrokeSpecs.NEXT_WORD_ALT)) && caret < maxCaret ||
           event.is(KeyStrokeSpecs.NEXT_WORD_CONTROL.addModifier(ModifierKey.SHIFT))) {
         view.caretPosition().set(maxCaret);
+        view.scrollToCaret();
         event.consume();
         return;
       }
@@ -135,6 +139,7 @@ class TextNavigationTrait extends CellTrait {
       view.selectionStart().set(0);
       view.caretPosition().set(maxCaret);
       view.selectionVisible().set(true);
+      view.scrollToCaret();
       event.consume();
       return;
     }
