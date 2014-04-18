@@ -34,6 +34,8 @@ public class KeyStrokeSpecs {
   public static final KeyStrokeSpec HOME = composite(new KeyStroke(Key.HOME), new KeyStroke(Key.LEFT, ModifierKey.META));
   public static final KeyStrokeSpec END = composite(new KeyStroke(Key.END), new KeyStroke(Key.RIGHT, ModifierKey.META));
 
+  public static final KeyStrokeSpec FILE_HOME = composite(new KeyStroke(Key.HOME, ModifierKey.CONTROL), new KeyStroke(Key.HOME, ModifierKey.META));
+  public static final KeyStrokeSpec FILE_END = composite(new KeyStroke(Key.END, ModifierKey.CONTROL), new KeyStroke(Key.END, ModifierKey.META));
 
   public static final KeyStroke PREV_WORD_CONTROL = new KeyStroke(Key.LEFT, ModifierKey.CONTROL);
   public static final KeyStroke PREV_WORD_ALT = new KeyStroke(Key.LEFT, ModifierKey.ALT);

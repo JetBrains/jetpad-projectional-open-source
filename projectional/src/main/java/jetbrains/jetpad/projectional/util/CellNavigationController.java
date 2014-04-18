@@ -70,7 +70,7 @@ public class CellNavigationController {
     result.add(myContainer.root.addTrait(new CellTrait() {
       @Override
       public void onKeyPressed(Cell cell, KeyEvent event) {
-        handleKeyPress(event);
+        handleKeyPress(cell, event);
         if (event.isConsumed()) return;
         super.onKeyPressed(cell, event);
       }
@@ -160,7 +160,7 @@ public class CellNavigationController {
     return Properties.select(focusedView(), caretPositionSelector());
   }
 
-  protected void handleKeyPress(KeyEvent event) {
+  protected void handleKeyPress(Cell cell, KeyEvent event) {
     Cell current = focusedView().get();
     Integer currentOffset = null;
 
@@ -202,6 +202,12 @@ public class CellNavigationController {
       moveToHome(next);
     } else if (event.is(KeyStrokeSpecs.END)) {
       next = Composites.endElement(current);
+      moveToEnd(next);
+    } else if (event.is(KeyStrokeSpecs.FILE_HOME)) {
+      next = Composites.firstFocusable(cell, true);
+      moveToHome(next);
+    } else if (event.is(KeyStrokeSpecs.FILE_END)) {
+      next = Composites.lastFocusable(cell, true);
       moveToEnd(next);
     } else if (event.is(KeyStrokeSpecs.SELECT_UP)) {
       Cell focusableParent = Composites.focusableParent(current);

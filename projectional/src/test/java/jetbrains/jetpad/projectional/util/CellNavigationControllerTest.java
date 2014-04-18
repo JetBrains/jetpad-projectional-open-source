@@ -20,6 +20,7 @@ import jetbrains.jetpad.cell.position.PositionHandler;
 import jetbrains.jetpad.cell.text.TextEditing;
 import jetbrains.jetpad.cell.util.CellFactory;
 import jetbrains.jetpad.event.Key;
+import jetbrains.jetpad.event.KeyStrokeSpecs;
 import jetbrains.jetpad.event.ModifierKey;
 import org.junit.Before;
 import org.junit.Test;
@@ -274,6 +275,22 @@ public class CellNavigationControllerTest extends EditingTestCase {
     right();
 
     assertTrue(text.focused().get());
+  }
+
+  @Test
+  public void fileHome() {
+    c2.focus();
+    press(KeyStrokeSpecs.FILE_HOME);
+
+    assertTrue(c11.focused().get());
+  }
+
+  @Test
+  public void fileEnd() {
+    c2.focus();
+    press(KeyStrokeSpecs.FILE_END);
+
+    assertTrue(c42.focused().get());
   }
 
   private TextCell view(boolean focusable) {
