@@ -23,7 +23,8 @@ import static com.google.gwt.query.client.GQuery.$;
 
 public class Scrolling {
   public static void scrollTo(Rectangle rect, Element element) {
-    if (!new Rectangle(0, 0, element.getOffsetWidth(), element.getOffsetHeight()).contains(rect)) {
+    Rectangle elBounds = new Rectangle(0, 0, element.getOffsetWidth(), element.getOffsetHeight());
+    if (!elBounds.contains(rect)) {
       throw new IllegalArgumentException();
     }
     adjustScrollers(rect, element);

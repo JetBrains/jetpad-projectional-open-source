@@ -16,6 +16,7 @@
 package jetbrains.jetpad.cell;
 
 import jetbrains.jetpad.geometry.Rectangle;
+import jetbrains.jetpad.geometry.Vector;
 import jetbrains.jetpad.model.property.DerivedProperty;
 import jetbrains.jetpad.model.property.Property;
 import jetbrains.jetpad.model.property.ReadableProperty;
@@ -90,7 +91,7 @@ public class TextCell extends Cell {
     int delta = 50;
     int offset = getCaretOffset(caretPosition().get());
     Rectangle bounds = getBounds();
-    scrollTo(new Rectangle(offset - delta, bounds.origin.y, 2 * delta, bounds.dimension.y));
+    scrollTo(new Rectangle(offset - delta, 0, 2 * delta, bounds.dimension.y).intersect(new Rectangle(Vector.ZERO, bounds.dimension)));
   }
 
   public ReadableProperty<String> prefixText() {
