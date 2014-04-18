@@ -25,7 +25,7 @@ import jetbrains.jetpad.model.property.PropertyChangeEvent;
 import jetbrains.jetpad.values.Color;
 
 public class EllipseView extends View {
-  private static final ViewPropertySpec<Vector> CENTER = new ViewPropertySpec<>("center", ViewPropertyKind.RELAYOUT_PARENT, new Vector(0, 0));
+  private static final ViewPropertySpec<Vector> CENTER = new ViewPropertySpec<>("center", ViewPropertyKind.RELAYOUT, new Vector(0, 0));
   private static final ViewPropertySpec<Double> FROM = new ViewPropertySpec<>("from", ViewPropertyKind.RELAYOUT, 0.0);
   private static final ViewPropertySpec<Double> TO = new ViewPropertySpec<>("to", ViewPropertyKind.RELAYOUT, 2 * Math.PI);
 
