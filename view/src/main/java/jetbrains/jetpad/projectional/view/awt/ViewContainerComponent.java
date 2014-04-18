@@ -723,6 +723,11 @@ public class ViewContainerComponent extends JComponent implements Scrollable {
       myContainer.root().validate();
 
       jetbrains.jetpad.geometry.Rectangle viewBounds = view.bounds().get();
+
+      if (!viewBounds.contains(rect.add(viewBounds.origin))) {
+        throw new IllegalArgumentException();
+      }
+
       jetbrains.jetpad.geometry.Rectangle bounds = new jetbrains.jetpad.geometry.Rectangle(viewBounds.origin.add(rect.origin), rect.dimension);
 
       if (bounds.origin.x + bounds.dimension.x < getVisibleRect().width) {

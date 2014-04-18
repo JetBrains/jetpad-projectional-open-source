@@ -47,6 +47,11 @@ public class NullViewContainerPeer implements ViewContainerPeer {
 
   @Override
   public void scrollTo(Rectangle rect, View view) {
+    myContainer.root().validate();
+    Rectangle viewBounds = view.bounds().get();
+    if (!viewBounds.contains(rect.add(viewBounds.origin))) {
+      throw new IllegalArgumentException();
+    }
   }
 
   @Override
