@@ -15,7 +15,9 @@
  */
 package jetbrains.jetpad.projectional.view.awt;
 
+import com.google.common.io.ByteStreams;
 import jetbrains.jetpad.base.Handler;
+import jetbrains.jetpad.base.base64.Base64Coder;
 import jetbrains.jetpad.base.edt.*;
 import jetbrains.jetpad.event.*;
 import jetbrains.jetpad.event.awt.EventTranslator;
@@ -44,6 +46,9 @@ import java.awt.image.ImageObserver;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.net.URL;
+import java.nio.file.FileSystems;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -575,7 +580,21 @@ public class ViewContainerComponent extends JComponent implements Scrollable {
             ImageData.BinaryImageData data = (ImageData.BinaryImageData) imageData;
             image = ImageIO.read(new ByteArrayInputStream(data.getData()));
           } else {
-            image = ImageIO.read(new URL(((ImageData.UrlImageData) imageData).getUrl()));
+            String url = ((ImageData.UrlImageData) imageData).getUrl();
+            String pngPrefix = "data:image/png;base64,";
+            String jpgPrefix = "data:image/jpeg;base64,";
+            if (url.startsWith(pngPrefix) || url.startsWith(jpgPrefix)) {
+              String base64;
+              if (url.startsWith(pngPrefix)) {
+                base64 = url.substring(pngPrefix.length());
+              } else {
+                base64 = url.substring(jpgPrefix.length());
+              }
+              byte[] data = Base64Coder.decodeBytes(base64);
+              image = ImageIO.read(new ByteArrayInputStream(data));
+            } else {
+              image = ImageIO.read(new URL(url));
+            }
           }
         } catch (IOException e) {
           throw new RuntimeException(e);
@@ -587,8 +606,7 @@ public class ViewContainerComponent extends JComponent implements Scrollable {
             return true;
           }
         });
-
-        } else {
+      } else {
         throw new UnsupportedOperationException("Unsupported Image : " + imageData);
       }
     }
