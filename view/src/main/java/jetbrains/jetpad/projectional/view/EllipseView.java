@@ -112,7 +112,7 @@ public class EllipseView extends View {
   protected void doValidate(ValidationContext ctx) {
     super.doValidate(ctx);
     Integer borderWidth = borderWidth().get();
-    Vector radius = radius().get().add(new Vector(borderWidth, borderWidth));
+    Vector radius = radius().get().add(new Vector(borderWidth / 2, borderWidth / 2));
     ctx.bounds(new Rectangle(center().get().sub(radius), radius.mul(2)), 0);
   }
 }

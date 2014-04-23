@@ -464,7 +464,7 @@ public class ViewContainerComponent extends JComponent implements Scrollable {
       g.setColor(toAwtColor(background));
       g.fillRect(bounds.origin.x, bounds.origin.y, bounds.dimension.x, bounds.dimension.y);
     }
-    Color border = view.border().get();
+    final Color border = view.border().get();
     if (border != null) {
       g.setColor(toAwtColor(border));
       g.drawRect(bounds.origin.x, bounds.origin.y, bounds.dimension.x - 1, bounds.dimension.y - 1);
@@ -488,7 +488,7 @@ public class ViewContainerComponent extends JComponent implements Scrollable {
         withStroke(g, new BasicStroke(borderWidth), new Runnable() {
           @Override
           public void run() {
-            final jetbrains.jetpad.geometry.Rectangle borderBounds = innerBounds; //new jetbrains.jetpad.geometry.Rectangle(bounds.origin.add(borderVec.div(2)), bounds.dimension.sub(borderVec));
+            final jetbrains.jetpad.geometry.Rectangle borderBounds = new jetbrains.jetpad.geometry.Rectangle(bounds.origin.add(borderVec), bounds.dimension.sub(borderVec.mul(2)));
             g.drawArc(borderBounds.origin.x, borderBounds.origin.y, borderBounds.dimension.x, borderBounds.dimension.y, (int) from, (int) (to - from));
           }
         });
