@@ -98,10 +98,14 @@ class EllipseViewMapper extends BaseViewMapper<EllipseView, Element> {
     double to = getSource().to().get();
     double eps = 0.0001;
 
+    Integer borderWidth = getSource().borderWidth().get();
+    int dx = borderWidth / 2;
+    int dy = borderWidth / 2;
+
     if (Math.abs(2 * Math.PI - (to - from)) < eps) {
-      segList.appendItem(path.createSVGPathSegMovetoAbs(radius.x, 0));
-      segList.appendItem(path.createSVGPathSegArcAbs(radius.x, 2 * radius.y, radius.x, radius.y, 180, false, true));
-      segList.appendItem(path.createSVGPathSegArcAbs(radius.x, 0, radius.x, radius.y, 180, false, true));
+      segList.appendItem(path.createSVGPathSegMovetoAbs(radius.x + dx, dy));
+      segList.appendItem(path.createSVGPathSegArcAbs(radius.x + dx, 2 * radius.y + dy, radius.x, radius.y, 180, false, true));
+      segList.appendItem(path.createSVGPathSegArcAbs(radius.x + dx, dy, radius.x, radius.y, 180, false, true));
     } else {
       float sx = (float) (1 + Math.cos(from)) * radius.x;
       float sy = (float) (1 + Math.sin(from)) * radius.y;
@@ -109,16 +113,16 @@ class EllipseViewMapper extends BaseViewMapper<EllipseView, Element> {
       float ty = (float) (1 + Math.sin(to)) * radius.y;
 
       if (!border) {
-        segList.appendItem(path.createSVGPathSegMovetoAbs(radius.x, radius.y));
-        segList.appendItem(path.createSVGPathSegLinetoAbs(sx, sy));
+        segList.appendItem(path.createSVGPathSegMovetoAbs(radius.x + dx, radius.y + dy));
+        segList.appendItem(path.createSVGPathSegLinetoAbs(sx + dx, sy + dy));
       } else {
-        segList.appendItem(path.createSVGPathSegMovetoAbs(sx, sy));
+        segList.appendItem(path.createSVGPathSegMovetoAbs(sx + dx, sy + dy));
       }
 
-      segList.appendItem(path.createSVGPathSegArcAbs(tx, ty, radius.x, radius.y, 0, (to - from) >= Math.PI, true));
+      segList.appendItem(path.createSVGPathSegArcAbs(tx + dx, ty + dy, radius.x, radius.y, 0, (to - from) >= Math.PI, true));
 
       if (!border) {
-        segList.appendItem(path.createSVGPathSegLinetoAbs(radius.x, radius.y));
+        segList.appendItem(path.createSVGPathSegLinetoAbs(radius.x + dx, radius.y + dy));
       }
     }
   }
