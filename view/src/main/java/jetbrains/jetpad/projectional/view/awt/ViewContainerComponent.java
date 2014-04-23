@@ -15,28 +15,27 @@
  */
 package jetbrains.jetpad.projectional.view.awt;
 
-import com.google.common.io.ByteStreams;
 import jetbrains.jetpad.base.Handler;
+import jetbrains.jetpad.base.Registration;
 import jetbrains.jetpad.base.base64.Base64Coder;
-import jetbrains.jetpad.base.edt.*;
+import jetbrains.jetpad.base.edt.AwtEventDispatchThread;
+import jetbrains.jetpad.base.edt.EventDispatchThread;
 import jetbrains.jetpad.event.*;
 import jetbrains.jetpad.event.awt.EventTranslator;
-import jetbrains.jetpad.geometry.*;
+import jetbrains.jetpad.geometry.Vector;
 import jetbrains.jetpad.model.event.CompositeRegistration;
 import jetbrains.jetpad.model.event.EventHandler;
-import jetbrains.jetpad.base.Registration;
 import jetbrains.jetpad.model.property.PropertyChangeEvent;
-import jetbrains.jetpad.values.Font;
 import jetbrains.jetpad.projectional.view.*;
 import jetbrains.jetpad.projectional.view.spi.NullViewContainerPeer;
 import jetbrains.jetpad.projectional.view.spi.ViewContainerPeer;
 import jetbrains.jetpad.values.Color;
+import jetbrains.jetpad.values.Font;
 import jetbrains.jetpad.values.FontFamily;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.Rectangle;
 import java.awt.datatransfer.*;
 import java.awt.event.*;
 import java.awt.event.KeyEvent;
@@ -46,9 +45,6 @@ import java.awt.image.ImageObserver;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.net.URL;
-import java.nio.file.FileSystems;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -481,15 +477,15 @@ public class ViewContainerComponent extends JComponent implements Scrollable {
       final Vector borderVec = new Vector(borderWidth, borderWidth);
 
       final jetbrains.jetpad.geometry.Rectangle innerBounds = new jetbrains.jetpad.geometry.Rectangle(bounds.origin.add(borderVec), bounds.dimension.sub(borderVec.mul(2)));
-      g.fillArc(innerBounds.origin.x, innerBounds.origin.y, innerBounds.dimension.x, innerBounds.dimension.y, (int) from, (int) (to - from));
+      g.fillArc(innerBounds.origin.x, innerBounds.origin.y, innerBounds.dimension.x - 1, innerBounds.dimension.y - 1, (int) from, (int) (to - from));
 
       if (borderWidth > 0) {
         g.setColor(toAwtColor(ellipseView.borderColor().get()));
-        withStroke(g, new BasicStroke(borderWidth), new Runnable() {
+        withStroke(g, new BasicStroke(borderWidth, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER), new Runnable() {
           @Override
           public void run() {
-            final jetbrains.jetpad.geometry.Rectangle borderBounds = new jetbrains.jetpad.geometry.Rectangle(bounds.origin.add(borderVec), bounds.dimension.sub(borderVec.mul(2)));
-            g.drawArc(borderBounds.origin.x, borderBounds.origin.y, borderBounds.dimension.x, borderBounds.dimension.y, (int) from, (int) (to - from));
+            final jetbrains.jetpad.geometry.Rectangle borderBounds = innerBounds;
+            g.drawArc(borderBounds.origin.x, borderBounds.origin.y, borderBounds.dimension.x - 1, borderBounds.dimension.y - 1, (int) from, (int) (to - from));
           }
         });
       }
