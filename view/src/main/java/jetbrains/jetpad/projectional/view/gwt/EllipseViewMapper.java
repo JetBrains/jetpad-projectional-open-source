@@ -16,6 +16,7 @@
 package jetbrains.jetpad.projectional.view.gwt;
 
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.Style;
 import com.google.gwt.user.client.DOM;
 import jetbrains.jetpad.geometry.Vector;
 import jetbrains.jetpad.mapper.Synchronizers;
@@ -43,27 +44,52 @@ class EllipseViewMapper extends BaseViewMapper<EllipseView, Element> {
     final OMSVGSVGElement svg = createSVG(doc);
     getTarget().appendChild(svg.getElement());
 
-    final OMSVGPathElement path = new OMSVGPathElement();
-    svg.appendChild(path);
+    final OMSVGPathElement fillPath = new OMSVGPathElement();
+    svg.appendChild(fillPath);
+
+    final OMSVGPathElement borderPath = new OMSVGPathElement();
+    svg.appendChild(borderPath);
+    borderPath.getStyle().setSVGProperty(SVGConstants.SVG_FILL_ATTRIBUTE, "transparent");
+
 
     conf.add(GwtViewSynchronizers.svgBoundsSyncrhonizer(getSource(), svg));
 
     conf.add(Synchronizers.forEventSource(new CompositeEventSource<>(getSource().center(), getSource().radius(), getSource().from(), getSource().to()), new Runnable() {
       @Override
       public void run() {
-        updatePath(path);
+        updatePath(fillPath, false);
+        updatePath(borderPath, true);
       }
     }));
 
     conf.add(Synchronizers.forProperty(getSource().background(), new WritableProperty<Color>() {
       @Override
       public void set(Color value) {
-        path.getStyle().setSVGProperty(SVGConstants.SVG_FILL_ATTRIBUTE, value.toCssColor());
+        fillPath.getStyle().setSVGProperty(SVGConstants.SVG_FILL_ATTRIBUTE, value.toCssColor());
+      }
+    }));
+
+    conf.add(Synchronizers.forProperty(getSource().borderWidth(), new WritableProperty<Integer>() {
+      @Override
+      public void set(Integer value) {
+        if (value == 0) {
+          borderPath.getStyle().setVisibility(Style.Visibility.HIDDEN);
+        } else {
+          borderPath.getStyle().setVisibility(Style.Visibility.VISIBLE);
+          borderPath.getStyle().setSVGProperty(SVGConstants.SVG_STROKE_WIDTH_ATTRIBUTE, "" + value + "px");
+        }
+      }
+    }));
+
+    conf.add(Synchronizers.forProperty(getSource().borderColor(), new WritableProperty<Color>() {
+      @Override
+      public void set(Color value) {
+        borderPath.getStyle().setSVGProperty(SVGConstants.SVG_STROKE_ATTRIBUTE, value.toCssColor());
       }
     }));
   }
 
-  private void updatePath(OMSVGPathElement path) {
+  private void updatePath(OMSVGPathElement path, boolean border) {
     OMSVGPathSegList segList = path.getPathSegList();
     segList.clear();
     Vector radius = getSource().radius().get();
@@ -77,16 +103,23 @@ class EllipseViewMapper extends BaseViewMapper<EllipseView, Element> {
       segList.appendItem(path.createSVGPathSegArcAbs(radius.x, 2 * radius.y, radius.x, radius.y, 180, false, true));
       segList.appendItem(path.createSVGPathSegArcAbs(radius.x, 0, radius.x, radius.y, 180, false, true));
     } else {
-      segList.appendItem(path.createSVGPathSegMovetoAbs(radius.x, radius.y));
       float sx = (float) (1 + Math.cos(from)) * radius.x;
       float sy = (float) (1 + Math.sin(from)) * radius.y;
-
-      segList.appendItem(path.createSVGPathSegLinetoAbs(sx, sy));
       float tx = (float) (1 + Math.cos(to)) * radius.x;
       float ty = (float) (1 + Math.sin(to)) * radius.y;
 
+      if (!border) {
+        segList.appendItem(path.createSVGPathSegMovetoAbs(radius.x, radius.y));
+        segList.appendItem(path.createSVGPathSegLinetoAbs(sx, sy));
+      } else {
+        segList.appendItem(path.createSVGPathSegMovetoAbs(sx, sy));
+      }
+
       segList.appendItem(path.createSVGPathSegArcAbs(tx, ty, radius.x, radius.y, 0, (to - from) >= Math.PI, true));
-      segList.appendItem(path.createSVGPathSegLinetoAbs(radius.x, radius.y));
+
+      if (!border) {
+        segList.appendItem(path.createSVGPathSegLinetoAbs(radius.x, radius.y));
+      }
     }
   }
 
