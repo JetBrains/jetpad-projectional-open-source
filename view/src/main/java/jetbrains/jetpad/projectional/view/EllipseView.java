@@ -30,6 +30,8 @@ public class EllipseView extends View {
   private static final ViewPropertySpec<Double> TO = new ViewPropertySpec<>("to", ViewPropertyKind.RELAYOUT, 2 * Math.PI);
 
   public static final ViewPropertySpec<Vector> RADIUS = new ViewPropertySpec<>("dimension", ViewPropertyKind.RELAYOUT, new Vector(10, 10));
+  public static final ViewPropertySpec<Color> BORDER_COLOR = new ViewPropertySpec<>("color", ViewPropertyKind.REPAINT, Color.BLACK);
+  public static final ViewPropertySpec<Integer> BORDER_WIDTH = new ViewPropertySpec<>("borderWidth", ViewPropertyKind.RELAYOUT_AND_REPAINT, 0);
 
 
   public EllipseView() {
@@ -50,6 +52,14 @@ public class EllipseView extends View {
 
   public Property<Double> to() {
     return angleProperty(TO);
+  }
+
+  public Property<Color> borderColor() {
+    return prop(BORDER_COLOR);
+  }
+
+  public Property<Integer> borderWidth() {
+    return prop(BORDER_WIDTH);
   }
 
   private Property<Double> angleProperty(ViewPropertySpec<Double> spec) {
@@ -101,6 +111,8 @@ public class EllipseView extends View {
   @Override
   protected void doValidate(ValidationContext ctx) {
     super.doValidate(ctx);
-    ctx.bounds(new Rectangle(center().get().sub(radius().get()), radius().get().mul(2)), 0);
+    Integer borderWidth = borderWidth().get();
+    Vector radius = radius().get().add(new Vector(borderWidth, borderWidth));
+    ctx.bounds(new Rectangle(center().get().sub(radius), radius.mul(2)), 0);
   }
 }

@@ -456,8 +456,8 @@ public class ViewContainerComponent extends JComponent implements Scrollable {
     }
   }
 
-  private void paintContent(View view, Graphics2D g) {
-    jetbrains.jetpad.geometry.Rectangle bounds = view.bounds().get();
+  private void paintContent(View view, final Graphics2D g) {
+    final jetbrains.jetpad.geometry.Rectangle bounds = view.bounds().get();
 
     Color background = view.background().get();
     if (!(view instanceof EllipseView) && background != null) {
@@ -474,10 +474,25 @@ public class ViewContainerComponent extends JComponent implements Scrollable {
       EllipseView ellipseView = (EllipseView) view;
       g.setColor(toAwtColor(ellipseView.background().get()));
 
-      double from = (ellipseView.from().get() * 360) / (2 * Math.PI);
-      double to = (ellipseView.to().get() * 360) / (2 * Math.PI);
+      final double from = (ellipseView.from().get() * 360) / (2 * Math.PI);
+      final double to = (ellipseView.to().get() * 360) / (2 * Math.PI);
 
-      g.fillArc(bounds.origin.x, bounds.origin.y, bounds.dimension.x, bounds.dimension.y, (int) from, (int) (to - from));
+      int borderWidth = ellipseView.borderWidth().get();
+      final Vector borderVec = new Vector(borderWidth, borderWidth);
+
+      final jetbrains.jetpad.geometry.Rectangle innerBounds = new jetbrains.jetpad.geometry.Rectangle(bounds.origin.add(borderVec), bounds.dimension.sub(borderVec.mul(2)));
+      g.fillArc(innerBounds.origin.x, innerBounds.origin.y, innerBounds.dimension.x, innerBounds.dimension.y, (int) from, (int) (to - from));
+
+      if (borderWidth > 0) {
+        g.setColor(toAwtColor(ellipseView.borderColor().get()));
+        withStroke(g, new BasicStroke(borderWidth), new Runnable() {
+          @Override
+          public void run() {
+            final jetbrains.jetpad.geometry.Rectangle borderBounds = innerBounds; //new jetbrains.jetpad.geometry.Rectangle(bounds.origin.add(borderVec.div(2)), bounds.dimension.sub(borderVec));
+            g.drawArc(borderBounds.origin.x, borderBounds.origin.y, borderBounds.dimension.x, borderBounds.dimension.y, (int) from, (int) (to - from));
+          }
+        });
+      }
     }
 
     if (view instanceof LineView) {
@@ -708,6 +723,16 @@ public class ViewContainerComponent extends JComponent implements Scrollable {
   public boolean getScrollableTracksViewportHeight() {
     JViewport viewPort = (JViewport) getParent();
     return viewPort.getHeight() > getPreferredSize().height;
+  }
+
+  private void withStroke(Graphics2D g, Stroke s, Runnable r) {
+    Stroke oldStroke = g.getStroke();
+    g.setStroke(s);
+    try {
+      r.run();
+    } finally {
+      g.setStroke(oldStroke);
+    }
   }
 
   private class MyViewContainerPeer implements ViewContainerPeer {
