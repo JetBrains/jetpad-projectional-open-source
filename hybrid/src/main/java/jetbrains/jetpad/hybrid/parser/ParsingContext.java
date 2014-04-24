@@ -16,6 +16,7 @@
 package jetbrains.jetpad.hybrid.parser;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class ParsingContext {
@@ -24,6 +25,10 @@ public class ParsingContext {
 
   public ParsingContext(List<Token> tokens) {
     myTokens = new ArrayList<>(tokens);
+  }
+
+  public List<Token> getTokens() {
+    return Collections.unmodifiableList(myTokens);
   }
 
   public Token current() {
