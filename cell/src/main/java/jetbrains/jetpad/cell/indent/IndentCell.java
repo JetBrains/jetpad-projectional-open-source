@@ -15,6 +15,7 @@
  */
 package jetbrains.jetpad.cell.indent;
 
+import jetbrains.jetpad.geometry.Rectangle;
 import jetbrains.jetpad.model.collections.CollectionItemEvent;
 import jetbrains.jetpad.model.event.ListenerCaller;
 import jetbrains.jetpad.model.event.Listeners;
@@ -44,6 +45,16 @@ public class IndentCell extends Cell {
     Cell parent = parent().get();
     if (parent instanceof IndentCell) return false;
     return true;
+  }
+
+  @Override
+  public void scrollTo(Rectangle rect) {
+    Cell parent = parent().get();
+    if (parent instanceof IndentCell) {
+      parent.scrollTo(new Rectangle(rect.origin.add(getBounds().origin.sub(parent.getBounds().origin)), rect.dimension));
+    } else {
+      super.scrollTo(rect);
+    }
   }
 
   private IndentCell indentContainer() {
