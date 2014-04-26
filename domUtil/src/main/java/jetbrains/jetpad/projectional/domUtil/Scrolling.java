@@ -25,7 +25,7 @@ public class Scrolling {
   public static void scrollTo(Rectangle rect, Element element) {
     Rectangle elBounds = new Rectangle(0, 0, element.getOffsetWidth(), element.getOffsetHeight());
     if (!elBounds.contains(rect)) {
-      throw new IllegalArgumentException();
+      throw new IllegalArgumentException(elBounds + " should contain " + rect);
     }
     adjustScrollers(rect, element);
     Rectangle visibleArea = new Rectangle(getScrollX(), getScrollY(), getScrollWidth(), getScrollHeight());
