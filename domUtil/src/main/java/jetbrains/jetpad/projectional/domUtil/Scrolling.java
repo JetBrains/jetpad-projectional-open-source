@@ -23,7 +23,7 @@ import static com.google.gwt.query.client.GQuery.$;
 
 public class Scrolling {
   public static void scrollTo(Rectangle rect, Element element) {
-    Rectangle elBounds = new Rectangle(0, 0, element.getOffsetWidth(), element.getOffsetHeight());
+    Rectangle elBounds = new Rectangle(0, 0, element.getScrollWidth(), element.getScrollHeight());
     if (!elBounds.contains(rect)) {
       throw new IllegalArgumentException(elBounds + " should contain " + rect);
     }
@@ -31,8 +31,8 @@ public class Scrolling {
     Rectangle visibleArea = new Rectangle(getScrollX(), getScrollY(), getScrollWidth(), getScrollHeight());
     Rectangle bounds = getBounds(element);
     if (!visibleArea.contains(bounds)) {
-      int top = element.getAbsoluteTop() + rect.origin.x;
-      int left = element.getAbsoluteLeft() + rect.origin.y;
+      int top = element.getAbsoluteLeft() + rect.origin.y;
+      int left = element.getAbsoluteTop() + rect.origin.x;
       int width = rect.dimension.x;
       int height = rect.dimension.y;
 
@@ -66,8 +66,8 @@ public class Scrolling {
   private static Rectangle getBounds(Element element) {
     int x = element.getAbsoluteLeft();
     int y = element.getAbsoluteTop();
-    int width = element.getAbsoluteRight() - element.getAbsoluteLeft();
-    int height = element.getAbsoluteBottom() - element.getAbsoluteTop();
+    int width = element.getScrollWidth();
+    int height = element.getScrollHeight();
     return new Rectangle(x, y, width, height);
   }
 

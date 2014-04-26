@@ -27,6 +27,7 @@ import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import jetbrains.jetpad.base.Handler;
+import jetbrains.jetpad.base.Registration;
 import jetbrains.jetpad.base.edt.EventDispatchThread;
 import jetbrains.jetpad.base.edt.JsEventDispatchThread;
 import jetbrains.jetpad.cell.*;
@@ -42,7 +43,6 @@ import jetbrains.jetpad.mapper.MappingContext;
 import jetbrains.jetpad.mapper.Synchronizers;
 import jetbrains.jetpad.model.collections.CollectionItemEvent;
 import jetbrains.jetpad.model.event.EventHandler;
-import jetbrains.jetpad.base.Registration;
 import jetbrains.jetpad.model.property.Properties;
 import jetbrains.jetpad.model.property.PropertyChangeEvent;
 import jetbrains.jetpad.model.property.ReadableProperty;
@@ -280,15 +280,6 @@ public class CellContainerToDomMapper extends Mapper<CellContainer, Element> {
           result = new Rectangle(Vector.ZERO, Vector.ZERO);
         }
 
-        //we use this hack to correctly calculate bounds of HorizontalCells (we use browser layout)
-        if (cell instanceof HorizontalCell) {
-          for (Cell child : cell.children()) {
-            if (child instanceof VerticalCell) {
-              result = result.union(child.getBounds());
-            }
-          }
-        }
-
         return result;
       }
 
@@ -322,8 +313,8 @@ public class CellContainerToDomMapper extends Mapper<CellContainer, Element> {
           Element target = getElement(cell);
           int x = ceil(target.getAbsoluteLeft());
           int y = ceil(target.getAbsoluteTop());
-          int width = Math.max(0, floor(target.getOffsetWidth()) - 1);
-          int height = Math.max(0, floor(target.getOffsetHeight()) - 1);
+          int width = Math.max(0, floor(target.getScrollWidth()) - 1);
+          int height = Math.max(0, floor(target.getScrollHeight()) - 1);
           return new Rectangle(x, y, width, height);
         }
       }
