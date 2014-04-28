@@ -5,7 +5,7 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>jetbrains.jetpad.projectional</groupId>
-  <artifactId>view</artifactId>
+  <artifactId>base-projectional</artifactId>
   <version>1.0-SNAPSHOT</version>
   <packaging>jar</packaging>
 
@@ -18,26 +18,8 @@
 
   <dependencies>
     <dependency>
-      <groupId>org.vectomatic</groupId>
-      <artifactId>lib-gwt-svg</artifactId>
-      <version>0.5.7</version>
-    </dependency>
-
-    <dependency>
       <groupId>jetbrains.jetpad</groupId>
       <artifactId>model</artifactId>
-      <version>1.0-SNAPSHOT</version>
-    </dependency>
-
-    <dependency>
-      <groupId>jetbrains.jetpad.mapper</groupId>
-      <artifactId>mapper</artifactId>
-      <version>1.0-SNAPSHOT</version>
-    </dependency>
-
-    <dependency>
-      <groupId>jetbrains.jetpad.mapper</groupId>
-      <artifactId>gwt-util</artifactId>
       <version>1.0-SNAPSHOT</version>
     </dependency>
 
@@ -50,24 +32,6 @@
     <dependency>
       <groupId>jetbrains.jetpad.util</groupId>
       <artifactId>base</artifactId>
-      <version>1.0-SNAPSHOT</version>
-    </dependency>
-
-    <dependency>
-      <groupId>jetbrains.jetpad.projectional</groupId>
-      <artifactId>event</artifactId>
-      <version>1.0-SNAPSHOT</version>
-    </dependency>
-
-    <dependency>
-      <groupId>jetbrains.jetpad.projectional</groupId>
-      <artifactId>base-projectional</artifactId>
-      <version>1.0-SNAPSHOT</version>
-    </dependency>
-
-    <dependency>
-      <groupId>jetbrains.jetpad.projectional</groupId>
-      <artifactId>domUtil</artifactId>
       <version>1.0-SNAPSHOT</version>
     </dependency>
   </dependencies>

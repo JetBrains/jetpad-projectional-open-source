@@ -17,6 +17,7 @@
   <inherits name="jetbrains.jetpad.mapper.Mapper"/>
   <inherits name="jetbrains.jetpad.projectional.domUtil.DomUtil"/>
   <inherits name="jetbrains.jetpad.mapper.gwt.GwtMapper"/>
+  <inherits name="jetbrains.jetpad.projectional.base.Base" />
 
   <source path="">
     <exclude name="awt/**.*" />

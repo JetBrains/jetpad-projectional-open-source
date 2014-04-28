@@ -17,6 +17,7 @@ package jetbrains.jetpad.projectional.view;
 
 import jetbrains.jetpad.geometry.Vector;
 import jetbrains.jetpad.model.property.Property;
+import jetbrains.jetpad.projectional.base.ImageData;
 
 public class ImageView extends View {
   public static final ViewPropertySpec<ImageData> IMAGE = new ViewPropertySpec<>("image", ViewPropertyKind.RELAYOUT_AND_REPAINT, ImageData.emptyImage(new Vector(100, 100)));

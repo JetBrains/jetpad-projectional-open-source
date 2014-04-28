@@ -19,7 +19,7 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.user.client.DOM;
 import jetbrains.jetpad.mapper.Synchronizers;
 import jetbrains.jetpad.model.property.WritableProperty;
-import jetbrains.jetpad.projectional.view.ImageData;
+import jetbrains.jetpad.projectional.base.ImageData;
 import jetbrains.jetpad.projectional.view.ImageView;
 
 class ImageViewMapper extends BaseViewMapper<ImageView, Element> {

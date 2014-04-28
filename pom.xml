@@ -16,6 +16,8 @@
   </parent>
 
   <modules>
+    <module>base</module>
+
     <module>cell</module>
     <module>completion</module>
     <module>view</module>
