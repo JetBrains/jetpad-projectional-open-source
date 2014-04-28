@@ -36,6 +36,10 @@ class CellMappers {
       return new TextCellMapper((TextCell) cell, ctx);
     }
 
+    if (cell instanceof ImageCell) {
+      return new ImageCellMapper((ImageCell) cell, ctx);
+    }
+
     if (cell instanceof RootCell) {
       return new RootCellMapper((RootCell) cell, ctx);
     }

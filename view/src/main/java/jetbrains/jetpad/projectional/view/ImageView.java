@@ -28,6 +28,6 @@ public class ImageView extends View {
   protected void doValidate(ValidationContext ctx) {
     super.doValidate(ctx);
     ImageData imageData = image.get();
-    ctx.bounds(imageData.getDimension(), 0);
+    ctx.bounds(imageData.getDimension(), imageData.getDimension().y);
   }
 }
