@@ -36,6 +36,10 @@ class CellMappers {
       return new ScrollCellMapper((ScrollCell) source, ctx);
     }
 
+    if (source instanceof ImageCell) {
+      return new ImageCellMapper((ImageCell) source, ctx);
+    }
+
     if (source instanceof IndentCell) {
       IndentCell cell = (IndentCell) source;
       if (!cell.isRootIndent()) {
