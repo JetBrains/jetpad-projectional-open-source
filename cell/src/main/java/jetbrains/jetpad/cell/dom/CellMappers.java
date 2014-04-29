@@ -52,7 +52,7 @@ class CellMappers {
       return new RootCellMapper((RootCell) source, ctx);
     }
 
-    return null;
+    return new DefaultCellMapper(source, ctx);
   }
 
 }
