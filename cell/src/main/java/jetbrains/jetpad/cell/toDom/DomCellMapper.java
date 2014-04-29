@@ -69,6 +69,12 @@ class DomCellMapper extends BaseCellMapper<DomCell> {
         }
         super.onFocusGained(cell, event);
       }
+
+      @Override
+      public void onFocusLost(Cell cell, FocusEvent event) {
+        $(getContext().focusElement).focus();
+        super.onFocusLost(cell, event);
+      }
     })));
   }
 }

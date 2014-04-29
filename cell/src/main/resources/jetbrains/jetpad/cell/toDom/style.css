@@ -73,15 +73,3 @@
 .selected[style] {
   background-color: selectionColor !important;
 }
-
-.mobileInputField {
-  position: absolute;
-  width: 0;
-  height: 0;
-  left: 0;
-  top: 0;
-  border-color: transparent;
-  border-width: 0;
-  resize: none;
-  outline: 0;
-}

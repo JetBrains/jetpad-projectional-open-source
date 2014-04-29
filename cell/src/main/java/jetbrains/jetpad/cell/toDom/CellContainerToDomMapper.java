@@ -22,7 +22,6 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.StyleInjector;
 import com.google.gwt.query.client.Function;
-import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
@@ -93,7 +92,6 @@ public class CellContainerToDomMapper extends Mapper<CellContainer, Element> {
 
 
   private CellToDomContext myCellToDomContext;
-  private Element myMobileFocusTarget;
 
   public CellContainerToDomMapper(CellContainer source, Element target) {
     super(source, target);
@@ -102,10 +100,6 @@ public class CellContainerToDomMapper extends Mapper<CellContainer, Element> {
     ensureIndentInjected();
 
     myCellToDomContext = new CellToDomContext(target);
-
-    if (isMobile()) {
-      myMobileFocusTarget = DOM.createTextArea();
-    }
   }
 
   @Override
@@ -118,11 +112,6 @@ public class CellContainerToDomMapper extends Mapper<CellContainer, Element> {
     getTarget().setTabIndex(0);
     getTarget().addClassName(CSS.rootContainer());
 
-    if (isMobile()) {
-      getFocusTarget().addClassName(CSS.mobileInputField());
-      getTarget().appendChild(myMobileFocusTarget);
-    }
-
     registerListeners();
   }
 
@@ -133,11 +122,6 @@ public class CellContainerToDomMapper extends Mapper<CellContainer, Element> {
     enablePopup(getTarget());
     getSource().resetContainerPeer();
     getTarget().removeClassName(CSS.rootContainer());
-
-    if (isMobile()) {
-      getTarget().removeChild(myMobileFocusTarget);
-      getFocusTarget().removeClassName(CSS.mobileInputField());
-    }
 
     $(getTarget()).unbind(Event.KEYEVENTS | Event.MOUSEEVENTS);
   }
@@ -256,7 +240,7 @@ public class CellContainerToDomMapper extends Mapper<CellContainer, Element> {
   }
 
   private Element getFocusTarget() {
-    return isMobile() ? myMobileFocusTarget : getTarget();
+    return getTarget();
   }
 
   private CellContainerPeer createCellContainerPeer() {
