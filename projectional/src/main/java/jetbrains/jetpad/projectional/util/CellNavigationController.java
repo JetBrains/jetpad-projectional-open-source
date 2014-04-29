@@ -250,5 +250,4 @@ public class CellNavigationController {
       event.consume();
     }
   }
-
 }

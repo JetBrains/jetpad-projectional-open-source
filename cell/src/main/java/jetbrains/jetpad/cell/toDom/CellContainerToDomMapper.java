@@ -293,12 +293,11 @@ public class CellContainerToDomMapper extends Mapper<CellContainer, Element> {
             return null;
           }
         } else {
-          //workaround for FF where coordinates are double and might overlap
           Element target = getElement(cell);
-          int x = ceil(target.getAbsoluteLeft());
-          int y = ceil(target.getAbsoluteTop());
-          int width = Math.max(0, floor(target.getScrollWidth()) - 1);
-          int height = Math.max(0, floor(target.getScrollHeight()) - 1);
+          int x = target.getAbsoluteLeft();
+          int y = target.getAbsoluteTop();
+          int width = target.getScrollWidth();
+          int height = target.getScrollHeight();
           return new Rectangle(x, y, width, height);
         }
       }
