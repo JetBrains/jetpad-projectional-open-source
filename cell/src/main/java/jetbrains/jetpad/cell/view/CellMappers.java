@@ -52,6 +52,6 @@ class CellMappers {
       return new IndentRootCellMapper(indentCell, ctx);
     }
 
-    throw new UnsupportedOperationException();
+    return new DefaultCellMapper(cell, ctx);
   }
 }
