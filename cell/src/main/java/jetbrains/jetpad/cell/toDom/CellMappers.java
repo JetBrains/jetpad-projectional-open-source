@@ -16,6 +16,7 @@
 package jetbrains.jetpad.cell.toDom;
 
 import jetbrains.jetpad.cell.*;
+import jetbrains.jetpad.cell.dom.DomCell;
 import jetbrains.jetpad.cell.indent.IndentCell;
 
 class CellMappers {
@@ -50,6 +51,10 @@ class CellMappers {
 
     if (source instanceof RootCell) {
       return new RootCellMapper((RootCell) source, ctx);
+    }
+
+    if (source instanceof DomCell) {
+      return new DomCellMapper((DomCell) source, ctx);
     }
 
     return new DefaultCellMapper(source, ctx);
