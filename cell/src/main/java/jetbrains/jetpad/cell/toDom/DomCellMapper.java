@@ -1,7 +1,9 @@
 package jetbrains.jetpad.cell.toDom;
 
 import com.google.gwt.dom.client.Node;
+import com.google.gwt.query.client.Function;
 import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.Event;
 import jetbrains.jetpad.cell.Cell;
 import jetbrains.jetpad.cell.dom.DomCell;
 import jetbrains.jetpad.cell.event.FocusEvent;
@@ -28,12 +30,34 @@ class DomCellMapper extends BaseCellMapper<DomCell> {
     super.registerSynchronizers(conf);
 
     conf.add(Synchronizers.forProperty(getSource().node, new WritableProperty<Node>() {
+      Node currentValue;
+
       @Override
       public void set(Node value) {
+        if (currentValue != null) {
+          $(currentValue).unbind(Event.ONFOCUS | Event.ONBLUR);
+        }
+
         getTarget().removeAllChildren();
         if (value != null) {
           getTarget().appendChild(value);
+          $(value).focus(new Function() {
+            @Override
+            public boolean f(Event e) {
+              getContext().focused.set(true);
+              return false;
+            }
+          });
+          $(value).blur(new Function() {
+            @Override
+            public boolean f(Event e) {
+              getContext().focused.set(false);
+              return false;
+            }
+          });
         }
+
+        currentValue = value;
       }
     }));
 
