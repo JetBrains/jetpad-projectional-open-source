@@ -267,14 +267,6 @@ public class CellContainerToDomMapper extends Mapper<CellContainer, Element> {
         return result;
       }
 
-      private int floor(int i) {
-        return (int) Math.floor(i);
-      }
-
-      private int ceil(int i) {
-        return (int) Math.ceil(i);
-      }
-
       private Rectangle getBaseBounds(Cell cell) {
         Mapper<? extends Cell, ? extends Element> mapper = getMapper(cell);
         if (mapper == null) {
