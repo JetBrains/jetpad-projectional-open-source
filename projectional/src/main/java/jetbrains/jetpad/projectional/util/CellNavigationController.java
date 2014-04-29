@@ -25,6 +25,7 @@ import jetbrains.jetpad.event.*;
 import jetbrains.jetpad.geometry.Rectangle;
 import jetbrains.jetpad.geometry.Vector;
 import jetbrains.jetpad.model.composite.Composites;
+import jetbrains.jetpad.model.composite.CompositesWithBounds;
 import jetbrains.jetpad.model.event.CompositeRegistration;
 import jetbrains.jetpad.model.event.EventHandler;
 import jetbrains.jetpad.model.property.*;
@@ -34,6 +35,8 @@ import java.util.Stack;
 import static jetbrains.jetpad.model.composite.Composites.*;
 
 public class CellNavigationController {
+  private CompositesWithBounds ourWithBounds = new CompositesWithBounds(2);
+
   static Registration install(final CellContainer container) {
     final CellNavigationController controller = new CellNavigationController(container);
     return controller.install();
@@ -192,16 +195,16 @@ public class CellNavigationController {
       next = prevFocusable(current);
       moveToHome(next);
     } else if (event.is(Key.UP)) {
-      next = upperFocusable(current, currentOffset);
+      next = ourWithBounds.upperFocusable(current, currentOffset);
       restoreOffset = true;
     } else if (event.is(Key.DOWN)) {
-      next = lowerFocusable(current, currentOffset);
+      next = ourWithBounds.lowerFocusable(current, currentOffset);
       restoreOffset = true;
     } else if (event.is(KeyStrokeSpecs.HOME)) {
-      next = Composites.homeElement(current);
+      next = ourWithBounds.homeElement(current);
       moveToHome(next);
     } else if (event.is(KeyStrokeSpecs.END)) {
-      next = Composites.endElement(current);
+      next = ourWithBounds.endElement(current);
       moveToEnd(next);
     } else if (event.is(KeyStrokeSpecs.FILE_HOME)) {
       next = Composites.firstFocusable(cell, true);
