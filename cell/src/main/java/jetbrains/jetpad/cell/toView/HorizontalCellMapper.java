@@ -13,17 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package jetbrains.jetpad.projectional.util.awt;
+package jetbrains.jetpad.cell.toView;
 
-import jetbrains.jetpad.cell.CellContainer;
-import jetbrains.jetpad.cell.toView.MapperCell2View;
-import jetbrains.jetpad.projectional.view.ViewContainer;
-import jetbrains.jetpad.projectional.view.awt.AwtDemo;
+import jetbrains.jetpad.cell.HorizontalCell;
+import jetbrains.jetpad.projectional.view.HorizontalView;
 
-public class AwtComponent {
-  public static void showDemo(final CellContainer container) {
-    ViewContainer viewContainer = new ViewContainer();
-    MapperCell2View.map(container, viewContainer);
-    AwtDemo.show(viewContainer);
+class HorizontalCellMapper extends BaseCellMapper<HorizontalCell, HorizontalView> {
+  HorizontalCellMapper(HorizontalCell source, CellToViewContext ctx) {
+    super(source, new HorizontalView(), ctx);
   }
 }

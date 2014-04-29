@@ -19,7 +19,7 @@ import jetbrains.jetpad.cell.Cell;
 import jetbrains.jetpad.cell.CellContainer;
 import jetbrains.jetpad.cell.HorizontalCell;
 import jetbrains.jetpad.cell.TextCell;
-import jetbrains.jetpad.cell.view.CellContainerToViewMapper;
+import jetbrains.jetpad.cell.toView.CellContainerToViewMapper;
 import jetbrains.jetpad.model.collections.list.ObservableList;
 import jetbrains.jetpad.model.composite.Composites;
 import jetbrains.jetpad.projectional.view.TextView;

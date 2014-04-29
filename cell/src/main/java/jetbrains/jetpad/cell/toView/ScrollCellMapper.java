@@ -13,17 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package jetbrains.jetpad.projectional.util.awt;
+package jetbrains.jetpad.cell.toView;
 
-import jetbrains.jetpad.cell.CellContainer;
-import jetbrains.jetpad.cell.toView.MapperCell2View;
-import jetbrains.jetpad.projectional.view.ViewContainer;
-import jetbrains.jetpad.projectional.view.awt.AwtDemo;
+import jetbrains.jetpad.cell.ScrollCell;
+import jetbrains.jetpad.projectional.view.ScrollView;
 
-public class AwtComponent {
-  public static void showDemo(final CellContainer container) {
-    ViewContainer viewContainer = new ViewContainer();
-    MapperCell2View.map(container, viewContainer);
-    AwtDemo.show(viewContainer);
+class ScrollCellMapper extends BaseCellMapper<ScrollCell, ScrollView> {
+  ScrollCellMapper(ScrollCell source, CellToViewContext ctx) {
+    super(source, new ScrollView(), ctx);
+  }
+
+  @Override
+  void refreshProperties() {
+    super.refreshProperties();
+
+    ScrollCell source = getSource();
+    ScrollView target = getTarget();
+
+    target.scroll().set(source.scroll().get());
+    target.maxDimension().set(source.maxDimension().get());
   }
 }

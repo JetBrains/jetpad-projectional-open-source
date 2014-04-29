@@ -13,17 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package jetbrains.jetpad.projectional.util.awt;
+package jetbrains.jetpad.cell.toDom;
 
-import jetbrains.jetpad.cell.CellContainer;
-import jetbrains.jetpad.cell.toView.MapperCell2View;
-import jetbrains.jetpad.projectional.view.ViewContainer;
-import jetbrains.jetpad.projectional.view.awt.AwtDemo;
+import com.google.gwt.resources.client.CssResource;
 
-public class AwtComponent {
-  public static void showDemo(final CellContainer container) {
-    ViewContainer viewContainer = new ViewContainer();
-    MapperCell2View.map(container, viewContainer);
-    AwtDemo.show(viewContainer);
-  }
+public interface CellToDomCss extends CssResource {
+  String vertical();
+  String rootContainer();
+  String horizontal();
+  String indented();
+  String hidden();
+  String selected();
+  String highlighted();
+  String mobileInputField();
 }

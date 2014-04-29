@@ -16,7 +16,7 @@
 package jetbrains.jetpad.projectional.demo;
 
 import jetbrains.jetpad.cell.CellContainer;
-import jetbrains.jetpad.cell.view.MapperCell2View;
+import jetbrains.jetpad.cell.toView.MapperCell2View;
 import jetbrains.jetpad.projectional.demo.indentDemo.IndentDemo;
 import jetbrains.jetpad.projectional.view.ViewContainer;
 import jetbrains.jetpad.projectional.view.awt.AwtDemo;

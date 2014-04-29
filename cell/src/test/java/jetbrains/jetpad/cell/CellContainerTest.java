@@ -16,7 +16,7 @@
 package jetbrains.jetpad.cell;
 
 import jetbrains.jetpad.cell.trait.CellTrait;
-import jetbrains.jetpad.cell.view.MapperCell2View;
+import jetbrains.jetpad.cell.toView.MapperCell2View;
 import jetbrains.jetpad.event.MouseEvent;
 import jetbrains.jetpad.geometry.Vector;
 import jetbrains.jetpad.projectional.view.ViewContainer;

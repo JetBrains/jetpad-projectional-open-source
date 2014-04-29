@@ -16,7 +16,7 @@
 package jetbrains.jetpad.projectional.demo;
 
 import com.google.gwt.core.client.EntryPoint;
-import jetbrains.jetpad.cell.dom.CellContainerToDomMapper;
+import jetbrains.jetpad.cell.toDom.CellContainerToDomMapper;
 import jetbrains.jetpad.projectional.demo.concept.ConceptDemo;
 import jetbrains.jetpad.projectional.demo.diagram.DiagramDemo;
 import jetbrains.jetpad.projectional.demo.diagramExpr.DiagramExprDemo;

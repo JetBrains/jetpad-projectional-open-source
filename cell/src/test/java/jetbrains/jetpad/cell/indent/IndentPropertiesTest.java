@@ -18,7 +18,7 @@ package jetbrains.jetpad.cell.indent;
 import jetbrains.jetpad.cell.Cell;
 import jetbrains.jetpad.cell.CellContainer;
 import jetbrains.jetpad.cell.TextCell;
-import jetbrains.jetpad.cell.view.CellContainerToViewMapper;
+import jetbrains.jetpad.cell.toView.CellContainerToViewMapper;
 import jetbrains.jetpad.mapper.Mapper;
 import jetbrains.jetpad.projectional.view.View;
 import jetbrains.jetpad.projectional.view.ViewContainer;

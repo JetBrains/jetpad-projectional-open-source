@@ -27,7 +27,7 @@ import jetbrains.jetpad.model.property.Property;
 import jetbrains.jetpad.model.property.ValueProperty;
 import jetbrains.jetpad.cell.TextCell;
 import jetbrains.jetpad.cell.text.TextEditing;
-import jetbrains.jetpad.cell.view.CellView;
+import jetbrains.jetpad.cell.toView.CellView;
 import jetbrains.jetpad.projectional.util.RootController;
 import jetbrains.jetpad.projectional.view.*;
 import jetbrains.mps.diagram.contentDemo.model.Content;
