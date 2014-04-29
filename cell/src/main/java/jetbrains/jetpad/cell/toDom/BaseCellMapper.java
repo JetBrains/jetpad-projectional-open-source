@@ -272,11 +272,6 @@ abstract class BaseCellMapper<SourceT extends Cell> extends Mapper<SourceT, Elem
   void childAdded(CollectionItemEvent<Cell> event) {
     if (managesChildren()) return;
     Mapper<? extends Cell, ? extends Element> mapper = createMapper(event.getItem());
-
-    if (event.getItem() instanceof DomCell) {
-      System.out.println();
-    }
-
     myChildrenMappers.add(event.getIndex(), mapper);
     myTarget.add(event.getIndex(), mapper.getTarget());
   }
