@@ -83,6 +83,9 @@
     </plugins>
   </build>
 
+  <scm>
+    <developerConnection>https://github.com/JetBrains/jetpad-projectional.git</developerConnection>
+  </scm>
   <reporting>
     <plugins>
       <plugin>
