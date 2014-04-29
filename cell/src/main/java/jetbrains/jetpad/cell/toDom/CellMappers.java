@@ -18,6 +18,7 @@ package jetbrains.jetpad.cell.toDom;
 import jetbrains.jetpad.cell.*;
 import jetbrains.jetpad.cell.dom.DomCell;
 import jetbrains.jetpad.cell.indent.IndentCell;
+import jetbrains.jetpad.cell.view.ViewCell;
 
 class CellMappers {
   static BaseCellMapper<?> createMapper(Cell source, CellToDomContext ctx) {
@@ -55,6 +56,10 @@ class CellMappers {
 
     if (source instanceof DomCell) {
       return new DomCellMapper((DomCell) source, ctx);
+    }
+
+    if (source instanceof ViewCell) {
+      return new ViewCellMapper((ViewCell) source, ctx);
     }
 
     return new DefaultCellMapper(source, ctx);
