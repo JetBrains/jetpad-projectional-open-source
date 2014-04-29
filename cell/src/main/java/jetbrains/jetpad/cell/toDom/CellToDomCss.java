@@ -26,4 +26,5 @@ public interface CellToDomCss extends CssResource {
   String selected();
   String highlighted();
   String mobileInputField();
+  String domCell();
 }

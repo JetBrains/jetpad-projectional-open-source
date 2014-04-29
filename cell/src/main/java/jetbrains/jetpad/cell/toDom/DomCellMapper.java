@@ -9,6 +9,13 @@ import jetbrains.jetpad.model.property.WritableProperty;
 class DomCellMapper extends BaseCellMapper<DomCell> {
   DomCellMapper(DomCell source, CellToDomContext ctx) {
     super(source, ctx, DOM.createDiv());
+
+    getTarget().addClassName(CellContainerToDomMapper.CSS.domCell());
+  }
+
+  @Override
+  protected boolean managesChildren() {
+    return true;
   }
 
   @Override
