@@ -58,6 +58,9 @@ public class EventTranslator {
     //disable shift+arrow selection
     if (event.is(KeyStrokeSpecs.SELECT_BEFORE) || event.is(KeyStrokeSpecs.SELECT_AFTER)) return false;
 
+    //disable tab navigation
+    if (event.is(Key.TAB) || event.is(Key.TAB, ModifierKey.SHIFT)) return false;
+
     return !event.isConsumed();
   }
 
