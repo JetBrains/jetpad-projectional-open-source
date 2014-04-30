@@ -29,6 +29,6 @@ public class DataFlowEntryPoint implements EntryPoint {
     RootDiagramMapper mapper = new RootDiagramMapper(model);
     mapper.attachRoot();
 
-    View2Dom.showDemo(mapper.getTarget(), $("#diagram").get(0));
+    View2Dom.map(mapper.getTarget(), $("#diagram").get(0));
   }
 }

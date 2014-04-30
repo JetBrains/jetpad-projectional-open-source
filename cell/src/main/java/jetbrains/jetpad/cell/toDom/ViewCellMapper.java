@@ -20,7 +20,7 @@ class ViewCellMapper extends BaseCellMapper<ViewCell> {
   protected void registerSynchronizers(SynchronizersConfiguration conf) {
     super.registerSynchronizers(conf);
 
-    conf.add(Synchronizers.forRegistration(View2Dom.showDemo(myViewContainer, getTarget())));
+    conf.add(Synchronizers.forRegistration(View2Dom.map(myViewContainer, getTarget())));
 
     conf.add(Synchronizers.forProperty(getSource().view, new WritableProperty<View>() {
       @Override

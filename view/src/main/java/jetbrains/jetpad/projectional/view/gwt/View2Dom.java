@@ -55,7 +55,7 @@ import java.util.Collections;
 import static com.google.gwt.query.client.GQuery.$;
 
 public class View2Dom {
-  public static Registration showDemo(final ViewContainer container, final Element element) {
+  public static Registration map(final ViewContainer container, final Element element) {
     CompositeRegistration reg = new CompositeRegistration();
 
     final Element rootDiv = DOM.createDiv();

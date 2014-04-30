@@ -64,5 +64,4 @@ class CellMappers {
 
     return new DefaultCellMapper(source, ctx);
   }
-
 }
