@@ -19,15 +19,15 @@ import jetbrains.jetpad.cell.Cell;
 import jetbrains.jetpad.cell.CellContainer;
 import jetbrains.jetpad.cell.CellPropertySpec;
 import jetbrains.jetpad.cell.TextCell;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Arrays;
 import java.util.HashSet;
 
-import static jetbrains.jetpad.cell.util.CellFactory.*;
-import static org.junit.Assert.*;
+import static jetbrains.jetpad.cell.util.CellFactory.horizontal;
+import static jetbrains.jetpad.cell.util.CellFactory.label;
+import static org.junit.Assert.assertEquals;
 
 public class WithPropertyIndexTest {
   private CellContainer container;
@@ -97,7 +97,6 @@ public class WithPropertyIndexTest {
     assertIndex(c1, c2);
   }
 
-
   @Test
   public void dispose() {
     initIndex();
@@ -108,7 +107,6 @@ public class WithPropertyIndexTest {
 
     assertIndex();
   }
-
 
   private void initIndex() {
     index = WithPropertyIndex.forCellProperty(container, TEST_PROP);
@@ -133,6 +131,4 @@ public class WithPropertyIndexTest {
   private void assertIndex(Cell... cells) {
     assertEquals(new HashSet<>(Arrays.asList(cells)), index.withProperty());
   }
-
-
 }
