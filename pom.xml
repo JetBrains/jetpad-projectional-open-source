@@ -84,7 +84,7 @@
   </build>
 
   <scm>
-    <developerConnection>https://github.com/JetBrains/jetpad-projectional.git</developerConnection>
+    <developerConnection>scm:git:https://github.com/JetBrains/jetpad-projectional.git</developerConnection>
   </scm>
   <reporting>
     <plugins>
