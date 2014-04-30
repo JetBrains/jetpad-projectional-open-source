@@ -15,6 +15,7 @@
  */
 package jetbrains.jetpad.cell.toDom;
 
+import com.google.common.base.Strings;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Timer;
 import jetbrains.jetpad.model.event.CompositeRegistration;
@@ -60,6 +61,11 @@ class TextCellMapper extends BaseCellMapper<TextCell> {
 
   int getCaretAt(int x) {
     return myTextEditor.caretPositionAt(x);
+  }
+
+  @Override
+  protected boolean isEmpty() {
+    return Strings.isNullOrEmpty(getSource().text().get());
   }
 
   @Override

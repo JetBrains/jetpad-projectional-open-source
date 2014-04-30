@@ -20,16 +20,15 @@ import com.google.gwt.dom.client.Node;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Timer;
-import jetbrains.jetpad.cell.dom.DomCell;
+import jetbrains.jetpad.base.Registration;
+import jetbrains.jetpad.cell.Cell;
 import jetbrains.jetpad.geometry.Rectangle;
 import jetbrains.jetpad.mapper.Mapper;
 import jetbrains.jetpad.mapper.MappingContext;
-import jetbrains.jetpad.model.composite.Composites;
 import jetbrains.jetpad.model.collections.CollectionItemEvent;
 import jetbrains.jetpad.model.collections.set.ObservableSet;
-import jetbrains.jetpad.base.Registration;
+import jetbrains.jetpad.model.composite.Composites;
 import jetbrains.jetpad.model.property.PropertyChangeEvent;
-import jetbrains.jetpad.cell.*;
 import jetbrains.jetpad.values.Color;
 
 import java.util.AbstractList;
@@ -116,6 +115,10 @@ abstract class BaseCellMapper<SourceT extends Cell> extends Mapper<SourceT, Elem
     myExternalSelectCount += delta;
   }
 
+  boolean isEmpty() {
+    return false;
+  }
+
   protected void refreshProperties() {
     Style style = getTarget().getStyle();
     if (getSource().selected().get() || myExternalSelectCount > 0) {
@@ -124,7 +127,7 @@ abstract class BaseCellMapper<SourceT extends Cell> extends Mapper<SourceT, Elem
       getTarget().removeClassName(CellContainerToDomMapper.CSS.selected());
     }
 
-    if (getSource().highlighted().get() || myExternalHighlightCount > 0) {
+    if (!isEmpty() && (getSource().highlighted().get() || myExternalHighlightCount > 0)) {
       getTarget().addClassName(CellContainerToDomMapper.CSS.highlighted());
     } else {
       getTarget().removeClassName(CellContainerToDomMapper.CSS.highlighted());
