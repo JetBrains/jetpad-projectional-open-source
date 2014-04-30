@@ -4,13 +4,13 @@
 
   <groupId>jetbrains.jetpad</groupId>
   <artifactId>projectional-container</artifactId>
-  <version>1.0.0</version>
+  <version>1.0.1-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <parent>
     <groupId>jetbrains.jetpad</groupId>
     <artifactId>dependencies</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.1-SNAPSHOT</version>
   </parent>
 
   <modules>
@@ -83,7 +83,7 @@
 
   <scm>
     <developerConnection>scm:git:https://github.com/JetBrains/jetpad-projectional.git</developerConnection>
-    <tag>jetpad-projectional-1.0.0</tag>
+    <tag>HEAD</tag>
   </scm>
   <reporting>
     <plugins>

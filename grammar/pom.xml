@@ -4,13 +4,13 @@
 
   <groupId>jetbrains.jetpad</groupId>
   <artifactId>grammar</artifactId>
-  <version>1.0.0</version>
+  <version>1.0.1-SNAPSHOT</version>
   <packaging>jar</packaging>
 
   <parent>
     <groupId>jetbrains.jetpad</groupId>
     <artifactId>projectional-container</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.1-SNAPSHOT</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
 
