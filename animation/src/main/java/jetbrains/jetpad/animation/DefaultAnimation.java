@@ -1,4 +1,4 @@
-package jetbrains.jetpad.projectional.view.animation;
+package jetbrains.jetpad.animation;
 
 import jetbrains.jetpad.base.Handler;
 import jetbrains.jetpad.base.SimpleAsync;

@@ -10,6 +10,7 @@
   <inherits name="jetbrains.jetpad.base.Base" />
   <inherits name="jetbrains.jetpad.grammar.Grammar"/>
   <inherits name="jetbrains.jetpad.event.Event"/>
+  <inherits name="jetbrains.jetpad.animation.Animation"/>
   <inherits name="jetbrains.jetpad.projectional.view.View"/>
   <inherits name="jetbrains.jetpad.completion.Completion"/>
 

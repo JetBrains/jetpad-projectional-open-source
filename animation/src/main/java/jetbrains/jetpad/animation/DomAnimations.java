@@ -1,4 +1,4 @@
-package jetbrains.jetpad.projectional.view.animation;
+package jetbrains.jetpad.animation;
 
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.query.client.Function;

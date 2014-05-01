@@ -34,8 +34,8 @@ import jetbrains.jetpad.model.property.PropertyChangeEvent;
 import jetbrains.jetpad.model.property.ReadableProperty;
 import jetbrains.jetpad.model.property.WritableProperty;
 import jetbrains.jetpad.projectional.view.*;
-import jetbrains.jetpad.projectional.view.animation.Animation;
-import jetbrains.jetpad.projectional.view.animation.Animations;
+import jetbrains.jetpad.animation.Animation;
+import jetbrains.jetpad.animation.Animations;
 
 import java.util.HashSet;
 import java.util.Set;

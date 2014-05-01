@@ -49,8 +49,8 @@ import jetbrains.jetpad.model.property.WritableProperty;
 import jetbrains.jetpad.projectional.domUtil.Scrolling;
 import jetbrains.jetpad.projectional.domUtil.TextMetricsCalculator;
 import jetbrains.jetpad.projectional.view.TextView;
-import jetbrains.jetpad.projectional.view.animation.Animation;
-import jetbrains.jetpad.projectional.view.animation.DomAnimations;
+import jetbrains.jetpad.animation.Animation;
+import jetbrains.jetpad.animation.DomAnimations;
 
 import java.util.Collections;
 

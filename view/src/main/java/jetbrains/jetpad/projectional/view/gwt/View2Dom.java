@@ -47,8 +47,8 @@ import jetbrains.jetpad.projectional.domUtil.TextMetricsCalculator;
 import jetbrains.jetpad.projectional.view.TextView;
 import jetbrains.jetpad.projectional.view.View;
 import jetbrains.jetpad.projectional.view.ViewContainer;
-import jetbrains.jetpad.projectional.view.animation.Animation;
-import jetbrains.jetpad.projectional.view.animation.DomAnimations;
+import jetbrains.jetpad.animation.Animation;
+import jetbrains.jetpad.animation.DomAnimations;
 import jetbrains.jetpad.projectional.view.spi.ViewContainerPeer;
 import jetbrains.jetpad.values.Font;
 

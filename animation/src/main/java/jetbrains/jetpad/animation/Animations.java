@@ -1,4 +1,4 @@
-package jetbrains.jetpad.projectional.view.animation;
+package jetbrains.jetpad.animation;
 
 public class Animations {
   public static Animation finishedAnimation() {

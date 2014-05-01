@@ -32,7 +32,7 @@ import jetbrains.jetpad.model.composite.HasVisibility;
 import jetbrains.jetpad.model.event.*;
 import jetbrains.jetpad.model.property.*;
 import jetbrains.jetpad.model.util.ListMap;
-import jetbrains.jetpad.projectional.view.animation.Animation;
+import jetbrains.jetpad.animation.Animation;
 import jetbrains.jetpad.values.Color;
 
 import java.util.*;
