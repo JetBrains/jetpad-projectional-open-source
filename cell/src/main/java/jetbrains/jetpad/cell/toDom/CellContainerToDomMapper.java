@@ -22,16 +22,16 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.StyleInjector;
 import com.google.gwt.query.client.Function;
+import com.google.gwt.query.client.GQuery;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
-import jetbrains.jetpad.base.Async;
 import jetbrains.jetpad.base.Handler;
 import jetbrains.jetpad.base.Registration;
-import jetbrains.jetpad.base.SimpleAsync;
 import jetbrains.jetpad.base.edt.EventDispatchThread;
 import jetbrains.jetpad.base.edt.JsEventDispatchThread;
 import jetbrains.jetpad.cell.*;
+import jetbrains.jetpad.cell.animation.Animation;
 import jetbrains.jetpad.cell.event.CompletionEvent;
 import jetbrains.jetpad.event.*;
 import jetbrains.jetpad.event.dom.ClipboardSupport;
@@ -329,15 +329,13 @@ public class CellContainerToDomMapper extends Mapper<CellContainer, Element> {
       }
 
       @Override
-      public Async<Object> fadeIn(Cell cell, int duration) {
-        final SimpleAsync<Object> result = new SimpleAsync<>();
-        $(getMapper(cell).getTarget()).css("opacity", "0").animate("opacity : 1", duration, new Function() {
+      public Animation fadeIn(final Cell cell, final int duration) {
+        return new GQueryBasedAnimation() {
           @Override
-          public void f() {
-            result.success(null);
+          protected GQuery createAnimation(Function callback) {
+            return $(getMapper(cell).getTarget()).css("opacity", "0").animate("opacity : 1", duration, callback);
           }
-        });
-        return result;
+        };
       }
     };
   }

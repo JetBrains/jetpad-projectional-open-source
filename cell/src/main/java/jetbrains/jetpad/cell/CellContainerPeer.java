@@ -15,10 +15,10 @@
  */
 package jetbrains.jetpad.cell;
 
-import jetbrains.jetpad.base.Async;
-import jetbrains.jetpad.base.Asyncs;
 import jetbrains.jetpad.base.edt.EventDispatchThread;
 import jetbrains.jetpad.base.edt.NullEventDispatchThread;
+import jetbrains.jetpad.cell.animation.Animation;
+import jetbrains.jetpad.cell.animation.Animations;
 import jetbrains.jetpad.geometry.Rectangle;
 import jetbrains.jetpad.model.property.Properties;
 import jetbrains.jetpad.model.property.ReadableProperty;
@@ -59,13 +59,13 @@ public interface CellContainerPeer {
     }
 
     @Override
-    public Async<Object> fadeIn(Cell cell, int duration) {
-      return Asyncs.constant(null);
+    public Animation fadeIn(Cell cell, int duration) {
+      return Animations.finishedAnimation();
     }
   };
 
 
-  Async<Object> fadeIn(Cell cell, int duration);
+  Animation fadeIn(Cell cell, int duration);
   int getCaretAt(TextCell tv, int x);
   int getCaretOffset(TextCell tv, int caret);
   Rectangle getBounds(Cell cell);
