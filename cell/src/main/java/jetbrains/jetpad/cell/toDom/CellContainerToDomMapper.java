@@ -25,8 +25,10 @@ import com.google.gwt.query.client.Function;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
+import jetbrains.jetpad.base.Async;
 import jetbrains.jetpad.base.Handler;
 import jetbrains.jetpad.base.Registration;
+import jetbrains.jetpad.base.SimpleAsync;
 import jetbrains.jetpad.base.edt.EventDispatchThread;
 import jetbrains.jetpad.base.edt.JsEventDispatchThread;
 import jetbrains.jetpad.cell.*;
@@ -327,8 +329,15 @@ public class CellContainerToDomMapper extends Mapper<CellContainer, Element> {
       }
 
       @Override
-      public void fadeIn(Cell cell) {
-        $(getMapper(cell).getTarget()).css("opacity", "0").animate("opacity : 1", 300);
+      public Async<Object> fadeIn(Cell cell) {
+        final SimpleAsync<Object> result = new SimpleAsync<>();
+        $(getMapper(cell).getTarget()).css("opacity", "0").animate("opacity : 1", 300, new Function() {
+          @Override
+          public void f() {
+            result.success(null);
+          }
+        });
+        return result;
       }
     };
   }

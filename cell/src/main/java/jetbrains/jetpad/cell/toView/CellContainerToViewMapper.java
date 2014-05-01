@@ -16,6 +16,8 @@
 package jetbrains.jetpad.cell.toView;
 
 import com.google.common.base.Supplier;
+import jetbrains.jetpad.base.Async;
+import jetbrains.jetpad.base.Asyncs;
 import jetbrains.jetpad.base.Registration;
 import jetbrains.jetpad.base.edt.EventDispatchThread;
 import jetbrains.jetpad.cell.*;
@@ -201,7 +203,8 @@ public class CellContainerToViewMapper extends Mapper<CellContainer, View> {
       }
 
       @Override
-      public void fadeIn(Cell cell) {
+      public Async<Object> fadeIn(Cell cell) {
+        return Asyncs.constant(null);
       }
     };
   }

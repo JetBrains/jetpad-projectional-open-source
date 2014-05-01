@@ -15,6 +15,8 @@
  */
 package jetbrains.jetpad.cell;
 
+import jetbrains.jetpad.base.Async;
+import jetbrains.jetpad.base.Asyncs;
 import jetbrains.jetpad.base.edt.EventDispatchThread;
 import jetbrains.jetpad.base.edt.NullEventDispatchThread;
 import jetbrains.jetpad.geometry.Rectangle;
@@ -57,12 +59,13 @@ public interface CellContainerPeer {
     }
 
     @Override
-    public void fadeIn(Cell cell) {
+    public Async<Object> fadeIn(Cell cell) {
+      return Asyncs.constant(null);
     }
   };
 
 
-  void fadeIn(Cell cell);
+  Async<Object> fadeIn(Cell cell);
   int getCaretAt(TextCell tv, int x);
   int getCaretOffset(TextCell tv, int caret);
   Rectangle getBounds(Cell cell);

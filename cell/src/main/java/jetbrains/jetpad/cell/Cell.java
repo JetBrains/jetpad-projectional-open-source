@@ -16,6 +16,8 @@
 package jetbrains.jetpad.cell;
 
 import com.google.common.base.Objects;
+import jetbrains.jetpad.base.Async;
+import jetbrains.jetpad.base.Registration;
 import jetbrains.jetpad.cell.event.CellEventSpec;
 import jetbrains.jetpad.cell.event.CompletionEvent;
 import jetbrains.jetpad.cell.event.EventPriority;
@@ -34,7 +36,6 @@ import jetbrains.jetpad.model.composite.*;
 import jetbrains.jetpad.model.event.EventHandler;
 import jetbrains.jetpad.model.event.ListenerCaller;
 import jetbrains.jetpad.model.event.Listeners;
-import jetbrains.jetpad.base.Registration;
 import jetbrains.jetpad.model.property.BaseReadableProperty;
 import jetbrains.jetpad.model.property.Property;
 import jetbrains.jetpad.model.property.PropertyChangeEvent;
@@ -135,8 +136,8 @@ public abstract class Cell implements Composite<Cell>, HasVisibility, HasFocusab
     return getProp(HAS_SHADOW);
   }
 
-  public void fadeIn() {
-    getViewContainerPeer().fadeIn(this);
+  public Async<Object> fadeIn() {
+    return getViewContainerPeer().fadeIn(this);
   }
 
   public <EventT extends Event> void dispatch(EventT e, CellEventSpec<EventT> spec) {
