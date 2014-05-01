@@ -55,8 +55,14 @@ public interface CellContainerPeer {
     public EventDispatchThread getEdt() {
       return new NullEventDispatchThread();
     }
+
+    @Override
+    public void fadeIn(Cell cell) {
+    }
   };
 
+
+  void fadeIn(Cell cell);
   int getCaretAt(TextCell tv, int x);
   int getCaretOffset(TextCell tv, int caret);
   Rectangle getBounds(Cell cell);

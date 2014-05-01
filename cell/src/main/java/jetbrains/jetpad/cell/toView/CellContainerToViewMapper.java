@@ -199,6 +199,10 @@ public class CellContainerToViewMapper extends Mapper<CellContainer, View> {
         }
         return myTargetView.container().getEdt();
       }
+
+      @Override
+      public void fadeIn(Cell cell) {
+      }
     };
   }
 

@@ -217,6 +217,7 @@ public class CompletionSupport {
     reg.add(removeOnClose);
 
     textView.bottomPopup().set(completionCell);
+    completionCell.fadeIn();
   }
 
   public static TextCell showPopup(

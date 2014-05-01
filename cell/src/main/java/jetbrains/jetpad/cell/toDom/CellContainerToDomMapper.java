@@ -325,6 +325,11 @@ public class CellContainerToDomMapper extends Mapper<CellContainer, Element> {
       public EventDispatchThread getEdt() {
         return JsEventDispatchThread.INSTANCE;
       }
+
+      @Override
+      public void fadeIn(Cell cell) {
+        $(getMapper(cell).getTarget()).css("opacity", "0").animate("opacity : 1", 300);
+      }
     };
   }
 
