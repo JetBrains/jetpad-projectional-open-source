@@ -1,4 +1,4 @@
-package jetbrains.jetpad.cell.animation;
+package jetbrains.jetpad.projectional.view.animation;
 
 public interface Animation {
   void stop();

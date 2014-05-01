@@ -22,7 +22,6 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.StyleInjector;
 import com.google.gwt.query.client.Function;
-import com.google.gwt.query.client.GQuery;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
@@ -31,7 +30,6 @@ import jetbrains.jetpad.base.Registration;
 import jetbrains.jetpad.base.edt.EventDispatchThread;
 import jetbrains.jetpad.base.edt.JsEventDispatchThread;
 import jetbrains.jetpad.cell.*;
-import jetbrains.jetpad.cell.animation.Animation;
 import jetbrains.jetpad.cell.event.CompletionEvent;
 import jetbrains.jetpad.event.*;
 import jetbrains.jetpad.event.dom.ClipboardSupport;
@@ -51,6 +49,8 @@ import jetbrains.jetpad.model.property.WritableProperty;
 import jetbrains.jetpad.projectional.domUtil.Scrolling;
 import jetbrains.jetpad.projectional.domUtil.TextMetricsCalculator;
 import jetbrains.jetpad.projectional.view.TextView;
+import jetbrains.jetpad.projectional.view.animation.Animation;
+import jetbrains.jetpad.projectional.view.animation.DomAnimations;
 
 import java.util.Collections;
 
@@ -330,34 +330,12 @@ public class CellContainerToDomMapper extends Mapper<CellContainer, Element> {
 
       @Override
       public Animation fadeIn(final Cell cell, final int duration) {
-        return new GQueryBasedAnimation() {
-          @Override
-          protected GQuery createAnimation(final Runnable callback) {
-            return $(getMapper(cell).getTarget()).css("opacity", "0").animate("opacity : 1", duration, new Function() {
-              @Override
-              public void f() {
-                callback.run();
-              }
-            });
-          }
-        };
+        return DomAnimations.fadeIn(getMapper(cell).getTarget(), duration);
       }
 
       @Override
       public Animation fadeOut(final Cell cell, final int duration) {
-        return new GQueryBasedAnimation() {
-          @Override
-          protected GQuery createAnimation(final Runnable callback) {
-            final GQuery target = $(getMapper(cell).getTarget());
-            return target.fadeOut(duration, new Function() {
-              @Override
-              public void f() {
-                callback.run();
-                target.show();
-              }
-            });
-          }
-        };
+        return DomAnimations.fadeOut(getMapper(cell).getTarget(), duration);
       }
     };
   }

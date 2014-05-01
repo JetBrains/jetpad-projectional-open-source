@@ -47,6 +47,8 @@ import jetbrains.jetpad.projectional.domUtil.TextMetricsCalculator;
 import jetbrains.jetpad.projectional.view.TextView;
 import jetbrains.jetpad.projectional.view.View;
 import jetbrains.jetpad.projectional.view.ViewContainer;
+import jetbrains.jetpad.projectional.view.animation.Animation;
+import jetbrains.jetpad.projectional.view.animation.DomAnimations;
 import jetbrains.jetpad.projectional.view.spi.ViewContainerPeer;
 import jetbrains.jetpad.values.Font;
 
@@ -201,6 +203,16 @@ public class View2Dom {
       @Override
       public EventDispatchThread getEdt() {
         return JsEventDispatchThread.INSTANCE;
+      }
+
+      @Override
+      public Animation fadeIn(View view, int duration) {
+        return DomAnimations.fadeIn((Element) rootMapper.getDescendantMapper(view).getTarget(), duration);
+      }
+
+      @Override
+      public Animation fadeOut(View view, int duration) {
+        return DomAnimations.fadeOut((Element) rootMapper.getDescendantMapper(view).getTarget(), duration);
       }
     });
 

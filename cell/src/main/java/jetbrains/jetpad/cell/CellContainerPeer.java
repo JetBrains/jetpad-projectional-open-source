@@ -17,8 +17,8 @@ package jetbrains.jetpad.cell;
 
 import jetbrains.jetpad.base.edt.EventDispatchThread;
 import jetbrains.jetpad.base.edt.NullEventDispatchThread;
-import jetbrains.jetpad.cell.animation.Animation;
-import jetbrains.jetpad.cell.animation.Animations;
+import jetbrains.jetpad.projectional.view.animation.Animation;
+import jetbrains.jetpad.projectional.view.animation.Animations;
 import jetbrains.jetpad.geometry.Rectangle;
 import jetbrains.jetpad.model.property.Properties;
 import jetbrains.jetpad.model.property.ReadableProperty;

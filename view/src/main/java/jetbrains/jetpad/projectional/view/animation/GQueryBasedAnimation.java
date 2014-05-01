@@ -1,7 +1,6 @@
-package jetbrains.jetpad.cell.toDom;
+package jetbrains.jetpad.projectional.view.animation;
 
 import com.google.gwt.query.client.GQuery;
-import jetbrains.jetpad.cell.animation.DefaultAnimation;
 
 abstract class GQueryBasedAnimation extends DefaultAnimation {
   private GQuery myAnimation;

@@ -18,9 +18,10 @@ package jetbrains.jetpad.projectional.view.spi;
 import jetbrains.jetpad.base.edt.EventDispatchThread;
 import jetbrains.jetpad.geometry.Rectangle;
 import jetbrains.jetpad.model.property.PropertyChangeEvent;
-import jetbrains.jetpad.values.Font;
 import jetbrains.jetpad.projectional.view.View;
 import jetbrains.jetpad.projectional.view.ViewContainer;
+import jetbrains.jetpad.projectional.view.animation.Animation;
+import jetbrains.jetpad.values.Font;
 
 public interface ViewContainerPeer {
   void attach(ViewContainer container);
@@ -40,4 +41,7 @@ public interface ViewContainerPeer {
   void requestFocus();
 
   EventDispatchThread getEdt();
+
+  Animation fadeIn(View view, int duration);
+  Animation fadeOut(View view, int duration);
 }

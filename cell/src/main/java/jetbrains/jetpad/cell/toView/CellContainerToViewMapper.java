@@ -19,8 +19,6 @@ import com.google.common.base.Supplier;
 import jetbrains.jetpad.base.Registration;
 import jetbrains.jetpad.base.edt.EventDispatchThread;
 import jetbrains.jetpad.cell.*;
-import jetbrains.jetpad.cell.animation.Animation;
-import jetbrains.jetpad.cell.animation.Animations;
 import jetbrains.jetpad.event.*;
 import jetbrains.jetpad.geometry.Rectangle;
 import jetbrains.jetpad.geometry.Vector;
@@ -36,6 +34,8 @@ import jetbrains.jetpad.model.property.PropertyChangeEvent;
 import jetbrains.jetpad.model.property.ReadableProperty;
 import jetbrains.jetpad.model.property.WritableProperty;
 import jetbrains.jetpad.projectional.view.*;
+import jetbrains.jetpad.projectional.view.animation.Animation;
+import jetbrains.jetpad.projectional.view.animation.Animations;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -202,14 +202,24 @@ public class CellContainerToViewMapper extends Mapper<CellContainer, View> {
         return myTargetView.container().getEdt();
       }
 
+      private View getViewFor(Cell cell) {
+        Mapper<? super Cell, ?> mapper = rootMapper.getDescendantMapper(cell);
+        if (mapper == null) return null;
+        return (View) mapper.getTarget();
+      }
+
       @Override
       public Animation fadeIn(Cell cell, int duration) {
-        return Animations.finishedAnimation();
+        View view = getViewFor(cell);
+        if (view == null) return Animations.finishedAnimation();
+        return view.fadeIn(duration);
       }
 
       @Override
       public Animation fadeOut(Cell cell, int duration) {
-        return Animations.finishedAnimation();
+        View view = getViewFor(cell);
+        if (view == null) return Animations.finishedAnimation();
+        return view.fadeOut(duration);
       }
     };
   }

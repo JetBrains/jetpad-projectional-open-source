@@ -28,6 +28,8 @@ import jetbrains.jetpad.model.event.EventHandler;
 import jetbrains.jetpad.model.property.PropertyChangeEvent;
 import jetbrains.jetpad.projectional.base.ImageData;
 import jetbrains.jetpad.projectional.view.*;
+import jetbrains.jetpad.projectional.view.animation.Animation;
+import jetbrains.jetpad.projectional.view.animation.Animations;
 import jetbrains.jetpad.projectional.view.spi.NullViewContainerPeer;
 import jetbrains.jetpad.projectional.view.spi.ViewContainerPeer;
 import jetbrains.jetpad.values.Color;
@@ -811,6 +813,16 @@ public class ViewContainerComponent extends JComponent implements Scrollable {
     @Override
     public EventDispatchThread getEdt() {
       return AwtEventDispatchThread.INSTANCE;
+    }
+
+    @Override
+    public Animation fadeIn(View view, int duration) {
+      return Animations.finishedAnimation();
+    }
+
+    @Override
+    public Animation fadeOut(View view, int duration) {
+      return Animations.finishedAnimation();
     }
   }
 }

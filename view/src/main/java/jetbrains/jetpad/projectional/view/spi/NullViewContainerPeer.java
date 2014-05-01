@@ -19,6 +19,8 @@ import jetbrains.jetpad.base.edt.EventDispatchThread;
 import jetbrains.jetpad.base.edt.NullEventDispatchThread;
 import jetbrains.jetpad.geometry.Rectangle;
 import jetbrains.jetpad.model.property.PropertyChangeEvent;
+import jetbrains.jetpad.projectional.view.animation.Animation;
+import jetbrains.jetpad.projectional.view.animation.Animations;
 import jetbrains.jetpad.values.Font;
 import jetbrains.jetpad.projectional.view.View;
 import jetbrains.jetpad.projectional.view.ViewContainer;
@@ -80,5 +82,15 @@ public class NullViewContainerPeer implements ViewContainerPeer {
   @Override
   public EventDispatchThread getEdt() {
     return new NullEventDispatchThread();
+  }
+
+  @Override
+  public Animation fadeIn(View view, int duration) {
+    return Animations.finishedAnimation();
+  }
+
+  @Override
+  public Animation fadeOut(View view, int duration) {
+    return Animations.finishedAnimation();
   }
 }
