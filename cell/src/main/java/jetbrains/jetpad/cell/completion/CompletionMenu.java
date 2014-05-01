@@ -33,6 +33,9 @@ class CompletionMenu {
   static Cell createView(CompletionMenuModel model, Handler<CompletionItem> completer) {
     CompletionMenuModelMapper mapper = new CompletionMenuModelMapper(model, completer);
     mapper.attachRoot();
+
+    mapper.getTarget().hasShadow().set(true);
+
     return mapper.getTarget();
   }
 

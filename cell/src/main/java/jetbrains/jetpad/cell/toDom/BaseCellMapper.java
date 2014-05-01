@@ -146,6 +146,12 @@ abstract class BaseCellMapper<SourceT extends Cell> extends Mapper<SourceT, Elem
     } else {
       getTarget().removeClassName(CellContainerToDomMapper.CSS.hidden());
     }
+
+    if (getSource().hasShadow().get()) {
+      getTarget().addClassName(CellContainerToDomMapper.CSS.hasShadow());
+    } else {
+      getTarget().removeClassName(CellContainerToDomMapper.CSS.hasShadow());
+    }
   }
 
   void updatePopup(PropertyChangeEvent<Cell> event) {

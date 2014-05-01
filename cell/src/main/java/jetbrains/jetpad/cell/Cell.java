@@ -63,6 +63,7 @@ public abstract class Cell implements Composite<Cell>, HasVisibility, HasFocusab
   public static final CellPropertySpec<Boolean> FOCUSABLE = new CellPropertySpec<>("focusable", false);
   public static final CellPropertySpec<Color> BACKGROUND = new CellPropertySpec<>("background");
   public static final CellPropertySpec<Color> BORDER_COLOR = new CellPropertySpec<>("borderColor");
+  public static final CellPropertySpec<Boolean> HAS_SHADOW = new CellPropertySpec<>("hasShadow", false);
 
   public static boolean isPopupProp(CellPropertySpec<?> prop) {
     return prop == BOTTOM_POPUP || prop == FRONT_POPUP || prop == LEFT_POPUP || prop == RIGHT_POPUP;
@@ -129,6 +130,11 @@ public abstract class Cell implements Composite<Cell>, HasVisibility, HasFocusab
   public Property<Cell> rightPopup() {
     return getProp(RIGHT_POPUP);
   }
+
+  public Property<Boolean> hasShadow() {
+    return getProp(HAS_SHADOW);
+  }
+
 
   public <EventT extends Event> void dispatch(EventT e, CellEventSpec<EventT> spec) {
     dispatchStep(e, spec);

@@ -73,3 +73,7 @@
 .selected[style] {
   background-color: selectionColor !important;
 }
+
+.hasShadow {
+  box-shadow: 5px 5px 10px black;
+}
