@@ -1,6 +1,5 @@
 package jetbrains.jetpad.cell.toDom;
 
-import com.google.gwt.query.client.Function;
 import com.google.gwt.query.client.GQuery;
 import jetbrains.jetpad.cell.animation.DefaultAnimation;
 
@@ -8,15 +7,15 @@ abstract class GQueryBasedAnimation extends DefaultAnimation {
   private GQuery myAnimation;
 
   protected GQueryBasedAnimation() {
-    myAnimation = createAnimation(new Function() {
+    myAnimation = createAnimation(new Runnable() {
       @Override
-      public void f() {
+      public void run() {
         done();
       }
     });
   }
 
-  protected abstract GQuery createAnimation(Function callback);
+  protected abstract GQuery createAnimation(Runnable callback);
 
   @Override
   protected void doStop() {

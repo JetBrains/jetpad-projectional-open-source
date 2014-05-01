@@ -206,6 +206,11 @@ public class CellContainerToViewMapper extends Mapper<CellContainer, View> {
       public Animation fadeIn(Cell cell, int duration) {
         return Animations.finishedAnimation();
       }
+
+      @Override
+      public Animation fadeOut(Cell cell, int duration) {
+        return Animations.finishedAnimation();
+      }
     };
   }
 

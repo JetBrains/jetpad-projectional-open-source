@@ -62,10 +62,14 @@ public interface CellContainerPeer {
     public Animation fadeIn(Cell cell, int duration) {
       return Animations.finishedAnimation();
     }
+
+    @Override
+    public Animation fadeOut(Cell cell, int duration) {
+      return Animations.finishedAnimation();
+    }
   };
 
 
-  Animation fadeIn(Cell cell, int duration);
   int getCaretAt(TextCell tv, int x);
   int getCaretOffset(TextCell tv, int caret);
   Rectangle getBounds(Cell cell);
@@ -75,4 +79,7 @@ public interface CellContainerPeer {
   void requestFocus();
 
   EventDispatchThread getEdt();
+
+  Animation fadeIn(Cell cell, int duration);
+  Animation fadeOut(Cell cell, int duration);
 }

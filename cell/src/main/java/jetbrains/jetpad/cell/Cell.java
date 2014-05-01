@@ -16,7 +16,6 @@
 package jetbrains.jetpad.cell;
 
 import com.google.common.base.Objects;
-import jetbrains.jetpad.base.Async;
 import jetbrains.jetpad.base.Registration;
 import jetbrains.jetpad.cell.animation.Animation;
 import jetbrains.jetpad.cell.event.CellEventSpec;
@@ -139,6 +138,10 @@ public abstract class Cell implements Composite<Cell>, HasVisibility, HasFocusab
 
   public Animation fadeIn(int duration) {
     return getViewContainerPeer().fadeIn(this, duration);
+  }
+
+  public Animation fadeOut(int duration) {
+    return getViewContainerPeer().fadeOut(this, duration);
   }
 
   public <EventT extends Event> void dispatch(EventT e, CellEventSpec<EventT> spec) {

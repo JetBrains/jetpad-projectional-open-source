@@ -332,8 +332,30 @@ public class CellContainerToDomMapper extends Mapper<CellContainer, Element> {
       public Animation fadeIn(final Cell cell, final int duration) {
         return new GQueryBasedAnimation() {
           @Override
-          protected GQuery createAnimation(Function callback) {
-            return $(getMapper(cell).getTarget()).css("opacity", "0").animate("opacity : 1", duration, callback);
+          protected GQuery createAnimation(final Runnable callback) {
+            return $(getMapper(cell).getTarget()).css("opacity", "0").animate("opacity : 1", duration, new Function() {
+              @Override
+              public void f() {
+                callback.run();
+              }
+            });
+          }
+        };
+      }
+
+      @Override
+      public Animation fadeOut(final Cell cell, final int duration) {
+        return new GQueryBasedAnimation() {
+          @Override
+          protected GQuery createAnimation(final Runnable callback) {
+            final GQuery target = $(getMapper(cell).getTarget());
+            return target.fadeOut(duration, new Function() {
+              @Override
+              public void f() {
+                callback.run();
+                target.show();
+              }
+            });
           }
         };
       }
