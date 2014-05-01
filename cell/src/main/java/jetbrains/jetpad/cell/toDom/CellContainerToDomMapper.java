@@ -329,9 +329,9 @@ public class CellContainerToDomMapper extends Mapper<CellContainer, Element> {
       }
 
       @Override
-      public Async<Object> fadeIn(Cell cell) {
+      public Async<Object> fadeIn(Cell cell, int duration) {
         final SimpleAsync<Object> result = new SimpleAsync<>();
-        $(getMapper(cell).getTarget()).css("opacity", "0").animate("opacity : 1", 300, new Function() {
+        $(getMapper(cell).getTarget()).css("opacity", "0").animate("opacity : 1", duration, new Function() {
           @Override
           public void f() {
             result.success(null);

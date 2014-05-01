@@ -136,8 +136,8 @@ public abstract class Cell implements Composite<Cell>, HasVisibility, HasFocusab
     return getProp(HAS_SHADOW);
   }
 
-  public Async<Object> fadeIn() {
-    return getViewContainerPeer().fadeIn(this);
+  public Async<Object> fadeIn(int duration) {
+    return getViewContainerPeer().fadeIn(this, duration);
   }
 
   public <EventT extends Event> void dispatch(EventT e, CellEventSpec<EventT> spec) {

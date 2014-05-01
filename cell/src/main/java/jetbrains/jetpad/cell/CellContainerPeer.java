@@ -59,13 +59,13 @@ public interface CellContainerPeer {
     }
 
     @Override
-    public Async<Object> fadeIn(Cell cell) {
+    public Async<Object> fadeIn(Cell cell, int duration) {
       return Asyncs.constant(null);
     }
   };
 
 
-  Async<Object> fadeIn(Cell cell);
+  Async<Object> fadeIn(Cell cell, int duration);
   int getCaretAt(TextCell tv, int x);
   int getCaretOffset(TextCell tv, int caret);
   Rectangle getBounds(Cell cell);

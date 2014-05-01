@@ -203,7 +203,7 @@ public class CellContainerToViewMapper extends Mapper<CellContainer, View> {
       }
 
       @Override
-      public Async<Object> fadeIn(Cell cell) {
+      public Async<Object> fadeIn(Cell cell, int duration) {
         return Asyncs.constant(null);
       }
     };
