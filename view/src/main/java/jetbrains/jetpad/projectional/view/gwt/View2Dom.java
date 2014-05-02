@@ -207,25 +207,21 @@ public class View2Dom {
 
       @Override
       public Animation fadeIn(View view, int duration) {
-        rootMapper.getSource().validate();
         return DomAnimations.fadeIn((Element) rootMapper.getDescendantMapper(view).getTarget(), duration);
       }
 
       @Override
       public Animation fadeOut(View view, int duration) {
-        rootMapper.getSource().validate();
         return DomAnimations.fadeOut((Element) rootMapper.getDescendantMapper(view).getTarget(), duration);
       }
 
       @Override
       public Animation showSlide(View view, int duration) {
-        rootMapper.getSource().validate();
         return DomAnimations.showSlide((Element) rootMapper.getDescendantMapper(view).getTarget(), duration);
       }
 
       @Override
       public Animation hideSlide(View view, int duration) {
-        rootMapper.getSource().validate();
         return DomAnimations.hideSlide((Element) rootMapper.getDescendantMapper(view).getTarget(), duration);
       }
     });
