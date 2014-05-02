@@ -11,7 +11,7 @@ public class DomAnimations {
     return new GQueryBasedAnimation() {
       @Override
       protected GQuery createAnimation(final Runnable callback) {
-        return $(e).delay(50).hide().fadeIn(new Function() {
+        return $(e).delay(50).hide().fadeIn(duration, new Function() {
           @Override
           public void f() {
             callback.run();
