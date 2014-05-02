@@ -13,7 +13,7 @@ public abstract class DefaultAnimation implements Animation {
     if (myDone) {
       throw new IllegalStateException();
     }
-    myWhenDone.onSuccess(null);
+    myWhenDone.success(null);
     myDone = true;
   }
 

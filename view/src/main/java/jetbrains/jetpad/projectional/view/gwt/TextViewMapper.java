@@ -15,15 +15,18 @@
  */
 package jetbrains.jetpad.projectional.view.gwt;
 
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style;
+import com.google.gwt.query.client.Function;
 import com.google.gwt.user.client.DOM;
 import jetbrains.jetpad.mapper.Synchronizers;
 import jetbrains.jetpad.model.property.WritableProperty;
 import jetbrains.jetpad.projectional.domUtil.DomTextEditor;
 import jetbrains.jetpad.projectional.view.TextView;
-import com.google.gwt.dom.client.Element;
 import jetbrains.jetpad.values.Color;
 import jetbrains.jetpad.values.FontFamily;
+
+import static com.google.gwt.query.client.GQuery.$;
 
 class TextViewMapper extends BaseViewMapper<TextView, Element> {
   TextViewMapper(View2DomContext ctx, TextView source) {

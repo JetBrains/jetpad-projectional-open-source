@@ -11,7 +11,7 @@ public class DomAnimations {
     return new GQueryBasedAnimation() {
       @Override
       protected GQuery createAnimation(final Runnable callback) {
-        return GQuery.$(e).css("opacity", "0").animate("opacity : 1", duration, new Function() {
+        return $(e).delay(50).hide().fadeIn(new Function() {
           @Override
           public void f() {
             callback.run();
@@ -25,12 +25,40 @@ public class DomAnimations {
     return new GQueryBasedAnimation() {
       @Override
       protected GQuery createAnimation(final Runnable callback) {
-        final GQuery target = $(e);
-        return target.fadeOut(duration, new Function() {
+        return GQuery.$(e).css("opacity", "1").animate("opacity : 0", duration, new Function() {
           @Override
           public void f() {
             callback.run();
-            target.show();
+            $(e).css("opacity", "1");
+          }
+        });
+      }
+    };
+  }
+
+  public static Animation showSlide(final Element e, final int duration) {
+    return new GQueryBasedAnimation() {
+      @Override
+      protected GQuery createAnimation(final Runnable callback) {
+        return $(e).delay(50).hide().slideToggle(duration, new Function() {
+          @Override
+          public void f() {
+            callback.run();
+          }
+        });
+      }
+    };
+  }
+
+  public static Animation hideSlide(final Element e, final int duration) {
+    return new GQueryBasedAnimation() {
+      @Override
+      protected GQuery createAnimation(final Runnable callback) {
+        return $(e).slideToggle(duration, new Function() {
+          @Override
+          public void f() {
+            callback.run();
+            $(e).show();
           }
         });
       }
