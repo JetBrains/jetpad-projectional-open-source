@@ -211,7 +211,7 @@ public class CompletionSupport {
     reg.add(new Registration() {
       @Override
       public void remove() {
-        completionCell.fadeOut(300).whenDone(new Runnable() {
+        completionCell.hideSlide(300).whenDone(new Runnable() {
           @Override
           public void run() {
             completionCell.removeFromParent();

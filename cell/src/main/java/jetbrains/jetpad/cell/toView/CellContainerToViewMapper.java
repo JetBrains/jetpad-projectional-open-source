@@ -15,7 +15,10 @@
  */
 package jetbrains.jetpad.cell.toView;
 
+import com.google.common.base.Function;
 import com.google.common.base.Supplier;
+import jetbrains.jetpad.animation.Animation;
+import jetbrains.jetpad.animation.Animations;
 import jetbrains.jetpad.base.Registration;
 import jetbrains.jetpad.base.edt.EventDispatchThread;
 import jetbrains.jetpad.cell.*;
@@ -34,8 +37,6 @@ import jetbrains.jetpad.model.property.PropertyChangeEvent;
 import jetbrains.jetpad.model.property.ReadableProperty;
 import jetbrains.jetpad.model.property.WritableProperty;
 import jetbrains.jetpad.projectional.view.*;
-import jetbrains.jetpad.animation.Animation;
-import jetbrains.jetpad.animation.Animations;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -209,22 +210,49 @@ public class CellContainerToViewMapper extends Mapper<CellContainer, View> {
       }
 
       @Override
-      public Animation fadeIn(Cell cell, int duration) {
-        View view = getViewFor(cell);
-        if (view == null) return Animations.finishedAnimation();
-        return view.fadeIn(duration);
+      public Animation fadeIn(Cell cell, final int duration) {
+        return animate(cell, new Function<View, Animation>() {
+          @Override
+          public Animation apply(View view) {
+            return view.fadeIn(duration);
+          }
+        });
       }
 
       @Override
-      public Animation fadeOut(Cell cell, int duration) {
-        View view = getViewFor(cell);
-        if (view == null) return Animations.finishedAnimation();
-        return view.fadeOut(duration);
+      public Animation fadeOut(Cell cell, final int duration) {
+        return animate(cell, new Function<View, Animation>() {
+          @Override
+          public Animation apply(View view) {
+            return view.fadeOut(duration);
+          }
+        });
       }
 
       @Override
-      public Animation showSlide(Cell cell, int duration) {
-        return Animations.finishedAnimation();
+      public Animation showSlide(Cell cell, final int duration) {
+        return animate(cell, new Function<View, Animation>() {
+          @Override
+          public Animation apply(View view) {
+            return view.showSlide(duration);
+          }
+        });
+      }
+
+      @Override
+      public Animation hideSlide(Cell cell, final int duration) {
+        return animate(cell, new Function<View, Animation>() {
+          @Override
+          public Animation apply(View view) {
+            return view.hideSlide(duration);
+          }
+        });
+      }
+
+      private Animation animate(Cell cell, Function<View, Animation> provider) {
+        View view = getViewFor(cell);
+        if (view == null) return Animations.finishedAnimation();
+        return provider.apply(view);
       }
     };
   }

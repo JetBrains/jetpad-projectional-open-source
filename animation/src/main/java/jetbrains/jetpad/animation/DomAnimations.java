@@ -49,4 +49,20 @@ public class DomAnimations {
       }
     };
   }
+
+  public static Animation hideSlide(final Element e, final int duration) {
+    return new GQueryBasedAnimation() {
+      @Override
+      protected GQuery createAnimation(final Runnable callback) {
+        int height = $(e).height();
+        return $(e).height(height).animate("height : 0", duration, new Function() {
+          @Override
+          public void f() {
+            $(e).height(null);
+            callback.run();
+          }
+        });
+      }
+    };
+  }
 }

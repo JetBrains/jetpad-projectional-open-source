@@ -214,6 +214,16 @@ public class View2Dom {
       public Animation fadeOut(View view, int duration) {
         return DomAnimations.fadeOut((Element) rootMapper.getDescendantMapper(view).getTarget(), duration);
       }
+
+      @Override
+      public Animation showSlide(View view, int duration) {
+        return DomAnimations.showSlide((Element) rootMapper.getDescendantMapper(view).getTarget(), duration);
+      }
+
+      @Override
+      public Animation hideSlide(View view, int duration) {
+        return DomAnimations.hideSlide((Element) rootMapper.getDescendantMapper(view).getTarget(), duration);
+      }
     });
 
     reg.add(PropertyBinding.bind(container.root().bounds(), new WritableProperty<Rectangle>() {

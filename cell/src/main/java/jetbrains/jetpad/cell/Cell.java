@@ -148,6 +148,10 @@ public abstract class Cell implements Composite<Cell>, HasVisibility, HasFocusab
     return getPeer().showSlide(this, duration);
   }
 
+  public Animation hideSlide(int duration) {
+    return getPeer().hideSlide(this, duration);
+  }
+
   public <EventT extends Event> void dispatch(EventT e, CellEventSpec<EventT> spec) {
     dispatchStep(e, spec);
     if (e.isConsumed()) return;
