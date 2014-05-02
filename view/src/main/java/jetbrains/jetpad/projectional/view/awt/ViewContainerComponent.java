@@ -824,15 +824,5 @@ public class ViewContainerComponent extends JComponent implements Scrollable {
     public Animation fadeOut(View view, int duration) {
       return Animations.finishedAnimation();
     }
-
-    @Override
-    public Animation slideShow(View view, int duration) {
-      return Animations.finishedAnimation();
-    }
-
-    @Override
-    public Animation slideHide(View view, int duration) {
-      return Animations.finishedAnimation();
-    }
   }
 }

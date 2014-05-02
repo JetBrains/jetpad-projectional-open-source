@@ -221,6 +221,20 @@ public class CellContainerToViewMapper extends Mapper<CellContainer, View> {
         if (view == null) return Animations.finishedAnimation();
         return view.fadeOut(duration);
       }
+
+      @Override
+      public Animation slideShow(Cell cell, int duration) {
+        View view = getViewFor(cell);
+        if (view == null) return Animations.finishedAnimation();
+        return view.slideShow(duration);
+      }
+
+      @Override
+      public Animation slideHide(Cell cell, int duration) {
+        View view = getViewFor(cell);
+        if (view == null) return Animations.finishedAnimation();
+        return view.slideHide(duration);
+      }
     };
   }
 

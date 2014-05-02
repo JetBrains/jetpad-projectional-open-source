@@ -93,14 +93,4 @@ public class NullViewContainerPeer implements ViewContainerPeer {
   public Animation fadeOut(View view, int duration) {
     return Animations.finishedAnimation();
   }
-
-  @Override
-  public Animation slideShow(View view, int duration) {
-    return Animations.finishedAnimation();
-  }
-
-  @Override
-  public Animation slideHide(View view, int duration) {
-    return Animations.finishedAnimation();
-  }
 }

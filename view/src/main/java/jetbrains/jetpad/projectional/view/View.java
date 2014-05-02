@@ -729,14 +729,6 @@ public abstract class View implements Composite<View>, HasFocusability, HasVisib
     return container().peer().fadeOut(this, duration);
   }
 
-  public Animation slideShow(int duration) {
-    return container().peer().slideShow(this, duration);
-  }
-
-  public Animation slideHide(int duration) {
-    return container().peer().slideHide(this, duration);
-  }
-
   private class ChildList extends ObservableArrayList<View> {
     @Override
     public void add(final int index, final View item) {
