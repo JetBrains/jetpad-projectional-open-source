@@ -22,7 +22,7 @@ import jetbrains.jetpad.base.edt.AwtEventDispatchThread;
 import jetbrains.jetpad.base.edt.EventDispatchThread;
 import jetbrains.jetpad.event.*;
 import jetbrains.jetpad.event.awt.EventTranslator;
-import jetbrains.jetpad.geometry.Vector;
+import jetbrains.jetpad.geometry.*;
 import jetbrains.jetpad.model.event.CompositeRegistration;
 import jetbrains.jetpad.model.event.EventHandler;
 import jetbrains.jetpad.model.property.PropertyChangeEvent;
@@ -39,6 +39,7 @@ import jetbrains.jetpad.values.FontFamily;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.Rectangle;
 import java.awt.datatransfer.*;
 import java.awt.event.*;
 import java.awt.event.KeyEvent;
@@ -477,9 +478,12 @@ public class ViewContainerComponent extends JComponent implements Scrollable {
       final double to = (ellipseView.to().get() * 360) / (2 * Math.PI);
 
       int borderWidth = ellipseView.borderWidth().get();
-      final Vector borderVec = new Vector(borderWidth, borderWidth);
+      final Vector borderVec = new Vector(borderWidth / 2, borderWidth / 2);
 
       final jetbrains.jetpad.geometry.Rectangle innerBounds = new jetbrains.jetpad.geometry.Rectangle(bounds.origin.add(borderVec), bounds.dimension.sub(borderVec.mul(2)));
+
+      System.out.println("inner bounds = " + innerBounds);
+
       g.fillArc(innerBounds.origin.x, innerBounds.origin.y, innerBounds.dimension.x - 1, innerBounds.dimension.y - 1, (int) from, (int) (to - from));
 
       if (borderWidth > 0) {
