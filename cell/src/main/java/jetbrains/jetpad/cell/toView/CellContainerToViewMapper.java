@@ -226,11 +226,6 @@ public class CellContainerToViewMapper extends Mapper<CellContainer, View> {
       public Animation showSlide(Cell cell, int duration) {
         return Animations.finishedAnimation();
       }
-
-      @Override
-      public Animation hideSlide(Cell cell, int duration) {
-        return Animations.finishedAnimation();
-      }
     };
   }
 

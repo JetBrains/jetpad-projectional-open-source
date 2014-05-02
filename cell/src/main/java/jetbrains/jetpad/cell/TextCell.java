@@ -80,11 +80,11 @@ public class TextCell extends Cell {
   }
 
   public int getCaretAt(int x) {
-    return getViewContainerPeer().getCaretAt(this, x);
+    return getPeer().getCaretAt(this, x);
   }
 
   public int getCaretOffset(int caret) {
-    return getViewContainerPeer().getCaretOffset(this, caret);
+    return getPeer().getCaretOffset(this, caret);
   }
 
   public void scrollToCaret() {

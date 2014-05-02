@@ -72,11 +72,6 @@ public interface CellContainerPeer {
     public Animation showSlide(Cell cell, int duration) {
       return Animations.finishedAnimation();
     }
-
-    @Override
-    public Animation hideSlide(Cell cell, int duration) {
-      return Animations.finishedAnimation();
-    }
   };
 
 
@@ -93,5 +88,4 @@ public interface CellContainerPeer {
   Animation fadeIn(Cell cell, int duration);
   Animation fadeOut(Cell cell, int duration);
   Animation showSlide(Cell cell, int duration);
-  Animation hideSlide(Cell cell, int duration);
 }

@@ -222,7 +222,7 @@ public class CompletionSupport {
     });
 
     textView.bottomPopup().set(completionCell);
-    completionCell.showSlide(300);
+    completionCell.showSlide(150);
   }
 
   public static TextCell showPopup(

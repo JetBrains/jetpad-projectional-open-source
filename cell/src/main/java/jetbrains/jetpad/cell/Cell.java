@@ -137,19 +137,15 @@ public abstract class Cell implements Composite<Cell>, HasVisibility, HasFocusab
   }
 
   public Animation fadeIn(int duration) {
-    return getViewContainerPeer().fadeIn(this, duration);
+    return getPeer().fadeIn(this, duration);
   }
 
   public Animation fadeOut(int duration) {
-    return getViewContainerPeer().fadeOut(this, duration);
+    return getPeer().fadeOut(this, duration);
   }
 
   public Animation showSlide(int duration) {
-    return getViewContainerPeer().showSlide(this, duration);
-  }
-
-  public Animation hideSlide(int duration) {
-    return getViewContainerPeer().hideSlide(this, duration);
+    return getPeer().showSlide(this, duration);
   }
 
   public <EventT extends Event> void dispatch(EventT e, CellEventSpec<EventT> spec) {
@@ -342,15 +338,15 @@ public abstract class Cell implements Composite<Cell>, HasVisibility, HasFocusab
   }
 
   public Vector origin() {
-    return getViewContainerPeer().getBounds(this).origin;
+    return getPeer().getBounds(this).origin;
   }
 
   public Vector dimension() {
-    return getViewContainerPeer().getBounds(this).dimension;
+    return getPeer().getBounds(this).dimension;
   }
 
   public Rectangle getBounds() {
-    return getViewContainerPeer().getBounds(this);
+    return getPeer().getBounds(this);
   }
 
   public void scrollTo() {
@@ -358,10 +354,10 @@ public abstract class Cell implements Composite<Cell>, HasVisibility, HasFocusab
   }
 
   public void scrollTo(Rectangle rect) {
-    getViewContainerPeer().scrollTo(rect, this);
+    getPeer().scrollTo(rect, this);
   }
 
-  protected CellContainerPeer getViewContainerPeer() {
+  protected CellContainerPeer getPeer() {
     if (myContainer == null) throw new IllegalStateException();
     return myContainer.getCellContainerPeer();
   }
