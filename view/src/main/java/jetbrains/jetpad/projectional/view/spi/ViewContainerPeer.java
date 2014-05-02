@@ -44,4 +44,6 @@ public interface ViewContainerPeer {
 
   Animation fadeIn(View view, int duration);
   Animation fadeOut(View view, int duration);
+  Animation slideShow(View view, int duration);
+  Animation slideHide(View view, int duration);
 }

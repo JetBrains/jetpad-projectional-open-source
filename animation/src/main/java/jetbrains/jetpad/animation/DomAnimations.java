@@ -36,4 +36,36 @@ public class DomAnimations {
       }
     };
   }
+
+  public static Animation slideShow(final Element e, final int duration) {
+    return new GQueryBasedAnimation() {
+      @Override
+      protected GQuery createAnimation(final Runnable callback) {
+        final GQuery target = $(e);
+        target.hide();
+        return target.slideToggle(duration, new Function() {
+          @Override
+          public void f() {
+            callback.run();
+          }
+        });
+      }
+    };
+  }
+
+  public static Animation slideHide(final Element e, final int duration) {
+    return new GQueryBasedAnimation() {
+      @Override
+      protected GQuery createAnimation(final Runnable callback) {
+        final GQuery target = $(e);
+        return target.slideToggle(duration, new Function() {
+          @Override
+          public void f() {
+            callback.run();
+            target.show();
+          }
+        });
+      }
+    };
+  }
 }
