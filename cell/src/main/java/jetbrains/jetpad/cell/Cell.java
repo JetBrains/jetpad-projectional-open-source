@@ -17,7 +17,7 @@ package jetbrains.jetpad.cell;
 
 import com.google.common.base.Objects;
 import jetbrains.jetpad.base.Registration;
-import jetbrains.jetpad.animation.Animation;
+import jetbrains.jetpad.base.animation.Animation;
 import jetbrains.jetpad.cell.event.CellEventSpec;
 import jetbrains.jetpad.cell.event.CompletionEvent;
 import jetbrains.jetpad.cell.event.EventPriority;

@@ -20,7 +20,6 @@
     <module>completion</module>
     <module>view</module>
     <module>event</module>
-    <module>animation</module>
     <module>hybrid</module>
     <module>projectional</module>
     <module>demo</module>
