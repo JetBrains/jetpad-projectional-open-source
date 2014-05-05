@@ -16,10 +16,10 @@
 package jetbrains.jetpad.projectional.view;
 
 import com.google.common.collect.Range;
+import jetbrains.jetpad.base.Registration;
 import jetbrains.jetpad.geometry.Rectangle;
 import jetbrains.jetpad.geometry.Vector;
 import jetbrains.jetpad.model.event.EventHandler;
-import jetbrains.jetpad.base.Registration;
 import jetbrains.jetpad.model.property.Property;
 import jetbrains.jetpad.model.property.PropertyChangeEvent;
 import jetbrains.jetpad.values.Color;
@@ -114,8 +114,6 @@ public class EllipseView extends View {
     Integer borderWidth = borderWidth().get();
     Vector radius = radius().get().add(new Vector(borderWidth / 2, borderWidth / 2));
     Rectangle rect = new Rectangle(center().get().sub(radius), radius.mul(2));
-
-    System.out.println("rect = " + rect);
 
     ctx.bounds(rect, 0);
   }
