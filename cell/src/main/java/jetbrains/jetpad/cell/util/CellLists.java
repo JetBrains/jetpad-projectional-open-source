@@ -15,8 +15,13 @@
  */
 package jetbrains.jetpad.cell.util;
 
+import com.google.common.base.Function;
 import com.google.common.base.Supplier;
-import jetbrains.jetpad.cell.*;
+import jetbrains.jetpad.base.animation.AnimatedList;
+import jetbrains.jetpad.base.animation.Animation;
+import jetbrains.jetpad.cell.Cell;
+import jetbrains.jetpad.cell.HorizontalCell;
+import jetbrains.jetpad.cell.TextCell;
 import jetbrains.jetpad.cell.trait.CellTraitPropertySpec;
 
 import java.util.List;
@@ -63,5 +68,38 @@ public class CellLists {
         }
       }
     };
+  }
+
+  public static List<Cell> animated(final List<Cell> baseList, final Function<Cell, Animation> add, final Function<Cell, Animation> remove) {
+    return new AnimatedList<Cell>(baseList) {
+      @Override
+      public Animation addAnimation(Cell e) {
+        return add.apply(e);
+      }
+
+      @Override
+      public Animation removeAnimation(Cell e) {
+        return remove.apply(e);
+      }
+    };
+  }
+
+  public static List<Cell> animated(List<Cell> baseList) {
+
+    return animated(baseList, new Function<Cell, Animation>() {
+      @Override
+      public Animation apply(Cell input) {
+        return input.fadeIn(300);
+      }
+    }, new Function<Cell, Animation>() {
+      @Override
+      public Animation apply(Cell input) {
+        return input.fadeOut(300);
+      }
+    });
+  }
+
+  public static List<Cell> animated(Cell cell) {
+    return animated(cell.children());
   }
 }
