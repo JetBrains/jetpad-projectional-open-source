@@ -18,6 +18,7 @@ package jetbrains.jetpad.projectional.view;
 import com.google.common.base.Objects;
 import com.google.common.base.Strings;
 import jetbrains.jetpad.base.Registration;
+import jetbrains.jetpad.base.animation.Animations;
 import jetbrains.jetpad.event.Event;
 import jetbrains.jetpad.geometry.Rectangle;
 import jetbrains.jetpad.geometry.Vector;
@@ -722,18 +723,22 @@ public abstract class View implements Composite<View>, HasFocusability, HasVisib
   }
 
   public Animation fadeIn(int duration) {
+    if (container() == null) return Animations.finishedAnimation();
     return container().peer().fadeIn(this, duration);
   }
 
   public Animation fadeOut(int duration) {
+    if (container() == null) return Animations.finishedAnimation();
     return container().peer().fadeOut(this, duration);
   }
 
   public Animation hideSlide(int duration) {
+    if (container() == null) return Animations.finishedAnimation();
     return container().peer().hideSlide(this, duration);
   }
 
   public Animation showSlide(int duration) {
+    if (container() == null) return Animations.finishedAnimation();
     return container().peer().showSlide(this, duration);
   }
 

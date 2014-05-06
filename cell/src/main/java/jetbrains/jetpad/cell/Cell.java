@@ -18,6 +18,7 @@ package jetbrains.jetpad.cell;
 import com.google.common.base.Objects;
 import jetbrains.jetpad.base.Registration;
 import jetbrains.jetpad.base.animation.Animation;
+import jetbrains.jetpad.base.animation.Animations;
 import jetbrains.jetpad.cell.event.CellEventSpec;
 import jetbrains.jetpad.cell.event.CompletionEvent;
 import jetbrains.jetpad.cell.event.EventPriority;
@@ -137,18 +138,22 @@ public abstract class Cell implements Composite<Cell>, HasVisibility, HasFocusab
   }
 
   public Animation fadeIn(int duration) {
+    if (cellContainer().get() == null) return Animations.finishedAnimation();
     return getPeer().fadeIn(this, duration);
   }
 
   public Animation fadeOut(int duration) {
+    if (cellContainer().get() == null) return Animations.finishedAnimation();
     return getPeer().fadeOut(this, duration);
   }
 
   public Animation showSlide(int duration) {
+    if (cellContainer().get() == null) return Animations.finishedAnimation();
     return getPeer().showSlide(this, duration);
   }
 
   public Animation hideSlide(int duration) {
+    if (cellContainer().get() == null) return Animations.finishedAnimation();
     return getPeer().hideSlide(this, duration);
   }
 
