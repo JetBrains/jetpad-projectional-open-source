@@ -4,13 +4,13 @@
 
   <groupId>jetbrains.jetpad.projectional</groupId>
   <artifactId>cell</artifactId>
-  <version>1.0.1-SNAPSHOT</version>
+  <version>1.1-SNAPSHOT</version>
   <packaging>jar</packaging>
 
   <parent>
     <groupId>jetbrains.jetpad</groupId>
     <artifactId>projectional-container</artifactId>
-    <version>1.0.1-SNAPSHOT</version>
+    <version>1.1-SNAPSHOT</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
 
@@ -18,67 +18,67 @@
     <dependency>
       <groupId>jetbrains.jetpad.mapper</groupId>
       <artifactId>mapper</artifactId>
-      <version>1.0.1-SNAPSHOT</version>
+      <version>1.1-SNAPSHOT</version>
     </dependency>
 
     <dependency>
       <groupId>jetbrains.jetpad.mapper</groupId>
       <artifactId>gwt-util</artifactId>
-      <version>1.0.1-SNAPSHOT</version>
+      <version>1.1-SNAPSHOT</version>
     </dependency>
 
     <dependency>
       <groupId>jetbrains.jetpad.projectional</groupId>
       <artifactId>domUtil</artifactId>
-      <version>1.0.1-SNAPSHOT</version>
+      <version>1.1-SNAPSHOT</version>
     </dependency>
 
     <dependency>
       <groupId>jetbrains.jetpad</groupId>
       <artifactId>test</artifactId>
-      <version>1.0.1-SNAPSHOT</version>
+      <version>1.1-SNAPSHOT</version>
     </dependency>
 
     <dependency>
       <groupId>jetbrains.jetpad.util</groupId>
       <artifactId>base</artifactId>
-      <version>1.0.1-SNAPSHOT</version>
+      <version>1.1-SNAPSHOT</version>
     </dependency>
 
     <dependency>
       <groupId>jetbrains.jetpad.util</groupId>
       <artifactId>geometry</artifactId>
-      <version>1.0.1-SNAPSHOT</version>
+      <version>1.1-SNAPSHOT</version>
     </dependency>
 
     <dependency>
       <groupId>jetbrains.jetpad</groupId>
       <artifactId>model</artifactId>
-      <version>1.0.1-SNAPSHOT</version>
+      <version>1.1-SNAPSHOT</version>
     </dependency>
 
     <dependency>
       <groupId>jetbrains.jetpad.projectional</groupId>
       <artifactId>event</artifactId>
-      <version>1.0.1-SNAPSHOT</version>
+      <version>1.1-SNAPSHOT</version>
     </dependency>
 
     <dependency>
       <groupId>jetbrains.jetpad.projectional</groupId>
       <artifactId>completion</artifactId>
-      <version>1.0.1-SNAPSHOT</version>
+      <version>1.1-SNAPSHOT</version>
     </dependency>
 
     <dependency>
       <groupId>jetbrains.jetpad.projectional</groupId>
       <artifactId>view</artifactId>
-      <version>1.0.1-SNAPSHOT</version>
+      <version>1.1-SNAPSHOT</version>
     </dependency>
 
     <dependency>
       <groupId>jetbrains.jetpad</groupId>
       <artifactId>grammar</artifactId>
-      <version>1.0.1-SNAPSHOT</version>
+      <version>1.1-SNAPSHOT</version>
     </dependency>
 
     <dependency>

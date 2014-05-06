@@ -4,13 +4,13 @@
 
   <groupId>jetbrains.jetpad.projectional</groupId>
   <artifactId>event</artifactId>
-  <version>1.0.1-SNAPSHOT</version>
+  <version>1.1-SNAPSHOT</version>
   <packaging>jar</packaging>
 
   <parent>
     <groupId>jetbrains.jetpad</groupId>
     <artifactId>projectional-container</artifactId>
-    <version>1.0.1-SNAPSHOT</version>
+    <version>1.1-SNAPSHOT</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
 
@@ -18,19 +18,19 @@
     <dependency>
       <groupId>jetbrains.jetpad</groupId>
       <artifactId>model</artifactId>
-      <version>1.0.1-SNAPSHOT</version>
+      <version>1.1-SNAPSHOT</version>
     </dependency>
 
     <dependency>
       <groupId>jetbrains.jetpad.util</groupId>
       <artifactId>geometry</artifactId>
-      <version>1.0.1-SNAPSHOT</version>
+      <version>1.1-SNAPSHOT</version>
     </dependency>
 
     <dependency>
       <groupId>jetbrains.jetpad.util</groupId>
       <artifactId>base</artifactId>
-      <version>1.0.1-SNAPSHOT</version>
+      <version>1.1-SNAPSHOT</version>
     </dependency>
 
     <dependency>
