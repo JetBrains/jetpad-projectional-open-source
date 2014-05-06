@@ -482,8 +482,6 @@ public class ViewContainerComponent extends JComponent implements Scrollable {
 
       final jetbrains.jetpad.geometry.Rectangle innerBounds = new jetbrains.jetpad.geometry.Rectangle(bounds.origin.add(borderVec), bounds.dimension.sub(borderVec.mul(2)));
 
-      System.out.println("inner bounds = " + innerBounds);
-
       g.fillArc(innerBounds.origin.x, innerBounds.origin.y, innerBounds.dimension.x - 1, innerBounds.dimension.y - 1, (int) from, (int) (to - from));
 
       if (borderWidth > 0) {
