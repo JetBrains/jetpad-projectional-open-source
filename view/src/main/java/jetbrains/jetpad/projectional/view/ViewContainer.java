@@ -330,8 +330,12 @@ public class ViewContainer {
     @Override
     public void set(View value) {
       if (value != null) {
-        if (!value.focusable().get()) throw new IllegalStateException("cannot set focus: " + value);
-        if (value.container() != ViewContainer.this) throw new IllegalArgumentException();
+        if (!value.focusable().get()) {
+          throw new IllegalStateException("cannot set focus: " + value);
+        }
+        if (value.container() != ViewContainer.this) {
+          throw new IllegalArgumentException();
+        }
       }
 
       View oldValue = get();

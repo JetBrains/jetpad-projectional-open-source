@@ -29,8 +29,12 @@ public abstract class SimpleCompletionItem extends BaseCompletionItem {
   }
 
   protected SimpleCompletionItem(@NotNull String matchingText, @NotNull String visibleText) {
-    if (matchingText == null) throw new NullPointerException();
-    if (visibleText == null) throw new NullPointerException();
+    if (matchingText == null) {
+      throw new NullPointerException();
+    }
+    if (visibleText == null) {
+      throw new NullPointerException();
+    }
     myMatchingText = matchingText;
     myVisibleText = visibleText;
   }

@@ -45,12 +45,16 @@ public class LRParserState {
   }
 
   public void addAction(Terminal terminal, LRParserAction<LRParserState> action) {
-    if (myActions.containsKey(terminal)) throw new IllegalStateException();
+    if (myActions.containsKey(terminal)) {
+      throw new IllegalStateException();
+    }
     myActions.put(terminal, action);
   }
 
   public void addNextState(NonTerminal nonTerminal, LRParserState state) {
-    if (myNextStates.containsKey(nonTerminal)) throw new IllegalStateException();
+    if (myNextStates.containsKey(nonTerminal)) {
+      throw new IllegalStateException();
+    }
     myNextStates.put(nonTerminal, state);
   }
 

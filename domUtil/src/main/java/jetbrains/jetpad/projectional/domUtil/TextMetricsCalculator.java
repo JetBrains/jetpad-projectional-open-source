@@ -35,7 +35,9 @@ public class TextMetricsCalculator {
 
   public static TextMetrics calculateAprox(final Font font, String text) {
     Canvas canvas = Canvas.createIfSupported();
-    if (canvas == null) throw new IllegalStateException();
+    if (canvas == null) {
+      throw new IllegalStateException();
+    }
     Context2d ctx = canvas.getContext2d();
     ctx.setFont(getFontString(font));
     final int width = (int) ctx.measureText(normalize(text)).getWidth();
@@ -62,7 +64,9 @@ public class TextMetricsCalculator {
 
   public static TextMetrics calculate(final Font font, String text) {
     Canvas canvas = Canvas.createIfSupported();
-    if (canvas == null) throw new IllegalStateException();
+    if (canvas == null) {
+      throw new IllegalStateException();
+    }
     Context2d ctx = canvas.getContext2d();
     ctx.setFont(getFontString(font));
     final int width = (int) ctx.measureText(normalize(text)).getWidth();
@@ -118,7 +122,9 @@ public class TextMetricsCalculator {
 
   private static Metrics measureFontRange(Font font, String text) {
     Canvas canvas = Canvas.createIfSupported();
-    if (canvas == null) throw new IllegalStateException();
+    if (canvas == null) {
+      throw new IllegalStateException();
+    }
 
     Context2d ctx = canvas.getContext2d();
 

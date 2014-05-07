@@ -38,7 +38,9 @@ class BaseCellMapper<SourceT extends Cell, TargetT extends View> extends Mapper<
   BaseCellMapper(SourceT source, TargetT target, CellToViewContext ctx) {
     super(source, target);
 
-    if (ctx == null) throw new NullPointerException();
+    if (ctx == null) {
+      throw new NullPointerException();
+    }
 
     myContext = ctx;
     myChildMappers = createChildList();

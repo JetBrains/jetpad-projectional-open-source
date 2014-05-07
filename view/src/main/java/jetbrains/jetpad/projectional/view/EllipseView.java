@@ -78,7 +78,9 @@ public class EllipseView extends View {
 
       @Override
       public void set(Double value) {
-        if (value < -2 * Math.PI || value > 2 * Math.PI) throw new IllegalArgumentException();
+        if (value < -2 * Math.PI || value > 2 * Math.PI) {
+          throw new IllegalArgumentException();
+        }
         prop.set(value);
       }
 

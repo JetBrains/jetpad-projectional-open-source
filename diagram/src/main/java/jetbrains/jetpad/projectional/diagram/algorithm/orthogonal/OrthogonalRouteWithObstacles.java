@@ -127,9 +127,13 @@ public class OrthogonalRouteWithObstacles {
     for (MyLine l: mySegmentsMap.keySet()) {
       for (Segment s: mySegmentsMap.get(l)) {
         if (l.ver) {
-          if (s.start.x != s.end.x || s.start.x != l.coord || s.start.y > s.end.y) throw new RuntimeException();
+          if (s.start.x != s.end.x || s.start.x != l.coord || s.start.y > s.end.y) {
+            throw new RuntimeException();
+          }
         } else {
-          if (s.start.y != s.end.y || s.start.y != l.coord || s.start.x > s.end.x) throw new RuntimeException();
+          if (s.start.y != s.end.y || s.start.y != l.coord || s.start.x > s.end.x) {
+            throw new RuntimeException();
+          }
         }
       }
     }

@@ -20,7 +20,9 @@ public class Expression extends ExpressionAstNode {
     expr.removeFromParent();
 
     ExpressionAstNode parentNode = parent().get();
-    if (parentNode == null) throw new IllegalStateException();
+    if (parentNode == null) {
+      throw new IllegalStateException();
+    }
     if (parentNode instanceof ExpressionContainer) {
       ((ExpressionContainer) parentNode).expression.set(expr);
     } else if (parentNode instanceof ParensExpression) {

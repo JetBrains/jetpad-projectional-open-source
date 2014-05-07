@@ -16,7 +16,6 @@
 package jetbrains.jetpad.completion;
 
 import com.google.common.base.Function;
-import jetbrains.jetpad.completion.CompletionItem;
 import jetbrains.jetpad.model.collections.CollectionItemEvent;
 import jetbrains.jetpad.model.collections.list.ObservableArrayList;
 import jetbrains.jetpad.model.collections.list.ObservableList;
@@ -86,7 +85,9 @@ public class CompletionMenuModel {
 
   public void up() {
     CompletionItem selected = selectedItem.get();
-    if (selected == null) throw new IllegalStateException();
+    if (selected == null) {
+      throw new IllegalStateException();
+    }
 
     int index = visibleItems.indexOf(selected);
     if (index > 0) {
@@ -96,7 +97,9 @@ public class CompletionMenuModel {
 
   public void down() {
     CompletionItem selected = selectedItem.get();
-    if (selected == null) throw new IllegalStateException();
+    if (selected == null) {
+      throw new IllegalStateException();
+    }
 
     int index = visibleItems.indexOf(selected);
     if (index < visibleItems.size() - 1) {

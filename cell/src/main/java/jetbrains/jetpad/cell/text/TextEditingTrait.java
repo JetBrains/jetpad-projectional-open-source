@@ -64,7 +64,9 @@ public class TextEditingTrait extends TextNavigationTrait {
 
       @Override
       public void activate(Runnable restoreState) {
-        if (isActive()) throw new IllegalStateException();
+        if (isActive()) {
+          throw new IllegalStateException();
+        }
         CompletionSupport.showCompletion(view, view.get(Completion.COMPLETION).get(new BaseCompletionParameters() {
           @Override
           public boolean isMenu() {
@@ -80,7 +82,9 @@ public class TextEditingTrait extends TextNavigationTrait {
 
       @Override
       public void deactivate() {
-        if (!isActive()) throw new IllegalStateException();
+        if (!isActive()) {
+          throw new IllegalStateException();
+        }
 
         view.get(CompletionSupport.HIDE_COMPLETION).run();
       }

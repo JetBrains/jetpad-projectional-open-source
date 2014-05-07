@@ -70,7 +70,9 @@ public class CompletionSupport {
 
           @Override
           public void activate(Runnable restoreState) {
-            if (isActive()) throw new IllegalStateException();
+            if (isActive()) {
+              throw new IllegalStateException();
+            }
             List<CompletionItem> items = cell.get(Completion.COMPLETION).get(new BaseCompletionParameters() {
               @Override
               public boolean isMenu() {
@@ -87,7 +89,9 @@ public class CompletionSupport {
 
           @Override
           public void deactivate() {
-            if (!isActive()) throw new IllegalStateException();
+            if (!isActive()) {
+              throw new IllegalStateException();
+            }
             cell.focus();
           }
 
@@ -115,7 +119,9 @@ public class CompletionSupport {
         Cell current = cell.cellContainer().get().focusedCell.get();
         while (current != cell) {
           Cell parent = current.parent().get();
-          if (parent == null) throw new IllegalStateException();
+          if (parent == null) {
+            throw new IllegalStateException();
+          }
           int index = parent.children().indexOf(current);
           if (index != 0) return false;
           current = parent;
@@ -351,7 +357,9 @@ public class CompletionSupport {
 
     popup.children().add(textView);
 
-    if (targetPopup.get() != null) throw new IllegalStateException();
+    if (targetPopup.get() != null) {
+      throw new IllegalStateException();
+    }
 
     targetPopup.set(popup);
     textView.focus();

@@ -57,7 +57,9 @@ public abstract class EditingTestCase {
   }
 
   protected KeyEvent press(KeyStrokeSpec spec) {
-    if (spec.keyStrokes().isEmpty()) throw new IllegalArgumentException();
+    if (spec.keyStrokes().isEmpty()) {
+      throw new IllegalArgumentException();
+    }
     return press(spec.keyStrokes().iterator().next());
   }
 

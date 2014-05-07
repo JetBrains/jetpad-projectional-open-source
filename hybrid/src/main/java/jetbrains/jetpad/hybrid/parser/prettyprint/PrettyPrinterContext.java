@@ -41,7 +41,9 @@ public class PrettyPrinterContext<NodeT>  {
   }
 
   public void print(final NodeT obj) {
-    if (myPrinted) throw new IllegalStateException();
+    if (myPrinted) {
+      throw new IllegalStateException();
+    }
 
     print(obj, new Runnable() {
       @Override
@@ -169,7 +171,9 @@ public class PrettyPrinterContext<NodeT>  {
 
   public ParseNode result() {
     ensurePrinted();
-    if (myStack.size() != 1 || myStack.peek().size() != 1) throw new IllegalStateException();
+    if (myStack.size() != 1 || myStack.peek().size() != 1) {
+      throw new IllegalStateException();
+    }
     return myStack.peek().get(0);
   }
 
@@ -187,7 +191,9 @@ public class PrettyPrinterContext<NodeT>  {
   }
 
   private void ensurePrinted() {
-    if (!myPrinted) throw new IllegalStateException();
+    if (!myPrinted) {
+      throw new IllegalStateException();
+    }
   }
 
   private static abstract class BaseParseNode implements ParseNode {
@@ -205,7 +211,9 @@ public class PrettyPrinterContext<NodeT>  {
 
     private CompositeParseNode(Object value, List<BaseParseNode> children) {
       myValue = value;
-      if (children.isEmpty()) throw new IllegalArgumentException();
+      if (children.isEmpty()) {
+        throw new IllegalArgumentException();
+      }
       for (BaseParseNode n : children) {
         n.myParent = this;
         myChildren.add(n);

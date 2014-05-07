@@ -47,7 +47,9 @@ public class ScrollView extends View {
   protected void doValidate(ValidationContext ctx) {
     super.doValidate(ctx);
 
-    if (children().size() > 1) throw new IllegalStateException();
+    if (children().size() > 1) {
+      throw new IllegalStateException();
+    }
 
     View child = children().isEmpty() ? null : children().get(0);
     if (child != null) {

@@ -110,7 +110,9 @@ public class TextView extends View {
 
 
   public int getCaretOffset(int caret) {
-    if (container() == null) throw new IllegalStateException();
+    if (container() == null) {
+      throw new IllegalStateException();
+    }
     if (text().get() == null) return 0;
     return textWidth(text().get().substring(0, caret));
   }

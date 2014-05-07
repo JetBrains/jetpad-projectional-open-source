@@ -193,7 +193,9 @@ class TokenListEditor<SourceT> {
   }
 
   void restoreState(List<Token> state) {
-    if (myRestoringState) throw new IllegalStateException();
+    if (myRestoringState) {
+      throw new IllegalStateException();
+    }
     myRestoringState = true;
     try {
       if (state != null) {

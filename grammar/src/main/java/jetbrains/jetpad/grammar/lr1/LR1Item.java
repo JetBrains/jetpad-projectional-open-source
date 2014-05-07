@@ -28,7 +28,9 @@ class LR1Item implements LRItem<LR1Item> {
   private Terminal myLookAhead;
 
   LR1Item(Rule rule, int index, Terminal lookAhead) {
-    if (index < 0 || index > rule.getSymbols().size()) throw new IllegalArgumentException();
+    if (index < 0 || index > rule.getSymbols().size()) {
+      throw new IllegalArgumentException();
+    }
 
     myRule = rule;
     myIndex = index;
@@ -62,7 +64,9 @@ class LR1Item implements LRItem<LR1Item> {
   }
 
   public LR1Item getNextItem() {
-    if (getNextSymbol() == null) throw new IllegalStateException();
+    if (getNextSymbol() == null) {
+      throw new IllegalStateException();
+    }
     return new LR1Item(myRule, myIndex + 1, myLookAhead);
   }
 

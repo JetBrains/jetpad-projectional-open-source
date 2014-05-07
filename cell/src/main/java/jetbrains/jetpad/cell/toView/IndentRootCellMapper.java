@@ -132,7 +132,9 @@ class IndentRootCellMapper extends BaseCellMapper<IndentCell, VerticalView> {
             @Override
             public void handle(Cell item) {
               BaseCellMapper<?, ?> mapper = (BaseCellMapper<?, ?>) getDescendantMapper(item);
-              if (mapper == null) throw new IllegalStateException();
+              if (mapper == null) {
+                throw new IllegalStateException();
+              }
               if (prop == Cell.HIGHLIGHTED) {
                 if ((Boolean) event.getNewValue()) {
                   mapper.changeExternalHighlight(1);

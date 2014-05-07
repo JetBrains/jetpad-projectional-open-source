@@ -44,7 +44,9 @@ class PersistentList<ValueT> extends AbstractList<ValueT> {
 
   @Override
   public ValueT get(int index) {
-    if (myNil) throw new IndexOutOfBoundsException();
+    if (myNil) {
+      throw new IndexOutOfBoundsException();
+    }
     if (index == 0) return myHead;
     return myTail.get(index - 1);
   }

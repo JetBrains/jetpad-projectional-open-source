@@ -182,7 +182,9 @@ public class IndentUpdater<SourceCT extends Composite<SourceCT>, TargetT> {
     } else if (myIndentUpdaterSource.isNewLine(child)) {
       TargetT lineCell = myNewLineToLine.remove(child);
 
-      if (lineCell == null) throw new IllegalStateException();
+      if (lineCell == null) {
+        throw new IllegalStateException();
+      }
 
       if (indent(child) > 0) {
         children(lineCell).remove(0);

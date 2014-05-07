@@ -132,7 +132,9 @@ public abstract class View implements Composite<View>, HasFocusability, HasVisib
   }
 
   void attach(ViewContainer container) {
-    if (myContainer != null) throw new IllegalStateException();
+    if (myContainer != null) {
+      throw new IllegalStateException();
+    }
 
     for (View child : children()) {
       child.attach(container);
@@ -152,7 +154,9 @@ public abstract class View implements Composite<View>, HasFocusability, HasVisib
   }
 
   void detach() {
-    if (myContainer == null) throw new IllegalStateException();
+    if (myContainer == null) {
+      throw new IllegalStateException();
+    }
 
     fire(new ListenerCaller<ViewListener>() {
       @Override
@@ -798,7 +802,9 @@ public abstract class View implements Composite<View>, HasFocusability, HasVisib
   private class ExternalChildList extends AbstractList<View> implements ObservableList<View> {
     @Override
     public View get(int index) {
-      if (myChildren == null) throw new IndexOutOfBoundsException();
+      if (myChildren == null) {
+        throw new IndexOutOfBoundsException();
+      }
       return myChildren.get(index);
     }
 
@@ -810,7 +816,9 @@ public abstract class View implements Composite<View>, HasFocusability, HasVisib
 
     @Override
     public View set(int index, View element) {
-      if (myChildren == null) throw new IndexOutOfBoundsException();
+      if (myChildren == null) {
+        throw new IndexOutOfBoundsException();
+      }
       return myChildren.set(index, element);
     }
 
@@ -828,7 +836,9 @@ public abstract class View implements Composite<View>, HasFocusability, HasVisib
 
     @Override
     public View remove(int index) {
-      if (myChildren == null) throw new IndexOutOfBoundsException();
+      if (myChildren == null) {
+        throw new IndexOutOfBoundsException();
+      }
       View result = myChildren.remove(index);
       if (myChildren.isEmpty()) {
         myChildren = null;

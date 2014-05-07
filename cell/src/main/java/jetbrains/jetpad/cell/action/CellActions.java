@@ -23,7 +23,9 @@ import jetbrains.jetpad.model.composite.Composites;
 public class CellActions {
 
   public static Runnable toCell(final Cell cell) {
-    if (cell == null) throw new NullPointerException();
+    if (cell == null) {
+      throw new NullPointerException();
+    }
 
     return new Runnable() {
       @Override
@@ -38,7 +40,9 @@ public class CellActions {
   }
 
   public static Runnable toHome(final Cell cell) {
-    if (cell == null) throw new NullPointerException();
+    if (cell == null) {
+      throw new NullPointerException();
+    }
 
     return new Runnable() {
       @Override
@@ -54,7 +58,9 @@ public class CellActions {
   }
 
   public static Runnable toEnd(final Cell cell) {
-    if (cell == null) throw new NullPointerException();
+    if (cell == null) {
+      throw new NullPointerException();
+    }
 
     return new Runnable() {
       @Override
@@ -70,7 +76,9 @@ public class CellActions {
   }
 
   public static Runnable toFirstFocusable(final Cell cell) {
-    if (cell == null) throw new NullPointerException();
+    if (cell == null) {
+      throw new NullPointerException();
+    }
 
     return new Runnable() {
       @Override
@@ -81,7 +89,9 @@ public class CellActions {
   }
 
   public static Runnable toLastFocusable(final Cell cell) {
-    if (cell == null) throw new NullPointerException();
+    if (cell == null) {
+      throw new NullPointerException();
+    }
 
     return new Runnable() {
       @Override
@@ -101,7 +111,9 @@ public class CellActions {
   }
 
   public static Runnable toPosition(final TextCell cell, final int pos) {
-    if (cell == null) throw new NullPointerException();
+    if (cell == null) {
+      throw new NullPointerException();
+    }
 
     return new Runnable() {
       @Override

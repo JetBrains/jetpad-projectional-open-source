@@ -23,7 +23,9 @@ public class Event {
   }
 
   public void consume() {
-    if (myConsumed) throw new IllegalStateException();
+    if (myConsumed) {
+      throw new IllegalStateException();
+    }
     myConsumed = true;
   }
 }

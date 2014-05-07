@@ -26,7 +26,9 @@ class SLRItem implements LRItem<SLRItem> {
   private int myIndex;
 
   SLRItem(Rule rule, int index) {
-    if (index < 0 || index > rule.getSymbols().size()) throw new IllegalArgumentException();
+    if (index < 0 || index > rule.getSymbols().size()) {
+      throw new IllegalArgumentException();
+    }
 
     myRule = rule;
     myIndex = index;
@@ -59,7 +61,9 @@ class SLRItem implements LRItem<SLRItem> {
   }
 
   public SLRItem getNextItem() {
-    if (getNextSymbol() == null) throw new IllegalStateException();
+    if (getNextSymbol() == null) {
+      throw new IllegalStateException();
+    }
     return new SLRItem(myRule, myIndex + 1);
   }
 

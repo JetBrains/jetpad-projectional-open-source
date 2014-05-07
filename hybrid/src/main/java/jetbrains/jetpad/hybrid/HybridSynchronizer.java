@@ -470,13 +470,17 @@ public class HybridSynchronizer<SourceT> implements Synchronizer {
   }
 
   private void addPlaceholder() {
-    if (myPlaceholder != null) throw new IllegalStateException();
+    if (myPlaceholder != null) {
+      throw new IllegalStateException();
+    }
     myPlaceholder = createPlaceholder();
     myTargetList.add(CellFactory.horizontal(myPlaceholder, CellFactory.placeHolder(myPlaceholder, myPlaceHolderText)));
   }
 
   private void removePlaceholder() {
-    if (myPlaceholder == null) throw new IllegalStateException();
+    if (myPlaceholder == null) {
+      throw new IllegalStateException();
+    }
     myTargetList.clear();
     myPlaceholder = null;
   }
@@ -517,7 +521,9 @@ public class HybridSynchronizer<SourceT> implements Synchronizer {
 
   public Range<Integer> selection() {
     ObservableList<Cell> selection = mySelectionSupport.selection();
-    if (selection.isEmpty()) throw new IllegalStateException();
+    if (selection.isEmpty()) {
+      throw new IllegalStateException();
+    }
     return Range.closed(myTargetList.indexOf(selection.get(0)), myTargetList.indexOf(selection.get(selection.size() - 1)) + 1);
   }
 
@@ -573,7 +579,9 @@ public class HybridSynchronizer<SourceT> implements Synchronizer {
 
   void clearSelection() {
     ObservableList<Cell> selection = mySelectionSupport.selection();
-    if (selection.isEmpty()) throw new IllegalStateException();
+    if (selection.isEmpty()) {
+      throw new IllegalStateException();
+    }
 
     int firstIndex = myTargetList.indexOf(selection.get(0));
     int lastIndex = firstIndex + selection.size();

@@ -19,7 +19,9 @@ public class IdentifierToken extends SimpleToken {
   private String myName;
 
   public IdentifierToken(String name) {
-    if (name == null) throw new NullPointerException();
+    if (name == null) {
+      throw new NullPointerException();
+    }
     myName =  name;
   }
 

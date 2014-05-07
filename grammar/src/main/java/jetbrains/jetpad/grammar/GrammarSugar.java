@@ -20,7 +20,9 @@ import java.util.List;
 
 public class GrammarSugar {
   public static NonTerminal seq(Symbol... symbols) {
-    if (symbols.length == 0) throw new IllegalArgumentException();
+    if (symbols.length == 0) {
+      throw new IllegalArgumentException();
+    }
     Grammar g = symbols[0].getGrammar();
     NonTerminal seq = g.newNonTerminal(g.uniqueName("seq_"));
     g.newRule(seq, symbols);

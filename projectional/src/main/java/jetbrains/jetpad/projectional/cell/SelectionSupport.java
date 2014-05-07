@@ -105,12 +105,20 @@ public class SelectionSupport<ItemT> {
     final int end = mySource.indexOf(to);
     Cell focusedCell = myTarget.cellContainer().get().focusedCell.get();
 
-    if (start == -1 || end == -1) throw new IllegalArgumentException();
-    if (start > end) throw new IllegalArgumentException();
-    if (!Composites.isDescendant(myTarget, focusedCell)) throw new IllegalStateException();
+    if (start == -1 || end == -1) {
+      throw new IllegalArgumentException();
+    }
+    if (start > end) {
+      throw new IllegalArgumentException();
+    }
+    if (!Composites.isDescendant(myTarget, focusedCell)) {
+      throw new IllegalStateException();
+    }
 
     int currentIndex = myTargetList.indexOf(currentCell());
-    if (currentIndex < start || currentIndex > end) throw new IllegalArgumentException();
+    if (currentIndex < start || currentIndex > end) {
+      throw new IllegalArgumentException();
+    }
 
     runSelectionAction(new Runnable() {
       @Override
@@ -297,7 +305,9 @@ public class SelectionSupport<ItemT> {
   }
 
   private void runSelectionAction(Runnable r) {
-    if (myChangingSelection) throw new IllegalStateException();
+    if (myChangingSelection) {
+      throw new IllegalStateException();
+    }
     changeSelection(r);
   }
 

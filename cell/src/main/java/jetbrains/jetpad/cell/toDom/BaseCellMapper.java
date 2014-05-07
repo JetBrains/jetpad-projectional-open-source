@@ -239,7 +239,9 @@ abstract class BaseCellMapper<SourceT extends Cell> extends Mapper<SourceT, Elem
 
       @Override
       public Node set(int index, Node element) {
-        if (element.getParentElement() != null) throw new IllegalStateException();
+        if (element.getParentElement() != null) {
+          throw new IllegalStateException();
+        }
 
         Element wrapperDiv = DOM.createDiv();
         wrapperDiv.appendChild(element);
@@ -251,7 +253,9 @@ abstract class BaseCellMapper<SourceT extends Cell> extends Mapper<SourceT, Elem
 
       @Override
       public void add(int index, Node element) {
-        if (element.getParentElement() != null) throw new IllegalStateException();
+        if (element.getParentElement() != null) {
+          throw new IllegalStateException();
+        }
 
         Element wrapperDiv = DOM.createDiv();
         wrapperDiv.appendChild(element);

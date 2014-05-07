@@ -54,7 +54,9 @@ public abstract class BinOpTransformer<ExprT, BinExprT extends ExprT> {
   }
 
   private BinExprT rotateLeft(BinExprT binExpr) {
-    if (!canRotateLeft(binExpr)) throw new IllegalStateException();
+    if (!canRotateLeft(binExpr)) {
+      throw new IllegalStateException();
+    }
     BinExprT right = asBinOp(right(binExpr).get());
     ExprT rightLeft = left(right).get();
     left(right).set(null);
@@ -65,7 +67,9 @@ public abstract class BinOpTransformer<ExprT, BinExprT extends ExprT> {
   }
 
   private BinExprT rotateRight(BinExprT binExpr) {
-    if (!canRotateRight(binExpr)) throw new IllegalStateException();
+    if (!canRotateRight(binExpr)) {
+      throw new IllegalStateException();
+    }
     BinExprT left = asBinOp(left(binExpr).get());
     ExprT leftRight = right(left).get();
     right(left).set(null);

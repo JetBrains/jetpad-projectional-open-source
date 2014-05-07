@@ -41,7 +41,9 @@ public class ParseNodes {
   public static ParseNode nonSameRangeChild(ParseNode node, int offset) {
     Range<Integer> targetRange = Range.closed(offset, offset + 1);
 
-    if (!node.range().encloses(targetRange)) throw new IllegalArgumentException();
+    if (!node.range().encloses(targetRange)) {
+      throw new IllegalArgumentException();
+    }
 
     for (ParseNode child : node.children()) {
       if (child.range().equals(node.range())) {

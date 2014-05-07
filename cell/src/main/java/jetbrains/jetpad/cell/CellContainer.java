@@ -60,8 +60,12 @@ public class CellContainer {
         mySettingValue = true;
         try {
           if (value != null) {
-            if (!value.canFocus()) throw new IllegalStateException("cannot set focus: " + value);
-            if (value.cellContainer().get() != CellContainer.this) throw new IllegalArgumentException();
+            if (!value.canFocus()) {
+              throw new IllegalStateException("cannot set focus: " + value);
+            }
+            if (value.cellContainer().get() != CellContainer.this) {
+              throw new IllegalArgumentException();
+            }
           }
 
           Cell oldValue = get();
@@ -355,7 +359,9 @@ public class CellContainer {
   }
 
   public void setCellContainerPeer(CellContainerPeer provider) {
-    if (provider == null) throw new NullPointerException();
+    if (provider == null) {
+      throw new NullPointerException();
+    }
     myCellContainerPeer = provider;
   }
 

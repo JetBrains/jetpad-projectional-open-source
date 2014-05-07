@@ -83,14 +83,20 @@ public final class Grammar {
   }
 
   private void checkName(String name) {
-    if (mySymbols.containsKey(name)) throw new IllegalArgumentException("Duplicate name");
+    if (mySymbols.containsKey(name)) {
+      throw new IllegalArgumentException("Duplicate name");
+    }
   }
 
   public Rule newRule(NonTerminal head, Symbol... symbols) {
     try {
-      if (head.getGrammar() != this) throw new IllegalArgumentException();
+      if (head.getGrammar() != this) {
+        throw new IllegalArgumentException();
+      }
       for (Symbol s : symbols) {
-        if (s.getGrammar() != this) throw new IllegalArgumentException();
+        if (s.getGrammar() != this) {
+          throw new IllegalArgumentException();
+        }
       }
 
       Rule result = new Rule(this, head, symbols);

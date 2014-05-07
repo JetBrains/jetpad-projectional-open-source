@@ -15,8 +15,6 @@
  */
 package jetbrains.jetpad.grammar.base;
 
-import com.google.common.base.*;
-import com.google.common.base.Objects;
 import jetbrains.jetpad.grammar.*;
 import jetbrains.jetpad.grammar.parser.LRParserAction;
 import jetbrains.jetpad.grammar.parser.LRParserState;
@@ -194,10 +192,16 @@ public abstract class BaseLRTableGenerator<ItemT extends LRItem<ItemT>> {
 
   private void checkGrammar() {
     NonTerminal start = myGrammar.getStart();
-    if (start.getRules().size() != 1) throw new IllegalArgumentException();
+    if (start.getRules().size() != 1) {
+      throw new IllegalArgumentException();
+    }
     Rule firstRule = start.getRules().iterator().next();
-    if (firstRule.getSymbols().size() != 1) throw new IllegalArgumentException();
-    if (!(firstRule.getSymbols().get(0) instanceof NonTerminal)) throw new IllegalArgumentException();
+    if (firstRule.getSymbols().size() != 1) {
+      throw new IllegalArgumentException();
+    }
+    if (!(firstRule.getSymbols().get(0) instanceof NonTerminal)) {
+      throw new IllegalArgumentException();
+    }
   }
 
   public void dumpTable() {

@@ -367,7 +367,9 @@ public abstract class Cell implements Composite<Cell>, HasVisibility, HasFocusab
   }
 
   protected CellContainerPeer getPeer() {
-    if (myContainer == null) throw new IllegalStateException();
+    if (myContainer == null) {
+      throw new IllegalStateException();
+    }
     return myContainer.getCellContainerPeer();
   }
 
@@ -516,8 +518,12 @@ public abstract class Cell implements Composite<Cell>, HasVisibility, HasFocusab
   }
 
   private void attach(final CellContainer container) {
-    if (container == null) throw new IllegalStateException();
-    if (myContainer != null) throw new IllegalStateException();
+    if (container == null) {
+      throw new IllegalStateException();
+    }
+    if (myContainer != null) {
+      throw new IllegalStateException();
+    }
 
     myContainer = container;
     myContainer.viewAdded(this);
@@ -542,7 +548,9 @@ public abstract class Cell implements Composite<Cell>, HasVisibility, HasFocusab
   }
 
   private void detach() {
-    if (myContainer == null) throw new IllegalStateException();
+    if (myContainer == null) {
+      throw new IllegalStateException();
+    }
 
     myContainer.viewRemoved(this);
 
@@ -568,7 +576,9 @@ public abstract class Cell implements Composite<Cell>, HasVisibility, HasFocusab
   }
 
   public void removeFromParent() {
-    if (myParent == null) throw new IllegalStateException();
+    if (myParent == null) {
+      throw new IllegalStateException();
+    }
 
     if (myParent.myChildren != null && myParent.myChildren.contains(this)) {
       myParent.children().remove(this);
@@ -660,7 +670,9 @@ public abstract class Cell implements Composite<Cell>, HasVisibility, HasFocusab
   private class ChildList extends ObservableArrayList<Cell> {
     @Override
     public void add(final int index, final Cell item) {
-      if (item.parent().get() != null) throw new IllegalStateException();
+      if (item.parent().get() != null) {
+        throw new IllegalStateException();
+      }
 
       final CollectionItemEvent<Cell> event = new CollectionItemEvent<>(item, index, true);
 
@@ -731,7 +743,9 @@ public abstract class Cell implements Composite<Cell>, HasVisibility, HasFocusab
   private class ExternalChildList extends AbstractList<Cell> implements ObservableList<Cell> {
     @Override
     public Cell get(int index) {
-      if (myChildren == null) throw new IndexOutOfBoundsException();
+      if (myChildren == null) {
+        throw new IndexOutOfBoundsException();
+      }
       return myChildren.get(index);
     }
 
@@ -743,7 +757,9 @@ public abstract class Cell implements Composite<Cell>, HasVisibility, HasFocusab
 
     @Override
     public Cell set(int index, Cell element) {
-      if (myChildren == null) throw new IndexOutOfBoundsException();
+      if (myChildren == null) {
+        throw new IndexOutOfBoundsException();
+      }
       return myChildren.set(index, element);
     }
 

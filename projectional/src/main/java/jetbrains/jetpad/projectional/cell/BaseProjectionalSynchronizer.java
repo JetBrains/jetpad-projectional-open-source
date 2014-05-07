@@ -478,7 +478,9 @@ abstract class BaseProjectionalSynchronizer<SourceT, ContextT, SourceItemT> impl
 
     @Override
     public Cell get(int index) {
-      if (myHasPlaceholder) throw new IndexOutOfBoundsException();
+      if (myHasPlaceholder) {
+        throw new IndexOutOfBoundsException();
+      }
       return getList().get(index);
     }
 

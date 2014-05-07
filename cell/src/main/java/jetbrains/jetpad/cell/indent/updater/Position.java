@@ -106,7 +106,9 @@ class Position<SourceCT extends Composite<SourceCT>> {
     SourceCT current = item.parent().get();
     SourceCT upperMostCell = item;
     while (current != myUpdater.root()) {
-      if (current == null) throw new IllegalStateException();
+      if (current == null) {
+        throw new IllegalStateException();
+      }
       if (myUpdater.isCell(current)) {
         upperMostCell = current;
       }
