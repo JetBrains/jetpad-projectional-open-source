@@ -25,5 +25,10 @@ public class ViewCell extends Cell {
 
   public final Property<View> view = getProp(VIEW);
 
+  public ViewCell() {
+  }
 
+  public ViewCell(View v) {
+    view.set(v);
+  }
 }
