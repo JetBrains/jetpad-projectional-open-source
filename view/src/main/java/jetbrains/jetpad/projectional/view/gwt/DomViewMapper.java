@@ -11,6 +11,8 @@ import jetbrains.jetpad.model.property.Selector;
 import jetbrains.jetpad.model.property.WritableProperty;
 import jetbrains.jetpad.projectional.view.dom.DomView;
 
+import static com.google.gwt.query.client.GQuery.$;
+
 class DomViewMapper extends BaseViewMapper<DomView, Element> {
   DomViewMapper(View2DomContext ctx, DomView source) {
     super(ctx, source, DOM.createDiv());
@@ -40,6 +42,15 @@ class DomViewMapper extends BaseViewMapper<DomView, Element> {
         getTarget().setInnerHTML("");
         if (value != null) {
           getTarget().appendChild(value);
+        }
+      }
+    }));
+
+    conf.add(Synchronizers.forProperty(getSource().focused(), new WritableProperty<Boolean>() {
+      @Override
+      public void set(Boolean value) {
+        if (value && getSource().element.get() != null) {
+          $(getSource().element.get()).focus();
         }
       }
     }));
