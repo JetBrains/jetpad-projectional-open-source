@@ -15,9 +15,11 @@
  */
 package jetbrains.jetpad.projectional.view;
 
+import com.google.common.base.Function;
 import com.google.common.base.Objects;
 import com.google.common.base.Strings;
 import jetbrains.jetpad.base.Registration;
+import jetbrains.jetpad.base.animation.Animation;
 import jetbrains.jetpad.base.animation.Animations;
 import jetbrains.jetpad.event.Event;
 import jetbrains.jetpad.geometry.Rectangle;
@@ -33,7 +35,7 @@ import jetbrains.jetpad.model.composite.HasVisibility;
 import jetbrains.jetpad.model.event.*;
 import jetbrains.jetpad.model.property.*;
 import jetbrains.jetpad.model.util.ListMap;
-import jetbrains.jetpad.base.animation.Animation;
+import jetbrains.jetpad.projectional.view.spi.ViewContainerPeer;
 import jetbrains.jetpad.values.Color;
 
 import java.util.*;
@@ -726,24 +728,45 @@ public abstract class View implements Composite<View>, HasFocusability, HasVisib
     return result;
   }
 
-  public Animation fadeIn(int duration) {
-    if (container() == null) return Animations.finishedAnimation();
-    return container().peer().fadeIn(this, duration);
+  public Animation fadeIn(final int duration) {
+    return animate(new Function<ViewContainerPeer, Animation>() {
+      @Override
+      public Animation apply(ViewContainerPeer input) {
+        return input.fadeIn(View.this, duration);
+      }
+    });
   }
 
-  public Animation fadeOut(int duration) {
-    if (container() == null) return Animations.finishedAnimation();
-    return container().peer().fadeOut(this, duration);
+  public Animation fadeOut(final int duration) {
+    return animate(new Function<ViewContainerPeer, Animation>() {
+      @Override
+      public Animation apply(ViewContainerPeer input) {
+        return input.fadeOut(View.this, duration);
+      }
+    });
   }
 
-  public Animation hideSlide(int duration) {
-    if (container() == null) return Animations.finishedAnimation();
-    return container().peer().hideSlide(this, duration);
+  public Animation hideSlide(final int duration) {
+    return animate(new Function<ViewContainerPeer, Animation>() {
+      @Override
+      public Animation apply(ViewContainerPeer input) {
+        return input.hideSlide(View.this, duration);
+      }
+    });
   }
 
-  public Animation showSlide(int duration) {
+  public Animation showSlide(final int duration) {
+    return animate(new Function<ViewContainerPeer, Animation>() {
+      @Override
+      public Animation apply(ViewContainerPeer input) {
+        return input.showSlide(View.this, duration);
+      }
+    });
+  }
+
+  private Animation animate(Function<ViewContainerPeer, Animation> provider) {
     if (container() == null) return Animations.finishedAnimation();
-    return container().peer().showSlide(this, duration);
+    return provider.apply(container().peer());
   }
 
   private class ChildList extends ObservableArrayList<View> {
