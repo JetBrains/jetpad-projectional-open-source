@@ -15,10 +15,13 @@
  */
 package jetbrains.jetpad.projectional.demo.diagram.mapper;
 
+import com.google.gwt.dom.client.Element;
+import com.google.gwt.user.client.DOM;
 import jetbrains.jetpad.base.Value;
 import jetbrains.jetpad.event.Key;
 import jetbrains.jetpad.event.KeyEvent;
 import jetbrains.jetpad.event.MouseEvent;
+import jetbrains.jetpad.geometry.Vector;
 import jetbrains.jetpad.mapper.Mapper;
 import jetbrains.jetpad.mapper.MapperFactory;
 import jetbrains.jetpad.mapper.Synchronizers;
@@ -26,12 +29,22 @@ import jetbrains.jetpad.projectional.demo.diagram.model.DiagramNode;
 import jetbrains.jetpad.projectional.demo.diagram.model.SimpleDiagram;
 import jetbrains.jetpad.projectional.diagram.view.RootTrait;
 import jetbrains.jetpad.projectional.view.*;
+import jetbrains.jetpad.projectional.view.dom.DomView;
 
 public class RootSimpleDiagramMapper extends Mapper<SimpleDiagram, ViewContainer> {
   public RootSimpleDiagramMapper(SimpleDiagram source) {
     super(source, new ViewContainer());
 
     getTarget().root().addTrait(RootTrait.ROOT_TRAIT);
+
+    DomView view = new DomView();
+
+    Element el = DOM.createButton();
+    el.setInnerHTML("Button");
+    view.element.set(el);
+
+    getTarget().decorationRoot().children().add(view);
+    view.moveTo(new Vector(100, 100));
 
     final Value<Boolean> newItem = new Value<>(false);
     getTarget().root().addTrait(new ViewTraitBuilder()

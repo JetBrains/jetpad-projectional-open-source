@@ -20,6 +20,7 @@ import com.google.gwt.user.client.DOM;
 import jetbrains.jetpad.mapper.Mapper;
 import jetbrains.jetpad.mapper.MapperFactory;
 import jetbrains.jetpad.projectional.view.*;
+import jetbrains.jetpad.projectional.view.dom.DomView;
 
 class ViewMapperFactory {
   //todo set to false because it causes ui corruption when changing zoom in chrome
@@ -46,6 +47,8 @@ class ViewMapperFactory {
           result = new EllipseViewMapper(ctx, (EllipseView) source);
         } else if (source instanceof ImageView) {
           result = new ImageViewMapper(ctx, (ImageView) source);
+        } else if (source instanceof DomView) {
+          result = new DomViewMapper(ctx, (DomView) source);
         } else {
           result = new CompositeViewMapper<View, Element>(ctx, source, DOM.createDiv());
         }
