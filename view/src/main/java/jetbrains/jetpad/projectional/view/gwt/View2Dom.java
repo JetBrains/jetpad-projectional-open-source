@@ -30,6 +30,7 @@ import com.google.gwt.user.client.Window;
 import jetbrains.jetpad.base.Handler;
 import jetbrains.jetpad.base.Registration;
 import jetbrains.jetpad.base.Value;
+import jetbrains.jetpad.base.animation.Animation;
 import jetbrains.jetpad.base.edt.EventDispatchThread;
 import jetbrains.jetpad.base.edt.JsEventDispatchThread;
 import jetbrains.jetpad.event.*;
@@ -38,6 +39,7 @@ import jetbrains.jetpad.event.dom.EventTranslator;
 import jetbrains.jetpad.geometry.Rectangle;
 import jetbrains.jetpad.geometry.Vector;
 import jetbrains.jetpad.mapper.Mapper;
+import jetbrains.jetpad.mapper.gwt.DomAnimations;
 import jetbrains.jetpad.model.event.CompositeRegistration;
 import jetbrains.jetpad.model.event.EventHandler;
 import jetbrains.jetpad.model.property.*;
@@ -47,8 +49,7 @@ import jetbrains.jetpad.projectional.domUtil.TextMetricsCalculator;
 import jetbrains.jetpad.projectional.view.TextView;
 import jetbrains.jetpad.projectional.view.View;
 import jetbrains.jetpad.projectional.view.ViewContainer;
-import jetbrains.jetpad.base.animation.Animation;
-import jetbrains.jetpad.mapper.gwt.DomAnimations;
+import jetbrains.jetpad.projectional.view.dom.DomView;
 import jetbrains.jetpad.projectional.view.spi.ViewContainerPeer;
 import jetbrains.jetpad.values.Font;
 
@@ -241,9 +242,11 @@ public class View2Dom {
     reg.add(eventRegistration(Event.ONMOUSEDOWN, $(rootDiv).mousedown(new Function() {
       @Override
       public boolean f(Event e) {
-        pressed.set(true);
         rootDiv.focus();
-        container.mousePressed(toMouseEvent(rootDiv, e));
+        MouseEvent me = toMouseEvent(rootDiv, e);
+        if (isDomViewEvent(container, me)) return true;
+        pressed.set(true);
+        container.mousePressed(me);
         pressedOutside.set(false);
         return false;
       }
@@ -271,7 +274,9 @@ public class View2Dom {
       @Override
       public boolean f(Event e) {
         pressed.set(false);
-        container.mouseReleased(toMouseEvent(rootDiv, e));
+        MouseEvent me = toMouseEvent(rootDiv, e);
+        if (isDomViewEvent(container, me)) return true;
+        container.mouseReleased(me);
         return false;
       }
     })));
@@ -302,7 +307,8 @@ public class View2Dom {
     reg.add(eventRegistration(Event.ONMOUSEOVER, $(rootDiv).mouseenter(new Function() {
       @Override
       public boolean f(Event e) {
-        container.mouseEntered(toMouseEvent(rootDiv, e));
+        MouseEvent me = toMouseEvent(rootDiv, e);
+        container.mouseEntered(me);
         return false;
       }
     })));
@@ -422,6 +428,14 @@ public class View2Dom {
     int y = cy + scrollTop - absoluteTop + elScrollTop;
 
     return new MouseEvent(x, y);
+  }
+
+  private static boolean isDomViewEvent(ViewContainer c, MouseEvent e) {
+    View targetView = c.root().viewAt(e.location());
+    if (targetView instanceof DomView) {
+      return true;
+    }
+    return false;
   }
 
   private static native void disablePopup(Element el) /*-{

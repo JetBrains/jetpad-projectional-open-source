@@ -16,6 +16,8 @@
 package jetbrains.jetpad.projectional.demo.diagram.mapper;
 
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.query.client.Function;
+import com.google.gwt.query.client.GQuery;
 import com.google.gwt.user.client.DOM;
 import jetbrains.jetpad.base.Value;
 import jetbrains.jetpad.event.Key;
@@ -42,6 +44,13 @@ public class RootSimpleDiagramMapper extends Mapper<SimpleDiagram, ViewContainer
     Element el = DOM.createButton();
     el.setInnerHTML("Button");
     view.element.set(el);
+
+    GQuery.$(el).click(new Function() {
+      @Override
+      public void f() {
+        System.out.println();
+      }
+    });
 
     getTarget().decorationRoot().children().add(view);
     view.moveTo(new Vector(100, 100));
