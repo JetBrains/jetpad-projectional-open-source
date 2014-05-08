@@ -22,7 +22,7 @@ import jetbrains.jetpad.projectional.base.ImageData;
 public class ImageView extends View {
   public static final ViewPropertySpec<ImageData> IMAGE = new ViewPropertySpec<>("image", ViewPropertyKind.RELAYOUT_AND_REPAINT, ImageData.emptyImage(new Vector(100, 100)));
 
-  public final Property<ImageData> image = prop(IMAGE);
+  public final Property<ImageData> image = getProp(IMAGE);
 
   @Override
   protected void doValidate(ValidationContext ctx) {

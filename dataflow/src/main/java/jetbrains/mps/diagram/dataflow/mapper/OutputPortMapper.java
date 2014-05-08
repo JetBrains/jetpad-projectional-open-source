@@ -51,10 +51,10 @@ public class OutputPortMapper extends Mapper<OutputPort, RectView> {
       public void handle(View view, MouseEvent e) {
         if (connector.get() == null) return;
         View atEvent = getTarget().container().root().viewAt(e.location());
-        if (atEvent == null || atEvent.prop(InputPortMapper.PORT).get() == null) {
+        if (atEvent == null || atEvent.getProp(InputPortMapper.PORT).get() == null) {
           connector.get().removeFromParent();
         } else {
-          connector.get().input.set(atEvent.prop(InputPortMapper.PORT).get());
+          connector.get().input.set(atEvent.getProp(InputPortMapper.PORT).get());
         }
         connector.set(null);
       }

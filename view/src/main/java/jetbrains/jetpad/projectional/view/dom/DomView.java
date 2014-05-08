@@ -10,7 +10,7 @@ import jetbrains.jetpad.projectional.view.ViewPropertySpec;
 public class DomView extends View {
   public static final ViewPropertySpec<Element> ELEMENT = new ViewPropertySpec<>("element", ViewPropertyKind.RELAYOUT);
 
-  public final Property<Element> element = prop(ELEMENT);
+  public final Property<Element> element = getProp(ELEMENT);
 
   @Override
   protected void doValidate(ValidationContext ctx) {

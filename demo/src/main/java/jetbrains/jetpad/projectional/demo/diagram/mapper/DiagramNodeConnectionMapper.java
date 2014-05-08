@@ -33,7 +33,7 @@ class DiagramNodeConnectionMapper extends Mapper<DiagramNodeConnection, LineConn
     super(source, new LineConnection());
 
     getTarget().view().focusable().set(true);
-    getTarget().view().prop(RootTrait.DELETE_HANDLER).set(new DeleteHandler() {
+    getTarget().view().getProp(RootTrait.DELETE_HANDLER).set(new DeleteHandler() {
       @Override
       public boolean canDelete() {
         return true;

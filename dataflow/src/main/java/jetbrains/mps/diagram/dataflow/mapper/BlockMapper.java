@@ -55,13 +55,13 @@ public class BlockMapper extends Mapper<Block, BlockView> {
         }
       }
     }).build());
-    getTarget().rect.prop(RootTrait.MOVE_HANDLER).set(new MoveHandler() {
+    getTarget().rect.getProp(RootTrait.MOVE_HANDLER).set(new MoveHandler() {
       @Override
       public void move(Vector delta) {
         getSource().location.set(getSource().location.get().add(delta));
       }
     });
-    getTarget().prop(RootTrait.DELETE_HANDLER).set(new DeleteHandler() {
+    getTarget().getProp(RootTrait.DELETE_HANDLER).set(new DeleteHandler() {
       @Override
       public boolean canDelete() {
         return true;

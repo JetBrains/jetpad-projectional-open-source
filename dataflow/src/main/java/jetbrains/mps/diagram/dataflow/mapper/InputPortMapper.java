@@ -29,6 +29,6 @@ public class InputPortMapper extends Mapper<InputPort, RectView> {
     super(source, new RectView());
     getTarget().dimension().set(new Vector(10, 10));
     getTarget().background().set(Color.LIGHT_GRAY);
-    getTarget().prop(PORT).set(getSource());
+    getTarget().getProp(PORT).set(getSource());
   }
 }

@@ -17,9 +17,6 @@ package jetbrains.jetpad.projectional.view;
 
 import jetbrains.jetpad.geometry.Vector;
 import jetbrains.jetpad.model.property.Property;
-import jetbrains.jetpad.projectional.view.View;
-import jetbrains.jetpad.projectional.view.ViewPropertyKind;
-import jetbrains.jetpad.projectional.view.ViewPropertySpec;
 import jetbrains.jetpad.values.Color;
 
 public class RectView extends View {
@@ -30,7 +27,7 @@ public class RectView extends View {
   }
 
   public Property<Vector> dimension() {
-    return prop(DIMENSION);
+    return getProp(DIMENSION);
   }
 
   @Override

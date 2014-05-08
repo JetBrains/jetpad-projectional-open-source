@@ -37,14 +37,14 @@ class DiagramNodeMapper extends Mapper<DiagramNode, DiagramNodeView> {
     getTarget().padding().set(10);
     getTarget().focusable().set(true);
 
-    getTarget().prop(RootTrait.MOVE_HANDLER).set(new MoveHandler() {
+    getTarget().getProp(RootTrait.MOVE_HANDLER).set(new MoveHandler() {
       @Override
       public void move(Vector delta) {
         getSource().location.set(getSource().location.get().add(delta));
       }
     });
 
-    getTarget().prop(RootTrait.DELETE_HANDLER).set(new DeleteHandler() {
+    getTarget().getProp(RootTrait.DELETE_HANDLER).set(new DeleteHandler() {
       @Override
       public boolean canDelete() {
         return true;

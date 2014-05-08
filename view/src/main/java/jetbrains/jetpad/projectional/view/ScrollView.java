@@ -32,15 +32,15 @@ public class ScrollView extends View {
   }
 
   public Property<Vector> maxDimension() {
-    return prop(MAX_DIMENSION);
+    return getProp(MAX_DIMENSION);
   }
 
   public Property<Vector> offset() {
-    return prop(OFFSET);
+    return getProp(OFFSET);
   }
 
   public Property<Boolean> scroll() {
-    return prop(SCROLL);
+    return getProp(SCROLL);
   }
 
   @Override

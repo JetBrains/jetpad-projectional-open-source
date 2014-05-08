@@ -38,7 +38,7 @@ class DiagramNodeView extends VerticalView {
   }
 
   Property<Integer> padding() {
-    return prop(PADDING);
+    return getProp(PADDING);
   }
 
   @Override

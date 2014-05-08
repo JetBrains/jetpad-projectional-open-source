@@ -67,31 +67,31 @@ public abstract class View implements Composite<View>, HasFocusability, HasVisib
   private int myDeltaListenersCount;
 
   public Property<Boolean> visible() {
-    return prop(VISIBLE);
+    return getProp(VISIBLE);
   }
 
   public ReadableProperty<Boolean> focused() {
-    return prop(FOCUSED);
+    return getProp(FOCUSED);
   }
 
   void focused(boolean focused) {
-    prop(FOCUSED).set(focused);
+    getProp(FOCUSED).set(focused);
   }
 
   public Property<Boolean> focusable() {
-    return prop(FOCUSABLE);
+    return getProp(FOCUSABLE);
   }
 
   public Property<Color> background() {
-    return prop(BACKGROUND);
+    return getProp(BACKGROUND);
   }
 
   public Property<Color> border() {
-    return prop(BORDER_COLOR);
+    return getProp(BORDER_COLOR);
   }
 
   public Property<String> name() {
-    return prop(NAME);
+    return getProp(NAME);
   }
 
   public ReadableProperty<View> parent() {
@@ -275,10 +275,10 @@ public abstract class View implements Composite<View>, HasFocusability, HasVisib
 
 
   protected Property<Vector> toParentOffsetProp(final ViewPropertySpec<Vector> spec) {
-    return new ToParentOffsetProperty(prop(spec));
+    return new ToParentOffsetProperty(getProp(spec));
   }
 
-  public <ValueT> Property<ValueT> prop(final ViewPropertySpec<ValueT> spec) {
+  public <ValueT> Property<ValueT> getProp(final ViewPropertySpec<ValueT> spec) {
     return new Property<ValueT>() {
       @Override
       public String getPropExpr() {

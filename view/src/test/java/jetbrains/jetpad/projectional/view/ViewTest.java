@@ -75,7 +75,7 @@ public class ViewTest {
   @Test
   public void propSet() {
     View v = newView();
-    v.prop(NAME).addHandler(nameChangeListener());
+    v.getProp(NAME).addHandler(nameChangeListener());
 
     v.set(NAME, "aaa");
     assertEquals("aaa", v.get(NAME));
@@ -86,7 +86,7 @@ public class ViewTest {
   @Test
   public void propChangeWithAddingTrait() {
     View v = newView();
-    v.prop(NAME).addHandler(nameChangeListener());
+    v.getProp(NAME).addHandler(nameChangeListener());
 
     v.addTrait(X_NAME_TRAIT);
     assertEquals("x", v.get(NAME));
@@ -97,8 +97,8 @@ public class ViewTest {
   @Test
   public void propChangeWithAdditngTraitWithParent() {
     View v = newView();
-    v.prop(NAME).addHandler(nameChangeListener());
-    v.prop(ID).addHandler(idChangeListener());
+    v.getProp(NAME).addHandler(nameChangeListener());
+    v.getProp(ID).addHandler(idChangeListener());
 
     v.addTrait(ID_TRAIT);
 
@@ -113,7 +113,7 @@ public class ViewTest {
   public void propChangeWithRemovingTrait() {
     View v = newView();
 
-    v.prop(NAME).addHandler(nameChangeListener());
+    v.getProp(NAME).addHandler(nameChangeListener());
 
     Registration reg = v.addTrait(X_NAME_TRAIT);
     reg.remove();
@@ -126,8 +126,8 @@ public class ViewTest {
   @Test
   public void propChangeWithRemovingTraitWithParent() {
     View v = newView();
-    v.prop(NAME).addHandler(nameChangeListener());
-    v.prop(ID).addHandler(idChangeListener());
+    v.getProp(NAME).addHandler(nameChangeListener());
+    v.getProp(ID).addHandler(idChangeListener());
 
     v.addTrait(ID_TRAIT).remove();
 
@@ -141,7 +141,7 @@ public class ViewTest {
   @Test
   public void oneTraitOverridesOther() {
     View v = newView();
-    v.prop(NAME).addHandler(nameChangeListener());
+    v.getProp(NAME).addHandler(nameChangeListener());
     v.addTrait(OVERRIDE_NAME_TRAIT);
 
     assertNameFired(null, "xx");

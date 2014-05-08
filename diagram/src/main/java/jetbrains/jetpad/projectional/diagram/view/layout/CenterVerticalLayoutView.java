@@ -37,7 +37,7 @@ public class CenterVerticalLayoutView extends GroupView {
   public CenterVerticalLayoutView(boolean useOuterBounds) {
     myUseOuterBounds = useOuterBounds;
     if (useOuterBounds) {
-      prop(DiagramViewSpecs.CONTENT_RECT_HANDLER).set(new Handler<Rectangle>() {
+      getProp(DiagramViewSpecs.CONTENT_RECT_HANDLER).set(new Handler<Rectangle>() {
         @Override
         public void handle(Rectangle item) {
           outerBounds().set(item);
@@ -47,7 +47,7 @@ public class CenterVerticalLayoutView extends GroupView {
   }
 
   private Property<Rectangle> outerBounds() {
-    return prop(OUTER_BOUNDS);
+    return getProp(OUTER_BOUNDS);
   }
 
   @Override

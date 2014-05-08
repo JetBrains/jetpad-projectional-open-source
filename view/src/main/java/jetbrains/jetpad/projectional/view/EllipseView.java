@@ -39,7 +39,7 @@ public class EllipseView extends View {
   }
 
   public Property<Vector> radius() {
-    return prop(RADIUS);
+    return getProp(RADIUS);
   }
 
   public Property<Vector> center() {
@@ -55,15 +55,15 @@ public class EllipseView extends View {
   }
 
   public Property<Color> borderColor() {
-    return prop(BORDER_COLOR);
+    return getProp(BORDER_COLOR);
   }
 
   public Property<Integer> borderWidth() {
-    return prop(BORDER_WIDTH);
+    return getProp(BORDER_WIDTH);
   }
 
   private Property<Double> angleProperty(ViewPropertySpec<Double> spec) {
-    final Property<Double> prop = prop(spec);
+    final Property<Double> prop = getProp(spec);
 
     return new Property<Double>() {
       @Override

@@ -39,7 +39,7 @@ public class LabelView extends CellView {
   private static final ViewPropertySpec<Vector> LABEL_DELTA = new ViewPropertySpec<>("label delta", ViewPropertyKind.RELAYOUT, Vector.ZERO);
   private static final int LABEL_TO_CONNECTION_DIST = 2;
 
-  private Property<Vector> myLabelDelta = prop(LABEL_DELTA);
+  private Property<Vector> myLabelDelta = getProp(LABEL_DELTA);
   private LabelPlacement myLabelPlacement = null;
   private PolyLineConnection myConnection;
 

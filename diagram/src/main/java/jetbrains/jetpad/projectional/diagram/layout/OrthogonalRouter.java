@@ -171,7 +171,7 @@ public class OrthogonalRouter implements ConnectionRouter {
 
   private Vector getEndpointShift(View endpointView, Vector defaultShift) {
     if (endpointView == null) return defaultShift;
-    GridDirection dir = endpointView.prop(DiagramViewSpecs.CONNECTOR_DIR).get();
+    GridDirection dir = endpointView.getProp(DiagramViewSpecs.CONNECTOR_DIR).get();
     if (dir != null) {
       return dir.dir().mul(DIST_FROM_OBSTACLE);
     } else {

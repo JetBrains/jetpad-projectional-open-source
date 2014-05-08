@@ -28,11 +28,11 @@ public class IndentHorizontalLayoutView extends GroupView {
   private final ViewPropertySpec<Integer> INDENT = new ViewPropertySpec<>("indent", ViewPropertyKind.RELAYOUT);
 
   public Property<Integer> padding() {
-    return prop(PADDING);
+    return getProp(PADDING);
   }
 
   public Property<Integer> indent() {
-    return prop(INDENT);
+    return getProp(INDENT);
   }
 
   @Override

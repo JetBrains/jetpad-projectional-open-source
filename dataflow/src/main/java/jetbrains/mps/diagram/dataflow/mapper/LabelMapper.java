@@ -37,7 +37,7 @@ class LabelMapper extends Mapper<Connector, LabelView> {
 
     getSource().text.set("label " + ourConnectorCounter++);
 
-    getTarget().prop(RootTrait.MOVE_HANDLER).set(new MoveHandler() {
+    getTarget().getProp(RootTrait.MOVE_HANDLER).set(new MoveHandler() {
       @Override
       public void move(Vector delta) {
         getTarget().changeLabelDelta(delta);

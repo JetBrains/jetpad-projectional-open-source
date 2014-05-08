@@ -38,11 +38,11 @@ public class RelativePositionerView extends View {
   }
 
   public Property<HorizontalAnchor> horizontalAnchor() {
-    return prop(HORIZONTAL_ANCHOR);
+    return getProp(HORIZONTAL_ANCHOR);
   }
 
   public Property<VerticalAnchor> verticalAnchor() {
-    return prop(VERTICAL_ANCHOR);
+    return getProp(VERTICAL_ANCHOR);
   }
 
   @Override

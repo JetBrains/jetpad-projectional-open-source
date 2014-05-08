@@ -32,7 +32,7 @@ public class ConnectorMapper extends Mapper<Connector, PolyLineConnection> {
   ConnectorMapper(Connector source, View popupView) {
     super(source, new PolyLineConnection(new CellView()));
 
-    getTarget().view().prop(RootTrait.DELETE_HANDLER).set(new DeleteHandler() {
+    getTarget().view().getProp(RootTrait.DELETE_HANDLER).set(new DeleteHandler() {
       @Override
       public boolean canDelete() {
         return true;

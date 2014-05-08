@@ -49,35 +49,35 @@ public class TextView extends View {
   }
 
   public Property<String> text() {
-    return prop(TEXT);
+    return getProp(TEXT);
   }
 
   public Property<Color> textColor() {
-    return prop(TEXT_COLOR);
+    return getProp(TEXT_COLOR);
   }
 
   public Property<Boolean> caretVisible() {
-    return prop(CARET_VISIBLE);
+    return getProp(CARET_VISIBLE);
   }
 
   public Property<Integer> caretPosition() {
-    return prop(CARET_POSITION);
+    return getProp(CARET_POSITION);
   }
 
   public Property<Boolean> bold() {
-    return prop(BOLD);
+    return getProp(BOLD);
   }
 
   public Property<Boolean> italic() {
-    return prop(ITALIC);
+    return getProp(ITALIC);
   }
 
   public Property<FontFamily> fontFamily() {
-    return prop(FONT_FAMILY);
+    return getProp(FONT_FAMILY);
   }
 
   public Property<Integer> fontSize() {
-    return prop(FONT_SIZE);
+    return getProp(FONT_SIZE);
   }
 
   public ReadableProperty<Font> font() {
@@ -90,11 +90,11 @@ public class TextView extends View {
   }
 
   public Property<Boolean> selectionVisible() {
-    return prop(SELECTION_VISIBLE);
+    return getProp(SELECTION_VISIBLE);
   }
 
   public Property<Integer> selectionStart() {
-    return prop(SELECTION_START);
+    return getProp(SELECTION_START);
   }
 
   public int getCaretAt(int xOffset) {

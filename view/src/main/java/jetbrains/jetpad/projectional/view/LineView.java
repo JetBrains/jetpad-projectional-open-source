@@ -39,11 +39,11 @@ public class LineView extends View {
   }
 
   public Property<Color> color() {
-    return prop(COLOR);
+    return getProp(COLOR);
   }
 
   public Property<Integer> width() {
-    return prop(WIDTH);
+    return getProp(WIDTH);
   }
 
   @Override

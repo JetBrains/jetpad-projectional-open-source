@@ -25,11 +25,11 @@ public class VerticalView extends View {
   private static final ViewPropertySpec<Integer> INDENT_WIDTH = new ViewPropertySpec<>("indentWidth", ViewPropertyKind.NONE, 0);
 
   public Property<Boolean> indent() {
-    return prop(INDENT);
+    return getProp(INDENT);
   }
 
   public ReadableProperty<Integer> indentWidth() {
-    return prop(INDENT_WIDTH);
+    return getProp(INDENT_WIDTH);
   }
 
   @Override
@@ -40,7 +40,7 @@ public class VerticalView extends View {
     int width = 0;
     int height = 0;
     int indentWidth = indent().get() ? container().peer().textWidth(TextView.DEFAULT_FONT, "x") * 2 : 0;
-    prop(INDENT_WIDTH).set(indentWidth);
+    getProp(INDENT_WIDTH).set(indentWidth);
 
     for (View child : children()) {
       if (!child.visible().get()) continue;

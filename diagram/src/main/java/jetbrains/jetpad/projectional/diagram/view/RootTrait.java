@@ -35,12 +35,12 @@ public class RootTrait {
     builder.on(ViewEvents.MOUSE_PRESSED, new ViewEventHandler<MouseEvent>() {
       @Override
       public void handle(View view, MouseEvent e) {
-        view.prop(prevPoint).set(e.location());
+        view.getProp(prevPoint).set(e.location());
         View current = view.viewAt(e.location());
 
         while (current != null) {
-          MoveHandler mh = current.prop(MOVE_HANDLER).get();
-          view.prop(moveHandler).set(mh);
+          MoveHandler mh = current.getProp(MOVE_HANDLER).get();
+          view.getProp(moveHandler).set(mh);
           if (mh != null) break;
           current = current.parent().get();
         }
@@ -64,19 +64,19 @@ public class RootTrait {
     builder.on(ViewEvents.MOUSE_RELEASED, new ViewEventHandler<MouseEvent>() {
       @Override
       public void handle(View view, MouseEvent e) {
-        view.prop(prevPoint).set(null);
-        view.prop(moveHandler).set(null);
+        view.getProp(prevPoint).set(null);
+        view.getProp(moveHandler).set(null);
       }
     });
 
     builder.on(ViewEvents.MOUSE_DRAGGED, new ViewEventHandler<MouseEvent>() {
       @Override
       public void handle(View view, MouseEvent e) {
-        MoveHandler mh = view.prop(moveHandler).get();
+        MoveHandler mh = view.getProp(moveHandler).get();
         if (mh != null) {
-          mh.move(e.location().sub(view.prop(prevPoint).get()));
+          mh.move(e.location().sub(view.getProp(prevPoint).get()));
         }
-        view.prop(prevPoint).set(e.location());
+        view.getProp(prevPoint).set(e.location());
       }
     });
 
@@ -88,7 +88,7 @@ public class RootTrait {
           View current = vc.focusedView().get();
 
           while (current != null) {
-            DeleteHandler dh = current.prop(DELETE_HANDLER).get();
+            DeleteHandler dh = current.getProp(DELETE_HANDLER).get();
             if (dh != null && dh.canDelete()) {
               dh.delete();
               e.consume();
