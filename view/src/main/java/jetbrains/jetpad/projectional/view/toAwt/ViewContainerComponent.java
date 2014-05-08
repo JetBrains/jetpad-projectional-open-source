@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package jetbrains.jetpad.projectional.view.awt;
+package jetbrains.jetpad.projectional.view.toAwt;
 
 import jetbrains.jetpad.base.Handler;
 import jetbrains.jetpad.base.Registration;
@@ -53,7 +53,7 @@ import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-import static jetbrains.jetpad.projectional.view.awt.AwtConverters.toAwtColor;
+import static jetbrains.jetpad.projectional.view.toAwt.AwtConverters.toAwtColor;
 
 public class ViewContainerComponent extends JComponent implements Scrollable {
   private static final String MONOSPACED_FONT = java.awt.Font.MONOSPACED;

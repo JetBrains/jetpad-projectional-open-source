@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package jetbrains.jetpad.projectional.view.gwt;
+package jetbrains.jetpad.projectional.view.toGwt;
 
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style;

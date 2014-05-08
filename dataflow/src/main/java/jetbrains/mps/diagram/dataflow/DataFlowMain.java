@@ -15,7 +15,7 @@
  */
 package jetbrains.mps.diagram.dataflow;
 
-import jetbrains.jetpad.projectional.view.awt.AwtDemo;
+import jetbrains.jetpad.projectional.view.toAwt.AwtDemo;
 import jetbrains.mps.diagram.dataflow.mapper.RootDiagramMapper;
 import jetbrains.mps.diagram.dataflow.model.Diagram;
 

@@ -22,7 +22,7 @@ import jetbrains.jetpad.projectional.diagram.layout.OrthogonalRouter;
 import jetbrains.jetpad.projectional.diagram.view.DiagramView;
 import jetbrains.jetpad.projectional.diagram.view.PolyLineConnection;
 import jetbrains.jetpad.projectional.view.ViewContainer;
-import jetbrains.jetpad.projectional.view.awt.AwtDemo;
+import jetbrains.jetpad.projectional.view.toAwt.AwtDemo;
 
 import java.util.List;
 

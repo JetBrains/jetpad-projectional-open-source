@@ -18,7 +18,7 @@ package jetbrains.jetpad.projectional.util.awt;
 import jetbrains.jetpad.cell.CellContainer;
 import jetbrains.jetpad.cell.toView.MapperCell2View;
 import jetbrains.jetpad.projectional.view.ViewContainer;
-import jetbrains.jetpad.projectional.view.awt.AwtDemo;
+import jetbrains.jetpad.projectional.view.toAwt.AwtDemo;
 
 public class AwtComponent {
   public static void showDemo(final CellContainer container) {

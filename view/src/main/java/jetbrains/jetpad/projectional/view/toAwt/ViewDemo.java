@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package jetbrains.jetpad.projectional.view.awt;
+package jetbrains.jetpad.projectional.view.toAwt;
 
 import jetbrains.jetpad.geometry.Vector;
 import jetbrains.jetpad.projectional.view.*;

@@ -15,10 +15,7 @@
  */
 package jetbrains.jetpad.projectional.demo.diagramExpr;
 
-import jetbrains.jetpad.projectional.demo.diagramExpr.mapper.RootSimpleDiagramMapper;
-import jetbrains.jetpad.projectional.demo.diagramExpr.model.SimpleDiagram;
-import jetbrains.jetpad.projectional.view.ViewContainer;
-import jetbrains.jetpad.projectional.view.awt.AwtDemo;
+import jetbrains.jetpad.projectional.view.toAwt.AwtDemo;
 
 public class DiagramExprDemoMain {
   public static void main(String[] args) {

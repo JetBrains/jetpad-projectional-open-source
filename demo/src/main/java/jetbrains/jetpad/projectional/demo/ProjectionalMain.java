@@ -23,7 +23,7 @@ import jetbrains.jetpad.projectional.demo.diagramExpr.DiagramExprDemo;
 import jetbrains.jetpad.projectional.demo.expr.ExprDemo;
 import jetbrains.jetpad.projectional.demo.hybridExpr.HybridExprDemo;
 import jetbrains.jetpad.projectional.demo.indentDemo.IndentDemo;
-import jetbrains.jetpad.projectional.view.gwt.View2Dom;
+import jetbrains.jetpad.projectional.view.toGwt.View2Dom;
 
 import static com.google.gwt.query.client.GQuery.$;
 

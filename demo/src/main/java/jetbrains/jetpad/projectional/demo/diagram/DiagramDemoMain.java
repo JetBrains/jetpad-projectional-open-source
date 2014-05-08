@@ -15,13 +15,9 @@
  */
 package jetbrains.jetpad.projectional.demo.diagram;
 
-import jetbrains.jetpad.geometry.Vector;
 import jetbrains.jetpad.projectional.demo.diagram.mapper.RootSimpleDiagramMapper;
 import jetbrains.jetpad.projectional.demo.diagram.model.SimpleDiagram;
-import jetbrains.jetpad.projectional.view.PolyLineView;
-import jetbrains.jetpad.projectional.view.PolygonView;
-import jetbrains.jetpad.projectional.view.awt.AwtDemo;
-import jetbrains.jetpad.values.Color;
+import jetbrains.jetpad.projectional.view.toAwt.AwtDemo;
 
 public class DiagramDemoMain {
   public static void main(String[] args) {

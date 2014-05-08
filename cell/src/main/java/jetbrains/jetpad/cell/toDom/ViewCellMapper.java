@@ -21,7 +21,7 @@ import jetbrains.jetpad.mapper.Synchronizers;
 import jetbrains.jetpad.model.property.WritableProperty;
 import jetbrains.jetpad.projectional.view.View;
 import jetbrains.jetpad.projectional.view.ViewContainer;
-import jetbrains.jetpad.projectional.view.gwt.View2Dom;
+import jetbrains.jetpad.projectional.view.toGwt.View2Dom;
 
 class ViewCellMapper extends BaseCellMapper<ViewCell> {
   private ViewContainer myViewContainer;

@@ -13,10 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package jetbrains.jetpad.projectional.view.gwt;
+package jetbrains.jetpad.projectional.view.toGwt;
 
 import jetbrains.jetpad.geometry.Rectangle;
-import jetbrains.jetpad.model.property.Property;
 import jetbrains.jetpad.model.property.ReadableProperty;
 
 interface View2DomContext {

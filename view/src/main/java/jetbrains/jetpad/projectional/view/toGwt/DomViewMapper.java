@@ -1,4 +1,4 @@
-package jetbrains.jetpad.projectional.view.gwt;
+package jetbrains.jetpad.projectional.view.toGwt;
 
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.user.client.DOM;

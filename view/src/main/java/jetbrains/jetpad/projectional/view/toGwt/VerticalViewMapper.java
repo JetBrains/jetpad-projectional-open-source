@@ -13,20 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package jetbrains.jetpad.projectional.view.gwt;
+package jetbrains.jetpad.projectional.view.toGwt;
 
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.user.client.DOM;
-import jetbrains.jetpad.geometry.Vector;
 import jetbrains.jetpad.mapper.Synchronizers;
 import jetbrains.jetpad.model.property.DerivedProperty;
 import jetbrains.jetpad.model.property.WritableProperty;
-import jetbrains.jetpad.projectional.view.ScrollView;
 import jetbrains.jetpad.projectional.view.VerticalView;
 
-class ScrollViewMapper extends CompositeViewMapper<ScrollView, Element> {
-  ScrollViewMapper(View2DomContext ctx, ScrollView source) {
+class VerticalViewMapper extends CompositeViewMapper<VerticalView, Element> {
+  VerticalViewMapper(View2DomContext ctx, VerticalView source) {
     super(ctx, source, DOM.createDiv());
   }
 
@@ -39,18 +37,24 @@ class ScrollViewMapper extends CompositeViewMapper<ScrollView, Element> {
   protected void registerSynchronizers(SynchronizersConfiguration conf) {
     super.registerSynchronizers(conf);
 
-    final Style style = getTarget().getStyle();
-    conf.add(Synchronizers.forProperty(getSource().scroll(), new WritableProperty<Boolean>() {
-      @Override
-      public void set(Boolean value) {
-        style.setOverflow(value ? Style.Overflow.HIDDEN : Style.Overflow.VISIBLE);
+    conf.add(Synchronizers.forProperty(new DerivedProperty<Boolean>(getSource().bounds(), context().visibleArea()) {
+        @Override
+        public Boolean get() {
+          return getSource().bounds().get().intersects(context().visibleArea().get());
+        }
+      },
+      new WritableProperty<Boolean>() {
+        @Override
+        public void set(Boolean value) {
+          getTarget().getStyle().setVisibility(value ? Style.Visibility.VISIBLE : Style.Visibility.HIDDEN);
+        }
       }
-    }));
-    conf.add(Synchronizers.forProperty(getSource().maxDimension(), new WritableProperty<Vector>() {
+    ));
+
+    conf.add(Synchronizers.forProperty(getSource().indentWidth(), new WritableProperty<Integer>() {
       @Override
-      public void set(Vector value) {
-        style.setProperty("maxWidth", value.x + "px");
-        style.setProperty("maxHeight", value.y + "px");
+      public void set(Integer value) {
+        getTarget().getStyle().setPaddingLeft(value, Style.Unit.PX);
       }
     }));
   }

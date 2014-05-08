@@ -16,7 +16,7 @@
 package jetbrains.mps.diagram.dataflow;
 
 import com.google.gwt.core.client.EntryPoint;
-import jetbrains.jetpad.projectional.view.gwt.View2Dom;
+import jetbrains.jetpad.projectional.view.toGwt.View2Dom;
 import jetbrains.mps.diagram.dataflow.mapper.RootDiagramMapper;
 import jetbrains.mps.diagram.dataflow.model.Diagram;
 

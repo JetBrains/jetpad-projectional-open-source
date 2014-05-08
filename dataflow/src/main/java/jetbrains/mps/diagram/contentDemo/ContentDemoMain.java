@@ -15,7 +15,7 @@
  */
 package jetbrains.mps.diagram.contentDemo;
 
-import jetbrains.jetpad.projectional.view.awt.AwtDemo;
+import jetbrains.jetpad.projectional.view.toAwt.AwtDemo;
 import jetbrains.mps.diagram.contentDemo.mapper.ContentRootMapper;
 import jetbrains.mps.diagram.contentDemo.model.Content;
 import jetbrains.mps.diagram.contentDemo.model.ContentItem;
