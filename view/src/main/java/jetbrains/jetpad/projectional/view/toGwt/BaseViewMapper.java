@@ -176,6 +176,17 @@ class BaseViewMapper<ViewT extends View, ElementT extends Element> extends Mappe
         });
       }
     }));
+
+    conf.add(Synchronizers.forProperty(getSource().hasShadow(), new WritableProperty<Boolean>() {
+      @Override
+      public void set(Boolean value) {
+        if (value) {
+          getTarget().getStyle().setProperty("boxShadow", "5px 5px 10px black");
+        } else {
+          getTarget().getStyle().setProperty("boxShadow", null);
+        }
+      }
+    }));
   }
 
   protected OMSVGSVGElement createSVG(OMSVGDocument doc) {
