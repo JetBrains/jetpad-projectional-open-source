@@ -49,6 +49,7 @@ public abstract class View implements Composite<View>, HasFocusability, HasVisib
   public static final ViewPropertySpec<Boolean> FOCUSABLE = new ViewPropertySpec<>("focusabled", ViewPropertyKind.NONE, false);
   public static final ViewPropertySpec<Color> BACKGROUND = new ViewPropertySpec<>("background", ViewPropertyKind.REPAINT, null);
   public static final ViewPropertySpec<Color> BORDER_COLOR = new ViewPropertySpec<>("bordercolor", ViewPropertyKind.REPAINT, null);
+  public static final ViewPropertySpec<Boolean> HAS_SHADOW = new ViewPropertySpec<>("hasShadow", ViewPropertyKind.REPAINT, false);
 
   private View myParent;
   private ObservableList<View> myChildren;
@@ -90,6 +91,10 @@ public abstract class View implements Composite<View>, HasFocusability, HasVisib
 
   public Property<Color> border() {
     return getProp(BORDER_COLOR);
+  }
+
+  public Property<Boolean> hasShadow() {
+    return getProp(HAS_SHADOW);
   }
 
   public Property<String> name() {

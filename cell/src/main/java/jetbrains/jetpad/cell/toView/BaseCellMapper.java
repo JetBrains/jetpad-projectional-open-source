@@ -101,6 +101,7 @@ class BaseCellMapper<SourceT extends Cell, TargetT extends View> extends Mapper<
     }
     view.border().set(cell.borderColor().get());
     view.visible().set(cell.visible().get());
+    view.hasShadow().set(cell.hasShadow().get());
   }
 
   void updatePopup(PropertyChangeEvent<Cell> event) {
