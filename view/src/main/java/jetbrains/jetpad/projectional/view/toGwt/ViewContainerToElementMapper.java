@@ -67,8 +67,9 @@ public class ViewContainerToElementMapper extends Mapper<ViewContainer, Element>
       return new MapperFactory<View, Element>() {
         @Override
         public Mapper<? extends View, ? extends Element> createMapper(View source) {
-          for (MapperFactory<View, Element> f : myFactories) {
-            Mapper<? extends View, ? extends Element>result = f.createMapper(source);
+          for (int i = myFactories.size() - 1; i >= 0; i--) {
+            MapperFactory<View, Element> f = myFactories.get(i);
+            Mapper<? extends View, ? extends Element> result = f.createMapper(source);
             if (result != null) {
               return result;
             }

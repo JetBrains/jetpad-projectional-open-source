@@ -62,7 +62,7 @@ class CompositeViewMapper<ViewT extends View, ElementT extends Element> extends 
         nodes,
         context().getFactory()));
     } else {
-      conf.add(Synchronizers.forObservableRole(this, getSource().children(), nodes, ViewMapperFactory.factory(context())));
+      conf.add(Synchronizers.forObservableRole(this, getSource().children(), nodes, context().getFactory()));
     }
   }
 }
