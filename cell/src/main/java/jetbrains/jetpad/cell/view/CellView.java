@@ -15,6 +15,7 @@
  */
 package jetbrains.jetpad.cell.view;
 
+import jetbrains.jetpad.base.Registration;
 import jetbrains.jetpad.cell.Cell;
 import jetbrains.jetpad.cell.CellContainer;
 import jetbrains.jetpad.cell.toView.CellToView;
@@ -26,11 +27,15 @@ import jetbrains.jetpad.projectional.view.*;
 
 public class CellView extends HorizontalView {
   public static final ViewPropertySpec<Cell> CELL = new ViewPropertySpec<>("cell", ViewPropertyKind.RELAYOUT, null);
+  static final ViewPropertySpec<Boolean> EXTERNAL_MAPPING = new ViewPropertySpec<>("externalMapping", ViewPropertyKind.NONE, false);
 
   public final Property<Cell> cell = getProp(CELL);
   public final CellContainer container = new CellContainer();
 
+  final Property<Boolean> externalMapping = getProp(EXTERNAL_MAPPING);
+
   private GroupView myPopupView = new GroupView();
+  private Registration myMappingRegistration;
 
   public CellView() {
     cell.addHandler(new EventHandler<PropertyChangeEvent<Cell>>() {
@@ -43,7 +48,18 @@ public class CellView extends HorizontalView {
       }
     });
 
-    CellToView.map(container, this, this, myPopupView);
+    myMappingRegistration = CellToView.map(container, this, this, myPopupView);
+    externalMapping.addHandler(new EventHandler<PropertyChangeEvent<Boolean>>() {
+      @Override
+      public void onEvent(PropertyChangeEvent<Boolean> event) {
+        if (event.getNewValue()) {
+          myMappingRegistration.remove();
+          myMappingRegistration = null;
+        } else {
+          myMappingRegistration = CellToView.map(container, CellView.this, CellView.this, myPopupView);
+        }
+      }
+    });
   }
 
   @Override
