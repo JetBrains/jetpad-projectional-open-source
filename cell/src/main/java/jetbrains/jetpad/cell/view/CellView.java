@@ -15,20 +15,19 @@
  */
 package jetbrains.jetpad.cell.view;
 
+import jetbrains.jetpad.cell.Cell;
+import jetbrains.jetpad.cell.CellContainer;
 import jetbrains.jetpad.cell.toView.CellToView;
 import jetbrains.jetpad.model.composite.Composites;
 import jetbrains.jetpad.model.event.EventHandler;
 import jetbrains.jetpad.model.property.Property;
 import jetbrains.jetpad.model.property.PropertyChangeEvent;
-import jetbrains.jetpad.model.property.ValueProperty;
-import jetbrains.jetpad.cell.Cell;
-import jetbrains.jetpad.cell.CellContainer;
-import jetbrains.jetpad.projectional.view.GroupView;
-import jetbrains.jetpad.projectional.view.HorizontalView;
-import jetbrains.jetpad.projectional.view.View;
+import jetbrains.jetpad.projectional.view.*;
 
 public class CellView extends HorizontalView {
-  public final Property<Cell> cell = new ValueProperty<>();
+  public static final ViewPropertySpec<Cell> CELL = new ViewPropertySpec<>("cell", ViewPropertyKind.RELAYOUT, null);
+
+  public final Property<Cell> cell = getProp(CELL);
   public final CellContainer container = new CellContainer();
 
   private GroupView myPopupView = new GroupView();
