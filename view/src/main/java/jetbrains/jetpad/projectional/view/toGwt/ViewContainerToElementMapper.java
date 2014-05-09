@@ -44,7 +44,10 @@ import jetbrains.jetpad.projectional.view.spi.NullViewContainerPeer;
 import jetbrains.jetpad.projectional.view.spi.ViewContainerPeer;
 import jetbrains.jetpad.values.Font;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 
 import static com.google.gwt.query.client.GQuery.$;
 
@@ -52,6 +55,7 @@ public class ViewContainerToElementMapper extends Mapper<ViewContainer, Element>
   private Element myRootDiv = DOM.createDiv();
   private ValueProperty<Rectangle> myVisibleArea = new ValueProperty<>();
   private Property<Mapper<? extends View, ? extends Element>> myRootMapper = createChildProperty();
+  private List<MapperFactory<View, Element>> myFactories = new ArrayList<>();
   private ViewToDomContext myCtx = new ViewToDomContext() {
     @Override
     public ReadableProperty<Rectangle> visibleArea() {
@@ -60,12 +64,27 @@ public class ViewContainerToElementMapper extends Mapper<ViewContainer, Element>
 
     @Override
     public MapperFactory<View, Element> getFactory() {
-      return ViewMapperFactory.factory(this);
+      return new MapperFactory<View, Element>() {
+        @Override
+        public Mapper<? extends View, ? extends Element> createMapper(View source) {
+          for (MapperFactory<View, Element> f : myFactories) {
+            Mapper<? extends View, ? extends Element>result = f.createMapper(source);
+            if (result != null) {
+              return result;
+            }
+          }
+
+          return null;
+        }
+      };
     }
   };
 
-  public ViewContainerToElementMapper(ViewContainer source, Element target) {
+  public ViewContainerToElementMapper(ViewContainer source, Element target, MapperFactory<View, Element>... factories) {
     super(source, target);
+
+    myFactories.add(ViewMapperFactory.factory(myCtx));
+    myFactories.addAll(Arrays.asList(factories));
 
     disablePopup(myRootDiv);
     target.appendChild(myRootDiv);
