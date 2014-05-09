@@ -14,7 +14,7 @@ import jetbrains.jetpad.projectional.view.dom.DomView;
 import static com.google.gwt.query.client.GQuery.$;
 
 class DomViewMapper extends BaseViewMapper<DomView, Element> {
-  DomViewMapper(View2DomContext ctx, DomView source) {
+  DomViewMapper(ViewToDomContext ctx, DomView source) {
     super(ctx, source, DOM.createDiv());
   }
 

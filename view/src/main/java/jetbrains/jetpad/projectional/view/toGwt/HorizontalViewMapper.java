@@ -29,7 +29,7 @@ import jetbrains.jetpad.projectional.view.View;
 class HorizontalViewMapper extends BaseViewMapper<HorizontalView, Element> {
   private Element myContainer;
 
-  HorizontalViewMapper(View2DomContext ctx, HorizontalView source) {
+  HorizontalViewMapper(ViewToDomContext ctx, HorizontalView source) {
     super(ctx, source, DOM.createDiv());
     myContainer = DOM.createDiv();
     getTarget().appendChild(myContainer);

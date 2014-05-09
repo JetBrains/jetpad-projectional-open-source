@@ -30,7 +30,7 @@ import jetbrains.jetpad.projectional.view.View;
 import java.util.List;
 
 class CompositeViewMapper<ViewT extends View, ElementT extends Element> extends BaseViewMapper<ViewT, ElementT> {
-  CompositeViewMapper(View2DomContext ctx, ViewT source, ElementT target) {
+  CompositeViewMapper(ViewToDomContext ctx, ViewT source, ElementT target) {
     super(ctx, source, target);
   }
 

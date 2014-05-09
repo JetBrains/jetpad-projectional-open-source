@@ -18,6 +18,6 @@ package jetbrains.jetpad.projectional.view.toGwt;
 import jetbrains.jetpad.geometry.Rectangle;
 import jetbrains.jetpad.model.property.ReadableProperty;
 
-interface View2DomContext {
+interface ViewToDomContext {
   ReadableProperty<Rectangle> visibleArea();
 }

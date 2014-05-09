@@ -24,7 +24,7 @@ import jetbrains.jetpad.model.property.WritableProperty;
 import jetbrains.jetpad.projectional.view.ScrollView;
 
 class ScrollViewMapper extends CompositeViewMapper<ScrollView, Element> {
-  ScrollViewMapper(View2DomContext ctx, ScrollView source) {
+  ScrollViewMapper(ViewToDomContext ctx, ScrollView source) {
     super(ctx, source, DOM.createDiv());
   }
 

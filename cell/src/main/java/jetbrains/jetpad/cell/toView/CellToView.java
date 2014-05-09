@@ -17,18 +17,12 @@ package jetbrains.jetpad.cell.toView;
 
 import jetbrains.jetpad.base.Registration;
 import jetbrains.jetpad.cell.*;
+import jetbrains.jetpad.mapper.Mappers;
 import jetbrains.jetpad.projectional.view.*;
 
-public class MapperCell2View {
+public class CellToView {
   public static Registration map(final CellContainer cellContainer, View root, View targetView, View popupView) {
-    final CellContainerToViewMapper mapper = new CellContainerToViewMapper(cellContainer, root, targetView, popupView);
-    mapper.attachRoot();
-    return new Registration() {
-      @Override
-      public void remove() {
-        mapper.detachRoot();
-      }
-    };
+    return Mappers.attachRoot(new CellContainerToViewMapper(cellContainer, root, targetView, popupView));
   }
 
   public static Registration map(final CellContainer cellContainer, ViewContainer container) {

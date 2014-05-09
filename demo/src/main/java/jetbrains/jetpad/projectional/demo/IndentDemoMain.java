@@ -16,7 +16,7 @@
 package jetbrains.jetpad.projectional.demo;
 
 import jetbrains.jetpad.cell.CellContainer;
-import jetbrains.jetpad.cell.toView.MapperCell2View;
+import jetbrains.jetpad.cell.toView.CellToView;
 import jetbrains.jetpad.projectional.demo.indentDemo.IndentDemo;
 import jetbrains.jetpad.projectional.view.ViewContainer;
 import jetbrains.jetpad.projectional.view.toAwt.AwtDemo;
@@ -25,7 +25,7 @@ public class IndentDemoMain {
   public static void main(String[] args) {
     CellContainer cellContainer = IndentDemo.create();
     ViewContainer viewContainer = new ViewContainer();
-    MapperCell2View.map(cellContainer, viewContainer);
+    CellToView.map(cellContainer, viewContainer);
     AwtDemo.show(viewContainer);
   }
 }

@@ -23,7 +23,7 @@ import jetbrains.jetpad.projectional.base.ImageData;
 import jetbrains.jetpad.projectional.view.ImageView;
 
 class ImageViewMapper extends BaseViewMapper<ImageView, Element> {
-  ImageViewMapper(View2DomContext ctx, ImageView source) {
+  ImageViewMapper(ViewToDomContext ctx, ImageView source) {
     super(ctx, source, DOM.createImg());
   }
 

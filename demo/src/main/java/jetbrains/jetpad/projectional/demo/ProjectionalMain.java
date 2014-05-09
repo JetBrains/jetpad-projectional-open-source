@@ -23,7 +23,7 @@ import jetbrains.jetpad.projectional.demo.diagramExpr.DiagramExprDemo;
 import jetbrains.jetpad.projectional.demo.expr.ExprDemo;
 import jetbrains.jetpad.projectional.demo.hybridExpr.HybridExprDemo;
 import jetbrains.jetpad.projectional.demo.indentDemo.IndentDemo;
-import jetbrains.jetpad.projectional.view.toGwt.View2Dom;
+import jetbrains.jetpad.projectional.view.toGwt.ViewToDom;
 
 import static com.google.gwt.query.client.GQuery.$;
 
@@ -34,7 +34,7 @@ public class ProjectionalMain implements EntryPoint {
     new CellContainerToDomMapper(ExprDemo.createDemo(), $("#exprDemo").get(0)).attachRoot();
     new CellContainerToDomMapper(IndentDemo.create(), $("#indentDemo").get(0)).attachRoot();
     new CellContainerToDomMapper(HybridExprDemo.createDemo(), $("#hybridExprDemo").get(0)).attachRoot();
-    View2Dom.map(DiagramDemo.createContainer(), $("#diagramDemo").get(0));
-    View2Dom.map(DiagramExprDemo.createContainer(), $("#diagramExprDemo").get(0));
+    ViewToDom.map(DiagramDemo.createContainer(), $("#diagramDemo").get(0));
+    ViewToDom.map(DiagramExprDemo.createContainer(), $("#diagramExprDemo").get(0));
   }
 }

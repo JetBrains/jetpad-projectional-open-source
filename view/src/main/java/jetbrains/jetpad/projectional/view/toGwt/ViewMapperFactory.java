@@ -26,7 +26,7 @@ class ViewMapperFactory {
   //todo set to false because it causes ui corruption when changing zoom in chrome
   private static boolean BROWSER_LAYOUT_COLLECTIONS = false;
 
-  static MapperFactory<View, Element> factory(final View2DomContext ctx) {
+  static MapperFactory<View, Element> factory(final ViewToDomContext ctx) {
     return new MapperFactory<View, Element>() {
       @Override
       public Mapper<? extends View, ? extends Element> createMapper(View source) {

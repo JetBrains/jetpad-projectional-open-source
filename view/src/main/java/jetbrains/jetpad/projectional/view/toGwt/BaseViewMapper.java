@@ -34,9 +34,9 @@ import org.vectomatic.dom.svg.OMSVGSVGElement;
 import org.vectomatic.dom.svg.OMSVGStyle;
 
 class BaseViewMapper<ViewT extends View, ElementT extends Element> extends Mapper<ViewT, ElementT> {
-  private View2DomContext myContext;
+  private ViewToDomContext myContext;
 
-  BaseViewMapper(View2DomContext ctx, ViewT source, ElementT target) {
+  BaseViewMapper(ViewToDomContext ctx, ViewT source, ElementT target) {
     super(source, target);
     myContext = ctx;
 
@@ -47,7 +47,7 @@ class BaseViewMapper<ViewT extends View, ElementT extends Element> extends Mappe
     }
   }
 
-  View2DomContext context() {
+  ViewToDomContext context() {
     return myContext;
   }
 

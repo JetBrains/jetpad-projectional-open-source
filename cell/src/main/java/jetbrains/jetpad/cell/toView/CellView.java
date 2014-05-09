@@ -43,7 +43,7 @@ public class CellView extends HorizontalView {
       }
     });
 
-    MapperCell2View.map(container, this, this, myPopupView);
+    CellToView.map(container, this, this, myPopupView);
   }
 
   @Override

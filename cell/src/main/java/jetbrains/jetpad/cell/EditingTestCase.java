@@ -15,10 +15,10 @@
  */
 package jetbrains.jetpad.cell;
 
+import jetbrains.jetpad.cell.toView.CellToView;
 import jetbrains.jetpad.event.*;
 import jetbrains.jetpad.geometry.Vector;
 import jetbrains.jetpad.cell.event.CompletionEvent;
-import jetbrains.jetpad.cell.toView.MapperCell2View;
 import jetbrains.jetpad.projectional.view.ViewContainer;
 import org.junit.Before;
 
@@ -33,7 +33,7 @@ public abstract class EditingTestCase {
 
   @Before
   public void initLViewContainer() {
-    MapperCell2View.map(myCellContainer, myViewContainer);
+    CellToView.map(myCellContainer, myViewContainer);
   }
 
   protected void layout() {

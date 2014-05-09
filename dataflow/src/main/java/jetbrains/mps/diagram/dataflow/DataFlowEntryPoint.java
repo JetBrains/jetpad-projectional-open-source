@@ -16,7 +16,7 @@
 package jetbrains.mps.diagram.dataflow;
 
 import com.google.gwt.core.client.EntryPoint;
-import jetbrains.jetpad.projectional.view.toGwt.View2Dom;
+import jetbrains.jetpad.projectional.view.toGwt.ViewToDom;
 import jetbrains.mps.diagram.dataflow.mapper.RootDiagramMapper;
 import jetbrains.mps.diagram.dataflow.model.Diagram;
 
@@ -29,6 +29,6 @@ public class DataFlowEntryPoint implements EntryPoint {
     RootDiagramMapper mapper = new RootDiagramMapper(model);
     mapper.attachRoot();
 
-    View2Dom.map(mapper.getTarget(), $("#diagram").get(0));
+    ViewToDom.map(mapper.getTarget(), $("#diagram").get(0));
   }
 }

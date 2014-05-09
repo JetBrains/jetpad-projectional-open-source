@@ -15,8 +15,8 @@
  */
 package jetbrains.jetpad.cell;
 
+import jetbrains.jetpad.cell.toView.CellToView;
 import jetbrains.jetpad.cell.trait.CellTrait;
-import jetbrains.jetpad.cell.toView.MapperCell2View;
 import jetbrains.jetpad.event.MouseEvent;
 import jetbrains.jetpad.geometry.Vector;
 import jetbrains.jetpad.projectional.view.ViewContainer;
@@ -36,7 +36,7 @@ public class CellContainerTest {
 
   @Before
   public void init() {
-    MapperCell2View.map(container, viewContainer);
+    CellToView.map(container, viewContainer);
 
     container.root.children().addAll(Arrays.asList(cell1, cell2));
   }

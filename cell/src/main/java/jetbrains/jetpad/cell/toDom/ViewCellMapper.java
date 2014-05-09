@@ -21,7 +21,7 @@ import jetbrains.jetpad.mapper.Synchronizers;
 import jetbrains.jetpad.model.property.WritableProperty;
 import jetbrains.jetpad.projectional.view.View;
 import jetbrains.jetpad.projectional.view.ViewContainer;
-import jetbrains.jetpad.projectional.view.toGwt.View2Dom;
+import jetbrains.jetpad.projectional.view.toGwt.ViewToDom;
 
 class ViewCellMapper extends BaseCellMapper<ViewCell> {
   private ViewContainer myViewContainer;
@@ -35,7 +35,7 @@ class ViewCellMapper extends BaseCellMapper<ViewCell> {
   protected void registerSynchronizers(SynchronizersConfiguration conf) {
     super.registerSynchronizers(conf);
 
-    conf.add(Synchronizers.forRegistration(View2Dom.map(myViewContainer, getTarget())));
+    conf.add(Synchronizers.forRegistration(ViewToDom.map(myViewContainer, getTarget())));
 
     conf.add(Synchronizers.forProperty(getSource().view, new WritableProperty<View>() {
       @Override

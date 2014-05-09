@@ -24,7 +24,7 @@ import jetbrains.jetpad.model.property.WritableProperty;
 import jetbrains.jetpad.projectional.view.VerticalView;
 
 class VerticalViewMapper extends CompositeViewMapper<VerticalView, Element> {
-  VerticalViewMapper(View2DomContext ctx, VerticalView source) {
+  VerticalViewMapper(ViewToDomContext ctx, VerticalView source) {
     super(ctx, source, DOM.createDiv());
   }
 

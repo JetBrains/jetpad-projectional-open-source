@@ -30,7 +30,7 @@ import org.vectomatic.dom.svg.utils.OMSVGParser;
 import org.vectomatic.dom.svg.utils.SVGConstants;
 
 class LineViewMapper extends BaseViewMapper<LineView, Element> {
-  LineViewMapper(View2DomContext ctx, LineView source) {
+  LineViewMapper(ViewToDomContext ctx, LineView source) {
     super(ctx, source, DOM.createDiv());
   }
 

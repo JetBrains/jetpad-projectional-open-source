@@ -16,7 +16,7 @@
 package jetbrains.jetpad.cell.view;
 
 import jetbrains.jetpad.cell.CellContainer;
-import jetbrains.jetpad.cell.toView.MapperCell2View;
+import jetbrains.jetpad.cell.toView.CellToView;
 import jetbrains.jetpad.projectional.view.TextView;
 import jetbrains.jetpad.projectional.view.ViewContainer;
 import org.junit.Before;
@@ -33,7 +33,7 @@ public class ViewCellTest {
 
   @Before
   public void init() {
-    MapperCell2View.map(cellContainer, viewContainer);
+    CellToView.map(cellContainer, viewContainer);
     viewCell.view.set(testView);
     cellContainer.root.children().add(viewCell);
   }

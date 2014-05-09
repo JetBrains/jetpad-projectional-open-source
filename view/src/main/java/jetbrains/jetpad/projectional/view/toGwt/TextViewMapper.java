@@ -28,7 +28,7 @@ import jetbrains.jetpad.values.FontFamily;
 import static com.google.gwt.query.client.GQuery.$;
 
 class TextViewMapper extends BaseViewMapper<TextView, Element> {
-  TextViewMapper(View2DomContext ctx, TextView source) {
+  TextViewMapper(ViewToDomContext ctx, TextView source) {
     super(ctx, source, DOM.createDiv());
   }
 

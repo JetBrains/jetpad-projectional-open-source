@@ -51,13 +51,12 @@ public class ViewContainerToElementMapper extends Mapper<ViewContainer, Element>
   private Element myRootDiv = DOM.createDiv();
   private ValueProperty<Rectangle> myVisibleArea = new ValueProperty<>();
   private Property<Mapper<? extends View, ? extends Element>> myRootMapper = createChildProperty();
-  private View2DomContext myCtx = new View2DomContext() {
+  private ViewToDomContext myCtx = new ViewToDomContext() {
     @Override
     public ReadableProperty<Rectangle> visibleArea() {
       return myVisibleArea;
     }
   };
-
 
   public ViewContainerToElementMapper(ViewContainer source, Element target) {
     super(source, target);
