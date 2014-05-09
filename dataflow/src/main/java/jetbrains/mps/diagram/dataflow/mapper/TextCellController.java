@@ -23,7 +23,7 @@ import jetbrains.jetpad.model.property.PropertyChangeEvent;
 import jetbrains.jetpad.model.property.ValueProperty;
 import jetbrains.jetpad.cell.TextCell;
 import jetbrains.jetpad.cell.text.TextEditing;
-import jetbrains.jetpad.cell.toView.CellView;
+import jetbrains.jetpad.cell.view.CellView;
 import jetbrains.jetpad.projectional.view.View;
 import jetbrains.jetpad.projectional.view.ViewEventHandler;
 import jetbrains.jetpad.projectional.view.ViewEvents;

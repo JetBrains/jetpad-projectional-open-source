@@ -16,6 +16,7 @@
 package jetbrains.jetpad.cell.toView;
 
 import jetbrains.jetpad.cell.trait.CellTrait;
+import jetbrains.jetpad.cell.view.CellView;
 import jetbrains.jetpad.event.MouseEvent;
 import jetbrains.jetpad.cell.Cell;
 import jetbrains.jetpad.cell.TextCell;

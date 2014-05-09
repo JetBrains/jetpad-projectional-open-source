@@ -13,8 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package jetbrains.jetpad.cell.toView;
+package jetbrains.jetpad.cell.view;
 
+import jetbrains.jetpad.cell.toView.CellToView;
 import jetbrains.jetpad.model.composite.Composites;
 import jetbrains.jetpad.model.event.EventHandler;
 import jetbrains.jetpad.model.property.Property;

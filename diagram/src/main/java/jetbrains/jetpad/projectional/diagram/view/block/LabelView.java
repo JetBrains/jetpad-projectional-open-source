@@ -15,7 +15,7 @@
  */
 package jetbrains.jetpad.projectional.diagram.view.block;
 
-import jetbrains.jetpad.cell.toView.CellView;
+import jetbrains.jetpad.cell.view.CellView;
 import jetbrains.jetpad.geometry.Rectangle;
 import jetbrains.jetpad.geometry.Segment;
 import jetbrains.jetpad.geometry.Vector;

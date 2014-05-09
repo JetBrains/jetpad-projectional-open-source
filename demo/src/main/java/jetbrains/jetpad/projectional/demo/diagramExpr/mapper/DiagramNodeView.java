@@ -19,7 +19,7 @@ import jetbrains.jetpad.projectional.util.RootController;
 import jetbrains.jetpad.geometry.Rectangle;
 import jetbrains.jetpad.geometry.Vector;
 import jetbrains.jetpad.model.property.Property;
-import jetbrains.jetpad.cell.toView.CellView;
+import jetbrains.jetpad.cell.view.CellView;
 import jetbrains.jetpad.projectional.view.VerticalView;
 import jetbrains.jetpad.projectional.view.View;
 import jetbrains.jetpad.projectional.view.ViewPropertyKind;
