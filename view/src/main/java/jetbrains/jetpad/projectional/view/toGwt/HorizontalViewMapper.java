@@ -51,7 +51,7 @@ class HorizontalViewMapper extends BaseViewMapper<HorizontalView, Element> {
     conf.add(Synchronizers.forObservableRole(this, getSource().children(), DomUtil.elementChildren(myContainer), new MapperFactory<View, Node>() {
       @Override
       public Mapper<? extends View, ? extends Node> createMapper(View source) {
-        Mapper<? extends View, ? extends Element> result = ViewMapperFactory.factory(context()).createMapper(source);
+        Mapper<? extends View, ? extends Element> result = context().getFactory().createMapper(source);
         result.getTarget().getStyle().setFloat(Style.Float.LEFT);
         return result;
       }

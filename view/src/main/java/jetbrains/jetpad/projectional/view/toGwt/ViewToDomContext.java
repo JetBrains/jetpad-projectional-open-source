@@ -15,9 +15,13 @@
  */
 package jetbrains.jetpad.projectional.view.toGwt;
 
+import com.google.gwt.dom.client.Element;
 import jetbrains.jetpad.geometry.Rectangle;
+import jetbrains.jetpad.mapper.MapperFactory;
 import jetbrains.jetpad.model.property.ReadableProperty;
+import jetbrains.jetpad.projectional.view.View;
 
 interface ViewToDomContext {
   ReadableProperty<Rectangle> visibleArea();
+  MapperFactory<View, Element> getFactory();
 }

@@ -25,6 +25,7 @@ import jetbrains.jetpad.event.dom.EventTranslator;
 import jetbrains.jetpad.geometry.Rectangle;
 import jetbrains.jetpad.geometry.Vector;
 import jetbrains.jetpad.mapper.Mapper;
+import jetbrains.jetpad.mapper.MapperFactory;
 import jetbrains.jetpad.mapper.MappingContext;
 import jetbrains.jetpad.mapper.Synchronizers;
 import jetbrains.jetpad.mapper.gwt.DomAnimations;
@@ -55,6 +56,11 @@ public class ViewContainerToElementMapper extends Mapper<ViewContainer, Element>
     @Override
     public ReadableProperty<Rectangle> visibleArea() {
       return myVisibleArea;
+    }
+
+    @Override
+    public MapperFactory<View, Element> getFactory() {
+      return ViewMapperFactory.factory(this);
     }
   };
 
@@ -269,7 +275,7 @@ public class ViewContainerToElementMapper extends Mapper<ViewContainer, Element>
     super.onAttach(ctx);
     update();
 
-    myRootMapper.set(ViewMapperFactory.factory(myCtx).createMapper(getSource().root()));
+    myRootMapper.set(myCtx.getFactory().createMapper(getSource().root()));
     myRootDiv.appendChild(myRootMapper.get().getTarget());
 
     TextMetrics metrics = TextMetricsCalculator.calculate(TextView.DEFAULT_FONT, "x");
