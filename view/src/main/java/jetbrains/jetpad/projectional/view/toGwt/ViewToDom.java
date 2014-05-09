@@ -17,13 +17,11 @@ package jetbrains.jetpad.projectional.view.toGwt;
 
 import com.google.gwt.dom.client.Element;
 import jetbrains.jetpad.base.Registration;
-import jetbrains.jetpad.mapper.MapperFactory;
 import jetbrains.jetpad.mapper.Mappers;
-import jetbrains.jetpad.projectional.view.View;
 import jetbrains.jetpad.projectional.view.ViewContainer;
 
 public class ViewToDom {
-  public static Registration map(final ViewContainer container, final Element element, MapperFactory<View, Element>... factories) {
-    return Mappers.attachRoot(new ViewContainerToElementMapper(container, element, factories));
+  public static Registration map(final ViewContainer container, final Element element) {
+    return Mappers.attachRoot(new ViewContainerToElementMapper(container, element));
   }
 }

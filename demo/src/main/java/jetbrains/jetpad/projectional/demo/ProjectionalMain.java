@@ -17,7 +17,6 @@ package jetbrains.jetpad.projectional.demo;
 
 import com.google.gwt.core.client.EntryPoint;
 import jetbrains.jetpad.cell.toDom.CellContainerToDomMapper;
-import jetbrains.jetpad.cell.view.CellViewToElementMapperFactory;
 import jetbrains.jetpad.projectional.demo.concept.ConceptDemo;
 import jetbrains.jetpad.projectional.demo.diagram.DiagramDemo;
 import jetbrains.jetpad.projectional.demo.diagramExpr.DiagramExprDemo;
@@ -36,6 +35,6 @@ public class ProjectionalMain implements EntryPoint {
     new CellContainerToDomMapper(IndentDemo.create(), $("#indentDemo").get(0)).attachRoot();
     new CellContainerToDomMapper(HybridExprDemo.createDemo(), $("#hybridExprDemo").get(0)).attachRoot();
     ViewToDom.map(DiagramDemo.createContainer(), $("#diagramDemo").get(0));
-    ViewToDom.map(DiagramExprDemo.createContainer(), $("#diagramExprDemo").get(0), new CellViewToElementMapperFactory());
+    ViewToDom.map(DiagramExprDemo.createContainer(), $("#diagramExprDemo").get(0));
   }
 }
