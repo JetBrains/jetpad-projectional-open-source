@@ -17,19 +17,19 @@ package jetbrains.jetpad.projectional.view.toAwt;
 
 import jetbrains.jetpad.base.Handler;
 import jetbrains.jetpad.base.Registration;
+import jetbrains.jetpad.base.animation.Animation;
+import jetbrains.jetpad.base.animation.Animations;
 import jetbrains.jetpad.base.base64.Base64Coder;
 import jetbrains.jetpad.base.edt.AwtEventDispatchThread;
 import jetbrains.jetpad.base.edt.EventDispatchThread;
 import jetbrains.jetpad.event.*;
 import jetbrains.jetpad.event.awt.EventTranslator;
-import jetbrains.jetpad.geometry.*;
+import jetbrains.jetpad.geometry.Vector;
 import jetbrains.jetpad.model.event.CompositeRegistration;
 import jetbrains.jetpad.model.event.EventHandler;
 import jetbrains.jetpad.model.property.PropertyChangeEvent;
 import jetbrains.jetpad.projectional.base.ImageData;
 import jetbrains.jetpad.projectional.view.*;
-import jetbrains.jetpad.base.animation.Animation;
-import jetbrains.jetpad.base.animation.Animations;
 import jetbrains.jetpad.projectional.view.spi.NullViewContainerPeer;
 import jetbrains.jetpad.projectional.view.spi.ViewContainerPeer;
 import jetbrains.jetpad.values.Color;
@@ -39,11 +39,11 @@ import jetbrains.jetpad.values.FontFamily;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.Rectangle;
 import java.awt.datatransfer.*;
 import java.awt.event.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
+import java.awt.geom.Arc2D;
 import java.awt.image.BufferedImage;
 import java.awt.image.ImageObserver;
 import java.io.ByteArrayInputStream;
@@ -482,7 +482,7 @@ public class ViewContainerComponent extends JComponent implements Scrollable {
 
       final jetbrains.jetpad.geometry.Rectangle innerBounds = new jetbrains.jetpad.geometry.Rectangle(bounds.origin.add(borderVec), bounds.dimension.sub(borderVec.mul(2)));
 
-      g.fillArc(innerBounds.origin.x, innerBounds.origin.y, innerBounds.dimension.x - 1, innerBounds.dimension.y - 1, (int) from, (int) (to - from));
+      g.fill(new Arc2D.Double(innerBounds.origin.x, innerBounds.origin.y, innerBounds.dimension.x - 1, innerBounds.dimension.y - 1, from, to - from, Arc2D.PIE));
 
       if (borderWidth > 0) {
         g.setColor(toAwtColor(ellipseView.borderColor().get()));
@@ -490,7 +490,7 @@ public class ViewContainerComponent extends JComponent implements Scrollable {
           @Override
           public void run() {
             final jetbrains.jetpad.geometry.Rectangle borderBounds = innerBounds;
-            g.drawArc(borderBounds.origin.x, borderBounds.origin.y, borderBounds.dimension.x - 1, borderBounds.dimension.y - 1, (int) from, (int) (to - from));
+            g.draw(new Arc2D.Double(borderBounds.origin.x, borderBounds.origin.y, borderBounds.dimension.x - 1, borderBounds.dimension.y - 1, from, to - from, Arc2D.PIE));
           }
         });
       }
