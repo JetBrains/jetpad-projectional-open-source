@@ -97,7 +97,7 @@ public class EllipseView extends View {
     Vector nl = loc.sub(center().get());
     double eps = 0.001;
     if (nl.length() <= eps) return true;
-    if (!(r.x * r.x * nl.x * nl.x + r.y * r.y * nl.y * nl.y <= r.x * r.x * r.y * r.y)) return false;
+    if (!(r.x * r.x * nl.y * nl.y + r.y * r.y * nl.x * nl.x <= r.x * r.x * r.y * r.y)) return false;
 
     double phi = Math.atan2(nl.y, nl.x);
     double from = from().get();
