@@ -38,6 +38,20 @@ public class EllipseViewTest {
   }
 
   @Test
+  public void containsOverflow() {
+
+    EllipseView ellipse = new EllipseView();
+    ellipse.radius().set(new Vector(5000, 1000));
+    ellipse.validate();
+
+    assertTrue(ellipse.contains(new Vector(0, 0)));
+    assertTrue(ellipse.contains(new Vector(5000, 0)));
+    assertTrue(ellipse.contains(new Vector(0, 1000)));
+
+    assertFalse(ellipse.contains(new Vector(5000, 1000)));
+  }
+
+  @Test
   public void sectorContains() {
     EllipseView ellipse = new EllipseView();
     ellipse.radius().set(new Vector(10, 10));
