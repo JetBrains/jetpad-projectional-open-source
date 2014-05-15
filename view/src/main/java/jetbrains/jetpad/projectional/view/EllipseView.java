@@ -105,12 +105,15 @@ public class EllipseView extends View {
 
     if (b * b * x * x + a * a * y * y > a * a * b * b) return false;
 
-    double phi = Math.atan2(nl.y, nl.x);
+    double phi = -Math.atan2(nl.y, nl.x);
     double from = from().get();
     double to = to().get();
-
     for (int i = -1 ; i <= 1; i++) {
-      if (Range.closed(from + 2 * Math.PI * i, to + 2 * Math.PI * i).contains(phi)) return true;
+      double lower = from + 2 * Math.PI * i;
+      double upper = to + 2 * Math.PI * i;
+      if (Range.closed(lower, upper).contains(phi)) {
+        return true;
+      }
     }
 
     return false;
