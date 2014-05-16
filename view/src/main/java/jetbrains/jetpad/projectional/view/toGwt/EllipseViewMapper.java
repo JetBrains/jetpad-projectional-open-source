@@ -107,10 +107,10 @@ class EllipseViewMapper extends BaseViewMapper<EllipseView, Element> {
       segList.appendItem(path.createSVGPathSegArcAbs(radius.x + dx, 2 * radius.y + dy, radius.x, radius.y, 180, false, true));
       segList.appendItem(path.createSVGPathSegArcAbs(radius.x + dx, dy, radius.x, radius.y, 180, false, true));
     } else {
-      float sx = (float) (1 + Math.cos(from)) * radius.x;
-      float sy = (float) (1 + Math.sin(from)) * radius.y;
-      float tx = (float) (1 + Math.cos(to)) * radius.x;
-      float ty = (float) (1 + Math.sin(to)) * radius.y;
+      float sx = (float) (1 + Math.cos(-to)) * radius.x;
+      float sy = (float) (1 + Math.sin(-to)) * radius.y;
+      float tx = (float) (1 + Math.cos(-from)) * radius.x;
+      float ty = (float) (1 + Math.sin(-from)) * radius.y;
 
       if (!border) {
         segList.appendItem(path.createSVGPathSegMovetoAbs(radius.x + dx, radius.y + dy));
