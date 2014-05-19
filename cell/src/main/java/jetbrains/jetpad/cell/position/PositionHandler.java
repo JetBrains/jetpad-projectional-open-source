@@ -22,7 +22,9 @@ import jetbrains.jetpad.cell.text.TextCellPositionHandler;
 import jetbrains.jetpad.cell.trait.CellTraitPropertySpec;
 
 public interface PositionHandler {
-  static final CellTraitPropertySpec<PositionHandler> PROPERTY = new CellTraitPropertySpec<>("positionHandler", new Function<Cell, PositionHandler>() {
+  public static PositionHandler EMPTY = new EmptyPositionHandler();
+
+  public static final CellTraitPropertySpec<PositionHandler> PROPERTY = new CellTraitPropertySpec<>("positionHandler", new Function<Cell, PositionHandler>() {
     @Override
     public PositionHandler apply(Cell input) {
       if (input instanceof TextCell) {
