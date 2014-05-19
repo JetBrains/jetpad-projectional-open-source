@@ -18,8 +18,6 @@ package jetbrains.jetpad.projectional.view;
 import jetbrains.jetpad.model.property.PropertyChangeEvent;
 
 public interface ViewContainerListener {
-  void onPeerChanged();
-
   void onBeforeCommand();
   void onAfterCommand();
 

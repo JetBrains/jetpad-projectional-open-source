@@ -42,7 +42,7 @@ public class CellContainer {
   private List<Cell> myPopups = new ArrayList<>();
   private Listeners<CellContainerListener> myListeners = new Listeners<>();
   private boolean myInCommand;
-  private CellContainerPeer myCellContainerPeer = CellContainerPeer.NULL;
+  private Property<CellContainerPeer> myCellContainerPeer = new ValueProperty<>(CellContainerPeer.NULL);
 
   private String myLastSeenText;
   private ClipboardContent myContent = new EmptyClipboardContent();
@@ -355,6 +355,10 @@ public class CellContainer {
   }
 
   CellContainerPeer getCellContainerPeer() {
+    return myCellContainerPeer.get();
+  }
+
+  ReadableProperty<CellContainerPeer> cellContainerPeer() {
     return myCellContainerPeer;
   }
 
@@ -362,18 +366,11 @@ public class CellContainer {
     if (provider == null) {
       throw new NullPointerException();
     }
-    myCellContainerPeer = provider;
-
-    myListeners.fire(new ListenerCaller<CellContainerListener>() {
-      @Override
-      public void call(CellContainerListener l) {
-        l.onPeerChanged();
-      }
-    });
+    myCellContainerPeer.set(provider);
   }
 
   public void resetContainerPeer() {
-    myCellContainerPeer = CellContainerPeer.NULL;
+    myCellContainerPeer.set(CellContainerPeer.NULL);
   }
 
   public ReadableProperty<Boolean> focused() {
@@ -381,10 +378,10 @@ public class CellContainer {
   }
 
   public void requestFocus() {
-    myCellContainerPeer.requestFocus();
+    getCellContainerPeer().requestFocus();
   }
 
   public EventDispatchThread getEdt() {
-    return myCellContainerPeer.getEdt();
+    return getCellContainerPeer().getEdt();
   }
 }

@@ -80,13 +80,6 @@ public class ViewContainer {
     myPeer = peer;
     myContentRoot.invalidateTree();
     myPeer.attach(this);
-
-    myListeners.fire(new ListenerCaller<ViewContainerListener>() {
-      @Override
-      public void call(ViewContainerListener l) {
-        l.onPeerChanged();
-      }
-    });
   }
 
   ViewContainerPeer peer() {

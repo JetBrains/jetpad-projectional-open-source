@@ -20,10 +20,6 @@ import jetbrains.jetpad.model.property.PropertyChangeEvent;
 
 public class CellContainerAdapter implements CellContainerListener {
   @Override
-  public void onPeerChanged() {
-  }
-
-  @Override
   public void onBeforeCommand() {
   }
 

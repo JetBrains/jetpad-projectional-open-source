@@ -331,7 +331,7 @@ public class CellContainerToDomMapper extends Mapper<CellContainer, Element> {
       @Override
       public Object getMappedTo(Cell cell) {
         Mapper<?, ?> mapper = getMapper(cell);
-        if (mapper == null) return cell;
+        if (mapper == null) return null;
         return mapper.getTarget();
       }
 

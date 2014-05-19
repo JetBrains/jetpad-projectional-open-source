@@ -38,10 +38,8 @@ import jetbrains.jetpad.model.composite.*;
 import jetbrains.jetpad.model.event.EventHandler;
 import jetbrains.jetpad.model.event.ListenerCaller;
 import jetbrains.jetpad.model.event.Listeners;
-import jetbrains.jetpad.model.property.BaseReadableProperty;
-import jetbrains.jetpad.model.property.Property;
-import jetbrains.jetpad.model.property.PropertyChangeEvent;
-import jetbrains.jetpad.model.property.ReadableProperty;
+import jetbrains.jetpad.model.property.*;
+import jetbrains.jetpad.model.property.Properties;
 import jetbrains.jetpad.model.util.ListMap;
 import jetbrains.jetpad.values.Color;
 
@@ -395,8 +393,18 @@ public abstract class Cell implements Composite<Cell>, HasVisibility, HasFocusab
     return myContainer.getCellContainerPeer();
   }
 
-  public Object getMappedTo() {
-    return getPeer().getMappedTo(this);
+  public ReadableProperty<Object> mappedTo() {
+    return Properties.select(cellContainer(), new Selector<CellContainer, ReadableProperty<Object>>() {
+      @Override
+      public ReadableProperty<Object> select(CellContainer source) {
+        return new DerivedProperty<Object>(source.cellContainerPeer()) {
+          @Override
+          public Object get() {
+            return getPeer().getMappedTo(Cell.this);
+          }
+        };
+      }
+    });
   }
 
   public Registration addListener(CellListener l) {

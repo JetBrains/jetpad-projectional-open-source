@@ -19,8 +19,6 @@ import jetbrains.jetpad.model.collections.CollectionItemEvent;
 import jetbrains.jetpad.model.property.PropertyChangeEvent;
 
 public interface CellContainerListener {
-  void onPeerChanged();
-
   void onBeforeCommand();
   void onAfterCommand();
 
