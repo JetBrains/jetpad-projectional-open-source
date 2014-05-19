@@ -85,7 +85,7 @@ class ProjectionalObservableListSynchronizer<ContextT, SourceItemT> extends Base
             }
           }
         } finally {
-          if (event.isConsumed()) {
+          if (event.isConsumed() && cell.isAttached()) {
             scrollToSelection();
           }
         }
