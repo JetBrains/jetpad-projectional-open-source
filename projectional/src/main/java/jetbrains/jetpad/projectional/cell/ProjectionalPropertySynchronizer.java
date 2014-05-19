@@ -97,12 +97,10 @@ class ProjectionalPropertySynchronizer<ContextT, SourceItemT extends ContextT> e
 
       @Override
       public void onViewTraitEvent(Cell cell, CellTraitEventSpec<?> spec, Event event) {
-        if (spec == Cells.BECAME_EMPTY) {
-          if (cell.get(ProjectionalSynchronizers.DELETE_ON_EMPTY)) {
-            itemBecameEmpty();
-            event.consume();
-            return;
-          }
+        if (spec == Cells.BECAME_EMPTY && cell.get(ProjectionalSynchronizers.DELETE_ON_EMPTY)) {
+          itemBecameEmpty();
+          event.consume();
+          return;
         }
 
         super.onViewTraitEvent(cell, spec, event);
