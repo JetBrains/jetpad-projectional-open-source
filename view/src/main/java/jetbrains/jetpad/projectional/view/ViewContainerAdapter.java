@@ -19,6 +19,10 @@ import jetbrains.jetpad.model.property.PropertyChangeEvent;
 
 public class ViewContainerAdapter implements ViewContainerListener {
   @Override
+  public void onPeerChanged() {
+  }
+
+  @Override
   public void onBeforeCommand() {
   }
 
