@@ -363,6 +363,13 @@ public class CellContainer {
       throw new NullPointerException();
     }
     myCellContainerPeer = provider;
+
+    myListeners.fire(new ListenerCaller<CellContainerListener>() {
+      @Override
+      public void call(CellContainerListener l) {
+        l.onPeerChanged();
+      }
+    });
   }
 
   public void resetContainerPeer() {
