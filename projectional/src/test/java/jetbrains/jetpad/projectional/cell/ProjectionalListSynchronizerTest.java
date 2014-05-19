@@ -17,6 +17,9 @@ package jetbrains.jetpad.projectional.cell;
 
 import com.google.common.base.Function;
 import com.google.common.base.Supplier;
+import jetbrains.jetpad.cell.trait.CellTrait;
+import jetbrains.jetpad.cell.trait.CellTraitPropertySpec;
+import jetbrains.jetpad.cell.util.Cells;
 import jetbrains.jetpad.event.*;
 import jetbrains.jetpad.mapper.Mapper;
 import jetbrains.jetpad.mapper.MapperFactory;
@@ -662,6 +665,17 @@ public class ProjectionalListSynchronizerTest extends EditingTestCase {
     assertTrue(container.children.isEmpty());
   }
 
+  @Test
+  public void deleteOnEmpty() {
+    container.children.addAll(Arrays.asList(new DeleteOnEmptyChild(), new NonEmptyChild()));
+    selectChild(0);
+
+    rootMapper.getTarget().children().get(0).dispatch(new Event(), Cells.BECAME_EMPTY);
+
+    assertEquals(1, container.children.size());
+    assertTrue(container.children.get(0) instanceof NonEmptyChild);
+  }
+
   private Child get(int index) {
     return container.children.get(index);
   }
@@ -752,6 +766,10 @@ public class ProjectionalListSynchronizerTest extends EditingTestCase {
           return new CompositeChildMapper((CompositeChild) source);
         }
 
+        if (source instanceof DeleteOnEmptyChild) {
+          return new DeleteOnEmptyChildMapper((DeleteOnEmptyChild) source);
+        }
+
         return null;
       }
     };
@@ -818,6 +836,9 @@ public class ProjectionalListSynchronizerTest extends EditingTestCase {
   }
 
   private class ComplexNonSelectableChild extends Child {
+  }
+
+  private class DeleteOnEmptyChild extends Child {
   }
 
 
@@ -914,4 +935,23 @@ public class ProjectionalListSynchronizerTest extends EditingTestCase {
     }
   }
 
+  private class DeleteOnEmptyChildCell extends HorizontalCell {
+    private DeleteOnEmptyChildCell() {
+      focusable().set(true);
+
+      addTrait(new CellTrait() {
+        @Override
+        public Object get(final Cell cell, CellTraitPropertySpec<?> spec) {
+          if (spec == ProjectionalSynchronizers.DELETE_ON_EMPTY) return true;
+          return super.get(cell, spec);
+        }
+      });
+    }
+  }
+
+  private class DeleteOnEmptyChildMapper extends Mapper<DeleteOnEmptyChild, DeleteOnEmptyChildCell> {
+    private DeleteOnEmptyChildMapper(DeleteOnEmptyChild source) {
+      super(source, new DeleteOnEmptyChildCell());
+    }
+  }
 }

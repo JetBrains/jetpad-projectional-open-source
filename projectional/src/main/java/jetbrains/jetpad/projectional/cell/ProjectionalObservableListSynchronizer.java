@@ -17,9 +17,11 @@ package jetbrains.jetpad.projectional.cell;
 
 import jetbrains.jetpad.base.Runnables;
 import jetbrains.jetpad.cell.trait.CellTrait;
+import jetbrains.jetpad.cell.trait.CellTraitEventSpec;
 import jetbrains.jetpad.completion.CompletionItem;
 import jetbrains.jetpad.completion.CompletionParameters;
 import jetbrains.jetpad.completion.CompletionSupplier;
+import jetbrains.jetpad.event.Event;
 import jetbrains.jetpad.event.KeyEvent;
 import jetbrains.jetpad.mapper.Mapper;
 import jetbrains.jetpad.mapper.MapperFactory;
@@ -103,6 +105,19 @@ class ProjectionalObservableListSynchronizer<ContextT, SourceItemT> extends Base
         }
 
         return super.get(cell, spec);
+      }
+
+      @Override
+      public void onViewTraitEvent(Cell cell, CellTraitEventSpec<?> spec, Event event) {
+        if (spec == Cells.BECAME_EMPTY && cell.get(ProjectionalSynchronizers.DELETE_ON_EMPTY)) {
+          int index = childCells().indexOf(cell);
+          if (index == -1) return;
+          clear(mySource.subList(index, index + 1));
+          event.consume();
+          return;
+        }
+
+        super.onViewTraitEvent(cell, spec, event);
       }
     });
   }
