@@ -42,7 +42,7 @@ public class CellContainer {
   private List<Cell> myPopups = new ArrayList<>();
   private Listeners<CellContainerListener> myListeners = new Listeners<>();
   private boolean myInCommand;
-  private Property<CellContainerPeer> myCellContainerPeer = new ValueProperty<>(CellContainerPeer.NULL);
+  private CellContainerPeer myCellContainerPeer = CellContainerPeer.NULL;
 
   private String myLastSeenText;
   private ClipboardContent myContent = new EmptyClipboardContent();
@@ -355,10 +355,6 @@ public class CellContainer {
   }
 
   CellContainerPeer getCellContainerPeer() {
-    return myCellContainerPeer.get();
-  }
-
-  ReadableProperty<CellContainerPeer> cellContainerPeer() {
     return myCellContainerPeer;
   }
 
@@ -366,11 +362,11 @@ public class CellContainer {
     if (provider == null) {
       throw new NullPointerException();
     }
-    myCellContainerPeer.set(provider);
+    myCellContainerPeer = provider;
   }
 
   public void resetContainerPeer() {
-    myCellContainerPeer.set(CellContainerPeer.NULL);
+    myCellContainerPeer = CellContainerPeer.NULL;
   }
 
   public ReadableProperty<Boolean> focused() {

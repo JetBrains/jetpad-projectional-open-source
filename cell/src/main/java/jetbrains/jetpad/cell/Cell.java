@@ -393,20 +393,6 @@ public abstract class Cell implements Composite<Cell>, HasVisibility, HasFocusab
     return myContainer.getCellContainerPeer();
   }
 
-  public ReadableProperty<Object> mappedTo() {
-    return Properties.select(cellContainer(), new Selector<CellContainer, ReadableProperty<Object>>() {
-      @Override
-      public ReadableProperty<Object> select(CellContainer source) {
-        return new DerivedProperty<Object>(source.cellContainerPeer()) {
-          @Override
-          public Object get() {
-            return getPeer().getMappedTo(Cell.this);
-          }
-        };
-      }
-    });
-  }
-
   public Registration addListener(CellListener l) {
     if (myListeners == null) {
       myListeners = new Listeners<>();

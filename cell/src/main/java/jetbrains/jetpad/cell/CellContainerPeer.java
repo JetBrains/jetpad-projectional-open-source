@@ -59,11 +59,6 @@ public interface CellContainerPeer {
     }
 
     @Override
-    public Object getMappedTo(Cell cell) {
-      return null;
-    }
-
-    @Override
     public Animation fadeIn(Cell cell, int duration) {
       return Animations.finishedAnimation();
     }
@@ -90,8 +85,6 @@ public interface CellContainerPeer {
   Rectangle getBounds(Cell cell);
   void scrollTo(Rectangle rect, Cell cell);
   ReadableProperty<Boolean> focused();
-
-  Object getMappedTo(Cell cell);
 
   void requestFocus();
 
