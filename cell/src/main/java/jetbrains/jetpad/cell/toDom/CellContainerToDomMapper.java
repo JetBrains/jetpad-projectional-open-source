@@ -329,6 +329,13 @@ public class CellContainerToDomMapper extends Mapper<CellContainer, Element> {
       }
 
       @Override
+      public Object getMappedTo(Cell cell) {
+        Mapper<?, ?> mapper = getMapper(cell);
+        if (mapper == null) return cell;
+        return mapper.getTarget();
+      }
+
+      @Override
       public Animation fadeIn(final Cell cell, final int duration) {
         return DomAnimations.fadeIn(getMapper(cell).getTarget(), duration);
       }

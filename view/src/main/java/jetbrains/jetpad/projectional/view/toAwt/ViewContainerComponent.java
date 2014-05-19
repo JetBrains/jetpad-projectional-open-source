@@ -836,5 +836,10 @@ public class ViewContainerComponent extends JComponent implements Scrollable {
     public Animation hideSlide(View view, int duration) {
       return Animations.finishedAnimation();
     }
+
+    @Override
+    public Object getMappedTo(View view) {
+      return null;
+    }
   }
 }

@@ -360,28 +360,35 @@ public class ViewContainerToElementMapper extends Mapper<ViewContainer, Element>
       }
 
       @Override
+      public Object getMappedTo(View view) {
+        Mapper<? super View, ?> mapper = myRootMapper.get().getDescendantMapper(view);
+        if (mapper == null) return null;
+        return mapper.getTarget();
+      }
+
+      @Override
       public EventDispatchThread getEdt() {
         return JsEventDispatchThread.INSTANCE;
       }
 
       @Override
       public Animation fadeIn(View view, int duration) {
-        return DomAnimations.fadeIn((Element) myRootMapper.get().getDescendantMapper(view).getTarget(), duration);
+        return DomAnimations.fadeIn((Element) getMappedTo(view), duration);
       }
 
       @Override
       public Animation fadeOut(View view, int duration) {
-        return DomAnimations.fadeOut((Element) myRootMapper.get().getDescendantMapper(view).getTarget(), duration);
+        return DomAnimations.fadeOut((Element) getMappedTo(view), duration);
       }
 
       @Override
       public Animation showSlide(View view, int duration) {
-        return DomAnimations.showSlide((Element) myRootMapper.get().getDescendantMapper(view).getTarget(), duration);
+        return DomAnimations.showSlide((Element) getMappedTo(view), duration);
       }
 
       @Override
       public Animation hideSlide(View view, int duration) {
-        return DomAnimations.hideSlide((Element) myRootMapper.get().getDescendantMapper(view).getTarget(), duration);
+        return DomAnimations.hideSlide((Element) getMappedTo(view), duration);
       }
     });
   }

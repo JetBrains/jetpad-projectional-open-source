@@ -80,6 +80,11 @@ public class NullViewContainerPeer implements ViewContainerPeer {
   }
 
   @Override
+  public Object getMappedTo(View view) {
+    return null;
+  }
+
+  @Override
   public EventDispatchThread getEdt() {
     return new NullEventDispatchThread();
   }

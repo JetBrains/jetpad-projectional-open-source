@@ -40,6 +40,8 @@ public interface ViewContainerPeer {
 
   void requestFocus();
 
+  Object getMappedTo(View view);
+
   EventDispatchThread getEdt();
 
   Animation fadeIn(View view, int duration);

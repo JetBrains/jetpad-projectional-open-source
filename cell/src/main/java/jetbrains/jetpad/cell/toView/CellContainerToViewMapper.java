@@ -203,6 +203,11 @@ public class CellContainerToViewMapper extends Mapper<CellContainer, View> {
         return myTargetView.container().getEdt();
       }
 
+      @Override
+      public Object getMappedTo(Cell cell) {
+        return getViewFor(cell);
+      }
+
       private View getViewFor(Cell cell) {
         Mapper<? super Cell, ?> mapper = rootMapper.getDescendantMapper(cell);
         if (mapper == null) return null;
