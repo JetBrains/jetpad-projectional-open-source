@@ -27,6 +27,8 @@ import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import jetbrains.jetpad.base.Handler;
 import jetbrains.jetpad.base.Registration;
+import jetbrains.jetpad.base.Value;
+import jetbrains.jetpad.base.animation.Animation;
 import jetbrains.jetpad.base.edt.EventDispatchThread;
 import jetbrains.jetpad.base.edt.JsEventDispatchThread;
 import jetbrains.jetpad.cell.*;
@@ -40,7 +42,9 @@ import jetbrains.jetpad.mapper.Mapper;
 import jetbrains.jetpad.mapper.MapperFactory;
 import jetbrains.jetpad.mapper.MappingContext;
 import jetbrains.jetpad.mapper.Synchronizers;
+import jetbrains.jetpad.mapper.gwt.DomAnimations;
 import jetbrains.jetpad.model.collections.CollectionItemEvent;
+import jetbrains.jetpad.model.event.CompositeRegistration;
 import jetbrains.jetpad.model.event.EventHandler;
 import jetbrains.jetpad.model.property.Properties;
 import jetbrains.jetpad.model.property.PropertyChangeEvent;
@@ -49,14 +53,48 @@ import jetbrains.jetpad.model.property.WritableProperty;
 import jetbrains.jetpad.projectional.domUtil.Scrolling;
 import jetbrains.jetpad.projectional.domUtil.TextMetricsCalculator;
 import jetbrains.jetpad.projectional.view.TextView;
-import jetbrains.jetpad.base.animation.Animation;
-import jetbrains.jetpad.mapper.gwt.DomAnimations;
 
 import java.util.Collections;
 
 import static com.google.gwt.query.client.GQuery.$;
 
 public class CellContainerToDomMapper extends Mapper<CellContainer, Element> {
+  static final CellPropertySpec<Element> ELEMENT = new CellPropertySpec<>("element");
+
+  public static ReadableProperty<Element> elementFor(Cell cell) {
+    return cell.getProp(ELEMENT);
+  }
+
+  public static Registration whenElementAvailable(Cell cell, final Runnable r) {
+    ReadableProperty<Element> prop = elementFor(cell);
+    if (prop.get() != null) {
+      r.run();
+      return Registration.EMPTY;
+    } else {
+      final CompositeRegistration reg = new CompositeRegistration();
+      final Value<Boolean> removed = new Value<>(false);
+      reg.add(prop.addHandler(new EventHandler<PropertyChangeEvent<Element>>() {
+        @Override
+        public void onEvent(PropertyChangeEvent<Element> event) {
+          if (event.getNewValue() != null) {
+            r.run();
+            reg.remove();
+            removed.set(true);
+          }
+        }
+      }));
+
+      return new Registration() {
+        @Override
+        public void remove() {
+          if (removed.get()) return;
+          reg.remove();
+          removed.set(true);
+        }
+      };
+    }
+  }
+
   private static boolean ourIndentInjected;
 
   static final CellToDomBundle BUNDLE = GWT.create(CellToDomBundle.class);

@@ -91,10 +91,14 @@ abstract class BaseCellMapper<SourceT extends Cell> extends Mapper<SourceT, Elem
     } else if (getSource().rightPopup().get() != null) {
       updatePopup(new PropertyChangeEvent<>(null, getSource().rightPopup().get()));
     }
+
+    getSource().getProp(CellContainerToDomMapper.ELEMENT).set(getTarget());
   }
 
   @Override
   protected void onDetach() {
+    getSource().getProp(CellContainerToDomMapper.ELEMENT).set(null);
+
     if (myWasPopup) {
       getTarget().removeFromParent();
     }
