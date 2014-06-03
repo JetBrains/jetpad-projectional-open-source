@@ -32,6 +32,7 @@ import jetbrains.jetpad.base.animation.Animation;
 import jetbrains.jetpad.base.edt.EventDispatchThread;
 import jetbrains.jetpad.base.edt.JsEventDispatchThread;
 import jetbrains.jetpad.cell.*;
+import jetbrains.jetpad.cell.dom.DomCell;
 import jetbrains.jetpad.cell.event.CompletionEvent;
 import jetbrains.jetpad.event.*;
 import jetbrains.jetpad.event.dom.ClipboardSupport;
@@ -397,6 +398,7 @@ public class CellContainerToDomMapper extends Mapper<CellContainer, Element> {
       @Override
       public boolean f(Event e) {
         MouseEvent event = toMouseEvent(e);
+        if (isDomCellEvent(event)) return true;
         getSource().mousePressed(event);
         $(focusTarget).focus();
         return false;
@@ -405,28 +407,36 @@ public class CellContainerToDomMapper extends Mapper<CellContainer, Element> {
 
     $(target).mouseup(new Function() {
       public boolean f(Event e) {
-        getSource().mouseReleased(toMouseEvent(e));
+        MouseEvent event = toMouseEvent(e);
+        if (isDomCellEvent(event)) return true;
+        getSource().mouseReleased(event);
         return false;
       }
     });
 
     $(target).mousemove(new Function() {
       public boolean f(Event e) {
-        getSource().mouseMoved(toMouseEvent(e));
+        MouseEvent event = toMouseEvent(e);
+        if (isDomCellEvent(event)) return true;
+        getSource().mouseMoved(event);
         return false;
       }
     });
 
     $(target).mouseenter(new Function() {
       public boolean f(Event e) {
-        getSource().mouseEntered(toMouseEvent(e));
+        MouseEvent event = toMouseEvent(e);
+        if (isDomCellEvent(event)) return true;
+        getSource().mouseEntered(event);
         return false;
       }
     });
 
     $(target).mouseleave(new Function() {
       public boolean f(Event e) {
-        getSource().mouseLeft(toMouseEvent(e));
+        MouseEvent event = toMouseEvent(e);
+        if (isDomCellEvent(event)) return true;
+        getSource().mouseLeft(event);
         return false;
       }
     });
@@ -515,6 +525,11 @@ public class CellContainerToDomMapper extends Mapper<CellContainer, Element> {
         return false;
       }
     });
+  }
+
+  private boolean isDomCellEvent(MouseEvent e) {
+    Cell target = getSource().findCell(getSource().root, e.location());
+    return target instanceof DomCell;
   }
 
   private Mapper<? extends Cell, Element> rootMapper() {

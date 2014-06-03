@@ -243,7 +243,7 @@ public class CellContainer {
     dispatch(target, e, eventSpec);
   }
 
-  private Cell findCell(Cell current, Vector loc) {
+  public Cell findCell(Cell current, Vector loc) {
     if (!current.getBounds().contains(loc)) return null;
     for (Cell child : current.children()) {
       if (!child.visible().get()) continue;
