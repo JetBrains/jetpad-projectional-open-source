@@ -64,6 +64,10 @@ public class LabelView extends CellView {
     });
   }
 
+  public Property<Vector> getDelta() {
+    return myLabelDelta;
+  }
+
   public Property<Boolean> editing() {
     return myEditing;
   }
