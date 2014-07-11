@@ -42,7 +42,7 @@ public class BlockWithLabelMapper extends BlockMapper {
   protected void registerSynchronizers(SynchronizersConfiguration conf) {
     super.registerSynchronizers(conf);
 
-    conf.add(Synchronizers.forProperties(getSource().text, ((TextCell) myCell.cell.get()).text()));
-    conf.add(Synchronizers.forProperty(getTarget().rect.background(), myCell.background()));
+    conf.add(Synchronizers.forPropsTwoWay(getSource().text, ((TextCell) myCell.cell.get()).text()));
+    conf.add(Synchronizers.forPropsOneWay(getTarget().rect.background(), myCell.background()));
   }
 }

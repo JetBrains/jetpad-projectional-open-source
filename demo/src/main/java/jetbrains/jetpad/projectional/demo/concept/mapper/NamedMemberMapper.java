@@ -28,6 +28,6 @@ class NamedMemberMapper extends Mapper<NamedMember, NamedMemberCell> {
   protected void registerSynchronizers(SynchronizersConfiguration conf) {
     super.registerSynchronizers(conf);
 
-    conf.add(Synchronizers.forProperties(getSource().name, getTarget().name.text()));
+    conf.add(Synchronizers.forPropsTwoWay(getSource().name, getTarget().name.text()));
   }
 }

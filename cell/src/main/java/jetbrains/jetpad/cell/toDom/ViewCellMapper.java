@@ -37,7 +37,7 @@ class ViewCellMapper extends BaseCellMapper<ViewCell> {
 
     conf.add(Synchronizers.forRegistration(ViewToDom.map(myViewContainer, getTarget())));
 
-    conf.add(Synchronizers.forProperty(getSource().view, new WritableProperty<View>() {
+    conf.add(Synchronizers.forPropsOneWay(getSource().view, new WritableProperty<View>() {
       @Override
       public void set(View value) {
         myViewContainer.contentRoot().children().clear();

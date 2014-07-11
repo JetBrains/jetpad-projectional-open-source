@@ -46,61 +46,61 @@ class TextViewMapper extends BaseViewMapper<TextView, Element> {
 
     super.registerSynchronizers(conf);
 
-    conf.add(Synchronizers.forProperty(getSource().selectionVisible(), new WritableProperty<Boolean>() {
+    conf.add(Synchronizers.forPropsOneWay(getSource().selectionVisible(), new WritableProperty<Boolean>() {
       @Override
       public void set(Boolean value) {
         editor.selectionVisble(value);
       }
     }));
-    conf.add(Synchronizers.forProperty(getSource().selectionStart(), new WritableProperty<Integer>() {
+    conf.add(Synchronizers.forPropsOneWay(getSource().selectionStart(), new WritableProperty<Integer>() {
       @Override
       public void set(Integer value) {
         editor.selectionStart(value);
       }
     }));
-    conf.add(Synchronizers.forProperty(getSource().text(), new WritableProperty<String>() {
+    conf.add(Synchronizers.forPropsOneWay(getSource().text(), new WritableProperty<String>() {
       @Override
       public void set(String value) {
         editor.text(value);
       }
     }));
-    conf.add(Synchronizers.forProperty(getSource().textColor(), new WritableProperty<Color>() {
+    conf.add(Synchronizers.forPropsOneWay(getSource().textColor(), new WritableProperty<Color>() {
       @Override
       public void set(Color value) {
         editor.textColor(value);
       }
     }));
-    conf.add(Synchronizers.forProperty(getSource().caretVisible(), new WritableProperty<Boolean>() {
+    conf.add(Synchronizers.forPropsOneWay(getSource().caretVisible(), new WritableProperty<Boolean>() {
       @Override
       public void set(Boolean value) {
         editor.caretVisible(value);
       }
     }));
-    conf.add(Synchronizers.forProperty(getSource().caretPosition(), new WritableProperty<Integer>() {
+    conf.add(Synchronizers.forPropsOneWay(getSource().caretPosition(), new WritableProperty<Integer>() {
       @Override
       public void set(Integer value) {
         editor.caretPosition(value);
       }
     }));
-    conf.add(Synchronizers.forProperty(getSource().bold(), new WritableProperty<Boolean>() {
+    conf.add(Synchronizers.forPropsOneWay(getSource().bold(), new WritableProperty<Boolean>() {
       @Override
       public void set(Boolean value) {
         editor.bold(value);
       }
     }));
-    conf.add(Synchronizers.forProperty(getSource().italic(), new WritableProperty<Boolean>() {
+    conf.add(Synchronizers.forPropsOneWay(getSource().italic(), new WritableProperty<Boolean>() {
       @Override
       public void set(Boolean value) {
         editor.italic(value);
       }
     }));
-    conf.add(Synchronizers.forProperty(getSource().fontFamily(), new WritableProperty<FontFamily>() {
+    conf.add(Synchronizers.forPropsOneWay(getSource().fontFamily(), new WritableProperty<FontFamily>() {
       @Override
       public void set(FontFamily value) {
         editor.fontFamily(value);
       }
     }));
-    conf.add(Synchronizers.forProperty(getSource().fontSize(), new WritableProperty<Integer>() {
+    conf.add(Synchronizers.forPropsOneWay(getSource().fontSize(), new WritableProperty<Integer>() {
       @Override
       public void set(Integer value) {
         editor.fontSize(value);

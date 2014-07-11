@@ -74,7 +74,7 @@ public class ContentRootMapper extends Mapper<Diagram, ViewContainer> {
 
     myProperties = new ContentProperties(x, y);
 
-    conf.add(Synchronizers.forProperties(text, myContent.name));
+    conf.add(Synchronizers.forPropsTwoWay(text, myContent.name));
     conf.add(Synchronizers.forProperty(num, new Runnable() {
       @Override
       public void run() {

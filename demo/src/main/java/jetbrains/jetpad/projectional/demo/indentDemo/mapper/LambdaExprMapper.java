@@ -33,7 +33,7 @@ class LambdaExprMapper extends Mapper<LambdaExpr, LambdaExprMapper.LambdaExprCel
   protected void registerSynchronizers(SynchronizersConfiguration conf) {
     super.registerSynchronizers(conf);
 
-    conf.add(Synchronizers.forProperties(getSource().varName, getTarget().name.text()));
+    conf.add(Synchronizers.forPropsTwoWay(getSource().varName, getTarget().name.text()));
     conf.add(LambdaSynchronizers.exprSynchronizer(this, getSource().body, getTarget().body));
   }
 

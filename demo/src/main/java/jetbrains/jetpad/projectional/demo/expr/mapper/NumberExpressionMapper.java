@@ -31,6 +31,6 @@ class NumberExpressionMapper extends Mapper<NumberExpression, TextCell> {
   protected void registerSynchronizers(SynchronizersConfiguration conf) {
     super.registerSynchronizers(conf);
 
-    conf.add(Synchronizers.forProperties(getSource().value, ValueEditors.intProperty(getTarget())));
+    conf.add(Synchronizers.forPropsTwoWay(getSource().value, ValueEditors.intProperty(getTarget())));
   }
 }

@@ -34,6 +34,6 @@ class VarExprMapper extends Mapper<VarExpr, TextCell> {
   protected void registerSynchronizers(SynchronizersConfiguration conf) {
     super.registerSynchronizers(conf);
 
-    conf.add(Synchronizers.forProperties(getSource().name, getTarget().text()));
+    conf.add(Synchronizers.forPropsTwoWay(getSource().name, getTarget().text()));
   }
 }

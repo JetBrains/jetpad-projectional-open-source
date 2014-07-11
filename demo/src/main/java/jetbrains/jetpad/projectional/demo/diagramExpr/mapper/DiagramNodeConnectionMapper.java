@@ -56,14 +56,14 @@ class DiagramNodeConnectionMapper extends Mapper<DiagramNodeConnection, LineConn
   protected void registerSynchronizers(SynchronizersConfiguration conf) {
     super.registerSynchronizers(conf);
 
-    conf.add(Synchronizers.forProperty(getSource().target, new WritableProperty<DiagramNode>() {
+    conf.add(Synchronizers.forPropsOneWay(getSource().target, new WritableProperty<DiagramNode>() {
       @Override
       public void set(DiagramNode value) {
         getTarget().end().set((View) getParent().getParent().getDescendantMapper(value).getTarget());
       }
     }));
 
-    conf.add(Synchronizers.forProperty(
+    conf.add(Synchronizers.forPropsOneWay(
       Properties.ifProp(getTarget().view().focused(), Properties.constant(Color.RED), Properties.constant(Color.DARK_BLUE)),
       getTarget().color()
     ));

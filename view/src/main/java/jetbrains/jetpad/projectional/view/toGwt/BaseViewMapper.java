@@ -136,7 +136,7 @@ class BaseViewMapper<ViewT extends View, ElementT extends Element> extends Mappe
     }
 
     if (!isCustomBackgroundSync()) {
-      conf.add(Synchronizers.forProperty(getSource().background(), new WritableProperty<Color>() {
+      conf.add(Synchronizers.forPropsOneWay(getSource().background(), new WritableProperty<Color>() {
         @Override
         public void set(Color value) {
           Style style = getTarget().getStyle();
@@ -149,7 +149,7 @@ class BaseViewMapper<ViewT extends View, ElementT extends Element> extends Mappe
       }));
     }
 
-    conf.add(Synchronizers.forProperty(getSource().border(), new WritableProperty<Color>() {
+    conf.add(Synchronizers.forPropsOneWay(getSource().border(), new WritableProperty<Color>() {
       @Override
       public void set(Color value) {
         Style style = getTarget().getStyle();
@@ -165,7 +165,7 @@ class BaseViewMapper<ViewT extends View, ElementT extends Element> extends Mappe
       }
     }));
 
-    conf.add(Synchronizers.forProperty(getSource().visible(), new WritableProperty<Boolean>() {
+    conf.add(Synchronizers.forPropsOneWay(getSource().visible(), new WritableProperty<Boolean>() {
       @Override
       public void set(final Boolean value) {
         whenValid(new Runnable() {
@@ -177,7 +177,7 @@ class BaseViewMapper<ViewT extends View, ElementT extends Element> extends Mappe
       }
     }));
 
-    conf.add(Synchronizers.forProperty(getSource().hasShadow(), new WritableProperty<Boolean>() {
+    conf.add(Synchronizers.forPropsOneWay(getSource().hasShadow(), new WritableProperty<Boolean>() {
       @Override
       public void set(Boolean value) {
         if (value) {

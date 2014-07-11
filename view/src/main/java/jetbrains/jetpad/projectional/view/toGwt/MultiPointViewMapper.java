@@ -97,7 +97,7 @@ class MultiPointViewMapper extends BaseViewMapper<MultiPointView, Element> {
 
     conf.add(GwtViewSynchronizers.svgBoundsSyncrhonizer(getSource(), svg));
 
-    conf.add(Synchronizers.forProperty(getSource().color(), new WritableProperty<Color>() {
+    conf.add(Synchronizers.forPropsOneWay(getSource().color(), new WritableProperty<Color>() {
       @Override
       public void set(Color value) {
         if (isPolyLine) {
@@ -110,7 +110,7 @@ class MultiPointViewMapper extends BaseViewMapper<MultiPointView, Element> {
       }
     }));
 
-    conf.add(Synchronizers.forProperty(getSource().width(), new WritableProperty<Integer>() {
+    conf.add(Synchronizers.forPropsOneWay(getSource().width(), new WritableProperty<Integer>() {
       @Override
       public void set(Integer value) {
         style.setSVGProperty(SVGConstants.SVG_STROKE_WIDTH_ATTRIBUTE, "" + value);

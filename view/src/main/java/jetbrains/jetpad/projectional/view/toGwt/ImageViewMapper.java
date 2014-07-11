@@ -31,7 +31,7 @@ class ImageViewMapper extends BaseViewMapper<ImageView, Element> {
   protected void registerSynchronizers(SynchronizersConfiguration conf) {
     super.registerSynchronizers(conf);
 
-    conf.add(Synchronizers.forProperty(getSource().image, new WritableProperty<ImageData>() {
+    conf.add(Synchronizers.forPropsOneWay(getSource().image, new WritableProperty<ImageData>() {
       @Override
       public void set(ImageData value) {
         getTarget().setPropertyInt("width", value.getDimension().x);

@@ -44,7 +44,7 @@ class DomCellMapper extends BaseCellMapper<DomCell> {
   protected void registerSynchronizers(SynchronizersConfiguration conf) {
     super.registerSynchronizers(conf);
 
-    conf.add(Synchronizers.forProperty(getSource().node, new WritableProperty<Node>() {
+    conf.add(Synchronizers.forPropsOneWay(getSource().node, new WritableProperty<Node>() {
       Node currentValue;
 
       @Override

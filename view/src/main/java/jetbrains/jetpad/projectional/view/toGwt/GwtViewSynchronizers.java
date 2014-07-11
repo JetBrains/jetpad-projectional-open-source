@@ -25,7 +25,7 @@ import org.vectomatic.dom.svg.OMSVGSVGElement;
 
 class GwtViewSynchronizers {
   static Synchronizer svgBoundsSyncrhonizer(View view, final OMSVGSVGElement svg) {
-    return Synchronizers.forProperty(view.bounds(), new WritableProperty<Rectangle>() {
+    return Synchronizers.forPropsOneWay(view.bounds(), new WritableProperty<Rectangle>() {
       @Override
       public void set(Rectangle value) {
         svg.setWidth(Style.Unit.PX, value.dimension.x + 1);

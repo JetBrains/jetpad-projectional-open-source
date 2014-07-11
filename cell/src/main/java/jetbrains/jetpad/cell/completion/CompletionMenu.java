@@ -98,14 +98,14 @@ class CompletionMenu {
       super.registerSynchronizers(conf);
       final ReadableProperty<String> text = ((CompletionMenuModelMapper) getParent()).getSource().text;
 
-      conf.add(Synchronizers.forProperty(Properties.ifProp(new DerivedProperty<Boolean>(text) {
+      conf.add(Synchronizers.forPropsOneWay(Properties.ifProp(new DerivedProperty<Boolean>(text) {
         @Override
         public Boolean get() {
           return getSource().isMatch(text.get());
         }
       }, Color.BLUE, Color.BLACK), myText.textColor()));
 
-      conf.add(Synchronizers.forProperty(new DerivedProperty<String>() {
+      conf.add(Synchronizers.forPropsOneWay(new DerivedProperty<String>() {
         @Override
         public String get() {
           return getSource().visibleText(text.get());
@@ -119,7 +119,7 @@ class CompletionMenu {
 
       final ReadableProperty<CompletionItem> selectedItem = ((CompletionMenuModelMapper) getParent()).getSource().selectedItem;
 
-      conf.add(Synchronizers.forProperty(
+      conf.add(Synchronizers.forPropsOneWay(
         Properties.same(selectedItem, getSource()),
         new WritableProperty<Boolean>() {
           @Override
@@ -132,7 +132,8 @@ class CompletionMenu {
               getTarget().scrollTo();
             }
           }
-        }));
+        }
+      ));
     }
   }
 }

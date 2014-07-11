@@ -73,7 +73,7 @@ public class CellContainerToViewMapper extends Mapper<CellContainer, View> {
   protected void registerSynchronizers(SynchronizersConfiguration conf) {
     super.registerSynchronizers(conf);
 
-    conf.add(Synchronizers.forProperty(Properties.constant(true), myTargetView.focusable()));
+    conf.add(Synchronizers.forPropsOneWay(Properties.constant(true), myTargetView.focusable()));
     conf.add(Synchronizers.<Cell, View>forSingleRole(this, Properties.<Cell>constant(getSource().root),
       new WritableProperty<View>() {
         @Override

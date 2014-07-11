@@ -29,6 +29,6 @@ public class ContentItemMapper extends Mapper<ContentItem, ContentDemoItemView> 
   protected void registerSynchronizers(SynchronizersConfiguration conf) {
     super.registerSynchronizers(conf);
 
-    conf.add(Synchronizers.forProperties(getSource().size, getTarget().dimension()));
+    conf.add(Synchronizers.forPropsTwoWay(getSource().size, getTarget().dimension()));
   }
 }

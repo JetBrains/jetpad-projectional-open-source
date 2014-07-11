@@ -50,20 +50,20 @@ public class ConnectorMapper extends Mapper<Connector, PolyLineConnection> {
   protected void registerSynchronizers(SynchronizersConfiguration conf) {
     super.registerSynchronizers(conf);
 
-    conf.add(Synchronizers.forProperty(getSource().input, new WritableProperty<InputPort>() {
+    conf.add(Synchronizers.forPropsOneWay(getSource().input, new WritableProperty<InputPort>() {
       @Override
       public void set(InputPort value) {
         getTarget().toView().set(value == null ? null : (View) getParent().getDescendantMapper(value).getTarget());
       }
     }));
 
-    conf.add(Synchronizers.forProperty(getSource().output, new WritableProperty<OutputPort>() {
+    conf.add(Synchronizers.forPropsOneWay(getSource().output, new WritableProperty<OutputPort>() {
       @Override
       public void set(OutputPort value) {
         getTarget().fromView().set(value == null ? null : (View) getParent().getDescendantMapper(value).getTarget());
       }
     }));
 
-    conf.add(Synchronizers.forProperty(getSource().inputLocation, getTarget().toLocation()));
+    conf.add(Synchronizers.forPropsOneWay(getSource().inputLocation, getTarget().toLocation()));
   }
 }

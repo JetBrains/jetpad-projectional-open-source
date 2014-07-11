@@ -62,14 +62,14 @@ class EllipseViewMapper extends BaseViewMapper<EllipseView, Element> {
       }
     }));
 
-    conf.add(Synchronizers.forProperty(getSource().background(), new WritableProperty<Color>() {
+    conf.add(Synchronizers.forPropsOneWay(getSource().background(), new WritableProperty<Color>() {
       @Override
       public void set(Color value) {
         fillPath.getStyle().setSVGProperty(SVGConstants.SVG_FILL_ATTRIBUTE, value.toCssColor());
       }
     }));
 
-    conf.add(Synchronizers.forProperty(getSource().borderWidth(), new WritableProperty<Integer>() {
+    conf.add(Synchronizers.forPropsOneWay(getSource().borderWidth(), new WritableProperty<Integer>() {
       @Override
       public void set(Integer value) {
         if (value == 0) {
@@ -81,7 +81,7 @@ class EllipseViewMapper extends BaseViewMapper<EllipseView, Element> {
       }
     }));
 
-    conf.add(Synchronizers.forProperty(getSource().borderColor(), new WritableProperty<Color>() {
+    conf.add(Synchronizers.forPropsOneWay(getSource().borderColor(), new WritableProperty<Color>() {
       @Override
       public void set(Color value) {
         borderPath.getStyle().setSVGProperty(SVGConstants.SVG_STROKE_ATTRIBUTE, value.toCssColor());

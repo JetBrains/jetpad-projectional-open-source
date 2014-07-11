@@ -85,8 +85,8 @@ public class BlockMapper extends Mapper<Block, BlockView> {
   protected void registerSynchronizers(SynchronizersConfiguration conf) {
     super.registerSynchronizers(conf);
 
-    conf.add(Synchronizers.forProperty(Properties.ifProp(getTarget().focused(), Properties.constant(Color.RED), getSource().color), getTarget().rect.background()));
-    conf.add(Synchronizers.forProperty(getSource().location, new WritableProperty<Vector>() {
+    conf.add(Synchronizers.forPropsOneWay(Properties.ifProp(getTarget().focused(), Properties.constant(Color.RED), getSource().color), getTarget().rect.background()));
+    conf.add(Synchronizers.forPropsOneWay(getSource().location, new WritableProperty<Vector>() {
       @Override
       public void set(Vector value) {
         getTarget().moveTo(value);

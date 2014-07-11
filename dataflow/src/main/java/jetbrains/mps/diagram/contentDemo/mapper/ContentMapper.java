@@ -32,7 +32,7 @@ public class ContentMapper extends Mapper<Content, ContentDemoView> {
   protected void registerSynchronizers(SynchronizersConfiguration conf) {
     super.registerSynchronizers(conf);
 
-    conf.add(Synchronizers.forProperties(getSource().name, getTarget().nameView.text()));
+    conf.add(Synchronizers.forPropsTwoWay(getSource().name, getTarget().nameView.text()));
 
     conf.add(Synchronizers.forObservableRole(this, getSource().items, getTarget().itemsView.children(), new MapperFactory<ContentItem, View>() {
       @Override

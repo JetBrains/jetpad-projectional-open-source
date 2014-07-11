@@ -48,8 +48,8 @@ class ConceptDeclarationMapper extends Mapper<ConceptDeclaration, ConceptDeclara
   protected void registerSynchronizers(SynchronizersConfiguration conf) {
     super.registerSynchronizers(conf);
 
-    conf.add(Synchronizers.forProperties(getSource().name, getTarget().name.text()));
-    conf.add(Synchronizers.forProperties(getSource().isAbstract, ValueEditors.booleanProperty(getTarget().isAbstractText)));
+    conf.add(Synchronizers.forPropsTwoWay(getSource().name, getTarget().name.text()));
+    conf.add(Synchronizers.forPropsTwoWay(getSource().isAbstract, ValueEditors.booleanProperty(getTarget().isAbstractText)));
 
     ProjectionalRoleSynchronizer<Object, ConceptMember> membersSync = ProjectionalSynchronizers.<Object, ConceptMember>forRole(
       this,

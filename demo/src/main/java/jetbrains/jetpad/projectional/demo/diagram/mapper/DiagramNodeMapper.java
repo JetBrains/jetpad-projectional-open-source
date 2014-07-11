@@ -60,7 +60,7 @@ class DiagramNodeMapper extends Mapper<DiagramNode, RectView> {
   protected void registerSynchronizers(SynchronizersConfiguration conf) {
     super.registerSynchronizers(conf);
 
-    conf.add(Synchronizers.forProperty(getSource().location, new WritableProperty<Vector>() {
+    conf.add(Synchronizers.forPropsOneWay(getSource().location, new WritableProperty<Vector>() {
       @Override
       public void set(Vector loc) {
         getTarget().moveTo(loc);
@@ -80,7 +80,7 @@ class DiagramNodeMapper extends Mapper<DiagramNode, RectView> {
         }
       }));
 
-    conf.add(Synchronizers.forProperty(
+    conf.add(Synchronizers.forPropsOneWay(
       Properties.ifProp(getTarget().focused(), Properties.constant(Color.RED), Properties.constant(Color.LIGHT_GRAY)),
       getTarget().background()
     ));

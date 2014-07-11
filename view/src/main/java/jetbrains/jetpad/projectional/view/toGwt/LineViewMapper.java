@@ -47,7 +47,7 @@ class LineViewMapper extends BaseViewMapper<LineView, Element> {
 
     conf.add(GwtViewSynchronizers.svgBoundsSyncrhonizer(getSource(), svg));
 
-    conf.add(Synchronizers.forProperty(new DerivedProperty<Vector>(getSource().bounds(), getSource().start()) {
+    conf.add(Synchronizers.forPropsOneWay(new DerivedProperty<Vector>(getSource().bounds(), getSource().start()) {
       @Override
       public Vector get() {
         return getSource().start().get().sub(getSource().bounds().get().origin);
@@ -64,7 +64,7 @@ class LineViewMapper extends BaseViewMapper<LineView, Element> {
         });
       }
     }));
-    conf.add(Synchronizers.forProperty(new DerivedProperty<Vector>(getSource().bounds(), getSource().start()) {
+    conf.add(Synchronizers.forPropsOneWay(new DerivedProperty<Vector>(getSource().bounds(), getSource().start()) {
       @Override
       public Vector get() {
         return getSource().end().get().sub(getSource().bounds().get().origin);
@@ -81,14 +81,14 @@ class LineViewMapper extends BaseViewMapper<LineView, Element> {
         });
       }
     }));
-    conf.add(Synchronizers.forProperty(getSource().color(), new WritableProperty<Color>() {
+    conf.add(Synchronizers.forPropsOneWay(getSource().color(), new WritableProperty<Color>() {
       @Override
       public void set(Color value) {
         line.getStyle().setSVGProperty(SVGConstants.SVG_STROKE_ATTRIBUTE, value.toCssColor());
       }
     }));
 
-    conf.add(Synchronizers.forProperty(getSource().width(), new WritableProperty<Integer>() {
+    conf.add(Synchronizers.forPropsOneWay(getSource().width(), new WritableProperty<Integer>() {
       @Override
       public void set(Integer value) {
         line.getStyle().setSVGProperty(SVGConstants.SVG_STROKE_WIDTH_ATTRIBUTE, "" + value);

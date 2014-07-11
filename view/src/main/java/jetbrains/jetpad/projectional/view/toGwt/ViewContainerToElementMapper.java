@@ -96,7 +96,7 @@ public class ViewContainerToElementMapper extends Mapper<ViewContainer, Element>
       }
     })));
 
-    conf.add(Synchronizers.forProperty(getSource().root().bounds(), new WritableProperty<Rectangle>() {
+    conf.add(Synchronizers.forPropsOneWay(getSource().root().bounds(), new WritableProperty<Rectangle>() {
       @Override
       public void set(Rectangle value) {
         Vector bottomRight = value.origin.add(value.dimension);

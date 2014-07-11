@@ -37,12 +37,12 @@ class VerticalViewMapper extends CompositeViewMapper<VerticalView, Element> {
   protected void registerSynchronizers(SynchronizersConfiguration conf) {
     super.registerSynchronizers(conf);
 
-    conf.add(Synchronizers.forProperty(new DerivedProperty<Boolean>(getSource().bounds(), context().visibleArea()) {
-        @Override
-        public Boolean get() {
-          return getSource().bounds().get().intersects(context().visibleArea().get());
-        }
-      },
+    conf.add(Synchronizers.forPropsOneWay(new DerivedProperty<Boolean>(getSource().bounds(), context().visibleArea()) {
+                                            @Override
+                                            public Boolean get() {
+                                              return getSource().bounds().get().intersects(context().visibleArea().get());
+                                            }
+                                          },
       new WritableProperty<Boolean>() {
         @Override
         public void set(Boolean value) {
@@ -51,7 +51,7 @@ class VerticalViewMapper extends CompositeViewMapper<VerticalView, Element> {
       }
     ));
 
-    conf.add(Synchronizers.forProperty(getSource().indentWidth(), new WritableProperty<Integer>() {
+    conf.add(Synchronizers.forPropsOneWay(getSource().indentWidth(), new WritableProperty<Integer>() {
       @Override
       public void set(Integer value) {
         getTarget().getStyle().setPaddingLeft(value, Style.Unit.PX);

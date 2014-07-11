@@ -36,7 +36,7 @@ class DomViewMapper extends BaseViewMapper<DomView, Element> {
       }
     }));
 
-    conf.add(Synchronizers.forProperty(getSource().element, new WritableProperty<Element>() {
+    conf.add(Synchronizers.forPropsOneWay(getSource().element, new WritableProperty<Element>() {
       @Override
       public void set(Element value) {
         getTarget().setInnerHTML("");
@@ -46,7 +46,7 @@ class DomViewMapper extends BaseViewMapper<DomView, Element> {
       }
     }));
 
-    conf.add(Synchronizers.forProperty(getSource().focused(), new WritableProperty<Boolean>() {
+    conf.add(Synchronizers.forPropsOneWay(getSource().focused(), new WritableProperty<Boolean>() {
       @Override
       public void set(Boolean value) {
         if (value && getSource().element.get() != null) {

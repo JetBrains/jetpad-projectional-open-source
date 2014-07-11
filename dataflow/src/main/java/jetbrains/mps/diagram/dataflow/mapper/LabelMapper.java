@@ -59,8 +59,8 @@ class LabelMapper extends Mapper<Connector, LabelView> {
       public void attach(SynchronizerContext ctx) {
         TextCellController textCellController = new TextCellController();
         myReg = textCellController.install(getTarget());
-        myPropSynchronizer = Synchronizers.forProperties(getSource().text, textCellController.getTextCell().text());
-        myEditingSynchronizer = Synchronizers.forProperties(textCellController.editing(), getTarget().editing());
+        myPropSynchronizer = Synchronizers.forPropsTwoWay(getSource().text, textCellController.getTextCell().text());
+        myEditingSynchronizer = Synchronizers.forPropsTwoWay(textCellController.editing(), getTarget().editing());
         myInvalidateSynchronizer = Synchronizers.forProperty(textCellController.editing(), new Runnable() {
           @Override
           public void run() {
