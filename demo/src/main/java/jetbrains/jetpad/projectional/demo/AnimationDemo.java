@@ -13,13 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package jetbrains.jetpad.projectional.view.toAwt;
+package jetbrains.jetpad.projectional.demo;
 
 import jetbrains.jetpad.base.animation.Animation;
 import jetbrains.jetpad.base.animation.TimerAnimation;
 import jetbrains.jetpad.event.MouseEvent;
 import jetbrains.jetpad.geometry.Vector;
 import jetbrains.jetpad.projectional.view.*;
+import jetbrains.jetpad.projectional.view.toAwt.AwtDemo;
 import jetbrains.jetpad.values.Color;
 
 public class AnimationDemo {
