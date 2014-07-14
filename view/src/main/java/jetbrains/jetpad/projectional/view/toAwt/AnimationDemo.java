@@ -24,12 +24,12 @@ import jetbrains.jetpad.values.Color;
 
 public class AnimationDemo {
   public static void main(String[] args) {
-    ViewContainer container = createConnectionDemo();
+    ViewContainer container = createContainer();
 
     AwtDemo.show(container);
   }
 
-  private static ViewContainer createConnectionDemo() {
+  private static ViewContainer createContainer() {
     final ViewContainer container = new ViewContainer();
 
     final RectView rect = new RectView();
