@@ -246,6 +246,15 @@ public class IndentUpdaterTest {
   }
 
   @Test
+  public void newLineVisibilityChangeInCaseOfEmptyContainer() {
+    NewLineCell nl = newLine();
+    nl.visible().set(false);
+    children.addAll(Arrays.asList(text("a"), nl, indent()));
+    nl.visible().set(true);
+
+  }
+
+  @Test
   public void nestedVisibility() {
     IndentCell l = indent(text("b"), text("c"));
     l.visible().set(false);

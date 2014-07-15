@@ -150,6 +150,7 @@ public class IndentUpdater<SourceCT extends Composite<SourceCT>, TargetT> {
       Iterator<Position<SourceCT>> positions = nextNewLinePos == null ? toEnd(insertAt.next()) : range(insertAt.next(), nextNewLinePos);
       while (positions.hasNext()) {
         SourceCT part = positions.next().get();
+        if (!myIndentUpdaterSource.isCell(part)) continue;
         Cell cell = myIndentUpdaterSource.getCell(part);
         CellWrapper<TargetT> wrapper = myWrappers.get(cell);
         TargetT item = wrapper.item();
