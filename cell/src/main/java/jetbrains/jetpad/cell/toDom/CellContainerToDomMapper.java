@@ -458,7 +458,7 @@ public class CellContainerToDomMapper extends Mapper<CellContainer, Element> {
                 @Override
                 public void handle(String text) {
                   if (Strings.isNullOrEmpty(text)) {
-                    getSource().keyPressed(new KeyEvent(e.key(), e.keyChar(), e.modifiers()));
+                    getSource().keyPressed(e.copy());
                   } else {
                     getSource().paste(text);
                   }

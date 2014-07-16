@@ -212,7 +212,7 @@ public class ViewContainerToElementMapper extends Mapper<ViewContainer, Element>
                     @Override
                     public void handle(String text) {
                       if (Strings.isNullOrEmpty(text)) {
-                        getSource().keyPressed(new KeyEvent(e.key(), e.keyChar(), e.modifiers()));
+                        getSource().keyPressed(e.copy());
                       } else {
                         getSource().paste(new PasteEvent(new TextClipboardContent(text)));
                       }

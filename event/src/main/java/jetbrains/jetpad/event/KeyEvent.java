@@ -58,6 +58,10 @@ public class KeyEvent extends Event {
     return myKeyStroke.has(key);
   }
 
+  public KeyEvent copy() {
+    return new KeyEvent(key(), keyChar(), modifiers());
+  }
+
   @Override
   public String toString() {
     return myKeyStroke.toString();
