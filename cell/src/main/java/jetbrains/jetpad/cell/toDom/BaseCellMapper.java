@@ -55,8 +55,8 @@ abstract class BaseCellMapper<SourceT extends Cell> extends Mapper<SourceT, Elem
     return myContext;
   }
 
-  protected boolean managesChildren() {
-    return false;
+  protected boolean isAutoChildManagement() {
+    return true;
   }
 
   @Override
@@ -65,7 +65,7 @@ abstract class BaseCellMapper<SourceT extends Cell> extends Mapper<SourceT, Elem
 
     myTarget = divWrappedElementChildren(getTarget());
 
-    if (!managesChildren()) {
+    if (isAutoChildManagement()) {
       myChildrenMappers = createChildList();
       for (Cell child : getSource().children()) {
         Mapper<? extends Cell, ? extends Element> mapper = createMapper(child);
@@ -287,14 +287,14 @@ abstract class BaseCellMapper<SourceT extends Cell> extends Mapper<SourceT, Elem
   }
 
   void childAdded(CollectionItemEvent<Cell> event) {
-    if (managesChildren()) return;
+    if (isAutoChildManagement()) return;
     Mapper<? extends Cell, ? extends Element> mapper = createMapper(event.getItem());
     myChildrenMappers.add(event.getIndex(), mapper);
     myTarget.add(event.getIndex(), mapper.getTarget());
   }
 
   void childRemoved(CollectionItemEvent<Cell> event) {
-    if (managesChildren()) return;
+    if (isAutoChildManagement()) return;
     myChildrenMappers.remove(event.getIndex());
     myTarget.remove(event.getIndex());
   }
