@@ -131,10 +131,6 @@ public class TextView extends View {
   }
 
   private int textHeight() {
-    if (container() == null) {
-      System.out.println();
-    }
-
     ViewContainerPeer peer = container().peer();
     return peer.textHeight(font().get());
   }
