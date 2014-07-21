@@ -61,10 +61,12 @@ class BaseCellMapper<SourceT extends Cell, TargetT extends View> extends Mapper<
       childAdded(i, children.get(i));
     }
 
-    updatePopup(new PropertyChangeEvent<>(null, getSource().frontPopup().get()));
-    updatePopup(new PropertyChangeEvent<>(null, getSource().bottomPopup().get()));
-    updatePopup(new PropertyChangeEvent<>(null, getSource().leftPopup().get()));
-    updatePopup(new PropertyChangeEvent<>(null, getSource().rightPopup().get()));
+    if (isAutoPopupManagement()) {
+      updatePopup(new PropertyChangeEvent<>(null, getSource().frontPopup().get()));
+      updatePopup(new PropertyChangeEvent<>(null, getSource().bottomPopup().get()));
+      updatePopup(new PropertyChangeEvent<>(null, getSource().leftPopup().get()));
+      updatePopup(new PropertyChangeEvent<>(null, getSource().rightPopup().get()));
+    }
   }
 
   @Override
@@ -159,6 +161,10 @@ class BaseCellMapper<SourceT extends Cell, TargetT extends View> extends Mapper<
   }
 
   boolean isAutoChildManagement() {
+    return true;
+  }
+
+  boolean isAutoPopupManagement() {
     return true;
   }
 

@@ -356,9 +356,11 @@ public class CellContainerToViewMapper extends Mapper<CellContainer, View> {
         if (target == null) return;
 
         if (Cell.isPopupProp(prop)) {
-          target.updatePopup((PropertyChangeEvent<Cell>) event);
-          PropertyChangeEvent<Cell> changeEvent = (PropertyChangeEvent<Cell>) event;
+          if (target.isAutoPopupManagement()) {
+            target.updatePopup((PropertyChangeEvent<Cell>) event);
+          }
 
+          PropertyChangeEvent<Cell> changeEvent = (PropertyChangeEvent<Cell>) event;
           if (changeEvent.getOldValue() != null) {
             updateCachesOnRemove(changeEvent.getOldValue());
           }
