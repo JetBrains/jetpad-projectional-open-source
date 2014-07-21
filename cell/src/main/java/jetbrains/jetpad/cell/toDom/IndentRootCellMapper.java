@@ -134,6 +134,11 @@ class IndentRootCellMapper extends BaseCellMapper<IndentCell> {
   }
 
   @Override
+  protected boolean isAutoPopupManagement() {
+    return false;
+  }
+
+  @Override
   protected void onAttach(MappingContext ctx) {
     super.onAttach(ctx);
 

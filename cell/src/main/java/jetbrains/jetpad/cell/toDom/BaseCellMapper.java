@@ -59,6 +59,10 @@ abstract class BaseCellMapper<SourceT extends Cell> extends Mapper<SourceT, Elem
     return true;
   }
 
+  protected boolean isAutoPopupManagement() {
+    return true;
+  }
+
   @Override
   protected void registerSynchronizers(SynchronizersConfiguration conf) {
     super.registerSynchronizers(conf);
@@ -82,14 +86,16 @@ abstract class BaseCellMapper<SourceT extends Cell> extends Mapper<SourceT, Elem
     super.onAttach(ctx);
     myWasPopup = Composites.<Cell>isNonCompositeChild(getSource());
 
-    if (getSource().bottomPopup().get() != null) {
-      updatePopup(new PropertyChangeEvent<>(null, getSource().bottomPopup().get()));
-    } else if (getSource().frontPopup().get() != null) {
-      updatePopup(new PropertyChangeEvent<>(null, getSource().frontPopup().get()));
-    } else if (getSource().leftPopup().get() != null) {
-      updatePopup(new PropertyChangeEvent<>(null, getSource().leftPopup().get()));
-    } else if (getSource().rightPopup().get() != null) {
-      updatePopup(new PropertyChangeEvent<>(null, getSource().rightPopup().get()));
+    if (isAutoPopupManagement()) {
+      if (getSource().bottomPopup().get() != null) {
+        updatePopup(new PropertyChangeEvent<>(null, getSource().bottomPopup().get()));
+      } else if (getSource().frontPopup().get() != null) {
+        updatePopup(new PropertyChangeEvent<>(null, getSource().frontPopup().get()));
+      } else if (getSource().leftPopup().get() != null) {
+        updatePopup(new PropertyChangeEvent<>(null, getSource().leftPopup().get()));
+      } else if (getSource().rightPopup().get() != null) {
+        updatePopup(new PropertyChangeEvent<>(null, getSource().rightPopup().get()));
+      }
     }
 
     getSource().getProp(CellContainerToDomMapper.ELEMENT).set(getTarget());
