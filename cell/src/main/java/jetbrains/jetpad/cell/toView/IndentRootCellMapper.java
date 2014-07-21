@@ -100,8 +100,8 @@ class IndentRootCellMapper extends BaseCellMapper<IndentCell, VerticalView> {
   }
 
   @Override
-  boolean managesChildren() {
-    return true;
+  boolean isAutoChildManagement() {
+    return false;
   }
 
   @Override
