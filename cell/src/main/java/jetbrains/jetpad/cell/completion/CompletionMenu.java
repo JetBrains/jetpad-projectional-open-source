@@ -19,6 +19,7 @@ import jetbrains.jetpad.base.Handler;
 import jetbrains.jetpad.cell.trait.CellTrait;
 import jetbrains.jetpad.completion.CompletionItem;
 import jetbrains.jetpad.completion.CompletionMenuModel;
+import jetbrains.jetpad.geometry.Rectangle;
 import jetbrains.jetpad.geometry.Vector;
 import jetbrains.jetpad.mapper.*;
 import jetbrains.jetpad.model.property.DerivedProperty;
@@ -129,7 +130,7 @@ class CompletionMenu {
             }
             getTarget().background().set(value ? Color.LIGHT_CYAN : null);
             if (value && getTarget().isAttached()) {
-              getTarget().scrollTo();
+              getTarget().scrollTo(new Rectangle(0, 0, 1, getTarget().dimension().y));
             }
           }
         }
