@@ -52,7 +52,7 @@ class CompletionMenu {
       myVerticalCell = new VerticalCell();
       getTarget().children().add(myVerticalCell);
 
-      myVerticalCell.background().set(Color.VERY_LIGHT_GRAY);
+      getTarget().background().set(Color.VERY_LIGHT_GRAY);
       getTarget().maxDimension().set(new Vector(600, 200));
       getTarget().scroll().set(true);
     }
