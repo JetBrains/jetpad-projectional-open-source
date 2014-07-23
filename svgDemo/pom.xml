@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>projectional-container</artifactId>
+        <groupId>jetbrains.jetpad</groupId>
+        <version>1.1-SNAPSHOT</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>svgDemo</artifactId>
+    <dependencies>
+        <dependency>
+            <groupId>jetbrains.jetpad.util</groupId>
+            <artifactId>values</artifactId>
+            <version>1.1-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>jetbrains.jetpad</groupId>
+            <artifactId>svg</artifactId>
+            <version>1.1-SNAPSHOT</version>
+        </dependency></dependencies>
+
+
+</project>
