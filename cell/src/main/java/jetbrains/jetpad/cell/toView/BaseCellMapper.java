@@ -61,10 +61,12 @@ class BaseCellMapper<SourceT extends Cell, TargetT extends View> extends Mapper<
       childAdded(i, children.get(i));
     }
 
-    updatePopup(new PropertyChangeEvent<>(null, getSource().frontPopup().get()));
-    updatePopup(new PropertyChangeEvent<>(null, getSource().bottomPopup().get()));
-    updatePopup(new PropertyChangeEvent<>(null, getSource().leftPopup().get()));
-    updatePopup(new PropertyChangeEvent<>(null, getSource().rightPopup().get()));
+    if (isAutoPopupManagement()) {
+      updatePopup(new PropertyChangeEvent<>(null, getSource().frontPopup().get()));
+      updatePopup(new PropertyChangeEvent<>(null, getSource().bottomPopup().get()));
+      updatePopup(new PropertyChangeEvent<>(null, getSource().leftPopup().get()));
+      updatePopup(new PropertyChangeEvent<>(null, getSource().rightPopup().get()));
+    }
   }
 
   @Override
@@ -158,19 +160,23 @@ class BaseCellMapper<SourceT extends Cell, TargetT extends View> extends Mapper<
     updater.update(target.getBounds(), getTarget().container().visibleRect(), popupMapper.getTarget());
   }
 
-  boolean managesChildren() {
-    return false;
+  boolean isAutoChildManagement() {
+    return true;
+  }
+
+  boolean isAutoPopupManagement() {
+    return true;
   }
 
   void childAdded(int index, Cell child) {
-    if (managesChildren()) return;
+    if (!isAutoChildManagement()) return;
     BaseCellMapper<?, ?> mapper = createMapper(child);
     myChildMappers.add(index, mapper);
     getTarget().children().add(index, mapper.getTarget());
   }
 
   void childRemoved(int index, Cell child) {
-    if (managesChildren()) return;
+    if (!isAutoChildManagement()) return;
     myChildMappers.remove(index);
     getTarget().children().remove(index);
   }

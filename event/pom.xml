@@ -37,5 +37,10 @@
       <groupId>com.googlecode.gwtquery</groupId>
       <artifactId>gwtquery</artifactId>
     </dependency>
+
+    <dependency>
+      <groupId>com.google.gwt</groupId>
+      <artifactId>gwt-user</artifactId>
+    </dependency>
   </dependencies>
 </project>

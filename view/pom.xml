@@ -68,5 +68,10 @@
       <artifactId>domUtil</artifactId>
       <version>1.1-SNAPSHOT</version>
     </dependency>
+
+    <dependency>
+      <groupId>com.google.gwt</groupId>
+      <artifactId>gwt-user</artifactId>
+    </dependency>
   </dependencies>
 </project>

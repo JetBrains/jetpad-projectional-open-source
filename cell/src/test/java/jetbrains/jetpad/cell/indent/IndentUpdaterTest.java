@@ -312,6 +312,12 @@ public class IndentUpdaterTest {
     root.visible().set(true);
   }
 
+  @Test
+  public void exceptionOnRootPopup() {
+    TextCell cell = new TextCell("aaa");
+    indentCell.bottomPopup().set(cell);
+  }
+
   private Cell composite(String text) {
     Cell result = new HorizontalCell();
     result.children().addAll(Arrays.asList(text("composite"), text(text)));

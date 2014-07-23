@@ -196,7 +196,9 @@ public class CellContainerToDomMapper extends Mapper<CellContainer, Element> {
             BaseCellMapper<?> mapper = (BaseCellMapper<?>) rootMapper().getDescendantMapper(cell);
             if (mapper == null) return;
             if (Cell.isPopupProp(prop)) {
-              mapper.updatePopup((PropertyChangeEvent<Cell>) event);
+              if (mapper.isAutoPopupManagement()) {
+                mapper.updatePopup((PropertyChangeEvent<Cell>) event);
+              }
             } else {
               mapper.refreshProperties();
             }

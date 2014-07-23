@@ -36,8 +36,8 @@ class DomCellMapper extends BaseCellMapper<DomCell> {
   }
 
   @Override
-  protected boolean managesChildren() {
-    return true;
+  protected boolean isAutoChildManagement() {
+    return false;
   }
 
   @Override

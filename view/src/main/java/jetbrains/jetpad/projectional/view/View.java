@@ -407,7 +407,8 @@ public abstract class View implements Composite<View>, HasFocusability, HasVisib
   }
 
   protected void doValidate(ValidationContext ctx) {
-    for (View child : children()) {
+    List<View> children = new ArrayList<>(children());
+    for (View child : children) {
       child.validate();
     }
   }

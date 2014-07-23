@@ -55,8 +55,12 @@ abstract class BaseCellMapper<SourceT extends Cell> extends Mapper<SourceT, Elem
     return myContext;
   }
 
-  protected boolean managesChildren() {
-    return false;
+  protected boolean isAutoChildManagement() {
+    return true;
+  }
+
+  protected boolean isAutoPopupManagement() {
+    return true;
   }
 
   @Override
@@ -65,7 +69,7 @@ abstract class BaseCellMapper<SourceT extends Cell> extends Mapper<SourceT, Elem
 
     myTarget = divWrappedElementChildren(getTarget());
 
-    if (!managesChildren()) {
+    if (isAutoChildManagement()) {
       myChildrenMappers = createChildList();
       for (Cell child : getSource().children()) {
         Mapper<? extends Cell, ? extends Element> mapper = createMapper(child);
@@ -82,14 +86,16 @@ abstract class BaseCellMapper<SourceT extends Cell> extends Mapper<SourceT, Elem
     super.onAttach(ctx);
     myWasPopup = Composites.<Cell>isNonCompositeChild(getSource());
 
-    if (getSource().bottomPopup().get() != null) {
-      updatePopup(new PropertyChangeEvent<>(null, getSource().bottomPopup().get()));
-    } else if (getSource().frontPopup().get() != null) {
-      updatePopup(new PropertyChangeEvent<>(null, getSource().frontPopup().get()));
-    } else if (getSource().leftPopup().get() != null) {
-      updatePopup(new PropertyChangeEvent<>(null, getSource().leftPopup().get()));
-    } else if (getSource().rightPopup().get() != null) {
-      updatePopup(new PropertyChangeEvent<>(null, getSource().rightPopup().get()));
+    if (isAutoPopupManagement()) {
+      if (getSource().bottomPopup().get() != null) {
+        updatePopup(new PropertyChangeEvent<>(null, getSource().bottomPopup().get()));
+      } else if (getSource().frontPopup().get() != null) {
+        updatePopup(new PropertyChangeEvent<>(null, getSource().frontPopup().get()));
+      } else if (getSource().leftPopup().get() != null) {
+        updatePopup(new PropertyChangeEvent<>(null, getSource().leftPopup().get()));
+      } else if (getSource().rightPopup().get() != null) {
+        updatePopup(new PropertyChangeEvent<>(null, getSource().rightPopup().get()));
+      }
     }
 
     getSource().getProp(CellContainerToDomMapper.ELEMENT).set(getTarget());
@@ -287,14 +293,14 @@ abstract class BaseCellMapper<SourceT extends Cell> extends Mapper<SourceT, Elem
   }
 
   void childAdded(CollectionItemEvent<Cell> event) {
-    if (managesChildren()) return;
+    if (!isAutoChildManagement()) return;
     Mapper<? extends Cell, ? extends Element> mapper = createMapper(event.getItem());
     myChildrenMappers.add(event.getIndex(), mapper);
     myTarget.add(event.getIndex(), mapper.getTarget());
   }
 
   void childRemoved(CollectionItemEvent<Cell> event) {
-    if (managesChildren()) return;
+    if (!isAutoChildManagement()) return;
     myChildrenMappers.remove(event.getIndex());
     myTarget.remove(event.getIndex());
   }

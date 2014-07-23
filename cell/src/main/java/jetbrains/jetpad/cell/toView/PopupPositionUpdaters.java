@@ -16,6 +16,7 @@
 package jetbrains.jetpad.cell.toView;
 
 import jetbrains.jetpad.geometry.Rectangle;
+import jetbrains.jetpad.geometry.Vector;
 import jetbrains.jetpad.projectional.view.View;
 
 class PopupPositionUpdaters {
@@ -28,9 +29,11 @@ class PopupPositionUpdaters {
         popup.moveTo(target);
 
         boolean bottom = visibleRect.contains(popup.bounds().get());
+        Vector delta = new Vector(0, -targetRect.dimension.y - popup.bounds().get().dimension.y);
+        boolean top = visibleRect.contains(popup.bounds().get().add(delta));
 
-        if (!bottom) {
-          popup.move(new jetbrains.jetpad.geometry.Vector(0, -targetRect.dimension.y - popup.bounds().get().dimension.y));
+        if (!bottom && top) {
+          popup.move(delta);
         }
       }
     };

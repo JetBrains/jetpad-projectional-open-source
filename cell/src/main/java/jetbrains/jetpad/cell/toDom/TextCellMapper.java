@@ -41,8 +41,8 @@ class TextCellMapper extends BaseCellMapper<TextCell> {
   }
 
   @Override
-  protected boolean managesChildren() {
-    return true;
+  protected boolean isAutoChildManagement() {
+    return false;
   }
 
   @Override

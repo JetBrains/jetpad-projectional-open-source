@@ -129,8 +129,13 @@ class IndentRootCellMapper extends BaseCellMapper<IndentCell> {
   }
 
   @Override
-  protected boolean managesChildren() {
-    return true;
+  protected boolean isAutoChildManagement() {
+    return false;
+  }
+
+  @Override
+  protected boolean isAutoPopupManagement() {
+    return false;
   }
 
   @Override
