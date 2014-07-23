@@ -27,8 +27,8 @@
     <module>dataflow</module>
     <module>diagram</module>
     <module>domUtil</module>
-      <module>svg</module>
-      <module>svgDemo</module>
+    <module>svg</module>
+    <module>svgDemo</module>
   </modules>
 
   <build>
