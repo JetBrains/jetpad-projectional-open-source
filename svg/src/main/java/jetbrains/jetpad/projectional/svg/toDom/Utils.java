@@ -15,27 +15,26 @@ public class Utils {
       }
 
       @Override
-      public OMNode set(int index, OMNode node) {
-        if (node.getParentNode() != null) {
+      public OMNode set(int index, OMNode element) {
+        if (element.getParentNode() != null) {
           throw new IllegalStateException();
         }
 
         OMNode child = get(index);
-        e.replaceChild(child, node);
+        e.replaceChild(child, element);
         return child;
       }
 
       @Override
-      public void add(int index, OMNode node) {
-        if (node.getParentNode() != null) {
+      public void add(int index, OMNode element) {
+        if (element.getParentNode() != null) {
           throw new IllegalStateException();
         }
 
         if (index == size()) {
-          e.insertBefore(node, null);
+          e.insertBefore(element, null);
         } else {
-          OMNode prev = get(index);
-          e.insertBefore(node, prev);
+          e.insertBefore(element, get(index));
         }
       }
 

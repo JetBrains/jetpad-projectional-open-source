@@ -1,6 +1,5 @@
 package jetbrains.jetpad.projectional.svg.toDom;
 
-import jetbrains.jetpad.mapper.Synchronizer;
 import jetbrains.jetpad.mapper.Synchronizers;
 import jetbrains.jetpad.model.property.WritableProperty;
 import jetbrains.jetpad.projectional.svg.SvgRect;
