@@ -9,7 +9,10 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
+    <groupId>jetbrains.jetpad.projectional</groupId>
     <artifactId>svgDemo</artifactId>
+    <version>1.1-SNAPSHOT</version>
+
     <dependencies>
         <dependency>
             <groupId>jetbrains.jetpad.util</groupId>
@@ -24,6 +27,11 @@
         <dependency>
             <groupId>com.google.gwt</groupId>
             <artifactId>gwt-user</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.xmlgraphics</groupId>
+            <artifactId>batik-swing</artifactId>
+            <version>1.7</version>
         </dependency>
     </dependencies>
 
