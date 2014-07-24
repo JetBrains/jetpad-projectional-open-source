@@ -16,28 +16,28 @@ public class SvgEllipseMapper extends SvgElementMapper<SvgEllipse, SVGOMEllipseE
   protected void registerSynchronizers(SynchronizersConfiguration conf) {
     super.registerSynchronizers(conf);
 
-    conf.add(Synchronizers.forPropsOneWay(getSource().cx, new WritableProperty<Integer>() {
+    conf.add(Synchronizers.forPropsOneWay(getSource().cx, new WritableProperty<Double>() {
       @Override
-      public void set(Integer value) {
-        getTarget().setAttribute("cx", Integer.toString(value));
+      public void set(Double value) {
+        getTarget().setAttribute("cx", Double.toString(value));
       }
     }));
-    conf.add(Synchronizers.forPropsOneWay(getSource().cy, new WritableProperty<Integer>() {
+    conf.add(Synchronizers.forPropsOneWay(getSource().cy, new WritableProperty<Double>() {
       @Override
-      public void set(Integer value) {
-        getTarget().setAttribute("cy", Integer.toString(value));
+      public void set(Double value) {
+        getTarget().setAttribute("cy", Double.toString(value));
       }
     }));
-    conf.add(Synchronizers.forPropsOneWay(getSource().rx, new WritableProperty<Integer>() {
+    conf.add(Synchronizers.forPropsOneWay(getSource().rx, new WritableProperty<Double>() {
       @Override
-      public void set(Integer value) {
-        getTarget().setAttribute("rx", Integer.toString(value));
+      public void set(Double value) {
+        getTarget().setAttribute("rx", Double.toString(value));
       }
     }));
-    conf.add(Synchronizers.forPropsOneWay(getSource().ry, new WritableProperty<Integer>() {
+    conf.add(Synchronizers.forPropsOneWay(getSource().ry, new WritableProperty<Double>() {
       @Override
-      public void set(Integer value) {
-        getTarget().setAttribute("ry", Integer.toString(value));
+      public void set(Double value) {
+        getTarget().setAttribute("ry", Double.toString(value));
       }
     }));
     conf.add(Synchronizers.forPropsOneWay(getSource().fill, new WritableProperty<Color>() {

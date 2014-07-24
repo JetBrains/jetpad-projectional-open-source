@@ -15,28 +15,28 @@ public class SvgRectMapper extends SvgElementMapper<SvgRect, OMSVGRectElement> {
   protected void registerSynchronizers(SynchronizersConfiguration conf) {
     super.registerSynchronizers(conf);
 
-    conf.add(Synchronizers.forPropsOneWay(getSource().x, new WritableProperty<Integer>() {
+    conf.add(Synchronizers.forPropsOneWay(getSource().x, new WritableProperty<Double>() {
       @Override
-      public void set(Integer value) {
-        getTarget().setAttribute("x", Integer.toString(value));
+      public void set(Double value) {
+        getTarget().setAttribute("x", Double.toString(value));
       }
     }));
-    conf.add(Synchronizers.forPropsOneWay(getSource().y, new WritableProperty<Integer>() {
+    conf.add(Synchronizers.forPropsOneWay(getSource().y, new WritableProperty<Double>() {
       @Override
-      public void set(Integer value) {
-        getTarget().setAttribute("y", Integer.toString(value));
+      public void set(Double value) {
+        getTarget().setAttribute("y", Double.toString(value));
       }
     }));
-    conf.add(Synchronizers.forPropsOneWay(getSource().height, new WritableProperty<Integer>() {
+    conf.add(Synchronizers.forPropsOneWay(getSource().height, new WritableProperty<Double>() {
       @Override
-      public void set(Integer value) {
-        getTarget().setAttribute("height", Integer.toString(value));
+      public void set(Double value) {
+        getTarget().setAttribute("height", Double.toString(value));
       }
     }));
-    conf.add(Synchronizers.forPropsOneWay(getSource().width, new WritableProperty<Integer>() {
+    conf.add(Synchronizers.forPropsOneWay(getSource().width, new WritableProperty<Double>() {
       @Override
-      public void set(Integer value) {
-        getTarget().setAttribute("width", Integer.toString(value));
+      public void set(Double value) {
+        getTarget().setAttribute("width", Double.toString(value));
       }
     }));
     conf.add(Synchronizers.forPropsOneWay(getSource().fill, new WritableProperty<Color>() {
