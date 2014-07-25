@@ -14,8 +14,8 @@ import org.apache.batik.dom.svg.SVGOMRectElement;
 public class SvgElementMappingFactory implements MapperFactory<SvgElement, SVGOMElement> {
   private AbstractDocument myDoc;
 
-  public SvgElementMappingFactory(AbstractDocument myDoc) {
-    this.myDoc = myDoc;
+  public SvgElementMappingFactory(AbstractDocument doc) {
+    myDoc = doc;
   }
 
   @Override
