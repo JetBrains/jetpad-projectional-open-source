@@ -10,6 +10,6 @@
         <exclude name="AwtDemo.java" />
     </source>
 
-    <entry-point class='jetbrains.jetpad.projectional.svgDemo.Demo'/>
+    <entry-point class='jetbrains.jetpad.projectional.svgDemo.GwtDemo'/>
 
 </module>

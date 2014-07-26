@@ -8,7 +8,7 @@ import jetbrains.jetpad.projectional.svg.SvgRoot;
 import jetbrains.jetpad.projectional.svg.toDom.SvgRootMapper;
 import org.vectomatic.dom.svg.OMSVGSVGElement;
 
-public class Demo implements EntryPoint {
+public class GwtDemo implements EntryPoint {
   public void onModuleLoad() {
     final SvgRoot svgRoot = DemoModel.createModel();
 
