@@ -1,13 +1,14 @@
-package jetbrains.jetpad.projectional.svg.toDom;
+package jetbrains.jetpad.projectional.svg.toAwt;
 
 import jetbrains.jetpad.mapper.Synchronizers;
 import jetbrains.jetpad.model.property.WritableProperty;
 import jetbrains.jetpad.projectional.svg.SvgRoot;
-import org.vectomatic.dom.svg.OMSVGSVGElement;
+import org.apache.batik.dom.AbstractDocument;
+import org.apache.batik.dom.svg.SVGOMSVGElement;
 
-public class SvgRootMapper extends SvgElementMapper<SvgRoot, OMSVGSVGElement> {
-  public SvgRootMapper(SvgRoot source, OMSVGSVGElement target) {
-    super(source, target);
+public class SvgRootMapper extends SvgElementMapper<SvgRoot, SVGOMSVGElement> {
+  public SvgRootMapper(SvgRoot source, SVGOMSVGElement target, AbstractDocument doc) {
+    super(source, target, doc);
   }
 
   @Override

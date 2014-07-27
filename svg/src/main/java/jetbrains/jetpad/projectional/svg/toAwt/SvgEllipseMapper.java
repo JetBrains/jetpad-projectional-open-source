@@ -1,14 +1,15 @@
-package jetbrains.jetpad.projectional.svg.toDom;
+package jetbrains.jetpad.projectional.svg.toAwt;
 
 import jetbrains.jetpad.mapper.Synchronizers;
 import jetbrains.jetpad.model.property.WritableProperty;
 import jetbrains.jetpad.projectional.svg.SvgEllipse;
 import jetbrains.jetpad.values.Color;
-import org.vectomatic.dom.svg.OMSVGEllipseElement;
+import org.apache.batik.dom.AbstractDocument;
+import org.apache.batik.dom.svg.SVGOMEllipseElement;
 
-public class SvgEllipseMapper extends SvgElementMapper<SvgEllipse, OMSVGEllipseElement> {
-  public SvgEllipseMapper(SvgEllipse source, OMSVGEllipseElement target) {
-    super(source, target);
+public class SvgEllipseMapper extends SvgElementMapper<SvgEllipse, SVGOMEllipseElement> {
+  public SvgEllipseMapper(SvgEllipse source, SVGOMEllipseElement target, AbstractDocument doc) {
+    super(source, target, doc);
   }
 
   @Override

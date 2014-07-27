@@ -1,32 +1,32 @@
-package jetbrains.jetpad.projectional.svg.toDom;
+package jetbrains.jetpad.projectional.svg.toAwt;
 
-import org.vectomatic.dom.svg.OMElement;
-import org.vectomatic.dom.svg.OMNode;
+import org.apache.batik.dom.svg.SVGOMElement;
+import org.w3c.dom.Node;
 
 import java.util.AbstractList;
 import java.util.List;
 
 public class Utils {
-  public static List<OMNode> elementChildren(final OMElement e) {
-    return new AbstractList<OMNode>() {
+  public static List<Node> elementChildren(final SVGOMElement e) {
+    return new AbstractList<Node>() {
       @Override
-      public OMNode get(int index) {
-        return e.getChildNodes().getItem(index);
+      public Node get(int index) {
+        return e.getChildNodes().item(index);
       }
 
       @Override
-      public OMNode set(int index, OMNode element) {
+      public Node set(int index, Node element) {
         if (element.getParentNode() != null) {
           throw new IllegalStateException();
         }
 
-        OMNode child = get(index);
-        e.replaceChild(child, element);
+        Node child = get(index);
+        e.replaceChild(element, child);
         return child;
       }
 
       @Override
-      public void add(int index, OMNode element) {
+      public void add(int index, Node element) {
         if (element.getParentNode() != null) {
           throw new IllegalStateException();
         }
@@ -39,8 +39,8 @@ public class Utils {
       }
 
       @Override
-      public OMNode remove(int index) {
-        OMNode child = get(index);
+      public Node remove(int index) {
+        Node child = get(index);
         e.removeChild(child);
         return child;
       }

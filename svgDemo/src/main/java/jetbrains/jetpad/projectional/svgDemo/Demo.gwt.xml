@@ -6,6 +6,10 @@
     <inherits name="jetbrains.jetpad.values.Values" />
     <inherits name="jetbrains.jetpad.projectional.svg.Svg" />
 
-    <entry-point class='client.Demo'/>
+    <source path="">
+        <exclude name="AwtDemo.java" />
+    </source>
+
+    <entry-point class='jetbrains.jetpad.projectional.svgDemo.Demo'/>
 
 </module>
