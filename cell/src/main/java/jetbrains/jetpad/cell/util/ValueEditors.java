@@ -110,8 +110,8 @@ public class ValueEditors {
   }
 
   public static Property<Integer> intProperty(TextCell textView) {
-    textView.addTrait(TextEditing.validTextEditing(Validators.integer(), Color.BLUE));
-    Property<String> validated = validatedProperty(textView.text(), Validators.integer());
+    textView.addTrait(TextEditing.validTextEditing(Validators.unsignedInteger(), Color.BLUE));
+    Property<String> validated = validatedProperty(textView.text(), Validators.unsignedInteger());
 
     return Properties.map(validated, new Function<String, Integer>() {
         @Override

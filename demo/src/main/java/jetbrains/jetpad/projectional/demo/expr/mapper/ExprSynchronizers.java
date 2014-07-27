@@ -133,7 +133,7 @@ public class ExprSynchronizers {
 
       @Override
       public boolean isMatch(String text) {
-        return Validators.integer().apply(text);
+        return Validators.unsignedInteger().apply(text);
       }
 
       @Override

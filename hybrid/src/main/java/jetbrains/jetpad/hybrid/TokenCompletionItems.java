@@ -101,7 +101,7 @@ public class TokenCompletionItems {
 
       @Override
       public boolean isMatch(String text) {
-        return Validators.integer().apply(text);
+        return Validators.unsignedInteger().apply(text);
       }
 
       @Override
