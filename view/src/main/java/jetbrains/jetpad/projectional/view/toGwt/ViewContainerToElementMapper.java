@@ -33,6 +33,7 @@ import jetbrains.jetpad.mapper.gwt.GwtSynchronizers;
 import jetbrains.jetpad.model.event.CompositeRegistration;
 import jetbrains.jetpad.model.event.EventHandler;
 import jetbrains.jetpad.model.property.*;
+import jetbrains.jetpad.projectional.domUtil.DomUtil;
 import jetbrains.jetpad.projectional.domUtil.Scrolling;
 import jetbrains.jetpad.projectional.domUtil.TextMetrics;
 import jetbrains.jetpad.projectional.domUtil.TextMetricsCalculator;
@@ -315,7 +316,8 @@ public class ViewContainerToElementMapper extends Mapper<ViewContainer, Element>
       @Override
       public Rectangle visibleRect() {
         getSource().root().validate();
-        return getSource().root().bounds().get();
+        Rectangle visiblePart = DomUtil.visiblePart(myRootDiv);
+        return new Rectangle(visiblePart.origin.sub(new Vector(myRootDiv.getAbsoluteLeft(), myRootDiv.getAbsoluteTop())), visiblePart.dimension);
       }
 
       @Override
