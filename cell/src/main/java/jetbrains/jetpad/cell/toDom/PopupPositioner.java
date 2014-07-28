@@ -32,7 +32,10 @@ class PopupPositioner {
     Rectangle visiblePart = DomUtil.visiblePart(myContext.rootElement);
     Rectangle childBounds = new Rectangle(target.origin, new Vector(popup.getClientWidth(), popup.getClientHeight()));
 
-    if (visiblePart.contains(childBounds)) {
+    boolean bottom = visiblePart.contains(childBounds);
+    boolean top = visiblePart.contains(childBounds.add(new Vector(0, -target.dimension.y + childBounds.dimension.y)));
+
+    if (bottom || !top) {
       setPosition(
         popup,
         target.origin.x,
