@@ -19,7 +19,7 @@ public class AwtDemo {
     svgCanvas.setDocumentState(AbstractJSVGComponent.ALWAYS_DYNAMIC);
 
     final SvgRoot svgRoot = DemoModel.createModel();
-    SvgRootDocumentMapper mapper = new SvgRootDocumentMapper(svgRoot, SvgRootDocumentMapper.createDoc());
+    SvgRootDocumentMapper mapper = new SvgRootDocumentMapper(svgRoot);
     mapper.attachRoot();
 
     svgCanvas.setSVGDocument(mapper.getTarget());

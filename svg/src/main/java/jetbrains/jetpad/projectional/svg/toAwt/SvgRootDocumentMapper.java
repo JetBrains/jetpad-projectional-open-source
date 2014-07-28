@@ -9,14 +9,14 @@ import org.apache.batik.dom.svg.SVGOMSVGElement;
 import org.w3c.dom.DOMImplementation;
 
 public class SvgRootDocumentMapper extends Mapper<SvgRoot, SVGOMDocument> {
-  public static SVGOMDocument createDoc() {
+  private static SVGOMDocument createDocument() {
     DOMImplementation impl = SVGDOMImplementation.getDOMImplementation();
     String svgNS = SVGDOMImplementation.SVG_NAMESPACE_URI;
     return (SVGOMDocument) impl.createDocument(svgNS, "svg", null);
   }
 
-  public SvgRootDocumentMapper(SvgRoot source, SVGOMDocument target) {
-    super(source, target);
+  public SvgRootDocumentMapper(SvgRoot source) {
+    super(source, createDocument());
   }
 
   @Override
