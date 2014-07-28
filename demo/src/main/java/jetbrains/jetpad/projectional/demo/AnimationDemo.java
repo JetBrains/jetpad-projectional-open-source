@@ -51,7 +51,7 @@ public class AnimationDemo {
           } else {
             myAnimation = new TimerAnimation(container.getEdt(), 100, 100) {
               @Override
-              protected void animateFrame(int frame) {
+              protected void animateFrame(int frame, boolean lastFrame) {
                 if (frame <= 50) {
                   rect.moveTo(new Vector(100, 100 + frame * 5));
                 } else {
