@@ -39,22 +39,26 @@ public class DomUtil {
   }
 
   public static Rectangle visiblePart(Element ctx, Rectangle rect) {
-    if (ctx.getOffsetParent() == null) {
-      Rectangle visibleArea = new Rectangle(Window.getScrollLeft(), Window.getScrollTop(), Window.getClientWidth(), Window.getClientHeight());
-      return visibleArea.intersect(rect);
-    } else {
-      Rectangle visible;
-      if (hasScroller(ctx)) {
-        visible = new Rectangle(0, 0, ctx.getOffsetWidth(), ctx.getOffsetHeight());
-        Rectangle visible2 = new Rectangle(0, 0, ctx.getScrollWidth(), ctx.getScrollHeight());
-        Vector scroll = new Vector(ctx.getScrollLeft(), ctx.getScrollTop());
-        rect = rect.sub(scroll);
+    while (true) {
+      if (ctx.getOffsetParent() == null) {
+        Rectangle visibleArea = new Rectangle(Window.getScrollLeft(), Window.getScrollTop(), Window.getClientWidth(), Window.getClientHeight());
+        return visibleArea.intersect(rect);
       } else {
-        visible = new Rectangle(0, 0, ctx.getScrollWidth(), ctx.getScrollHeight());
-      }
+        Rectangle visible;
+        if (hasScroller(ctx)) {
+          visible = new Rectangle(0, 0, ctx.getClientWidth(), ctx.getClientHeight());
+          Vector scroll = new Vector(ctx.getScrollLeft(), ctx.getScrollTop());
+          rect = rect.sub(scroll);
+        } else {
+          visible = new Rectangle(0, 0, ctx.getScrollWidth(), ctx.getScrollHeight());
+        }
 
-      Rectangle newRect = visible.intersect(rect);
-      return visiblePart(ctx.getOffsetParent(), newRect.add(new Vector(ctx.getOffsetLeft(), ctx.getOffsetTop())));
+        Rectangle newRect = visible.intersect(rect);
+        Vector offset = new Vector(ctx.getOffsetLeft(), ctx.getOffsetTop());
+
+        ctx = ctx.getOffsetParent();
+        rect = newRect.add(offset);
+      }
     }
   }
 }
