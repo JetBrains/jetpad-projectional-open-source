@@ -30,7 +30,13 @@ class PopupPositioner {
   }
 
   void positionBottom(Rectangle target, Element popup) {
-    Rectangle visiblePart = DomUtil.hasScrollers(myContext.rootElement) ? DomUtil.visiblePart(myContext.rootElement) : new Rectangle(Window.getScrollLeft(), Window.getScrollTop(), Window.getClientWidth(), Window.getClientHeight());
+    boolean hasScrollers = DomUtil.hasScrollers(myContext.rootElement);
+    Rectangle visiblePart;
+    if (hasScrollers) {
+      visiblePart = DomUtil.visiblePart(myContext.rootElement);
+    } else {
+      visiblePart = new Rectangle(Window.getScrollLeft(), Window.getScrollTop(), Window.getClientWidth(), Window.getClientHeight());
+    }
     Rectangle childBounds = new Rectangle(target.origin, new Vector(popup.getClientWidth(), popup.getAbsoluteBottom() - popup.getAbsoluteTop()));
 
     boolean bottom = visiblePart.contains(childBounds);

@@ -44,9 +44,11 @@ public class DomUtil {
       return visibleArea.intersect(rect);
     } else {
       Rectangle visible;
-      if (hasScrollers(ctx)) {
+      if (hasScroller(ctx)) {
         visible = new Rectangle(0, 0, ctx.getOffsetWidth(), ctx.getOffsetHeight());
-        rect = rect.sub(new Vector(ctx.getScrollLeft(), ctx.getScrollTop()));
+        Rectangle visible2 = new Rectangle(0, 0, ctx.getScrollWidth(), ctx.getScrollHeight());
+        Vector scroll = new Vector(ctx.getScrollLeft(), ctx.getScrollTop());
+        rect = rect.sub(scroll);
       } else {
         visible = new Rectangle(0, 0, ctx.getScrollWidth(), ctx.getScrollHeight());
       }
