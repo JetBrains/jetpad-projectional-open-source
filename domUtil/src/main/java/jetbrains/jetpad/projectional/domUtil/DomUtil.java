@@ -23,6 +23,17 @@ import jetbrains.jetpad.geometry.Vector;
 import static com.google.gwt.query.client.GQuery.$;
 
 public class DomUtil {
+  public static boolean hasScrollers(Element ctx) {
+    if (ctx.getParentElement() == null) return false;
+    if (hasScroller(ctx)) return true;
+    return hasScrollers(ctx.getParentElement());
+  }
+
+  private static boolean hasScroller(Element e) {
+    String overflow = $(e).css("overflow");
+    return "scroll".equals(overflow) || "auto".equals(overflow);
+  }
+
   public static Rectangle visiblePart(Element ctx) {
     return DomUtil.visiblePart(ctx, new Rectangle(0, 0, ctx.getScrollWidth(), ctx.getScrollHeight()));
   }
@@ -32,9 +43,8 @@ public class DomUtil {
       Rectangle visibleArea = new Rectangle(Window.getScrollLeft(), Window.getScrollTop(), Window.getClientWidth(), Window.getClientHeight());
       return visibleArea.intersect(rect);
     } else {
-      String overflow = $(ctx).css("overflow");
       Rectangle visible;
-      if ("scroll".equals(overflow) || "auto".equals(overflow)) {
+      if (hasScrollers(ctx)) {
         visible = new Rectangle(0, 0, ctx.getOffsetWidth(), ctx.getOffsetHeight());
         rect = rect.sub(new Vector(ctx.getScrollLeft(), ctx.getScrollTop()));
       } else {

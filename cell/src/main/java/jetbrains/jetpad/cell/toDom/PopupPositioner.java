@@ -17,6 +17,7 @@ package jetbrains.jetpad.cell.toDom;
 
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style;
+import com.google.gwt.user.client.Window;
 import jetbrains.jetpad.geometry.Rectangle;
 import jetbrains.jetpad.geometry.Vector;
 import jetbrains.jetpad.projectional.domUtil.DomUtil;
@@ -29,11 +30,11 @@ class PopupPositioner {
   }
 
   void positionBottom(Rectangle target, Element popup) {
-    Rectangle visiblePart = DomUtil.visiblePart(myContext.rootElement);
-    Rectangle childBounds = new Rectangle(target.origin, new Vector(popup.getClientWidth(), popup.getClientHeight()));
+    Rectangle visiblePart = DomUtil.hasScrollers(myContext.rootElement) ? DomUtil.visiblePart(myContext.rootElement) : new Rectangle(Window.getScrollLeft(), Window.getScrollTop(), Window.getClientWidth(), Window.getClientHeight());
+    Rectangle childBounds = new Rectangle(target.origin, new Vector(popup.getClientWidth(), popup.getAbsoluteBottom() - popup.getAbsoluteTop()));
 
     boolean bottom = visiblePart.contains(childBounds);
-    boolean top = visiblePart.contains(childBounds.add(new Vector(0, -target.dimension.y + childBounds.dimension.y)));
+    boolean top = visiblePart.contains(childBounds.add(new Vector(0, -target.dimension.y - childBounds.dimension.y)));
 
     if (bottom || !top) {
       setPosition(
