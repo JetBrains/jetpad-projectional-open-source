@@ -5,8 +5,9 @@
     <inherits name='com.google.gwt.user.User'/>
     <inherits name="jetbrains.jetpad.values.Values" />
     <inherits name="jetbrains.jetpad.projectional.svg.Svg" />
+  <inherits name="jetbrains.jetpad.projectional.view.View"/>
 
-    <source path="">
+  <source path="">
         <exclude name="AwtDemo.java" />
     </source>
 

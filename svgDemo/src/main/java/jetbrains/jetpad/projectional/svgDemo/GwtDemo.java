@@ -1,27 +1,44 @@
 package jetbrains.jetpad.projectional.svgDemo;
 
 import com.google.gwt.core.client.EntryPoint;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.user.client.ui.*;
+import jetbrains.jetpad.base.Value;
+import jetbrains.jetpad.event.KeyEvent;
+import jetbrains.jetpad.event.MouseEvent;
 import jetbrains.jetpad.projectional.svg.SvgRoot;
-import jetbrains.jetpad.projectional.svg.toDom.SvgRootMapper;
-import org.vectomatic.dom.svg.OMSVGSVGElement;
+import jetbrains.jetpad.projectional.view.*;
+import jetbrains.jetpad.projectional.view.toGwt.ViewToDom;
+
+import static com.google.gwt.query.client.GQuery.$;
 
 public class GwtDemo implements EntryPoint {
   public void onModuleLoad() {
-    final SvgRoot svgRoot = DemoModel.createModel();
+    SvgRoot svgRoot = DemoModel.createModel();
+    final SvgView svgView = new SvgView(svgRoot);
 
-    SvgRootMapper mapper = new SvgRootMapper(svgRoot, new OMSVGSVGElement());
-    mapper.attachRoot();
+    ViewContainer container = new ViewContainer();
+    container.contentRoot().children().add(svgView);
 
-    mapper.getTarget().addClickHandler(new ClickHandler() {
+    final Value<Boolean> state = new Value<>(true);
+
+    container.root().addTrait(new ViewTraitBuilder().on(ViewEvents.MOUSE_PRESSED, new ViewEventHandler<MouseEvent>() {
       @Override
-      public void onClick(ClickEvent clickEvent) {
-        DemoModel.addCircle(svgRoot, clickEvent.getX(), clickEvent.getY());
+      public void handle(View view, MouseEvent e) {
+        DemoModel.addCircle(svgView.svgRoot.get(), e.x(), e.y());
       }
-    });
+    })
+    .on(ViewEvents.KEY_PRESSED, new ViewEventHandler<KeyEvent>() {
+      @Override
+      public void handle(View view, KeyEvent e) {
+        if (state.get()) {
+          svgView.svgRoot.set(DemoModel.createAltModel());
+        } else {
+          svgView.svgRoot.set(DemoModel.createModel());
+        }
+        state.set(!state.get());
+      }
+    })
+    .build());
 
-    RootPanel.get().getElement().appendChild(mapper.getTarget().getElement());
+    ViewToDom.map(container, $("#svg").get(0));
   }
 }
