@@ -14,7 +14,7 @@ public class DemoModel {
     SvgEllipse ellipse = new SvgEllipse();
     ellipse.cx.set(200.0);
     ellipse.cy.set(80.0);
-    ellipse.rx.set(100.0);
+    ellipse.rx.set(170.0);
     ellipse.ry.set(50.0);
     ellipse.fill.set(Color.YELLOW);
 
@@ -41,18 +41,18 @@ public class DemoModel {
 
   public static SvgRoot createAltModel() {
     SvgRoot svgRoot = new SvgRoot();
-    svgRoot.height.set(500.0);
-    svgRoot.width.set(300.0);
+    svgRoot.height.set(400.0);
+    svgRoot.width.set(200.0);
 
     SvgRect rect = new SvgRect();
-    rect.x.set(50.0);
-    rect.y.set(50.0);
-    rect.width.set(200.0);
-    rect.height.set(200.0);
+    rect.x.set(10.0);
+    rect.y.set(100.0);
+    rect.width.set(180.0);
+    rect.height.set(180.0);
 
     SvgEllipse ellipse = new SvgEllipse();
-    ellipse.cx.set(150.0);
-    ellipse.cy.set(150.0);
+    ellipse.cx.set(100.0);
+    ellipse.cy.set(190.0);
     ellipse.rx.set(50.0);
     ellipse.ry.set(50.0);
     ellipse.fill.set(Color.RED);

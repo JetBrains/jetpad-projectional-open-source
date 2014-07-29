@@ -18,9 +18,9 @@
   <inherits name="jetbrains.jetpad.projectional.domUtil.DomUtil"/>
   <inherits name="jetbrains.jetpad.mapper.gwt.GwtMapper"/>
   <inherits name="jetbrains.jetpad.projectional.base.Base" />
-    <inherits name="jetbrains.jetpad.projectional.svg.Svg"/>
+  <inherits name="jetbrains.jetpad.projectional.svg.Svg"/>
 
-    <source path="">
+  <source path="">
     <exclude name="awt/**.*" />
   </source>
 </module>

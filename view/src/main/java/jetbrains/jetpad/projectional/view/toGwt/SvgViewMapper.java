@@ -32,7 +32,7 @@ public class SvgViewMapper extends BaseViewMapper<SvgView, Element> {
   protected void registerSynchronizers(SynchronizersConfiguration conf) {
     super.registerSynchronizers(conf);
 
-    conf.add(Synchronizers.forPropsOneWay(getSource().svgRoot, new WritableProperty<SvgRoot>() {
+    conf.add(Synchronizers.forPropsOneWay(getSource().root(), new WritableProperty<SvgRoot>() {
       @Override
       public void set(SvgRoot value) {
         OMSVGSVGElement element = new OMSVGSVGElement();
