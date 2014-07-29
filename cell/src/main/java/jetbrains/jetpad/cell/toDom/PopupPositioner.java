@@ -37,10 +37,11 @@ class PopupPositioner {
     } else {
       visiblePart = new Rectangle(Window.getScrollLeft(), Window.getScrollTop(), Window.getClientWidth(), Window.getClientHeight());
     }
+
     Rectangle childBounds = new Rectangle(target.origin, new Vector(popup.getClientWidth(), popup.getAbsoluteBottom() - popup.getAbsoluteTop()));
 
-    boolean bottom = visiblePart.contains(childBounds);
-    boolean top = visiblePart.contains(childBounds.add(new Vector(0, -target.dimension.y - childBounds.dimension.y)));
+    boolean bottom = visiblePart.contains(childBounds.add(new Vector(0, target.dimension.y)));
+    boolean top = visiblePart.contains(childBounds.sub(new Vector(0, childBounds.dimension.y)));
 
     if (bottom || !top) {
       setPosition(
