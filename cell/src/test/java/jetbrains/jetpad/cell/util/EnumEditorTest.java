@@ -34,7 +34,7 @@ public class EnumEditorTest extends EditingTestCase {
   @Before
   public void init() {
     myCellContainer.root.children().add(cell);
-    PropertyBinding.bind(property, ValueEditors.enumProperty(cell, TestEnum.class));
+    PropertyBinding.bindTwoWay(property, ValueEditors.enumProperty(cell, TestEnum.class));
   }
 
   @Test

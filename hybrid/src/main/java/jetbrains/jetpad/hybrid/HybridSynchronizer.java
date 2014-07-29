@@ -654,7 +654,7 @@ public class HybridSynchronizer<SourceT> implements Synchronizer {
 
     CollectionListener<Token> tokensListener = createTokensListener();
     myRegistration = new CompositeRegistration(
-      PropertyBinding.bind(myProperty, myTokenListEditor.value),
+      PropertyBinding.bindTwoWay(myProperty, myTokenListEditor.value),
       myTokenListEditor.tokens.addListener(tokensListener)
     );
 

@@ -141,7 +141,7 @@ public class CompletionSupport {
 
     final CompositeRegistration reg = new CompositeRegistration();
     final ReadableProperty<String> prefixText = textView.prefixText();
-    reg.add(PropertyBinding.bind(prefixText, menuModel.text));
+    reg.add(PropertyBinding.bindOneWay(prefixText, menuModel.text));
 
     final Handler<CompletionItem> completer = new Handler<CompletionItem>() {
       @Override
