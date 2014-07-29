@@ -49,6 +49,8 @@ class ViewMapperFactory {
           result = new ImageViewMapper(ctx, (ImageView) source);
         } else if (source instanceof DomView) {
           result = new DomViewMapper(ctx, (DomView) source);
+        } else if (source instanceof SvgView) {
+          result = new SvgViewMapper(ctx, (SvgView) source);
         } else {
           result = new CompositeViewMapper<View, Element>(ctx, source, DOM.createDiv());
         }
