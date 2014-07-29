@@ -51,6 +51,7 @@ import jetbrains.jetpad.model.property.Properties;
 import jetbrains.jetpad.model.property.PropertyChangeEvent;
 import jetbrains.jetpad.model.property.ReadableProperty;
 import jetbrains.jetpad.model.property.WritableProperty;
+import jetbrains.jetpad.projectional.domUtil.DomUtil;
 import jetbrains.jetpad.projectional.domUtil.Scrolling;
 import jetbrains.jetpad.projectional.domUtil.TextMetricsCalculator;
 import jetbrains.jetpad.projectional.view.TextView;
@@ -352,6 +353,11 @@ public class CellContainerToDomMapper extends Mapper<CellContainer, Element> {
       @Override
       public void scrollTo(Rectangle rect, Cell cell) {
         Scrolling.scrollTo(rect, getElement(cell));
+      }
+
+      @Override
+      public Rectangle visibleRect() {
+        return DomUtil.visiblePart(getTarget());
       }
 
       @Override
