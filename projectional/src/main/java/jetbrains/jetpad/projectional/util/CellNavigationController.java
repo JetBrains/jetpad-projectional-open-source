@@ -61,7 +61,7 @@ public class CellNavigationController {
           myPrevXOffset.set(null);
         }
       }),
-      focusedView().addHandler(new EventHandler<PropertyChangeEvent<Cell>>() {
+      focusedCell().addHandler(new EventHandler<PropertyChangeEvent<Cell>>() {
         @Override
         public void onEvent(PropertyChangeEvent<Cell> event) {
           //todo we should reset the stuff on every view structure change
@@ -102,7 +102,7 @@ public class CellNavigationController {
     return result;
   }
 
-  private Property<Cell> focusedView() {
+  private Property<Cell> focusedCell() {
     return myContainer.focusedCell;
   }
 
@@ -156,23 +156,25 @@ public class CellNavigationController {
   }
 
   private int selectedXOffset() {
-    return selectedCaretOffset().get() + focusedView().get().getBounds().origin.x;
+    return selectedCaretOffset().get() + focusedCell().get().getBounds().origin.x;
   }
 
   private ReadableProperty<Integer> selectedCaretOffset() {
-    return Properties.select(focusedView(), caretPositionSelector());
+    return Properties.select(focusedCell(), caretPositionSelector());
   }
 
   protected void handleKeyPress(Cell cell, KeyEvent event) {
-    Cell current = focusedView().get();
+    Cell current = focusedCell().get();
     Integer currentOffset = null;
 
-    if (event.is(Key.UP) || event.is(Key.DOWN)) {
+    if (event.is(Key.UP) || event.is(Key.DOWN) || event.is(Key.PAGE_UP) || event.is(Key.PAGE_DOWN)) {
       currentOffset = myPrevXOffset.get();
       if (currentOffset == null) {
         currentOffset = selectedXOffset();
       }
     }
+
+    Rectangle visibleRect = focusedCell().get().cellContainer().get().visibleRect();
 
     Cell next = null;
     boolean restoreOffset = false;
@@ -199,6 +201,22 @@ public class CellNavigationController {
       restoreOffset = true;
     } else if (event.is(Key.DOWN)) {
       next = ourWithBounds.lowerFocusable(current, currentOffset);
+      restoreOffset = true;
+    } else if (event.is(Key.PAGE_UP)) {
+      next = new PageUpDown(current, currentOffset, visibleRect.dimension.y) {
+        @Override
+        protected Cell next(Cell current, int offset) {
+          return ourWithBounds.upperFocusable(current, offset);
+        }
+      }.execute();
+      restoreOffset = true;
+    } else if (event.is(Key.PAGE_DOWN)) {
+      next = new PageUpDown(current, currentOffset, visibleRect.dimension.y) {
+        @Override
+        protected Cell next(Cell current, int offset) {
+          return ourWithBounds.lowerFocusable(current, offset);
+        }
+      }.execute();
       restoreOffset = true;
     } else if (event.is(KeyStrokeSpecs.HOME)) {
       next = ourWithBounds.homeElement(current);
@@ -228,7 +246,7 @@ public class CellNavigationController {
       myStackResetEnabled.set(false);
     }
     if (next != null) {
-      focusedView().set(next);
+      focusedCell().set(next);
       scrollTo(next);
 
       if (restoreOffset) {
@@ -244,13 +262,69 @@ public class CellNavigationController {
   protected void handleMousePress(MouseEvent event) {
     Cell closest = Composites.findClosest(root(), event.location());
     if (closest != null) {
-      focusedView().set(closest);
+      focusedCell().set(closest);
       if (event.x() < closest.getBounds().origin.x) {
         moveToHome(closest);
       } else {
         moveToEnd(closest);
       }
       event.consume();
+    }
+  }
+
+  private Cell pageMoveFocusable(Cell cell, int offset, int pageHeight) {
+    Cell current = cell;
+    while (true) {
+      Cell next = ourWithBounds.lowerFocusable(current, offset);
+
+      if (next == null) {
+        if (next != cell) {
+          return current;
+        } else {
+          return null;
+        }
+      }
+
+      if (cell.getBounds().distance(next.origin()) >= pageHeight) {
+        return next;
+      }
+
+      current = next;
+    }
+  }
+
+  private abstract class PageUpDown {
+    private Cell myCell;
+    private int myOffset;
+    private int myPageHeight;
+
+    PageUpDown(Cell cell, int offset, int pageHeight) {
+      myCell = cell;
+      myOffset = offset;
+      myPageHeight = pageHeight;
+    }
+
+    protected abstract Cell next(Cell current, int offset);
+
+    Cell execute() {
+      Cell current = myCell;
+      while (true) {
+        Cell next = next(current, myOffset);
+
+        if (next == null) {
+          if (next != myCell) {
+            return current;
+          } else {
+            return null;
+          }
+        }
+
+        if (myCell.getBounds().distance(next.origin()) >= myPageHeight) {
+          return next;
+        }
+
+        current = next;
+      }
     }
   }
 }

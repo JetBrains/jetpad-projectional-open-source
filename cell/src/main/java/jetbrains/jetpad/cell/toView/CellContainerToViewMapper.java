@@ -187,7 +187,8 @@ public class CellContainerToViewMapper extends Mapper<CellContainer, View> {
 
       @Override
       public Rectangle visibleRect() {
-        return myTargetView.getBounds();
+        Rectangle result = myTargetView.container().visibleRect().intersect(myTargetView.getBounds());
+        return result != null ? result : new Rectangle(0, 0, 0, 0);
       }
 
       @Override
