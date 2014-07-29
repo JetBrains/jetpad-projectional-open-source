@@ -16,23 +16,24 @@
 package jetbrains.jetpad.cell;
 
 import com.google.common.base.Objects;
+import jetbrains.jetpad.base.Registration;
 import jetbrains.jetpad.base.edt.EventDispatchThread;
+import jetbrains.jetpad.cell.event.CellEventSpec;
+import jetbrains.jetpad.cell.event.CompletionEvent;
+import jetbrains.jetpad.cell.event.FocusEvent;
 import jetbrains.jetpad.event.*;
-import jetbrains.jetpad.event.TextClipboardContent;
+import jetbrains.jetpad.geometry.Rectangle;
 import jetbrains.jetpad.geometry.Vector;
 import jetbrains.jetpad.model.collections.CollectionItemEvent;
 import jetbrains.jetpad.model.event.ListenerCaller;
 import jetbrains.jetpad.model.event.Listeners;
-import jetbrains.jetpad.base.Registration;
 import jetbrains.jetpad.model.property.Property;
 import jetbrains.jetpad.model.property.PropertyChangeEvent;
 import jetbrains.jetpad.model.property.ReadableProperty;
 import jetbrains.jetpad.model.property.ValueProperty;
-import jetbrains.jetpad.cell.event.CellEventSpec;
-import jetbrains.jetpad.cell.event.CompletionEvent;
-import jetbrains.jetpad.cell.event.FocusEvent;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class CellContainer {
   public final Property<Cell> focusedCell;
@@ -376,6 +377,11 @@ public class CellContainer {
   public void requestFocus() {
     getCellContainerPeer().requestFocus();
   }
+
+  public Rectangle visibleRect() {
+    return getCellContainerPeer().visibleRect();
+  }
+
 
   public EventDispatchThread getEdt() {
     return getCellContainerPeer().getEdt();

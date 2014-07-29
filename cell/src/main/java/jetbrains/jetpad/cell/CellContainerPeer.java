@@ -44,6 +44,12 @@ public interface CellContainerPeer {
     public void scrollTo(Rectangle rect, Cell cell) {
     }
 
+
+    @Override
+    public Rectangle visibleRect() {
+      return new Rectangle(0, 0, 10000, 10000);
+    }
+
     @Override
     public void requestFocus() {
     }
@@ -85,7 +91,7 @@ public interface CellContainerPeer {
   Rectangle getBounds(Cell cell);
   void scrollTo(Rectangle rect, Cell cell);
   ReadableProperty<Boolean> focused();
-
+  Rectangle visibleRect();
   void requestFocus();
 
   EventDispatchThread getEdt();

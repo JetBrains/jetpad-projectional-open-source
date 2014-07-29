@@ -186,6 +186,11 @@ public class CellContainerToViewMapper extends Mapper<CellContainer, View> {
       }
 
       @Override
+      public Rectangle visibleRect() {
+        return myTargetView.getBounds();
+      }
+
+      @Override
       public void requestFocus() {
         getTarget().container().requestFocus();
       }
