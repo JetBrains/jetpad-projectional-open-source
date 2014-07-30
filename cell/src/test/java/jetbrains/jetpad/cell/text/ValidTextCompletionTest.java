@@ -16,11 +16,14 @@
 package jetbrains.jetpad.cell.text;
 
 import com.google.common.base.Predicate;
-import jetbrains.jetpad.cell.*;
 import jetbrains.jetpad.base.Runnables;
-import jetbrains.jetpad.cell.completion.*;
+import jetbrains.jetpad.cell.Cell;
+import jetbrains.jetpad.cell.TextCell;
+import jetbrains.jetpad.cell.completion.Completion;
+import jetbrains.jetpad.cell.completion.CompletionTestCase;
 import jetbrains.jetpad.cell.trait.CellTrait;
 import jetbrains.jetpad.cell.trait.CellTraitPropertySpec;
+import jetbrains.jetpad.cell.trait.DerivedCellTrait;
 import jetbrains.jetpad.completion.CompletionItem;
 import jetbrains.jetpad.completion.CompletionParameters;
 import jetbrains.jetpad.completion.CompletionSupplier;
@@ -45,9 +48,9 @@ public class ValidTextCompletionTest extends CompletionTestCase {
     text.text().set("");
     text.focusable().set(true);
 
-    text.addTrait(new CellTrait() {
+    text.addTrait(new DerivedCellTrait() {
       @Override
-      protected CellTrait getBaseTrait(Cell cell) {
+      protected CellTrait getBase(Cell cell) {
         return
           TextEditing.validTextEditing(
             new Predicate<String>() {

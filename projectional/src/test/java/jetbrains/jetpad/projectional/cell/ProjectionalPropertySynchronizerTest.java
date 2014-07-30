@@ -17,26 +17,30 @@ package jetbrains.jetpad.projectional.cell;
 
 import com.google.common.base.Function;
 import com.google.common.base.Supplier;
+import jetbrains.jetpad.base.Validators;
+import jetbrains.jetpad.base.Value;
+import jetbrains.jetpad.cell.Cell;
+import jetbrains.jetpad.cell.EditingTestCase;
+import jetbrains.jetpad.cell.TextCell;
+import jetbrains.jetpad.cell.VerticalCell;
+import jetbrains.jetpad.cell.action.CellActions;
+import jetbrains.jetpad.cell.text.TextEditing;
 import jetbrains.jetpad.cell.trait.CellTrait;
+import jetbrains.jetpad.cell.trait.CellTraitEventSpec;
+import jetbrains.jetpad.cell.trait.CellTraitPropertySpec;
+import jetbrains.jetpad.cell.trait.DerivedCellTrait;
 import jetbrains.jetpad.cell.util.Cells;
+import jetbrains.jetpad.completion.CompletionItem;
+import jetbrains.jetpad.completion.CompletionParameters;
+import jetbrains.jetpad.completion.SimpleCompletionItem;
 import jetbrains.jetpad.event.*;
 import jetbrains.jetpad.mapper.Mapper;
 import jetbrains.jetpad.mapper.MapperFactory;
 import jetbrains.jetpad.model.property.Property;
 import jetbrains.jetpad.model.property.ValueProperty;
-import jetbrains.jetpad.cell.*;
-import jetbrains.jetpad.cell.action.CellActions;
-import jetbrains.jetpad.completion.CompletionItem;
-import jetbrains.jetpad.completion.CompletionParameters;
-import jetbrains.jetpad.completion.SimpleCompletionItem;
-import jetbrains.jetpad.cell.text.TextEditing;
-import jetbrains.jetpad.cell.trait.CellTraitEventSpec;
-import jetbrains.jetpad.cell.trait.CellTraitPropertySpec;
 import jetbrains.jetpad.projectional.generic.Role;
 import jetbrains.jetpad.projectional.generic.RoleCompletion;
 import jetbrains.jetpad.projectional.util.RootController;
-import jetbrains.jetpad.base.Validators;
-import jetbrains.jetpad.base.Value;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -344,9 +348,9 @@ public class ProjectionalPropertySynchronizerTest extends EditingTestCase {
 
       getTarget().text().set(myText);
 
-      getTarget().addTrait(new CellTrait() {
+      getTarget().addTrait(new DerivedCellTrait() {
         @Override
-        protected CellTrait getBaseTrait(Cell cell) {
+        protected CellTrait getBase(Cell cell) {
           return myEditable ? TextEditing.validTextEditing(Validators.equalsTo(myText)) : TextEditing.textNavigation(true, true);
         }
 

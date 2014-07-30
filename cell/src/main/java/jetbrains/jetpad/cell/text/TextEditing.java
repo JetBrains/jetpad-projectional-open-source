@@ -19,18 +19,18 @@ import com.google.common.base.Function;
 import com.google.common.base.Objects;
 import com.google.common.base.Predicate;
 import com.google.common.base.Supplier;
-import jetbrains.jetpad.cell.*;
+import jetbrains.jetpad.cell.Cell;
+import jetbrains.jetpad.cell.TextCell;
 import jetbrains.jetpad.cell.action.CellActions;
 import jetbrains.jetpad.cell.completion.CompletionHelper;
-import jetbrains.jetpad.cell.trait.CellTrait;
-import jetbrains.jetpad.completion.CompletionParameters;
 import jetbrains.jetpad.cell.completion.CompletionSupport;
-import jetbrains.jetpad.cell.util.CellStateHandler;
 import jetbrains.jetpad.cell.completion.Side;
+import jetbrains.jetpad.cell.trait.CellTrait;
 import jetbrains.jetpad.cell.trait.CellTraitPropertySpec;
+import jetbrains.jetpad.cell.trait.DerivedCellTrait;
+import jetbrains.jetpad.cell.util.CellStateHandler;
+import jetbrains.jetpad.completion.CompletionParameters;
 import jetbrains.jetpad.values.Color;
-
-import java.util.Set;
 
 public class TextEditing {
   public static final CellTraitPropertySpec<Boolean> FIRST_ALLOWED = new CellTraitPropertySpec<>("firstAllowed", true);
@@ -48,9 +48,9 @@ public class TextEditing {
   private static final TextCellStateHandler EDITABLE_TEXT_VIEW_STATE_HANDLER = new TextCellStateHandler(true);
 
   public static CellTrait textNavigation(final boolean firstAllowed, final boolean lastAllowed) {
-    return new CellTrait() {
+    return new DerivedCellTrait() {
       @Override
-      protected CellTrait getBaseTrait(Cell cell) {
+      protected CellTrait getBase(Cell cell) {
         return new TextNavigationTrait();
       }
 
@@ -81,9 +81,9 @@ public class TextEditing {
   }
 
   public static CellTrait textEditing() {
-    return new CellTrait() {
+    return new DerivedCellTrait() {
       @Override
-      protected CellTrait getBaseTrait(Cell cell) {
+      protected CellTrait getBase(Cell cell) {
         return new TextEditingTrait();
       }
 
@@ -106,9 +106,9 @@ public class TextEditing {
   }
 
   public static CellTrait validTextEditing(final Predicate<String> validator, final Color validColor, final boolean selectionAvailable) {
-    return new CellTrait() {
+    return new DerivedCellTrait() {
       @Override
-      protected CellTrait getBaseTrait(Cell cell) {
+      protected CellTrait getBase(Cell cell) {
         return validTextEditing(validator);
       }
 
@@ -128,9 +128,9 @@ public class TextEditing {
   }
 
   public static CellTrait validTextEditing(final Predicate<String> validator, final Color validColor) {
-    return new CellTrait() {
+    return new DerivedCellTrait() {
       @Override
-      protected CellTrait getBaseTrait(Cell cell) {
+      protected CellTrait getBase(Cell cell) {
         return validTextEditing(validator);
       }
 
@@ -146,9 +146,9 @@ public class TextEditing {
   }
 
   public static CellTrait validTextEditing(final Predicate<String> validator) {
-    return new CellTrait() {
+    return new DerivedCellTrait() {
       @Override
-      protected CellTrait getBaseTrait(Cell cell) {
+      protected CellTrait getBase(Cell cell) {
         return new ValidTextEditingTrait();
       }
 

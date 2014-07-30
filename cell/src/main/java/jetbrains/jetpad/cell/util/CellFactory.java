@@ -16,14 +16,15 @@
 package jetbrains.jetpad.cell.util;
 
 import com.google.common.base.Strings;
-import jetbrains.jetpad.cell.trait.CellTrait;
-import jetbrains.jetpad.model.property.PropertyChangeEvent;
-import jetbrains.jetpad.event.MouseEvent;
 import jetbrains.jetpad.cell.*;
 import jetbrains.jetpad.cell.indent.IndentCell;
 import jetbrains.jetpad.cell.indent.NewLineCell;
 import jetbrains.jetpad.cell.text.TextEditing;
+import jetbrains.jetpad.cell.trait.CellTrait;
 import jetbrains.jetpad.cell.trait.CellTraitPropertySpec;
+import jetbrains.jetpad.cell.trait.DerivedCellTrait;
+import jetbrains.jetpad.event.MouseEvent;
+import jetbrains.jetpad.model.property.PropertyChangeEvent;
 import jetbrains.jetpad.values.Color;
 
 import java.util.Arrays;
@@ -93,9 +94,9 @@ public class CellFactory {
 
   public static TextCell keyword(final String text) {
     TextCell result = new TextCell();
-    result.addTrait(new CellTrait() {
+    result.addTrait(new DerivedCellTrait() {
       @Override
-      protected CellTrait getBaseTrait(Cell cell) {
+      protected CellTrait getBase(Cell cell) {
         return TextEditing.textNavigation(true, true);
       }
 

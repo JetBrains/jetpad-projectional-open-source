@@ -18,25 +18,27 @@ package jetbrains.jetpad.projectional.cell;
 import com.google.common.base.Function;
 import com.google.common.base.Objects;
 import com.google.common.base.Supplier;
+import jetbrains.jetpad.base.Registration;
+import jetbrains.jetpad.base.Validators;
+import jetbrains.jetpad.cell.Cell;
+import jetbrains.jetpad.cell.TextCell;
+import jetbrains.jetpad.cell.completion.Completion;
+import jetbrains.jetpad.cell.indent.IndentCell;
+import jetbrains.jetpad.cell.position.Positions;
+import jetbrains.jetpad.cell.text.TextEditing;
 import jetbrains.jetpad.cell.trait.CellTrait;
+import jetbrains.jetpad.cell.trait.CellTraitPropertySpec;
+import jetbrains.jetpad.cell.trait.DerivedCellTrait;
+import jetbrains.jetpad.cell.util.CellFactory;
+import jetbrains.jetpad.completion.CompletionItem;
+import jetbrains.jetpad.completion.CompletionParameters;
+import jetbrains.jetpad.completion.CompletionSupplier;
 import jetbrains.jetpad.event.*;
 import jetbrains.jetpad.mapper.*;
 import jetbrains.jetpad.model.collections.CollectionAdapter;
 import jetbrains.jetpad.model.collections.CollectionItemEvent;
 import jetbrains.jetpad.model.collections.list.ObservableArrayList;
 import jetbrains.jetpad.model.collections.list.ObservableList;
-import jetbrains.jetpad.base.Registration;
-import jetbrains.jetpad.cell.*;
-import jetbrains.jetpad.cell.completion.Completion;
-import jetbrains.jetpad.completion.CompletionItem;
-import jetbrains.jetpad.completion.CompletionParameters;
-import jetbrains.jetpad.completion.CompletionSupplier;
-import jetbrains.jetpad.cell.indent.IndentCell;
-import jetbrains.jetpad.cell.position.Positions;
-import jetbrains.jetpad.cell.text.TextEditing;
-import jetbrains.jetpad.cell.trait.CellTraitPropertySpec;
-import jetbrains.jetpad.cell.util.CellFactory;
-import jetbrains.jetpad.base.Validators;
 import jetbrains.jetpad.projectional.generic.Role;
 import jetbrains.jetpad.projectional.generic.RoleCompletion;
 
@@ -434,9 +436,9 @@ abstract class BaseProjectionalSynchronizer<SourceT, ContextT, SourceItemT> impl
 
     private Cell createPlaceholder() {
       TextCell placeHolder = new TextCell();
-      placeHolder.addTrait(new CellTrait() {
+      placeHolder.addTrait(new DerivedCellTrait() {
         @Override
-        protected CellTrait getBaseTrait(Cell cell) {
+        protected CellTrait getBase(Cell cell) {
           return TextEditing.validTextEditing(Validators.equalsTo(""));
         }
 

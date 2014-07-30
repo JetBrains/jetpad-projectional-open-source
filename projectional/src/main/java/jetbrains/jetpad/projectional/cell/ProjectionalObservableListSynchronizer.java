@@ -15,9 +15,19 @@
  */
 package jetbrains.jetpad.projectional.cell;
 
+import jetbrains.jetpad.base.Registration;
 import jetbrains.jetpad.base.Runnables;
+import jetbrains.jetpad.cell.Cell;
+import jetbrains.jetpad.cell.TextCell;
+import jetbrains.jetpad.cell.action.CellActions;
+import jetbrains.jetpad.cell.completion.Completion;
+import jetbrains.jetpad.cell.completion.CompletionSupport;
+import jetbrains.jetpad.cell.position.Positions;
 import jetbrains.jetpad.cell.trait.CellTrait;
 import jetbrains.jetpad.cell.trait.CellTraitEventSpec;
+import jetbrains.jetpad.cell.trait.CellTraitPropertySpec;
+import jetbrains.jetpad.cell.trait.DerivedCellTrait;
+import jetbrains.jetpad.cell.util.Cells;
 import jetbrains.jetpad.completion.CompletionItem;
 import jetbrains.jetpad.completion.CompletionParameters;
 import jetbrains.jetpad.completion.CompletionSupplier;
@@ -28,13 +38,6 @@ import jetbrains.jetpad.mapper.MapperFactory;
 import jetbrains.jetpad.mapper.RoleSynchronizer;
 import jetbrains.jetpad.mapper.Synchronizers;
 import jetbrains.jetpad.model.collections.list.ObservableList;
-import jetbrains.jetpad.base.Registration;
-import jetbrains.jetpad.cell.*;
-import jetbrains.jetpad.cell.action.CellActions;
-import jetbrains.jetpad.cell.completion.*;
-import jetbrains.jetpad.cell.position.Positions;
-import jetbrains.jetpad.cell.trait.CellTraitPropertySpec;
-import jetbrains.jetpad.cell.util.Cells;
 import jetbrains.jetpad.projectional.generic.CollectionEditor;
 import jetbrains.jetpad.projectional.generic.Role;
 
@@ -61,13 +64,13 @@ class ProjectionalObservableListSynchronizer<ContextT, SourceItemT> extends Base
 
   @Override
   protected Registration registerChild(SourceItemT child, final Cell childCell) {
-    return childCell.addTrait(new CellTrait() {
+    return childCell.addTrait(new DerivedCellTrait() {
       @Override
-      protected CellTrait getBaseTrait(Cell cell) {
+      protected CellTrait getBase(Cell cell) {
         if (!(cell instanceof TextCell)) {
           return CompletionSupport.trait();
         }
-        return null;
+        return CellTrait.EMPTY;
       }
 
       @Override

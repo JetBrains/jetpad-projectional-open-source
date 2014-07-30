@@ -28,127 +28,63 @@ import java.util.HashSet;
 import java.util.Set;
 
 public abstract class CellTrait {
+  public static final CellTrait EMPTY = new CellTrait() {};
+
   public static final Object NULL = new Object();
   public static final CellTrait[] EMPTY_ARRAY = new CellTrait[0];
 
-  protected CellTrait[] getBaseTraits(Cell cell) {
-    CellTrait next = getBaseTrait(cell);
-    if (next == null) {
-      return CellTrait.EMPTY_ARRAY;
-    }
-    return new CellTrait[] { next };
-  }
-
-  protected CellTrait getBaseTrait(Cell cell) {
-    return null;
-  }
-
   public void onPropertyChanged(Cell cell, CellPropertySpec<?> prop, PropertyChangeEvent<?> event) {
-    for (CellTrait t : getBaseTraits(cell)) {
-      t.onPropertyChanged(cell, prop, event);
-    }
   }
 
   public void onFocusGained(Cell cell, FocusEvent event) {
-    for (CellTrait t : getBaseTraits(cell)) {
-      t.onFocusGained(cell, event);
-    }
   }
 
   public void onFocusLost(Cell cell, FocusEvent event) {
-    for (CellTrait t : getBaseTraits(cell)) {
-      t.onFocusLost(cell, event);
-    }
   }
 
   public void onMousePressed(Cell cell, MouseEvent event) {
-    for (CellTrait t : getBaseTraits(cell)) {
-      t.onMousePressed(cell, event);
-    }
   }
 
   public void onMouseReleased(Cell cell, MouseEvent event) {
-    for (CellTrait t : getBaseTraits(cell)) {
-      t.onMouseReleased(cell, event);
-    }
   }
 
   public void onMouseMoved(Cell cell, MouseEvent event) {
-    for (CellTrait t : getBaseTraits(cell)) {
-      t.onMouseMoved(cell, event);
-    }
   }
 
   public void onMouseEntered(Cell cell, MouseEvent event) {
-    for (CellTrait t : getBaseTraits(cell)) {
-      t.onMouseEntered(cell, event);
-    }
   }
 
   public void onMouseLeft(Cell cell, MouseEvent event) {
-    for (CellTrait t : getBaseTraits(cell)) {
-      t.onMouseLeft(cell, event);
-    }
   }
 
   public void onKeyPressed(Cell cell, KeyEvent event) {
-    for (CellTrait t : getBaseTraits(cell)) {
-      t.onKeyPressed(cell, event);
-    }
   }
 
   public void onKeyPressedLowPriority(Cell cell, KeyEvent event) {
-    for (CellTrait t : getBaseTraits(cell)) {
-      t.onKeyReleasedLowPriority(cell, event);
-    }
   }
 
   public void onKeyReleased(Cell cell, KeyEvent event) {
-    for (CellTrait t : getBaseTraits(cell)) {
-      t.onKeyReleased(cell, event);
-    }
   }
 
   public void onKeyReleasedLowPriority(Cell cell, KeyEvent event) {
-    for (CellTrait t : getBaseTraits(cell)) {
-      t.onKeyReleasedLowPriority(cell, event);
-    }
   }
 
   public void onKeyTyped(Cell cell, KeyEvent event) {
-    for (CellTrait t : getBaseTraits(cell)) {
-      t.onKeyTyped(cell, event);
-    }
   }
 
   public void onKeyTypedLowPriority(Cell cell, KeyEvent event) {
-    for (CellTrait t : getBaseTraits(cell)) {
-      t.onKeyTypedLowPriority(cell, event);
-    }
   }
 
   public void onCopy(Cell cell, CopyCutEvent event) {
-    for (CellTrait t : getBaseTraits(cell)) {
-      t.onCopy(cell, event);
-    }
   }
 
   public void onCut(Cell cell, CopyCutEvent event) {
-    for (CellTrait t : getBaseTraits(cell)) {
-      t.onCut(cell, event);
-    }
   }
 
   public void onPaste(Cell cell, PasteEvent event) {
-    for (CellTrait t : getBaseTraits(cell)) {
-      t.onPaste(cell, event);
-    }
   }
 
   public void onComplete(Cell cell, CompletionEvent event) {
-    for (CellTrait t : getBaseTraits(cell)) {
-      t.onComplete(cell, event);
-    }
   }
 
   public void onViewTraitEvent(Cell cell, CellTraitEventSpec<?> spec, Event event) {
@@ -191,17 +127,9 @@ public abstract class CellTrait {
   }
 
   protected void provideProperties(Cell cell, PropertyCollector collector) {
-    for (CellTrait t : getBaseTraits(cell)) {
-      t.provideProperties(cell, collector);
-    }
   }
 
-
   public Object get(Cell cell, CellTraitPropertySpec<?> spec) {
-    for (CellTrait t : getBaseTraits(cell)) {
-      Object result = t.get(cell, spec);
-      if (result != null) return result;
-    }
     return null;
   }
 

@@ -18,9 +18,27 @@ package jetbrains.jetpad.hybrid;
 import com.google.common.base.Predicates;
 import com.google.common.collect.Range;
 import jetbrains.jetpad.base.Handler;
+import jetbrains.jetpad.base.Registration;
 import jetbrains.jetpad.base.Runnables;
+import jetbrains.jetpad.cell.Cell;
+import jetbrains.jetpad.cell.TextCell;
+import jetbrains.jetpad.cell.action.CellActions;
+import jetbrains.jetpad.cell.completion.Completion;
+import jetbrains.jetpad.cell.completion.CompletionSupport;
+import jetbrains.jetpad.cell.position.Positions;
+import jetbrains.jetpad.cell.text.TextEditing;
 import jetbrains.jetpad.cell.trait.CellTrait;
+import jetbrains.jetpad.cell.trait.CellTraitPropertySpec;
+import jetbrains.jetpad.cell.trait.DerivedCellTrait;
+import jetbrains.jetpad.cell.util.CellFactory;
+import jetbrains.jetpad.cell.util.CellLists;
+import jetbrains.jetpad.cell.util.CellStateHandler;
+import jetbrains.jetpad.cell.util.SeparatedCellList;
 import jetbrains.jetpad.event.*;
+import jetbrains.jetpad.hybrid.parser.Token;
+import jetbrains.jetpad.hybrid.parser.ValueToken;
+import jetbrains.jetpad.hybrid.parser.prettyprint.ParseNode;
+import jetbrains.jetpad.hybrid.parser.prettyprint.ParseNodes;
 import jetbrains.jetpad.mapper.Mapper;
 import jetbrains.jetpad.mapper.MapperFactory;
 import jetbrains.jetpad.mapper.Synchronizer;
@@ -33,23 +51,10 @@ import jetbrains.jetpad.model.collections.list.UnmodifiableObservableList;
 import jetbrains.jetpad.model.composite.Composites;
 import jetbrains.jetpad.model.event.CompositeRegistration;
 import jetbrains.jetpad.model.event.EventHandler;
-import jetbrains.jetpad.base.Registration;
 import jetbrains.jetpad.model.property.Property;
 import jetbrains.jetpad.model.property.PropertyBinding;
 import jetbrains.jetpad.model.property.ReadableProperty;
-import jetbrains.jetpad.cell.*;
-import jetbrains.jetpad.cell.action.CellActions;
-import jetbrains.jetpad.cell.completion.Completion;
-import jetbrains.jetpad.cell.completion.CompletionSupport;
-import jetbrains.jetpad.cell.position.Positions;
-import jetbrains.jetpad.projectional.cell.*;
-import jetbrains.jetpad.cell.text.TextEditing;
-import jetbrains.jetpad.cell.trait.CellTraitPropertySpec;
-import jetbrains.jetpad.cell.util.*;
-import jetbrains.jetpad.hybrid.parser.Token;
-import jetbrains.jetpad.hybrid.parser.ValueToken;
-import jetbrains.jetpad.hybrid.parser.prettyprint.ParseNode;
-import jetbrains.jetpad.hybrid.parser.prettyprint.ParseNodes;
+import jetbrains.jetpad.projectional.cell.SelectionSupport;
 
 import java.util.*;
 
@@ -455,8 +460,8 @@ public class HybridSynchronizer<SourceT> implements Synchronizer {
 
       target.addTrait(new TokenCellTraits.TokenCellTrait(true) {
         @Override
-        protected CellTrait getBaseTrait(Cell cell) {
-          return CompletionSupport.trait();
+        protected CellTrait[] getBaseTraits(Cell cell) {
+          return new CellTrait[] { CompletionSupport.trait() };
         }
       });
 
@@ -487,9 +492,9 @@ public class HybridSynchronizer<SourceT> implements Synchronizer {
 
   private TextCell createPlaceholder() {
     TextCell result = new TextCell();
-    result.addTrait(new CellTrait() {
+    result.addTrait(new DerivedCellTrait() {
       @Override
-      protected CellTrait getBaseTrait(Cell cell) {
+      protected CellTrait getBase(Cell cell) {
         return TextEditing.validTextEditing(Predicates.equalTo(""));
       }
 
