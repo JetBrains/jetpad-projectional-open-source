@@ -28,10 +28,7 @@ import jetbrains.jetpad.model.collections.CollectionItemEvent;
 import jetbrains.jetpad.model.collections.CollectionListener;
 import jetbrains.jetpad.model.collections.list.ObservableArrayList;
 import jetbrains.jetpad.model.collections.list.ObservableList;
-import jetbrains.jetpad.model.composite.Composite;
-import jetbrains.jetpad.model.composite.HasBounds;
-import jetbrains.jetpad.model.composite.HasFocusability;
-import jetbrains.jetpad.model.composite.HasVisibility;
+import jetbrains.jetpad.model.composite.*;
 import jetbrains.jetpad.model.event.*;
 import jetbrains.jetpad.model.property.*;
 import jetbrains.jetpad.model.util.ListMap;
@@ -40,7 +37,7 @@ import jetbrains.jetpad.values.Color;
 
 import java.util.*;
 
-public abstract class View implements Composite<View>, HasFocusability, HasVisibility, HasBounds {
+public abstract class View implements NavComposite<View>, HasFocusability, HasVisibility, HasBounds {
   //debug attribute which is used in toString
   public static final ViewPropertySpec<String> NAME = new ViewPropertySpec<>("name", ViewPropertyKind.NONE, "");
 
@@ -122,6 +119,16 @@ public abstract class View implements Composite<View>, HasFocusability, HasVisib
 
   public ObservableList<View> children() {
     return new ExternalChildList();
+  }
+
+  @Override
+  public View nextSibling() {
+    return Composites.nextSibling(this);
+  }
+
+  @Override
+  public View prevSibling() {
+    return Composites.prevSibling(this);
   }
 
   public ViewContainer container() {

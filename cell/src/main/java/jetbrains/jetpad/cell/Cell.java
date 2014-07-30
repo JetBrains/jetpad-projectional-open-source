@@ -38,14 +38,16 @@ import jetbrains.jetpad.model.composite.*;
 import jetbrains.jetpad.model.event.EventHandler;
 import jetbrains.jetpad.model.event.ListenerCaller;
 import jetbrains.jetpad.model.event.Listeners;
-import jetbrains.jetpad.model.property.*;
-import jetbrains.jetpad.model.property.Properties;
+import jetbrains.jetpad.model.property.BaseReadableProperty;
+import jetbrains.jetpad.model.property.Property;
+import jetbrains.jetpad.model.property.PropertyChangeEvent;
+import jetbrains.jetpad.model.property.ReadableProperty;
 import jetbrains.jetpad.model.util.ListMap;
 import jetbrains.jetpad.values.Color;
 
 import java.util.*;
 
-public abstract class Cell implements Composite<Cell>, HasVisibility, HasFocusability, HasBounds {
+public abstract class Cell implements NavComposite<Cell>, HasVisibility, HasFocusability, HasBounds {
   public static final Color HIGHLIGHT_COLOR = new Color(200, 200, 200);
   public static final Color SELECTION_COLOR = Color.LIGHT_BLUE;
 
@@ -91,6 +93,17 @@ public abstract class Cell implements Composite<Cell>, HasVisibility, HasFocusab
   public ObservableList<Cell> children() {
     return new ExternalChildList();
   }
+
+  @Override
+  public Cell nextSibling() {
+    return Composites.nextSibling(this);
+  }
+
+  @Override
+  public Cell prevSibling() {
+    return Composites.prevSibling(this);
+  }
+
 
   public Property<Boolean> visible() {
     return getProp(VISIBLE);
