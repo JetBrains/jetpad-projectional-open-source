@@ -56,7 +56,7 @@ public abstract class Cell implements Composite<Cell>, HasVisibility, HasFocusab
   public static final CellPropertySpec<Cell> LEFT_POPUP = new CellPropertySpec<>("leftPopup");
   public static final CellPropertySpec<Cell> RIGHT_POPUP = new CellPropertySpec<>("rightPopup");
 
-  private static final CellPropertySpec<Cell>[] POPUP_SPECS = new CellPropertySpec[]{LEFT_POPUP, RIGHT_POPUP, BOTTOM_POPUP, FRONT_POPUP};
+  private static final CellPropertySpec<Cell>[] POPUP_SPECS = new CellPropertySpec[] { LEFT_POPUP, RIGHT_POPUP, BOTTOM_POPUP, FRONT_POPUP };
 
   public static final CellPropertySpec<Boolean> VISIBLE = new CellPropertySpec<>("visible", true);
   public static final CellPropertySpec<Boolean> SELECTED = new CellPropertySpec<>("selected", false);
