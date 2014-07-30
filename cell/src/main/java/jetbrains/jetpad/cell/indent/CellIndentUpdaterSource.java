@@ -48,7 +48,7 @@ public class CellIndentUpdaterSource implements IndentUpdaterSource<Cell> {
 
   @Override
   public boolean isVisible(Cell src) {
-    return src.visible().get();
+    return src.get(Cell.VISIBLE);
   }
 
   @Override
