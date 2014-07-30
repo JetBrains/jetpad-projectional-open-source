@@ -21,7 +21,6 @@ import jetbrains.jetpad.model.composite.Composites;
 import java.util.Iterator;
 
 class Position<SourceCT extends Composite<SourceCT>> {
-  //todo position can be substantially optimized by storing a list of child positions from root to the bottom
   private IndentUpdater<SourceCT, ?> myUpdater;
   private SourceCT myPart;
 
