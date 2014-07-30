@@ -77,6 +77,8 @@ public abstract class Cell implements NavComposite<Cell>, HasVisibility, HasFocu
   private List<Cell> myChildren;
   private CellContainer myContainer;
   private Cell myParent;
+  private Cell myNext;
+  private Cell myPrev;
   private ListMap<CellPropertySpec<?>, Object> myProperties;
   private Listeners<CellListener> myListeners;
 
@@ -96,14 +98,13 @@ public abstract class Cell implements NavComposite<Cell>, HasVisibility, HasFocu
 
   @Override
   public Cell nextSibling() {
-    return Composites.nextSibling(this);
+    return myNext;
   }
 
   @Override
   public Cell prevSibling() {
-    return Composites.prevSibling(this);
+    return myPrev;
   }
-
 
   public Property<Boolean> visible() {
     return getProp(VISIBLE);
@@ -713,6 +714,17 @@ public abstract class Cell implements NavComposite<Cell>, HasVisibility, HasFocu
 
       item.changeParent(Cell.this);
 
+      Cell prev = index == 0 ? null : get(index - 1);
+      Cell next = index == size() ? null : get(index);
+      if (prev != null) {
+        prev.myNext = item;
+      }
+      if (next != null) {
+        next.myPrev = item;
+      }
+      item.myNext = next;
+      item.myPrev = prev;
+
       super.add(index, item);
 
       if (isAttached()) {
@@ -747,6 +759,17 @@ public abstract class Cell implements NavComposite<Cell>, HasVisibility, HasFocu
       onBeforeChildRemoved(event);
 
       item.changeParent(null);
+
+      Cell next = item.myNext;
+      Cell prev = item.myPrev;
+      if (next != null) {
+        next.myPrev = prev;
+      }
+      if (prev != null) {
+        prev.myNext = next;
+      }
+      item.myNext = null;
+      item.myPrev = null;
 
       Cell result = super.remove(index);
 
