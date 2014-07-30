@@ -286,7 +286,7 @@ public class IndentUpdater<SourceCT extends NavComposite<SourceCT>, TargetT> {
       if (myIndentUpdaterSource.isIndented(current)) {
         result++;
       }
-      current = current.parent().get();
+      current = current.getParent();
     }
     return result;
   }
@@ -318,7 +318,7 @@ public class IndentUpdater<SourceCT extends NavComposite<SourceCT>, TargetT> {
         throw new IllegalStateException("Can't find a root indent container for " + source);
       }
       if (!myIndentUpdaterSource.isVisible(current) && current != myJustBecameInvisible) return false;
-      current = current.parent().get();
+      current = current.getParent();
     }
     return true;
   }

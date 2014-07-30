@@ -314,6 +314,7 @@ public abstract class Cell implements NavComposite<Cell>, HasVisibility, HasFocu
     };
   }
 
+  @Override
   public Cell getParent() {
     return myParent;
   }

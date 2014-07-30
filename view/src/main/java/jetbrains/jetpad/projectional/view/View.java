@@ -98,6 +98,11 @@ public abstract class View implements NavComposite<View>, HasFocusability, HasVi
     return getProp(NAME);
   }
 
+  @Override
+  public View getParent() {
+    return myParent;
+  }
+
   public ReadableProperty<View> parent() {
     return new BaseReadableProperty<View>() {
       @Override

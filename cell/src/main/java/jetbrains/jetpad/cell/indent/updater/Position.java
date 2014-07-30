@@ -102,7 +102,7 @@ class Position<SourceCT extends NavComposite<SourceCT>> {
   }
 
   private SourceCT upperMostCell(SourceCT item) {
-    SourceCT current = item.parent().get();
+    SourceCT current = item.getParent();
     SourceCT upperMostCell = item;
     while (current != myUpdater.root()) {
       if (current == null) {
@@ -111,7 +111,7 @@ class Position<SourceCT extends NavComposite<SourceCT>> {
       if (myUpdater.isCell(current)) {
         upperMostCell = current;
       }
-      current = current.parent().get();
+      current = current.getParent();
     }
     return upperMostCell;
   }
