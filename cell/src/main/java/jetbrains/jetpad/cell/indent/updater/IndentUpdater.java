@@ -15,14 +15,14 @@
  */
 package jetbrains.jetpad.cell.indent.updater;
 
-import jetbrains.jetpad.cell.Cell;
-import jetbrains.jetpad.model.composite.Composite;
 import jetbrains.jetpad.base.Registration;
+import jetbrains.jetpad.cell.Cell;
+import jetbrains.jetpad.model.composite.NavComposite;
 import jetbrains.jetpad.model.property.PropertyChangeEvent;
 
 import java.util.*;
 
-public class IndentUpdater<SourceCT extends Composite<SourceCT>, TargetT> {
+public class IndentUpdater<SourceCT extends NavComposite<SourceCT>, TargetT> {
   private SourceCT myRoot;
   private Map<SourceCT, TargetT> myNewLineToLine = new HashMap<>();
   private Map<Cell, CellWrapper<TargetT>> myWrappers = new HashMap<>();

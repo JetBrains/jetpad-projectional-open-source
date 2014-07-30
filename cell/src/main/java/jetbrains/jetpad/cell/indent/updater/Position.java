@@ -15,12 +15,12 @@
  */
 package jetbrains.jetpad.cell.indent.updater;
 
-import jetbrains.jetpad.model.composite.Composite;
 import jetbrains.jetpad.model.composite.Composites;
+import jetbrains.jetpad.model.composite.NavComposite;
 
 import java.util.Iterator;
 
-class Position<SourceCT extends Composite<SourceCT>> {
+class Position<SourceCT extends NavComposite<SourceCT>> {
   private IndentUpdater<SourceCT, ?> myUpdater;
   private SourceCT myPart;
 
