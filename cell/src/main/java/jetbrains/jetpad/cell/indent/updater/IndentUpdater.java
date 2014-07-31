@@ -182,7 +182,6 @@ public class IndentUpdater<SourceCT extends NavComposite<SourceCT>, TargetT> {
     if (!myIndentUpdaterSource.isAttached(child)) {
       throw new IllegalStateException("child " + child + " is already detached");
     }
-    myIndentUpdaterSource.setAttached(child, false);
 
     Position<SourceCT> removeAt = new Position<>(this, child);
     Position<SourceCT> prevNewLinePos = prevNewLine(removeAt.prev());
@@ -221,6 +220,8 @@ public class IndentUpdater<SourceCT extends NavComposite<SourceCT>, TargetT> {
         children(mergeWith).add(c);
       }
     }
+
+    myIndentUpdaterSource.setAttached(child, false);
   }
 
   private void removeFromParent(TargetT c) {

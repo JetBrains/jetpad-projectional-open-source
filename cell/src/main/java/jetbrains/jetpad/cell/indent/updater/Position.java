@@ -81,24 +81,6 @@ class Position<SourceCT extends NavComposite<SourceCT>> {
     return prev;
   }
 
-  private SourceCT nextVisibleLeaf(SourceCT item) {
-    SourceCT current = Composites.nextLeaf(item, myUpdater.root());
-    while (current != null) {
-      if (myUpdater.isVisible(current)) return current;
-      current = Composites.nextLeaf(current, myUpdater.root());
-    }
-    return null;
-  }
-
-  private SourceCT prevVisibleLeaf(SourceCT item) {
-    SourceCT current = Composites.prevLeaf(item, myUpdater.root());
-    while (current != null) {
-      if (myUpdater.isVisible(current)) return current;
-      current = Composites.prevLeaf(current, myUpdater.root());
-    }
-    return null;
-  }
-
   private SourceCT upperMostCell(SourceCT item) {
     SourceCT current = item.getParent();
     SourceCT upperMostCell = item;
@@ -142,6 +124,99 @@ class Position<SourceCT extends NavComposite<SourceCT>> {
         };
       }
     };
+  }
+
+  private SourceCT nextVisibleLeaf(SourceCT item) {
+    SourceCT current = nextLeaf(item, myUpdater.root());
+    while (current != null) {
+      if (myUpdater.isVisible(current)) return current;
+      current = nextLeaf(current, myUpdater.root());
+    }
+    return null;
+  }
+
+  private SourceCT prevVisibleLeaf(SourceCT item) {
+    SourceCT current = prevLeaf(item, myUpdater.root());
+    while (current != null) {
+      if (myUpdater.isVisible(current)) return current;
+      current = prevLeaf(current, myUpdater.root());
+    }
+    return null;
+  }
+
+  private SourceCT firstChild(SourceCT p) {
+    SourceCT current = p.firstChild();
+    while (current != null) {
+      if (myUpdater.isAttached(current)) return current;
+      current = current.nextSibling();
+    }
+    return null;
+  }
+
+  private SourceCT lastChild(SourceCT p) {
+    SourceCT current = p.lastChild();
+    while (current != null) {
+      if (myUpdater.isAttached(current)) return current;
+      current = current.prevSibling();
+    }
+    return null;
+  }
+
+  private SourceCT prevSibling(SourceCT c) {
+    SourceCT current = c.prevSibling();
+    while (current != null) {
+      if (myUpdater.isAttached(current)) return current;
+      current = current.prevSibling();
+    }
+    return null;
+  }
+
+  private SourceCT nextSibling(SourceCT c) {
+    SourceCT current = c.nextSibling();
+    while (current != null) {
+      if (myUpdater.isAttached(current)) return current;
+      current = current.nextSibling();
+    }
+    return null;
+  }
+
+  private SourceCT firstLeaf(SourceCT p) {
+    SourceCT first = firstChild(p);
+    if (first == null) return p;
+    return firstLeaf(first);
+  }
+
+  private SourceCT lastLeaf(SourceCT p) {
+    SourceCT last = lastChild(p);
+    if (last == null) return p;
+    return lastLeaf(last);
+  }
+
+  private SourceCT nextLeaf(SourceCT c, SourceCT within) {
+    SourceCT current = c;
+    while (true) {
+      SourceCT nextSibling = nextSibling(current);
+      if (nextSibling != null) {
+        return firstLeaf(nextSibling);
+      }
+      SourceCT parent = current.getParent();
+      if (parent == within) return null;
+      current = parent;
+    }
+  }
+
+  private SourceCT prevLeaf(SourceCT c, SourceCT within) {
+    SourceCT current = c;
+    while (true) {
+      SourceCT prevSibling = prevSibling(current);
+      if (prevSibling != null) {
+        return lastLeaf(prevSibling);
+      }
+
+      SourceCT parent = current.getParent();
+      if (parent == within) return null;
+      current = parent;
+    }
   }
 
   @Override
