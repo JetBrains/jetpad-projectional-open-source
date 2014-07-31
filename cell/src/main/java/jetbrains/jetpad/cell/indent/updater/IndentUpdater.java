@@ -31,7 +31,6 @@ public class IndentUpdater<SourceCT extends NavComposite<SourceCT>, TargetT> {
   private IndentUpdaterTarget<TargetT> myIndentUpdaterTarget;
   private SourceCT myJustBecameInvisible;
   private Map<SourceCT, Registration> myChildRegistrations = new HashMap<>();
-
   private Map<SourceCT, Boolean> myVisibilityMap = new HashMap<>();
 
   public IndentUpdater(
