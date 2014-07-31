@@ -129,7 +129,6 @@ public class IndentUpdater<SourceCT extends NavComposite<SourceCT>, TargetT> {
 
     Position<SourceCT> insertAt = new Position<>(this, child);
     Position<SourceCT> prevNewLinePos = prevNewLine(insertAt.prev());
-    Position<SourceCT> nextNewLinePos = nextNewLine(insertAt.next());
 
     if (myIndentUpdaterSource.isCell(child)) {
       Cell cell = myIndentUpdaterSource.getCell(child);
@@ -145,6 +144,8 @@ public class IndentUpdater<SourceCT extends NavComposite<SourceCT>, TargetT> {
         children(targetLine).add(prevNewLinePos.deltaTo(insertAt) - 1 + indentDelta, wrapper.item());
       }
     } else if (myIndentUpdaterSource.isNewLine(child)) {
+      Position<SourceCT> nextNewLinePos = nextNewLine(insertAt.next());
+
       TargetT newLine = myIndentUpdaterTarget.newLine();
       int indent = indent(child);
 
