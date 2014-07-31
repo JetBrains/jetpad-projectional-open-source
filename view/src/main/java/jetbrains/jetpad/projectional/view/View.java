@@ -136,6 +136,18 @@ public abstract class View implements NavComposite<View>, HasFocusability, HasVi
     return Composites.prevSibling(this);
   }
 
+  @Override
+  public View firstChild() {
+    if (myChildren == null) return null;
+    return myChildren.get(0);
+  }
+
+  @Override
+  public View lastChild() {
+    if (myChildren == null) return null;
+    return myChildren.get(myChildren.size() - 1);
+  }
+
   public ViewContainer container() {
     return myContainer;
   }

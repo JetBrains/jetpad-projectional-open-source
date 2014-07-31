@@ -106,6 +106,18 @@ public abstract class Cell implements NavComposite<Cell>, HasVisibility, HasFocu
     return myPrev;
   }
 
+  @Override
+  public Cell firstChild() {
+    if (myChildren == null) return null;
+    return myChildren.get(0);
+  }
+
+  @Override
+  public Cell lastChild() {
+    if (myChildren == null) return null;
+    return myChildren.get(myChildren.size() - 1);
+  }
+
   public Property<Boolean> visible() {
     return getProp(VISIBLE);
   }
