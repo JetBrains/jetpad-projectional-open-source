@@ -31,18 +31,12 @@ class Position<SourceCT extends NavComposite<SourceCT>> {
 
   Position<SourceCT> next() {
     SourceCT current = next(myPart);
-    while (current != null && !myUpdater.isAttached(current)) {
-      current = next(current);
-    }
     if (current == null) return null;
     return new Position<>(myUpdater, current);
   }
 
   Position<SourceCT> prev() {
     SourceCT current = prev(myPart);
-    while (current != null && !myUpdater.isAttached(current)) {
-      current = prev(current);
-    }
     if (current == null) return null;
     return new Position<>(myUpdater, current);
   }
