@@ -31,7 +31,6 @@ public class IndentUpdater<SourceCT extends NavComposite<SourceCT>, TargetT> {
   private IndentUpdaterTarget<TargetT> myIndentUpdaterTarget;
   private SourceCT myJustBecameInvisible;
   private Map<SourceCT, Registration> myChildRegistrations = new HashMap<>();
-  private Map<SourceCT, Boolean> myVisibilityMap = new HashMap<>();
 
   public IndentUpdater(
       SourceCT root,
@@ -47,19 +46,9 @@ public class IndentUpdater<SourceCT extends NavComposite<SourceCT>, TargetT> {
   }
 
   public void childAdded(SourceCT child) {
-    myVisibilityMap = new HashMap<>();
-    fillVisibilityMap(child, true);
     childAdded(child, true);
-    myVisibilityMap = null;
   }
 
-  private void fillVisibilityMap(SourceCT s, boolean visible) {
-    visible = visible && myIndentUpdaterSource.isVisible(s);
-    myVisibilityMap.put(s, visible);
-    for (SourceCT c : s.children()) {
-      fillVisibilityMap(c, visible);
-    }
-  }
 
   private void childAdded(SourceCT child, boolean real) {
     onChildAdd(child);
@@ -80,10 +69,7 @@ public class IndentUpdater<SourceCT extends NavComposite<SourceCT>, TargetT> {
   }
 
   public void childRemoved(SourceCT child) {
-    myVisibilityMap = new HashMap<>();
-    fillVisibilityMap(child, true);
     childRemoved(child, true);
-    myVisibilityMap = null;
   }
 
   private void childRemoved(SourceCT child, boolean real) {
@@ -329,13 +315,6 @@ public class IndentUpdater<SourceCT extends NavComposite<SourceCT>, TargetT> {
   }
 
   boolean isVisible(SourceCT source) {
-    if (myVisibilityMap != null) {
-      Boolean result = myVisibilityMap.get(source);
-      if (result != null) {
-        return result;
-      }
-    }
-
     SourceCT current = source;
     while (current != myRoot) {
       if (current == null) {
