@@ -121,19 +121,21 @@ class Position<SourceCT extends NavComposite<SourceCT>> {
   }
 
   private SourceCT nextVisibleLeaf(SourceCT item) {
-    SourceCT current = nextLeaf(item, myUpdater.root());
+    SourceCT root = myUpdater.root();
+    SourceCT current = nextLeaf(item, root);
     while (current != null) {
       if (myUpdater.isVisible(current)) return current;
-      current = nextLeaf(current, myUpdater.root());
+      current = nextLeaf(current, root);
     }
     return null;
   }
 
   private SourceCT prevVisibleLeaf(SourceCT item) {
-    SourceCT current = prevLeaf(item, myUpdater.root());
+    SourceCT root = myUpdater.root();
+    SourceCT current = prevLeaf(item, root);
     while (current != null) {
       if (myUpdater.isVisible(current)) return current;
-      current = prevLeaf(current, myUpdater.root());
+      current = prevLeaf(current, root);
     }
     return null;
   }
