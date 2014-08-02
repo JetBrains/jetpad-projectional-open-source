@@ -31,6 +31,7 @@ public class IndentUpdater<SourceCT extends NavComposite<SourceCT>, TargetT> {
   private IndentUpdaterTarget<TargetT> myIndentUpdaterTarget;
   private SourceCT myJustBecameInvisible;
   private Map<SourceCT, Registration> myChildRegistrations = new HashMap<>();
+  private boolean myInitialized;
 
   public IndentUpdater(
       SourceCT root,
@@ -45,10 +46,17 @@ public class IndentUpdater<SourceCT extends NavComposite<SourceCT>, TargetT> {
     children(myTarget).add(myIndentUpdaterTarget.newLine());
   }
 
+  public boolean isInitialized() {
+    return myInitialized;
+  }
+
+  public void initialized() {
+    myInitialized = true;
+  }
+
   public void childAdded(SourceCT child) {
     childAdded(child, true);
   }
-
 
   private void childAdded(SourceCT child, boolean real) {
     onChildAdd(child);

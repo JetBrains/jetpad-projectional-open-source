@@ -171,6 +171,7 @@ class Position<SourceCT extends NavComposite<SourceCT>> {
     SourceCT current = c.nextSibling();
     while (current != null) {
       if (myUpdater.isAttached(current)) return current;
+      if (!myUpdater.isInitialized() && myUpdater.isVisible(current)) return null;
       current = current.nextSibling();
     }
     return null;

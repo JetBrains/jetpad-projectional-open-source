@@ -145,6 +145,7 @@ class IndentRootCellMapper extends BaseCellMapper<IndentCell> {
     for (Cell child : getSource().children()) {
       myIndentUpdater.childAdded(child);
     }
+    myIndentUpdater.initialized();
 
     myRegistration = getSource().addListener(new IndentContainerCellListener() {
       @Override
