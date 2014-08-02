@@ -145,7 +145,9 @@ public class IndentUpdater<SourceCT extends NavComposite<SourceCT>, TargetT> {
         children(myTarget).add(1, newLine);
       } else {
         TargetT prevLine = myNewLineToLine.get(prevNewLinePos.get());
-        int prevLineIndex = children(myTarget).indexOf(prevLine);
+
+        //this is optimization for the initalization case
+        int prevLineIndex = children(myTarget).lastIndexOf(prevLine);
         children(myTarget).add(prevLineIndex + 1, newLine);
       }
 
