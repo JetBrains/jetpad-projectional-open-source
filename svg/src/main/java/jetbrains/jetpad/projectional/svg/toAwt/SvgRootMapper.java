@@ -15,13 +15,13 @@ public class SvgRootMapper extends SvgElementMapper<SvgRoot, SVGOMSVGElement> {
   protected void registerSynchronizers(SynchronizersConfiguration conf) {
     super.registerSynchronizers(conf);
 
-    conf.add(Synchronizers.forPropsOneWay(getSource().height, new WritableProperty<Double>() {
+    conf.add(Synchronizers.forPropsOneWay(getSource().getProp(SvgRoot.HEIGHT), new WritableProperty<Double>() {
       @Override
       public void set(Double value) {
         getTarget().setAttribute("height", Double.toString(value));
       }
     }));
-    conf.add(Synchronizers.forPropsOneWay(getSource().width, new WritableProperty<Double>() {
+    conf.add(Synchronizers.forPropsOneWay(getSource().getProp(SvgRoot.WIDTH), new WritableProperty<Double>() {
       @Override
       public void set(Double value) {
         getTarget().setAttribute("width", Double.toString(value));

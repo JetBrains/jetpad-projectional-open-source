@@ -2,15 +2,15 @@
         "http://google-web-toolkit.googlecode.com/svn/releases/2.0/distro-source/core/src/gwt-module.dtd">
 <module>
 
-    <inherits name='com.google.gwt.user.User'/>
-    <inherits name="jetbrains.jetpad.values.Values" />
-    <inherits name="jetbrains.jetpad.projectional.svg.Svg" />
+  <inherits name='com.google.gwt.user.User'/>
+  <inherits name="jetbrains.jetpad.values.Values" />
+  <inherits name="jetbrains.jetpad.projectional.svg.Svg" />
   <inherits name="jetbrains.jetpad.projectional.view.View"/>
 
   <source path="">
-        <exclude name="AwtDemo.java" />
-    </source>
+    <exclude name="AwtDemo.java" />
+  </source>
 
-    <entry-point class='jetbrains.jetpad.projectional.svgDemo.GwtDemo'/>
+  <entry-point class='jetbrains.jetpad.projectional.svgDemo.GwtDemo'/>
 
 </module>

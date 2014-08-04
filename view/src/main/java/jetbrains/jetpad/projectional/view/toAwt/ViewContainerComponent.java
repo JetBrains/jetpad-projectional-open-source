@@ -29,12 +29,19 @@ import jetbrains.jetpad.model.event.CompositeRegistration;
 import jetbrains.jetpad.model.event.EventHandler;
 import jetbrains.jetpad.model.property.PropertyChangeEvent;
 import jetbrains.jetpad.projectional.base.ImageData;
+import jetbrains.jetpad.projectional.svg.SvgRoot;
+import jetbrains.jetpad.projectional.svg.toAwt.SvgRootDocumentMapper;
 import jetbrains.jetpad.projectional.view.*;
 import jetbrains.jetpad.projectional.view.spi.NullViewContainerPeer;
 import jetbrains.jetpad.projectional.view.spi.ViewContainerPeer;
 import jetbrains.jetpad.values.Color;
 import jetbrains.jetpad.values.Font;
 import jetbrains.jetpad.values.FontFamily;
+import org.apache.batik.bridge.BridgeContext;
+import org.apache.batik.bridge.GVTBuilder;
+import org.apache.batik.bridge.UserAgent;
+import org.apache.batik.bridge.UserAgentAdapter;
+import org.apache.batik.gvt.GraphicsNode;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -49,8 +56,10 @@ import java.awt.image.ImageObserver;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.net.URL;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
+import java.util.Map;
 import java.util.Set;
 
 import static jetbrains.jetpad.projectional.view.toAwt.AwtConverters.toAwtColor;
@@ -80,6 +89,8 @@ public class ViewContainerComponent extends JComponent implements Scrollable {
   private long myLastActionTime;
   private Set<TextView> myWithCaretVisible = new HashSet<>();
   private MyViewContainerPeer myPeer = new MyViewContainerPeer();
+
+  private Map<View, PaintHelper> myViewPaintHelpers = new HashMap<>();
 
   public ViewContainerComponent() {
     setFocusable(true);
@@ -456,7 +467,7 @@ public class ViewContainerComponent extends JComponent implements Scrollable {
     }
   }
 
-  private void paintContent(View view, final Graphics2D g) {
+  private void paintContent(final View view, final Graphics2D g) {
     final jetbrains.jetpad.geometry.Rectangle bounds = view.bounds().get();
 
     Color background = view.background().get();
@@ -624,6 +635,17 @@ public class ViewContainerComponent extends JComponent implements Scrollable {
         });
       } else {
         throw new UnsupportedOperationException("Unsupported Image : " + imageData);
+      }
+    }
+
+    if (view instanceof SvgView) {
+      if (myViewPaintHelpers.containsKey(view)) {
+        myViewPaintHelpers.get(view).paint(view, (Graphics2D) g.create());
+      } else {
+        SvgPaintHelper helper = new SvgPaintHelper((SvgView) view);
+        myViewPaintHelpers.put(view, helper);
+
+        helper.paint((SvgView) view, (Graphics2D) g.create());
       }
     }
   }
@@ -840,6 +862,57 @@ public class ViewContainerComponent extends JComponent implements Scrollable {
     @Override
     public Object getMappedTo(View view) {
       return null;
+    }
+  }
+
+  private static interface PaintHelper<ViewT extends View> {
+    void paint(ViewT view, Graphics2D g);
+    void update(ViewT view);
+    void dispose();
+  }
+
+  private static class SvgPaintHelper implements PaintHelper<SvgView> {
+    private GraphicsNode myGraphicsNode;
+    private SvgRootDocumentMapper myMapper;
+
+    SvgPaintHelper(final SvgView view) {
+      createGraphicsNode(view);
+      view.root().addHandler(new EventHandler<PropertyChangeEvent<SvgRoot>>() {
+        @Override
+        public void onEvent(PropertyChangeEvent<SvgRoot> event) {
+          SvgPaintHelper.this.update(view);
+        }
+      });
+    }
+
+    private void createGraphicsNode(SvgView view) {
+      myMapper = new SvgRootDocumentMapper(view.root().get());
+      myMapper.attachRoot();
+
+      UserAgent userAgent = new UserAgentAdapter();
+      BridgeContext ctx = new BridgeContext(userAgent);
+      ctx.setDynamicState(BridgeContext.DYNAMIC);
+      GVTBuilder builder = new GVTBuilder();
+
+      myGraphicsNode = builder.build(ctx, myMapper.getTarget());
+    }
+
+    @Override
+    public void paint(SvgView view, Graphics2D g) {
+      g.translate(view.bounds().get().origin.x, view.bounds().get().origin.y);
+      myGraphicsNode.paint(g);
+    }
+
+    @Override
+    public void update(SvgView view) {
+      dispose();
+      createGraphicsNode(view);
+      view.invalidate();
+    }
+
+    @Override
+    public void dispose() {
+      myMapper.detachRoot();
     }
   }
 }

@@ -12,6 +12,10 @@ import java.awt.event.MouseEvent;
 
 public class AwtDemo {
   public static void main(String[] args) {
+    jetbrains.jetpad.projectional.view.toAwt.AwtDemo.show(DemoModel.demoViewContainer());
+  }
+
+  private static void noViewDemo() {
     JFrame frame = new JFrame("Svg Awt Demo");
     frame.setLayout(new BorderLayout());
 

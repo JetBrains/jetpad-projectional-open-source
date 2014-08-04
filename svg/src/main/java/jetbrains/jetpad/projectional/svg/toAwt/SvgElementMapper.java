@@ -18,6 +18,6 @@ public class SvgElementMapper<SourceT extends SvgElement, TargetT extends SVGOME
   protected void registerSynchronizers(SynchronizersConfiguration conf) {
     super.registerSynchronizers(conf);
 
-    conf.add(Synchronizers.forObservableRole(this, getSource().elements, Utils.elementChildren(getTarget()), new SvgElementMappingFactory(myDoc)));
+    conf.add(Synchronizers.forObservableRole(this, getSource().children(), Utils.elementChildren(getTarget()), new SvgElementMappingFactory(myDoc)));
   }
 }
