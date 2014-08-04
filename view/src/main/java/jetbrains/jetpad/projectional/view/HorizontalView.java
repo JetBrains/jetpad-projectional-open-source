@@ -17,7 +17,6 @@ package jetbrains.jetpad.projectional.view;
 
 import jetbrains.jetpad.geometry.Rectangle;
 import jetbrains.jetpad.geometry.Vector;
-import jetbrains.jetpad.projectional.view.View;
 
 public class HorizontalView extends View {
   @Override
@@ -28,7 +27,7 @@ public class HorizontalView extends View {
     int aboveBaseline = 0;
     int belowBaseLine = 0;
     for (View child : children()) {
-      if (!child.visible().get()) continue;
+      if (!child.get(View.VISIBLE)) continue;
       aboveBaseline = Math.max(aboveBaseline, child.baseLine());
       Rectangle childBounds = child.bounds().get();
       belowBaseLine = Math.max(belowBaseLine, childBounds.dimension.y - child.baseLine());
@@ -37,7 +36,7 @@ public class HorizontalView extends View {
 
     int offset = 0;
     for (View child : children()) {
-      if (!child.visible().get()) continue;
+      if (!child.get(View.VISIBLE)) continue;
       Vector newOrigin = ctx.origin().add(new Vector(offset, aboveBaseline - child.baseLine()));
       child.moveTo(newOrigin);
       offset += child.bounds().get().dimension.x;
