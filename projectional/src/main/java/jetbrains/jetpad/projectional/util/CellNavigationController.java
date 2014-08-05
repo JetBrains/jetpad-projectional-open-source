@@ -272,27 +272,6 @@ public class CellNavigationController {
     }
   }
 
-  private Cell pageMoveFocusable(Cell cell, int offset, int pageHeight) {
-    Cell current = cell;
-    while (true) {
-      Cell next = ourWithBounds.lowerFocusable(current, offset);
-
-      if (next == null) {
-        if (next != cell) {
-          return current;
-        } else {
-          return null;
-        }
-      }
-
-      if (cell.getBounds().distance(next.origin()) >= pageHeight) {
-        return next;
-      }
-
-      current = next;
-    }
-  }
-
   private abstract class PageUpDown {
     private Cell myCell;
     private int myOffset;
