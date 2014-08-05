@@ -49,12 +49,11 @@ public class IndentCell extends Cell {
 
   @Override
   public void scrollTo(Rectangle rect) {
-    Cell parent = getParent();
-    if (parent instanceof IndentCell) {
-      parent.scrollTo(new Rectangle(rect.origin.add(getBounds().origin.sub(parent.getBounds().origin)), rect.dimension));
-    } else {
-      super.scrollTo(rect);
+    Cell current = getParent();
+    while (current instanceof IndentCell) {
+      current = current.getParent();
     }
+    current.scrollTo(new Rectangle(rect.origin.add(getBounds().origin.sub(current.getBounds().origin)), rect.dimension));
   }
 
   private IndentCell indentContainer() {
