@@ -17,9 +17,9 @@ package jetbrains.jetpad.cell.toView;
 
 import com.google.common.base.Function;
 import com.google.common.base.Supplier;
+import jetbrains.jetpad.base.Registration;
 import jetbrains.jetpad.base.animation.Animation;
 import jetbrains.jetpad.base.animation.Animations;
-import jetbrains.jetpad.base.Registration;
 import jetbrains.jetpad.base.edt.EventDispatchThread;
 import jetbrains.jetpad.cell.*;
 import jetbrains.jetpad.event.*;
