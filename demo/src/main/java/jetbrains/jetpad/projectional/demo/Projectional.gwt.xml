@@ -12,7 +12,7 @@
     <exclude name="IndentDemoMain.java" />
     <exclude name="AnimationDemo.java" />
     <exclude name="diagram/DiagramDemoMain.java" />
-    <exclude name="diagramExpr/DiagramDemoMain.java" />
+    <exclude name="diagramExpr/DiagramExprDemoMain.java" />
   </source>
 
   <entry-point class="jetbrains.jetpad.projectional.demo.ProjectionalMain" />

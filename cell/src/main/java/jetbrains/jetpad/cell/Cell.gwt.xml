@@ -14,6 +14,6 @@
   <inherits name="jetbrains.jetpad.completion.Completion"/>
 
   <source path="">
-    <exclude name="view/EditingTestCase.java" />
+    <exclude name="EditingTestCase.java" />
   </source>
 </module>

@@ -1,4 +1,6 @@
 <module>
-  <source path="" />
+  <source path="">
+    <exclude name="util/awt/**"/>
+  </source>
   <inherits name="jetbrains.jetpad.cell.Cell" />
 </module>
