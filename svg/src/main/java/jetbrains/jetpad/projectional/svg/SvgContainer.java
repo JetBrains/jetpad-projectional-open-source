@@ -16,6 +16,7 @@
 package jetbrains.jetpad.projectional.svg;
 
 import jetbrains.jetpad.base.Registration;
+import jetbrains.jetpad.event.MouseEvent;
 import jetbrains.jetpad.model.event.ListenerCaller;
 import jetbrains.jetpad.model.event.Listeners;
 import jetbrains.jetpad.model.property.Property;
@@ -72,5 +73,13 @@ public class SvgContainer {
         l.onElementDetached(element);
       }
     });
+  }
+
+  public void mousePressed(MouseEvent e) {
+    dispatchMouseEvent(SvgEvents.MOUSE_PRESSED, e);
+  }
+
+  private void dispatchMouseEvent(SvgEventSpec<MouseEvent> spec, MouseEvent e) {
+    mySvgRoot.get().dispatch(spec, e);
   }
 }

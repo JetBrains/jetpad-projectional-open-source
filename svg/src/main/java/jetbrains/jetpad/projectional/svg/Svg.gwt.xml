@@ -27,6 +27,7 @@
 
   <inherits name="jetbrains.jetpad.mapper.Mapper"/>
   <inherits name="jetbrains.jetpad.values.Values"/>
+  <inherits name="jetbrains.jetpad.event.Event"/>
 
   <source path="">
     <exclude name="**/toAwt/**" />

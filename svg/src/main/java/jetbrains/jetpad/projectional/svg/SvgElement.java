@@ -17,6 +17,7 @@ package jetbrains.jetpad.projectional.svg;
 
 import com.google.common.base.Objects;
 import jetbrains.jetpad.base.Registration;
+import jetbrains.jetpad.event.Event;
 import jetbrains.jetpad.model.children.ChildList;
 import jetbrains.jetpad.model.children.HasParent;
 import jetbrains.jetpad.model.collections.list.ObservableList;
@@ -27,9 +28,13 @@ import jetbrains.jetpad.model.property.Property;
 import jetbrains.jetpad.model.property.PropertyChangeEvent;
 import jetbrains.jetpad.model.util.ListMap;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class SvgElement extends HasParent<SvgElement, SvgElement> {
   private SvgContainer myContainer;
   private ListMap<SvgPropertySpec<?>, Object> myProperties;
+  private List<SvgTrait> myTraits;
   private Listeners<SvgElementListener> myListeners;
 
   private SvgChildList myChildren;
@@ -193,6 +198,42 @@ public class SvgElement extends HasParent<SvgElement, SvgElement> {
 
     myContainer.svgElementDetached(this);
     myContainer = null;
+  }
+
+  public Registration addTrait(final SvgTrait trait) {
+    if (myTraits == null) {
+      myTraits = new ArrayList<>();
+    }
+
+    myTraits.add(trait);
+
+    return new Registration() {
+      @Override
+      public void remove() {
+        myTraits.remove(trait);
+
+        if (myTraits.isEmpty()) {
+          myTraits = null;
+        }
+      }
+    };
+  }
+
+  public <EventT extends Event> void dispatch(SvgEventSpec<EventT> spec, EventT event) {
+    if (myTraits != null) {
+      for (SvgTrait t : myTraits) {
+        SvgTrait current = t;
+        while (current != null) {
+          current.dispatch(this, spec, event);
+          if (event.isConsumed()) return;
+          current = current.parent();
+        }
+      }
+    }
+
+    if (parent().get() != null) {
+      parent().get().dispatch(spec, event);
+    }
   }
 
   private class SvgChildList extends ChildList<SvgElement, SvgElement> {

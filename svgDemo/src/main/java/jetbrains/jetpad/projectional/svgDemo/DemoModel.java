@@ -18,9 +18,7 @@ package jetbrains.jetpad.projectional.svgDemo;
 import jetbrains.jetpad.base.Value;
 import jetbrains.jetpad.event.KeyEvent;
 import jetbrains.jetpad.event.MouseEvent;
-import jetbrains.jetpad.projectional.svg.SvgEllipse;
-import jetbrains.jetpad.projectional.svg.SvgRect;
-import jetbrains.jetpad.projectional.svg.SvgRoot;
+import jetbrains.jetpad.projectional.svg.*;
 import jetbrains.jetpad.projectional.view.*;
 import jetbrains.jetpad.values.Color;
 
@@ -111,12 +109,24 @@ public class DemoModel {
     container.contentRoot().children().add(vView);
 
     final Value<Boolean> state = new Value<>(true);
-    container.root().addTrait(new ViewTraitBuilder().on(ViewEvents.MOUSE_PRESSED, new ViewEventHandler<MouseEvent>() {
+
+    model.addTrait(new SvgTraitBuilder().on(SvgEvents.MOUSE_PRESSED, new SvgEventHandler<MouseEvent>() {
       @Override
-      public void handle(View view, jetbrains.jetpad.event.MouseEvent e) {
-        DemoModel.addCircle(svgView.root().get(), e.x(), e.y());
+      public void handle(SvgElement element, MouseEvent e) {
+        DemoModel.addCircle(model, e.x(), e.y());
       }
     })
+    .build());
+
+    altModel.addTrait(new SvgTraitBuilder().on(SvgEvents.MOUSE_PRESSED, new SvgEventHandler<MouseEvent>() {
+      @Override
+      public void handle(SvgElement element, MouseEvent e) {
+        DemoModel.addCircle(altModel, e.x(), e.y());
+      }
+    })
+    .build());
+
+    container.root().addTrait(new ViewTraitBuilder()
     .on(ViewEvents.KEY_PRESSED, new ViewEventHandler<KeyEvent>() {
       @Override
       public void handle(View view, KeyEvent e) {

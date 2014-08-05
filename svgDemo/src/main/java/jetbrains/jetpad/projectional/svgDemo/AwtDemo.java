@@ -28,6 +28,7 @@ import java.awt.event.MouseEvent;
 public class AwtDemo {
   public static void main(String[] args) {
     jetbrains.jetpad.projectional.view.toAwt.AwtDemo.show(DemoModel.demoViewContainer());
+//    noViewDemo();
   }
 
   private static void noViewDemo() {

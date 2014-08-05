@@ -1,5 +1,6 @@
 package jetbrains.jetpad.projectional.view;
 
+import jetbrains.jetpad.event.MouseEvent;
 import jetbrains.jetpad.geometry.Vector;
 import jetbrains.jetpad.model.event.EventHandler;
 import jetbrains.jetpad.model.property.Property;
@@ -37,10 +38,26 @@ public class SvgView extends View {
         repaint();
       }
     });
+
+    addTrait(new ViewTraitBuilder().on(ViewEvents.MOUSE_PRESSED, new ViewEventHandler<MouseEvent>() {
+      @Override
+      public void handle(View view, MouseEvent e) {
+        MouseEvent translatedEvent = translateMouseEvent(e);
+        svgContainer.mousePressed(translatedEvent);
+        if (translatedEvent.isConsumed()) {
+          e.consume();
+        }
+      }
+    })
+    .build());
   }
 
   public Property<SvgRoot> root() {
     return getProp(SVG_ROOT);
+  }
+
+  private MouseEvent translateMouseEvent(MouseEvent e) {
+    return new MouseEvent(e.x() - bounds().get().origin.x, e.y() - bounds().get().origin.y);
   }
 
   @Override
