@@ -174,8 +174,12 @@ public class HybridSynchronizer<SourceT> implements Synchronizer {
     return new CellTrait() {
       @Override
       public Object get(Cell cell, CellTraitPropertySpec<?> spec) {
-        if (spec == HYBRID_SYNCHRONIZER) return HybridSynchronizer.this;
-        if (spec == CellStateHandler.PROPERTY) return getCellStateHandler();
+        if (spec == HYBRID_SYNCHRONIZER) {
+          return HybridSynchronizer.this;
+        }
+        if (spec == CellStateHandler.PROPERTY) {
+          return getCellStateHandler();
+        }
 
         return super.get(cell, spec);
       }
