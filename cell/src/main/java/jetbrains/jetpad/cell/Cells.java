@@ -6,7 +6,8 @@ import jetbrains.jetpad.geometry.Vector;
 
 public class Cells {
   public static Cell findCell(Cell current, Vector loc) {
-    if (!(current instanceof IndentCell) && !current.getBounds().contains(loc)) return null;
+    boolean isIndent = current instanceof IndentCell;
+    if (!isIndent && !current.getBounds().contains(loc)) return null;
     if (current instanceof NewLineCell) return null;
 
     for (Cell child : current.children()) {
@@ -17,7 +18,7 @@ public class Cells {
       }
     }
 
-    if (current.getBounds().contains(loc)) {
+    if (!isIndent && current.getBounds().contains(loc)) {
       return current;
     } else {
       return null;
