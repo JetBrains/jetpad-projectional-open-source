@@ -21,6 +21,8 @@ import jetbrains.jetpad.cell.trait.CellTraitPropertySpec;
 public interface CellStateHandler<CellT extends Cell, T> {
   public static final CellTraitPropertySpec<CellStateHandler<?, ?>> PROPERTY = new CellTraitPropertySpec<>("cellStateHandler");
 
+  boolean isFocusOnly();
+
   T saveState(CellT cell);
   void restoreState(CellT cell, T state);
 }

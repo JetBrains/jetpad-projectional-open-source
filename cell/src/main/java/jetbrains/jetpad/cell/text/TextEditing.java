@@ -200,6 +200,11 @@ public class TextEditing {
     }
 
     @Override
+    public boolean isFocusOnly() {
+      return !mySaveText;
+    }
+
+    @Override
     public TextViewState saveState(TextCell cell) {
       TextViewState result = new TextViewState();
       if (mySaveText) {
