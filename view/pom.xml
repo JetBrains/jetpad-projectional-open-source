@@ -70,7 +70,7 @@
     </dependency>
 
     <dependency>
-      <groupId>jetbrains.jetpad</groupId>
+      <groupId>jetbrains.jetpad.projectional</groupId>
       <artifactId>svg</artifactId>
       <version>1.1-SNAPSHOT</version>
     </dependency>

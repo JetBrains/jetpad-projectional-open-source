@@ -21,6 +21,6 @@
   <inherits name="jetbrains.jetpad.projectional.svg.Svg"/>
 
   <source path="">
-    <exclude name="awt/**.*" />
+    <exclude name="toAwt/**" />
   </source>
 </module>

@@ -30,6 +30,6 @@
   <inherits name="jetbrains.jetpad.event.Event"/>
 
   <source path="">
-    <exclude name="**/toAwt/**" />
+    <exclude name="toAwt/**" />
   </source>
 </module>
