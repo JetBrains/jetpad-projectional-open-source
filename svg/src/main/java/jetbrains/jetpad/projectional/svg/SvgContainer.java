@@ -79,6 +79,10 @@ public class SvgContainer {
     dispatchMouseEvent(SvgEvents.MOUSE_PRESSED, e);
   }
 
+  public void mouseReleased(MouseEvent e) {
+    dispatchMouseEvent(SvgEvents.MOUSE_RELEASED, e);
+  }
+
   private void dispatchMouseEvent(SvgEventSpec<MouseEvent> spec, MouseEvent e) {
     mySvgRoot.get().dispatch(spec, e);
   }

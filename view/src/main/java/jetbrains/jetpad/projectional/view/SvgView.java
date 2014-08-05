@@ -49,6 +49,16 @@ public class SvgView extends View {
         }
       }
     })
+    .on(ViewEvents.MOUSE_RELEASED, new ViewEventHandler<MouseEvent>() {
+      @Override
+      public void handle(View view, MouseEvent e) {
+        MouseEvent translatedEvent = translateMouseEvent(e);
+        svgContainer.mouseReleased(translatedEvent);
+        if (translatedEvent.isConsumed()) {
+          e.consume();
+        }
+      }
+    })
     .build());
   }
 

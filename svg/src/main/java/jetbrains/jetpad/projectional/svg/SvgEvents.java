@@ -19,4 +19,5 @@ import jetbrains.jetpad.event.MouseEvent;
 
 public class SvgEvents {
   public final static SvgEventSpec<MouseEvent> MOUSE_PRESSED = new SvgEventSpec<>("mousePressed");
+  public final static SvgEventSpec<MouseEvent> MOUSE_RELEASED = new SvgEventSpec<>("mouseReleased");
 }
