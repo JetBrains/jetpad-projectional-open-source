@@ -31,8 +31,8 @@ public class Scrolling {
     Rectangle visibleArea = new Rectangle(getScrollX(), getScrollY(), getScrollWidth(), getScrollHeight());
     Rectangle bounds = getBounds(element);
     if (!visibleArea.contains(bounds)) {
-      int top = element.getAbsoluteLeft() + rect.origin.y;
-      int left = element.getAbsoluteTop() + rect.origin.x;
+      int top = element.getAbsoluteTop() + rect.origin.y;
+      int left = element.getAbsoluteLeft() + rect.origin.x;
       int width = rect.dimension.x;
       int height = rect.dimension.y;
 
