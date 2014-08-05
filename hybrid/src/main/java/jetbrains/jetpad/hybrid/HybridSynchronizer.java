@@ -318,7 +318,7 @@ public class HybridSynchronizer<SourceT> implements Synchronizer {
     return new CellStateHandler<Cell, List<Token>>() {
       @Override
       public boolean isFocusOnly() {
-        return false;
+        return valid().get();
       }
 
       @Override
