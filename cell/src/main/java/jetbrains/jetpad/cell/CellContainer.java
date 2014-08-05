@@ -245,15 +245,7 @@ public class CellContainer {
   }
 
   public Cell findCell(Cell current, Vector loc) {
-    if (!current.getBounds().contains(loc)) return null;
-    for (Cell child : current.children()) {
-      if (!child.visible().get()) continue;
-      Cell result = findCell(child, loc);
-      if (result != null) {
-        return result;
-      }
-    }
-    return current;
+    return Cells.findCell(current, loc);
   }
 
   private <EventT extends Event> void dispatch(final EventT e, final CellEventSpec<EventT> spec) {
