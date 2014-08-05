@@ -49,7 +49,7 @@ public class IndentCell extends Cell {
 
   @Override
   public void scrollTo(Rectangle rect) {
-    Cell parent = parent().get();
+    Cell parent = getParent();
     if (parent instanceof IndentCell) {
       parent.scrollTo(new Rectangle(rect.origin.add(getBounds().origin.sub(parent.getBounds().origin)), rect.dimension));
     } else {
