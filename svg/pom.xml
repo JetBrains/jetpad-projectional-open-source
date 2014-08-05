@@ -1,46 +1,60 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright 2012-2014 JetBrains s.r.o
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~   http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <parent>
-        <artifactId>projectional-container</artifactId>
-        <groupId>jetbrains.jetpad</groupId>
-        <version>1.1-SNAPSHOT</version>
-    </parent>
-    <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <artifactId>projectional-container</artifactId>
+    <groupId>jetbrains.jetpad</groupId>
+    <version>1.1-SNAPSHOT</version>
+  </parent>
+  <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>svg</artifactId>
-    <dependencies>
-        <dependency>
-            <groupId>org.apache.xmlgraphics</groupId>
-            <artifactId>batik-swing</artifactId>
-            <version>1.7</version>
-        </dependency>
-        <dependency>
-            <groupId>org.vectomatic</groupId>
-            <artifactId>lib-gwt-svg</artifactId>
-            <version>0.5.7</version>
-        </dependency>
-        <dependency>
-            <groupId>jetbrains.jetpad</groupId>
-            <artifactId>model</artifactId>
-            <version>1.1-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>jetbrains.jetpad.mapper</groupId>
-            <artifactId>mapper</artifactId>
-            <version>1.1-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>jetbrains.jetpad.util</groupId>
-            <artifactId>values</artifactId>
-            <version>1.1-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>com.google.gwt</groupId>
-            <artifactId>gwt-user</artifactId>
-        </dependency>
-    </dependencies>
-
+  <artifactId>svg</artifactId>
+  <dependencies>
+    <dependency>
+      <groupId>org.apache.xmlgraphics</groupId>
+      <artifactId>batik-swing</artifactId>
+      <version>1.7</version>
+    </dependency>
+    <dependency>
+      <groupId>org.vectomatic</groupId>
+      <artifactId>lib-gwt-svg</artifactId>
+      <version>0.5.7</version>
+    </dependency>
+    <dependency>
+      <groupId>jetbrains.jetpad</groupId>
+      <artifactId>model</artifactId>
+      <version>1.1-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+      <groupId>jetbrains.jetpad.mapper</groupId>
+      <artifactId>mapper</artifactId>
+      <version>1.1-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+      <groupId>jetbrains.jetpad.util</groupId>
+      <artifactId>values</artifactId>
+      <version>1.1-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+      <groupId>com.google.gwt</groupId>
+      <artifactId>gwt-user</artifactId>
+    </dependency>
+  </dependencies>
 
 </project>
