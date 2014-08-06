@@ -24,6 +24,7 @@ import java.util.Map;
 
 public class SvgTraitBuilder {
   private SvgTrait myParent;
+  private Map<SvgPropertySpec<?>, Object> myProperties = new HashMap<>();
   private Map<SvgEventSpec<? extends Event>, List<SvgEventHandler<? extends Event>>> myHandlers = new HashMap<>();
 
   public SvgTraitBuilder() {
@@ -32,6 +33,11 @@ public class SvgTraitBuilder {
 
   public SvgTraitBuilder(SvgTrait parent) {
     myParent = parent;
+  }
+
+  public <ValueT> SvgTraitBuilder set(SvgPropertySpec<ValueT> spec, ValueT value) {
+    myProperties.put(spec, value);
+    return this;
   }
 
   public <EventT extends Event> SvgTraitBuilder on(SvgEventSpec<EventT> spec, SvgEventHandler<EventT> handler) {
@@ -43,6 +49,6 @@ public class SvgTraitBuilder {
   }
 
   public SvgTrait build() {
-    return new SvgTrait(myParent, myHandlers);
+    return new SvgTrait(myParent, myProperties, myHandlers);
   }
 }

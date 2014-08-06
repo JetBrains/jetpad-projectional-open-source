@@ -30,7 +30,9 @@ import jetbrains.jetpad.model.property.PropertyChangeEvent;
 import jetbrains.jetpad.model.util.ListMap;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class SvgElement extends HasParent<SvgElement, SvgElement> {
   private SvgContainer myContainer;
@@ -53,7 +55,21 @@ public class SvgElement extends HasParent<SvgElement, SvgElement> {
 
   <ValueT> ValueT get(SvgPropertySpec<ValueT> spec) {
     if (myProperties != null && myProperties.containsKey(spec)) {
-      return (ValueT) myProperties.get(spec);
+      @SuppressWarnings("unchecked")
+      ValueT result = (ValueT) myProperties.get(spec);
+      return result;
+    }
+
+    if (myTraits != null) {
+      for (SvgTrait t : myTraits) {
+        SvgTrait cur = t;
+        while (cur != null) {
+          if (cur.hasValue(spec)) {
+            return cur.get(spec);
+          }
+          cur = cur.parent();
+        }
+      }
     }
 
     return spec.defaultValue();
@@ -206,15 +222,55 @@ public class SvgElement extends HasParent<SvgElement, SvgElement> {
       myTraits = new ArrayList<>();
     }
 
+    Runnable fire = createFiringRunnable(trait);
     myTraits.add(trait);
+    fire.run();
 
     return new Registration() {
       @Override
       public void remove() {
+        Runnable fire = createFiringRunnable(trait);
         myTraits.remove(trait);
+        fire.run();
 
         if (myTraits.isEmpty()) {
           myTraits = null;
+        }
+      }
+    };
+  }
+
+  private <ValueT> Runnable createPropChangedRunnable(final SvgPropertySpec<ValueT> spec) {
+    final ValueT val = get(spec);
+    return new Runnable() {
+      @Override
+      public void run() {
+        ValueT newVal = get(spec);
+        if (Objects.equal(val, newVal)) return;
+        propertyChanged(spec, new PropertyChangeEvent<>(val, newVal));
+      }
+    };
+  }
+
+  private Runnable createFiringRunnable(SvgTrait t) {
+    Set<SvgPropertySpec<?>> props = new HashSet<>();
+    final List<Runnable> toRun = new ArrayList<>();
+
+    SvgTrait cur = t;
+    while (cur != null) {
+      for (final SvgPropertySpec<?> p : cur.properties()) {
+        if (props.contains(p)) continue;
+        toRun.add(createPropChangedRunnable(p));
+        props.add(p);
+      }
+      cur = cur.parent();
+    }
+
+    return new Runnable() {
+      @Override
+      public void run() {
+        for (Runnable r : toRun) {
+          r.run();
         }
       }
     };
