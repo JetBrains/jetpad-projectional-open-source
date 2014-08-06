@@ -341,7 +341,7 @@ public class CellContainerToDomMapper extends Mapper<CellContainer, Element> {
       private Element getElement(Cell cell) {
         Mapper<? extends Cell, ? extends Element> mapper = getMapper(cell);
         if (mapper == null) {
-          return getElement(cell.parent().get());
+          return getElement(cell.getParent());
         }
         return mapper.getTarget();
       }
