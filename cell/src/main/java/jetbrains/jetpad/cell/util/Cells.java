@@ -17,9 +17,12 @@ package jetbrains.jetpad.cell.util;
 
 import jetbrains.jetpad.cell.Cell;
 import jetbrains.jetpad.cell.TextCell;
+import jetbrains.jetpad.cell.indent.IndentCell;
+import jetbrains.jetpad.cell.indent.NewLineCell;
 import jetbrains.jetpad.cell.position.PositionHandler;
 import jetbrains.jetpad.cell.trait.CellTraitEventSpec;
 import jetbrains.jetpad.event.Event;
+import jetbrains.jetpad.geometry.Vector;
 
 import java.util.List;
 
@@ -53,5 +56,25 @@ public class Cells {
 
   public static boolean isLeaf(Cell cell) {
     return cell instanceof TextCell;
+  }
+
+  public static Cell findCell(Cell current, Vector loc) {
+    boolean isIndent = current instanceof IndentCell;
+    if (!isIndent && !current.getBounds().contains(loc)) return null;
+    if (current instanceof NewLineCell) return null;
+
+    for (Cell child : current.children()) {
+      if (!child.visible().get()) continue;
+      Cell result = findCell(child, loc);
+      if (result != null) {
+        return result;
+      }
+    }
+
+    if (!isIndent && current.getBounds().contains(loc)) {
+      return current;
+    } else {
+      return null;
+    }
   }
 }

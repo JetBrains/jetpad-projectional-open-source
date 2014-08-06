@@ -245,7 +245,7 @@ public class CellContainer {
   }
 
   public Cell findCell(Cell current, Vector loc) {
-    return Cells.findCell(current, loc);
+    return jetbrains.jetpad.cell.util.Cells.findCell(current, loc);
   }
 
   private <EventT extends Event> void dispatch(final EventT e, final CellEventSpec<EventT> spec) {
