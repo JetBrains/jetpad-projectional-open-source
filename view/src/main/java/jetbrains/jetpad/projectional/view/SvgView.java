@@ -26,6 +26,9 @@ public class SvgView extends View {
     svgContainer.addListener(new SvgContainerAdapter() {
       @Override
       public void onPropertySet(SvgElement element, SvgPropertySpec<?> spec, PropertyChangeEvent<?> event) {
+        if (element == root().get() && (spec == SvgRoot.HEIGHT || spec == SvgRoot.WIDTH)) {
+          invalidate();
+        }
         repaint();
       }
 
