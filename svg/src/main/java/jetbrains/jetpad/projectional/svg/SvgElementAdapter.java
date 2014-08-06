@@ -38,8 +38,4 @@ public class SvgElementAdapter implements SvgElementListener {
   @Override
   public void onChildRemoved(CollectionItemEvent<SvgElement> event) {
   }
-
-  @Override
-  public void onParentChanged(PropertyChangeEvent<SvgElement> event) {
-  }
 }

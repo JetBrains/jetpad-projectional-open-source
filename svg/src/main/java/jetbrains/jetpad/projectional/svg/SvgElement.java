@@ -20,6 +20,7 @@ import jetbrains.jetpad.base.Registration;
 import jetbrains.jetpad.event.Event;
 import jetbrains.jetpad.model.children.ChildList;
 import jetbrains.jetpad.model.children.HasParent;
+import jetbrains.jetpad.model.collections.CollectionItemEvent;
 import jetbrains.jetpad.model.collections.list.ObservableList;
 import jetbrains.jetpad.model.event.EventHandler;
 import jetbrains.jetpad.model.event.ListenerCaller;
@@ -242,20 +243,33 @@ public class SvgElement extends HasParent<SvgElement, SvgElement> {
     }
 
     @Override
-    public void add(int index, SvgElement element) {
+    public void add(final int index, final SvgElement element) {
       if (isAttached()) {
         element.attach(container());
       }
       super.add(index, element);
+      fire(new ListenerCaller<SvgElementListener>() {
+        @Override
+        public void call(SvgElementListener l) {
+          l.onChildAdded(new CollectionItemEvent<>(element, index, true));
+        }
+      });
     }
 
     @Override
-    public SvgElement remove(int index) {
-      SvgElement element = get(index);
+    public SvgElement remove(final int index) {
+      final SvgElement element = get(index);
       if (isAttached()) {
         element.detach();
       }
-      return super.remove(index);
+      SvgElement result =  super.remove(index);
+      fire(new ListenerCaller<SvgElementListener>() {
+        @Override
+        public void call(SvgElementListener l) {
+          l.onChildRemoved(new CollectionItemEvent<>(element, index, false));
+        }
+      });
+      return result;
     }
   }
 }

@@ -26,6 +26,4 @@ interface SvgElementListener {
 
   void onChildAdded(CollectionItemEvent<SvgElement> event);
   void onChildRemoved(CollectionItemEvent<SvgElement> event);
-
-  void onParentChanged(PropertyChangeEvent<SvgElement> event);
 }
