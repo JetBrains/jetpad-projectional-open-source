@@ -133,7 +133,9 @@ public class SvgElement extends HasParent<SvgElement, SvgElement> {
           @Override
           public <ValT> void onPropertySet(SvgPropertySpec<ValT> p, PropertyChangeEvent<ValT> event) {
             if (p != spec) return;
-            handler.onEvent((PropertyChangeEvent<ValueT>) event);
+            @SuppressWarnings("unchecked")
+            PropertyChangeEvent<ValueT> castEvent = (PropertyChangeEvent<ValueT>) event;
+            handler.onEvent(castEvent);
           }
         });
       }
