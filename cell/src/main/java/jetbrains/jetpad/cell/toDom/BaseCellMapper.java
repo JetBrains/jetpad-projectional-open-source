@@ -99,10 +99,14 @@ abstract class BaseCellMapper<SourceT extends Cell> extends Mapper<SourceT, Elem
     }
 
     getSource().getProp(CellContainerToDomMapper.ELEMENT).set(getTarget());
+
+    myContext.register(this);
   }
 
   @Override
   protected void onDetach() {
+    myContext.unregister(this);
+
     getSource().getProp(CellContainerToDomMapper.ELEMENT).set(null);
 
     if (myWasPopup) {

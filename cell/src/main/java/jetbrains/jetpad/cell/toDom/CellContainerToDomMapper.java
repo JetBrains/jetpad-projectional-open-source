@@ -34,7 +34,6 @@ import jetbrains.jetpad.base.edt.JsEventDispatchThread;
 import jetbrains.jetpad.cell.*;
 import jetbrains.jetpad.cell.dom.DomCell;
 import jetbrains.jetpad.cell.event.CompletionEvent;
-import jetbrains.jetpad.cell.util.Cells;
 import jetbrains.jetpad.event.*;
 import jetbrains.jetpad.event.dom.ClipboardSupport;
 import jetbrains.jetpad.event.dom.EventTranslator;
@@ -46,6 +45,7 @@ import jetbrains.jetpad.mapper.MappingContext;
 import jetbrains.jetpad.mapper.Synchronizers;
 import jetbrains.jetpad.mapper.gwt.DomAnimations;
 import jetbrains.jetpad.model.collections.CollectionItemEvent;
+import jetbrains.jetpad.model.composite.Composites;
 import jetbrains.jetpad.model.event.CompositeRegistration;
 import jetbrains.jetpad.model.event.EventHandler;
 import jetbrains.jetpad.model.property.Properties;
@@ -358,8 +358,27 @@ public class CellContainerToDomMapper extends Mapper<CellContainer, Element> {
 
       @Override
       public Cell findCell(Cell root, Vector loc) {
-        return Cells.findCell(root, loc);
+        Element e = elementAt(loc.x, loc.y);
+        if (e == null) return null;
+        Cell result = findCellFor(e);
+        if (result == null) return null;
+        if (Composites.isDescendant(root, result)) {
+          return result;
+        }
+        return null;
       }
+
+      private Cell findCellFor(Element e) {
+        BaseCellMapper<?> result = myCellToDomContext.findMapper(e);
+        if (result != null) return result.getSource();
+        Element parent = e.getParentElement();
+        if (parent == null) return null;
+        return findCellFor(parent);
+      }
+
+      private native Element elementAt(int x, int y) /*-{
+        return $doc.elementFromPoint(x, y);
+      }-*/;
 
       @Override
       public Rectangle visibleRect() {

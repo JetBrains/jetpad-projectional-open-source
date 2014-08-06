@@ -19,13 +19,36 @@ import com.google.gwt.dom.client.Element;
 import jetbrains.jetpad.model.property.Property;
 import jetbrains.jetpad.model.property.ValueProperty;
 
+import java.util.HashMap;
+import java.util.Map;
+
 class CellToDomContext {
   final Property<Boolean> focused = new ValueProperty<>(false);
   final Element rootElement;
   final Element focusElement;
+  private final Map<Element, BaseCellMapper<?>> myMappers = new HashMap<>();
 
   CellToDomContext(Element rootElement) {
     this.rootElement = rootElement;
     this.focusElement = rootElement;
+  }
+
+  void register(BaseCellMapper<?> mapper) {
+    if (myMappers.get(mapper.getTarget()) != null) {
+      throw new IllegalStateException();
+    }
+
+    myMappers.put(mapper.getTarget(), mapper);
+  }
+
+  void unregister(BaseCellMapper<?> mapper) {
+    BaseCellMapper<?> result = myMappers.remove(mapper.getTarget());
+    if (result != mapper) {
+      throw new IllegalStateException();
+    }
+  }
+
+  BaseCellMapper<?> findMapper(Element e) {
+    return myMappers.get(e);
   }
 }
