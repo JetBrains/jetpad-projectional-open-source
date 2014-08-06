@@ -34,6 +34,7 @@ import jetbrains.jetpad.base.edt.JsEventDispatchThread;
 import jetbrains.jetpad.cell.*;
 import jetbrains.jetpad.cell.dom.DomCell;
 import jetbrains.jetpad.cell.event.CompletionEvent;
+import jetbrains.jetpad.cell.util.Cells;
 import jetbrains.jetpad.event.*;
 import jetbrains.jetpad.event.dom.ClipboardSupport;
 import jetbrains.jetpad.event.dom.EventTranslator;
@@ -353,6 +354,11 @@ public class CellContainerToDomMapper extends Mapper<CellContainer, Element> {
       @Override
       public void scrollTo(Rectangle rect, Cell cell) {
         Scrolling.scrollTo(rect, getElement(cell));
+      }
+
+      @Override
+      public Cell findCell(Cell root, Vector loc) {
+        return Cells.findCell(root, loc);
       }
 
       @Override

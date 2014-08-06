@@ -15,11 +15,13 @@
  */
 package jetbrains.jetpad.cell;
 
-import jetbrains.jetpad.base.edt.EventDispatchThread;
-import jetbrains.jetpad.base.edt.NullEventDispatchThread;
 import jetbrains.jetpad.base.animation.Animation;
 import jetbrains.jetpad.base.animation.Animations;
+import jetbrains.jetpad.base.edt.EventDispatchThread;
+import jetbrains.jetpad.base.edt.NullEventDispatchThread;
+import jetbrains.jetpad.cell.util.Cells;
 import jetbrains.jetpad.geometry.Rectangle;
+import jetbrains.jetpad.geometry.Vector;
 import jetbrains.jetpad.model.property.Properties;
 import jetbrains.jetpad.model.property.ReadableProperty;
 
@@ -44,6 +46,11 @@ public interface CellContainerPeer {
     public void scrollTo(Rectangle rect, Cell cell) {
     }
 
+
+    @Override
+    public Cell findCell(Cell root, Vector loc) {
+      return Cells.findCell(root, loc);
+    }
 
     @Override
     public Rectangle visibleRect() {
@@ -90,6 +97,9 @@ public interface CellContainerPeer {
   int getCaretOffset(TextCell tv, int caret);
   Rectangle getBounds(Cell cell);
   void scrollTo(Rectangle rect, Cell cell);
+
+  Cell findCell(Cell root, Vector loc);
+
   ReadableProperty<Boolean> focused();
   Rectangle visibleRect();
   void requestFocus();
