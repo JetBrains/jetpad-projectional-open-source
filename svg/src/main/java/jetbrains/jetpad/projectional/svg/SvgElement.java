@@ -27,17 +27,15 @@ import jetbrains.jetpad.model.event.ListenerCaller;
 import jetbrains.jetpad.model.event.Listeners;
 import jetbrains.jetpad.model.property.Property;
 import jetbrains.jetpad.model.property.PropertyChangeEvent;
-import jetbrains.jetpad.model.property.ReadableProperty;
 import jetbrains.jetpad.model.util.ListMap;
+import jetbrains.jetpad.projectional.svg.event.SvgAttributeEvent;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class SvgElement extends HasParent<SvgElement, SvgElement> {
   private SvgContainer myContainer;
   private ListMap<SvgPropertySpec<?>, Object> myProperties;
+  private ListMap<String, String> myAttributes;
   private List<SvgTrait> myTraits;
   private Listeners<SvgElementListener> myListeners;
 
@@ -52,6 +50,35 @@ public class SvgElement extends HasParent<SvgElement, SvgElement> {
       myChildren = new SvgChildList(this);
     }
     return myChildren;
+  }
+
+  public boolean hasAttr(String name) {
+    return myAttributes.containsKey(name);
+  }
+
+  public String getAttr(String name) {
+    return (myAttributes.containsKey(name) ? myAttributes.get(name) : null);
+  }
+
+  public void setAttr(String name, String value) {
+    if (myAttributes == null) {
+      myAttributes = new ListMap<>();
+    }
+    String oldValue = myAttributes.put(name, value);
+    if (oldValue == null || oldValue.equals(value)) {
+      SvgAttributeEvent event = new SvgAttributeEvent(name, oldValue, value);
+      dispatch(SvgEvents.ATTRIBUTE_CHANGED, event);
+      if (isAttached()) {
+        myContainer.attributeChanged(this, event);
+      }
+    }
+  }
+
+  public Set<String> getAttributesKeys() {
+    if (myAttributes == null) {
+      return Collections.emptySet();
+    }
+    return Collections.unmodifiableSet(myAttributes.keySet());
   }
 
   <ValueT> ValueT get(SvgPropertySpec<ValueT> spec) {

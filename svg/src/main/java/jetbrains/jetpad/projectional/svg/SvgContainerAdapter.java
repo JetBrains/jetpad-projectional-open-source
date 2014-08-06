@@ -16,10 +16,15 @@
 package jetbrains.jetpad.projectional.svg;
 
 import jetbrains.jetpad.model.property.PropertyChangeEvent;
+import jetbrains.jetpad.projectional.svg.event.SvgAttributeEvent;
 
 public class SvgContainerAdapter implements SvgContainerListener {
   @Override
   public void onPropertySet(SvgElement element, SvgPropertySpec<?> spec, PropertyChangeEvent<?> event) {
+  }
+
+  @Override
+  public void onAttrSet(SvgElement element, SvgAttributeEvent event) {
   }
 
   @Override

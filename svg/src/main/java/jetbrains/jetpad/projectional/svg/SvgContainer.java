@@ -23,6 +23,7 @@ import jetbrains.jetpad.model.event.Listeners;
 import jetbrains.jetpad.model.property.Property;
 import jetbrains.jetpad.model.property.PropertyChangeEvent;
 import jetbrains.jetpad.model.property.ValueProperty;
+import jetbrains.jetpad.projectional.svg.event.SvgAttributeEvent;
 
 public class SvgContainer {
   private Property<SvgRoot> mySvgRoot = new ValueProperty<SvgRoot>() {
@@ -54,6 +55,15 @@ public class SvgContainer {
       @Override
       public void call(SvgContainerListener l) {
         l.onPropertySet(element, spec, event);
+      }
+    });
+  }
+
+  void attributeChanged(final SvgElement element, final SvgAttributeEvent event) {
+    myListeners.fire(new ListenerCaller<SvgContainerListener>() {
+      @Override
+      public void call(SvgContainerListener l) {
+        l.onAttrSet(element, event);
       }
     });
   }

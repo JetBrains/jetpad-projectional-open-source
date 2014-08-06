@@ -13,14 +13,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package jetbrains.jetpad.projectional.svg;
+package jetbrains.jetpad.projectional.svg.event;
 
-import jetbrains.jetpad.model.property.PropertyChangeEvent;
-import jetbrains.jetpad.projectional.svg.event.SvgAttributeEvent;
+import jetbrains.jetpad.event.Event;
 
-public interface SvgContainerListener {
-  void onPropertySet(SvgElement element, SvgPropertySpec<?> spec, PropertyChangeEvent<?> event);
-  void onAttrSet(SvgElement element, SvgAttributeEvent event);
-  void onElementAttached(SvgElement element);
-  void onElementDetached(SvgElement element);
+public class SvgAttributeEvent extends Event {
+  private String myAttrName;
+  private String myOldValue;
+  private String myNewValue;
+
+  public SvgAttributeEvent(String attrName, String oldValue, String newValue) {
+    myAttrName = attrName;
+    myOldValue = oldValue;
+    myNewValue = newValue;
+  }
+
+  public String getAttrName() {
+    return myAttrName;
+  }
+
+  public String getOldValue() {
+    return myOldValue;
+  }
+
+  public String getNewValue() {
+    return myNewValue;
+  }
 }

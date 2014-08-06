@@ -7,6 +7,7 @@ import jetbrains.jetpad.model.event.EventHandler;
 import jetbrains.jetpad.model.property.Property;
 import jetbrains.jetpad.model.property.PropertyChangeEvent;
 import jetbrains.jetpad.projectional.svg.*;
+import jetbrains.jetpad.projectional.svg.event.SvgAttributeEvent;
 
 public class SvgView extends View {
   public static final ViewPropertySpec<SvgRoot> SVG_ROOT = new ViewPropertySpec<>("svgRoot", ViewPropertyKind.RELAYOUT);
@@ -27,6 +28,14 @@ public class SvgView extends View {
       @Override
       public void onPropertySet(SvgElement element, SvgPropertySpec<?> spec, PropertyChangeEvent<?> event) {
         if (element == root().get() && (spec == SvgRoot.HEIGHT || spec == SvgRoot.WIDTH)) {
+          invalidate();
+        }
+        repaint();
+      }
+
+      @Override
+      public void onAttrSet(SvgElement element, SvgAttributeEvent event) {
+        if (element == root().get() && (event.getAttrName().equalsIgnoreCase("height") || (event.getAttrName().equalsIgnoreCase("width")))){
           invalidate();
         }
         repaint();

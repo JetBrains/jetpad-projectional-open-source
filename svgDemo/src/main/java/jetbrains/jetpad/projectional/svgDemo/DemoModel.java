@@ -16,6 +16,7 @@
 package jetbrains.jetpad.projectional.svgDemo;
 
 import jetbrains.jetpad.base.Value;
+import jetbrains.jetpad.event.Key;
 import jetbrains.jetpad.event.KeyEvent;
 import jetbrains.jetpad.event.MouseEvent;
 import jetbrains.jetpad.projectional.svg.*;
@@ -34,6 +35,7 @@ public class DemoModel {
     ellipse.getProp(SvgEllipse.RX).set(170.0);
     ellipse.getProp(SvgEllipse.RY).set(50.0);
     ellipse.getProp(SvgEllipse.FILL).set(Color.YELLOW);
+    ellipse.setAttr("style", "stroke:#006600;");
 
     SvgEllipse ellipse2 = new SvgEllipse();
     ellipse2.getProp(SvgEllipse.CX).set(250.0);
@@ -130,6 +132,10 @@ public class DemoModel {
     .on(ViewEvents.KEY_PRESSED, new ViewEventHandler<KeyEvent>() {
       @Override
       public void handle(View view, KeyEvent e) {
+        if (e.key() == Key.SPACE) {
+          model.children().get(0).setAttr("fill", "black");
+          return;
+        }
         if (state.get()) {
           svgView.root().set(altModel);
         } else {
