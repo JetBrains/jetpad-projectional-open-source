@@ -1,5 +1,6 @@
 package jetbrains.jetpad.projectional.view;
 
+import jetbrains.jetpad.event.KeyEvent;
 import jetbrains.jetpad.event.MouseEvent;
 import jetbrains.jetpad.geometry.Vector;
 import jetbrains.jetpad.model.event.EventHandler;
@@ -57,6 +58,24 @@ public class SvgView extends View {
         if (translatedEvent.isConsumed()) {
           e.consume();
         }
+      }
+    })
+    .on(ViewEvents.KEY_PRESSED, new ViewEventHandler<KeyEvent>() {
+      @Override
+      public void handle(View view, KeyEvent e) {
+        svgContainer.keyPressed(e);
+      }
+    })
+    .on(ViewEvents.KEY_RELEASED, new ViewEventHandler<KeyEvent>() {
+      @Override
+      public void handle(View view, KeyEvent e) {
+        svgContainer.keyReleased(e);
+      }
+    })
+    .on(ViewEvents.KEY_TYPED, new ViewEventHandler<KeyEvent>() {
+      @Override
+      public void handle(View view, KeyEvent e) {
+        svgContainer.keyTyped(e);
       }
     })
     .build());

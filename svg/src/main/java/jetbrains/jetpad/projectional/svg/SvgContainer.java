@@ -16,6 +16,7 @@
 package jetbrains.jetpad.projectional.svg;
 
 import jetbrains.jetpad.base.Registration;
+import jetbrains.jetpad.event.KeyEvent;
 import jetbrains.jetpad.event.MouseEvent;
 import jetbrains.jetpad.model.event.ListenerCaller;
 import jetbrains.jetpad.model.event.Listeners;
@@ -83,7 +84,23 @@ public class SvgContainer {
     dispatchMouseEvent(SvgEvents.MOUSE_RELEASED, e);
   }
 
+  public void keyPressed(KeyEvent e) {
+    dispatchKeyboardEvent(SvgEvents.KEY_PRESSED, e);
+  }
+
+  public void keyReleased(KeyEvent e) {
+    dispatchKeyboardEvent(SvgEvents.KEY_RELEASED, e);
+  }
+
+  public void keyTyped(KeyEvent e) {
+    dispatchKeyboardEvent(SvgEvents.KEY_TYPED, e);
+  }
+
   private void dispatchMouseEvent(SvgEventSpec<MouseEvent> spec, MouseEvent e) {
+    mySvgRoot.get().dispatch(spec, e);
+  }
+
+  private void dispatchKeyboardEvent(SvgEventSpec<KeyEvent> spec, KeyEvent e) {
     mySvgRoot.get().dispatch(spec, e);
   }
 }
