@@ -27,6 +27,7 @@ import jetbrains.jetpad.model.event.ListenerCaller;
 import jetbrains.jetpad.model.event.Listeners;
 import jetbrains.jetpad.model.property.Property;
 import jetbrains.jetpad.model.property.PropertyChangeEvent;
+import jetbrains.jetpad.model.property.ReadableProperty;
 import jetbrains.jetpad.model.util.ListMap;
 
 import java.util.ArrayList;
@@ -62,12 +63,8 @@ public class SvgElement extends HasParent<SvgElement, SvgElement> {
 
     if (myTraits != null) {
       for (SvgTrait t : myTraits) {
-        SvgTrait cur = t;
-        while (cur != null) {
-          if (cur.hasValue(spec)) {
-            return cur.get(spec);
-          }
-          cur = cur.parent();
+        if (t.hasValue(spec)) {
+          return t.get(spec);
         }
       }
     }
@@ -258,14 +255,10 @@ public class SvgElement extends HasParent<SvgElement, SvgElement> {
     Set<SvgPropertySpec<?>> props = new HashSet<>();
     final List<Runnable> toRun = new ArrayList<>();
 
-    SvgTrait cur = t;
-    while (cur != null) {
-      for (final SvgPropertySpec<?> p : cur.properties()) {
-        if (props.contains(p)) continue;
-        toRun.add(createPropChangedRunnable(p));
-        props.add(p);
-      }
-      cur = cur.parent();
+    for (final SvgPropertySpec<?> p : t.properties()) {
+      if (props.contains(p)) continue;
+      toRun.add(createPropChangedRunnable(p));
+      props.add(p);
     }
 
     return new Runnable() {
@@ -281,12 +274,8 @@ public class SvgElement extends HasParent<SvgElement, SvgElement> {
   public <EventT extends Event> void dispatch(SvgEventSpec<EventT> spec, EventT event) {
     if (myTraits != null) {
       for (SvgTrait t : myTraits) {
-        SvgTrait current = t;
-        while (current != null) {
-          current.dispatch(this, spec, event);
-          if (event.isConsumed()) return;
-          current = current.parent();
-        }
+        t.dispatch(this, spec, event);
+        if (event.isConsumed()) return;
       }
     }
 

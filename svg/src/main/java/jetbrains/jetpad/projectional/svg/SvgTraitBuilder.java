@@ -23,16 +23,10 @@ import java.util.List;
 import java.util.Map;
 
 public class SvgTraitBuilder {
-  private SvgTrait myParent;
   private Map<SvgPropertySpec<?>, Object> myProperties = new HashMap<>();
   private Map<SvgEventSpec<? extends Event>, List<SvgEventHandler<? extends Event>>> myHandlers = new HashMap<>();
 
   public SvgTraitBuilder() {
-    this(null);
-  }
-
-  public SvgTraitBuilder(SvgTrait parent) {
-    myParent = parent;
   }
 
   public <ValueT> SvgTraitBuilder set(SvgPropertySpec<ValueT> spec, ValueT value) {
@@ -49,6 +43,6 @@ public class SvgTraitBuilder {
   }
 
   public SvgTrait build() {
-    return new SvgTrait(myParent, myProperties, myHandlers);
+    return new SvgTrait(myProperties, myHandlers);
   }
 }

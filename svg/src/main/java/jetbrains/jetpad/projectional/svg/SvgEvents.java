@@ -25,5 +25,4 @@ public class SvgEvents {
   public final static SvgEventSpec<KeyEvent> KEY_PRESSED = new SvgEventSpec<>("keyPressed");
   public final static SvgEventSpec<KeyEvent> KEY_RELEASED = new SvgEventSpec<>("keyReleased");
   public final static SvgEventSpec<KeyEvent> KEY_TYPED = new SvgEventSpec<>("keyTyped");
-
 }

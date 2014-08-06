@@ -24,13 +24,11 @@ import java.util.Map;
 import java.util.Set;
 
 public class SvgTrait {
-  private SvgTrait myParent;
   private ListMap<SvgPropertySpec<?>, Object> myProperties;
   private ListMap<SvgEventSpec<? extends Event>, List<SvgEventHandler<? extends Event>>> myHandlers;
 
 
-  SvgTrait(SvgTrait parent, Map<SvgPropertySpec<?>, Object> props, Map<SvgEventSpec<? extends Event>, List<SvgEventHandler<? extends Event>>> handlers) {
-    myParent = parent;
+  SvgTrait(Map<SvgPropertySpec<?>, Object> props, Map<SvgEventSpec<? extends Event>, List<SvgEventHandler<? extends Event>>> handlers) {
     for (Map.Entry<SvgPropertySpec<?>, Object> entry : props.entrySet()) {
       if (myProperties == null) {
         myProperties = new ListMap<>();
@@ -44,10 +42,6 @@ public class SvgTrait {
       }
       myHandlers.put(entry.getKey(), entry.getValue());
     }
-  }
-
-  SvgTrait parent() {
-    return myParent;
   }
 
   Set<SvgPropertySpec<?>> properties() {
@@ -68,7 +62,9 @@ public class SvgTrait {
   <EventT extends Event> void dispatch(SvgElement element, SvgEventSpec<EventT> spec, EventT event) {
     if (myHandlers != null && myHandlers.containsKey(spec)) {
       for (SvgEventHandler<? extends Event> handler : myHandlers.get(spec)) {
-        ((SvgEventHandler<EventT>) handler).handle(element, event);
+        @SuppressWarnings("unchecked")
+        SvgEventHandler<EventT> castHandler = (SvgEventHandler<EventT>) handler;
+        castHandler.handle(element, event);
         if (event.isConsumed()) return;
       }
     }
