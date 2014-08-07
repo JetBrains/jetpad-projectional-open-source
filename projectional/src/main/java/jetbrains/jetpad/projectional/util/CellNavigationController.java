@@ -261,8 +261,8 @@ public class CellNavigationController {
 
   protected void handleMousePress(MouseEvent event) {
     Cell closest = myContainer.findCell(root(), event.location());
-    if (closest == root() || closest == null) {
-      closest = Composites.findClosest(root(), event.location());
+    if (closest == root() || closest == null || !closest.focusable().get()) {
+      closest = Composites.findClosestFocusable(root(), event.location());
     }
     if (closest != null) {
       focusedCell().set(closest);

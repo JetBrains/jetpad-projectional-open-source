@@ -22,7 +22,6 @@ import jetbrains.jetpad.base.animation.Animation;
 import jetbrains.jetpad.base.animation.Animations;
 import jetbrains.jetpad.base.edt.EventDispatchThread;
 import jetbrains.jetpad.cell.*;
-import jetbrains.jetpad.cell.util.Cells;
 import jetbrains.jetpad.event.*;
 import jetbrains.jetpad.geometry.Rectangle;
 import jetbrains.jetpad.geometry.Vector;
@@ -188,8 +187,19 @@ public class CellContainerToViewMapper extends Mapper<CellContainer, View> {
 
       @Override
       public Cell findCell(Cell root, Vector loc) {
-        return Cells.findCell(root, loc);
+        View view = myTargetView.viewAt(loc);
+        if (view == null) return null;
+        return findCellFor(view);
       }
+
+      private Cell findCellFor(View v) {
+        BaseCellMapper<?, ?> result = myContext.getMapper(v);
+        if (result != null) return result.getSource();
+        View parent = v.getParent();
+        if (parent == null) return null;
+        return findCellFor(parent);
+      }
+
 
       @Override
       public Rectangle visibleRect() {

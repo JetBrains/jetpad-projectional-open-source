@@ -54,7 +54,10 @@ class BaseCellMapper<SourceT extends Cell, TargetT extends View> extends Mapper<
   protected void onAttach(MappingContext ctx) {
     super.onAttach(ctx);
 
+    myContext.register(this);
+
     refreshProperties();
+
 
     ObservableList<Cell> children = getSource().children();
     for (int i = 0; i < children.size(); i++) {
@@ -78,6 +81,8 @@ class BaseCellMapper<SourceT extends Cell, TargetT extends View> extends Mapper<
       myPopupUpdateReg.remove();
       myPopupUpdateReg = null;
     }
+
+    myContext.unregister(this);
 
     super.onDetach();
   }
