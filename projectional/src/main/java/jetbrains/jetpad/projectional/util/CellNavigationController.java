@@ -261,7 +261,7 @@ public class CellNavigationController {
 
   protected void handleMousePress(MouseEvent event) {
     Cell closest = myContainer.findCell(root(), event.location());
-    if (closest == root() || closest == null || !closest.focusable().get()) {
+    if (isTrivial(closest)|| !closest.focusable().get()) {
       closest = Composites.findClosestFocusable(root(), event.location());
     }
     if (closest != null) {
@@ -273,6 +273,10 @@ public class CellNavigationController {
       }
       event.consume();
     }
+  }
+
+  private boolean isTrivial(Cell cell) {
+    return cell == null || cell == root();
   }
 
   private abstract class PageUpDown {
