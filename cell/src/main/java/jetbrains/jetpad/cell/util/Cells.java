@@ -80,7 +80,7 @@ public class Cells {
     }
   }
 
-  public static Cell findClosestFocusableToLeft(Cell current, Vector loc) {
+  public static Cell findClosestFocusableToSide(Cell current, Vector loc) {
     if (!current.visible().get()) return null;
 
     Rectangle bounds = current.getBounds();
@@ -93,7 +93,7 @@ public class Cells {
     for (Cell child : current.children()) {
       if (!child.visible().get()) continue;
 
-      Cell closest = findClosestFocusableToLeft(child, loc);
+      Cell closest = findClosestFocusableToSide(child, loc);
       if (closest == null) continue;
       int newDistance = (int) closest.getBounds().distance(loc);
 

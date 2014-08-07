@@ -263,7 +263,7 @@ public class CellNavigationController {
   protected void handleMousePress(MouseEvent event) {
     Cell closest = findFocusabelAt(event.location());
     if (closest == null) {
-      closest = Cells.findClosestFocusableToLeft(root(), event.location());
+      closest = Cells.findClosestFocusableToSide(root(), event.location());
     }
     if (closest != null) {
       focusedCell().set(closest);
