@@ -15,6 +15,7 @@
  */
 package jetbrains.jetpad.cell.util;
 
+import com.google.common.collect.Range;
 import jetbrains.jetpad.cell.Cell;
 import jetbrains.jetpad.cell.TextCell;
 import jetbrains.jetpad.cell.indent.IndentCell;
@@ -22,6 +23,7 @@ import jetbrains.jetpad.cell.indent.NewLineCell;
 import jetbrains.jetpad.cell.position.PositionHandler;
 import jetbrains.jetpad.cell.trait.CellTraitEventSpec;
 import jetbrains.jetpad.event.Event;
+import jetbrains.jetpad.geometry.Rectangle;
 import jetbrains.jetpad.geometry.Vector;
 
 import java.util.List;
@@ -76,5 +78,35 @@ public class Cells {
     } else {
       return null;
     }
+  }
+
+  public static Cell findClosestFocusableToLeft(Cell current, Vector loc) {
+    if (!current.visible().get()) return null;
+
+    Rectangle bounds = current.getBounds();
+    Range<Integer> range = Range.closed(bounds.origin.y, bounds.origin.y + bounds.dimension.y);
+    if (!range.contains(loc.y)) {
+      return null;
+    }
+    Cell result = null;
+    int distance = Integer.MAX_VALUE;
+    for (Cell child : current.children()) {
+      if (!child.visible().get()) continue;
+
+      Cell closest = findClosestFocusableToLeft(child, loc);
+      if (closest == null) continue;
+      int newDistance = (int) closest.getBounds().distance(loc);
+
+      if (newDistance < distance) {
+        result = closest;
+        distance = newDistance;
+      }
+    }
+
+    if (result == null && current.focusable().get()) {
+      return current;
+    }
+
+    return result;
   }
 }

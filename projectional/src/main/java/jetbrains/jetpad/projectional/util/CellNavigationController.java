@@ -21,6 +21,7 @@ import jetbrains.jetpad.cell.Cell;
 import jetbrains.jetpad.cell.CellContainer;
 import jetbrains.jetpad.cell.position.PositionHandler;
 import jetbrains.jetpad.cell.trait.CellTrait;
+import jetbrains.jetpad.cell.util.Cells;
 import jetbrains.jetpad.event.*;
 import jetbrains.jetpad.geometry.Rectangle;
 import jetbrains.jetpad.geometry.Vector;
@@ -262,7 +263,7 @@ public class CellNavigationController {
   protected void handleMousePress(MouseEvent event) {
     Cell closest = findFocusabelAt(event.location());
     if (closest == null) {
-      closest = Composites.findClosestFocusable(root(), event.location());
+      closest = Cells.findClosestFocusableToLeft(root(), event.location());
     }
     if (closest != null) {
       focusedCell().set(closest);
