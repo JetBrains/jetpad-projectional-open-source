@@ -109,4 +109,42 @@ public class Cells {
 
     return result;
   }
+
+  public static Cell firstVisibleLeaf(Cell cell) {
+    if (!cell.visible().get()) return null;
+
+    for (Cell c : cell.children()) {
+      Cell firstVis = firstVisibleLeaf(c);
+      if (firstVis != null) return firstVis;
+    }
+
+    return cell;
+  }
+
+  public static Cell lastVisibleLeaf(Cell cell) {
+    if (!cell.visible().get()) return null;
+
+    List<Cell> children = cell.children();
+    for (int i = children.size() - 1; i >= 0; i--) {
+      Cell firstVis = lastVisibleLeaf(children.get(i));
+      if (firstVis != null) return firstVis;
+    }
+
+    return cell;
+  }
+
+  public static Rectangle indentBounds(IndentCell cell) {
+    IndentCell container = cell.indentContainer();
+    Rectangle bounds = container.getBounds();
+
+    Cell firstLeaf = firstVisibleLeaf(cell);
+    if (firstLeaf == null) return null;
+
+    Cell lastLeaf = lastVisibleLeaf(cell);
+
+    Rectangle firstBounds = firstLeaf.getBounds();
+    Rectangle lastBounds = lastLeaf.getBounds();
+
+    return new Rectangle(new Vector(bounds.origin.x, firstLeaf.getBounds().origin.y), new Vector(bounds.dimension.x, lastBounds.origin.y + lastBounds.dimension.y - firstBounds.origin.y));
+  }
 }

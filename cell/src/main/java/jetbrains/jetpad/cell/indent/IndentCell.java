@@ -56,7 +56,7 @@ public class IndentCell extends Cell {
     current.scrollTo(new Rectangle(rect.origin.add(getBounds().origin.sub(current.getBounds().origin)), rect.dimension));
   }
 
-  private IndentCell indentContainer() {
+  public IndentCell indentContainer() {
     if (isRootIndent()) {
       return this;
     }

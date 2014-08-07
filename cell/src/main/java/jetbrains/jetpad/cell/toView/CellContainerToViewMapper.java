@@ -22,6 +22,9 @@ import jetbrains.jetpad.base.animation.Animation;
 import jetbrains.jetpad.base.animation.Animations;
 import jetbrains.jetpad.base.edt.EventDispatchThread;
 import jetbrains.jetpad.cell.*;
+import jetbrains.jetpad.cell.indent.IndentCell;
+import jetbrains.jetpad.cell.indent.NewLineCell;
+import jetbrains.jetpad.cell.util.Cells;
 import jetbrains.jetpad.event.*;
 import jetbrains.jetpad.geometry.Rectangle;
 import jetbrains.jetpad.geometry.Vector;
@@ -42,6 +45,9 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class CellContainerToViewMapper extends Mapper<CellContainer, View> {
+  public static int count = 0;
+
+
   private View myTargetView;
   private View myPopupView;
   private CellToViewContext myContext;
@@ -158,23 +164,19 @@ public class CellContainerToViewMapper extends Mapper<CellContainer, View> {
       private Rectangle calculateBounds(Cell cell) {
         getTarget().container().root().validate();
         BaseCellMapper<?, ?> descendantMapper = (BaseCellMapper<?, ?>) rootMapper.getDescendantMapper(cell);
+
         if (descendantMapper == null) {
-          Rectangle result = null;
-          for (Cell child : cell.children()) {
-            Rectangle childBounds = calculateBounds(child);
-            if (childBounds == null) continue;
-            if (result == null) {
-              result = childBounds;
-            } else {
-              result = result.union(childBounds);
-            }
-          }
-          if (result != null) {
-            return result;
-          } else {
+          if (cell instanceof NewLineCell) {
             return null;
+          } else if (cell instanceof IndentCell) {
+            IndentCell indentCell = (IndentCell) cell;
+            return Cells.indentBounds(indentCell);
+          } else {
+            throw new IllegalStateException();
           }
         }
+
+        count++;
         return descendantMapper.getTarget().bounds().get();
       }
 

@@ -34,6 +34,9 @@ import jetbrains.jetpad.base.edt.JsEventDispatchThread;
 import jetbrains.jetpad.cell.*;
 import jetbrains.jetpad.cell.dom.DomCell;
 import jetbrains.jetpad.cell.event.CompletionEvent;
+import jetbrains.jetpad.cell.indent.IndentCell;
+import jetbrains.jetpad.cell.indent.NewLineCell;
+import jetbrains.jetpad.cell.util.Cells;
 import jetbrains.jetpad.event.*;
 import jetbrains.jetpad.event.dom.ClipboardSupport;
 import jetbrains.jetpad.event.dom.EventTranslator;
@@ -315,19 +318,12 @@ public class CellContainerToDomMapper extends Mapper<CellContainer, Element> {
       private Rectangle getBaseBounds(Cell cell) {
         Mapper<? extends Cell, ? extends Element> mapper = getMapper(cell);
         if (mapper == null) {
-          Rectangle result = null;
-          for (Cell child : cell.children()) {
-            Rectangle childBounds = getBaseBounds(child);
-            if (result == null) {
-              result = childBounds;
-            } else if (childBounds != null) {
-              result = result.union(childBounds);
-            }
-          }
-          if (result != null) {
-            return result;
-          } else {
+          if (cell instanceof NewLineCell) {
             return null;
+          }  else if (cell instanceof IndentCell) {
+            return Cells.indentBounds((IndentCell) cell);
+          } else {
+            throw new IllegalStateException();
           }
         } else {
           Element target = getElement(cell);
