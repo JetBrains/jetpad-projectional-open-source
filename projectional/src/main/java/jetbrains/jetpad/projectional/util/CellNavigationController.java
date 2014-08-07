@@ -260,8 +260,8 @@ public class CellNavigationController {
   }
 
   protected void handleMousePress(MouseEvent event) {
-    Cell closest = myContainer.findCell(root(), event.location());
-    if (isTrivial(closest)|| !closest.focusable().get()) {
+    Cell closest = findFocusabelAt(event.location());
+    if (closest == null) {
       closest = Composites.findClosestFocusable(root(), event.location());
     }
     if (closest != null) {
@@ -273,6 +273,14 @@ public class CellNavigationController {
       }
       event.consume();
     }
+  }
+
+  private Cell findFocusabelAt(Vector loc) {
+    Cell cell = myContainer.findCell(root(), loc);
+    if (isTrivial(cell) || !cell.focusable().get()) {
+      return null;
+    }
+    return cell;
   }
 
   private boolean isTrivial(Cell cell) {
