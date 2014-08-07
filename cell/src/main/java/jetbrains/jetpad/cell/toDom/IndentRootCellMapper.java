@@ -22,9 +22,9 @@ import com.google.gwt.dom.client.Style;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Timer;
 import jetbrains.jetpad.base.Handler;
+import jetbrains.jetpad.base.Registration;
 import jetbrains.jetpad.cell.Cell;
 import jetbrains.jetpad.cell.CellPropertySpec;
-import jetbrains.jetpad.cell.indent.CellIndentUpdaterSource;
 import jetbrains.jetpad.cell.indent.IndentCell;
 import jetbrains.jetpad.cell.indent.IndentContainerCellListener;
 import jetbrains.jetpad.cell.indent.updater.CellWrapper;
@@ -36,7 +36,6 @@ import jetbrains.jetpad.mapper.MappingContext;
 import jetbrains.jetpad.model.collections.CollectionItemEvent;
 import jetbrains.jetpad.model.composite.Composites;
 import jetbrains.jetpad.model.event.EventHandler;
-import jetbrains.jetpad.base.Registration;
 import jetbrains.jetpad.model.property.PropertyChangeEvent;
 import jetbrains.jetpad.projectional.domUtil.DomTextEditor;
 
@@ -47,7 +46,7 @@ import java.util.Set;
 
 class IndentRootCellMapper extends BaseCellMapper<IndentCell> {
   private Set<BaseCellMapper<?>> myCellMappers;
-  private IndentUpdater<Cell, Node> myIndentUpdater;
+  private IndentUpdater<Node> myIndentUpdater;
   private Registration myRegistration;
   private Timer myPositionUpdater;
   private Map<Mapper<?, ?>, Runnable> myPositionUpdaters = new HashMap<>();
@@ -56,15 +55,9 @@ class IndentRootCellMapper extends BaseCellMapper<IndentCell> {
     super(source, ctx, DOM.createDiv());
     myCellMappers = createChildSet();
 
-    myIndentUpdater = new IndentUpdater<>(
+    myIndentUpdater = new IndentUpdater<Node>(
       getSource(),
       getTarget(),
-      new CellIndentUpdaterSource() {
-        @Override
-        protected void visibilityChanged(Cell cell, PropertyChangeEvent<Boolean> event) {
-          myIndentUpdater.visibilityChanged(cell, event);
-        }
-      },
       new IndentUpdaterTarget<Node>() {
         @Override
         public Element newLine() {
@@ -125,7 +118,12 @@ class IndentRootCellMapper extends BaseCellMapper<IndentCell> {
           }
         }
       }
-    );
+    ) {
+      @Override
+      protected void onVisibilityChanged(Cell cell, PropertyChangeEvent<Boolean> event) {
+        myIndentUpdater.visibilityChanged(cell, event);
+      }
+    };
   }
 
   @Override

@@ -15,43 +15,43 @@
  */
 package jetbrains.jetpad.cell.indent.updater;
 
+import jetbrains.jetpad.cell.Cell;
 import jetbrains.jetpad.model.composite.Composites;
-import jetbrains.jetpad.model.composite.NavComposite;
 
 import java.util.Iterator;
 
-class Position<SourceCT extends NavComposite<SourceCT>> {
-  private IndentUpdater<SourceCT, ?> myUpdater;
-  private SourceCT myPart;
+class Position {
+  private IndentUpdater<?> myUpdater;
+  private Cell myCell;
 
-  Position(IndentUpdater<SourceCT, ?> updater, SourceCT part) {
+  Position(IndentUpdater<?> updater, Cell cell) {
     myUpdater = updater;
-    myPart = part;
+    myCell = cell;
   }
 
-  Position<SourceCT> next() {
-    SourceCT current = next(myPart);
+  Position next() {
+    Cell current = next(myCell);
     if (current == null) return null;
-    return new Position<>(myUpdater, current);
+    return new Position(myUpdater, current);
   }
 
-  Position<SourceCT> prev() {
-    SourceCT current = prev(myPart);
+  Position prev() {
+    Cell current = prev(myCell);
     if (current == null) return null;
-    return new Position<>(myUpdater, current);
+    return new Position(myUpdater, current);
   }
 
-  SourceCT get() {
-    return myPart;
+  Cell get() {
+    return myCell;
   }
 
-  int deltaTo(Position<SourceCT> to) {
-    if (to.myPart == myPart) return 0;
-    if (Composites.isBefore(myPart, to.myPart)) {
+  int deltaTo(Position to) {
+    if (to.myCell == myCell) return 0;
+    if (Composites.isBefore(myCell, to.myCell)) {
       int count = 0;
-      for (SourceCT p : nextLeaves(myPart)) {
+      for (Cell p : nextLeaves(myCell)) {
         count++;
-        if (p == to.myPart) break;
+        if (p == to.myCell) break;
       }
       return count;
     } else {
@@ -59,26 +59,26 @@ class Position<SourceCT extends NavComposite<SourceCT>> {
     }
   }
 
-  private SourceCT next(SourceCT item) {
-    SourceCT next = nextVisibleLeaf(item);
+  private Cell next(Cell item) {
+    Cell next = nextVisibleLeaf(item);
     if (next == null) return null;
-    SourceCT parentCell = upperMostCell(next);
+    Cell parentCell = upperMostCell(next);
     if (parentCell != null) return parentCell;
     return next;
   }
 
-  private SourceCT prev(SourceCT item) {
-    SourceCT prev = prevVisibleLeaf(item);
+  private Cell prev(Cell item) {
+    Cell prev = prevVisibleLeaf(item);
     if (prev == null) return null;
-    SourceCT parentCell = upperMostCell(prev);
+    Cell parentCell = upperMostCell(prev);
     if (parentCell != null) return parentCell;
     return prev;
   }
 
-  private SourceCT upperMostCell(SourceCT item) {
-    SourceCT current = item.getParent();
-    SourceCT upperMostCell = item;
-    SourceCT root = myUpdater.root();
+  private Cell upperMostCell(Cell item) {
+    Cell current = item.getParent();
+    Cell upperMostCell = item;
+    Cell root = myUpdater.root();
     while (current != root) {
       if (current == null) {
         throw new IllegalStateException();
@@ -91,13 +91,13 @@ class Position<SourceCT extends NavComposite<SourceCT>> {
     return upperMostCell;
   }
 
-  private Iterable<SourceCT> nextLeaves(final SourceCT item) {
-    return new Iterable<SourceCT>() {
+  private Iterable<Cell> nextLeaves(final Cell item) {
+    return new Iterable<Cell>() {
       @Override
-      public Iterator<SourceCT> iterator() {
-        return new Iterator<SourceCT>() {
-          private SourceCT myCurrentLeaf = item;
-          private SourceCT myNextLeaf = Position.this.next(item);
+      public Iterator<Cell> iterator() {
+        return new Iterator<Cell>() {
+          private Cell myCurrentLeaf = item;
+          private Cell myNextLeaf = Position.this.next(item);
 
           @Override
           public boolean hasNext() {
@@ -105,7 +105,7 @@ class Position<SourceCT extends NavComposite<SourceCT>> {
           }
 
           @Override
-          public SourceCT next() {
+          public Cell next() {
             myCurrentLeaf = myNextLeaf;
             myNextLeaf = Position.this.next(myCurrentLeaf);
             return myCurrentLeaf;
@@ -120,9 +120,9 @@ class Position<SourceCT extends NavComposite<SourceCT>> {
     };
   }
 
-  private SourceCT nextVisibleLeaf(SourceCT item) {
-    SourceCT root = myUpdater.root();
-    SourceCT current = nextLeaf(item, root);
+  private Cell nextVisibleLeaf(Cell item) {
+    Cell root = myUpdater.root();
+    Cell current = nextLeaf(item, root);
     while (current != null) {
       if (myUpdater.isVisible(current)) return current;
       current = nextLeaf(current, root);
@@ -130,9 +130,9 @@ class Position<SourceCT extends NavComposite<SourceCT>> {
     return null;
   }
 
-  private SourceCT prevVisibleLeaf(SourceCT item) {
-    SourceCT root = myUpdater.root();
-    SourceCT current = prevLeaf(item, root);
+  private Cell prevVisibleLeaf(Cell item) {
+    Cell root = myUpdater.root();
+    Cell current = prevLeaf(item, root);
     while (current != null) {
       if (myUpdater.isVisible(current)) return current;
       current = prevLeaf(current, root);
@@ -140,8 +140,8 @@ class Position<SourceCT extends NavComposite<SourceCT>> {
     return null;
   }
 
-  private SourceCT firstChild(SourceCT p) {
-    SourceCT current = p.firstChild();
+  private Cell firstChild(Cell p) {
+    Cell current = p.firstChild();
     while (current != null) {
       if (myUpdater.isAttached(current)) return current;
       current = current.nextSibling();
@@ -149,8 +149,8 @@ class Position<SourceCT extends NavComposite<SourceCT>> {
     return null;
   }
 
-  private SourceCT lastChild(SourceCT p) {
-    SourceCT current = p.lastChild();
+  private Cell lastChild(Cell p) {
+    Cell current = p.lastChild();
     while (current != null) {
       if (myUpdater.isAttached(current)) return current;
       current = current.prevSibling();
@@ -158,8 +158,8 @@ class Position<SourceCT extends NavComposite<SourceCT>> {
     return null;
   }
 
-  private SourceCT prevSibling(SourceCT c) {
-    SourceCT current = c.prevSibling();
+  private Cell prevSibling(Cell c) {
+    Cell current = c.prevSibling();
     while (current != null) {
       if (myUpdater.isAttached(current)) return current;
       current = current.prevSibling();
@@ -167,8 +167,8 @@ class Position<SourceCT extends NavComposite<SourceCT>> {
     return null;
   }
 
-  private SourceCT nextSibling(SourceCT c) {
-    SourceCT current = c.nextSibling();
+  private Cell nextSibling(Cell c) {
+    Cell current = c.nextSibling();
     while (current != null) {
       if (myUpdater.isAttached(current)) return current;
       if (!myUpdater.isInitialized() && myUpdater.isVisible(current)) return null;
@@ -177,40 +177,40 @@ class Position<SourceCT extends NavComposite<SourceCT>> {
     return null;
   }
 
-  private SourceCT firstLeaf(SourceCT p) {
-    SourceCT first = firstChild(p);
+  private Cell firstLeaf(Cell p) {
+    Cell first = firstChild(p);
     if (first == null) return p;
     return firstLeaf(first);
   }
 
-  private SourceCT lastLeaf(SourceCT p) {
-    SourceCT last = lastChild(p);
+  private Cell lastLeaf(Cell p) {
+    Cell last = lastChild(p);
     if (last == null) return p;
     return lastLeaf(last);
   }
 
-  private SourceCT nextLeaf(SourceCT c, SourceCT within) {
-    SourceCT current = c;
+  private Cell nextLeaf(Cell c, Cell within) {
+    Cell current = c;
     while (true) {
-      SourceCT nextSibling = nextSibling(current);
+      Cell nextSibling = nextSibling(current);
       if (nextSibling != null) {
         return firstLeaf(nextSibling);
       }
-      SourceCT parent = current.getParent();
+      Cell parent = current.getParent();
       if (parent == within) return null;
       current = parent;
     }
   }
 
-  private SourceCT prevLeaf(SourceCT c, SourceCT within) {
-    SourceCT current = c;
+  private Cell prevLeaf(Cell c, Cell within) {
+    Cell current = c;
     while (true) {
-      SourceCT prevSibling = prevSibling(current);
+      Cell prevSibling = prevSibling(current);
       if (prevSibling != null) {
         return lastLeaf(prevSibling);
       }
 
-      SourceCT parent = current.getParent();
+      Cell parent = current.getParent();
       if (parent == within) return null;
       current = parent;
     }
@@ -219,11 +219,11 @@ class Position<SourceCT extends NavComposite<SourceCT>> {
   @Override
   public boolean equals(Object obj) {
     if (!(obj instanceof Position)) return false;
-    return myPart == ((Position<SourceCT>) obj).myPart;
+    return myCell == ((Position) obj).myCell;
   }
 
   @Override
   public int hashCode() {
-    return myPart.hashCode();
+    return myCell.hashCode();
   }
 }

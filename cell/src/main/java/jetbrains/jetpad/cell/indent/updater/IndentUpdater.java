@@ -17,28 +17,29 @@ package jetbrains.jetpad.cell.indent.updater;
 
 import jetbrains.jetpad.base.Registration;
 import jetbrains.jetpad.cell.Cell;
-import jetbrains.jetpad.model.composite.NavComposite;
+import jetbrains.jetpad.cell.indent.IndentCell;
+import jetbrains.jetpad.cell.indent.NewLineCell;
+import jetbrains.jetpad.model.event.EventHandler;
 import jetbrains.jetpad.model.property.PropertyChangeEvent;
 
 import java.util.*;
 
-public class IndentUpdater<SourceCT extends NavComposite<SourceCT>, TargetT> {
-  private SourceCT myRoot;
-  private Map<SourceCT, TargetT> myNewLineToLine = new HashMap<>();
+public class IndentUpdater<TargetT> {
+  private Cell myRoot;
+  private Map<Cell, TargetT> myNewLineToLine = new HashMap<>();
   private Map<Cell, CellWrapper<TargetT>> myWrappers = new HashMap<>();
   private TargetT myTarget;
-  private IndentUpdaterSource<SourceCT> myIndentUpdaterSource;
   private IndentUpdaterTarget<TargetT> myIndentUpdaterTarget;
-  private SourceCT myJustBecameInvisible;
-  private Map<SourceCT, Registration> myChildRegistrations = new HashMap<>();
+  private Cell myJustBecameInvisible;
+  private Map<Cell, Registration> myChildRegistrations = new HashMap<>();
   private boolean myInitialized;
 
+  private Set<Cell> myAttached = new HashSet<>();
+
   public IndentUpdater(
-      SourceCT root,
+      Cell root,
       TargetT target,
-      IndentUpdaterSource<SourceCT> indentUpdaterSource,
       IndentUpdaterTarget<TargetT> indentUpdaterTarget) {
-    myIndentUpdaterSource = indentUpdaterSource;
     myIndentUpdaterTarget = indentUpdaterTarget;
     myRoot = root;
     myTarget = target;
@@ -54,49 +55,49 @@ public class IndentUpdater<SourceCT extends NavComposite<SourceCT>, TargetT> {
     myInitialized = true;
   }
 
-  public void childAdded(SourceCT child) {
+  public void childAdded(Cell child) {
     childAdded(child, true);
   }
 
-  private void childAdded(SourceCT child, boolean real) {
+  private void childAdded(Cell child, boolean real) {
     onChildAdd(child);
 
     if (real) {
       if (myChildRegistrations.containsKey(child)) {
         throw new IllegalStateException();
       }
-      myChildRegistrations.put(child, myIndentUpdaterSource.watch(child));
+      myChildRegistrations.put(child, watch(child));
     }
 
-    if (!myIndentUpdaterSource.isCell(child)) {
-      List<SourceCT> children = child.children();
-      for (SourceCT c : children) {
+    if (!isCell(child)) {
+      List<Cell> children = child.children();
+      for (Cell c : children) {
         childAdded(c, real);
       }
     }
   }
 
-  public void childRemoved(SourceCT child) {
+  public void childRemoved(Cell child) {
     childRemoved(child, true);
   }
 
-  private void childRemoved(SourceCT child, boolean real) {
-    List<SourceCT> children = child.children();
+  private void childRemoved(Cell child, boolean real) {
+    List<Cell> children = child.children();
 
     if (real) {
       myChildRegistrations.remove(child).remove();
     }
 
-    if (!myIndentUpdaterSource.isCell(child)) {
+    if (!isCell(child)) {
       for (int i = children.size() - 1; i >= 0; i--) {
-        SourceCT c = children.get(i);
+        Cell c = children.get(i);
         childRemoved(c, real);
       }
     }
     onChildRemove(child);
   }
 
-  public void visibilityChanged(SourceCT item, PropertyChangeEvent<Boolean> change) {
+  public void visibilityChanged(Cell item, PropertyChangeEvent<Boolean> change) {
     if (item == root()) return;
 
     if (change.getNewValue()) {
@@ -111,33 +112,32 @@ public class IndentUpdater<SourceCT extends NavComposite<SourceCT>, TargetT> {
     }
   }
 
-  private void onChildAdd(SourceCT child) {
+  private void onChildAdd(Cell child) {
     if (!isVisible(child)) return;
 
-    if (myIndentUpdaterSource.isAttached(child)) {
+    if (isAttached(child)) {
       throw new IllegalStateException("child " + child + " is already attached");
     }
 
-    myIndentUpdaterSource.setAttached(child, true);
+    setAttached(child, true);
 
-    Position<SourceCT> insertAt = new Position<>(this, child);
-    Position<SourceCT> prevNewLinePos = prevNewLine(insertAt.prev());
+    Position insertAt = new Position(this, child);
+    Position prevNewLinePos = prevNewLine(insertAt.prev());
 
-    if (myIndentUpdaterSource.isCell(child)) {
-      Cell cell = myIndentUpdaterSource.getCell(child);
-      CellWrapper<TargetT> wrapper = myIndentUpdaterTarget.wrap(cell);
-      myWrappers.put(cell, wrapper);
+    if (isCell(child)) {
+      CellWrapper<TargetT> wrapper = myIndentUpdaterTarget.wrap(child);
+      myWrappers.put(child, wrapper);
 
       if (prevNewLinePos == null) {
-        Position<SourceCT> first = new Position<>(this, firstLeaf(myRoot));
+        Position first = new Position(this, firstLeaf(myRoot));
         children(children(myTarget).get(0)).add(first.deltaTo(insertAt), wrapper.item());
       } else {
         TargetT targetLine = myNewLineToLine.get(prevNewLinePos.get());
         int indentDelta = indent(prevNewLinePos.get()) > 0 ? 1 : 0;
         children(targetLine).add(prevNewLinePos.deltaTo(insertAt) - 1 + indentDelta, wrapper.item());
       }
-    } else if (myIndentUpdaterSource.isNewLine(child)) {
-      Position<SourceCT> nextNewLinePos = nextNewLine(insertAt.next());
+    } else if (child instanceof NewLineCell) {
+      Position nextNewLinePos = nextNewLine(insertAt.next());
 
       TargetT newLine = myIndentUpdaterTarget.newLine();
       int indent = indent(child);
@@ -159,12 +159,11 @@ public class IndentUpdater<SourceCT extends NavComposite<SourceCT>, TargetT> {
         children(myTarget).add(prevLineIndex + 1, newLine);
       }
 
-      Iterator<Position<SourceCT>> positions = nextNewLinePos == null ? toEnd(insertAt.next()) : range(insertAt.next(), nextNewLinePos);
+      Iterator<Position> positions = nextNewLinePos == null ? toEnd(insertAt.next()) : range(insertAt.next(), nextNewLinePos);
       while (positions.hasNext()) {
-        SourceCT part = positions.next().get();
-        if (!myIndentUpdaterSource.isCell(part)) continue;
-        Cell cell = myIndentUpdaterSource.getCell(part);
-        CellWrapper<TargetT> wrapper = myWrappers.get(cell);
+        Cell part = positions.next().get();
+        if (!isCell(part)) continue;
+        CellWrapper<TargetT> wrapper = myWrappers.get(part);
         TargetT item = wrapper.item();
         removeFromParent(item);
         children(newLine).add(item);
@@ -172,26 +171,26 @@ public class IndentUpdater<SourceCT extends NavComposite<SourceCT>, TargetT> {
     }
   }
 
-  private void onChildRemove(SourceCT child) {
+  private void onChildRemove(Cell child) {
     if (!isVisible(child)) return;
 
-    if (!myIndentUpdaterSource.isAttached(child)) {
+    if (!isAttached(child)) {
       throw new IllegalStateException("child " + child + " is already detached");
     }
 
-    Position<SourceCT> removeAt = new Position<>(this, child);
-    Position<SourceCT> prevNewLinePos = prevNewLine(removeAt.prev());
+    Position removeAt = new Position(this, child);
+    Position prevNewLinePos = prevNewLine(removeAt.prev());
 
-    if (myIndentUpdaterSource.isCell(child)) {
+    if (isCell(child)) {
       if (prevNewLinePos == null) {
-        Position<SourceCT> first = new Position<>(this, firstLeaf(myRoot));
+        Position first = new Position(this, firstLeaf(myRoot));
         children(children(myTarget).get(0)).remove(first.deltaTo(removeAt));
       } else {
         TargetT line = myNewLineToLine.get(prevNewLinePos.get());
         children(line).remove(prevNewLinePos.deltaTo(removeAt) - 1 + (indent(child) > 0 ? 1 : 0));
       }
-      myWrappers.remove(myIndentUpdaterSource.getCell(child)).remove();
-    } else if (myIndentUpdaterSource.isNewLine(child)) {
+      myWrappers.remove(child).remove();
+    } else if (child instanceof NewLineCell) {
       TargetT lineCell = myNewLineToLine.remove(child);
 
       if (lineCell == null) {
@@ -217,17 +216,17 @@ public class IndentUpdater<SourceCT extends NavComposite<SourceCT>, TargetT> {
       }
     }
 
-    myIndentUpdaterSource.setAttached(child, false);
+    setAttached(child, false);
   }
 
   private void removeFromParent(TargetT c) {
     children(myIndentUpdaterTarget.parent(c)).remove(c);
   }
 
-  private Position<SourceCT> prevNewLine(Position<SourceCT> from) {
-    Position<SourceCT> current = from;
+  private Position prevNewLine(Position from) {
+    Position current = from;
     while (current != null) {
-      if (myIndentUpdaterSource.isNewLine(current.get())) {
+      if (current.get() instanceof NewLineCell) {
         return  current;
       }
       current = current.prev();
@@ -235,10 +234,10 @@ public class IndentUpdater<SourceCT extends NavComposite<SourceCT>, TargetT> {
     return null;
   }
 
-  private Position<SourceCT> nextNewLine(Position<SourceCT> from) {
-    Position<SourceCT> current = from;
+  private Position nextNewLine(Position from) {
+    Position current = from;
     while (current != null) {
-      if (myIndentUpdaterSource.isNewLine(current.get())) {
+      if (current.get() instanceof NewLineCell) {
         return current;
       }
       current = current.next();
@@ -246,9 +245,9 @@ public class IndentUpdater<SourceCT extends NavComposite<SourceCT>, TargetT> {
     return null;
   }
 
-  private Iterator<Position<SourceCT>> toEnd(final Position<SourceCT> pos) {
-    return new Iterator<Position<SourceCT>>() {
-      private Position<SourceCT> myCurrent = pos;
+  private Iterator<Position> toEnd(final Position pos) {
+    return new Iterator<Position>() {
+      private Position myCurrent = pos;
 
       @Override
       public boolean hasNext() {
@@ -256,8 +255,8 @@ public class IndentUpdater<SourceCT extends NavComposite<SourceCT>, TargetT> {
       }
 
       @Override
-      public Position<SourceCT> next() {
-        Position<SourceCT> result = myCurrent;
+      public Position next() {
+        Position result = myCurrent;
         myCurrent = myCurrent.next();
         return result;
       }
@@ -269,9 +268,9 @@ public class IndentUpdater<SourceCT extends NavComposite<SourceCT>, TargetT> {
     };
   }
 
-  private Iterator<Position<SourceCT>> range(final Position<SourceCT> from, final Position<SourceCT> to) {
-    return new Iterator<Position<SourceCT>>() {
-      private Position<SourceCT> myCurrent = from;
+  private Iterator<Position> range(final Position from, final Position to) {
+    return new Iterator<Position>() {
+      private Position myCurrent = from;
 
       @Override
       public boolean hasNext() {
@@ -279,8 +278,8 @@ public class IndentUpdater<SourceCT extends NavComposite<SourceCT>, TargetT> {
       }
 
       @Override
-      public Position<SourceCT> next() {
-        Position<SourceCT> result = myCurrent;
+      public Position next() {
+        Position result = myCurrent;
         myCurrent = myCurrent.next();
         return result;
       }
@@ -292,11 +291,11 @@ public class IndentUpdater<SourceCT extends NavComposite<SourceCT>, TargetT> {
     };
   }
 
-  private int indent(SourceCT part) {
+  private int indent(Cell part) {
     int result = 0;
-    SourceCT current = part;
+    Cell current = part;
     while (current != null) {
-      if (myIndentUpdaterSource.isIndented(current)) {
+      if (isIndented(current)) {
         result++;
       }
       current = current.getParent();
@@ -304,33 +303,25 @@ public class IndentUpdater<SourceCT extends NavComposite<SourceCT>, TargetT> {
     return result;
   }
 
-  private SourceCT firstLeaf(SourceCT item) {
-    if (myIndentUpdaterSource.isCell(item) || item.children().isEmpty()) return item;
-    for (SourceCT child : item.children()) {
+  private Cell firstLeaf(Cell item) {
+    if (isCell(item) || item.children().isEmpty()) return item;
+    for (Cell child : item.children()) {
       if (isVisible(child)) return firstLeaf(child);
     }
     throw new IllegalStateException();
   }
 
-  SourceCT root() {
+  Cell root() {
     return myRoot;
   }
 
-  boolean isAttached(SourceCT source) {
-    return myIndentUpdaterSource.isAttached(source);
-  }
-
-  boolean isCell(SourceCT source) {
-    return myIndentUpdaterSource.isCell(source);
-  }
-
-  boolean isVisible(SourceCT source) {
-    SourceCT current = source;
+  boolean isVisible(Cell source) {
+    Cell current = source;
     while (current != myRoot) {
       if (current == null) {
         throw new IllegalStateException("Can't find a root indent container for " + source);
       }
-      if (!myIndentUpdaterSource.isVisible(current) && current != myJustBecameInvisible) return false;
+      if (!current.get(Cell.VISIBLE) && current != myJustBecameInvisible) return false;
       current = current.getParent();
     }
     return true;
@@ -340,4 +331,44 @@ public class IndentUpdater<SourceCT extends NavComposite<SourceCT>, TargetT> {
     return myIndentUpdaterTarget.children(target);
   }
 
+  boolean isAttached(Cell src) {
+    return myAttached.contains(src);
+  }
+
+  private void setAttached(final Cell src, boolean value) {
+    if (value) {
+      myAttached.add(src);
+    } else {
+      myAttached.remove(src);
+    }
+  }
+
+  boolean isCell(Cell source) {
+    return !(source instanceof IndentCell);
+  }
+
+  private Registration watch(final Cell child) {
+    if (isCell(child)) {
+      return child.visible().addHandler(new EventHandler<PropertyChangeEvent<Boolean>>() {
+        @Override
+        public void onEvent(PropertyChangeEvent<Boolean> event) {
+          onVisibilityChanged(child, event);
+        }
+      });
+    } else {
+      return Registration.EMPTY;
+    }
+  }
+
+  private boolean isIndented(Cell src) {
+    if (src instanceof IndentCell) {
+      return ((IndentCell) src).isIndented();
+    }
+
+    return false;
+  }
+
+
+  protected void onVisibilityChanged(Cell cell, PropertyChangeEvent<Boolean> event) {
+  }
 }
