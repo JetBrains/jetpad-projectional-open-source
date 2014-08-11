@@ -1,6 +1,7 @@
 @eval textFont jetbrains.jetpad.projectional.view.gwt.View2Dom.font();
 @eval selectionColor jetbrains.jetpad.cell.Cell.SELECTION_COLOR.toCssColor();
 @eval highlightColor jetbrains.jetpad.cell.Cell.HIGHLIGHT_COLOR.toCssColor();
+@eval brightHighlightColor jetbrains.jetpad.cell.Cell.BRIGHT_HIGHLIGHT_COLOR.toCssColor();
 
 .rootContainer:focus {
   outline: 0;
@@ -60,6 +61,19 @@
 
 .highlighted[style] {
   background-color: highlightColor !important;
+}
+
+
+.brightlyHighlighted {
+  background-color: brightHighlightColor;
+}
+
+.brightlyHighlighted .horizontal {
+  background-color: brightHighlightColor;
+}
+
+.brightlyHighlighted[style] {
+  background-color: brightHighlightColor !important;
 }
 
 .selected {

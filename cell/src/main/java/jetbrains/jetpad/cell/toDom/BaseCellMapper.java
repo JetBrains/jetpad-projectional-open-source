@@ -142,9 +142,10 @@ abstract class BaseCellMapper<SourceT extends Cell> extends Mapper<SourceT, Elem
     }
 
     if (!isEmpty() && (getSource().highlighted().get() || myExternalHighlightCount > 0)) {
-      getTarget().addClassName(CellContainerToDomMapper.CSS.highlighted());
+      getTarget().addClassName(getSource().brightHighlight().get() ? CellContainerToDomMapper.CSS.brightlyHighlighted() : CellContainerToDomMapper.CSS.highlighted());
     } else {
       getTarget().removeClassName(CellContainerToDomMapper.CSS.highlighted());
+      getTarget().removeClassName(CellContainerToDomMapper.CSS.brightlyHighlighted());
     }
 
     Color background = getSource().background().get();
