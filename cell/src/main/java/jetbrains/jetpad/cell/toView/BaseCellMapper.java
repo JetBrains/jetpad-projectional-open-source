@@ -102,7 +102,7 @@ class BaseCellMapper<SourceT extends Cell, TargetT extends View> extends Mapper<
     if (cell.selected().get() || myExternalSelectCount > 0) {
       view.background().set(Cell.SELECTION_COLOR);
     } else if ((cell.highlighted().get() || myExternalHighlightCount > 0) && myContext.containerFocused().get()) {
-      view.background().set(Cell.HIGHLIGHT_COLOR);
+      view.background().set(cell.brightHighlight().get() ? Cell.BRIGHT_HIGHLIGHT_COLOR : Cell.HIGHLIGHT_COLOR);
     } else {
       view.background().set(cell.background().get());
     }

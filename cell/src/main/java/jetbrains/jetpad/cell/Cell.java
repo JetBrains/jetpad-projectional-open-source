@@ -49,6 +49,7 @@ import java.util.*;
 
 public abstract class Cell implements NavComposite<Cell>, HasVisibility, HasFocusability, HasBounds {
   public static final Color HIGHLIGHT_COLOR = new Color(200, 200, 200);
+  public static final Color BRIGHT_HIGHLIGHT_COLOR = new Color(168, 214, 255);
   public static final Color SELECTION_COLOR = Color.LIGHT_BLUE;
 
   public static final CellPropertySpec<Boolean> FOCUSED = new CellPropertySpec<>("focused", false);
@@ -63,6 +64,7 @@ public abstract class Cell implements NavComposite<Cell>, HasVisibility, HasFocu
   public static final CellPropertySpec<Boolean> VISIBLE = new CellPropertySpec<>("visible", true);
   public static final CellPropertySpec<Boolean> SELECTED = new CellPropertySpec<>("selected", false);
   public static final CellPropertySpec<Boolean> HIGHLIGHTED = new CellPropertySpec<>("highlighted", false);
+  public static final CellPropertySpec<Boolean> BRIGHT_HIGHLIGHT = new CellPropertySpec<>("brightHighlight", false);
   public static final CellPropertySpec<Boolean> FOCUSABLE = new CellPropertySpec<>("focusable", false);
   public static final CellPropertySpec<Color> BACKGROUND = new CellPropertySpec<>("background");
   public static final CellPropertySpec<Color> BORDER_COLOR = new CellPropertySpec<>("borderColor");
@@ -124,6 +126,10 @@ public abstract class Cell implements NavComposite<Cell>, HasVisibility, HasFocu
 
   public Property<Boolean> selected() {
     return getProp(SELECTED);
+  }
+
+  public Property<Boolean> brightHighlight() {
+    return getProp(BRIGHT_HIGHLIGHT);
   }
 
   public Property<Boolean> highlighted() {

@@ -98,6 +98,8 @@ public class CellNavigationController {
           oldCell.highlighted().set(false);
           Cell pair = oldCell.get(PAIR_CELL);
           if (pair != null) {
+            oldCell.brightHighlight().set(false);
+            pair.brightHighlight().set(false);
             pair.highlighted().set(false);
           }
         }
@@ -107,6 +109,8 @@ public class CellNavigationController {
           newCell.highlighted().set(true);
           Cell pair = newCell.get(PAIR_CELL);
           if (pair != null) {
+            newCell.brightHighlight().set(true);
+            pair.brightHighlight().set(true);
             pair.highlighted().set(true);
           }
         }
