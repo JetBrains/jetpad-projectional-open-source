@@ -29,8 +29,9 @@ public class Scrolling {
     }
     adjustScrollers(rect, element);
     Rectangle visibleArea = new Rectangle(getScrollX(), getScrollY(), getScrollWidth(), getScrollHeight());
-    Rectangle bounds = getBounds(element);
-    if (!visibleArea.contains(bounds)) {
+    Rectangle elementBounds = getBounds(element);
+    Rectangle bounds = new Rectangle(elementBounds.origin.add(rect.origin), rect.dimension);
+    if (!visibleArea.contains(bounds)) {    // are we sure about this?
       int top = element.getAbsoluteTop() + rect.origin.y;
       int left = element.getAbsoluteLeft() + rect.origin.x;
       int width = rect.dimension.x;
