@@ -293,6 +293,16 @@ public class CellNavigationControllerTest extends EditingTestCase {
     assertTrue(c42.focused().get());
   }
 
+  @Test
+  public void pairNavigation() {
+    c1.set(CellNavigationController.PAIR_CELL, c2);
+    c1.focus();
+
+    press(KeyStrokeSpecs.MATCHING_CONSTRUCTS);
+
+    assertTrue(c2.focused().get());
+  }
+
   private TextCell view(boolean focusable) {
     TextCell result = new TextCell();
     result.text().set("abcdef");

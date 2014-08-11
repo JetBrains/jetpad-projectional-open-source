@@ -40,6 +40,7 @@ import static jetbrains.jetpad.model.composite.Composites.prevFocusable;
 public class CellNavigationController {
   public static final CellPropertySpec<Cell> PAIR_CELL = new CellPropertySpec<>("pairCell");
 
+
   private CompositesWithBounds ourWithBounds = new CompositesWithBounds(2);
 
   static Registration install(final CellContainer container) {
@@ -261,6 +262,8 @@ public class CellNavigationController {
         next = mySelectionStack.pop();
       }
       myStackResetEnabled.set(false);
+    } else if (event.is(KeyStrokeSpecs.MATCHING_CONSTRUCTS) && current.get(PAIR_CELL) != null) {
+      next = current.get(PAIR_CELL);
     }
     if (next != null) {
       focusedCell().set(next);
