@@ -19,6 +19,7 @@ import jetbrains.jetpad.base.Registration;
 import jetbrains.jetpad.base.Value;
 import jetbrains.jetpad.cell.Cell;
 import jetbrains.jetpad.cell.CellContainer;
+import jetbrains.jetpad.cell.CellPropertySpec;
 import jetbrains.jetpad.cell.position.PositionHandler;
 import jetbrains.jetpad.cell.trait.CellTrait;
 import jetbrains.jetpad.cell.util.Cells;
@@ -33,9 +34,12 @@ import jetbrains.jetpad.model.property.*;
 
 import java.util.Stack;
 
-import static jetbrains.jetpad.model.composite.Composites.*;
+import static jetbrains.jetpad.model.composite.Composites.nextFocusable;
+import static jetbrains.jetpad.model.composite.Composites.prevFocusable;
 
 public class CellNavigationController {
+  public static final CellPropertySpec<Cell> PAIR_CELL = new CellPropertySpec<>("pairCell");
+
   private CompositesWithBounds ourWithBounds = new CompositesWithBounds(2);
 
   static Registration install(final CellContainer container) {
@@ -92,11 +96,19 @@ public class CellNavigationController {
         Cell oldCell = event.getOldValue();
         if (oldCell != null) {
           oldCell.highlighted().set(false);
+          Cell pair = oldCell.get(PAIR_CELL);
+          if (pair != null) {
+            pair.highlighted().set(false);
+          }
         }
 
         Cell newCell = event.getNewValue();
         if (newCell != null) {
           newCell.highlighted().set(true);
+          Cell pair = newCell.get(PAIR_CELL);
+          if (pair != null) {
+            pair.highlighted().set(true);
+          }
         }
       }
     }));
