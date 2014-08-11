@@ -77,6 +77,11 @@ class KeyCodeMapper {
     register(KeyEvent.VK_Y, Key.Y);
     register(KeyEvent.VK_Z, Key.Z);
 
+    register(KeyEvent.VK_BRACELEFT, Key.LEFT_BRACE);
+    register(KeyEvent.VK_BRACERIGHT, Key.RIGHT_BRACE);
+    register(KeyEvent.VK_LEFT_PARENTHESIS, Key.LEFT_PAREN);
+    register(KeyEvent.VK_RIGHT_PARENTHESIS, Key.RIGHT_PAREN);
+
     register(KeyEvent.VK_0, Key.DIGIT_0);
     register(KeyEvent.VK_1, Key.DIGIT_1);
     register(KeyEvent.VK_2, Key.DIGIT_2);
