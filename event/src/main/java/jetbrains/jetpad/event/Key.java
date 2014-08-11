@@ -54,8 +54,6 @@ public enum Key {
   DIGIT_9("9"),
   LEFT_BRACE("["),
   RIGHT_BRACE("]"),
-  LEFT_PAREN("("),
-  RIGHT_PAREN(")"),
   UP("Up"),
   DOWN("Down"),
   LEFT("Left"),

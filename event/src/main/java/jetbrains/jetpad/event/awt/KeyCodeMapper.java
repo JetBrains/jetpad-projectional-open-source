@@ -79,8 +79,6 @@ class KeyCodeMapper {
 
     register(KeyEvent.VK_OPEN_BRACKET, Key.LEFT_BRACE);
     register(KeyEvent.VK_CLOSE_BRACKET, Key.RIGHT_BRACE);
-    register(KeyEvent.VK_LEFT_PARENTHESIS, Key.LEFT_PAREN);
-    register(KeyEvent.VK_RIGHT_PARENTHESIS, Key.RIGHT_PAREN);
 
     register(KeyEvent.VK_0, Key.DIGIT_0);
     register(KeyEvent.VK_1, Key.DIGIT_1);
