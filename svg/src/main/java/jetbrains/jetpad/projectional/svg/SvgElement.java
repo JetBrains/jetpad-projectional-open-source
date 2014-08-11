@@ -27,6 +27,7 @@ import jetbrains.jetpad.model.event.ListenerCaller;
 import jetbrains.jetpad.model.event.Listeners;
 import jetbrains.jetpad.model.property.Property;
 import jetbrains.jetpad.model.property.PropertyChangeEvent;
+import jetbrains.jetpad.model.property.ValueProperty;
 import jetbrains.jetpad.model.util.ListMap;
 import jetbrains.jetpad.projectional.svg.event.SvgAttributeEvent;
 
@@ -35,7 +36,7 @@ import java.util.*;
 public class SvgElement extends HasParent<SvgElement, SvgElement> {
   private SvgContainer myContainer;
   private ListMap<SvgPropertySpec<?>, Object> myProperties;
-  private ListMap<String, String> myAttributes;
+  private ListMap<String, ValueProperty<String>> myAttributes;
   private List<SvgTrait> myTraits;
   private Listeners<SvgElementListener> myListeners;
 
@@ -56,16 +57,26 @@ public class SvgElement extends HasParent<SvgElement, SvgElement> {
     return myAttributes.containsKey(name);
   }
 
-  public String getAttr(String name) {
-    return (myAttributes.containsKey(name) ? myAttributes.get(name) : null);
+  public Property<String> getAttr(String name) {
+    if (myAttributes != null && myAttributes.containsKey(name)) {
+      return myAttributes.get(name);
+    }
+    return null;
   }
 
   public void setAttr(String name, String value) {
+    // TODO: remove value when null is passed as a value
     if (myAttributes == null) {
       myAttributes = new ListMap<>();
     }
-    String oldValue = myAttributes.put(name, value);
-    if (oldValue == null || oldValue.equals(value)) {
+    String oldValue = null;
+    if (myAttributes.containsKey(name)) {
+      oldValue = myAttributes.get(name).get();
+      myAttributes.get(name).set(value);
+    } else {
+      myAttributes.put(name, new ValueProperty<>(value));
+    }
+    if (value != null && !value.equals(oldValue)) {
       SvgAttributeEvent event = new SvgAttributeEvent(name, oldValue, value);
       dispatch(SvgEvents.ATTRIBUTE_CHANGED, event);
       if (isAttached()) {

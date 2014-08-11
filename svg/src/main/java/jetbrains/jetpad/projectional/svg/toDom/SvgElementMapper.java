@@ -16,8 +16,8 @@
 package jetbrains.jetpad.projectional.svg.toDom;
 
 import jetbrains.jetpad.mapper.Mapper;
-import jetbrains.jetpad.mapper.MappingContext;
 import jetbrains.jetpad.mapper.Synchronizers;
+import jetbrains.jetpad.model.property.WritableProperty;
 import jetbrains.jetpad.projectional.svg.SvgElement;
 import jetbrains.jetpad.projectional.svg.SvgEventHandler;
 import jetbrains.jetpad.projectional.svg.SvgEvents;
@@ -31,27 +31,35 @@ public class SvgElementMapper<SourceT extends SvgElement, TargetT extends OMSVGE
   }
 
   @Override
-  protected void registerSynchronizers(SynchronizersConfiguration conf) {
+  protected void registerSynchronizers(final SynchronizersConfiguration conf) {
     super.registerSynchronizers(conf);
+
+    // FIXME: O(n^2) time
+    for (final String key : getSource().getAttributesKeys()) {
+      conf.add(Synchronizers.forPropsOneWay(getSource().getAttr(key), new WritableProperty<String>() {
+        @Override
+        public void set(String value) {
+          getTarget().setAttribute(key, value);
+        }
+      }));
+    }
 
     getSource().addTrait(new SvgTraitBuilder().on(SvgEvents.ATTRIBUTE_CHANGED, new SvgEventHandler<SvgAttributeEvent>() {
       @Override
-      public void handle(SvgElement element, SvgAttributeEvent e) {
+      public void handle(SvgElement element, final SvgAttributeEvent e) {
+        if (e.getOldValue() == null) {
+          conf.add(Synchronizers.forPropsOneWay(element.getAttr(e.getAttrName()), new WritableProperty<String>() {
+            @Override
+            public void set(String value) {
+              getTarget().setAttribute(e.getAttrName(), value);
+            }
+          }));
+        }
         getTarget().setAttribute(e.getAttrName(), e.getNewValue());
       }
     })
     .build());
 
     conf.add(Synchronizers.forObservableRole(this, getSource().children(), Utils.elementChildren(getTarget()), new SvgElementMapperFactory()));
-  }
-
-  @Override
-  protected void onAttach(MappingContext ctx) {
-    super.onAttach(ctx);
-
-    // FIXME: O(n^2) time
-    for (String key : getSource().getAttributesKeys()) {
-      getTarget().setAttribute(key, getSource().getAttr(key));
-    }
   }
 }
