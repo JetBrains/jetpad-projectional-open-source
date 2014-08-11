@@ -269,6 +269,7 @@ public class CellNavigationController {
       } else {
         moveToEnd(next);
       }
+      restoreOffset = false;
     }
     if (next != null) {
       focusedCell().set(next);
