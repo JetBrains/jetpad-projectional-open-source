@@ -264,6 +264,11 @@ public class CellNavigationController {
       myStackResetEnabled.set(false);
     } else if (event.is(KeyStrokeSpecs.MATCHING_CONSTRUCTS) && current.get(PAIR_CELL) != null) {
       next = current.get(PAIR_CELL);
+      if (Composites.isBefore(next, current)) {
+        moveToHome(next);
+      } else {
+        moveToEnd(next);
+      }
     }
     if (next != null) {
       focusedCell().set(next);
