@@ -25,8 +25,6 @@ public interface HybridPositionSpec<SourceT> {
   Parser<SourceT> getParser();
   PrettyPrinter<? super SourceT> getPrettyPrinter();
 
-  PairFinder getPairFinder();
-
   CompletionSupplier getTokenCompletion(Function<Token, Runnable> tokenHandler);
   CompletionSupplier getAdditionalCompletion(CompletionContext ctx, Completer completer);
 }
