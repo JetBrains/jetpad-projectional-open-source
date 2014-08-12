@@ -836,6 +836,34 @@ public class HybridEditorTest extends EditingTestCase {
     assertNotNull(mapper.getDescendantMapper(expr));
   }
 
+  @Test
+  public void toRightSimplePair() {
+    setTokens(Tokens.LP, Tokens.RP);
+
+    assertSame(tokenCell(1), sync.getPair((TextTokenCell) tokenCell(0)));
+  }
+
+  @Test
+  public void toLeftSimplePair() {
+    setTokens(Tokens.LP, Tokens.RP);
+
+    assertSame(tokenCell(0), sync.getPair((TextTokenCell) tokenCell(1)));
+  }
+
+  @Test
+  public void nestedPairing() {
+    setTokens(Tokens.LP, Tokens.LP, Tokens.RP, Tokens.RP);
+
+    assertSame(tokenCell(0), sync.getPair((TextTokenCell) tokenCell(3)));
+  }
+
+  @Test
+  public void noPair() {
+    setTokens(Tokens.LP);
+
+    assertNull(sync.getPair((TextTokenCell) tokenCell(0)));
+  }
+
   private ValueToken createComplexToken() {
     return new ValueToken(new ComplexValueExpr(), new ComplexValueCloner());
   }
@@ -854,6 +882,10 @@ public class HybridEditorTest extends EditingTestCase {
 
   private void select(int index, int pos) {
     sync.tokenOperations().select(index, pos).run();
+  }
+
+  private Cell tokenCell(int index) {
+    return sync.tokenCells().get(index);
   }
 
   private Cell assertSelected(int index) {

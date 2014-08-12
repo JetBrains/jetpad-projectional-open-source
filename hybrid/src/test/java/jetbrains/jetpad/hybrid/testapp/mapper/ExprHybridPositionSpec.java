@@ -256,7 +256,7 @@ public class ExprHybridPositionSpec implements HybridPositionSpec<Expr> {
 
   @Override
   public PairSpec getPairSpec() {
-    return PairSpec.EMPTY;
+    return new ExprHybridPairSpec();
   }
 
   @Override
