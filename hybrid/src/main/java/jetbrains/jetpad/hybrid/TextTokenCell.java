@@ -111,7 +111,12 @@ class TextTokenCell extends TextCell {
 
       @Override
       protected void provideProperties(Cell cell, PropertyCollector collector) {
-        collector.add(CellNavigationController.PAIR_CELL, mySync.getPair(TextTokenCell.this));
+        collector.add(CellNavigationController.PAIR_CELL, new Supplier<Cell>() {
+          @Override
+          public Cell get() {
+            return mySync.getPair(TextTokenCell.this);
+          }
+        });
         super.provideProperties(cell, collector);
       }
     };

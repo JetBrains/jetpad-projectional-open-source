@@ -662,9 +662,44 @@ public class HybridSynchronizer<SourceT> implements Synchronizer {
 
   TextTokenCell getPair(TextTokenCell cell) {
     PairSpec pairSpec = mySpec.getPairSpec();
+    List<Token> tokens = myTokenListEditor.tokens;
+    Token token = cell.getToken();
+
     if (pairSpec.isLeft(cell.getToken())) {
+      int index = myTargetList.indexOf(cell);
+      if (index == -1) return null;
+
+      Stack<Token> pairStack = new Stack<>();
+      for (int i = index + 1; i < tokens.size(); i++) {
+        Token t = tokens.get(i);
+        if (pairStack.isEmpty() && pairSpec.isPair(token, t)) {
+          return (TextTokenCell) myTargetList.get(i);
+        }
+
+        if (pairSpec.isLeft(t)) {
+          pairStack.push(t);
+        } else if (pairSpec.isRight(t) && !pairStack.isEmpty() && pairSpec.isPair(pairStack.peek(), t)) {
+          pairStack.pop();
+        }
+      }
       return null;
     } else if (pairSpec.isRight(cell.getToken())) {
+      int index = myTargetList.indexOf(cell);
+      if (index == -1) return null;
+      Stack<Token> pairStack = new Stack<>();
+
+      for (int i = index - 1; i >=0; i--) {
+        Token t = tokens.get(i);
+        if (pairStack.isEmpty() && pairSpec.isPair(t, token)) {
+          return (TextTokenCell) myTargetList.get(i);
+        }
+
+        if (pairSpec.isRight(t)) {
+          pairStack.push(t);
+        } else if (pairSpec.isLeft(t) && !pairStack.isEmpty() && pairSpec.isPair(t, pairStack.peek())) {
+          pairStack.pop();
+        }
+      }
       return null;
     } else {
       return null;
