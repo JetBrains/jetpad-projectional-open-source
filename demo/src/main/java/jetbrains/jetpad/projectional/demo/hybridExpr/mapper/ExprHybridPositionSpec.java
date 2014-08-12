@@ -155,6 +155,11 @@ public class ExprHybridPositionSpec implements HybridPositionSpec<Expression> {
   }
 
   @Override
+  public PairSpec getPairSpec() {
+    return PairSpec.EMPTY;
+  }
+
+  @Override
   public CompletionSupplier getTokenCompletion(final Function<Token, Runnable> tokenHandler) {
     return new CompletionSupplier() {
       @Override

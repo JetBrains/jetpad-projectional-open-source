@@ -27,21 +27,29 @@ import jetbrains.jetpad.cell.Cell;
 import jetbrains.jetpad.cell.util.CellLists;
 import jetbrains.jetpad.projectional.cell.ProjectionalSynchronizers;
 import jetbrains.jetpad.cell.text.TextEditing;
+import jetbrains.jetpad.projectional.util.CellNavigationController;
 import jetbrains.jetpad.values.Color;
 
 class TextTokenCell extends TextCell {
+  private HybridSynchronizer<?> mySync;
   private boolean myFirst;
   private Token myToken;
   private Token myNextToken;
 
-  TextTokenCell(Token token) {
-    this.myToken = token;
+  TextTokenCell(HybridSynchronizer<?> sync, Token token) {
+    mySync = sync;
+    myToken = token;
+
     textColor().set(tokenTextColor());
     bold().set(token instanceof SimpleToken && ((SimpleToken) token).isBold());
     text().set(token.text());
 
     addTrait(createTrait());
     updateFocusability();
+  }
+
+  Token getToken() {
+    return myToken;
   }
 
   private Color tokenTextColor() {
@@ -99,6 +107,12 @@ class TextTokenCell extends TextCell {
         }
 
         return super.get(cell, spec);
+      }
+
+      @Override
+      protected void provideProperties(Cell cell, PropertyCollector collector) {
+        collector.add(CellNavigationController.PAIR_CELL, mySync.getPair(TextTokenCell.this));
+        super.provideProperties(cell, collector);
       }
     };
   }

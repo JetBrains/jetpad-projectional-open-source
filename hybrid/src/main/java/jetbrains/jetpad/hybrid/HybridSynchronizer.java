@@ -480,7 +480,7 @@ public class HybridSynchronizer<SourceT> implements Synchronizer {
       return target;
     }
 
-    return new TextTokenCell(token);
+    return new TextTokenCell(this, token);
   }
 
   private void addPlaceholder() {
@@ -658,6 +658,17 @@ public class HybridSynchronizer<SourceT> implements Synchronizer {
 
   TokenListEditor<SourceT> tokenListEditor() {
     return myTokenListEditor;
+  }
+
+  TextTokenCell getPair(TextTokenCell cell) {
+    PairSpec pairSpec = mySpec.getPairSpec();
+    if (pairSpec.isLeft(cell.getToken())) {
+      return null;
+    } else if (pairSpec.isRight(cell.getToken())) {
+      return null;
+    } else {
+      return null;
+    }
   }
 
   @Override

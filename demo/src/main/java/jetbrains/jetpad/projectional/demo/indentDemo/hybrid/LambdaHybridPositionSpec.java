@@ -76,6 +76,11 @@ public class LambdaHybridPositionSpec implements HybridPositionSpec<Expr> {
   }
 
   @Override
+  public PairSpec getPairSpec() {
+    return PairSpec.EMPTY;
+  }
+
+  @Override
   public CompletionSupplier getTokenCompletion(final Function<Token, Runnable> tokenHandler) {
     return new CompletionSupplier() {
       @Override

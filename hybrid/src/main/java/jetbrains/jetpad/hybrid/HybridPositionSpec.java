@@ -24,6 +24,7 @@ import jetbrains.jetpad.completion.CompletionSupplier;
 public interface HybridPositionSpec<SourceT> {
   Parser<SourceT> getParser();
   PrettyPrinter<? super SourceT> getPrettyPrinter();
+  PairSpec getPairSpec();
 
   CompletionSupplier getTokenCompletion(Function<Token, Runnable> tokenHandler);
   CompletionSupplier getAdditionalCompletion(CompletionContext ctx, Completer completer);
