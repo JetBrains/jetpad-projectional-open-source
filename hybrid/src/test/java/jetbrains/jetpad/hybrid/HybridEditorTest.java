@@ -851,6 +851,15 @@ public class HybridEditorTest extends EditingTestCase {
   }
 
   @Test
+  public void pairingIndexOutOfBoundsException() {
+    setTokens(Tokens.LP, Tokens.RP);
+    select(0, false);
+    type("239");
+
+    assertTokens(Tokens.LP, new IntValueToken(239), Tokens.RP);
+  }
+
+  @Test
   public void nestedPairing() {
     setTokens(Tokens.LP, Tokens.LP, Tokens.RP, Tokens.RP);
 

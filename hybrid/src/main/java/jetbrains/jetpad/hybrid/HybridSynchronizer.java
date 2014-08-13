@@ -680,10 +680,13 @@ public class HybridSynchronizer<SourceT> implements Synchronizer {
       if (index == -1) return null;
 
       Stack<Token> pairStack = new Stack<>();
-      for (int i = index + 1; i < tokens.size(); i++) {
-        Token t = tokens.get(i);
+      for (int i = index + 1; i < myTargetList.size(); i++) {
+        if (!(myTargetList.get(i) instanceof TextTokenCell)) continue;
+
+        TextTokenCell tc = (TextTokenCell) myTargetList.get(i);
+        Token t = tc.getToken();
         if (pairStack.isEmpty() && pairSpec.isPair(token, t)) {
-          return (TextTokenCell) myTargetList.get(i);
+          return tc;
         }
 
         if (pairSpec.isLeft(t)) {
@@ -699,9 +702,12 @@ public class HybridSynchronizer<SourceT> implements Synchronizer {
       Stack<Token> pairStack = new Stack<>();
 
       for (int i = index - 1; i >=0; i--) {
+        if (!(myTargetList.get(i) instanceof TextTokenCell)) continue;
+
+        TextTokenCell tc = (TextTokenCell) myTargetList.get(i);
         Token t = tokens.get(i);
         if (pairStack.isEmpty() && pairSpec.isPair(t, token)) {
-          return (TextTokenCell) myTargetList.get(i);
+          return tc;
         }
 
         if (pairSpec.isRight(t)) {
