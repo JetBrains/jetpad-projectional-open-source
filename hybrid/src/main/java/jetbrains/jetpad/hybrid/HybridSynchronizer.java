@@ -64,7 +64,7 @@ import static jetbrains.jetpad.model.composite.Composites.firstFocusable;
 import static jetbrains.jetpad.model.composite.Composites.lastFocusable;
 
 public class HybridSynchronizer<SourceT> implements Synchronizer {
-  static final boolean AUTO_INSERT_ENABLED = false;
+  static final boolean AUTO_INSERT_ENABLED = true;
 
   static final CellTraitPropertySpec<HybridSynchronizer<?>> HYBRID_SYNCHRONIZER = new CellTraitPropertySpec<>("hybridSynchronizer");
 
@@ -754,4 +754,7 @@ public class HybridSynchronizer<SourceT> implements Synchronizer {
     return myRegistration != null;
   }
 
+  public HybridPositionSpec<SourceT> getSpec() {
+    return mySpec;
+  }
 }

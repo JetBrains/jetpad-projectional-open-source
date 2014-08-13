@@ -22,6 +22,8 @@ import jetbrains.jetpad.cell.Cell;
 import java.util.List;
 
 public interface CompletionContext {
+  public static final CompletionContext EMPTY = new EmptyCompletionContext();
+
   int getTargetIndex();
 
   List<Token> getPrefix();

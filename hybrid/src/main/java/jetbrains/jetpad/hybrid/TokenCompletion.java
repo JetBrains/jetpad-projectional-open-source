@@ -168,21 +168,7 @@ class TokenCompletion {
       @Override
       public List<CompletionItem> get(CompletionParameters cp) {
         List<CompletionItem> result = new ArrayList<>();
-        result.addAll(positionSpec().getTokenCompletion(new Function<Token, Runnable>() {
-          @Override
-          public Runnable apply(Token input) {
-            if (HybridSynchronizer.AUTO_INSERT_ENABLED && ctx.getTargetIndex() == ctx.getTokens().size()) {
-              Token autoInsert = mySync.getAutoInsert(input);
-              if (autoInsert != null) {
-                return completer.complete(0, input, autoInsert);
-              } else {
-                return completer.complete(input);
-              }
-            } else {
-              return completer.complete(input);
-            }
-          }
-        }).get(cp));
+        result.addAll(positionSpec().getTokenCompletion(HybridUtil.getAutoInsertHandler(ctx, completer, mySync.getSpec())).get(cp));
         if (cp.isMenu()) {
           result.addAll(positionSpec().getAdditionalCompletion(ctx, completer).get(cp));
         }
