@@ -171,7 +171,7 @@ class TokenCompletion {
         result.addAll(positionSpec().getTokenCompletion(new Function<Token, Runnable>() {
           @Override
           public Runnable apply(Token input) {
-            if (HybridSynchronizer.AUTO_INSERT_ENABLED && ctx.getTargetIndex() == ctx.getObjects().size()) {
+            if (HybridSynchronizer.AUTO_INSERT_ENABLED && ctx.getTargetIndex() == ctx.getTokens().size()) {
               Token autoInsert = mySync.getAutoInsert(input);
               if (autoInsert != null) {
                 return completer.complete(0, input, autoInsert);
