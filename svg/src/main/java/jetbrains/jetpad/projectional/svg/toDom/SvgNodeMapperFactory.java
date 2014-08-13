@@ -28,6 +28,10 @@ public class SvgNodeMapperFactory implements MapperFactory<SvgNode, OMNode> {
       result = new SvgEllipseMapper( (SvgEllipse) source, new OMSVGEllipseElement());
     } else if (source instanceof SvgRect) {
       result = new SvgRectMapper((SvgRect) source, new OMSVGRectElement());
+    } else if (source instanceof SvgTextElement) {
+      result = new SvgTextElementMapper((SvgTextElement) source, new OMSVGTextElement());
+    } else if (source instanceof SvgTextNode) {
+      result = new SvgTextNodeMapper((SvgTextNode) source, new OMText(null));
     } else if (source instanceof SvgRoot) {
       throw new IllegalStateException("Svg root element can't be embedded");
     } else {

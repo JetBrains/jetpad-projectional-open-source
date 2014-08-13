@@ -37,6 +37,11 @@ public class DemoModel {
     ellipse.getProp(SvgEllipse.FILL).set(Color.YELLOW);
     ellipse.setAttr("style", "stroke:#006600;");
 
+    SvgTextElement text = new SvgTextElement();
+    text.addTextNode("Example Text");
+    text.getProp(SvgTextElement.X).set(20.);
+    text.getProp(SvgTextElement.Y).set(20.);
+
     SvgEllipse ellipse2 = new SvgEllipse();
     ellipse2.getProp(SvgEllipse.CX).set(250.0);
     ellipse2.getProp(SvgEllipse.CY).set(85.0);
@@ -54,6 +59,7 @@ public class DemoModel {
     svgRoot.children().add(ellipse);
     svgRoot.children().add(rect);
     svgRoot.children().add(ellipse2);
+    svgRoot.children().add(text);
 
     return svgRoot;
   }

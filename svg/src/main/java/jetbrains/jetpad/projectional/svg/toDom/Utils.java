@@ -22,7 +22,7 @@ import java.util.AbstractList;
 import java.util.List;
 
 public class Utils {
-  public static List<OMNode> elementChildren(final OMElement e) {
+  public static List<OMNode> elementChildren(final OMNode e) {
     return new AbstractList<OMNode>() {
       @Override
       public OMNode get(int index) {

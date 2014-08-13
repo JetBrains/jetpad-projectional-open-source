@@ -22,7 +22,7 @@ import java.util.AbstractList;
 import java.util.List;
 
 public class Utils {
-  public static List<Node> elementChildren(final SVGOMElement e) {
+  public static List<Node> elementChildren(final Node e) {
     return new AbstractList<Node>() {
       @Override
       public Node get(int index) {

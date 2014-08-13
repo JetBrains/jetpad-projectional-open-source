@@ -19,7 +19,6 @@ import jetbrains.jetpad.mapper.Mapper;
 import jetbrains.jetpad.mapper.MapperFactory;
 import jetbrains.jetpad.projectional.svg.*;
 import org.apache.batik.dom.AbstractDocument;
-import org.apache.batik.dom.svg.SVGOMElement;
 import org.apache.batik.dom.svg.SVGOMEllipseElement;
 import org.apache.batik.dom.svg.SVGOMRectElement;
 import org.apache.batik.dom.svg.SVGOMTextElement;
@@ -39,6 +38,10 @@ public class SvgNodeMappingFactory implements MapperFactory<SvgNode, Node> {
       result = new SvgEllipseMapper( (SvgEllipse) source, new SVGOMEllipseElement(null, myDoc), myDoc);
     } else if (source instanceof SvgRect) {
       result = new SvgRectMapper( (SvgRect) source, new SVGOMRectElement(null, myDoc), myDoc);
+    } else if (source instanceof SvgTextElement) {
+      result = new SvgTextElementMapper((SvgTextElement) source, new SVGOMTextElement(null, myDoc), myDoc);
+    } else if (source instanceof SvgTextNode) {
+      result = new SvgTextNodeMapper((SvgTextNode) source, myDoc.createTextNode(null), myDoc);
     } else if (source instanceof SvgRoot) {
       throw new IllegalStateException("Svg root element can't be embedded");
     } else {

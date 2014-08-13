@@ -16,16 +16,14 @@
 package jetbrains.jetpad.projectional.svg.toDom;
 
 import jetbrains.jetpad.base.Registration;
-import jetbrains.jetpad.mapper.Mapper;
 import jetbrains.jetpad.mapper.Synchronizer;
 import jetbrains.jetpad.mapper.SynchronizerContext;
-import jetbrains.jetpad.mapper.Synchronizers;
 import jetbrains.jetpad.model.event.EventHandler;
 import jetbrains.jetpad.projectional.svg.SvgElement;
 import jetbrains.jetpad.projectional.svg.event.SvgAttributeEvent;
 import org.vectomatic.dom.svg.OMSVGElement;
 
-public class SvgElementMapper<SourceT extends SvgElement, TargetT extends OMSVGElement> extends Mapper<SourceT, TargetT> {
+public class SvgElementMapper<SourceT extends SvgElement, TargetT extends OMSVGElement> extends SvgNodeMapper<SourceT, TargetT> {
   public SvgElementMapper(SourceT source, TargetT target) {
     super(source, target);
   }
@@ -40,7 +38,6 @@ public class SvgElementMapper<SourceT extends SvgElement, TargetT extends OMSVGE
       public void attach(SynchronizerContext ctx) {
         // FIXME: O(n^2) time
         for (String key : getSource().getAttributesKeys()) {
-          System.out.println(key + " = " + getSource().getAttr(key).get());
           getTarget().setAttribute(key, getSource().getAttr(key).get());
         }
 
@@ -57,7 +54,5 @@ public class SvgElementMapper<SourceT extends SvgElement, TargetT extends OMSVGE
         myReg.remove();
       }
     });
-
-    conf.add(Synchronizers.forObservableRole(this, getSource().children(), Utils.elementChildren(getTarget()), new SvgNodeMapperFactory()));
   }
 }

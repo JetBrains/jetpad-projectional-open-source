@@ -16,26 +16,21 @@
 package jetbrains.jetpad.projectional.svg.toAwt;
 
 import jetbrains.jetpad.base.Registration;
-import jetbrains.jetpad.mapper.Mapper;
 import jetbrains.jetpad.mapper.Synchronizer;
 import jetbrains.jetpad.mapper.SynchronizerContext;
-import jetbrains.jetpad.mapper.Synchronizers;
 import jetbrains.jetpad.model.event.EventHandler;
 import jetbrains.jetpad.projectional.svg.SvgElement;
 import jetbrains.jetpad.projectional.svg.event.SvgAttributeEvent;
 import org.apache.batik.dom.AbstractDocument;
 import org.apache.batik.dom.svg.SVGOMElement;
 
-public class SvgElementMapper<SourceT extends SvgElement, TargetT extends SVGOMElement> extends Mapper<SourceT, TargetT> {
-  private AbstractDocument myDoc;
-
+public class SvgElementMapper<SourceT extends SvgElement, TargetT extends SVGOMElement> extends SvgNodeMapper<SourceT, TargetT> {
   public SvgElementMapper(SourceT source, TargetT target, AbstractDocument doc) {
-    super(source, target);
-    myDoc = doc;
+    super(source, target, doc);
   }
 
   @Override
-  protected void registerSynchronizers(final SynchronizersConfiguration conf) {
+  protected void registerSynchronizers(SynchronizersConfiguration conf) {
     super.registerSynchronizers(conf);
 
     conf.add(new Synchronizer() {
@@ -44,7 +39,6 @@ public class SvgElementMapper<SourceT extends SvgElement, TargetT extends SVGOME
       public void attach(SynchronizerContext ctx) {
         // FIXME: O(n^2) time
         for (String key : getSource().getAttributesKeys()) {
-          System.out.println(key + " = " + getSource().getAttr(key).get());
           getTarget().setAttribute(key, getSource().getAttr(key).get());
         }
 
@@ -61,7 +55,5 @@ public class SvgElementMapper<SourceT extends SvgElement, TargetT extends SVGOME
         myReg.remove();
       }
     });
-
-    conf.add(Synchronizers.forObservableRole(this, getSource().children(), Utils.elementChildren(getTarget()), new SvgNodeMappingFactory(myDoc)));
   }
 }
