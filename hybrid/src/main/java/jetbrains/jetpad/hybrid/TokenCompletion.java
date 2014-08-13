@@ -171,16 +171,16 @@ class TokenCompletion {
         result.addAll(positionSpec().getTokenCompletion(new Function<Token, Runnable>() {
           @Override
           public Runnable apply(Token input) {
-//            if (ctx.getTargetIndex() == ctx.getObjects().size()) {
-//              Token autoInsert = mySync.getAutoInsert(input);
-//              if (autoInsert != null) {
-//                return completer.complete(0, input, autoInsert);
-//              } else {
-//                return completer.complete(input);
-//              }
-//            } else {
+            if (HybridSynchronizer.AUTO_INSERT_ENABLED && ctx.getTargetIndex() == ctx.getObjects().size()) {
+              Token autoInsert = mySync.getAutoInsert(input);
+              if (autoInsert != null) {
+                return completer.complete(0, input, autoInsert);
+              } else {
+                return completer.complete(input);
+              }
+            } else {
               return completer.complete(input);
-//            }
+            }
           }
         }).get(cp));
         if (cp.isMenu()) {

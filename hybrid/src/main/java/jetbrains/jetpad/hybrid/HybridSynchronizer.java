@@ -64,6 +64,8 @@ import static jetbrains.jetpad.model.composite.Composites.firstFocusable;
 import static jetbrains.jetpad.model.composite.Composites.lastFocusable;
 
 public class HybridSynchronizer<SourceT> implements Synchronizer {
+  static final boolean AUTO_INSERT_ENABLED = false;
+
   static final CellTraitPropertySpec<HybridSynchronizer<?>> HYBRID_SYNCHRONIZER = new CellTraitPropertySpec<>("hybridSynchronizer");
 
   private static final ContentKind<List<Token>> TOKENS_CONTENT = new ContentKind<List<Token>>() {};
