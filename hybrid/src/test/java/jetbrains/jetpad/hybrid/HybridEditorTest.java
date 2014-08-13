@@ -873,6 +873,24 @@ public class HybridEditorTest extends EditingTestCase {
     assertNull(sync.getPair((TextTokenCell) tokenCell(0)));
   }
 
+  @Test
+  public void autoInsertInAllowedPosition() {
+    type("(");
+
+    assertTokens(Tokens.LP, Tokens.RP);
+  }
+
+  @Test
+  public void noAutoInsertInNotAllowedPosition() {
+    setTokens(Tokens.DOT, Tokens.DOT);
+    select(0, false);
+
+    type("(");
+
+    assertTokens(Tokens.DOT, Tokens.LP, Tokens.DOT);
+  }
+
+
   private ValueToken createComplexToken() {
     return new ValueToken(new ComplexValueExpr(), new ComplexValueCloner());
   }

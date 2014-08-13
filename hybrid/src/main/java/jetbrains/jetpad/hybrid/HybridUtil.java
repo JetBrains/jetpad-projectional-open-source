@@ -8,7 +8,7 @@ public class HybridUtil {
     return new Function<Token, Runnable>() {
       @Override
       public Runnable apply(Token input) {
-        if (HybridSynchronizer.AUTO_INSERT_ENABLED && ctx.getTargetIndex() == ctx.getTokens().size()) {
+        if (ctx.getTargetIndex() == ctx.getTokens().size()) {
           PairSpec pairSpec = spec.getPairSpec();
           if (pairSpec.isLeft(input) && pairSpec.getAutoInsert(input) != null) {
             return completer.complete(0, input, pairSpec.getAutoInsert(input));
