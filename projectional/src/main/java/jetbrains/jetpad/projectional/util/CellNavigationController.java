@@ -92,16 +92,18 @@ public class CellNavigationController {
       }
     }));
     result.add(myContainer.focusedCell.addHandler(new EventHandler<PropertyChangeEvent<Cell>>() {
+      Cell myPair;
+
       @Override
       public void onEvent(PropertyChangeEvent<Cell> event) {
         Cell oldCell = event.getOldValue();
         if (oldCell != null) {
           oldCell.highlighted().set(false);
-          Cell pair = oldCell.get(PAIR_CELL);
-          if (pair != null) {
+          if (myPair != null) {
             oldCell.brightHighlight().set(false);
-            pair.brightHighlight().set(false);
-            pair.highlighted().set(false);
+            myPair.brightHighlight().set(false);
+            myPair.highlighted().set(false);
+            myPair = null;
           }
         }
 
@@ -113,6 +115,7 @@ public class CellNavigationController {
             newCell.brightHighlight().set(true);
             pair.brightHighlight().set(true);
             pair.highlighted().set(true);
+            myPair = pair;
           }
         }
       }
