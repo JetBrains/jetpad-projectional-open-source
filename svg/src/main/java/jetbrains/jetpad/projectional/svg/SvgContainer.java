@@ -50,38 +50,38 @@ public class SvgContainer {
     return myListeners.add(l);
   }
 
-  void propertyChanged(final SvgElement element, final SvgPropertySpec<?> spec, final PropertyChangeEvent<?> event) {
+  void propertyChanged(final SvgNode node, final SvgPropertySpec<?> spec, final PropertyChangeEvent<?> event) {
     myListeners.fire(new ListenerCaller<SvgContainerListener>() {
       @Override
       public void call(SvgContainerListener l) {
-        l.onPropertySet(element, spec, event);
+        l.onPropertySet(node, spec, event);
       }
     });
   }
 
-  void attributeChanged(final SvgElement element, final SvgAttributeEvent event) {
+  void attributeChanged(final SvgNode node, final SvgAttributeEvent event) {
     myListeners.fire(new ListenerCaller<SvgContainerListener>() {
       @Override
       public void call(SvgContainerListener l) {
-        l.onAttrSet(element, event);
+        l.onAttrSet(node, event);
       }
     });
   }
 
-  void svgElementAttached(final SvgElement element) {
+  void svgElementAttached(final SvgNode node) {
     myListeners.fire(new ListenerCaller<SvgContainerListener>() {
       @Override
       public void call(SvgContainerListener l) {
-        l.onElementAttached(element);
+        l.onElementAttached(node);
       }
     });
   }
 
-  void svgElementDetached(final SvgElement element) {
+  void svgElementDetached(final SvgNode node) {
     myListeners.fire(new ListenerCaller<SvgContainerListener>() {
       @Override
       public void call(SvgContainerListener l) {
-        l.onElementDetached(element);
+        l.onElementDetached(node);
       }
     });
   }

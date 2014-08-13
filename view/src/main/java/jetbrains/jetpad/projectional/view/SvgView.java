@@ -26,28 +26,28 @@ public class SvgView extends View {
     });
     svgContainer.addListener(new SvgContainerAdapter() {
       @Override
-      public void onPropertySet(SvgElement element, SvgPropertySpec<?> spec, PropertyChangeEvent<?> event) {
-        if (element == root().get() && (spec == SvgRoot.HEIGHT || spec == SvgRoot.WIDTH)) {
+      public void onPropertySet(SvgNode node, SvgPropertySpec<?> spec, PropertyChangeEvent<?> event) {
+        if (node == root().get() && (spec == SvgRoot.HEIGHT || spec == SvgRoot.WIDTH)) {
           invalidate();
         }
         repaint();
       }
 
       @Override
-      public void onAttrSet(SvgElement element, SvgAttributeEvent event) {
-        if (element == root().get() && (event.getAttrName().equalsIgnoreCase("height") || (event.getAttrName().equalsIgnoreCase("width")))){
+      public void onAttrSet(SvgNode node, SvgAttributeEvent event) {
+        if (node == root().get() && (event.getAttrName().equalsIgnoreCase("height") || (event.getAttrName().equalsIgnoreCase("width")))){
           invalidate();
         }
         repaint();
       }
 
       @Override
-      public void onElementAttached(SvgElement element) {
+      public void onElementAttached(SvgNode node) {
         repaint();
       }
 
       @Override
-      public void onElementDetached(SvgElement element) {
+      public void onElementDetached(SvgNode node) {
         repaint();
       }
     });

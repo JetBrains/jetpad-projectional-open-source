@@ -18,5 +18,5 @@ package jetbrains.jetpad.projectional.svg;
 import jetbrains.jetpad.event.Event;
 
 public interface SvgEventHandler<EventT extends Event> {
-  void handle(SvgElement element, EventT e);
+  void handle(SvgNode node, EventT e);
 }

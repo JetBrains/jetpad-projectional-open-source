@@ -13,26 +13,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package jetbrains.jetpad.projectional.svg.toDom;
+package jetbrains.jetpad.projectional.svg.toAwt;
 
 import jetbrains.jetpad.mapper.Mapper;
 import jetbrains.jetpad.mapper.MapperFactory;
-import jetbrains.jetpad.projectional.svg.SvgElement;
-import jetbrains.jetpad.projectional.svg.SvgEllipse;
-import jetbrains.jetpad.projectional.svg.SvgRect;
-import jetbrains.jetpad.projectional.svg.SvgRoot;
-import org.vectomatic.dom.svg.OMSVGElement;
-import org.vectomatic.dom.svg.OMSVGEllipseElement;
-import org.vectomatic.dom.svg.OMSVGRectElement;
+import jetbrains.jetpad.projectional.svg.*;
+import org.apache.batik.dom.AbstractDocument;
+import org.apache.batik.dom.svg.SVGOMElement;
+import org.apache.batik.dom.svg.SVGOMEllipseElement;
+import org.apache.batik.dom.svg.SVGOMRectElement;
+import org.apache.batik.dom.svg.SVGOMTextElement;
+import org.w3c.dom.Node;
 
-public class SvgElementMapperFactory implements MapperFactory<SvgElement, OMSVGElement> {
+public class SvgNodeMappingFactory implements MapperFactory<SvgNode, Node> {
+  private AbstractDocument myDoc;
+
+  public SvgNodeMappingFactory(AbstractDocument doc) {
+    myDoc = doc;
+  }
+
   @Override
-  public Mapper<? extends SvgElement, ? extends OMSVGElement> createMapper(SvgElement source) {
-    Mapper<? extends SvgElement, ? extends OMSVGElement> result;
+  public Mapper<? extends SvgNode, ? extends Node> createMapper(SvgNode source) {
+    Mapper<? extends SvgNode, ? extends Node> result;
     if (source instanceof SvgEllipse) {
-      result = new SvgEllipseMapper( (SvgEllipse) source, new OMSVGEllipseElement());
+      result = new SvgEllipseMapper( (SvgEllipse) source, new SVGOMEllipseElement(null, myDoc), myDoc);
     } else if (source instanceof SvgRect) {
-      result = new SvgRectMapper( (SvgRect) source, new OMSVGRectElement());
+      result = new SvgRectMapper( (SvgRect) source, new SVGOMRectElement(null, myDoc), myDoc);
     } else if (source instanceof SvgRoot) {
       throw new IllegalStateException("Svg root element can't be embedded");
     } else {

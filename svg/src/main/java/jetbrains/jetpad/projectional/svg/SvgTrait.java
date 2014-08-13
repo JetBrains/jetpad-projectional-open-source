@@ -59,12 +59,12 @@ public class SvgTrait {
     return result;
   }
 
-  <EventT extends Event> void dispatch(SvgElement element, SvgEventSpec<EventT> spec, EventT event) {
+  <EventT extends Event> void dispatch(SvgNode node, SvgEventSpec<EventT> spec, EventT event) {
     if (myHandlers != null && myHandlers.containsKey(spec)) {
       for (SvgEventHandler<? extends Event> handler : myHandlers.get(spec)) {
         @SuppressWarnings("unchecked")
         SvgEventHandler<EventT> castHandler = (SvgEventHandler<EventT>) handler;
-        castHandler.handle(element, event);
+        castHandler.handle(node, event);
         if (event.isConsumed()) return;
       }
     }

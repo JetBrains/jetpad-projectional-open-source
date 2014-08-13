@@ -20,18 +20,18 @@ import jetbrains.jetpad.projectional.svg.event.SvgAttributeEvent;
 
 public class SvgContainerAdapter implements SvgContainerListener {
   @Override
-  public void onPropertySet(SvgElement element, SvgPropertySpec<?> spec, PropertyChangeEvent<?> event) {
+  public void onPropertySet(SvgNode node, SvgPropertySpec<?> spec, PropertyChangeEvent<?> event) {
   }
 
   @Override
-  public void onAttrSet(SvgElement element, SvgAttributeEvent event) {
+  public void onAttrSet(SvgNode node, SvgAttributeEvent event) {
   }
 
   @Override
-  public void onElementAttached(SvgElement element) {
+  public void onElementAttached(SvgNode node) {
   }
 
   @Override
-  public void onElementDetached(SvgElement element) {
+  public void onElementDetached(SvgNode element) {
   }
 }

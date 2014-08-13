@@ -15,13 +15,13 @@
  */
 package jetbrains.jetpad.projectional.svg.toAwt;
 
+import jetbrains.jetpad.base.Registration;
 import jetbrains.jetpad.mapper.Mapper;
+import jetbrains.jetpad.mapper.Synchronizer;
+import jetbrains.jetpad.mapper.SynchronizerContext;
 import jetbrains.jetpad.mapper.Synchronizers;
-import jetbrains.jetpad.model.property.WritableProperty;
+import jetbrains.jetpad.model.event.EventHandler;
 import jetbrains.jetpad.projectional.svg.SvgElement;
-import jetbrains.jetpad.projectional.svg.SvgEventHandler;
-import jetbrains.jetpad.projectional.svg.SvgEvents;
-import jetbrains.jetpad.projectional.svg.SvgTraitBuilder;
 import jetbrains.jetpad.projectional.svg.event.SvgAttributeEvent;
 import org.apache.batik.dom.AbstractDocument;
 import org.apache.batik.dom.svg.SVGOMElement;
@@ -38,33 +38,30 @@ public class SvgElementMapper<SourceT extends SvgElement, TargetT extends SVGOME
   protected void registerSynchronizers(final SynchronizersConfiguration conf) {
     super.registerSynchronizers(conf);
 
-    // FIXME: O(n^2) time
-    for (final String key : getSource().getAttributesKeys()) {
-      conf.add(Synchronizers.forPropsOneWay(getSource().getAttr(key), new WritableProperty<String>() {
-        @Override
-        public void set(String value) {
-          getTarget().setAttribute(key, value);
-        }
-      }));
-    }
-
-    getSource().addTrait(new SvgTraitBuilder().on(SvgEvents.ATTRIBUTE_CHANGED, new SvgEventHandler<SvgAttributeEvent>() {
+    conf.add(new Synchronizer() {
+      private Registration myReg;
       @Override
-      public void handle(SvgElement element, final SvgAttributeEvent e) {
-        assert (element == getSource());
-        if (e.getOldValue() == null) {
-          conf.add(Synchronizers.forPropsOneWay(element.getAttr(e.getAttrName()), new WritableProperty<String>() {
-            @Override
-            public void set(String value) {
-              getTarget().setAttribute(e.getAttrName(), value);
-            }
-          }));
+      public void attach(SynchronizerContext ctx) {
+        // FIXME: O(n^2) time
+        for (String key : getSource().getAttributesKeys()) {
+          System.out.println(key + " = " + getSource().getAttr(key).get());
+          getTarget().setAttribute(key, getSource().getAttr(key).get());
         }
-        getTarget().setAttribute(e.getAttrName(), e.getNewValue());
-      }
-    })
-    .build());
 
-    conf.add(Synchronizers.forObservableRole(this, getSource().children(), Utils.elementChildren(getTarget()), new SvgElementMappingFactory(myDoc)));
+        myReg = getSource().attributes().addHandler(new EventHandler<SvgAttributeEvent>() {
+          @Override
+          public void onEvent(SvgAttributeEvent event) {
+            getTarget().setAttribute(event.getAttrName(), event.getNewValue());
+          }
+        });
+      }
+
+      @Override
+      public void detach() {
+        myReg.remove();
+      }
+    });
+
+    conf.add(Synchronizers.forObservableRole(this, getSource().children(), Utils.elementChildren(getTarget()), new SvgNodeMappingFactory(myDoc)));
   }
 }

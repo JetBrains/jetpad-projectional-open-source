@@ -19,8 +19,8 @@ import jetbrains.jetpad.model.property.PropertyChangeEvent;
 import jetbrains.jetpad.projectional.svg.event.SvgAttributeEvent;
 
 public interface SvgContainerListener {
-  void onPropertySet(SvgElement element, SvgPropertySpec<?> spec, PropertyChangeEvent<?> event);
-  void onAttrSet(SvgElement element, SvgAttributeEvent event);
-  void onElementAttached(SvgElement element);
-  void onElementDetached(SvgElement element);
+  void onPropertySet(SvgNode node, SvgPropertySpec<?> spec, PropertyChangeEvent<?> event);
+  void onAttrSet(SvgNode node, SvgAttributeEvent event);
+  void onElementAttached(SvgNode node);
+  void onElementDetached(SvgNode node);
 }
