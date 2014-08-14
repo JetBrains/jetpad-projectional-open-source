@@ -17,24 +17,26 @@ package jetbrains.jetpad.hybrid;
 
 import com.google.common.base.Function;
 import com.google.common.base.Objects;
-import jetbrains.jetpad.base.Value;
 import jetbrains.jetpad.base.Runnables;
+import jetbrains.jetpad.base.Value;
+import jetbrains.jetpad.cell.Cell;
+import jetbrains.jetpad.cell.TextCell;
+import jetbrains.jetpad.cell.completion.Completion;
+import jetbrains.jetpad.cell.completion.CompletionHelper;
 import jetbrains.jetpad.completion.CompletionController;
 import jetbrains.jetpad.completion.CompletionItem;
 import jetbrains.jetpad.completion.CompletionParameters;
 import jetbrains.jetpad.completion.CompletionSupplier;
-import jetbrains.jetpad.mapper.Mapper;
-import jetbrains.jetpad.cell.TextCell;
-import jetbrains.jetpad.cell.completion.*;
 import jetbrains.jetpad.hybrid.parser.Token;
-import jetbrains.jetpad.cell.Cell;
+import jetbrains.jetpad.mapper.Mapper;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import static jetbrains.jetpad.hybrid.SelectionPosition.*;
+import static jetbrains.jetpad.hybrid.SelectionPosition.FIRST;
+import static jetbrains.jetpad.hybrid.SelectionPosition.LAST;
 
 class TokenCompletion {
   private HybridSynchronizer<?> mySync;
@@ -168,7 +170,12 @@ class TokenCompletion {
       @Override
       public List<CompletionItem> get(CompletionParameters cp) {
         List<CompletionItem> result = new ArrayList<>();
-        result.addAll(positionSpec().getTokenCompletion(HybridUtil.getAutoInsertHandler(ctx, completer, mySync.getSpec())).get(cp));
+        result.addAll(positionSpec().getTokenCompletion(new Function<Token, Runnable>() {
+          @Override
+          public Runnable apply(Token input) {
+            return completer.complete(input);
+          }
+        }).get(cp));
         if (cp.isMenu()) {
           result.addAll(positionSpec().getAdditionalCompletion(ctx, completer).get(cp));
         }

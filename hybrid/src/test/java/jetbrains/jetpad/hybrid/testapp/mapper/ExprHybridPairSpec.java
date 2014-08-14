@@ -18,12 +18,4 @@ class ExprHybridPairSpec implements PairSpec {
   public boolean isPair(Token l, Token r) {
     return (l == Tokens.LP || l == Tokens.LP_CALL) && r == Tokens.RP;
   }
-
-  @Override
-  public Token getAutoInsert(Token t) {
-    if (t == Tokens.LP || t == Tokens.LP_CALL) {
-      return Tokens.RP;
-    }
-    return null;
-  }
 }

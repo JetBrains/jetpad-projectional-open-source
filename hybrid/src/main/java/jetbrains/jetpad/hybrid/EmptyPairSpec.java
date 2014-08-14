@@ -17,9 +17,4 @@ class EmptyPairSpec implements PairSpec {
   public boolean isPair(Token l, Token r) {
     return false;
   }
-
-  @Override
-  public Token getAutoInsert(Token t) {
-    return null;
-  }
 }

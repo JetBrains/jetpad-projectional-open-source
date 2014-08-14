@@ -8,6 +8,4 @@ public interface PairSpec {
   boolean isLeft(Token t);
   boolean isRight(Token t);
   boolean isPair(Token l, Token r);
-
-  Token getAutoInsert(Token t);
 }

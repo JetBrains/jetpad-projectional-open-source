@@ -660,14 +660,6 @@ public class HybridSynchronizer<SourceT> implements Synchronizer {
     return myTokenListEditor;
   }
 
-  Token getAutoInsert(Token t) {
-    PairSpec pairSpec = mySpec.getPairSpec();
-    if (pairSpec.isLeft(t)) {
-      return pairSpec.getAutoInsert(t);
-    }
-    return null;
-  }
-
   TextTokenCell getPair(TextTokenCell cell) {
     PairSpec pairSpec = mySpec.getPairSpec();
     List<Token> tokens = myTokenListEditor.tokens;
