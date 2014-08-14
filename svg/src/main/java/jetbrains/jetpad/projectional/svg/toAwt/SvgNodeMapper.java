@@ -33,6 +33,6 @@ public class SvgNodeMapper<SourceT extends SvgNode, TargetT extends Node> extend
   protected void registerSynchronizers(final Mapper.SynchronizersConfiguration conf) {
     super.registerSynchronizers(conf);
 
-    conf.add(Synchronizers.forObservableRole(this, getSource().children(), Utils.elementChildren(getTarget()), new SvgNodeMappingFactory(myDoc)));
+    conf.add(Synchronizers.forObservableRole(this, getSource().children(), Utils.elementChildren(getTarget()), new SvgNodeMapperFactory(myDoc)));
   }
 }
