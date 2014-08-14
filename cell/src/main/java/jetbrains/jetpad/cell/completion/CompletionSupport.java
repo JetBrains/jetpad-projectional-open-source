@@ -152,6 +152,7 @@ public class CompletionSupport {
       }
     };
 
+    final Cell completionCell = CompletionMenu.createView(menuModel, completer);
     reg.add(textView.addTrait(new CellTrait() {
       @Override
       public void onPropertyChanged(Cell cell, CellPropertySpec<?> propery, PropertyChangeEvent<?> event) {
@@ -168,6 +169,7 @@ public class CompletionSupport {
       @Override
       public void onKeyPressed(Cell cell, KeyEvent event) {
         CompletionItem selectedItem = menuModel.selectedItem.get();
+        int pageHeight = completionCell.getBounds().dimension.y / textView.dimension().y;
         if (selectedItem == null) return;
 
         if (event.is(Key.ENTER)) {
@@ -186,6 +188,17 @@ public class CompletionSupport {
           menuModel.down();
           event.consume();
           return;
+        }
+
+        if (event.is(Key.PAGE_UP) || event.is(Key.PAGE_DOWN)) {
+          for (int i = 0; i < pageHeight; i++) {
+            if (event.is(Key.PAGE_DOWN)) {
+              menuModel.down();
+            } else {
+              menuModel.up();
+            }
+          }
+          event.consume();
         }
 
         if (event.is(Key.ESCAPE)) {
@@ -213,7 +226,6 @@ public class CompletionSupport {
         return super.get(cell, spec);
       }
     }));
-    final Cell completionCell = CompletionMenu.createView(menuModel, completer);
     reg.add(new Registration() {
       @Override
       public void remove() {
