@@ -25,12 +25,9 @@ import jetbrains.jetpad.cell.completion.Completion;
 import jetbrains.jetpad.completion.CompletionController;
 import jetbrains.jetpad.cell.position.Positions;
 import jetbrains.jetpad.cell.util.CellStateHandler;
-import jetbrains.jetpad.event.KeyStrokeSpecs;
+import jetbrains.jetpad.event.*;
 import jetbrains.jetpad.model.composite.Composites;
 import jetbrains.jetpad.projectional.util.RootController;
-import jetbrains.jetpad.event.Key;
-import jetbrains.jetpad.event.KeyEvent;
-import jetbrains.jetpad.event.ModifierKey;
 import jetbrains.jetpad.hybrid.parser.*;
 import jetbrains.jetpad.hybrid.testapp.mapper.ExprContainerMapper;
 import jetbrains.jetpad.hybrid.testapp.mapper.Tokens;
@@ -711,6 +708,18 @@ public class HybridEditorTest extends EditingTestCase {
     press(KeyStrokeSpecs.PASTE);
 
     assertTokens(Tokens.ID, Tokens.ID, Tokens.PLUS);
+  }
+
+  @Test
+  public void pasteToEmpty() {
+    setTokens(Tokens.ID);
+    select(0, true);
+    press(Key.RIGHT, ModifierKey.SHIFT);
+
+    press(KeyStrokeSpecs.CUT);
+    press(KeyStrokeSpecs.PASTE);
+
+    assertTokens(Tokens.ID);
   }
 
   @Test

@@ -272,8 +272,15 @@ public class HybridSynchronizer<SourceT> implements Synchronizer {
       private void paste(ClipboardContent content) {
         List<Token> tokens = content.get(TOKENS_CONTENT);
         Cell currentCell = mySelectionSupport.currentCell();
-        int currentCellIndex = myTargetList.indexOf(currentCell);
-        int targetIndex = Positions.isHomePosition(currentCell) ? currentCellIndex : currentCellIndex + 1;
+
+        int targetIndex;
+        if (currentCell != null) {
+          int currentCellIndex = myTargetList.indexOf(currentCell);
+          targetIndex = Positions.isHomePosition(currentCell) ? currentCellIndex : currentCellIndex + 1;
+        } else {
+          targetIndex = 0;
+        }
+
         myTokenListEditor.tokens.addAll(targetIndex, tokens);
         myTokenListEditor.updateToPrintedTokens();
         tokenOperations().select(targetIndex + tokens.size() - 1, LAST).run();
