@@ -151,7 +151,7 @@ public class TextEditingTrait extends TextNavigationTrait {
 
   @Override
   public void onComplete(Cell cell, CompletionEvent event) {
-    TextCell textCell = (TextCell) cell;
+    final TextCell textCell = (TextCell) cell;
     String currentText = currentText(textCell);
     CompletionController handler = getCompletionController(textCell);
 
@@ -181,7 +181,12 @@ public class TextEditingTrait extends TextNavigationTrait {
           if (!rightTransform.isEmpty() && textCell.get(TextEditing.DOT_LIKE_RT)) {
             if (textCell.rightPopup().get() == null) {
               TextCell popup = CompletionSupport.showSideTransformPopup(textCell, textCell.rightPopup(), rightTransform.getItems());
-              popup.get(Completion.COMPLETION_CONTROLLER).activate();
+              popup.get(Completion.COMPLETION_CONTROLLER).activate(new Runnable() {
+                @Override
+                public void run() {
+                  textCell.focus();
+                }
+              } );
             }
             event.consume();
             return;

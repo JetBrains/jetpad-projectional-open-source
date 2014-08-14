@@ -278,6 +278,19 @@ public class ValidTextCompletionTest extends CompletionTestCase {
   }
 
   @Test
+  public void cancelationOfRtOnEnd() {
+    type("xx");
+
+    Cell focused = myCellContainer.focusedCell.get();
+
+    complete();
+    escape();
+
+    assertFocused(focused);
+  }
+
+
+  @Test
   public void lowPriorityIsntCompletedIf() {
     type("var");
 
