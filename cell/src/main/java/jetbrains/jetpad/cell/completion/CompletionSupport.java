@@ -97,7 +97,7 @@ public class CompletionSupport {
 
           @Override
           public boolean hasAmbiguousMatches() {
-            //todo implement it. we use this method only in hybrid1 synchronizers so we have mostly text view completion
+            //todo implement it. we use this method only in hybrid synchronizers so we have mostly text view completion
             return true;
           }
         };
