@@ -20,6 +20,7 @@ import jetbrains.jetpad.mapper.MapperFactory;
 import jetbrains.jetpad.projectional.svg.*;
 import org.apache.batik.dom.AbstractDocument;
 import org.apache.batik.dom.svg.SVGOMEllipseElement;
+import org.apache.batik.dom.svg.SVGOMPathElement;
 import org.apache.batik.dom.svg.SVGOMRectElement;
 import org.apache.batik.dom.svg.SVGOMTextElement;
 import org.w3c.dom.Node;
@@ -42,6 +43,8 @@ public class SvgNodeMapperFactory implements MapperFactory<SvgNode, Node> {
       result = new SvgTextElementMapper((SvgTextElement) source, new SVGOMTextElement(null, myDoc), myDoc);
     } else if (source instanceof SvgTextNode) {
       result = new SvgTextNodeMapper((SvgTextNode) source, myDoc.createTextNode(null), myDoc);
+    } else if (source instanceof SvgPathElement) {
+      result = new SvgPathElementMapper((SvgPathElement) source, new SVGOMPathElement(null, myDoc), myDoc);
     } else if (source instanceof SvgRoot) {
       throw new IllegalStateException("Svg root element can't be embedded");
     } else {

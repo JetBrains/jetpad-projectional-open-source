@@ -32,6 +32,8 @@ public class SvgNodeMapperFactory implements MapperFactory<SvgNode, OMNode> {
       result = new SvgTextElementMapper((SvgTextElement) source, new OMSVGTextElement());
     } else if (source instanceof SvgTextNode) {
       result = new SvgTextNodeMapper((SvgTextNode) source, new OMText(null));
+    } else if (source instanceof SvgPathElement) {
+      result = new SvgPathElementMapper((SvgPathElement) source, new OMSVGPathElement());
     } else if (source instanceof SvgRoot) {
       throw new IllegalStateException("Svg root element can't be embedded");
     } else {

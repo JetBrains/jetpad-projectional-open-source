@@ -42,6 +42,18 @@ public class DemoModel {
     text.getProp(SvgTextElement.X).set(20.);
     text.getProp(SvgTextElement.Y).set(20.);
 
+    SvgPathDataBuilder pathBuilder = new SvgPathDataBuilder(false);
+    pathBuilder.moveTo(150., 175., true)
+        .verticalLineTo(-100.)
+        .ellipticalArc(100., 100., 0., false, false, -100., 100.)
+        .closePath();
+
+    SvgPathElement path = new SvgPathElement();
+    path.getProp(SvgPathElement.D).set(pathBuilder.build());
+    path.setAttr("fill", "red");
+    path.setAttr("stroke", "blue");
+    path.setAttr("stroke-width", "5");
+
     SvgEllipse ellipse2 = new SvgEllipse();
     ellipse2.getProp(SvgEllipse.CX).set(250.0);
     ellipse2.getProp(SvgEllipse.CY).set(85.0);
@@ -60,6 +72,7 @@ public class DemoModel {
     svgRoot.children().add(rect);
     svgRoot.children().add(ellipse2);
     svgRoot.children().add(text);
+    svgRoot.children().add(path);
 
     return svgRoot;
   }
