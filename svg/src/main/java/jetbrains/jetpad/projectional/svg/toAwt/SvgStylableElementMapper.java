@@ -13,32 +13,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package jetbrains.jetpad.projectional.svg.toDom;
+package jetbrains.jetpad.projectional.svg.toAwt;
 
 import jetbrains.jetpad.mapper.Synchronizers;
 import jetbrains.jetpad.model.property.WritableProperty;
-import jetbrains.jetpad.projectional.svg.SvgTextElement;
-import org.vectomatic.dom.svg.OMSVGTextElement;
+import jetbrains.jetpad.projectional.svg.SvgStylableElement;
+import org.apache.batik.dom.AbstractDocument;
+import org.apache.batik.dom.svg.SVGStylableElement;
 
-public class SvgTextElementMapper extends SvgStylableElementMapper<SvgTextElement, OMSVGTextElement> {
-  public SvgTextElementMapper(SvgTextElement source, OMSVGTextElement target) {
-    super(source, target);
+public class SvgStylableElementMapper<SourceT extends SvgStylableElement, TargetT extends SVGStylableElement>
+    extends SvgElementMapper<SourceT, TargetT> {
+  public SvgStylableElementMapper(SourceT source, TargetT target, AbstractDocument doc) {
+    super(source, target, doc);
   }
 
   @Override
   protected void registerSynchronizers(SynchronizersConfiguration conf) {
     super.registerSynchronizers(conf);
 
-    conf.add(Synchronizers.forPropsOneWay(getSource().getProp(SvgTextElement.X), new WritableProperty<Double>() {
+    conf.add(Synchronizers.forPropsOneWay(getSource().getProp(SvgStylableElement.CLASS), new WritableProperty<String>() {
       @Override
-      public void set(Double value) {
-        getTarget().setAttribute("x", Double.toString(value));
-      }
-    }));
-    conf.add(Synchronizers.forPropsOneWay(getSource().getProp(SvgTextElement.Y), new WritableProperty<Double>() {
-      @Override
-      public void set(Double value) {
-        getTarget().setAttribute("y", Double.toString(value));
+      public void set(String value) {
+        getTarget().setAttribute("class", value);
       }
     }));
   }

@@ -17,11 +17,12 @@ package jetbrains.jetpad.projectional.svg.toDom;
 
 import jetbrains.jetpad.mapper.Synchronizers;
 import jetbrains.jetpad.model.property.WritableProperty;
-import jetbrains.jetpad.projectional.svg.SvgTextElement;
-import org.vectomatic.dom.svg.OMSVGTextElement;
+import jetbrains.jetpad.projectional.svg.SvgStylableElement;
+import org.vectomatic.dom.svg.OMSVGElement;
 
-public class SvgTextElementMapper extends SvgStylableElementMapper<SvgTextElement, OMSVGTextElement> {
-  public SvgTextElementMapper(SvgTextElement source, OMSVGTextElement target) {
+public class SvgStylableElementMapper<SourceT extends SvgStylableElement, TargetT extends OMSVGElement>
+    extends SvgElementMapper<SourceT, TargetT> {
+  public SvgStylableElementMapper(SourceT source, TargetT target) {
     super(source, target);
   }
 
@@ -29,16 +30,10 @@ public class SvgTextElementMapper extends SvgStylableElementMapper<SvgTextElemen
   protected void registerSynchronizers(SynchronizersConfiguration conf) {
     super.registerSynchronizers(conf);
 
-    conf.add(Synchronizers.forPropsOneWay(getSource().getProp(SvgTextElement.X), new WritableProperty<Double>() {
+    conf.add(Synchronizers.forPropsOneWay(getSource().getProp(SvgStylableElement.CLASS), new WritableProperty<String>() {
       @Override
-      public void set(Double value) {
-        getTarget().setAttribute("x", Double.toString(value));
-      }
-    }));
-    conf.add(Synchronizers.forPropsOneWay(getSource().getProp(SvgTextElement.Y), new WritableProperty<Double>() {
-      @Override
-      public void set(Double value) {
-        getTarget().setAttribute("y", Double.toString(value));
+      public void set(String value) {
+        getTarget().setClassNameBaseVal(value);
       }
     }));
   }

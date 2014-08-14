@@ -22,7 +22,7 @@ import jetbrains.jetpad.values.Color;
 import org.apache.batik.dom.AbstractDocument;
 import org.apache.batik.dom.svg.SVGOMEllipseElement;
 
-public class SvgEllipseMapper extends SvgElementMapper<SvgEllipse, SVGOMEllipseElement> {
+public class SvgEllipseMapper extends SvgStylableElementMapper<SvgEllipse, SVGOMEllipseElement> {
   public SvgEllipseMapper(SvgEllipse source, SVGOMEllipseElement target, AbstractDocument doc) {
     super(source, target, doc);
   }

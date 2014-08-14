@@ -15,6 +15,6 @@
  */
 package jetbrains.jetpad.projectional.svg;
 
-public class SvgPathElement extends SvgStylableElement {
-  public static final SvgPropertySpec<String> D = new SvgPropertySpec<>("d", null);
+public class SvgStylableElement extends SvgElement {
+  public static final SvgPropertySpec<String> CLASS = new SvgPropertySpec<>(null);
 }

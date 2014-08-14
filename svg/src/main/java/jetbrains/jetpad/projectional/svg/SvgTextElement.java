@@ -17,7 +17,7 @@ package jetbrains.jetpad.projectional.svg;
 
 import jetbrains.jetpad.model.collections.list.ObservableList;
 
-public class SvgTextElement extends SvgElement {
+public class SvgTextElement extends SvgStylableElement {
   public static final SvgPropertySpec<Double> X = new SvgPropertySpec<>("x", 0.0);
   public static final SvgPropertySpec<Double> Y = new SvgPropertySpec<>("y", 0.0);
 

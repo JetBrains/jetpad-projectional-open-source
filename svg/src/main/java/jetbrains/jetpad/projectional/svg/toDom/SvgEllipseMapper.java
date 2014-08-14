@@ -21,7 +21,7 @@ import jetbrains.jetpad.projectional.svg.SvgEllipse;
 import jetbrains.jetpad.values.Color;
 import org.vectomatic.dom.svg.OMSVGEllipseElement;
 
-public class SvgEllipseMapper extends SvgElementMapper<SvgEllipse, OMSVGEllipseElement> {
+public class SvgEllipseMapper extends SvgStylableElementMapper<SvgEllipse, OMSVGEllipseElement> {
   public SvgEllipseMapper(SvgEllipse source, OMSVGEllipseElement target) {
     super(source, target);
   }

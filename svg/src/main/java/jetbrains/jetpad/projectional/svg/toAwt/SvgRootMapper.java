@@ -21,7 +21,7 @@ import jetbrains.jetpad.projectional.svg.SvgRoot;
 import org.apache.batik.dom.AbstractDocument;
 import org.apache.batik.dom.svg.SVGOMSVGElement;
 
-public class SvgRootMapper extends SvgElementMapper<SvgRoot, SVGOMSVGElement> {
+public class SvgRootMapper extends SvgStylableElementMapper<SvgRoot, SVGOMSVGElement> {
   public SvgRootMapper(SvgRoot source, SVGOMSVGElement target, AbstractDocument doc) {
     super(source, target, doc);
   }

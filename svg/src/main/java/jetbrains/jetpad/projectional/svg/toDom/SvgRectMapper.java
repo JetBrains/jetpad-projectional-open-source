@@ -21,7 +21,7 @@ import jetbrains.jetpad.projectional.svg.SvgRect;
 import jetbrains.jetpad.values.Color;
 import org.vectomatic.dom.svg.OMSVGRectElement;
 
-public class SvgRectMapper extends SvgElementMapper<SvgRect, OMSVGRectElement> {
+public class SvgRectMapper extends SvgStylableElementMapper<SvgRect, OMSVGRectElement> {
   public SvgRectMapper(SvgRect source, OMSVGRectElement target) {
     super(source, target);
   }

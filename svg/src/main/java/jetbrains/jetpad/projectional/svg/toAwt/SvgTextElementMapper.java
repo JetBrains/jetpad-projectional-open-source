@@ -21,7 +21,7 @@ import jetbrains.jetpad.projectional.svg.SvgTextElement;
 import org.apache.batik.dom.AbstractDocument;
 import org.apache.batik.dom.svg.SVGOMTextElement;
 
-public class SvgTextElementMapper extends SvgElementMapper<SvgTextElement, SVGOMTextElement> {
+public class SvgTextElementMapper extends SvgStylableElementMapper<SvgTextElement, SVGOMTextElement> {
   public SvgTextElementMapper(SvgTextElement source, SVGOMTextElement target, AbstractDocument doc) {
     super(source, target, doc);
   }

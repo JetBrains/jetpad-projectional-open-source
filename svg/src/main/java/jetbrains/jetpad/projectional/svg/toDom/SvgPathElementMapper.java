@@ -20,7 +20,7 @@ import jetbrains.jetpad.model.property.WritableProperty;
 import jetbrains.jetpad.projectional.svg.SvgPathElement;
 import org.vectomatic.dom.svg.OMSVGPathElement;
 
-public class SvgPathElementMapper extends SvgElementMapper<SvgPathElement, OMSVGPathElement> {
+public class SvgPathElementMapper extends SvgStylableElementMapper<SvgPathElement, OMSVGPathElement> {
   public SvgPathElementMapper(SvgPathElement source, OMSVGPathElement target) {
     super(source, target);
   }

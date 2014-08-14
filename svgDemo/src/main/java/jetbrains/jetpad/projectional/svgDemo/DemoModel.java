@@ -36,6 +36,7 @@ public class DemoModel {
     ellipse.getProp(SvgEllipse.RY).set(50.0);
     ellipse.getProp(SvgEllipse.FILL).set(Color.YELLOW);
     ellipse.setAttr("style", "stroke:#006600;");
+    ellipse.getProp(SvgStylableElement.CLASS).set("ellipse-yellow");
 
     SvgTextElement text = new SvgTextElement();
     text.addTextNode("Example Text");

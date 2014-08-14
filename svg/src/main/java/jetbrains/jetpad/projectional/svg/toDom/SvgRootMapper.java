@@ -20,7 +20,7 @@ import jetbrains.jetpad.model.property.WritableProperty;
 import jetbrains.jetpad.projectional.svg.SvgRoot;
 import org.vectomatic.dom.svg.OMSVGSVGElement;
 
-public class SvgRootMapper extends SvgElementMapper<SvgRoot, OMSVGSVGElement> {
+public class SvgRootMapper extends SvgStylableElementMapper<SvgRoot, OMSVGSVGElement> {
   public SvgRootMapper(SvgRoot source, OMSVGSVGElement target) {
     super(source, target);
   }
