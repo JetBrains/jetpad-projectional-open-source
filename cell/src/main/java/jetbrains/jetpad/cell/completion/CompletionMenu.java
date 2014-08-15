@@ -16,12 +16,14 @@
 package jetbrains.jetpad.cell.completion;
 
 import jetbrains.jetpad.base.Handler;
+import jetbrains.jetpad.base.Registration;
 import jetbrains.jetpad.cell.trait.CellTrait;
 import jetbrains.jetpad.completion.CompletionItem;
 import jetbrains.jetpad.completion.CompletionMenuModel;
 import jetbrains.jetpad.geometry.Rectangle;
 import jetbrains.jetpad.geometry.Vector;
 import jetbrains.jetpad.mapper.*;
+import jetbrains.jetpad.model.event.CompositeRegistration;
 import jetbrains.jetpad.model.property.DerivedProperty;
 import jetbrains.jetpad.model.property.Properties;
 import jetbrains.jetpad.model.property.ReadableProperty;
@@ -31,11 +33,18 @@ import jetbrains.jetpad.cell.*;
 import jetbrains.jetpad.values.Color;
 
 class CompletionMenu {
-  static Cell createView(CompletionMenuModel model, Handler<CompletionItem> completer) {
-    CompletionMenuModelMapper mapper = new CompletionMenuModelMapper(model, completer);
+  static Cell createView(CompletionMenuModel model, Handler<CompletionItem> completer, CompositeRegistration reg) {
+    final CompletionMenuModelMapper mapper = new CompletionMenuModelMapper(model, completer);
     mapper.attachRoot();
 
     mapper.getTarget().hasShadow().set(true);
+
+    reg.add(new Registration() {
+      @Override
+      public void remove() {
+        mapper.detachRoot();
+      }
+    });
 
     return mapper.getTarget();
   }

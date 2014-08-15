@@ -152,7 +152,7 @@ public class CompletionSupport {
       }
     };
 
-    final Cell completionCell = CompletionMenu.createView(menuModel, completer);
+    final Cell completionCell = CompletionMenu.createView(menuModel, completer, reg);
     reg.add(textView.addTrait(new CellTrait() {
       @Override
       public void onPropertyChanged(Cell cell, CellPropertySpec<?> propery, PropertyChangeEvent<?> event) {
