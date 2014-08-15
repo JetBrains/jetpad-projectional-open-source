@@ -27,9 +27,7 @@ import jetbrains.jetpad.model.event.ListenerCaller;
 import jetbrains.jetpad.model.event.Listeners;
 import jetbrains.jetpad.model.property.Property;
 import jetbrains.jetpad.model.property.PropertyChangeEvent;
-import jetbrains.jetpad.model.property.ValueProperty;
 import jetbrains.jetpad.model.util.ListMap;
-import jetbrains.jetpad.projectional.svg.event.SvgAttributeEvent;
 
 import java.util.*;
 
@@ -39,7 +37,6 @@ public class SvgNode extends HasParent<SvgNode, SvgNode> {
   private List<SvgTrait> myTraits;
   private Listeners<SvgNodeListener> myListeners;
 
-  private AttrMap myAttributes = new AttrMap();
   private SvgChildList myChildren;
 
   public SvgContainer container() {
@@ -51,40 +48,6 @@ public class SvgNode extends HasParent<SvgNode, SvgNode> {
       myChildren = new SvgChildList(this);
     }
     return myChildren;
-  }
-
-  public AttrMap attributes() {
-    return myAttributes;
-  }
-
-  public boolean hasAttr(String name) {
-    return myAttributes.containsKey(name);
-  }
-
-  public Property<String> getAttr(String name) {
-    if (myAttributes != null && myAttributes.containsKey(name)) {
-      return myAttributes.get(name);
-    }
-    return null;
-  }
-
-  public void setAttr(String name, String value) {
-    // TODO: remove value when null is passed as a value
-    String oldValue = myAttributes.put(name, value);
-    if (value != null && !value.equals(oldValue)) {
-      SvgAttributeEvent event = new SvgAttributeEvent(name, oldValue, value);
-      dispatch(SvgEvents.ATTRIBUTE_CHANGED, event);
-      if (isAttached()) {
-        myContainer.attributeChanged(this, event);
-      }
-    }
-  }
-
-  public Set<String> getAttributesKeys() {
-    if (myAttributes == null) {
-      return Collections.emptySet();
-    }
-    return Collections.unmodifiableSet(myAttributes.keySet());
   }
 
   <ValueT> ValueT get(SvgPropertySpec<ValueT> spec) {

@@ -153,7 +153,7 @@ public class DemoModel {
       @Override
       public void handle(View view, KeyEvent e) {
         if (e.key() == Key.SPACE) {
-          model.children().get(0).setAttr("stroke-width", "7");
+          ((SvgElement) model.children().get(0)).setAttr("stroke-width", "7");
           return;
         }
         if (state.get()) {
