@@ -32,6 +32,8 @@ import jetbrains.jetpad.event.MouseEvent;
 import jetbrains.jetpad.cell.*;
 import jetbrains.jetpad.values.Color;
 
+import java.util.Arrays;
+
 class CompletionMenu {
   static Cell createView(CompletionMenuModel model, Handler<CompletionItem> completer, CompositeRegistration reg) {
     final CompletionMenuModelMapper mapper = new CompletionMenuModelMapper(model, completer);
@@ -50,16 +52,21 @@ class CompletionMenu {
   }
 
   private static class CompletionMenuModelMapper extends Mapper<CompletionMenuModel, ScrollCell> {
-    private VerticalCell myVerticalCell;
+    private VerticalCell myRootCell = new VerticalCell();
+    private VerticalCell myVerticalCell = new VerticalCell();
+    private TextCell myEmptyCell = new TextCell("<no completion items>");
     private Handler<CompletionItem> myCompleter;
 
     private CompletionMenuModelMapper(CompletionMenuModel source, Handler<CompletionItem> completer) {
       super(source, new ScrollCell());
 
+      myEmptyCell.textColor().set(Color.RED);
+
       myCompleter = completer;
 
-      myVerticalCell = new VerticalCell();
-      getTarget().children().add(myVerticalCell);
+      myRootCell.children().addAll(Arrays.asList(myVerticalCell, myEmptyCell));
+
+      getTarget().children().add(myRootCell);
 
       getTarget().background().set(Color.VERY_LIGHT_GRAY);
       getTarget().maxDimension().set(new Vector(600, 200));
@@ -80,6 +87,8 @@ class CompletionMenu {
             return new CompletionItemMapper(source);
           }
         }));
+
+      conf.add(Synchronizers.forPropsOneWay(Properties.isEmpty(getSource().visibleItems), myEmptyCell.visible()));
     }
   }
 
