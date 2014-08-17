@@ -19,6 +19,8 @@ import jetbrains.jetpad.base.Registration;
 import jetbrains.jetpad.mapper.Synchronizer;
 import jetbrains.jetpad.mapper.SynchronizerContext;
 import jetbrains.jetpad.model.event.EventHandler;
+import jetbrains.jetpad.model.property.WritableProperty;
+import jetbrains.jetpad.projectional.svg.SvgAttrSpec;
 import jetbrains.jetpad.projectional.svg.SvgElement;
 import jetbrains.jetpad.projectional.svg.event.SvgAttributeEvent;
 import org.vectomatic.dom.svg.OMSVGElement;
@@ -31,6 +33,16 @@ public class SvgElementMapper<SourceT extends SvgElement, TargetT extends OMSVGE
   @Override
   protected void registerSynchronizers(final SynchronizersConfiguration conf) {
     super.registerSynchronizers(conf);
+
+    for (String key : getSource().attrKeys()) {
+      final SvgAttrSpec spec = getSource().getSpecByName(key);
+      conf.add(Utils.attrSynchronizer(getSource().getProp(spec), new WritableProperty<Object>() {
+        @Override
+        public void set(Object value) {
+          getTarget().setAttribute(spec.toString(), value.toString());
+        }
+      }, getSource().propertyPresent(spec)));
+    }
 
     conf.add(new Synchronizer() {
       private Registration myReg;

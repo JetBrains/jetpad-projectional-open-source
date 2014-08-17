@@ -15,8 +15,6 @@
  */
 package jetbrains.jetpad.projectional.svg.toAwt;
 
-import jetbrains.jetpad.mapper.Synchronizers;
-import jetbrains.jetpad.model.property.WritableProperty;
 import jetbrains.jetpad.projectional.svg.SvgStylableElement;
 import org.apache.batik.dom.AbstractDocument;
 import org.apache.batik.dom.svg.SVGStylableElement;
@@ -30,12 +28,5 @@ public class SvgStylableElementMapper<SourceT extends SvgStylableElement, Target
   @Override
   protected void registerSynchronizers(SynchronizersConfiguration conf) {
     super.registerSynchronizers(conf);
-
-    conf.add(Synchronizers.forPropsOneWay(getSource().getProp(SvgStylableElement.CLASS), new WritableProperty<String>() {
-      @Override
-      public void set(String value) {
-        getTarget().setAttribute("class", value);
-      }
-    }));
   }
 }
