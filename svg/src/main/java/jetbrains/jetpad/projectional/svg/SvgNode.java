@@ -31,7 +31,7 @@ import jetbrains.jetpad.model.util.ListMap;
 
 import java.util.*;
 
-public class SvgNode extends HasParent<SvgNode, SvgNode> {
+public abstract class SvgNode extends HasParent<SvgNode, SvgNode> {
   private SvgContainer myContainer;
   private ListMap<SvgPropertySpec<?>, Object> myProperties;
   private List<SvgTrait> myTraits;
@@ -48,6 +48,10 @@ public class SvgNode extends HasParent<SvgNode, SvgNode> {
       myChildren = new SvgChildList(this);
     }
     return myChildren;
+  }
+
+  public <ValueT> boolean propertyPresent(SvgPropertySpec<ValueT> spec) {
+    return (myProperties != null && myProperties.containsKey(spec));
   }
 
   <ValueT> ValueT get(SvgPropertySpec<ValueT> spec) {

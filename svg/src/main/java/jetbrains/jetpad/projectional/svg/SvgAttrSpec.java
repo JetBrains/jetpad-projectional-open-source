@@ -15,6 +15,21 @@
  */
 package jetbrains.jetpad.projectional.svg;
 
-public abstract class SvgStylableElement extends SvgElement {
-  public static final SvgPropertySpec<String> CLASS = new SvgPropertySpec<>(null);
+public class SvgAttrSpec<ValueT> extends SvgPropertySpec<ValueT> {
+  private String myName;
+
+  public SvgAttrSpec(String name) {
+    super(name);
+    myName = name;
+  }
+
+  @Override
+  public String toString() {
+    return myName;
+  }
+
+  @Override
+  public ValueT defaultValue() {
+    return null;
+  }
 }

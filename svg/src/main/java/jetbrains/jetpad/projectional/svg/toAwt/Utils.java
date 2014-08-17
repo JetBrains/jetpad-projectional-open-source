@@ -15,6 +15,14 @@
  */
 package jetbrains.jetpad.projectional.svg.toAwt;
 
+import jetbrains.jetpad.base.Registration;
+import jetbrains.jetpad.mapper.Synchronizer;
+import jetbrains.jetpad.mapper.SynchronizerContext;
+import jetbrains.jetpad.mapper.Synchronizers;
+import jetbrains.jetpad.model.event.EventHandler;
+import jetbrains.jetpad.model.property.PropertyChangeEvent;
+import jetbrains.jetpad.model.property.ReadableProperty;
+import jetbrains.jetpad.model.property.WritableProperty;
 import org.apache.batik.dom.svg.SVGOMElement;
 import org.w3c.dom.Node;
 
@@ -63,6 +71,30 @@ public class Utils {
       @Override
       public int size() {
         return e.getChildNodes().getLength();
+      }
+    };
+  }
+
+  public static <ValueT> Synchronizer attrSynchronizer(final ReadableProperty<ValueT> source, final WritableProperty<ValueT> target, boolean init) {
+    if (init) {
+      return Synchronizers.forPropsOneWay(source, target);
+    }
+    return new Synchronizer() {
+      private Registration myReg;
+
+      @Override
+      public void attach(SynchronizerContext ctx) {
+        myReg = source.addHandler(new EventHandler<PropertyChangeEvent<ValueT>>() {
+          @Override
+          public void onEvent(PropertyChangeEvent<ValueT> event) {
+            target.set(event.getNewValue());
+          }
+        });
+      }
+
+      @Override
+      public void detach() {
+        myReg.remove();
       }
     };
   }

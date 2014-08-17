@@ -37,11 +37,11 @@ public class SvgElementMapper<SourceT extends SvgElement, TargetT extends OMSVGE
       @Override
       public void attach(SynchronizerContext ctx) {
         // FIXME: O(n^2) time
-        for (String key : getSource().getAttributesKeys()) {
-          getTarget().setAttribute(key, getSource().getAttr(key).get());
+        for (String key : getSource().getPresentXmlAttributesKeys()) {
+          getTarget().setAttribute(key, getSource().getXmlAttr(key).get());
         }
 
-        myReg = getSource().attributes().addHandler(new EventHandler<SvgAttributeEvent>() {
+        myReg = getSource().xmlAttributes().addHandler(new EventHandler<SvgAttributeEvent>() {
           @Override
           public void onEvent(SvgAttributeEvent event) {
             getTarget().setAttribute(event.getAttrName(), event.getNewValue());

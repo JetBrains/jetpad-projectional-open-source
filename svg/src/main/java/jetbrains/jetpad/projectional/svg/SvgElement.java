@@ -19,29 +19,50 @@ import jetbrains.jetpad.model.property.Property;
 import jetbrains.jetpad.projectional.svg.event.SvgAttributeEvent;
 
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
-public class SvgElement extends SvgNode {
-  private AttrMap myAttributes = new AttrMap();
+public abstract class SvgElement extends SvgNode {
+  private AttrMap myXmlAttributes = new AttrMap();
+  protected static Map<String, SvgAttrSpec<?>> myAttrInfo = new HashMap<>();
 
-  public AttrMap attributes() {
-    return myAttributes;
+  protected Map<String, SvgAttrSpec<?>> getAttrInfo() {
+    return myAttrInfo;
   }
 
-  public boolean hasAttr(String name) {
-    return myAttributes.containsKey(name);
+  public SvgAttrSpec<?> getSpecByName(String name) {
+    return getAttrInfo().get(name);
   }
 
-  public Property<String> getAttr(String name) {
-    if (myAttributes != null && myAttributes.containsKey(name)) {
-      return myAttributes.get(name);
+  public Set<String> attrKeys() {
+    return getAttrInfo().keySet();
+  }
+
+  public AttrMap xmlAttributes() {
+    return myXmlAttributes;
+  }
+
+  public boolean hasXmlAttr(String name) {
+    return myXmlAttributes.containsKey(name);
+  }
+
+  public Property<String> getXmlAttr(String name) {
+    if (myAttrInfo.containsKey(name)) {
+      throw new UnsupportedOperationException("Svg attributes should be accessed with appropriate accessor methods, not xml attrs methods");
+    }
+    if (myXmlAttributes != null && myXmlAttributes.containsKey(name)) {
+      return myXmlAttributes.get(name);
     }
     return null;
   }
 
-  public void setAttr(String name, String value) {
+  public void setXmlAttr(String name, String value) {
+    if (myAttrInfo.containsKey(name)) {
+      throw new UnsupportedOperationException("Svg attributes should be accessed with appropriate accessor methods, not xml attrs methods");
+    }
     // TODO: remove value when null is passed as a value
-    String oldValue = myAttributes.put(name, value);
+    String oldValue = myXmlAttributes.put(name, value);
     if (value != null && !value.equals(oldValue)) {
       SvgAttributeEvent event = new SvgAttributeEvent(name, oldValue, value);
       dispatch(SvgEvents.ATTRIBUTE_CHANGED, event);
@@ -51,10 +72,10 @@ public class SvgElement extends SvgNode {
     }
   }
 
-  public Set<String> getAttributesKeys() {
-    if (myAttributes == null) {
+  public Set<String> getPresentXmlAttributesKeys() {
+    if (myXmlAttributes == null) {
       return Collections.emptySet();
     }
-    return Collections.unmodifiableSet(myAttributes.keySet());
+    return Collections.unmodifiableSet(myXmlAttributes.keySet());
   }
 }

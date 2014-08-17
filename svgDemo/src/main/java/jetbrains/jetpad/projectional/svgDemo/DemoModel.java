@@ -35,13 +35,13 @@ public class DemoModel {
     ellipse.getProp(SvgEllipse.RX).set(170.0);
     ellipse.getProp(SvgEllipse.RY).set(50.0);
     ellipse.getProp(SvgEllipse.FILL).set(Color.YELLOW);
-    ellipse.setAttr("style", "stroke:#006600;");
+    ellipse.setXmlAttr("style", "stroke:#006600;");
     ellipse.getProp(SvgStylableElement.CLASS).set("ellipse-yellow");
 
     SvgTextElement text = new SvgTextElement();
     text.addTextNode("Example Text");
-    text.getProp(SvgTextElement.X).set(20.);
-    text.getProp(SvgTextElement.Y).set(20.);
+    text.getX().set(20.);
+    text.getY().set(20.);
 
     SvgPathDataBuilder pathBuilder = new SvgPathDataBuilder(false);
     pathBuilder.moveTo(150., 175., true)
@@ -51,9 +51,9 @@ public class DemoModel {
 
     SvgPathElement path = new SvgPathElement();
     path.getProp(SvgPathElement.D).set(pathBuilder.build());
-    path.setAttr("fill", "red");
-    path.setAttr("stroke", "blue");
-    path.setAttr("stroke-width", "5");
+    path.setXmlAttr("fill", "red");
+    path.setXmlAttr("stroke", "blue");
+    path.setXmlAttr("stroke-width", "5");
 
     SvgEllipse ellipse2 = new SvgEllipse();
     ellipse2.getProp(SvgEllipse.CX).set(250.0);
@@ -153,7 +153,7 @@ public class DemoModel {
       @Override
       public void handle(View view, KeyEvent e) {
         if (e.key() == Key.SPACE) {
-          ((SvgElement) model.children().get(0)).setAttr("stroke-width", "7");
+          ((SvgElement) model.children().get(0)).setXmlAttr("stroke-width", "7");
           return;
         }
         if (state.get()) {

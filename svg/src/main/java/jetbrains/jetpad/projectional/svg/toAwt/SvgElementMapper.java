@@ -19,6 +19,8 @@ import jetbrains.jetpad.base.Registration;
 import jetbrains.jetpad.mapper.Synchronizer;
 import jetbrains.jetpad.mapper.SynchronizerContext;
 import jetbrains.jetpad.model.event.EventHandler;
+import jetbrains.jetpad.model.property.WritableProperty;
+import jetbrains.jetpad.projectional.svg.SvgAttrSpec;
 import jetbrains.jetpad.projectional.svg.SvgElement;
 import jetbrains.jetpad.projectional.svg.event.SvgAttributeEvent;
 import org.apache.batik.dom.AbstractDocument;
@@ -33,16 +35,26 @@ public class SvgElementMapper<SourceT extends SvgElement, TargetT extends SVGOME
   protected void registerSynchronizers(SynchronizersConfiguration conf) {
     super.registerSynchronizers(conf);
 
+    for (String key : getSource().attrKeys()) {
+      final SvgAttrSpec spec = getSource().getSpecByName(key);
+      conf.add(Utils.attrSynchronizer(getSource().getProp(spec), new WritableProperty<Object>() {
+        @Override
+        public void set(Object value) {
+          getTarget().setAttribute(spec.toString(), value.toString());
+        }
+      }, getSource().propertyPresent(spec)));
+    }
+
     conf.add(new Synchronizer() {
       private Registration myReg;
       @Override
       public void attach(SynchronizerContext ctx) {
         // FIXME: O(n^2) time
-        for (String key : getSource().getAttributesKeys()) {
-          getTarget().setAttribute(key, getSource().getAttr(key).get());
+        for (String key : getSource().getPresentXmlAttributesKeys()) {
+          getTarget().setAttribute(key, getSource().getXmlAttr(key).get());
         }
 
-        myReg = getSource().attributes().addHandler(new EventHandler<SvgAttributeEvent>() {
+        myReg = getSource().xmlAttributes().addHandler(new EventHandler<SvgAttributeEvent>() {
           @Override
           public void onEvent(SvgAttributeEvent event) {
             getTarget().setAttribute(event.getAttrName(), event.getNewValue());

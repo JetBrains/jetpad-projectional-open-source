@@ -16,10 +16,34 @@
 package jetbrains.jetpad.projectional.svg;
 
 import jetbrains.jetpad.model.collections.list.ObservableList;
+import jetbrains.jetpad.model.property.Property;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class SvgTextElement extends SvgStylableElement {
-  public static final SvgPropertySpec<Double> X = new SvgPropertySpec<>("x", 0.0);
-  public static final SvgPropertySpec<Double> Y = new SvgPropertySpec<>("y", 0.0);
+  public static final SvgAttrSpec<Double> X = new SvgAttrSpec<>("x");
+  public static final SvgAttrSpec<Double> Y = new SvgAttrSpec<>("y");
+
+  protected static Map<String, SvgAttrSpec<?>> myAttrInfo;
+  static {
+    myAttrInfo = new HashMap<>(SvgStylableElement.myAttrInfo);
+    myAttrInfo.put(X.toString(), X);
+    myAttrInfo.put(Y.toString(), Y);
+  }
+
+  @Override
+  protected Map<String, SvgAttrSpec<?>> getAttrInfo() {
+    return myAttrInfo;
+  }
+
+  public Property<Double> getX() {
+    return getProp(X);
+  }
+
+  public Property<Double> getY() {
+    return getProp(Y);
+  }
 
   public void addTextNode(String text) {
     ObservableList<SvgNode> children = children();
