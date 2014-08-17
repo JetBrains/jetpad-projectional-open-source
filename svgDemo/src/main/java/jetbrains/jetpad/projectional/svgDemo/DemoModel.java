@@ -34,7 +34,8 @@ public class DemoModel {
     ellipse.getProp(SvgEllipse.CY).set(80.0);
     ellipse.getProp(SvgEllipse.RX).set(170.0);
     ellipse.getProp(SvgEllipse.RY).set(50.0);
-    ellipse.getProp(SvgEllipse.FILL).set(Color.YELLOW);
+//    ellipse.getXmlAttr("fill").set(Color.YELLOW.toCssColor());
+    ellipse.setXmlAttr("fill", Color.YELLOW.toCssColor());
     ellipse.setXmlAttr("style", "stroke:#006600;");
     ellipse.getProp(SvgStylableElement.CLASS).set("ellipse-yellow");
 
@@ -60,14 +61,14 @@ public class DemoModel {
     ellipse2.getProp(SvgEllipse.CY).set(85.0);
     ellipse2.getProp(SvgEllipse.RX).set(40.0);
     ellipse2.getProp(SvgEllipse.RY).set(85.0);
-    ellipse2.getProp(SvgEllipse.FILL).set(Color.GREEN);
+    ellipse2.setXmlAttr("fill", Color.GREEN.toCssColor());
 
     SvgRect rect = new SvgRect();
     rect.getProp(SvgRect.X).set(180.0);
     rect.getProp(SvgRect.Y).set(50.0);
     rect.getProp(SvgRect.WIDTH).set(80.0);
     rect.getProp(SvgRect.HEIGHT).set(50.0);
-    rect.getProp(SvgRect.FILL).set(Color.RED);
+    rect.setXmlAttr("fill", Color.RED.toCssColor());
 
     svgRoot.children().add(ellipse);
     svgRoot.children().add(rect);
@@ -94,7 +95,7 @@ public class DemoModel {
     ellipse.getProp(SvgEllipse.CY).set(190.0);
     ellipse.getProp(SvgEllipse.RX).set(50.0);
     ellipse.getProp(SvgEllipse.RY).set(50.0);
-    ellipse.getProp(SvgEllipse.FILL).set(Color.RED);
+    ellipse.setXmlAttr("fill", Color.RED.toCssColor());
 
     svgRoot.children().add(rect);
     svgRoot.children().add(ellipse);
@@ -108,7 +109,7 @@ public class DemoModel {
     circle.getProp(SvgEllipse.CY).set((double) y);
     circle.getProp(SvgEllipse.RX).set(10.0);
     circle.getProp(SvgEllipse.RY).set(10.0);
-    circle.getProp(SvgEllipse.FILL).set(Color.BLACK);
+    circle.setXmlAttr("fill", Color.BLACK.toCssColor());
 
     svgRoot.children().add(circle);
   }

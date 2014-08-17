@@ -15,12 +15,44 @@
  */
 package jetbrains.jetpad.projectional.svg;
 
-import jetbrains.jetpad.values.Color;
+import jetbrains.jetpad.model.property.Property;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class SvgEllipse extends SvgStylableElement {
-  public static final SvgPropertySpec<Double> CX = new SvgPropertySpec<>("cx", 0.0);
-  public static final SvgPropertySpec<Double> CY = new SvgPropertySpec<>("cy", 0.0);
-  public static final SvgPropertySpec<Double> RX = new SvgPropertySpec<>("rx", 0.0);
-  public static final SvgPropertySpec<Double> RY = new SvgPropertySpec<>("ry", 0.0);
-  public static final SvgPropertySpec<Color> FILL = new SvgPropertySpec<>("fill", Color.BLACK);
+  public static final SvgAttrSpec<Double> CX = new SvgAttrSpec<>("cx");
+  public static final SvgAttrSpec<Double> CY = new SvgAttrSpec<>("cy");
+  public static final SvgAttrSpec<Double> RX = new SvgAttrSpec<>("rx");
+  public static final SvgAttrSpec<Double> RY = new SvgAttrSpec<>("ry");
+
+  protected static Map<String, SvgAttrSpec<?>> myAttrInfo;
+  static {
+    myAttrInfo = new HashMap<>(SvgElement.myAttrInfo);
+    myAttrInfo.put(CX.toString(), CX);
+    myAttrInfo.put(CY.toString(), CY);
+    myAttrInfo.put(RX.toString(), RX);
+    myAttrInfo.put(RY.toString(), RY);
+  }
+
+  @Override
+  protected Map<String, SvgAttrSpec<?>> getAttrInfo() {
+    return myAttrInfo;
+  }
+
+  public Property<Double> getCx() {
+    return getProp(CX);
+  }
+
+  public Property<Double> getCy() {
+    return getProp(CY);
+  }
+
+  public Property<Double> getRx() {
+    return getProp(RX);
+  }
+
+  public Property<Double> getRy() {
+    return getProp(RY);
+  }
 }

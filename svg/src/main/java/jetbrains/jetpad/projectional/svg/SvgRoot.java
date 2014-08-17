@@ -15,7 +15,32 @@
  */
 package jetbrains.jetpad.projectional.svg;
 
+import jetbrains.jetpad.model.property.Property;
+
+import java.util.HashMap;
+import java.util.Map;
+
 public class SvgRoot extends SvgStylableElement {
-  public static final SvgPropertySpec<Double> HEIGHT = new SvgPropertySpec<>("height", 100.0);
-  public static final SvgPropertySpec<Double> WIDTH = new SvgPropertySpec<>("width", 100.0);
+  public static final SvgAttrSpec<Double> HEIGHT = new SvgAttrSpec<>("height");
+  public static final SvgAttrSpec<Double> WIDTH = new SvgAttrSpec<>("width");
+
+  protected static Map<String, SvgAttrSpec<?>> myAttrInfo;
+  static {
+    myAttrInfo = new HashMap<>(SvgElement.myAttrInfo);
+    myAttrInfo.put(HEIGHT.toString(), HEIGHT);
+    myAttrInfo.put(WIDTH.toString(), WIDTH);
+  }
+
+  @Override
+  protected Map<String, SvgAttrSpec<?>> getAttrInfo() {
+    return myAttrInfo;
+  }
+
+  public Property<Double> getHeight() {
+    return getProp(HEIGHT);
+  }
+
+  public Property<Double> getWidth() {
+    return getProp(WIDTH);
+  }
 }

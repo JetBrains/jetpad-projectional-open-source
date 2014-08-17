@@ -15,12 +15,44 @@
  */
 package jetbrains.jetpad.projectional.svg;
 
-import jetbrains.jetpad.values.Color;
+import jetbrains.jetpad.model.property.Property;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class SvgRect extends SvgStylableElement {
-  public static final SvgPropertySpec<Double> X = new SvgPropertySpec<>("x", 0.0);
-  public static final SvgPropertySpec<Double> Y = new SvgPropertySpec<>("y", 0.0);
-  public static final SvgPropertySpec<Double> HEIGHT = new SvgPropertySpec<>("height", 10.0);
-  public static final SvgPropertySpec<Double> WIDTH = new SvgPropertySpec<>("width", 10.0);
-  public static final SvgPropertySpec<Color> FILL = new SvgPropertySpec<>("fill", Color.BLACK);
+  public static final SvgAttrSpec<Double> X = new SvgAttrSpec<>("x");
+  public static final SvgAttrSpec<Double> Y = new SvgAttrSpec<>("y");
+  public static final SvgAttrSpec<Double> HEIGHT = new SvgAttrSpec<>("height");
+  public static final SvgAttrSpec<Double> WIDTH = new SvgAttrSpec<>("width");
+
+  protected static Map<String, SvgAttrSpec<?>> myAttrInfo;
+  static {
+    myAttrInfo = new HashMap<>(SvgElement.myAttrInfo);
+    myAttrInfo.put(X.toString(), X);
+    myAttrInfo.put(Y.toString(), Y);
+    myAttrInfo.put(HEIGHT.toString(), HEIGHT);
+    myAttrInfo.put(WIDTH.toString(), WIDTH);
+  }
+
+  @Override
+  protected Map<String, SvgAttrSpec<?>> getAttrInfo() {
+    return myAttrInfo;
+  }
+
+  public Property<Double> getX() {
+    return getProp(X);
+  }
+
+  public Property<Double> getY() {
+    return getProp(Y);
+  }
+
+  public Property<Double> getHeight() {
+    return getProp(HEIGHT);
+  }
+
+  public Property<Double> getWidth() {
+    return getProp(WIDTH);
+  }
 }

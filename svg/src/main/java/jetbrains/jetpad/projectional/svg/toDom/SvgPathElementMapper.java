@@ -15,25 +15,11 @@
  */
 package jetbrains.jetpad.projectional.svg.toDom;
 
-import jetbrains.jetpad.mapper.Synchronizers;
-import jetbrains.jetpad.model.property.WritableProperty;
 import jetbrains.jetpad.projectional.svg.SvgPathElement;
 import org.vectomatic.dom.svg.OMSVGPathElement;
 
 public class SvgPathElementMapper extends SvgStylableElementMapper<SvgPathElement, OMSVGPathElement> {
   public SvgPathElementMapper(SvgPathElement source, OMSVGPathElement target) {
     super(source, target);
-  }
-
-  @Override
-  protected void registerSynchronizers(SynchronizersConfiguration conf) {
-    super.registerSynchronizers(conf);
-
-    conf.add(Synchronizers.forPropsOneWay(getSource().getProp(SvgPathElement.D), new WritableProperty<String>() {
-      @Override
-      public void set(String value) {
-        getTarget().setAttribute("d", value);
-      }
-    }));
   }
 }

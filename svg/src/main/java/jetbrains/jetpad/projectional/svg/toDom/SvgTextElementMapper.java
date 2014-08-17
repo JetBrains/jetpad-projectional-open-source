@@ -22,9 +22,4 @@ public class SvgTextElementMapper extends SvgStylableElementMapper<SvgTextElemen
   public SvgTextElementMapper(SvgTextElement source, OMSVGTextElement target) {
     super(source, target);
   }
-
-  @Override
-  protected void registerSynchronizers(SynchronizersConfiguration conf) {
-    super.registerSynchronizers(conf);
-  }
 }
