@@ -29,7 +29,7 @@ import jetbrains.jetpad.model.event.CompositeRegistration;
 import jetbrains.jetpad.model.event.EventHandler;
 import jetbrains.jetpad.model.property.PropertyChangeEvent;
 import jetbrains.jetpad.projectional.base.ImageData;
-import jetbrains.jetpad.projectional.svg.SvgRoot;
+import jetbrains.jetpad.projectional.svg.SvgSvgElement;
 import jetbrains.jetpad.projectional.svg.toAwt.SvgRootDocumentMapper;
 import jetbrains.jetpad.projectional.view.*;
 import jetbrains.jetpad.projectional.view.spi.NullViewContainerPeer;
@@ -877,9 +877,9 @@ public class ViewContainerComponent extends JComponent implements Scrollable {
 
     SvgPaintHelper(final SvgView view) {
       createGraphicsNode(view);
-      view.root().addHandler(new EventHandler<PropertyChangeEvent<SvgRoot>>() {
+      view.root().addHandler(new EventHandler<PropertyChangeEvent<SvgSvgElement>>() {
         @Override
-        public void onEvent(PropertyChangeEvent<SvgRoot> event) {
+        public void onEvent(PropertyChangeEvent<SvgSvgElement> event) {
           SvgPaintHelper.this.update(view);
         }
       });

@@ -15,11 +15,11 @@
  */
 package jetbrains.jetpad.projectional.svg.toDom;
 
-import jetbrains.jetpad.projectional.svg.SvgEllipse;
+import jetbrains.jetpad.projectional.svg.SvgEllipseElement;
 import org.vectomatic.dom.svg.OMSVGEllipseElement;
 
-public class SvgEllipseMapper extends SvgStylableElementMapper<SvgEllipse, OMSVGEllipseElement> {
-  public SvgEllipseMapper(SvgEllipse source, OMSVGEllipseElement target) {
+public class SvgEllipseMapper extends SvgStylableElementMapper<SvgEllipseElement, OMSVGEllipseElement> {
+  public SvgEllipseMapper(SvgEllipseElement source, OMSVGEllipseElement target) {
     super(source, target);
   }
 }

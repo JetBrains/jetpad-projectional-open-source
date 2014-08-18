@@ -17,20 +17,20 @@ package jetbrains.jetpad.projectional.svg.toAwt;
 
 import jetbrains.jetpad.mapper.Mapper;
 import jetbrains.jetpad.mapper.MappingContext;
-import jetbrains.jetpad.projectional.svg.SvgRoot;
+import jetbrains.jetpad.projectional.svg.SvgSvgElement;
 import org.apache.batik.dom.svg.SVGDOMImplementation;
 import org.apache.batik.dom.svg.SVGOMDocument;
 import org.apache.batik.dom.svg.SVGOMSVGElement;
 import org.w3c.dom.DOMImplementation;
 
-public class SvgRootDocumentMapper extends Mapper<SvgRoot, SVGOMDocument> {
+public class SvgRootDocumentMapper extends Mapper<SvgSvgElement, SVGOMDocument> {
   private static SVGOMDocument createDocument() {
     DOMImplementation impl = SVGDOMImplementation.getDOMImplementation();
     String svgNS = SVGDOMImplementation.SVG_NAMESPACE_URI;
     return (SVGOMDocument) impl.createDocument(svgNS, "svg", null);
   }
 
-  public SvgRootDocumentMapper(SvgRoot source) {
+  public SvgRootDocumentMapper(SvgSvgElement source) {
     super(source, createDocument());
   }
 

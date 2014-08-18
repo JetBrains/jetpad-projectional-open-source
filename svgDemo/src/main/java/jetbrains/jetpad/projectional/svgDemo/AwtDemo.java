@@ -15,7 +15,7 @@
  */
 package jetbrains.jetpad.projectional.svgDemo;
 
-import jetbrains.jetpad.projectional.svg.SvgRoot;
+import jetbrains.jetpad.projectional.svg.SvgSvgElement;
 import jetbrains.jetpad.projectional.svg.toAwt.SvgRootDocumentMapper;
 import org.apache.batik.swing.JSVGCanvas;
 import org.apache.batik.swing.svg.AbstractJSVGComponent;
@@ -38,7 +38,7 @@ public class AwtDemo {
     JSVGCanvas svgCanvas = new JSVGCanvas();
     svgCanvas.setDocumentState(AbstractJSVGComponent.ALWAYS_DYNAMIC);
 
-    final SvgRoot svgRoot = DemoModel.createModel();
+    final SvgSvgElement svgRoot = DemoModel.createModel();
     SvgRootDocumentMapper mapper = new SvgRootDocumentMapper(svgRoot);
     mapper.attachRoot();
 

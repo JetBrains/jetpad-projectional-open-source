@@ -20,7 +20,7 @@ import jetbrains.jetpad.model.property.Property;
 import java.util.HashMap;
 import java.util.Map;
 
-public class SvgEllipse extends SvgStylableElement {
+public class SvgEllipseElement extends SvgStylableElement {
   public static final SvgAttrSpec<Double> CX = new SvgAttrSpec<>("cx");
   public static final SvgAttrSpec<Double> CY = new SvgAttrSpec<>("cy");
   public static final SvgAttrSpec<Double> RX = new SvgAttrSpec<>("rx");

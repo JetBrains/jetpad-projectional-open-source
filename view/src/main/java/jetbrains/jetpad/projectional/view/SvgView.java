@@ -10,16 +10,16 @@ import jetbrains.jetpad.projectional.svg.*;
 import jetbrains.jetpad.projectional.svg.event.SvgAttributeEvent;
 
 public class SvgView extends View {
-  public static final ViewPropertySpec<SvgRoot> SVG_ROOT = new ViewPropertySpec<>("svgRoot", ViewPropertyKind.RELAYOUT);
+  public static final ViewPropertySpec<SvgSvgElement> SVG_ROOT = new ViewPropertySpec<>("svgRoot", ViewPropertyKind.RELAYOUT);
 
   public final SvgContainer svgContainer;
 
-  public SvgView(SvgRoot root) {
+  public SvgView(SvgSvgElement root) {
     root().set(root);
     svgContainer = new SvgContainer(root);
-    root().addHandler(new EventHandler<PropertyChangeEvent<SvgRoot>>() {
+    root().addHandler(new EventHandler<PropertyChangeEvent<SvgSvgElement>>() {
       @Override
-      public void onEvent(PropertyChangeEvent<SvgRoot> event) {
+      public void onEvent(PropertyChangeEvent<SvgSvgElement> event) {
         svgContainer.root().set(event.getNewValue());
         invalidate();
       }
@@ -27,7 +27,7 @@ public class SvgView extends View {
     svgContainer.addListener(new SvgContainerAdapter() {
       @Override
       public void onPropertySet(SvgNode node, SvgPropertySpec<?> spec, PropertyChangeEvent<?> event) {
-        if (node == root().get() && (spec == SvgRoot.HEIGHT || spec == SvgRoot.WIDTH)) {
+        if (node == root().get() && (spec == SvgSvgElement.HEIGHT || spec == SvgSvgElement.WIDTH)) {
           invalidate();
         }
         repaint();
@@ -93,7 +93,7 @@ public class SvgView extends View {
     .build());
   }
 
-  public Property<SvgRoot> root() {
+  public Property<SvgSvgElement> root() {
     return getProp(SVG_ROOT);
   }
 

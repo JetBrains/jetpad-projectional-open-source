@@ -26,9 +26,9 @@ import jetbrains.jetpad.model.property.ValueProperty;
 import jetbrains.jetpad.projectional.svg.event.SvgAttributeEvent;
 
 public class SvgContainer {
-  private Property<SvgRoot> mySvgRoot = new ValueProperty<SvgRoot>() {
+  private Property<SvgSvgElement> mySvgRoot = new ValueProperty<SvgSvgElement>() {
     @Override
-    public void set(SvgRoot value) {
+    public void set(SvgSvgElement value) {
       if (mySvgRoot.get() != null) {
         mySvgRoot.get().detach();
       }
@@ -38,11 +38,11 @@ public class SvgContainer {
   };
   private Listeners<SvgContainerListener> myListeners = new Listeners<>();
 
-  public SvgContainer(SvgRoot root) {
+  public SvgContainer(SvgSvgElement root) {
     mySvgRoot.set(root);
   }
 
-  public Property<SvgRoot> root() {
+  public Property<SvgSvgElement> root() {
     return mySvgRoot;
   }
 

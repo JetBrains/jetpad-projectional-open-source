@@ -24,17 +24,17 @@ public class SvgNodeMapperFactory implements MapperFactory<SvgNode, OMNode> {
   @Override
   public Mapper<? extends SvgNode, ? extends OMNode> createMapper(SvgNode source) {
     Mapper<? extends SvgNode, ? extends OMNode> result;
-    if (source instanceof SvgEllipse) {
-      result = new SvgEllipseMapper( (SvgEllipse) source, new OMSVGEllipseElement());
-    } else if (source instanceof SvgRect) {
-      result = new SvgRectMapper((SvgRect) source, new OMSVGRectElement());
+    if (source instanceof SvgEllipseElement) {
+      result = new SvgEllipseMapper( (SvgEllipseElement) source, new OMSVGEllipseElement());
+    } else if (source instanceof SvgRectElement) {
+      result = new SvgRectMapper((SvgRectElement) source, new OMSVGRectElement());
     } else if (source instanceof SvgTextElement) {
       result = new SvgTextElementMapper((SvgTextElement) source, new OMSVGTextElement());
     } else if (source instanceof SvgTextNode) {
       result = new SvgTextNodeMapper((SvgTextNode) source, new OMText(null));
     } else if (source instanceof SvgPathElement) {
       result = new SvgPathElementMapper((SvgPathElement) source, new OMSVGPathElement());
-    } else if (source instanceof SvgRoot) {
+    } else if (source instanceof SvgSvgElement) {
       throw new IllegalStateException("Svg root element can't be embedded");
     } else {
       throw new IllegalStateException("Unsupported SvgNode");

@@ -35,17 +35,17 @@ public class SvgNodeMapperFactory implements MapperFactory<SvgNode, Node> {
   @Override
   public Mapper<? extends SvgNode, ? extends Node> createMapper(SvgNode source) {
     Mapper<? extends SvgNode, ? extends Node> result;
-    if (source instanceof SvgEllipse) {
-      result = new SvgEllipseMapper( (SvgEllipse) source, new SVGOMEllipseElement(null, myDoc), myDoc);
-    } else if (source instanceof SvgRect) {
-      result = new SvgRectMapper( (SvgRect) source, new SVGOMRectElement(null, myDoc), myDoc);
+    if (source instanceof SvgEllipseElement) {
+      result = new SvgEllipseMapper( (SvgEllipseElement) source, new SVGOMEllipseElement(null, myDoc), myDoc);
+    } else if (source instanceof SvgRectElement) {
+      result = new SvgRectMapper( (SvgRectElement) source, new SVGOMRectElement(null, myDoc), myDoc);
     } else if (source instanceof SvgTextElement) {
       result = new SvgTextElementMapper((SvgTextElement) source, new SVGOMTextElement(null, myDoc), myDoc);
     } else if (source instanceof SvgTextNode) {
       result = new SvgTextNodeMapper((SvgTextNode) source, myDoc.createTextNode(null), myDoc);
     } else if (source instanceof SvgPathElement) {
       result = new SvgPathElementMapper((SvgPathElement) source, new SVGOMPathElement(null, myDoc), myDoc);
-    } else if (source instanceof SvgRoot) {
+    } else if (source instanceof SvgSvgElement) {
       throw new IllegalStateException("Svg root element can't be embedded");
     } else {
       throw new IllegalStateException("Unsupported SvgElement");

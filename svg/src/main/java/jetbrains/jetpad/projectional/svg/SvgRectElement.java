@@ -20,7 +20,7 @@ import jetbrains.jetpad.model.property.Property;
 import java.util.HashMap;
 import java.util.Map;
 
-public class SvgRect extends SvgStylableElement {
+public class SvgRectElement extends SvgStylableElement {
   public static final SvgAttrSpec<Double> X = new SvgAttrSpec<>("x");
   public static final SvgAttrSpec<Double> Y = new SvgAttrSpec<>("y");
   public static final SvgAttrSpec<Double> HEIGHT = new SvgAttrSpec<>("height");
