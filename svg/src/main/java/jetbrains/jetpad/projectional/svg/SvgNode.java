@@ -222,7 +222,7 @@ public abstract class SvgNode extends HasParent<SvgNode, SvgNode> {
     }
 
     Runnable fire = createFiringRunnable(trait);
-    myTraits.add(trait);
+    myTraits.add(0, trait);
     fire.run();
 
     return new Registration() {
