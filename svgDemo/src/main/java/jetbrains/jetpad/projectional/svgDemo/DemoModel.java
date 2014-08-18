@@ -28,6 +28,7 @@ public class DemoModel {
     SvgSvgElement svgRoot = new SvgSvgElement();
     svgRoot.getProp(SvgSvgElement.HEIGHT).set(200.0);
     svgRoot.getProp(SvgSvgElement.WIDTH).set(400.0);
+    svgRoot.setXmlAttr("shape-rendering", "geometricPrecision");
 
     SvgEllipseElement ellipse = new SvgEllipseElement();
     ellipse.getProp(SvgEllipseElement.CX).set(200.0);
