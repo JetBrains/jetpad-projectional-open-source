@@ -15,10 +15,18 @@
  */
 package jetbrains.jetpad.projectional.svg;
 
+import java.util.Map;
+
 public class SvgAttrSpec<ValueT> extends SvgPropertySpec<ValueT> {
   private String myName;
 
-  public SvgAttrSpec(String name) {
+  static <ValueT> SvgAttrSpec<ValueT> initAttrSpec(String name, Map<String, SvgAttrSpec<?>> attrInfo) {
+    SvgAttrSpec<ValueT> spec = new SvgAttrSpec<>(name);
+    attrInfo.put(name, spec);
+    return spec;
+  }
+
+  private SvgAttrSpec(String name) {
     super(name);
     myName = name;
   }

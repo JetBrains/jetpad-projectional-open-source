@@ -21,13 +21,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 public abstract class SvgStylableElement extends SvgElement {
-  public static final SvgAttrSpec<String> CLASS = new SvgAttrSpec<>("class");
+  protected static Map<String, SvgAttrSpec<?>> myAttrInfo = new HashMap<>(SvgElement.myAttrInfo);
 
-  protected static Map<String, SvgAttrSpec<?>> myAttrInfo;
-  static {
-    myAttrInfo = new HashMap<>(SvgElement.myAttrInfo);
-    myAttrInfo.put(CLASS.toString(), CLASS);
-  }
+  public static final SvgAttrSpec<String> CLASS = SvgAttrSpec.initAttrSpec("class", myAttrInfo);
 
   @Override
   protected Map<String, SvgAttrSpec<?>> getAttrInfo() {

@@ -21,19 +21,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class SvgRectElement extends SvgStylableElement {
-  public static final SvgAttrSpec<Double> X = new SvgAttrSpec<>("x");
-  public static final SvgAttrSpec<Double> Y = new SvgAttrSpec<>("y");
-  public static final SvgAttrSpec<Double> HEIGHT = new SvgAttrSpec<>("height");
-  public static final SvgAttrSpec<Double> WIDTH = new SvgAttrSpec<>("width");
+  protected static Map<String, SvgAttrSpec<?>> myAttrInfo = new HashMap<>(SvgStylableElement.myAttrInfo);
 
-  protected static Map<String, SvgAttrSpec<?>> myAttrInfo;
-  static {
-    myAttrInfo = new HashMap<>(SvgElement.myAttrInfo);
-    myAttrInfo.put(X.toString(), X);
-    myAttrInfo.put(Y.toString(), Y);
-    myAttrInfo.put(HEIGHT.toString(), HEIGHT);
-    myAttrInfo.put(WIDTH.toString(), WIDTH);
-  }
+  public static final SvgAttrSpec<Double> X = SvgAttrSpec.initAttrSpec("x", myAttrInfo);
+  public static final SvgAttrSpec<Double> Y = SvgAttrSpec.initAttrSpec("y", myAttrInfo);
+  public static final SvgAttrSpec<Double> HEIGHT = SvgAttrSpec.initAttrSpec("height", myAttrInfo);
+  public static final SvgAttrSpec<Double> WIDTH = SvgAttrSpec.initAttrSpec("width", myAttrInfo);
 
   @Override
   protected Map<String, SvgAttrSpec<?>> getAttrInfo() {

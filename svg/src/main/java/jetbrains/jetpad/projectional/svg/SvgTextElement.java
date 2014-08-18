@@ -22,15 +22,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class SvgTextElement extends SvgStylableElement {
-  public static final SvgAttrSpec<Double> X = new SvgAttrSpec<>("x");
-  public static final SvgAttrSpec<Double> Y = new SvgAttrSpec<>("y");
+  protected static Map<String, SvgAttrSpec<?>> myAttrInfo = new HashMap<>(SvgStylableElement.myAttrInfo);
 
-  protected static Map<String, SvgAttrSpec<?>> myAttrInfo;
-  static {
-    myAttrInfo = new HashMap<>(SvgStylableElement.myAttrInfo);
-    myAttrInfo.put(X.toString(), X);
-    myAttrInfo.put(Y.toString(), Y);
-  }
+  public static final SvgAttrSpec<Double> X = SvgAttrSpec.initAttrSpec("x", myAttrInfo);
+  public static final SvgAttrSpec<Double> Y = SvgAttrSpec.initAttrSpec("y", myAttrInfo);
 
   @Override
   protected Map<String, SvgAttrSpec<?>> getAttrInfo() {
