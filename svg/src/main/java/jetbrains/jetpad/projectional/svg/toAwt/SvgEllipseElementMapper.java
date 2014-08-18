@@ -15,12 +15,12 @@
  */
 package jetbrains.jetpad.projectional.svg.toAwt;
 
-import jetbrains.jetpad.projectional.svg.SvgSvgElement;
+import jetbrains.jetpad.projectional.svg.SvgEllipseElement;
 import org.apache.batik.dom.AbstractDocument;
-import org.apache.batik.dom.svg.SVGOMSVGElement;
+import org.apache.batik.dom.svg.SVGOMEllipseElement;
 
-public class SvgRootMapper extends SvgStylableElementMapper<SvgSvgElement, SVGOMSVGElement> {
-  public SvgRootMapper(SvgSvgElement source, SVGOMSVGElement target, AbstractDocument doc) {
+public class SvgEllipseElementMapper extends SvgStylableElementMapper<SvgEllipseElement, SVGOMEllipseElement> {
+  public SvgEllipseElementMapper(SvgEllipseElement source, SVGOMEllipseElement target, AbstractDocument doc) {
     super(source, target, doc);
   }
 }

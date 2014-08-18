@@ -25,9 +25,9 @@ public class SvgNodeMapperFactory implements MapperFactory<SvgNode, OMNode> {
   public Mapper<? extends SvgNode, ? extends OMNode> createMapper(SvgNode source) {
     Mapper<? extends SvgNode, ? extends OMNode> result;
     if (source instanceof SvgEllipseElement) {
-      result = new SvgEllipseMapper( (SvgEllipseElement) source, new OMSVGEllipseElement());
+      result = new SvgEllipseElementMapper( (SvgEllipseElement) source, new OMSVGEllipseElement());
     } else if (source instanceof SvgRectElement) {
-      result = new SvgRectMapper((SvgRectElement) source, new OMSVGRectElement());
+      result = new SvgRectElementMapper((SvgRectElement) source, new OMSVGRectElement());
     } else if (source instanceof SvgTextElement) {
       result = new SvgTextElementMapper((SvgTextElement) source, new OMSVGTextElement());
     } else if (source instanceof SvgTextNode) {

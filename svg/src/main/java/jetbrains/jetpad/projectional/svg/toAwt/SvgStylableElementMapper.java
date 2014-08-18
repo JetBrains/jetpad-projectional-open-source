@@ -24,9 +24,4 @@ public class SvgStylableElementMapper<SourceT extends SvgStylableElement, Target
   public SvgStylableElementMapper(SourceT source, TargetT target, AbstractDocument doc) {
     super(source, target, doc);
   }
-
-  @Override
-  protected void registerSynchronizers(SynchronizersConfiguration conf) {
-    super.registerSynchronizers(conf);
-  }
 }

@@ -13,14 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package jetbrains.jetpad.projectional.svg.toAwt;
+package jetbrains.jetpad.projectional.svg.toDom;
 
 import jetbrains.jetpad.projectional.svg.SvgRectElement;
-import org.apache.batik.dom.AbstractDocument;
-import org.apache.batik.dom.svg.SVGOMRectElement;
+import org.vectomatic.dom.svg.OMSVGRectElement;
 
-public class SvgRectMapper extends SvgElementMapper<SvgRectElement, SVGOMRectElement> {
-  public SvgRectMapper(SvgRectElement source, SVGOMRectElement target, AbstractDocument doc) {
-    super(source, target, doc);
+public class SvgRectElementMapper extends SvgStylableElementMapper<SvgRectElement, OMSVGRectElement> {
+  public SvgRectElementMapper(SvgRectElement source, OMSVGRectElement target) {
+    super(source, target);
   }
 }

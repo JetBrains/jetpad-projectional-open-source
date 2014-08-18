@@ -13,13 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package jetbrains.jetpad.projectional.svg.toDom;
+package jetbrains.jetpad.projectional.svg.toAwt;
 
-import jetbrains.jetpad.projectional.svg.SvgEllipseElement;
-import org.vectomatic.dom.svg.OMSVGEllipseElement;
+import jetbrains.jetpad.projectional.svg.SvgSvgElement;
+import org.apache.batik.dom.AbstractDocument;
+import org.apache.batik.dom.svg.SVGOMSVGElement;
 
-public class SvgEllipseMapper extends SvgStylableElementMapper<SvgEllipseElement, OMSVGEllipseElement> {
-  public SvgEllipseMapper(SvgEllipseElement source, OMSVGEllipseElement target) {
-    super(source, target);
+public class SvgSvgElementMapper extends SvgStylableElementMapper<SvgSvgElement, SVGOMSVGElement> {
+  public SvgSvgElementMapper(SvgSvgElement source, SVGOMSVGElement target, AbstractDocument doc) {
+    super(source, target, doc);
   }
 }

@@ -15,11 +15,11 @@
  */
 package jetbrains.jetpad.projectional.svg.toDom;
 
-import jetbrains.jetpad.projectional.svg.SvgRectElement;
-import org.vectomatic.dom.svg.OMSVGRectElement;
+import jetbrains.jetpad.projectional.svg.SvgSvgElement;
+import org.vectomatic.dom.svg.OMSVGSVGElement;
 
-public class SvgRectMapper extends SvgStylableElementMapper<SvgRectElement, OMSVGRectElement> {
-  public SvgRectMapper(SvgRectElement source, OMSVGRectElement target) {
+public class SvgSvgElementMapper extends SvgStylableElementMapper<SvgSvgElement, OMSVGSVGElement> {
+  public SvgSvgElementMapper(SvgSvgElement source, OMSVGSVGElement target) {
     super(source, target);
   }
 }
