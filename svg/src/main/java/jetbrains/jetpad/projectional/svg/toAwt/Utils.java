@@ -23,6 +23,7 @@ import jetbrains.jetpad.model.event.EventHandler;
 import jetbrains.jetpad.model.property.PropertyChangeEvent;
 import jetbrains.jetpad.model.property.ReadableProperty;
 import jetbrains.jetpad.model.property.WritableProperty;
+import jetbrains.jetpad.projectional.svg.SvgElement;
 import org.apache.batik.dom.svg.SVGOMElement;
 import org.w3c.dom.Node;
 

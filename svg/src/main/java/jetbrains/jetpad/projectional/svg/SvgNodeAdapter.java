@@ -16,13 +16,8 @@
 package jetbrains.jetpad.projectional.svg;
 
 import jetbrains.jetpad.model.collections.CollectionItemEvent;
-import jetbrains.jetpad.model.property.PropertyChangeEvent;
 
 public class SvgNodeAdapter implements SvgNodeListener {
-  @Override
-  public <ValueT> void onPropertySet(SvgPropertySpec<ValueT> spec, PropertyChangeEvent<ValueT> event) {
-  }
-
   @Override
   public void onSvgElementAttached() {
   }

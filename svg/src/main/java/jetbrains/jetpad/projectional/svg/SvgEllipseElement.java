@@ -34,18 +34,18 @@ public class SvgEllipseElement extends SvgStylableElement {
   }
 
   public Property<Double> getCx() {
-    return getProp(CX);
+    return getAttr(CX);
   }
 
   public Property<Double> getCy() {
-    return getProp(CY);
+    return getAttr(CY);
   }
 
   public Property<Double> getRx() {
-    return getProp(RX);
+    return getAttr(RX);
   }
 
   public Property<Double> getRy() {
-    return getProp(RY);
+    return getAttr(RY);
   }
 }

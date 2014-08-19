@@ -16,27 +16,28 @@
 package jetbrains.jetpad.projectional.svg.event;
 
 import jetbrains.jetpad.event.Event;
+import jetbrains.jetpad.projectional.svg.SvgAttrSpec;
 
-public class SvgAttributeEvent extends Event {
-  private String myAttrName;
-  private String myOldValue;
-  private String myNewValue;
+public class SvgAttributeEvent<ValueT> extends Event {
+  private SvgAttrSpec<ValueT> mySpec;
+  private ValueT myOldValue;
+  private ValueT myNewValue;
 
-  public SvgAttributeEvent(String attrName, String oldValue, String newValue) {
-    myAttrName = attrName;
+  public SvgAttributeEvent(SvgAttrSpec<ValueT> spec, ValueT oldValue, ValueT newValue) {
+    mySpec = spec;
     myOldValue = oldValue;
     myNewValue = newValue;
   }
 
-  public String getAttrName() {
-    return myAttrName;
+  public SvgAttrSpec<ValueT> getAttrSpec() {
+    return mySpec;
   }
 
-  public String getOldValue() {
+  public ValueT getOldValue() {
     return myOldValue;
   }
 
-  public String getNewValue() {
+  public ValueT getNewValue() {
     return myNewValue;
   }
 }

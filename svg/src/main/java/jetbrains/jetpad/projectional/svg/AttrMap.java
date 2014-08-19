@@ -20,73 +20,74 @@ import jetbrains.jetpad.model.event.EventHandler;
 import jetbrains.jetpad.model.event.EventSource;
 import jetbrains.jetpad.model.event.ListenerCaller;
 import jetbrains.jetpad.model.event.Listeners;
-import jetbrains.jetpad.model.property.Property;
-import jetbrains.jetpad.model.property.ValueProperty;
 import jetbrains.jetpad.model.util.ListMap;
 import jetbrains.jetpad.projectional.svg.event.SvgAttributeEvent;
 
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.Set;
 
-public class AttrMap implements EventSource<SvgAttributeEvent> {
-  private ListMap<String, Property<String>> myListMap = new ListMap<>();
-  private Listeners<EventHandler<? super SvgAttributeEvent>> myHandlers;
+class AttrMap implements EventSource<SvgAttributeEvent<?>> {
+  private ListMap<SvgAttrSpec<?>, Object> myAttrs;
+  private Listeners<EventHandler<? super SvgAttributeEvent<?>>> myHandlers;
 
   public int size() {
-    return myListMap.size();
+    return (myAttrs == null ? 0 : myAttrs.size());
   }
 
   public boolean isEmpty() {
-    return myListMap.isEmpty();
+    return (myAttrs == null || myAttrs.isEmpty());
   }
 
-  public boolean containsKey(String key) {
-    return myListMap.containsKey(key);
+  public boolean containsKey(SvgAttrSpec<?> key) {
+    return (myAttrs != null && myAttrs.containsKey(key));
   }
 
-  public Property<String> get(String key) {
-    return myListMap.get(key);
-  }
-
-  public String put(String key, String value) {
-    String oldValue = null;
-    if (myListMap.containsKey(key)) {
-      oldValue = myListMap.get(key).get();
-      myListMap.get(key).set(value);
-    } else {
-      myListMap.put(key, new ValueProperty<>(value));
+  public <ValueT> ValueT get(SvgAttrSpec<ValueT> spec) {
+    if (myAttrs != null && myAttrs.containsKey(spec)) {
+      return (ValueT) myAttrs.get(spec);
     }
+    return null;
+  }
+
+  public <ValueT> ValueT set(SvgAttrSpec<ValueT> spec, ValueT value) {
+    if (myAttrs == null) {
+      myAttrs = new ListMap<>();
+    }
+
+    ValueT oldValue;
+    if (value == null) {
+      oldValue = (ValueT) myAttrs.remove(spec);
+    } else {
+      oldValue = (ValueT) myAttrs.put(spec, value);
+    }
+
     if (value != null && !value.equals(oldValue) && myHandlers != null) {
-      final SvgAttributeEvent event = new SvgAttributeEvent(key, oldValue, value);
-      myHandlers.fire(new ListenerCaller<EventHandler<? super SvgAttributeEvent>>() {
+      final SvgAttributeEvent<ValueT> event = new SvgAttributeEvent<>(spec, oldValue, value);
+      myHandlers.fire(new ListenerCaller<EventHandler<? super SvgAttributeEvent<?>>>() {
         @Override
-        public void call(EventHandler<? super SvgAttributeEvent> l) {
+        public void call(EventHandler<? super SvgAttributeEvent<?>> l) {
           l.onEvent(event);
         }
       });
     }
+
     return oldValue;
   }
 
-  public Property<String> remove(String key) {
-    Property<String> result = myListMap.remove(key);
-    if (myHandlers != null) {
-      final SvgAttributeEvent event = new SvgAttributeEvent(key, result.get(), null);
-      myHandlers.fire(new ListenerCaller<EventHandler<? super SvgAttributeEvent>>() {
-        @Override
-        public void call(EventHandler<? super SvgAttributeEvent> l) {
-          l.onEvent(event);
-        }
-      });
-    }
-    return result;
+  public <ValueT> ValueT remove(SvgAttrSpec<ValueT> spec) {
+    return set(spec, null);
   }
 
-  public Set<String> keySet() {
-    return myListMap.keySet();
+  public Set<SvgAttrSpec<?>> keySet() {
+    if (myAttrs == null) {
+      return Collections.emptySet();
+    }
+    return myAttrs.keySet();
   }
 
   @Override
-  public Registration addHandler(EventHandler<? super SvgAttributeEvent> handler) {
+  public Registration addHandler(EventHandler<? super SvgAttributeEvent<?>> handler) {
     if (myHandlers == null) {
       myHandlers = new Listeners<>();
     }

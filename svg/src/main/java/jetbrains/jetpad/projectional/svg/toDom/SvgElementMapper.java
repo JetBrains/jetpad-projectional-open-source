@@ -18,10 +18,9 @@ package jetbrains.jetpad.projectional.svg.toDom;
 import jetbrains.jetpad.base.Registration;
 import jetbrains.jetpad.mapper.Synchronizer;
 import jetbrains.jetpad.mapper.SynchronizerContext;
-import jetbrains.jetpad.model.event.EventHandler;
-import jetbrains.jetpad.model.property.WritableProperty;
 import jetbrains.jetpad.projectional.svg.SvgAttrSpec;
 import jetbrains.jetpad.projectional.svg.SvgElement;
+import jetbrains.jetpad.projectional.svg.SvgElementListener;
 import jetbrains.jetpad.projectional.svg.event.SvgAttributeEvent;
 import org.vectomatic.dom.svg.OMSVGElement;
 
@@ -34,31 +33,26 @@ public class SvgElementMapper<SourceT extends SvgElement, TargetT extends OMSVGE
   protected void registerSynchronizers(final SynchronizersConfiguration conf) {
     super.registerSynchronizers(conf);
 
-    for (String key : getSource().attrKeys()) {
-      final SvgAttrSpec spec = getSource().getSpecByName(key);
-      conf.add(Utils.attrSynchronizer(getSource().getProp(spec), new WritableProperty<Object>() {
-        @Override
-        public void set(Object value) {
-          getTarget().setAttribute(spec.toString(), value.toString());
-        }
-      }, getSource().propertyPresent(spec)));
-    }
-
     conf.add(new Synchronizer() {
       private Registration myReg;
+
       @Override
       public void attach(SynchronizerContext ctx) {
-        // FIXME: O(n^2) time
-        for (String key : getSource().getPresentXmlAttributesKeys()) {
-          getTarget().setAttribute(key, getSource().getXmlAttr(key).get());
-        }
-
-        myReg = getSource().xmlAttributes().addHandler(new EventHandler<SvgAttributeEvent>() {
+        myReg = getSource().addListener(new SvgElementListener<Object>() {
           @Override
-          public void onEvent(SvgAttributeEvent event) {
-            getTarget().setAttribute(event.getAttrName(), event.getNewValue());
+          public void onAttrSet(SvgAttributeEvent<Object> event) {
+            if (event.getOldValue() == null && event.getNewValue() != null) {
+              getTarget().setAttribute(event.getAttrSpec().toString(), event.getNewValue().toString());
+            }
+            if (event.getNewValue() == null) {
+              getTarget().removeAttribute(event.getAttrSpec().toString());
+            }
           }
         });
+
+        for (SvgAttrSpec<?> key : getSource().getAttrKeys()) {
+          getTarget().setAttribute(key.toString(), getSource().getAttr(key).get().toString());
+        }
       }
 
       @Override

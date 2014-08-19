@@ -18,45 +18,19 @@ package jetbrains.jetpad.projectional.svg;
 import jetbrains.jetpad.event.Event;
 import jetbrains.jetpad.model.util.ListMap;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 public class SvgTrait {
-  private ListMap<SvgPropertySpec<?>, Object> myProperties;
   private ListMap<SvgEventSpec<? extends Event>, List<SvgEventHandler<? extends Event>>> myHandlers;
 
-
-  SvgTrait(Map<SvgPropertySpec<?>, Object> props, Map<SvgEventSpec<? extends Event>, List<SvgEventHandler<? extends Event>>> handlers) {
-    for (Map.Entry<SvgPropertySpec<?>, Object> entry : props.entrySet()) {
-      if (myProperties == null) {
-        myProperties = new ListMap<>();
-      }
-      myProperties.put(entry.getKey(), entry.getValue());
-    }
-
+  SvgTrait(Map<SvgEventSpec<? extends Event>, List<SvgEventHandler<? extends Event>>> handlers) {
     for (Map.Entry<SvgEventSpec<? extends Event>, List<SvgEventHandler<? extends Event>>> entry : handlers.entrySet()) {
       if (myHandlers == null) {
         myHandlers = new ListMap<>();
       }
       myHandlers.put(entry.getKey(), entry.getValue());
     }
-  }
-
-  Set<SvgPropertySpec<?>> properties() {
-    if (myProperties == null) return Collections.emptySet();
-    return Collections.unmodifiableSet(myProperties.keySet());
-  }
-
-  boolean hasValue(SvgPropertySpec<?> spec) {
-    return (myProperties != null) && myProperties.containsKey(spec);
-  }
-
-  public <ValueT> ValueT get(SvgPropertySpec<ValueT> spec) {
-    @SuppressWarnings("unchecked")
-    ValueT result = (ValueT) myProperties.get(spec);
-    return result;
   }
 
   <EventT extends Event> void dispatch(SvgNode node, SvgEventSpec<EventT> spec, EventT event) {

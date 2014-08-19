@@ -31,6 +31,6 @@ public class SvgPathElement extends SvgStylableElement {
   }
 
   public Property<String> getD() {
-    return getProp(D);
+    return getAttr(D);
   }
 }

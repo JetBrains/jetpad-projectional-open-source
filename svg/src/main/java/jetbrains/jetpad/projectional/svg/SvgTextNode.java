@@ -18,6 +18,7 @@ package jetbrains.jetpad.projectional.svg;
 import jetbrains.jetpad.model.collections.list.ObservableArrayList;
 import jetbrains.jetpad.model.collections.list.ObservableList;
 import jetbrains.jetpad.model.property.Property;
+import jetbrains.jetpad.model.property.ValueProperty;
 
 public class SvgTextNode extends SvgNode {
   private static final ObservableList<SvgNode> NO_CHILDREN_LIST = new ObservableArrayList<SvgNode>() {
@@ -32,15 +33,15 @@ public class SvgTextNode extends SvgNode {
     }
   };
 
-  public static final SvgPropertySpec<String> CONTENT = new SvgPropertySpec<>("content");
+  private Property<String> myContent = new ValueProperty<>();
 
   public SvgTextNode(String text) {
     super();
-    getProp(CONTENT).set(text);
+    myContent.set(text);
   }
 
   public Property<String> getTextContent() {
-    return getProp(CONTENT);
+    return myContent;
   }
 
   @Override

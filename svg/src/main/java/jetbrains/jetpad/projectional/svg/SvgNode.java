@@ -33,7 +33,6 @@ import java.util.*;
 
 public abstract class SvgNode extends HasParent<SvgNode, SvgNode> {
   private SvgContainer myContainer;
-  private ListMap<SvgPropertySpec<?>, Object> myProperties;
   private List<SvgTrait> myTraits;
   private Listeners<SvgNodeListener> myListeners;
 
@@ -48,95 +47,6 @@ public abstract class SvgNode extends HasParent<SvgNode, SvgNode> {
       myChildren = new SvgChildList(this);
     }
     return myChildren;
-  }
-
-  public <ValueT> boolean propertyPresent(SvgPropertySpec<ValueT> spec) {
-    return (myProperties != null && myProperties.containsKey(spec));
-  }
-
-  <ValueT> ValueT get(SvgPropertySpec<ValueT> spec) {
-    if (myProperties != null && myProperties.containsKey(spec)) {
-      @SuppressWarnings("unchecked")
-      ValueT result = (ValueT) myProperties.get(spec);
-      return result;
-    }
-
-    if (myTraits != null) {
-      for (SvgTrait t : myTraits) {
-        if (t.hasValue(spec)) {
-          return t.get(spec);
-        }
-      }
-    }
-
-    return spec.defaultValue();
-  }
-
-  <ValueT> void set(SvgPropertySpec<ValueT> spec, ValueT value) {
-    final ValueT oldValue = get(spec);
-
-    if (myProperties == null && value == null) return;
-    if (myProperties == null) {
-      myProperties = new ListMap<>();
-    }
-
-    if (value == null) {
-      myProperties.remove(spec);
-      if (myProperties.isEmpty()) {
-        myProperties = null;
-      }
-    } else {
-      myProperties.put(spec, value);
-    }
-
-    final ValueT newValue = get(spec);
-    if (!Objects.equal(oldValue, newValue)) {
-      propertyChanged(spec, new PropertyChangeEvent<>(oldValue, newValue));
-    }
-  }
-
-  private <ValueT> void propertyChanged(final SvgPropertySpec<ValueT> spec, final PropertyChangeEvent<ValueT> event) {
-    if (isAttached()) {
-      container().propertyChanged(this, spec, event);
-    }
-    fire(new ListenerCaller<SvgNodeListener>() {
-      @Override
-      public void call(SvgNodeListener l) {
-        l.onPropertySet(spec, event);
-      }
-    });
-  }
-
-  public <ValueT> Property<ValueT> getProp(final SvgPropertySpec<ValueT> spec) {
-    return new Property<ValueT>() {
-      @Override
-      public String getPropExpr() {
-        return this + "." + spec;
-      }
-
-      @Override
-      public ValueT get() {
-        return SvgNode.this.get(spec);
-      }
-
-      @Override
-      public void set(ValueT value) {
-        SvgNode.this.set(spec, value);
-      }
-
-      @Override
-      public Registration addHandler(final EventHandler<? super PropertyChangeEvent<ValueT>> handler) {
-        return addListener(new SvgNodeAdapter() {
-          @Override
-          public <ValT> void onPropertySet(SvgPropertySpec<ValT> p, PropertyChangeEvent<ValT> event) {
-            if (p != spec) return;
-            @SuppressWarnings("unchecked")
-            PropertyChangeEvent<ValueT> castEvent = (PropertyChangeEvent<ValueT>) event;
-            handler.onEvent(castEvent);
-          }
-        });
-      }
-    };
   }
 
   Registration addListener(SvgNodeListener l) {
@@ -221,51 +131,15 @@ public abstract class SvgNode extends HasParent<SvgNode, SvgNode> {
       myTraits = new ArrayList<>();
     }
 
-    Runnable fire = createFiringRunnable(trait);
     myTraits.add(0, trait);
-    fire.run();
 
     return new Registration() {
       @Override
       public void remove() {
-        Runnable fire = createFiringRunnable(trait);
         myTraits.remove(trait);
-        fire.run();
 
         if (myTraits.isEmpty()) {
           myTraits = null;
-        }
-      }
-    };
-  }
-
-  private <ValueT> Runnable createPropChangedRunnable(final SvgPropertySpec<ValueT> spec) {
-    final ValueT val = get(spec);
-    return new Runnable() {
-      @Override
-      public void run() {
-        ValueT newVal = get(spec);
-        if (Objects.equal(val, newVal)) return;
-        propertyChanged(spec, new PropertyChangeEvent<>(val, newVal));
-      }
-    };
-  }
-
-  private Runnable createFiringRunnable(SvgTrait t) {
-    Set<SvgPropertySpec<?>> props = new HashSet<>();
-    final List<Runnable> toRun = new ArrayList<>();
-
-    for (final SvgPropertySpec<?> p : t.properties()) {
-      if (props.contains(p)) continue;
-      toRun.add(createPropChangedRunnable(p));
-      props.add(p);
-    }
-
-    return new Runnable() {
-      @Override
-      public void run() {
-        for (Runnable r : toRun) {
-          r.run();
         }
       }
     };

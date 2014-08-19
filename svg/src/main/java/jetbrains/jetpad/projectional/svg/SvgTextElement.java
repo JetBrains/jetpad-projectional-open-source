@@ -33,11 +33,11 @@ public class SvgTextElement extends SvgStylableElement {
   }
 
   public Property<Double> getX() {
-    return getProp(X);
+    return getAttr(X);
   }
 
   public Property<Double> getY() {
-    return getProp(Y);
+    return getAttr(Y);
   }
 
   public void addTextNode(String text) {

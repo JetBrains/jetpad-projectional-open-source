@@ -21,7 +21,6 @@ import jetbrains.jetpad.event.MouseEvent;
 import jetbrains.jetpad.model.event.ListenerCaller;
 import jetbrains.jetpad.model.event.Listeners;
 import jetbrains.jetpad.model.property.Property;
-import jetbrains.jetpad.model.property.PropertyChangeEvent;
 import jetbrains.jetpad.model.property.ValueProperty;
 import jetbrains.jetpad.projectional.svg.event.SvgAttributeEvent;
 
@@ -50,20 +49,11 @@ public class SvgContainer {
     return myListeners.add(l);
   }
 
-  void propertyChanged(final SvgNode node, final SvgPropertySpec<?> spec, final PropertyChangeEvent<?> event) {
+  void attributeChanged(final SvgElement element, final SvgAttributeEvent<?> event) {
     myListeners.fire(new ListenerCaller<SvgContainerListener>() {
       @Override
       public void call(SvgContainerListener l) {
-        l.onPropertySet(node, spec, event);
-      }
-    });
-  }
-
-  void attributeChanged(final SvgNode node, final SvgAttributeEvent event) {
-    myListeners.fire(new ListenerCaller<SvgContainerListener>() {
-      @Override
-      public void call(SvgContainerListener l) {
-        l.onAttrSet(node, event);
+        l.onAttrSet(element, event);
       }
     });
   }

@@ -31,6 +31,6 @@ public abstract class SvgStylableElement extends SvgElement {
   }
 
   public Property<String> getXmlClass() {
-    return getProp(CLASS);
+    return getAttr(CLASS);
   }
 }

@@ -34,18 +34,18 @@ public class SvgRectElement extends SvgStylableElement {
   }
 
   public Property<Double> getX() {
-    return getProp(X);
+    return getAttr(X);
   }
 
   public Property<Double> getY() {
-    return getProp(Y);
+    return getAttr(Y);
   }
 
   public Property<Double> getHeight() {
-    return getProp(HEIGHT);
+    return getAttr(HEIGHT);
   }
 
   public Property<Double> getWidth() {
-    return getProp(WIDTH);
+    return getAttr(WIDTH);
   }
 }

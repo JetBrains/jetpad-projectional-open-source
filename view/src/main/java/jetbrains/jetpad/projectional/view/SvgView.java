@@ -26,16 +26,9 @@ public class SvgView extends View {
     });
     svgContainer.addListener(new SvgContainerAdapter() {
       @Override
-      public void onPropertySet(SvgNode node, SvgPropertySpec<?> spec, PropertyChangeEvent<?> event) {
-        if (node == root().get() && (spec == SvgSvgElement.HEIGHT || spec == SvgSvgElement.WIDTH)) {
-          invalidate();
-        }
-        repaint();
-      }
-
-      @Override
       public void onAttrSet(SvgNode node, SvgAttributeEvent event) {
-        if (node == root().get() && (event.getAttrName().equalsIgnoreCase("height") || (event.getAttrName().equalsIgnoreCase("width")))){
+        if (node == root().get() &&
+            (event.getAttrSpec().toString().equalsIgnoreCase("height") || (event.getAttrSpec().toString().equalsIgnoreCase("width")))){
           invalidate();
         }
         repaint();
