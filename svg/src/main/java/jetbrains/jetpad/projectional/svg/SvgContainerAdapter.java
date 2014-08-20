@@ -23,10 +23,10 @@ public class SvgContainerAdapter implements SvgContainerListener {
   }
 
   @Override
-  public void onElementAttached(SvgNode node) {
+  public void onNodeAttached(SvgNode node) {
   }
 
   @Override
-  public void onElementDetached(SvgNode element) {
+  public void onNodeDetached(SvgNode element) {
   }
 }

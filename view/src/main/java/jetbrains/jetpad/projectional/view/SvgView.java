@@ -35,12 +35,12 @@ public class SvgView extends View {
       }
 
       @Override
-      public void onElementAttached(SvgNode node) {
+      public void onNodeAttached(SvgNode node) {
         repaint();
       }
 
       @Override
-      public void onElementDetached(SvgNode node) {
+      public void onNodeDetached(SvgNode node) {
         repaint();
       }
     });

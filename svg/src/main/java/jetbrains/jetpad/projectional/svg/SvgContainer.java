@@ -58,20 +58,20 @@ public class SvgContainer {
     });
   }
 
-  void svgElementAttached(final SvgNode node) {
+  void svgNodeAttached(final SvgNode node) {
     myListeners.fire(new ListenerCaller<SvgContainerListener>() {
       @Override
       public void call(SvgContainerListener l) {
-        l.onElementAttached(node);
+        l.onNodeAttached(node);
       }
     });
   }
 
-  void svgElementDetached(final SvgNode node) {
+  void svgNodeDetached(final SvgNode node) {
     myListeners.fire(new ListenerCaller<SvgContainerListener>() {
       @Override
       public void call(SvgContainerListener l) {
-        l.onElementDetached(node);
+        l.onNodeDetached(node);
       }
     });
   }

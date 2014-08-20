@@ -88,7 +88,7 @@ public abstract class SvgNode extends HasParent<SvgNode, SvgNode> {
     }
 
     myContainer = container;
-    myContainer.svgElementAttached(this);
+    myContainer.svgNodeAttached(this);
 
     onAttach();
 
@@ -118,7 +118,7 @@ public abstract class SvgNode extends HasParent<SvgNode, SvgNode> {
       node.detach();
     }
 
-    myContainer.svgElementDetached(this);
+    myContainer.svgNodeDetached(this);
     myContainer = null;
   }
 
