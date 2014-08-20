@@ -15,21 +15,17 @@
  */
 package jetbrains.jetpad.projectional.svg;
 
-import com.google.common.base.Objects;
 import jetbrains.jetpad.base.Registration;
 import jetbrains.jetpad.event.Event;
 import jetbrains.jetpad.model.children.ChildList;
 import jetbrains.jetpad.model.children.HasParent;
 import jetbrains.jetpad.model.collections.CollectionItemEvent;
 import jetbrains.jetpad.model.collections.list.ObservableList;
-import jetbrains.jetpad.model.event.EventHandler;
 import jetbrains.jetpad.model.event.ListenerCaller;
 import jetbrains.jetpad.model.event.Listeners;
-import jetbrains.jetpad.model.property.Property;
-import jetbrains.jetpad.model.property.PropertyChangeEvent;
-import jetbrains.jetpad.model.util.ListMap;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public abstract class SvgNode extends HasParent<SvgNode, SvgNode> {
   private SvgContainer myContainer;

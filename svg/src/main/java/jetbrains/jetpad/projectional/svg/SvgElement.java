@@ -21,8 +21,10 @@ import jetbrains.jetpad.model.event.ListenerCaller;
 import jetbrains.jetpad.model.event.Listeners;
 import jetbrains.jetpad.model.property.Property;
 import jetbrains.jetpad.model.property.PropertyChangeEvent;
+import jetbrains.jetpad.model.util.ListMap;
 import jetbrains.jetpad.projectional.svg.event.SvgAttributeEvent;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -31,25 +33,6 @@ public abstract class SvgElement extends SvgNode {
   private AttrMap myAttrs = new AttrMap();
   private Listeners<SvgElementListener<?>> myListeners;
   protected static Map<String, SvgAttrSpec<?>> myAttrInfo = new HashMap<>();
-
-  protected SvgElement() {
-    super();
-
-    myAttrs.addHandler(new EventHandler<SvgAttributeEvent<?>>() {
-      @Override
-      public void onEvent(final SvgAttributeEvent<?> event) {
-        if (myListeners != null) {
-          myListeners.fire(new ListenerCaller<SvgElementListener<?>>() {
-            @Override
-            public void call(SvgElementListener l) {
-              l.onAttrSet(event);
-            }
-          });
-        }
-        container().attributeChanged(SvgElement.this, event);
-      }
-    });
-  }
 
   protected Map<String, SvgAttrSpec<?>> getAttrInfo() {
     return myAttrInfo;
@@ -102,6 +85,21 @@ public abstract class SvgElement extends SvgNode {
     return myAttrs.keySet();
   }
 
+  private void onAttrChanged(final SvgAttributeEvent<?> event) {
+    if (myListeners != null) {
+      myListeners.fire(new ListenerCaller<SvgElementListener<?>>() {
+        @Override
+        public void call(SvgElementListener l) {
+          l.onAttrSet(event);
+        }
+      });
+    }
+
+    if (isAttached()) {
+      container().attributeChanged(this, event);
+    }
+  }
+
   public <ValueT> Registration addListener(SvgElementListener<ValueT> l) {
     if (myListeners == null) {
       myListeners = new Listeners<>();
@@ -116,5 +114,59 @@ public abstract class SvgElement extends SvgNode {
         }
       }
     };
+  }
+
+  private class AttrMap {
+    private ListMap<SvgAttrSpec<?>, Object> myAttrs;
+
+    public int size() {
+      return (myAttrs == null ? 0 : myAttrs.size());
+    }
+
+    public boolean isEmpty() {
+      return (myAttrs == null || myAttrs.isEmpty());
+    }
+
+    public boolean containsKey(SvgAttrSpec<?> key) {
+      return (myAttrs != null && myAttrs.containsKey(key));
+    }
+
+    public <ValueT> ValueT get(SvgAttrSpec<ValueT> spec) {
+      if (myAttrs != null && myAttrs.containsKey(spec)) {
+        return (ValueT) myAttrs.get(spec);
+      }
+      return null;
+    }
+
+    public <ValueT> ValueT set(SvgAttrSpec<ValueT> spec, ValueT value) {
+      if (myAttrs == null) {
+        myAttrs = new ListMap<>();
+      }
+
+      ValueT oldValue;
+      if (value == null) {
+        oldValue = (ValueT) myAttrs.remove(spec);
+      } else {
+        oldValue = (ValueT) myAttrs.put(spec, value);
+      }
+
+      if (value != null && !value.equals(oldValue)) {
+        final SvgAttributeEvent<ValueT> event = new SvgAttributeEvent<>(spec, oldValue, value);
+        SvgElement.this.onAttrChanged(event);
+      }
+
+      return oldValue;
+    }
+
+    public <ValueT> ValueT remove(SvgAttrSpec<ValueT> spec) {
+      return set(spec, null);
+    }
+
+    public Set<SvgAttrSpec<?>> keySet() {
+      if (myAttrs == null) {
+        return Collections.emptySet();
+      }
+      return myAttrs.keySet();
+    }
   }
 }
