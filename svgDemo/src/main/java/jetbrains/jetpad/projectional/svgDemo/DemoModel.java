@@ -35,7 +35,7 @@ public class DemoModel {
     ellipse.getCy().set(80.);
     ellipse.getRx().set(170.);
     ellipse.getRy().set(50.);
-    ellipse.getAttr("fill").set(Color.YELLOW.toCssColor());
+    ellipse.setAttr("fill", Color.YELLOW.toCssColor());
     ellipse.getAttr("style").set("stroke:#006600;");
     ellipse.getXmlClass().set("ellipse-yellow");
 

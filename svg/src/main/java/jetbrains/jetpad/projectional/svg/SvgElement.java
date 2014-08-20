@@ -82,6 +82,14 @@ public abstract class SvgElement extends SvgNode {
     return getAttr((SvgAttrSpec<ValueT>) getSpecByName(name));
   }
 
+  public <ValueT> void setAttr(SvgAttrSpec<ValueT> spec, ValueT value) {
+    getAttr(spec).set(value);
+  }
+
+  public <ValueT> void setAttr(String name, ValueT value) {
+    getAttr(name).set(value);
+  }
+
   public Set<SvgAttrSpec<?>> getAttrKeys() {
     return myAttrs.keySet();
   }
