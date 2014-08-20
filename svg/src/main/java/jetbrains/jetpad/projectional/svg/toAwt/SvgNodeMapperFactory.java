@@ -44,6 +44,8 @@ public class SvgNodeMapperFactory implements MapperFactory<SvgNode, Node> {
       result = new SvgElementMapper<>((SvgLineElement) source, new SVGOMLineElement(null, myDoc), myDoc);
     } else if (source instanceof SvgSvgElement) {
       result = new SvgElementMapper<>((SvgSvgElement) source, new SVGOMSVGElement(null, myDoc), myDoc);
+    } else if (source instanceof SvgGElement) {
+      result = new SvgElementMapper<>((SvgGElement) source, new SVGOMGElement(null, myDoc), myDoc);
     } else if (source instanceof SvgTextNode) {
       result = new SvgTextNodeMapper((SvgTextNode) source, myDoc.createTextNode(null), myDoc);
     } else {
