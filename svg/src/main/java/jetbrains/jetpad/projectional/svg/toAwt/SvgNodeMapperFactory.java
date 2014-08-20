@@ -33,19 +33,19 @@ public class SvgNodeMapperFactory implements MapperFactory<SvgNode, Node> {
   public Mapper<? extends SvgNode, ? extends Node> createMapper(SvgNode source) {
     Mapper<? extends SvgNode, ? extends Node> result;
     if (source instanceof SvgEllipseElement) {
-      result = new SvgEllipseElementMapper( (SvgEllipseElement) source, new SVGOMEllipseElement(null, myDoc), myDoc);
+      result = new SvgElementMapper<>((SvgEllipseElement) source, new SVGOMEllipseElement(null, myDoc), myDoc);
     } else if (source instanceof SvgRectElement) {
-      result = new SvgRectElementMapper( (SvgRectElement) source, new SVGOMRectElement(null, myDoc), myDoc);
+      result = new SvgElementMapper<>( (SvgRectElement) source, new SVGOMRectElement(null, myDoc), myDoc);
     } else if (source instanceof SvgTextElement) {
-      result = new SvgTextElementMapper((SvgTextElement) source, new SVGOMTextElement(null, myDoc), myDoc);
+      result = new SvgElementMapper<>((SvgTextElement) source, new SVGOMTextElement(null, myDoc), myDoc);
+    } else if (source instanceof SvgPathElement) {
+      result = new SvgElementMapper<>((SvgPathElement) source, new SVGOMPathElement(null, myDoc), myDoc);
+    } else if (source instanceof SvgLineElement) {
+      result = new SvgElementMapper<>((SvgLineElement) source, new SVGOMLineElement(null, myDoc), myDoc);
+    } else if (source instanceof SvgSvgElement) {
+      result = new SvgElementMapper<>((SvgSvgElement) source, new SVGOMSVGElement(null, myDoc), myDoc);
     } else if (source instanceof SvgTextNode) {
       result = new SvgTextNodeMapper((SvgTextNode) source, myDoc.createTextNode(null), myDoc);
-    } else if (source instanceof SvgPathElement) {
-      result = new SvgPathElementMapper((SvgPathElement) source, new SVGOMPathElement(null, myDoc), myDoc);
-    } else if (source instanceof SvgLineElement) {
-      result = new SvgLineElementMapper((SvgLineElement) source, new SVGOMLineElement(null, myDoc), myDoc);
-    } else if (source instanceof SvgSvgElement) {
-      throw new IllegalStateException("Svg root element can't be embedded");
     } else {
       throw new IllegalStateException("Unsupported SvgElement");
     }

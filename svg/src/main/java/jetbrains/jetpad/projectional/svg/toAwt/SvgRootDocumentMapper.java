@@ -38,7 +38,7 @@ public class SvgRootDocumentMapper extends Mapper<SvgSvgElement, SVGOMDocument> 
   protected void onAttach(MappingContext ctx) {
     super.onAttach(ctx);
 
-    SvgSvgElementMapper elementMapper = new SvgSvgElementMapper(getSource(), (SVGOMSVGElement) getTarget().getDocumentElement(), getTarget());
+    SvgElementMapper<SvgSvgElement, SVGOMSVGElement> elementMapper = new SvgElementMapper<>(getSource(), (SVGOMSVGElement) getTarget().getDocumentElement(), getTarget());
     elementMapper.attachRoot();
   }
 }

@@ -6,13 +6,13 @@ import jetbrains.jetpad.base.Registration;
 import jetbrains.jetpad.mapper.Synchronizers;
 import jetbrains.jetpad.model.property.WritableProperty;
 import jetbrains.jetpad.projectional.svg.SvgSvgElement;
-import jetbrains.jetpad.projectional.svg.toDom.SvgSvgElementMapper;
+import jetbrains.jetpad.projectional.svg.toDom.SvgElementMapper;
 import jetbrains.jetpad.projectional.view.SvgView;
 import org.vectomatic.dom.svg.OMSVGSVGElement;
 
 public class SvgViewMapper extends BaseViewMapper<SvgView, Element> {
   private static Registration map(SvgSvgElement root, OMSVGSVGElement element) {
-    final SvgSvgElementMapper mapper = new SvgSvgElementMapper(root, element);
+    final SvgElementMapper mapper = new SvgElementMapper<>(root, element);
     mapper.attachRoot();
     return new Registration() {
       @Override
