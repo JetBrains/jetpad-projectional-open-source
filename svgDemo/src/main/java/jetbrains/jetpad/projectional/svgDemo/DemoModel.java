@@ -26,7 +26,6 @@ import jetbrains.jetpad.values.Color;
 public class DemoModel {
   public static SvgSvgElement createModel() {
     SvgSvgElement svgRoot = new SvgSvgElement(200., 400.);
-    svgRoot.getAttr("shape-rendering").set("geometricPrecision");
 
     SvgEllipseElement ellipse = new SvgEllipseElement(200., 80., 170., 50.);
     ellipse.setAttr("fill", Color.YELLOW.toCssColor());

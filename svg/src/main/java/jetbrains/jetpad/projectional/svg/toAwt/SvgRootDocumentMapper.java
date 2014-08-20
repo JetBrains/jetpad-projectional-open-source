@@ -39,6 +39,7 @@ public class SvgRootDocumentMapper extends Mapper<SvgSvgElement, SVGOMDocument> 
     super.onAttach(ctx);
 
     SvgElementMapper<SvgSvgElement, SVGOMSVGElement> elementMapper = new SvgElementMapper<>(getSource(), (SVGOMSVGElement) getTarget().getDocumentElement(), getTarget());
+    getTarget().getDocumentElement().setAttribute("shape-rendering", "geometricPrecision");
     elementMapper.attachRoot();
   }
 }
