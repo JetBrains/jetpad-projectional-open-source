@@ -21,13 +21,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class SvgPathElement extends SvgStylableElement {
-  protected static Map<String, SvgAttrSpec<?>> myAttrInfo = new HashMap<>(SvgStylableElement.myAttrInfo);
+  protected static Map<String, SvgAttrSpec<?>> ourAttrInfo = new HashMap<>(SvgStylableElement.ourAttrInfo);
 
-  public static final SvgAttrSpec<String> D = SvgAttrSpec.initAttrSpec("d", myAttrInfo);
+  public static final SvgAttrSpec<String> D = SvgAttrSpec.initAttrSpec("d", ourAttrInfo);
 
   @Override
   protected Map<String, SvgAttrSpec<?>> getAttrInfo() {
-    return myAttrInfo;
+    return ourAttrInfo;
   }
 
   public Property<String> getD() {

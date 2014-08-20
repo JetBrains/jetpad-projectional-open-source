@@ -18,13 +18,13 @@ package jetbrains.jetpad.projectional.svg;
 import java.util.Map;
 
 public class SvgAttrSpec<ValueT> {
-  private String myName;
-
   static <ValueT> SvgAttrSpec<ValueT> initAttrSpec(String name, Map<String, SvgAttrSpec<?>> attrInfo) {
     SvgAttrSpec<ValueT> spec = new SvgAttrSpec<>(name);
     attrInfo.put(name, spec);
     return spec;
   }
+
+  private String myName;
 
   protected SvgAttrSpec(String name) {
     myName = name;

@@ -17,7 +17,6 @@ package jetbrains.jetpad.projectional.svg;
 
 import jetbrains.jetpad.event.KeyEvent;
 import jetbrains.jetpad.event.MouseEvent;
-import jetbrains.jetpad.projectional.svg.event.SvgAttributeEvent;
 
 public class SvgEvents {
   public final static SvgEventSpec<MouseEvent> MOUSE_PRESSED = new SvgEventSpec<>("mousePressed");
@@ -26,6 +25,4 @@ public class SvgEvents {
   public final static SvgEventSpec<KeyEvent> KEY_PRESSED = new SvgEventSpec<>("keyPressed");
   public final static SvgEventSpec<KeyEvent> KEY_RELEASED = new SvgEventSpec<>("keyReleased");
   public final static SvgEventSpec<KeyEvent> KEY_TYPED = new SvgEventSpec<>("keyTyped");
-
-  public final static SvgEventSpec<SvgAttributeEvent> ATTRIBUTE_CHANGED = new SvgEventSpec<>("attributeChanged");
 }

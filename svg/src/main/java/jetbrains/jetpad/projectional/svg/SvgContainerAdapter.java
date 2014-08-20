@@ -15,7 +15,6 @@
  */
 package jetbrains.jetpad.projectional.svg;
 
-import jetbrains.jetpad.model.property.PropertyChangeEvent;
 import jetbrains.jetpad.projectional.svg.event.SvgAttributeEvent;
 
 public class SvgContainerAdapter implements SvgContainerListener {

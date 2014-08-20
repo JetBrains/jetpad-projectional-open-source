@@ -21,14 +21,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class SvgSvgElement extends SvgStylableElement {
-  protected static Map<String, SvgAttrSpec<?>> myAttrInfo = new HashMap<>(SvgStylableElement.myAttrInfo);
+  protected static Map<String, SvgAttrSpec<?>> ourAttrInfo = new HashMap<>(SvgStylableElement.ourAttrInfo);
 
-  public static final SvgAttrSpec<Double> HEIGHT = SvgAttrSpec.initAttrSpec("height", myAttrInfo);
-  public static final SvgAttrSpec<Double> WIDTH = SvgAttrSpec.initAttrSpec("width", myAttrInfo);
+  public static final SvgAttrSpec<Double> HEIGHT = SvgAttrSpec.initAttrSpec("height", ourAttrInfo);
+  public static final SvgAttrSpec<Double> WIDTH = SvgAttrSpec.initAttrSpec("width", ourAttrInfo);
 
   @Override
   protected Map<String, SvgAttrSpec<?>> getAttrInfo() {
-    return myAttrInfo;
+    return ourAttrInfo;
   }
 
   public Property<Double> getHeight() {

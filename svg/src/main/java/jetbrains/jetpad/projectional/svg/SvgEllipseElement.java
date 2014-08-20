@@ -21,16 +21,16 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class SvgEllipseElement extends SvgStylableElement {
-  protected static Map<String, SvgAttrSpec<?>> myAttrInfo = new HashMap<>(SvgStylableElement.myAttrInfo);
+  protected static Map<String, SvgAttrSpec<?>> ourAttrInfo = new HashMap<>(SvgStylableElement.ourAttrInfo);
 
-  public static final SvgAttrSpec<Double> CX = SvgAttrSpec.initAttrSpec("cx", myAttrInfo);
-  public static final SvgAttrSpec<Double> CY = SvgAttrSpec.initAttrSpec("cy", myAttrInfo);
-  public static final SvgAttrSpec<Double> RX = SvgAttrSpec.initAttrSpec("rx", myAttrInfo);
-  public static final SvgAttrSpec<Double> RY = SvgAttrSpec.initAttrSpec("ry", myAttrInfo);
+  public static final SvgAttrSpec<Double> CX = SvgAttrSpec.initAttrSpec("cx", ourAttrInfo);
+  public static final SvgAttrSpec<Double> CY = SvgAttrSpec.initAttrSpec("cy", ourAttrInfo);
+  public static final SvgAttrSpec<Double> RX = SvgAttrSpec.initAttrSpec("rx", ourAttrInfo);
+  public static final SvgAttrSpec<Double> RY = SvgAttrSpec.initAttrSpec("ry", ourAttrInfo);
 
   @Override
   protected Map<String, SvgAttrSpec<?>> getAttrInfo() {
-    return myAttrInfo;
+    return ourAttrInfo;
   }
 
   public Property<Double> getCx() {

@@ -21,16 +21,16 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class SvgLineElement extends SvgStylableElement {
-  protected static Map<String, SvgAttrSpec<?>> myAttrInfo = new HashMap<>(SvgStylableElement.myAttrInfo);
+  protected static Map<String, SvgAttrSpec<?>> ourAttrInfo = new HashMap<>(SvgStylableElement.ourAttrInfo);
 
-  public static final SvgAttrSpec<Double> X1 = SvgAttrSpec.initAttrSpec("x1", myAttrInfo);
-  public static final SvgAttrSpec<Double> Y1 = SvgAttrSpec.initAttrSpec("y1", myAttrInfo);
-  public static final SvgAttrSpec<Double> X2 = SvgAttrSpec.initAttrSpec("x2", myAttrInfo);
-  public static final SvgAttrSpec<Double> Y2 = SvgAttrSpec.initAttrSpec("y2", myAttrInfo);
+  public static final SvgAttrSpec<Double> X1 = SvgAttrSpec.initAttrSpec("x1", ourAttrInfo);
+  public static final SvgAttrSpec<Double> Y1 = SvgAttrSpec.initAttrSpec("y1", ourAttrInfo);
+  public static final SvgAttrSpec<Double> X2 = SvgAttrSpec.initAttrSpec("x2", ourAttrInfo);
+  public static final SvgAttrSpec<Double> Y2 = SvgAttrSpec.initAttrSpec("y2", ourAttrInfo);
 
   @Override
   protected Map<String, SvgAttrSpec<?>> getAttrInfo() {
-    return myAttrInfo;
+    return ourAttrInfo;
   }
 
   public Property<Double> getX1() {

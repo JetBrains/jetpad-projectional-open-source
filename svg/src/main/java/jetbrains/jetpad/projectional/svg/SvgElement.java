@@ -30,17 +30,18 @@ import java.util.Map;
 import java.util.Set;
 
 public abstract class SvgElement extends SvgNode {
+  protected static Map<String, SvgAttrSpec<?>> ourAttrInfo = new HashMap<>();
+
   private AttrMap myAttrs = new AttrMap();
   private Listeners<SvgElementListener<?>> myListeners;
-  protected static Map<String, SvgAttrSpec<?>> myAttrInfo = new HashMap<>();
 
   protected Map<String, SvgAttrSpec<?>> getAttrInfo() {
-    return myAttrInfo;
+    return ourAttrInfo;
   }
 
   public SvgAttrSpec<?> getSpecByName(String name) {
-    if (myAttrInfo.containsKey(name)) {
-      return myAttrInfo.get(name);
+    if (ourAttrInfo.containsKey(name)) {
+      return ourAttrInfo.get(name);
     }
     return SvgXmlAttrSpec.createSpec(name);
   }
