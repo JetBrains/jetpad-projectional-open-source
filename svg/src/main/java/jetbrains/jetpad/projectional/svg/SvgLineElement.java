@@ -28,6 +28,19 @@ public class SvgLineElement extends SvgStylableElement {
   public static final SvgAttrSpec<Double> X2 = SvgAttrSpec.initAttrSpec("x2", ourAttrInfo);
   public static final SvgAttrSpec<Double> Y2 = SvgAttrSpec.initAttrSpec("y2", ourAttrInfo);
 
+  public SvgLineElement() {
+    super();
+  }
+
+  public SvgLineElement(Double x1, Double y1, Double x2, Double y2) {
+    this();
+
+    setAttr(X1, x1);
+    setAttr(Y1, y1);
+    setAttr(X2, x2);
+    setAttr(Y2, y2);
+  }
+
   @Override
   protected Map<String, SvgAttrSpec<?>> getAttrInfo() {
     return ourAttrInfo;

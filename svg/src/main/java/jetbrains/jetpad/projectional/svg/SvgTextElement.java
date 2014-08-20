@@ -27,6 +27,18 @@ public class SvgTextElement extends SvgStylableElement {
   public static final SvgAttrSpec<Double> X = SvgAttrSpec.initAttrSpec("x", ourAttrInfo);
   public static final SvgAttrSpec<Double> Y = SvgAttrSpec.initAttrSpec("y", ourAttrInfo);
 
+  public SvgTextElement() {
+    super();
+  }
+
+  public SvgTextElement(Double x, Double y, String content) {
+    this();
+
+    setAttr(X, x);
+    setAttr(Y, y);
+    addTextNode(content);
+  }
+
   @Override
   protected Map<String, SvgAttrSpec<?>> getAttrInfo() {
     return ourAttrInfo;

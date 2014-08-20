@@ -28,6 +28,19 @@ public class SvgRectElement extends SvgStylableElement {
   public static final SvgAttrSpec<Double> HEIGHT = SvgAttrSpec.initAttrSpec("height", ourAttrInfo);
   public static final SvgAttrSpec<Double> WIDTH = SvgAttrSpec.initAttrSpec("width", ourAttrInfo);
 
+  public SvgRectElement() {
+    super();
+  }
+
+  public SvgRectElement(Double x, Double y, Double height, Double width) {
+    this();
+
+    setAttr(X, x);
+    setAttr(Y, y);
+    setAttr(HEIGHT, height);
+    setAttr(WIDTH, width);
+  }
+
   @Override
   protected Map<String, SvgAttrSpec<?>> getAttrInfo() {
     return ourAttrInfo;

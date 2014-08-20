@@ -25,6 +25,16 @@ public class SvgPathElement extends SvgStylableElement {
 
   public static final SvgAttrSpec<String> D = SvgAttrSpec.initAttrSpec("d", ourAttrInfo);
 
+  public SvgPathElement() {
+    super();
+  }
+
+  public SvgPathElement(String d) {
+    this();
+
+    setAttr(D, d);
+  }
+
   @Override
   protected Map<String, SvgAttrSpec<?>> getAttrInfo() {
     return ourAttrInfo;

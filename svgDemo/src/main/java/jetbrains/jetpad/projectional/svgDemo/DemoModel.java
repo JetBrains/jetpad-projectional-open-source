@@ -25,24 +25,15 @@ import jetbrains.jetpad.values.Color;
 
 public class DemoModel {
   public static SvgSvgElement createModel() {
-    SvgSvgElement svgRoot = new SvgSvgElement();
-    svgRoot.getHeight().set(200.);
-    svgRoot.getWidth().set(400.);
+    SvgSvgElement svgRoot = new SvgSvgElement(200., 400.);
     svgRoot.getAttr("shape-rendering").set("geometricPrecision");
 
-    SvgEllipseElement ellipse = new SvgEllipseElement();
-    ellipse.getCx().set(200.);
-    ellipse.getCy().set(80.);
-    ellipse.getRx().set(170.);
-    ellipse.getRy().set(50.);
+    SvgEllipseElement ellipse = new SvgEllipseElement(200., 80., 170., 50.);
     ellipse.setAttr("fill", Color.YELLOW.toCssColor());
     ellipse.getAttr("style").set("stroke:#006600;");
     ellipse.getXmlClass().set("ellipse-yellow");
 
-    SvgTextElement text = new SvgTextElement();
-    text.addTextNode("Example Text");
-    text.getX().set(20.);
-    text.getY().set(20.);
+    SvgTextElement text = new SvgTextElement(20., 20., "Example Text");
 
     SvgPathDataBuilder pathBuilder = new SvgPathDataBuilder(false);
     pathBuilder.moveTo(150., 175., true)
@@ -50,24 +41,15 @@ public class DemoModel {
         .ellipticalArc(100., 100., 0., false, false, -100., 100.)
         .closePath();
 
-    SvgPathElement path = new SvgPathElement();
-    path.getD().set(pathBuilder.build());
+    SvgPathElement path = new SvgPathElement(pathBuilder.build());
     path.getAttr("fill").set("red");
     path.getAttr("stroke").set("blue");
     path.getAttr("stroke-width").set("5");
 
-    SvgEllipseElement ellipse2 = new SvgEllipseElement();
-    ellipse2.getCx().set(250.);
-    ellipse2.getCy().set(85.);
-    ellipse2.getRx().set(40.);
-    ellipse2.getRy().set(85.0);
+    SvgEllipseElement ellipse2 = new SvgEllipseElement(250., 85., 40., 85.);
     ellipse2.getAttr("fill").set(Color.GREEN.toCssColor());
 
-    SvgRectElement rect = new SvgRectElement();
-    rect.getX().set(180.);
-    rect.getY().set(50.);
-    rect.getWidth().set(80.);
-    rect.getHeight().set(50.);
+    SvgRectElement rect = new SvgRectElement(180., 50., 50., 80.);
     rect.getAttr("fill").set(Color.RED.toCssColor());
 
     svgRoot.children().add(ellipse);
@@ -104,11 +86,7 @@ public class DemoModel {
   }
 
   public static void addCircle(SvgSvgElement svgRoot, int x, int y) {
-    SvgEllipseElement circle = new SvgEllipseElement();
-    circle.getCx().set((double) x);
-    circle.getCy().set((double) y);
-    circle.getRx().set(10.);
-    circle.getRy().set(10.0);
+    SvgEllipseElement circle = new SvgEllipseElement((double) x, (double) y, 10., 10.);
     circle.getAttr("fill").set(Color.BLACK.toCssColor());
 
     svgRoot.children().add(circle);

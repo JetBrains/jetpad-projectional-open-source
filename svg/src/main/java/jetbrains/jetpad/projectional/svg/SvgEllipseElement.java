@@ -28,6 +28,19 @@ public class SvgEllipseElement extends SvgStylableElement {
   public static final SvgAttrSpec<Double> RX = SvgAttrSpec.initAttrSpec("rx", ourAttrInfo);
   public static final SvgAttrSpec<Double> RY = SvgAttrSpec.initAttrSpec("ry", ourAttrInfo);
 
+  public SvgEllipseElement() {
+    super();
+  }
+
+  public SvgEllipseElement(Double cx, Double cy, Double rx, Double ry) {
+    this();
+
+    setAttr(CX, cx);
+    setAttr(CY, cy);
+    setAttr(RX, rx);
+    setAttr(RY, ry);
+  }
+
   @Override
   protected Map<String, SvgAttrSpec<?>> getAttrInfo() {
     return ourAttrInfo;
