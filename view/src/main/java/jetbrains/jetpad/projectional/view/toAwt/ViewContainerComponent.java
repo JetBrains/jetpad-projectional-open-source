@@ -42,9 +42,12 @@ import org.apache.batik.bridge.GVTBuilder;
 import org.apache.batik.bridge.UserAgent;
 import org.apache.batik.bridge.UserAgentAdapter;
 import org.apache.batik.gvt.GraphicsNode;
+import org.apache.batik.gvt.event.AWTEventDispatcher;
+import org.apache.batik.gvt.event.EventDispatcher;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.swing.Timer;
 import java.awt.*;
 import java.awt.datatransfer.*;
 import java.awt.event.*;
@@ -56,11 +59,7 @@ import java.awt.image.ImageObserver;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.net.URL;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import static jetbrains.jetpad.projectional.view.toAwt.AwtConverters.toAwtColor;
 
@@ -871,11 +870,32 @@ public class ViewContainerComponent extends JComponent implements Scrollable {
     void dispose();
   }
 
-  private static class SvgPaintHelper implements PaintHelper<SvgView> {
+  private class SvgPaintHelper implements PaintHelper<SvgView> {
     private GraphicsNode myGraphicsNode;
     private SvgRootDocumentMapper myMapper;
+    private UserAgent myUserAgent;
+    private BridgeContext myBridgeContext;
+
 
     SvgPaintHelper(final SvgView view) {
+      myUserAgent = new UserAgentAdapter() {
+        AWTEventDispatcher dispatcher = new AWTEventDispatcher();
+
+        @Override
+        public EventDispatcher getEventDispatcher() {
+          return dispatcher;
+        }
+      };
+
+      ViewContainerComponent.this.addMouseListener(new MouseAdapter() {
+        @Override
+        public void mousePressed(MouseEvent e) {
+          e.translatePoint(-view.bounds().get().origin.x, -view.bounds().get().origin.y);
+          myUserAgent.getEventDispatcher().dispatchEvent(e);
+          e.translatePoint(view.bounds().get().origin.x, view.bounds().get().origin.y);
+        }
+      });
+
       createGraphicsNode(view);
       view.root().addHandler(new EventHandler<PropertyChangeEvent<SvgSvgElement>>() {
         @Override
@@ -886,15 +906,16 @@ public class ViewContainerComponent extends JComponent implements Scrollable {
     }
 
     private void createGraphicsNode(SvgView view) {
+      myBridgeContext = new BridgeContext(myUserAgent);
+      myBridgeContext.setDynamic(true);
+
       myMapper = new SvgRootDocumentMapper(view.root().get());
       myMapper.attachRoot();
 
-      UserAgent userAgent = new UserAgentAdapter();
-      BridgeContext ctx = new BridgeContext(userAgent);
-      ctx.setDynamicState(BridgeContext.DYNAMIC);
       GVTBuilder builder = new GVTBuilder();
+      myGraphicsNode = builder.build(myBridgeContext, myMapper.getTarget());
 
-      myGraphicsNode = builder.build(ctx, myMapper.getTarget());
+      myUserAgent.getEventDispatcher().setRootNode(myGraphicsNode);
     }
 
     @Override
@@ -913,6 +934,8 @@ public class ViewContainerComponent extends JComponent implements Scrollable {
     @Override
     public void dispose() {
       myMapper.detachRoot();
+      myBridgeContext.dispose();
+      myGraphicsNode = null;
     }
   }
 }
