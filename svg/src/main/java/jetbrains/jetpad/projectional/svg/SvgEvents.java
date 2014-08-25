@@ -19,8 +19,12 @@ import jetbrains.jetpad.event.KeyEvent;
 import jetbrains.jetpad.event.MouseEvent;
 
 public class SvgEvents {
+  public final static SvgEventSpec<MouseEvent> MOUSE_CLICKED = new SvgEventSpec<>("mouseClicked");
   public final static SvgEventSpec<MouseEvent> MOUSE_PRESSED = new SvgEventSpec<>("mousePressed");
   public final static SvgEventSpec<MouseEvent> MOUSE_RELEASED = new SvgEventSpec<>("mouseReleased");
+  public final static SvgEventSpec<MouseEvent> MOUSE_OVER = new SvgEventSpec<>("mouseOver");
+  public final static SvgEventSpec<MouseEvent> MOUSE_MOVE = new SvgEventSpec<>("mouseMove");
+  public final static SvgEventSpec<MouseEvent> MOUSE_OUT = new SvgEventSpec<>("mouseOut");
 
   public final static SvgEventSpec<KeyEvent> KEY_PRESSED = new SvgEventSpec<>("keyPressed");
   public final static SvgEventSpec<KeyEvent> KEY_RELEASED = new SvgEventSpec<>("keyReleased");

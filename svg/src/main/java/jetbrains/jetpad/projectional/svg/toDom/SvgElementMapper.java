@@ -41,12 +41,10 @@ public class SvgElementMapper<SourceT extends SvgElement, TargetT extends OMSVGE
         myReg = getSource().addListener(new SvgElementListener<Object>() {
           @Override
           public void onAttrSet(SvgAttributeEvent<Object> event) {
-            if (event.getOldValue() == null && event.getNewValue() != null) {
-              getTarget().setAttribute(event.getAttrSpec().toString(), event.getNewValue().toString());
-            }
             if (event.getNewValue() == null) {
               getTarget().removeAttribute(event.getAttrSpec().toString());
             }
+            getTarget().setAttribute(event.getAttrSpec().toString(), event.getNewValue().toString());
           }
         });
 

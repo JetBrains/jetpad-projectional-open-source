@@ -97,10 +97,10 @@ public class SvgContainer {
   }
 
   private void dispatchMouseEvent(SvgEventSpec<MouseEvent> spec, MouseEvent e) {
-    mySvgRoot.get().dispatch(spec, e);
+//    mySvgRoot.get().dispatch(spec, e);
   }
 
   private void dispatchKeyboardEvent(SvgEventSpec<KeyEvent> spec, KeyEvent e) {
-    mySvgRoot.get().dispatch(spec, e);
+//    mySvgRoot.get().dispatch(spec, e);
   }
 }

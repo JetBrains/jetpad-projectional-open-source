@@ -89,7 +89,7 @@ public class ViewContainerComponent extends JComponent implements Scrollable {
   private Set<TextView> myWithCaretVisible = new HashSet<>();
   private MyViewContainerPeer myPeer = new MyViewContainerPeer();
 
-  private Map<View, PaintHelper> myViewPaintHelpers = new HashMap<>();
+  private Map<View, PaintHelper<? extends View>> myViewPaintHelpers = new HashMap<>();
 
   public ViewContainerComponent() {
     setFocusable(true);
@@ -171,6 +171,14 @@ public class ViewContainerComponent extends JComponent implements Scrollable {
         handler.handle(evt);
         if (evt.isConsumed()) {
           e.consume();
+        }
+
+        for (View view : myViewPaintHelpers.keySet()) {
+          if (view.bounds().get().contains(new Vector(e.getX(), e.getY()))) {
+            e.translatePoint(-view.bounds().get().origin.x, -view.bounds().get().origin.y);
+            myViewPaintHelpers.get(view).handleMouseEvent(e);
+            e.translatePoint(view.bounds().get().origin.x, view.bounds().get().origin.y);
+          }
         }
       }
     };
@@ -639,7 +647,7 @@ public class ViewContainerComponent extends JComponent implements Scrollable {
 
     if (view instanceof SvgView) {
       if (myViewPaintHelpers.containsKey(view)) {
-        myViewPaintHelpers.get(view).paint(view, (Graphics2D) g.create());
+        ((PaintHelper<SvgView>) myViewPaintHelpers.get(view)).paint((SvgView) view, (Graphics2D) g.create());
       } else {
         SvgPaintHelper helper = new SvgPaintHelper((SvgView) view);
         myViewPaintHelpers.put(view, helper);
@@ -868,6 +876,7 @@ public class ViewContainerComponent extends JComponent implements Scrollable {
     void paint(ViewT view, Graphics2D g);
     void update(ViewT view);
     void dispose();
+    void handleMouseEvent(MouseEvent e);
   }
 
   private class SvgPaintHelper implements PaintHelper<SvgView> {
@@ -886,15 +895,6 @@ public class ViewContainerComponent extends JComponent implements Scrollable {
           return dispatcher;
         }
       };
-
-      ViewContainerComponent.this.addMouseListener(new MouseAdapter() {
-        @Override
-        public void mousePressed(MouseEvent e) {
-          e.translatePoint(-view.bounds().get().origin.x, -view.bounds().get().origin.y);
-          myUserAgent.getEventDispatcher().dispatchEvent(e);
-          e.translatePoint(view.bounds().get().origin.x, view.bounds().get().origin.y);
-        }
-      });
 
       createGraphicsNode(view);
       view.root().addHandler(new EventHandler<PropertyChangeEvent<SvgSvgElement>>() {
@@ -936,6 +936,11 @@ public class ViewContainerComponent extends JComponent implements Scrollable {
       myMapper.detachRoot();
       myBridgeContext.dispose();
       myGraphicsNode = null;
+    }
+
+    @Override
+    public void handleMouseEvent(MouseEvent e) {
+      myUserAgent.getEventDispatcher().dispatchEvent(e);
     }
   }
 }
