@@ -137,5 +137,7 @@ public class SvgElementMapper<SourceT extends SvgElement, TargetT extends OMSVGE
   @Override
   protected void onDetach() {
     super.onDetach();
+
+    myHandlerReg.remove();
   }
 }
