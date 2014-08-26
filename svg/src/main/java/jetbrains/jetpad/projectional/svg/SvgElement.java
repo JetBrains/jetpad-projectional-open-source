@@ -32,7 +32,7 @@ public abstract class SvgElement extends SvgNode {
   private AttrMap myAttrs = new AttrMap();
   private Listeners<SvgElementListener<?>> myListeners;
 
-  protected SvgAttrSpec<?> getSpecByName(String name) {
+  protected <ValueT> SvgAttrSpec<ValueT> getSpecByName(String name) {
     return SvgAttrSpec.createSpec(name);
   }
 
@@ -68,15 +68,17 @@ public abstract class SvgElement extends SvgNode {
     };
   }
 
-  public <ValueT> Property<ValueT> getAttr(String name) {
-    return getAttr((SvgAttrSpec<ValueT>) getSpecByName(name));
+  // if attr is one of pre-defined typed attrs (like CX in ellipse), the behaviour of this method is undefined
+  public Property<String> getAttr(String name) {
+    SvgAttrSpec<String> spec = getSpecByName(name);
+    return getAttr(spec);
   }
 
-  public <ValueT> void setAttr(SvgAttrSpec<ValueT> spec, ValueT value) {
+  protected <ValueT> void setAttr(SvgAttrSpec<ValueT> spec, ValueT value) {
     getAttr(spec).set(value);
   }
 
-  public <ValueT> void setAttr(String name, ValueT value) {
+  public void setAttr(String name, String value) {
     getAttr(name).set(value);
   }
 
