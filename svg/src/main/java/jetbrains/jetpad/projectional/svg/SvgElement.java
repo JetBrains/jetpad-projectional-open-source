@@ -25,6 +25,7 @@ import jetbrains.jetpad.model.util.ListMap;
 import jetbrains.jetpad.projectional.svg.event.SvgAttributeEvent;
 
 import java.util.Collections;
+import java.util.Objects;
 import java.util.Set;
 
 public abstract class SvgElement extends SvgNode {
@@ -148,7 +149,7 @@ public abstract class SvgElement extends SvgNode {
         oldValue = (ValueT) myAttrs.put(spec, value);
       }
 
-      if (value != null && !value.equals(oldValue)) {
+      if (!Objects.equals(value, oldValue)) {
         final SvgAttributeEvent<ValueT> event = new SvgAttributeEvent<>(spec, oldValue, value);
         SvgElement.this.onAttrChanged(event);
       }
