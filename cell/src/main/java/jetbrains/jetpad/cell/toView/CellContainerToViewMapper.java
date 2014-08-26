@@ -45,9 +45,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class CellContainerToViewMapper extends Mapper<CellContainer, View> {
-  public static int count = 0;
-
-
   private View myTargetView;
   private View myPopupView;
   private CellToViewContext myContext;
@@ -175,8 +172,6 @@ public class CellContainerToViewMapper extends Mapper<CellContainer, View> {
             throw new IllegalStateException();
           }
         }
-
-        count++;
         return descendantMapper.getTarget().bounds().get();
       }
 
