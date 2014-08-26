@@ -25,12 +25,15 @@ import jetbrains.jetpad.model.event.ListenerCaller;
 import jetbrains.jetpad.model.event.Listeners;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public abstract class SvgNode extends HasParent<SvgNode, SvgNode> {
   private SvgContainer myContainer;
-  private List<SvgTrait> myTraits;
   private Listeners<SvgNodeListener> myListeners;
+  private Map<SvgEventSpec<?>, Listeners<SvgEventHandler<?>>> myEventHandlers;
+
 
   private SvgChildList myChildren;
 
@@ -43,6 +46,19 @@ public abstract class SvgNode extends HasParent<SvgNode, SvgNode> {
       myChildren = new SvgChildList(this);
     }
     return myChildren;
+  }
+
+  public <EventT extends Event> Registration addEventHandler(SvgEventSpec<EventT> spec, SvgEventHandler<EventT> handler) {
+    if (myEventHandlers == null) {
+      myEventHandlers = new HashMap<>();
+    }
+    if (!myEventHandlers.containsKey(spec)) {
+      myEventHandlers.put(spec, new Listeners<SvgEventHandler<?>>());
+    }
+
+    // TODO: let mappers know about new event handler (to make them add target's listeners)
+
+    return (myEventHandlers.get(spec).add(handler));
   }
 
   Registration addListener(SvgNodeListener l) {
@@ -95,7 +111,7 @@ public abstract class SvgNode extends HasParent<SvgNode, SvgNode> {
     fire(new ListenerCaller<SvgNodeListener>() {
       @Override
       public void call(SvgNodeListener l) {
-        l.onSvgElementAttached();
+        l.onSvgNodeAttached();
       }
     });
   }
@@ -108,7 +124,7 @@ public abstract class SvgNode extends HasParent<SvgNode, SvgNode> {
     fire(new ListenerCaller<SvgNodeListener>() {
       @Override
       public void call(SvgNodeListener l) {
-        l.onSvgElementDetached();
+        l.onSvgNodeDetached();
       }
     });
 
@@ -122,34 +138,18 @@ public abstract class SvgNode extends HasParent<SvgNode, SvgNode> {
     myContainer = null;
   }
 
-  public Registration addTrait(final SvgTrait trait) {
-    if (myTraits == null) {
-      myTraits = new ArrayList<>();
-    }
-
-    myTraits.add(0, trait);
-
-    return new Registration() {
-      @Override
-      public void remove() {
-        myTraits.remove(trait);
-
-        if (myTraits.isEmpty()) {
-          myTraits = null;
+  public <EventT extends Event> void dispatch(SvgEventSpec<EventT> spec, final EventT event) {
+    if (myEventHandlers != null && myEventHandlers.containsKey(spec)) {
+      myEventHandlers.get(spec).fire(new ListenerCaller<SvgEventHandler<?>>() {
+        @Override
+        public void call(SvgEventHandler<?> l) {
+          if (event.isConsumed()) return;
+          ((SvgEventHandler<EventT>) l).handle(SvgNode.this, event);
         }
-      }
-    };
-  }
-
-  public <EventT extends Event> void dispatch(SvgEventSpec<EventT> spec, EventT event) {
-    if (myTraits != null) {
-      for (SvgTrait t : myTraits) {
-        t.dispatch(this, spec, event);
-        if (event.isConsumed()) return;
-      }
+      });
     }
 
-    if (parent().get() != null) {
+    if (parent().get() != null && !event.isConsumed()) {
       parent().get().dispatch(spec, event);
     }
   }

@@ -110,21 +110,19 @@ public class DemoModel {
 
     final Value<Boolean> state = new Value<>(true);
 
-    model.addTrait(new SvgTraitBuilder().on(SvgEvents.MOUSE_PRESSED, new SvgEventHandler<MouseEvent>() {
+    model.addEventHandler(SvgEvents.MOUSE_PRESSED, new SvgEventHandler<MouseEvent>() {
       @Override
       public void handle(SvgNode node, MouseEvent e) {
         DemoModel.addCircle(model, e.x(), e.y());
       }
-    })
-    .build());
+    });
 
-    altModel.addTrait(new SvgTraitBuilder().on(SvgEvents.MOUSE_PRESSED, new SvgEventHandler<MouseEvent>() {
+    altModel.addEventHandler(SvgEvents.MOUSE_PRESSED, new SvgEventHandler<MouseEvent>() {
       @Override
       public void handle(SvgNode node, MouseEvent e) {
         DemoModel.addCircle(altModel, e.x(), e.y());
       }
-    })
-    .build());
+    });
 
     final Value<Boolean> viewState = new Value<>(true);
     container.root().addTrait(new ViewTraitBuilder()

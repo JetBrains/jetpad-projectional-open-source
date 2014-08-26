@@ -18,8 +18,8 @@ package jetbrains.jetpad.projectional.svg;
 import jetbrains.jetpad.model.collections.CollectionItemEvent;
 
 interface SvgNodeListener {
-  void onSvgElementAttached();
-  void onSvgElementDetached();
+  void onSvgNodeAttached();
+  void onSvgNodeDetached();
 
   void onChildAdded(CollectionItemEvent<SvgNode> event);
   void onChildRemoved(CollectionItemEvent<SvgNode> event);

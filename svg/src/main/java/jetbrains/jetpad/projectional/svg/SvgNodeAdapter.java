@@ -19,11 +19,11 @@ import jetbrains.jetpad.model.collections.CollectionItemEvent;
 
 public class SvgNodeAdapter implements SvgNodeListener {
   @Override
-  public void onSvgElementAttached() {
+  public void onSvgNodeAttached() {
   }
 
   @Override
-  public void onSvgElementDetached() {
+  public void onSvgNodeDetached() {
   }
 
   @Override
