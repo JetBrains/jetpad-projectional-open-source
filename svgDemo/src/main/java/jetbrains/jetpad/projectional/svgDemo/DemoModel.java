@@ -98,7 +98,7 @@ public class DemoModel {
     svgView.border().set(Color.GRAY);
 
     ViewContainer container = new ViewContainer();
-    HorizontalView hView = new HorizontalView();
+    final HorizontalView hView = new HorizontalView();
     VerticalView vView = new VerticalView();
     final TextView textView = new TextView("Press any key to change to alternative model");
     TextView textView2 = new TextView("Use mouse clicks to add some black circles");
@@ -126,6 +126,7 @@ public class DemoModel {
     })
     .build());
 
+    final Value<Boolean> viewState = new Value<>(true);
     container.root().addTrait(new ViewTraitBuilder()
     .on(ViewEvents.KEY_PRESSED, new ViewEventHandler<KeyEvent>() {
       @Override
@@ -134,6 +135,23 @@ public class DemoModel {
           ((SvgElement) model.children().get(0)).getAttr("stroke-width").set("7");
           return;
         }
+
+        if (e.key() == Key.P) {
+          if (!viewState.get()) return;
+          hView.children().remove(svgView);
+          viewState.set(false);
+          return;
+        }
+
+        if (e.key() == Key.O) {
+          if (viewState.get()) return;
+          hView.children().add(0, svgView);
+          viewState.set(true);
+          return;
+        }
+
+        if (!viewState.get()) return;
+
         if (state.get()) {
           svgView.root().set(altModel);
         } else {

@@ -408,6 +408,11 @@ public class ViewContainerComponent extends JComponent implements Scrollable {
               TextView textView = (TextView) view;
               myWithCaretVisible.remove(textView);
             }
+
+            if (myViewPaintHelpers.containsKey(view)) {
+              myViewPaintHelpers.get(view).dispose();
+              myViewPaintHelpers.remove(view);
+            }
           }
         })
       );
@@ -879,12 +884,12 @@ public class ViewContainerComponent extends JComponent implements Scrollable {
     void handleMouseEvent(MouseEvent e);
   }
 
-  private class SvgPaintHelper implements PaintHelper<SvgView> {
+  private static class SvgPaintHelper implements PaintHelper<SvgView> {
     private GraphicsNode myGraphicsNode;
     private SvgRootDocumentMapper myMapper;
     private UserAgent myUserAgent;
     private BridgeContext myBridgeContext;
-
+    private Registration myHandlerReg;
 
     SvgPaintHelper(final SvgView view) {
       myUserAgent = new UserAgentAdapter() {
@@ -897,7 +902,7 @@ public class ViewContainerComponent extends JComponent implements Scrollable {
       };
 
       createGraphicsNode(view);
-      view.root().addHandler(new EventHandler<PropertyChangeEvent<SvgSvgElement>>() {
+      myHandlerReg = view.root().addHandler(new EventHandler<PropertyChangeEvent<SvgSvgElement>>() {
         @Override
         public void onEvent(PropertyChangeEvent<SvgSvgElement> event) {
           SvgPaintHelper.this.update(view);
@@ -926,16 +931,26 @@ public class ViewContainerComponent extends JComponent implements Scrollable {
 
     @Override
     public void update(SvgView view) {
-      dispose();
+      clear();
       createGraphicsNode(view);
       view.invalidate();
     }
 
     @Override
     public void dispose() {
-      myMapper.detachRoot();
+      clear();
+      myHandlerReg.remove();
+      myUserAgent = null;
+    }
+
+    private void clear() {
+      if (myMapper != null && myMapper.isAttached()) {
+        myMapper.detachRoot();
+      }
+      myMapper = null;
       myBridgeContext.dispose();
       myGraphicsNode = null;
+      myUserAgent.getEventDispatcher().setRootNode(null);
     }
 
     @Override
