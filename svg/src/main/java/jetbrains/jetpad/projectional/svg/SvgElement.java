@@ -31,7 +31,7 @@ public abstract class SvgElement extends SvgNode {
   private AttrMap myAttrs = new AttrMap();
   private Listeners<SvgElementListener<?>> myListeners;
 
-  public SvgAttrSpec<?> getSpecByName(String name) {
+  protected SvgAttrSpec<?> getSpecByName(String name) {
     return SvgAttrSpec.createSpec(name);
   }
 
