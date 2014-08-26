@@ -112,6 +112,7 @@ public class Cells {
 
   public static Cell firstVisibleLeaf(Cell cell) {
     if (!cell.visible().get()) return null;
+    if (cell instanceof NewLineCell) return null;
 
     for (Cell c : cell.children()) {
       Cell firstVis = firstVisibleLeaf(c);
@@ -123,6 +124,7 @@ public class Cells {
 
   public static Cell lastVisibleLeaf(Cell cell) {
     if (!cell.visible().get()) return null;
+    if (cell instanceof NewLineCell) return null;
 
     List<Cell> children = cell.children();
     for (int i = children.size() - 1; i >= 0; i--) {
