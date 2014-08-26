@@ -25,28 +25,17 @@ import jetbrains.jetpad.model.util.ListMap;
 import jetbrains.jetpad.projectional.svg.event.SvgAttributeEvent;
 
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Set;
 
 public abstract class SvgElement extends SvgNode {
-  protected static Map<String, SvgAttrSpec<?>> ourAttrInfo = new HashMap<>();
-
   private AttrMap myAttrs = new AttrMap();
   private Listeners<SvgElementListener<?>> myListeners;
 
-  protected Map<String, SvgAttrSpec<?>> getAttrInfo() {
-    return ourAttrInfo;
-  }
-
   public SvgAttrSpec<?> getSpecByName(String name) {
-    if (ourAttrInfo.containsKey(name)) {
-      return ourAttrInfo.get(name);
-    }
-    return SvgXmlAttrSpec.createSpec(name);
+    return SvgAttrSpec.createSpec(name);
   }
 
-  public <ValueT> Property<ValueT> getAttr(final SvgAttrSpec<ValueT> spec) {
+  protected <ValueT> Property<ValueT> getAttr(final SvgAttrSpec<ValueT> spec) {
     return new Property<ValueT>() {
       @Override
       public String getPropExpr() {

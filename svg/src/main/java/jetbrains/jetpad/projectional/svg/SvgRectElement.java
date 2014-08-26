@@ -17,16 +17,11 @@ package jetbrains.jetpad.projectional.svg;
 
 import jetbrains.jetpad.model.property.Property;
 
-import java.util.HashMap;
-import java.util.Map;
-
 public class SvgRectElement extends SvgStylableElement {
-  protected static Map<String, SvgAttrSpec<?>> ourAttrInfo = new HashMap<>(SvgStylableElement.ourAttrInfo);
-
-  public static final SvgAttrSpec<Double> X = SvgAttrSpec.initAttrSpec("x", ourAttrInfo);
-  public static final SvgAttrSpec<Double> Y = SvgAttrSpec.initAttrSpec("y", ourAttrInfo);
-  public static final SvgAttrSpec<Double> HEIGHT = SvgAttrSpec.initAttrSpec("height", ourAttrInfo);
-  public static final SvgAttrSpec<Double> WIDTH = SvgAttrSpec.initAttrSpec("width", ourAttrInfo);
+  private static final SvgAttrSpec<Double> X = SvgAttrSpec.createSpec("x");
+  private static final SvgAttrSpec<Double> Y = SvgAttrSpec.createSpec("y");
+  private static final SvgAttrSpec<Double> HEIGHT = SvgAttrSpec.createSpec("height");
+  private static final SvgAttrSpec<Double> WIDTH = SvgAttrSpec.createSpec("width");
 
   public SvgRectElement() {
     super();
@@ -39,11 +34,6 @@ public class SvgRectElement extends SvgStylableElement {
     setAttr(Y, y);
     setAttr(HEIGHT, height);
     setAttr(WIDTH, width);
-  }
-
-  @Override
-  protected Map<String, SvgAttrSpec<?>> getAttrInfo() {
-    return ourAttrInfo;
   }
 
   public Property<Double> getX() {

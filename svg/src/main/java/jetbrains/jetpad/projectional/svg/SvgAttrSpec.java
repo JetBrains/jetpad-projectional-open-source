@@ -15,13 +15,9 @@
  */
 package jetbrains.jetpad.projectional.svg;
 
-import java.util.Map;
-
-public class SvgAttrSpec<ValueT> {
-  static <ValueT> SvgAttrSpec<ValueT> initAttrSpec(String name, Map<String, SvgAttrSpec<?>> attrInfo) {
-    SvgAttrSpec<ValueT> spec = new SvgAttrSpec<>(name);
-    attrInfo.put(name, spec);
-    return spec;
+public final class SvgAttrSpec<ValueT> {
+  public static <ValueT> SvgAttrSpec<ValueT> createSpec(String name) {
+    return new SvgAttrSpec<>(name);
   }
 
   private String myName;
@@ -30,8 +26,29 @@ public class SvgAttrSpec<ValueT> {
     myName = name;
   }
 
+  public String getName() {
+    return myName;
+  }
+
   @Override
   public String toString() {
     return myName;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (!(o instanceof SvgAttrSpec)) return false;
+
+    SvgAttrSpec that = (SvgAttrSpec) o;
+
+    if (!myName.equals(that.myName)) return false;
+
+    return true;
+  }
+
+  @Override
+  public int hashCode() {
+    return myName.hashCode();
   }
 }

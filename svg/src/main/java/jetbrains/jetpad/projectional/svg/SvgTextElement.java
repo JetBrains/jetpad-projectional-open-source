@@ -18,14 +18,9 @@ package jetbrains.jetpad.projectional.svg;
 import jetbrains.jetpad.model.collections.list.ObservableList;
 import jetbrains.jetpad.model.property.Property;
 
-import java.util.HashMap;
-import java.util.Map;
-
 public class SvgTextElement extends SvgStylableElement {
-  protected static Map<String, SvgAttrSpec<?>> ourAttrInfo = new HashMap<>(SvgStylableElement.ourAttrInfo);
-
-  public static final SvgAttrSpec<Double> X = SvgAttrSpec.initAttrSpec("x", ourAttrInfo);
-  public static final SvgAttrSpec<Double> Y = SvgAttrSpec.initAttrSpec("y", ourAttrInfo);
+  private static final SvgAttrSpec<Double> X = SvgAttrSpec.createSpec("x");
+  private static final SvgAttrSpec<Double> Y = SvgAttrSpec.createSpec("y");
 
   public SvgTextElement() {
     super();
@@ -37,11 +32,6 @@ public class SvgTextElement extends SvgStylableElement {
     setAttr(X, x);
     setAttr(Y, y);
     addTextNode(content);
-  }
-
-  @Override
-  protected Map<String, SvgAttrSpec<?>> getAttrInfo() {
-    return ourAttrInfo;
   }
 
   public Property<Double> getX() {

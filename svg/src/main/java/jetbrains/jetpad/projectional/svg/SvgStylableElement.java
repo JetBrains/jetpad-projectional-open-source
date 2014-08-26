@@ -17,18 +17,8 @@ package jetbrains.jetpad.projectional.svg;
 
 import jetbrains.jetpad.model.property.Property;
 
-import java.util.HashMap;
-import java.util.Map;
-
 public abstract class SvgStylableElement extends SvgElement {
-  protected static Map<String, SvgAttrSpec<?>> ourAttrInfo = new HashMap<>(SvgElement.ourAttrInfo);
-
-  public static final SvgAttrSpec<String> CLASS = SvgAttrSpec.initAttrSpec("class", ourAttrInfo);
-
-  @Override
-  protected Map<String, SvgAttrSpec<?>> getAttrInfo() {
-    return ourAttrInfo;
-  }
+  private static final SvgAttrSpec<String> CLASS = SvgAttrSpec.createSpec("class");
 
   public Property<String> getXmlClass() {
     return getAttr(CLASS);

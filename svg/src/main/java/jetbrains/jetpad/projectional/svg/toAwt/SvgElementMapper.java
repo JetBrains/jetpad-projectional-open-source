@@ -58,7 +58,7 @@ public class SvgElementMapper<SourceT extends SvgElement, TargetT extends SVGOME
         });
 
         for (SvgAttrSpec<?> key : getSource().getAttrKeys()) {
-          getTarget().setAttribute(key.toString(), getSource().getAttr(key).get().toString());
+          getTarget().setAttribute(key.toString(), getSource().getAttr(key.getName()).get().toString());
         }
       }
 

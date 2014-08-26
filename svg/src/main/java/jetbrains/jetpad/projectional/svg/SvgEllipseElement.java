@@ -17,16 +17,11 @@ package jetbrains.jetpad.projectional.svg;
 
 import jetbrains.jetpad.model.property.Property;
 
-import java.util.HashMap;
-import java.util.Map;
-
 public class SvgEllipseElement extends SvgStylableElement {
-  protected static Map<String, SvgAttrSpec<?>> ourAttrInfo = new HashMap<>(SvgStylableElement.ourAttrInfo);
-
-  public static final SvgAttrSpec<Double> CX = SvgAttrSpec.initAttrSpec("cx", ourAttrInfo);
-  public static final SvgAttrSpec<Double> CY = SvgAttrSpec.initAttrSpec("cy", ourAttrInfo);
-  public static final SvgAttrSpec<Double> RX = SvgAttrSpec.initAttrSpec("rx", ourAttrInfo);
-  public static final SvgAttrSpec<Double> RY = SvgAttrSpec.initAttrSpec("ry", ourAttrInfo);
+  private static final SvgAttrSpec<Double> CX = SvgAttrSpec.createSpec("cx");
+  private static final SvgAttrSpec<Double> CY = SvgAttrSpec.createSpec("cy");
+  private static final SvgAttrSpec<Double> RX = SvgAttrSpec.createSpec("rx");
+  private static final SvgAttrSpec<Double> RY = SvgAttrSpec.createSpec("ry");
 
   public SvgEllipseElement() {
     super();
@@ -39,11 +34,6 @@ public class SvgEllipseElement extends SvgStylableElement {
     setAttr(CY, cy);
     setAttr(RX, rx);
     setAttr(RY, ry);
-  }
-
-  @Override
-  protected Map<String, SvgAttrSpec<?>> getAttrInfo() {
-    return ourAttrInfo;
   }
 
   public Property<Double> getCx() {
