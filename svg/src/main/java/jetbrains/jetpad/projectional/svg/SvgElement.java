@@ -68,9 +68,8 @@ public abstract class SvgElement extends SvgNode {
     };
   }
 
-  // if attr is one of pre-defined typed attrs (like CX in ellipse), the behaviour of this method is undefined
-  public Property<String> getAttr(String name) {
-    SvgAttrSpec<String> spec = getSpecByName(name);
+  public <ValueT> Property<ValueT> getAttr(String name) {
+    SvgAttrSpec<ValueT> spec = getSpecByName(name);
     return getAttr(spec);
   }
 
@@ -78,6 +77,7 @@ public abstract class SvgElement extends SvgNode {
     getAttr(spec).set(value);
   }
 
+  // if attr is one of pre-defined typed attrs (like CX in ellipse), the behaviour of this method is undefined
   public void setAttr(String name, String value) {
     getAttr(name).set(value);
   }
