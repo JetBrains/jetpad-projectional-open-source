@@ -30,6 +30,8 @@ public class SvgRootDocumentMapper extends Mapper<SvgSvgElement, SVGOMDocument> 
     return (SVGOMDocument) impl.createDocument(svgNS, "svg", null);
   }
 
+  private SvgElementMapper<SvgSvgElement, SVGOMSVGElement> myElementMapper;
+
   public SvgRootDocumentMapper(SvgSvgElement source) {
     super(source, createDocument());
   }
@@ -38,8 +40,16 @@ public class SvgRootDocumentMapper extends Mapper<SvgSvgElement, SVGOMDocument> 
   protected void onAttach(MappingContext ctx) {
     super.onAttach(ctx);
 
-    SvgElementMapper<SvgSvgElement, SVGOMSVGElement> elementMapper = new SvgElementMapper<>(getSource(), (SVGOMSVGElement) getTarget().getDocumentElement(), getTarget());
+    myElementMapper = new SvgElementMapper<>(getSource(), (SVGOMSVGElement) getTarget().getDocumentElement(), getTarget());
     getTarget().getDocumentElement().setAttribute("shape-rendering", "geometricPrecision");
-    elementMapper.attachRoot();
+    myElementMapper.attachRoot();
+  }
+
+  @Override
+  protected void onDetach() {
+    super.onDetach();
+
+    myElementMapper.detachRoot();
+    myElementMapper = null;
   }
 }
