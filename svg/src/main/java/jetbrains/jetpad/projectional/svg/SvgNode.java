@@ -15,18 +15,13 @@
  */
 package jetbrains.jetpad.projectional.svg;
 
-import jetbrains.jetpad.base.Registration;
 import jetbrains.jetpad.model.children.ChildList;
 import jetbrains.jetpad.model.children.HasParent;
-import jetbrains.jetpad.model.collections.CollectionItemEvent;
 import jetbrains.jetpad.model.collections.list.ObservableList;
-import jetbrains.jetpad.model.event.ListenerCaller;
-import jetbrains.jetpad.model.event.Listeners;
 
 
 public abstract class SvgNode extends HasParent<SvgNode, SvgNode> {
   private SvgContainer myContainer;
-  private Listeners<SvgNodeListener> myListeners;
 
   private SvgChildList myChildren;
 
@@ -40,29 +35,6 @@ public abstract class SvgNode extends HasParent<SvgNode, SvgNode> {
     }
     return myChildren;
   }
-
-  Registration addListener(SvgNodeListener l) {
-    if (myListeners == null) {
-      myListeners = new Listeners<>();
-    }
-    final Registration reg = myListeners.add(l);
-    return new Registration() {
-      @Override
-      public void remove() {
-        reg.remove();
-        if (myListeners.isEmpty()) {
-          myListeners = null;
-        }
-      }
-    };
-  }
-
-  protected void fire(ListenerCaller<SvgNodeListener> caller) {
-    if (myListeners != null) {
-      myListeners.fire(caller);
-    }
-  }
-
 
   public boolean isAttached() {
     return myContainer != null;
@@ -87,26 +59,12 @@ public abstract class SvgNode extends HasParent<SvgNode, SvgNode> {
     myContainer.svgNodeAttached(this);
 
     onAttach();
-
-    fire(new ListenerCaller<SvgNodeListener>() {
-      @Override
-      public void call(SvgNodeListener l) {
-        l.onSvgNodeAttached();
-      }
-    });
   }
 
   void detach() {
     if (!isAttached()) {
       throw new IllegalStateException("Svg element is not attached");
     }
-
-    fire(new ListenerCaller<SvgNodeListener>() {
-      @Override
-      public void call(SvgNodeListener l) {
-        l.onSvgNodeDetached();
-      }
-    });
 
     onDetach();
 
@@ -129,12 +87,6 @@ public abstract class SvgNode extends HasParent<SvgNode, SvgNode> {
         node.attach(container());
       }
       super.add(index, node);
-      fire(new ListenerCaller<SvgNodeListener>() {
-        @Override
-        public void call(SvgNodeListener l) {
-          l.onChildAdded(new CollectionItemEvent<>(node, index, true));
-        }
-      });
     }
 
     @Override
@@ -144,12 +96,6 @@ public abstract class SvgNode extends HasParent<SvgNode, SvgNode> {
         node.detach();
       }
       SvgNode result =  super.remove(index);
-      fire(new ListenerCaller<SvgNodeListener>() {
-        @Override
-        public void call(SvgNodeListener l) {
-          l.onChildRemoved(new CollectionItemEvent<>(node, index, false));
-        }
-      });
       return result;
     }
   }
