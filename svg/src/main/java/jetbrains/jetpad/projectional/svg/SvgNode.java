@@ -16,22 +16,17 @@
 package jetbrains.jetpad.projectional.svg;
 
 import jetbrains.jetpad.base.Registration;
-import jetbrains.jetpad.event.Event;
 import jetbrains.jetpad.model.children.ChildList;
 import jetbrains.jetpad.model.children.HasParent;
 import jetbrains.jetpad.model.collections.CollectionItemEvent;
 import jetbrains.jetpad.model.collections.list.ObservableList;
 import jetbrains.jetpad.model.event.ListenerCaller;
 import jetbrains.jetpad.model.event.Listeners;
-import jetbrains.jetpad.projectional.svg.event.SvgEventHandler;
-import jetbrains.jetpad.projectional.svg.event.SvgEventPeer;
-import jetbrains.jetpad.projectional.svg.event.SvgEventSpec;
 
 
 public abstract class SvgNode extends HasParent<SvgNode, SvgNode> {
   private SvgContainer myContainer;
   private Listeners<SvgNodeListener> myListeners;
-  private SvgEventPeer myEventPeer = new SvgEventPeer();
 
   private SvgChildList myChildren;
 
@@ -44,14 +39,6 @@ public abstract class SvgNode extends HasParent<SvgNode, SvgNode> {
       myChildren = new SvgChildList(this);
     }
     return myChildren;
-  }
-
-  public SvgEventPeer getEventPeer() {
-    return myEventPeer;
-  }
-
-  public <EventT extends Event> Registration addEventHandler(SvgEventSpec spec, SvgEventHandler<EventT> handler) {
-    return myEventPeer.addEventHandler(spec, handler);
   }
 
   Registration addListener(SvgNodeListener l) {
@@ -129,14 +116,6 @@ public abstract class SvgNode extends HasParent<SvgNode, SvgNode> {
 
     myContainer.svgNodeDetached(this);
     myContainer = null;
-  }
-
-  public <EventT extends Event> void dispatch(SvgEventSpec spec, final EventT event) {
-    myEventPeer.dispatch(spec, event, this);
-
-    if (parent().get() != null && !event.isConsumed()) {
-      parent().get().dispatch(spec, event);
-    }
   }
 
   private class SvgChildList extends ChildList<SvgNode, SvgNode> {

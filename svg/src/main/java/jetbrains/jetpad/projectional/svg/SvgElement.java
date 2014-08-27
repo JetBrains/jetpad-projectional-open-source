@@ -16,6 +16,7 @@
 package jetbrains.jetpad.projectional.svg;
 
 import jetbrains.jetpad.base.Registration;
+import jetbrains.jetpad.event.Event;
 import jetbrains.jetpad.model.event.EventHandler;
 import jetbrains.jetpad.model.event.ListenerCaller;
 import jetbrains.jetpad.model.event.Listeners;
@@ -23,6 +24,9 @@ import jetbrains.jetpad.model.property.Property;
 import jetbrains.jetpad.model.property.PropertyChangeEvent;
 import jetbrains.jetpad.model.util.ListMap;
 import jetbrains.jetpad.projectional.svg.event.SvgAttributeEvent;
+import jetbrains.jetpad.projectional.svg.event.SvgEventHandler;
+import jetbrains.jetpad.projectional.svg.event.SvgEventPeer;
+import jetbrains.jetpad.projectional.svg.event.SvgEventSpec;
 
 import java.util.Collections;
 import java.util.Objects;
@@ -31,6 +35,23 @@ import java.util.Set;
 public abstract class SvgElement extends SvgNode {
   private AttrMap myAttrs = new AttrMap();
   private Listeners<SvgElementListener<?>> myListeners;
+  private SvgEventPeer myEventPeer = new SvgEventPeer();
+
+  public SvgEventPeer getEventPeer() {
+    return myEventPeer;
+  }
+
+  public <EventT extends Event> Registration addEventHandler(SvgEventSpec spec, SvgEventHandler<EventT> handler) {
+    return myEventPeer.addEventHandler(spec, handler);
+  }
+
+  public <EventT extends Event> void dispatch(SvgEventSpec spec, final EventT event) {
+    myEventPeer.dispatch(spec, event, this);
+
+    if (parent().get() != null && !event.isConsumed() && (parent().get() instanceof SvgElement)) {
+      ((SvgElement) parent().get()).dispatch(spec, event);
+    }
+  }
 
   protected <ValueT> SvgAttrSpec<ValueT> getSpecByName(String name) {
     return SvgAttrSpec.createSpec(name);
