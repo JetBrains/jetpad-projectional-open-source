@@ -20,6 +20,8 @@ import jetbrains.jetpad.event.MouseEvent;
 import jetbrains.jetpad.mapper.MappingContext;
 import jetbrains.jetpad.mapper.Synchronizer;
 import jetbrains.jetpad.mapper.SynchronizerContext;
+import jetbrains.jetpad.mapper.Synchronizers;
+import jetbrains.jetpad.model.property.WritableProperty;
 import jetbrains.jetpad.projectional.svg.SvgAttrSpec;
 import jetbrains.jetpad.projectional.svg.SvgElement;
 import jetbrains.jetpad.projectional.svg.SvgElementListener;
@@ -31,8 +33,12 @@ import org.apache.batik.dom.svg.SVGOMElement;
 import org.w3c.dom.events.Event;
 import org.w3c.dom.events.EventListener;
 
+import java.util.EnumMap;
+import java.util.Map;
+import java.util.Set;
+
 public class SvgElementMapper<SourceT extends SvgElement, TargetT extends SVGOMElement> extends SvgNodeMapper<SourceT, TargetT> {
-  private Registration myHandlerReg;
+  private Map<SvgEventSpec, Registration> myHandlerRegs;
 
   public SvgElementMapper(SourceT source, TargetT target, AbstractDocument doc) {
     super(source, target, doc);
@@ -67,73 +73,59 @@ public class SvgElementMapper<SourceT extends SvgElement, TargetT extends SVGOME
         myReg.remove();
       }
     });
+
+    conf.add(Synchronizers.forPropsOneWay(getSource().getEventPeer().handlersSet(), new WritableProperty<Set<SvgEventSpec>>() {
+      @Override
+      public void set(Set<SvgEventSpec> value) {
+        if (myHandlerRegs == null) {
+          myHandlerRegs = new EnumMap<>(SvgEventSpec.class);
+        }
+
+        for (SvgEventSpec spec : SvgEventSpec.values()) {
+          if (!value.contains(spec) && myHandlerRegs.containsKey(spec)) {
+            myHandlerRegs.remove(spec).remove();
+          }
+          if (!value.contains(spec) || myHandlerRegs.containsKey(spec)) continue;
+          switch (spec) {
+            case MOUSE_CLICKED:
+              addMouseHandler(spec, "click");
+              break;
+            case MOUSE_PRESSED:
+              addMouseHandler(spec, "mousedown");
+              break;
+            case MOUSE_RELEASED:
+              addMouseHandler(spec, "mouseup");
+              break;
+            case MOUSE_OVER:
+              addMouseHandler(spec, "mouseover");
+              break;
+            case MOUSE_MOVE:
+              addMouseHandler(spec, "mousemove");
+              break;
+            case MOUSE_OUT:
+              addMouseHandler(spec, "mouseout");
+              break;
+            default:
+              break;
+          }
+        }
+      }
+    }));
   }
 
-  @Override
-  protected void onAttach(MappingContext ctx) {
-    super.onAttach(ctx);
-
-    final EventListener clickListener = new EventListener() {
+  private void addMouseHandler(final SvgEventSpec spec, final String eventType) {
+    final EventListener listener = new EventListener() {
       @Override
       public void handleEvent(Event evt) {
-        getSource().dispatch(SvgEventSpec.MOUSE_CLICKED, new MouseEvent(((DOMMouseEvent) evt).getClientX(), ((DOMMouseEvent) evt).getClientY()));
+        getSource().dispatch(spec, new MouseEvent(((DOMMouseEvent) evt).getClientX(), ((DOMMouseEvent) evt).getClientY()));
       }
     };
-    final EventListener mouseDownListener = new EventListener() {
-      @Override
-      public void handleEvent(Event evt) {
-        getSource().dispatch(SvgEventSpec.MOUSE_PRESSED, new MouseEvent(((DOMMouseEvent) evt).getClientX(), ((DOMMouseEvent) evt).getClientY()));
-      }
-    };
-    final EventListener mouseUpListener = new EventListener() {
-      @Override
-      public void handleEvent(Event evt) {
-        getSource().dispatch(SvgEventSpec.MOUSE_RELEASED, new MouseEvent(((DOMMouseEvent) evt).getClientX(), ((DOMMouseEvent) evt).getClientY()));
-      }
-    };
-    final EventListener mouseOverListener = new EventListener() {
-      @Override
-      public void handleEvent(Event evt) {
-        getSource().dispatch(SvgEventSpec.MOUSE_OVER, new MouseEvent(((DOMMouseEvent) evt).getClientX(), ((DOMMouseEvent) evt).getClientY()));
-      }
-    };
-    final EventListener mouseMoveListener = new EventListener() {
-      @Override
-      public void handleEvent(Event evt) {
-        getSource().dispatch(SvgEventSpec.MOUSE_MOVE, new MouseEvent(((DOMMouseEvent) evt).getClientX(), ((DOMMouseEvent) evt).getClientY()));
-      }
-    };
-    final EventListener mouseOutListener = new EventListener() {
-      @Override
-      public void handleEvent(Event evt) {
-        getSource().dispatch(SvgEventSpec.MOUSE_OUT, new MouseEvent(((DOMMouseEvent) evt).getClientX(), ((DOMMouseEvent) evt).getClientY()));
-      }
-    };
-
-    getTarget().addEventListener("click", clickListener, false);
-    getTarget().addEventListener("mousedown", mouseDownListener, false);
-    getTarget().addEventListener("mouseup", mouseUpListener, false);
-    getTarget().addEventListener("mouseover", mouseOverListener, false);
-    getTarget().addEventListener("mousemove", mouseMoveListener, false);
-    getTarget().addEventListener("mouseout", mouseOutListener, false);
-
-    myHandlerReg = new Registration() {
+    getTarget().addEventListener(eventType, listener, false);
+    myHandlerRegs.put(spec, new Registration() {
       @Override
       public void remove() {
-        getTarget().removeEventListener("click", clickListener, false);
-        getTarget().removeEventListener("mousedown", mouseDownListener, false);
-        getTarget().removeEventListener("mouseup", mouseUpListener, false);
-        getTarget().removeEventListener("mouseover", mouseOverListener, false);
-        getTarget().removeEventListener("mousemove", mouseMoveListener, false);
-        getTarget().removeEventListener("mouseout", mouseOutListener, false);
+        getTarget().removeEventListener(eventType, listener, false);
       }
-    };
-  }
-
-  @Override
-  protected void onDetach() {
-    super.onDetach();
-
-    myHandlerReg.remove();
+    });
   }
 }

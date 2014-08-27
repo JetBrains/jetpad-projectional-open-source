@@ -26,37 +26,27 @@ import jetbrains.jetpad.projectional.svg.SvgNode;
 
 import java.util.EnumMap;
 import java.util.Map;
+import java.util.Set;
 
 public class SvgEventPeer {
   private Map<SvgEventSpec, Listeners<SvgEventHandler<?>>> myEventHandlers = new EnumMap<>(SvgEventSpec.class);
-  private Map<SvgEventSpec, Listeners<EventHandler<? super PropertyChangeEvent<Boolean>>>> myListeners = new EnumMap<>(SvgEventSpec.class);
+  private Listeners<EventHandler<? super PropertyChangeEvent<Set<SvgEventSpec>>>> myListeners = new Listeners<>();
 
-  public ReadableProperty<Boolean> hasHandlers(final SvgEventSpec spec) {
-    return new ReadableProperty<Boolean>() {
+  public ReadableProperty<Set<SvgEventSpec>> handlersSet() {
+    return new ReadableProperty<Set<SvgEventSpec>>() {
       @Override
       public String getPropExpr() {
-        return this + "." + spec;
+        return this + "." + "handlersProp";
       }
 
       @Override
-      public Boolean get() {
-        return (myEventHandlers.containsKey(spec) && !myEventHandlers.get(spec).isEmpty());
+      public Set<SvgEventSpec> get() {
+        return myEventHandlers.keySet();
       }
 
       @Override
-      public Registration addHandler(final EventHandler<? super PropertyChangeEvent<Boolean>> handler) {
-        if (!myListeners.containsKey(spec)) {
-          myListeners.put(spec, new Listeners<EventHandler<? super PropertyChangeEvent<Boolean>>>());
-        }
-        return new Registration() {
-          Registration myReg = myListeners.get(spec).add(handler);
-          public void remove() {
-            myReg.remove();
-            if (myListeners.get(spec).isEmpty()) {
-              myListeners.remove(spec);
-            }
-          }
-        };
+      public Registration addHandler(final EventHandler<? super PropertyChangeEvent<Set<SvgEventSpec>>> handler) {
+        return myListeners.add(handler);
       }
     };
   }
@@ -66,17 +56,16 @@ public class SvgEventPeer {
       myEventHandlers.put(spec, new Listeners<SvgEventHandler<?>>());
     }
 
+    final Set<SvgEventSpec> oldHandlersSet = myEventHandlers.keySet();
+
     Registration addReg = myEventHandlers.get(spec).add(handler);
 
-    if (myListeners.containsKey(spec)) {
-      final Boolean oldHasHandlers = !myEventHandlers.get(spec).isEmpty();
-      myListeners.get(spec).fire(new ListenerCaller<EventHandler<? super PropertyChangeEvent<Boolean>>>() {
-        @Override
-        public void call(EventHandler<? super PropertyChangeEvent<Boolean>> l) {
-          l.onEvent(new PropertyChangeEvent<>(oldHasHandlers, true));
-        }
-      });
-    }
+    myListeners.fire(new ListenerCaller<EventHandler<? super PropertyChangeEvent<Set<SvgEventSpec>>>>() {
+      @Override
+      public void call(EventHandler<? super PropertyChangeEvent<Set<SvgEventSpec>>> l) {
+        l.onEvent(new PropertyChangeEvent<>(oldHandlersSet, myEventHandlers.keySet()));
+      }
+    });
 
     return addReg;
   }
