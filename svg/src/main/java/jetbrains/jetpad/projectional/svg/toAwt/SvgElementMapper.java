@@ -23,7 +23,7 @@ import jetbrains.jetpad.mapper.SynchronizerContext;
 import jetbrains.jetpad.projectional.svg.SvgAttrSpec;
 import jetbrains.jetpad.projectional.svg.SvgElement;
 import jetbrains.jetpad.projectional.svg.SvgElementListener;
-import jetbrains.jetpad.projectional.svg.SvgEvents;
+import jetbrains.jetpad.projectional.svg.event.SvgEvents;
 import jetbrains.jetpad.projectional.svg.event.SvgAttributeEvent;
 import org.apache.batik.dom.AbstractDocument;
 import org.apache.batik.dom.events.DOMMouseEvent;

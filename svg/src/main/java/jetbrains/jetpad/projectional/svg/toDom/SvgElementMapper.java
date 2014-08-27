@@ -15,7 +15,6 @@
  */
 package jetbrains.jetpad.projectional.svg.toDom;
 
-import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.*;
 import com.google.gwt.event.shared.HandlerRegistration;
 import jetbrains.jetpad.base.Registration;
@@ -26,7 +25,7 @@ import jetbrains.jetpad.mapper.SynchronizerContext;
 import jetbrains.jetpad.projectional.svg.SvgAttrSpec;
 import jetbrains.jetpad.projectional.svg.SvgElement;
 import jetbrains.jetpad.projectional.svg.SvgElementListener;
-import jetbrains.jetpad.projectional.svg.SvgEvents;
+import jetbrains.jetpad.projectional.svg.event.SvgEvents;
 import jetbrains.jetpad.projectional.svg.event.SvgAttributeEvent;
 import org.vectomatic.dom.svg.OMSVGElement;
 

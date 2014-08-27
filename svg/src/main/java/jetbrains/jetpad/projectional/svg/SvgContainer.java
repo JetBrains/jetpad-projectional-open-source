@@ -23,6 +23,8 @@ import jetbrains.jetpad.model.event.Listeners;
 import jetbrains.jetpad.model.property.Property;
 import jetbrains.jetpad.model.property.ValueProperty;
 import jetbrains.jetpad.projectional.svg.event.SvgAttributeEvent;
+import jetbrains.jetpad.projectional.svg.event.SvgEventSpec;
+import jetbrains.jetpad.projectional.svg.event.SvgEvents;
 
 public class SvgContainer {
   private Property<SvgSvgElement> mySvgRoot = new ValueProperty<SvgSvgElement>() {

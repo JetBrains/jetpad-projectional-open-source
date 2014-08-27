@@ -20,6 +20,8 @@ import jetbrains.jetpad.event.Key;
 import jetbrains.jetpad.event.KeyEvent;
 import jetbrains.jetpad.event.MouseEvent;
 import jetbrains.jetpad.projectional.svg.*;
+import jetbrains.jetpad.projectional.svg.event.SvgEventHandler;
+import jetbrains.jetpad.projectional.svg.event.SvgEvents;
 import jetbrains.jetpad.projectional.view.*;
 import jetbrains.jetpad.values.Color;
 
