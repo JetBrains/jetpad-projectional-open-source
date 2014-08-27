@@ -24,12 +24,12 @@ public class SvgAttrTest {
   SvgEllipseElement element;
 
   @Before
-  public void setUp() throws Exception {
+  public void setUp() {
     element = new SvgEllipseElement(10., 20., 30., 40.);
   }
 
   @Test
-  public void testSetAttr() throws Exception {
+  public void testSetAttr() {
     element.getCx().set(100.);
     element.getAttr("fill").set("yellow");
     element.setAttr("stroke", "black");
@@ -40,12 +40,12 @@ public class SvgAttrTest {
   }
 
   @Test
-  public void testNotSetAttr() throws Exception {
+  public void testNotSetAttr() {
     assertTrue(element.getAttr("fill").get() == null);
   }
 
   @Test
-  public void testResetAttr() throws Exception {
+  public void testResetAttr() {
     element.setAttr("fill", "yellow");
     element.getAttr("fill").set("red");
 
