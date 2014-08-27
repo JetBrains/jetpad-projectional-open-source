@@ -24,16 +24,14 @@ import jetbrains.jetpad.model.collections.list.ObservableList;
 import jetbrains.jetpad.model.event.ListenerCaller;
 import jetbrains.jetpad.model.event.Listeners;
 import jetbrains.jetpad.projectional.svg.event.SvgEventHandler;
+import jetbrains.jetpad.projectional.svg.event.SvgEventPeer;
 import jetbrains.jetpad.projectional.svg.event.SvgEventSpec;
 
-import java.util.HashMap;
-import java.util.Map;
 
 public abstract class SvgNode extends HasParent<SvgNode, SvgNode> {
   private SvgContainer myContainer;
   private Listeners<SvgNodeListener> myListeners;
-  private Map<SvgEventSpec, Listeners<SvgEventHandler<?>>> myEventHandlers;
-
+  private SvgEventPeer myEventPeer = new SvgEventPeer();
 
   private SvgChildList myChildren;
 
@@ -48,17 +46,12 @@ public abstract class SvgNode extends HasParent<SvgNode, SvgNode> {
     return myChildren;
   }
 
+  public SvgEventPeer getEventPeer() {
+    return myEventPeer;
+  }
+
   public <EventT extends Event> Registration addEventHandler(SvgEventSpec spec, SvgEventHandler<EventT> handler) {
-    if (myEventHandlers == null) {
-      myEventHandlers = new HashMap<>();
-    }
-    if (!myEventHandlers.containsKey(spec)) {
-      myEventHandlers.put(spec, new Listeners<SvgEventHandler<?>>());
-    }
-
-    // TODO: let mappers know about new event handler (to make them add target's listeners)
-
-    return (myEventHandlers.get(spec).add(handler));
+    return myEventPeer.addEventHandler(spec, handler);
   }
 
   Registration addListener(SvgNodeListener l) {
@@ -139,15 +132,7 @@ public abstract class SvgNode extends HasParent<SvgNode, SvgNode> {
   }
 
   public <EventT extends Event> void dispatch(SvgEventSpec spec, final EventT event) {
-    if (myEventHandlers != null && myEventHandlers.containsKey(spec)) {
-      myEventHandlers.get(spec).fire(new ListenerCaller<SvgEventHandler<?>>() {
-        @Override
-        public void call(SvgEventHandler<?> l) {
-          if (event.isConsumed()) return;
-          ((SvgEventHandler<EventT>) l).handle(SvgNode.this, event);
-        }
-      });
-    }
+    myEventPeer.dispatch(spec, event, this);
 
     if (parent().get() != null && !event.isConsumed()) {
       parent().get().dispatch(spec, event);
