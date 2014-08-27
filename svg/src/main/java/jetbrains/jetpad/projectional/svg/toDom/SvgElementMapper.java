@@ -19,18 +19,23 @@ import com.google.gwt.event.dom.client.*;
 import com.google.gwt.event.shared.HandlerRegistration;
 import jetbrains.jetpad.base.Registration;
 import jetbrains.jetpad.event.MouseEvent;
-import jetbrains.jetpad.mapper.MappingContext;
 import jetbrains.jetpad.mapper.Synchronizer;
 import jetbrains.jetpad.mapper.SynchronizerContext;
+import jetbrains.jetpad.mapper.Synchronizers;
+import jetbrains.jetpad.model.property.WritableProperty;
 import jetbrains.jetpad.projectional.svg.SvgAttrSpec;
 import jetbrains.jetpad.projectional.svg.SvgElement;
 import jetbrains.jetpad.projectional.svg.SvgElementListener;
-import jetbrains.jetpad.projectional.svg.event.SvgEventSpec;
 import jetbrains.jetpad.projectional.svg.event.SvgAttributeEvent;
+import jetbrains.jetpad.projectional.svg.event.SvgEventSpec;
 import org.vectomatic.dom.svg.OMSVGElement;
 
+import java.util.EnumMap;
+import java.util.Map;
+import java.util.Set;
+
 public class SvgElementMapper<SourceT extends SvgElement, TargetT extends OMSVGElement> extends SvgNodeMapper<SourceT, TargetT> {
-  private Registration myHandlerReg;
+  private Map<SvgEventSpec, HandlerRegistration> myHandlerRegs;
 
   public SvgElementMapper(SourceT source, TargetT target) {
     super(source, target);
@@ -65,78 +70,83 @@ public class SvgElementMapper<SourceT extends SvgElement, TargetT extends OMSVGE
         myReg.remove();
       }
     });
+
+    conf.add(Synchronizers.forPropsOneWay(getSource().getEventPeer().handlersSet(), new WritableProperty<Set<SvgEventSpec>>() {
+      @Override
+      public void set(Set<SvgEventSpec> value) {
+        if (myHandlerRegs == null) {
+          myHandlerRegs = new EnumMap<>(SvgEventSpec.class);
+        }
+
+        for (final SvgEventSpec spec : SvgEventSpec.values()) {
+          if (!value.contains(spec) && myHandlerRegs.containsKey(spec)) {
+            myHandlerRegs.remove(spec).removeHandler();
+          }
+          if (!value.contains(spec) || myHandlerRegs.containsKey(spec)) continue;
+          if (getSource().parent().get() == null) {
+            // bug in lib-gwt-svg, getOwnerSvgElement throws exception
+            throw new IllegalStateException("Can't add handlers to root svg element");
+          }
+
+          switch (spec) {
+            case MOUSE_CLICKED:
+              myHandlerRegs.put(spec, getTarget().addDomHandler(new ClickHandler() {
+                @Override
+                public void onClick(ClickEvent clickEvent) {
+                  getSource().dispatch(spec, createMouseEvent(clickEvent));
+                }
+              }, ClickEvent.getType()));
+              break;
+            case MOUSE_PRESSED:
+              myHandlerRegs.put(spec, getTarget().addDomHandler(new MouseDownHandler() {
+                @Override
+                public void onMouseDown(MouseDownEvent mouseDownEvent) {
+                  getSource().dispatch(spec, createMouseEvent(mouseDownEvent));
+                }
+              }, MouseDownEvent.getType()));
+              break;
+            case MOUSE_RELEASED:
+              myHandlerRegs.put(spec, getTarget().addDomHandler(new MouseUpHandler() {
+                @Override
+                public void onMouseUp(MouseUpEvent mouseUpEvent) {
+                  getSource().dispatch(spec, createMouseEvent(mouseUpEvent));
+                }
+              }, MouseUpEvent.getType()));
+              break;
+            case MOUSE_OVER:
+              myHandlerRegs.put(spec, getTarget().addDomHandler(new MouseOverHandler() {
+                @Override
+                public void onMouseOver(MouseOverEvent mouseOverEvent) {
+                  getSource().dispatch(spec, createMouseEvent(mouseOverEvent));
+                }
+              }, MouseOverEvent.getType()));
+              break;
+            case MOUSE_MOVE:
+              myHandlerRegs.put(spec, getTarget().addDomHandler(new MouseMoveHandler() {
+                @Override
+                public void onMouseMove(MouseMoveEvent mouseMoveEvent) {
+                  getSource().dispatch(spec, createMouseEvent(mouseMoveEvent));
+                }
+              }, MouseMoveEvent.getType()));
+              break;
+            case MOUSE_OUT:
+              myHandlerRegs.put(spec, getTarget().addDomHandler(new MouseOutHandler() {
+                @Override
+                public void onMouseOut(MouseOutEvent mouseOutEvent) {
+                  getSource().dispatch(spec, createMouseEvent(mouseOutEvent));
+                }
+              }, MouseOutEvent.getType()));
+              break;
+            default:
+              break;
+          }
+        }
+      }
+    }));
   }
 
   private MouseEvent createMouseEvent(com.google.gwt.event.dom.client.MouseEvent<?> evt) {
     return new MouseEvent(evt.getRelativeX(getTarget().getOwnerSVGElement().getElement()),
         evt.getRelativeY(getTarget().getOwnerSVGElement().getElement()));
-  }
-
-  @Override
-  protected void onAttach(MappingContext ctx) {
-    super.onAttach(ctx);
-
-    final HandlerRegistration clickReg = getTarget().addDomHandler(new ClickHandler() {
-      @Override
-      public void onClick(ClickEvent clickEvent) {
-        getSource().dispatch(SvgEventSpec.MOUSE_CLICKED, createMouseEvent(clickEvent));
-      }
-    }, ClickEvent.getType());
-
-    final HandlerRegistration downReg = getTarget().addDomHandler(new MouseDownHandler() {
-      @Override
-      public void onMouseDown(MouseDownEvent mouseDownEvent) {
-        getSource().dispatch(SvgEventSpec.MOUSE_PRESSED, createMouseEvent(mouseDownEvent));
-      }
-    }, MouseDownEvent.getType());
-
-    final HandlerRegistration upReg = getTarget().addDomHandler(new MouseUpHandler() {
-      @Override
-      public void onMouseUp(MouseUpEvent mouseUpEvent) {
-        getSource().dispatch(SvgEventSpec.MOUSE_RELEASED, createMouseEvent(mouseUpEvent));
-      }
-    }, MouseUpEvent.getType());
-
-    final HandlerRegistration overReg = getTarget().addDomHandler(new MouseOverHandler() {
-      @Override
-      public void onMouseOver(MouseOverEvent mouseOverEvent) {
-        getSource().dispatch(SvgEventSpec.MOUSE_OVER, createMouseEvent(mouseOverEvent));
-      }
-    }, MouseOverEvent.getType());
-
-    final HandlerRegistration moveReg = getTarget().addDomHandler(new MouseMoveHandler() {
-      @Override
-      public void onMouseMove(MouseMoveEvent mouseMoveEvent) {
-        getSource().dispatch(SvgEventSpec.MOUSE_MOVE, createMouseEvent(mouseMoveEvent));
-      }
-    }, MouseMoveEvent.getType());
-
-    final HandlerRegistration outReg = getTarget().addDomHandler(new MouseOutHandler() {
-      @Override
-      public void onMouseOut(MouseOutEvent mouseOutEvent) {
-        getSource().dispatch(SvgEventSpec.MOUSE_OUT, createMouseEvent(mouseOutEvent));
-      }
-    }, MouseOutEvent.getType());
-
-
-
-    myHandlerReg = new Registration() {
-      @Override
-      public void remove() {
-        clickReg.removeHandler();
-        downReg.removeHandler();
-        upReg.removeHandler();
-        overReg.removeHandler();
-        moveReg.removeHandler();
-        outReg.removeHandler();
-      }
-    };
-  }
-
-  @Override
-  protected void onDetach() {
-    super.onDetach();
-
-    myHandlerReg.remove();
   }
 }

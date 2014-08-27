@@ -27,7 +27,7 @@ import jetbrains.jetpad.values.Color;
 
 public class DemoModel {
   public static SvgSvgElement createModel() {
-    SvgSvgElement svgRoot = new SvgSvgElement(200., 400.);
+    final SvgSvgElement svgRoot = new SvgSvgElement(200., 400.);
 
     SvgEllipseElement ellipse = new SvgEllipseElement(200., 80., 170., 50.);
     ellipse.setAttr("fill", Color.YELLOW.toCssColor());
@@ -59,11 +59,18 @@ public class DemoModel {
     svgRoot.children().add(text);
     svgRoot.children().add(path);
 
+    ellipse.addEventHandler(SvgEventSpec.MOUSE_PRESSED, new SvgEventHandler<MouseEvent>() {
+      @Override
+      public void handle(SvgNode node, MouseEvent e) {
+        DemoModel.addCircle(svgRoot, e.x(), e.y());
+      }
+    });
+
     return svgRoot;
   }
 
   public static SvgSvgElement createAltModel() {
-    SvgSvgElement svgRoot = new SvgSvgElement();
+    final SvgSvgElement svgRoot = new SvgSvgElement();
     svgRoot.getHeight().set(400.);
     svgRoot.getWidth().set(200.);
 
@@ -82,6 +89,13 @@ public class DemoModel {
 
     svgRoot.children().add(rect);
     svgRoot.children().add(ellipse);
+
+    ellipse.addEventHandler(SvgEventSpec.MOUSE_PRESSED, new SvgEventHandler<MouseEvent>() {
+      @Override
+      public void handle(SvgNode node, MouseEvent e) {
+        DemoModel.addCircle(svgRoot, e.x(), e.y());
+      }
+    });
 
     return svgRoot;
   }
@@ -111,20 +125,6 @@ public class DemoModel {
     container.contentRoot().children().add(vView);
 
     final Value<Boolean> state = new Value<>(true);
-
-    model.addEventHandler(SvgEventSpec.MOUSE_PRESSED, new SvgEventHandler<MouseEvent>() {
-      @Override
-      public void handle(SvgNode node, MouseEvent e) {
-        DemoModel.addCircle(model, e.x(), e.y());
-      }
-    });
-
-    altModel.addEventHandler(SvgEventSpec.MOUSE_PRESSED, new SvgEventHandler<MouseEvent>() {
-      @Override
-      public void handle(SvgNode node, MouseEvent e) {
-        DemoModel.addCircle(altModel, e.x(), e.y());
-      }
-    });
 
     final Value<Boolean> viewState = new Value<>(true);
     container.root().addTrait(new ViewTraitBuilder()

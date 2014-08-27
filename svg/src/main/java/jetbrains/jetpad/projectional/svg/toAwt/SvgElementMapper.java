@@ -17,7 +17,6 @@ package jetbrains.jetpad.projectional.svg.toAwt;
 
 import jetbrains.jetpad.base.Registration;
 import jetbrains.jetpad.event.MouseEvent;
-import jetbrains.jetpad.mapper.MappingContext;
 import jetbrains.jetpad.mapper.Synchronizer;
 import jetbrains.jetpad.mapper.SynchronizerContext;
 import jetbrains.jetpad.mapper.Synchronizers;
@@ -25,8 +24,8 @@ import jetbrains.jetpad.model.property.WritableProperty;
 import jetbrains.jetpad.projectional.svg.SvgAttrSpec;
 import jetbrains.jetpad.projectional.svg.SvgElement;
 import jetbrains.jetpad.projectional.svg.SvgElementListener;
-import jetbrains.jetpad.projectional.svg.event.SvgEventSpec;
 import jetbrains.jetpad.projectional.svg.event.SvgAttributeEvent;
+import jetbrains.jetpad.projectional.svg.event.SvgEventSpec;
 import org.apache.batik.dom.AbstractDocument;
 import org.apache.batik.dom.events.DOMMouseEvent;
 import org.apache.batik.dom.svg.SVGOMElement;
@@ -86,6 +85,11 @@ public class SvgElementMapper<SourceT extends SvgElement, TargetT extends SVGOME
             myHandlerRegs.remove(spec).remove();
           }
           if (!value.contains(spec) || myHandlerRegs.containsKey(spec)) continue;
+          if (getSource().parent().get() == null) {
+            // bug in lib-gwt-svg, getOwnerSvgElement throws exception (check here for consistency between awt and gwt)
+            throw new IllegalStateException("Can't add handlers to root svg element");
+          }
+
           switch (spec) {
             case MOUSE_CLICKED:
               addMouseHandler(spec, "click");
