@@ -34,6 +34,8 @@ public class SvgNodeMapperFactory implements MapperFactory<SvgNode, Node> {
     Mapper<? extends SvgNode, ? extends Node> result;
     if (source instanceof SvgEllipseElement) {
       result = new SvgElementMapper<>((SvgEllipseElement) source, new SVGOMEllipseElement(null, myDoc), myDoc);
+    } else if (source instanceof SvgCircleElement) {
+      result = new SvgElementMapper<>((SvgCircleElement) source, new SVGOMCircleElement(null, myDoc), myDoc);
     } else if (source instanceof SvgRectElement) {
       result = new SvgElementMapper<>( (SvgRectElement) source, new SVGOMRectElement(null, myDoc), myDoc);
     } else if (source instanceof SvgTextElement) {

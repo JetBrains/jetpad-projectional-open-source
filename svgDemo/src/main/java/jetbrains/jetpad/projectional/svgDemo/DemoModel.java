@@ -101,7 +101,7 @@ public class DemoModel {
   }
 
   public static void addCircle(SvgSvgElement svgRoot, int x, int y) {
-    SvgEllipseElement circle = new SvgEllipseElement((double) x, (double) y, 10., 10.);
+    SvgCircleElement circle = new SvgCircleElement((double) x, (double) y, 10.);
     circle.getAttr("fill").set(Color.BLACK.toCssColor());
 
     svgRoot.children().add(circle);
