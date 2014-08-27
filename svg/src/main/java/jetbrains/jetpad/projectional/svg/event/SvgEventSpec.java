@@ -15,17 +15,7 @@
  */
 package jetbrains.jetpad.projectional.svg.event;
 
-import jetbrains.jetpad.event.Event;
-
-public class SvgEventSpec<EventT extends Event> {
-  private String myName;
-
-  public SvgEventSpec(String name) {
-    myName = name;
-  }
-
-  @Override
-  public String toString() {
-    return myName;
-  }
+public enum SvgEventSpec {
+  MOUSE_CLICKED, MOUSE_PRESSED, MOUSE_RELEASED, MOUSE_OVER, MOUSE_MOVE, MOUSE_OUT,
+  KEY_PRESSED, KEY_RELEASED, KEY_TYPED
 }

@@ -32,7 +32,7 @@ import java.util.Map;
 public abstract class SvgNode extends HasParent<SvgNode, SvgNode> {
   private SvgContainer myContainer;
   private Listeners<SvgNodeListener> myListeners;
-  private Map<SvgEventSpec<?>, Listeners<SvgEventHandler<?>>> myEventHandlers;
+  private Map<SvgEventSpec, Listeners<SvgEventHandler<?>>> myEventHandlers;
 
 
   private SvgChildList myChildren;
@@ -48,7 +48,7 @@ public abstract class SvgNode extends HasParent<SvgNode, SvgNode> {
     return myChildren;
   }
 
-  public <EventT extends Event> Registration addEventHandler(SvgEventSpec<EventT> spec, SvgEventHandler<EventT> handler) {
+  public <EventT extends Event> Registration addEventHandler(SvgEventSpec spec, SvgEventHandler<EventT> handler) {
     if (myEventHandlers == null) {
       myEventHandlers = new HashMap<>();
     }
@@ -138,7 +138,7 @@ public abstract class SvgNode extends HasParent<SvgNode, SvgNode> {
     myContainer = null;
   }
 
-  public <EventT extends Event> void dispatch(SvgEventSpec<EventT> spec, final EventT event) {
+  public <EventT extends Event> void dispatch(SvgEventSpec spec, final EventT event) {
     if (myEventHandlers != null && myEventHandlers.containsKey(spec)) {
       myEventHandlers.get(spec).fire(new ListenerCaller<SvgEventHandler<?>>() {
         @Override

@@ -23,7 +23,7 @@ import jetbrains.jetpad.mapper.SynchronizerContext;
 import jetbrains.jetpad.projectional.svg.SvgAttrSpec;
 import jetbrains.jetpad.projectional.svg.SvgElement;
 import jetbrains.jetpad.projectional.svg.SvgElementListener;
-import jetbrains.jetpad.projectional.svg.event.SvgEvents;
+import jetbrains.jetpad.projectional.svg.event.SvgEventSpec;
 import jetbrains.jetpad.projectional.svg.event.SvgAttributeEvent;
 import org.apache.batik.dom.AbstractDocument;
 import org.apache.batik.dom.events.DOMMouseEvent;
@@ -76,37 +76,37 @@ public class SvgElementMapper<SourceT extends SvgElement, TargetT extends SVGOME
     final EventListener clickListener = new EventListener() {
       @Override
       public void handleEvent(Event evt) {
-        getSource().dispatch(SvgEvents.MOUSE_CLICKED, new MouseEvent(((DOMMouseEvent) evt).getClientX(), ((DOMMouseEvent) evt).getClientY()));
+        getSource().dispatch(SvgEventSpec.MOUSE_CLICKED, new MouseEvent(((DOMMouseEvent) evt).getClientX(), ((DOMMouseEvent) evt).getClientY()));
       }
     };
     final EventListener mouseDownListener = new EventListener() {
       @Override
       public void handleEvent(Event evt) {
-        getSource().dispatch(SvgEvents.MOUSE_PRESSED, new MouseEvent(((DOMMouseEvent) evt).getClientX(), ((DOMMouseEvent) evt).getClientY()));
+        getSource().dispatch(SvgEventSpec.MOUSE_PRESSED, new MouseEvent(((DOMMouseEvent) evt).getClientX(), ((DOMMouseEvent) evt).getClientY()));
       }
     };
     final EventListener mouseUpListener = new EventListener() {
       @Override
       public void handleEvent(Event evt) {
-        getSource().dispatch(SvgEvents.MOUSE_RELEASED, new MouseEvent(((DOMMouseEvent) evt).getClientX(), ((DOMMouseEvent) evt).getClientY()));
+        getSource().dispatch(SvgEventSpec.MOUSE_RELEASED, new MouseEvent(((DOMMouseEvent) evt).getClientX(), ((DOMMouseEvent) evt).getClientY()));
       }
     };
     final EventListener mouseOverListener = new EventListener() {
       @Override
       public void handleEvent(Event evt) {
-        getSource().dispatch(SvgEvents.MOUSE_OVER, new MouseEvent(((DOMMouseEvent) evt).getClientX(), ((DOMMouseEvent) evt).getClientY()));
+        getSource().dispatch(SvgEventSpec.MOUSE_OVER, new MouseEvent(((DOMMouseEvent) evt).getClientX(), ((DOMMouseEvent) evt).getClientY()));
       }
     };
     final EventListener mouseMoveListener = new EventListener() {
       @Override
       public void handleEvent(Event evt) {
-        getSource().dispatch(SvgEvents.MOUSE_MOVE, new MouseEvent(((DOMMouseEvent) evt).getClientX(), ((DOMMouseEvent) evt).getClientY()));
+        getSource().dispatch(SvgEventSpec.MOUSE_MOVE, new MouseEvent(((DOMMouseEvent) evt).getClientX(), ((DOMMouseEvent) evt).getClientY()));
       }
     };
     final EventListener mouseOutListener = new EventListener() {
       @Override
       public void handleEvent(Event evt) {
-        getSource().dispatch(SvgEvents.MOUSE_OUT, new MouseEvent(((DOMMouseEvent) evt).getClientX(), ((DOMMouseEvent) evt).getClientY()));
+        getSource().dispatch(SvgEventSpec.MOUSE_OUT, new MouseEvent(((DOMMouseEvent) evt).getClientX(), ((DOMMouseEvent) evt).getClientY()));
       }
     };
 

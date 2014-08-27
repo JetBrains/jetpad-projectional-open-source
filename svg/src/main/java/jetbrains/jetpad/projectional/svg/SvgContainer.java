@@ -24,7 +24,6 @@ import jetbrains.jetpad.model.property.Property;
 import jetbrains.jetpad.model.property.ValueProperty;
 import jetbrains.jetpad.projectional.svg.event.SvgAttributeEvent;
 import jetbrains.jetpad.projectional.svg.event.SvgEventSpec;
-import jetbrains.jetpad.projectional.svg.event.SvgEvents;
 
 public class SvgContainer {
   private Property<SvgSvgElement> mySvgRoot = new ValueProperty<SvgSvgElement>() {
@@ -79,30 +78,30 @@ public class SvgContainer {
   }
 
   public void mousePressed(MouseEvent e) {
-    dispatchMouseEvent(SvgEvents.MOUSE_PRESSED, e);
+    dispatchMouseEvent(SvgEventSpec.MOUSE_PRESSED, e);
   }
 
   public void mouseReleased(MouseEvent e) {
-    dispatchMouseEvent(SvgEvents.MOUSE_RELEASED, e);
+    dispatchMouseEvent(SvgEventSpec.MOUSE_RELEASED, e);
   }
 
   public void keyPressed(KeyEvent e) {
-    dispatchKeyboardEvent(SvgEvents.KEY_PRESSED, e);
+    dispatchKeyboardEvent(SvgEventSpec.KEY_PRESSED, e);
   }
 
   public void keyReleased(KeyEvent e) {
-    dispatchKeyboardEvent(SvgEvents.KEY_RELEASED, e);
+    dispatchKeyboardEvent(SvgEventSpec.KEY_RELEASED, e);
   }
 
   public void keyTyped(KeyEvent e) {
-    dispatchKeyboardEvent(SvgEvents.KEY_TYPED, e);
+    dispatchKeyboardEvent(SvgEventSpec.KEY_TYPED, e);
   }
 
-  private void dispatchMouseEvent(SvgEventSpec<MouseEvent> spec, MouseEvent e) {
+  private void dispatchMouseEvent(SvgEventSpec spec, MouseEvent e) {
 //    mySvgRoot.get().dispatch(spec, e);
   }
 
-  private void dispatchKeyboardEvent(SvgEventSpec<KeyEvent> spec, KeyEvent e) {
-//    mySvgRoot.get().dispatch(spec, e);
+  private void dispatchKeyboardEvent(SvgEventSpec spec, KeyEvent e) {
+    mySvgRoot.get().dispatch(spec, e);
   }
 }

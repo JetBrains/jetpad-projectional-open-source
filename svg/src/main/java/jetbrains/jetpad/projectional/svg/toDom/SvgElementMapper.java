@@ -25,7 +25,7 @@ import jetbrains.jetpad.mapper.SynchronizerContext;
 import jetbrains.jetpad.projectional.svg.SvgAttrSpec;
 import jetbrains.jetpad.projectional.svg.SvgElement;
 import jetbrains.jetpad.projectional.svg.SvgElementListener;
-import jetbrains.jetpad.projectional.svg.event.SvgEvents;
+import jetbrains.jetpad.projectional.svg.event.SvgEventSpec;
 import jetbrains.jetpad.projectional.svg.event.SvgAttributeEvent;
 import org.vectomatic.dom.svg.OMSVGElement;
 
@@ -79,42 +79,42 @@ public class SvgElementMapper<SourceT extends SvgElement, TargetT extends OMSVGE
     final HandlerRegistration clickReg = getTarget().addDomHandler(new ClickHandler() {
       @Override
       public void onClick(ClickEvent clickEvent) {
-        getSource().dispatch(SvgEvents.MOUSE_CLICKED, createMouseEvent(clickEvent));
+        getSource().dispatch(SvgEventSpec.MOUSE_CLICKED, createMouseEvent(clickEvent));
       }
     }, ClickEvent.getType());
 
     final HandlerRegistration downReg = getTarget().addDomHandler(new MouseDownHandler() {
       @Override
       public void onMouseDown(MouseDownEvent mouseDownEvent) {
-        getSource().dispatch(SvgEvents.MOUSE_PRESSED, createMouseEvent(mouseDownEvent));
+        getSource().dispatch(SvgEventSpec.MOUSE_PRESSED, createMouseEvent(mouseDownEvent));
       }
     }, MouseDownEvent.getType());
 
     final HandlerRegistration upReg = getTarget().addDomHandler(new MouseUpHandler() {
       @Override
       public void onMouseUp(MouseUpEvent mouseUpEvent) {
-        getSource().dispatch(SvgEvents.MOUSE_RELEASED, createMouseEvent(mouseUpEvent));
+        getSource().dispatch(SvgEventSpec.MOUSE_RELEASED, createMouseEvent(mouseUpEvent));
       }
     }, MouseUpEvent.getType());
 
     final HandlerRegistration overReg = getTarget().addDomHandler(new MouseOverHandler() {
       @Override
       public void onMouseOver(MouseOverEvent mouseOverEvent) {
-        getSource().dispatch(SvgEvents.MOUSE_OVER, createMouseEvent(mouseOverEvent));
+        getSource().dispatch(SvgEventSpec.MOUSE_OVER, createMouseEvent(mouseOverEvent));
       }
     }, MouseOverEvent.getType());
 
     final HandlerRegistration moveReg = getTarget().addDomHandler(new MouseMoveHandler() {
       @Override
       public void onMouseMove(MouseMoveEvent mouseMoveEvent) {
-        getSource().dispatch(SvgEvents.MOUSE_MOVE, createMouseEvent(mouseMoveEvent));
+        getSource().dispatch(SvgEventSpec.MOUSE_MOVE, createMouseEvent(mouseMoveEvent));
       }
     }, MouseMoveEvent.getType());
 
     final HandlerRegistration outReg = getTarget().addDomHandler(new MouseOutHandler() {
       @Override
       public void onMouseOut(MouseOutEvent mouseOutEvent) {
-        getSource().dispatch(SvgEvents.MOUSE_OUT, createMouseEvent(mouseOutEvent));
+        getSource().dispatch(SvgEventSpec.MOUSE_OUT, createMouseEvent(mouseOutEvent));
       }
     }, MouseOutEvent.getType());
 
