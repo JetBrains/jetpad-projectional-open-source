@@ -37,6 +37,12 @@ public abstract class SvgElement extends SvgNode {
   private Listeners<SvgElementListener<?>> myListeners;
   private SvgEventPeer myEventPeer = new SvgEventPeer();
 
+  private static final SvgAttrSpec<String> ID = SvgAttrSpec.createSpec("id");
+
+  public Property<String> getId() {
+    return getAttr(ID);
+  }
+
   public SvgEventPeer getEventPeer() {
     return myEventPeer;
   }
