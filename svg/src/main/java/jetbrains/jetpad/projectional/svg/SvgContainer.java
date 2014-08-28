@@ -16,14 +16,11 @@
 package jetbrains.jetpad.projectional.svg;
 
 import jetbrains.jetpad.base.Registration;
-import jetbrains.jetpad.event.KeyEvent;
-import jetbrains.jetpad.event.MouseEvent;
 import jetbrains.jetpad.model.event.ListenerCaller;
 import jetbrains.jetpad.model.event.Listeners;
 import jetbrains.jetpad.model.property.Property;
 import jetbrains.jetpad.model.property.ValueProperty;
 import jetbrains.jetpad.projectional.svg.event.SvgAttributeEvent;
-import jetbrains.jetpad.projectional.svg.event.SvgEventSpec;
 
 public class SvgContainer {
   private Property<SvgSvgElement> mySvgRoot = new ValueProperty<SvgSvgElement>() {
@@ -75,33 +72,5 @@ public class SvgContainer {
         l.onNodeDetached(node);
       }
     });
-  }
-
-  public void mousePressed(MouseEvent e) {
-    dispatchMouseEvent(SvgEventSpec.MOUSE_PRESSED, e);
-  }
-
-  public void mouseReleased(MouseEvent e) {
-    dispatchMouseEvent(SvgEventSpec.MOUSE_RELEASED, e);
-  }
-
-  public void keyPressed(KeyEvent e) {
-    dispatchKeyboardEvent(SvgEventSpec.KEY_PRESSED, e);
-  }
-
-  public void keyReleased(KeyEvent e) {
-    dispatchKeyboardEvent(SvgEventSpec.KEY_RELEASED, e);
-  }
-
-  public void keyTyped(KeyEvent e) {
-    dispatchKeyboardEvent(SvgEventSpec.KEY_TYPED, e);
-  }
-
-  private void dispatchMouseEvent(SvgEventSpec spec, MouseEvent e) {
-//    mySvgRoot.get().dispatch(spec, e);
-  }
-
-  private void dispatchKeyboardEvent(SvgEventSpec spec, KeyEvent e) {
-    mySvgRoot.get().dispatch(spec, e);
   }
 }
