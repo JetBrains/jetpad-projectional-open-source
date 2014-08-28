@@ -121,6 +121,7 @@ public class SvgElementMapper<SourceT extends SvgElement, TargetT extends SVGOME
     final EventListener listener = new EventListener() {
       @Override
       public void handleEvent(Event evt) {
+        evt.stopPropagation();
         getSource().dispatch(spec, new MouseEvent(((DOMMouseEvent) evt).getClientX(), ((DOMMouseEvent) evt).getClientY()));
       }
     };

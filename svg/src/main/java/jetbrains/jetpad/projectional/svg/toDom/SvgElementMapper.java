@@ -146,6 +146,7 @@ public class SvgElementMapper<SourceT extends SvgElement, TargetT extends OMSVGE
   }
 
   private MouseEvent createMouseEvent(com.google.gwt.event.dom.client.MouseEvent<?> evt) {
+    evt.stopPropagation();
     return new MouseEvent(evt.getRelativeX(getTarget().getOwnerSVGElement().getElement()),
         evt.getRelativeY(getTarget().getOwnerSVGElement().getElement()));
   }

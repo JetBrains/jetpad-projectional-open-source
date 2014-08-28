@@ -42,7 +42,7 @@ public class SvgTransformBuilder {
   public SvgTransformBuilder translate(double x) {
     return addTransformation("translate", x);
   }
-  
+
   public SvgTransformBuilder scale(double x, double y) {
     return addTransformation("scale", x, y);
   }
