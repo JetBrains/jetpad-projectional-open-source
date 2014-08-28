@@ -141,6 +141,10 @@ public class SvgElementMapper<SourceT extends SvgElement, TargetT extends OMSVGE
               break;
           }
         }
+
+        if (myHandlerRegs.isEmpty()) {
+          myHandlerRegs = null;
+        }
       }
     }));
   }
