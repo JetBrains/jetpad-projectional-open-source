@@ -29,8 +29,11 @@ public class DemoModel {
   public static SvgSvgElement createModel() {
     final SvgSvgElement svgRoot = new SvgSvgElement(200., 400.);
 
+    SvgStyleElement style = new SvgStyleElement(".ellipse-yellow { \n" +
+        "fill: yellow;\n" +
+        "}");
+
     SvgEllipseElement ellipse = new SvgEllipseElement(200., 80., 170., 50.);
-    ellipse.setAttr("fill", Color.YELLOW.toCssColor());
     ellipse.getAttr("style").set("stroke:#006600;");
     ellipse.getXmlClass().set("ellipse-yellow");
 
@@ -53,6 +56,7 @@ public class DemoModel {
     SvgRectElement rect = new SvgRectElement(180., 50., 50., 80.);
     rect.getAttr("fill").set(Color.RED.toCssColor());
 
+    svgRoot.children().add(style);
     svgRoot.children().add(ellipse);
     svgRoot.children().add(rect);
     svgRoot.children().add(ellipse2);
@@ -132,7 +136,7 @@ public class DemoModel {
       @Override
       public void handle(View view, KeyEvent e) {
         if (e.key() == Key.SPACE) {
-          ((SvgElement) model.children().get(0)).getAttr("stroke-width").set("7");
+          ((SvgElement) model.children().get(1)).getAttr("stroke-width").set("7");
           return;
         }
 

@@ -35,5 +35,6 @@ public class SvgStyleElement extends SvgElement {
     }
     SvgTextNode textNode = new SvgTextNode(content);
     children.add(textNode);
+    setAttr("type", "text/css");
   }
 }
