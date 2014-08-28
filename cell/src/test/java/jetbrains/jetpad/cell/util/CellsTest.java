@@ -26,10 +26,14 @@ import jetbrains.jetpad.model.property.Property;
 import jetbrains.jetpad.model.property.ValueProperty;
 import org.junit.Test;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class CellsTest {
+  HorizontalCell container = new HorizontalCell();
+  Cell c1 = new TextCell();
+  Cell c2 = new TextCell();
+  Cell c3 = new TextCell();
+
   @Test
   public void emptinessOfEmptyText() {
     TextCell cell = new TextCell();
@@ -98,5 +102,47 @@ public class CellsTest {
     });
 
     assertTrue(Cells.isEmpty(cell));
+  }
+
+  @Test
+  public void nextCellAfterAdd() {
+    container.children().add(c1);
+    container.children().add(c2);
+
+    assertNull(c2.nextSibling());
+    assertSame(c2, c1.nextSibling());
+  }
+
+  @Test
+  public void nextCellAfterRemove() {
+    container.children().add(c1);
+    container.children().add(c2);
+    container.children().add(c3);
+
+    container.children().remove(c2);
+
+    assertSame(c3, c1.nextSibling());
+    assertNull(c2.nextSibling());
+  }
+
+  @Test
+  public void prevCellAfterAdd() {
+    container.children().add(c1);
+    container.children().add(c2);
+
+    assertNull(c1.prevSibling());
+    assertSame(c1, c2.prevSibling());
+  }
+
+  @Test
+  public void prevCellAfterRemove() {
+    container.children().add(c1);
+    container.children().add(c2);
+    container.children().add(c3);
+
+    container.children().remove(c2);
+
+    assertNull(c2.prevSibling());
+    assertSame(c1, c3.prevSibling());
   }
 }
