@@ -40,12 +40,6 @@ public abstract class SvgNode extends HasParent<SvgNode, SvgNode> {
     return myContainer != null;
   }
 
-  protected void onAttach() {
-  }
-
-  protected void onDetach() {
-  }
-
   void attach(SvgContainer container) {
     if (isAttached()) {
       throw new IllegalStateException("Svg element is already attached");
@@ -57,16 +51,12 @@ public abstract class SvgNode extends HasParent<SvgNode, SvgNode> {
 
     myContainer = container;
     myContainer.svgNodeAttached(this);
-
-    onAttach();
   }
 
   void detach() {
     if (!isAttached()) {
       throw new IllegalStateException("Svg element is not attached");
     }
-
-    onDetach();
 
     for (SvgNode node : children()) {
       node.detach();
@@ -95,8 +85,7 @@ public abstract class SvgNode extends HasParent<SvgNode, SvgNode> {
       if (isAttached()) {
         node.detach();
       }
-      SvgNode result =  super.remove(index);
-      return result;
+      return super.remove(index);
     }
   }
 }
