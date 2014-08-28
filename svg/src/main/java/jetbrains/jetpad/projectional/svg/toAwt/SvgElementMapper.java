@@ -29,6 +29,7 @@ import jetbrains.jetpad.projectional.svg.event.SvgEventSpec;
 import org.apache.batik.dom.AbstractDocument;
 import org.apache.batik.dom.events.DOMMouseEvent;
 import org.apache.batik.dom.svg.SVGOMElement;
+import org.apache.batik.util.SVGConstants;
 import org.w3c.dom.events.Event;
 import org.w3c.dom.events.EventListener;
 
@@ -92,22 +93,22 @@ public class SvgElementMapper<SourceT extends SvgElement, TargetT extends SVGOME
 
           switch (spec) {
             case MOUSE_CLICKED:
-              addMouseHandler(spec, "click");
+              addMouseHandler(spec, SVGConstants.SVG_CLICK_EVENT_TYPE);
               break;
             case MOUSE_PRESSED:
-              addMouseHandler(spec, "mousedown");
+              addMouseHandler(spec, SVGConstants.SVG_MOUSEDOWN_EVENT_TYPE);
               break;
             case MOUSE_RELEASED:
-              addMouseHandler(spec, "mouseup");
+              addMouseHandler(spec, SVGConstants.SVG_MOUSEUP_EVENT_TYPE);
               break;
             case MOUSE_OVER:
-              addMouseHandler(spec, "mouseover");
+              addMouseHandler(spec, SVGConstants.SVG_MOUSEOVER_EVENT_TYPE);
               break;
             case MOUSE_MOVE:
-              addMouseHandler(spec, "mousemove");
+              addMouseHandler(spec, SVGConstants.SVG_MOUSEMOVE_EVENT_TYPE);
               break;
             case MOUSE_OUT:
-              addMouseHandler(spec, "mouseout");
+              addMouseHandler(spec, SVGConstants.SVG_MOUSEOUT_EVENT_TYPE);
               break;
             default:
               break;
