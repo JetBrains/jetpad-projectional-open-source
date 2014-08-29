@@ -101,6 +101,7 @@ public class TextEditingTrait extends TextNavigationTrait {
             return true;
           }
         });
+        helper.load();
         return !helper.hasSingleMatch(text, false);
       }
     };
@@ -164,6 +165,8 @@ public class TextEditingTrait extends TextNavigationTrait {
           return true;
         }
       });
+      completion.load();
+
       String prefixText = textCell.prefixText().get();
       if (textCell.isEnd()) {
         List<CompletionItem> matches = completion.matches(prefixText);
@@ -180,6 +183,8 @@ public class TextEditingTrait extends TextNavigationTrait {
               return true;
             }
           });
+          rightTransform.load();
+
           if (!rightTransform.isEmpty() && textCell.get(TextEditing.DOT_LIKE_RT)) {
             if (textCell.rightPopup().get() == null) {
               TextCell popup = CompletionSupport.showSideTransformPopup(textCell, textCell.rightPopup(), rightTransform.getItems());

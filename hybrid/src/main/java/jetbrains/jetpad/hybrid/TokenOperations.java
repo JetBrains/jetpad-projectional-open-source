@@ -195,6 +195,7 @@ class TokenOperations<SourceT> {
     }
 
     CompletionHelper completion = mySync.tokenCompletion().completion(completer);
+    completion.load();
     List<CompletionItem> matches = completion.matches(newTokenText);
     if (matches.size() == 1) {
       matches.get(0).complete(newTokenText);
@@ -239,6 +240,9 @@ class TokenOperations<SourceT> {
         return Runnables.EMPTY;
       }
     });
+    completion.load();
+
+
     if (completion.isBoundary(text, caret - 1) && completion.isBoundary(text.substring(caret - 1), 1)) {
       Token first = tc.completeToken(text.substring(0, caret - 1));
       Token second = tc.completeToken(text.substring(caret - 1, caret));

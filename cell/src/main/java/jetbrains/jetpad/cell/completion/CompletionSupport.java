@@ -313,6 +313,9 @@ public class CompletionSupport {
         return wrappedItems;
       }
     }, CompletionParameters.EMPTY);
+
+    completion.load();
+
     textView.focusable().set(true);
     final Registration traitReg = textView.addTrait(new TextEditingTrait() {
       @Override
