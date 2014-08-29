@@ -16,26 +16,23 @@
 package jetbrains.jetpad.cell.completion;
 
 import com.google.common.base.Strings;
-import jetbrains.jetpad.base.Handler;
-import jetbrains.jetpad.base.Runnables;
-import jetbrains.jetpad.cell.trait.CellTrait;
-import jetbrains.jetpad.completion.*;
-import jetbrains.jetpad.model.event.CompositeRegistration;
-import jetbrains.jetpad.base.Registration;
-import jetbrains.jetpad.model.property.Property;
-import jetbrains.jetpad.model.property.PropertyBinding;
-import jetbrains.jetpad.model.property.PropertyChangeEvent;
-import jetbrains.jetpad.model.property.ReadableProperty;
-import jetbrains.jetpad.event.Key;
-import jetbrains.jetpad.event.KeyEvent;
-import jetbrains.jetpad.event.ModifierKey;
+import jetbrains.jetpad.base.*;
 import jetbrains.jetpad.cell.*;
-import jetbrains.jetpad.base.Value;
 import jetbrains.jetpad.cell.event.CompletionEvent;
 import jetbrains.jetpad.cell.event.FocusEvent;
 import jetbrains.jetpad.cell.text.TextEditing;
 import jetbrains.jetpad.cell.text.TextEditingTrait;
+import jetbrains.jetpad.cell.trait.CellTrait;
 import jetbrains.jetpad.cell.trait.CellTraitPropertySpec;
+import jetbrains.jetpad.completion.*;
+import jetbrains.jetpad.event.Key;
+import jetbrains.jetpad.event.KeyEvent;
+import jetbrains.jetpad.event.ModifierKey;
+import jetbrains.jetpad.model.event.CompositeRegistration;
+import jetbrains.jetpad.model.property.Property;
+import jetbrains.jetpad.model.property.PropertyBinding;
+import jetbrains.jetpad.model.property.PropertyChangeEvent;
+import jetbrains.jetpad.model.property.ReadableProperty;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -79,7 +76,7 @@ public class CompletionSupport {
                 return true;
               }
             });
-            showPopup(cell, cell.frontPopup(), items, restoreState);
+            showPopup(cell, cell.frontPopup(), Asyncs.constant(items), restoreState);
           }
 
           @Override
@@ -131,13 +128,13 @@ public class CompletionSupport {
     };
   }
 
-  public static void showCompletion(final TextCell textView, List<CompletionItem> items, final Registration removeOnClose, final Runnable restoreState) {
+  public static void showCompletion(final TextCell textView, Async<List<CompletionItem>> items, final Registration removeOnClose, final Runnable restoreState) {
     if (!textView.focused().get()) {
       throw new IllegalArgumentException();
     }
 
     final CompletionMenuModel menuModel = new CompletionMenuModel();
-    menuModel.items.addAll(items);
+    menuModel.loading.set(true);
 
     final CompositeRegistration reg = new CompositeRegistration();
     final ReadableProperty<String> prefixText = textView.prefixText();
@@ -241,12 +238,26 @@ public class CompletionSupport {
 
     textView.bottomPopup().set(completionCell);
     completionCell.showSlide(150);
+
+    items.onSuccess(new Handler<List<CompletionItem>>() {
+      @Override
+      public void handle(List<CompletionItem> items) {
+        menuModel.loading.set(false);
+        menuModel.items.addAll(items);
+      }
+    });
+    items.onFailure(new Handler<Throwable>() {
+      @Override
+      public void handle(Throwable item) {
+        menuModel.loading.set(true);
+      }
+    });
   }
 
   public static TextCell showPopup(
       Cell cell,
       Property<Cell> targetPopup,
-      List<CompletionItem> items,
+      Async<List<CompletionItem>> items,
       Runnable onDeactivate) {
     CellContainer container = cell.cellContainer().get();
     final HorizontalCell popup = new HorizontalCell();

@@ -17,6 +17,7 @@ package jetbrains.jetpad.cell.text;
 
 import com.google.common.base.Strings;
 import com.google.common.base.Supplier;
+import jetbrains.jetpad.base.Asyncs;
 import jetbrains.jetpad.base.Runnables;
 import jetbrains.jetpad.cell.util.Cells;
 import jetbrains.jetpad.completion.BaseCompletionParameters;
@@ -67,12 +68,12 @@ public class TextEditingTrait extends TextNavigationTrait {
         if (isActive()) {
           throw new IllegalStateException();
         }
-        CompletionSupport.showCompletion(view, view.get(Completion.COMPLETION).get(new BaseCompletionParameters() {
+        CompletionSupport.showCompletion(view, Asyncs.constant(view.get(Completion.COMPLETION).get(new BaseCompletionParameters() {
           @Override
           public boolean isMenu() {
             return true;
           }
-        }), Registration.EMPTY, restoreState);
+        })), Registration.EMPTY, restoreState);
       }
 
       @Override
