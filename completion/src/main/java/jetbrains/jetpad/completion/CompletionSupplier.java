@@ -15,6 +15,9 @@
  */
 package jetbrains.jetpad.completion;
 
+import jetbrains.jetpad.base.Async;
+import jetbrains.jetpad.base.Asyncs;
+
 import java.util.Collections;
 import java.util.List;
 
@@ -27,6 +30,10 @@ public abstract class CompletionSupplier {
   };
 
   public abstract List<CompletionItem> get(CompletionParameters cp);
+
+  public Async<List<CompletionItem>> getAsync(CompletionParameters cp) {
+    return Asyncs.constant(get(cp));
+  }
 
   public boolean isEmpty(CompletionParameters cp) {
     return get(cp).isEmpty();

@@ -17,19 +17,20 @@ package jetbrains.jetpad.cell.text;
 
 import com.google.common.base.Strings;
 import com.google.common.base.Supplier;
-import jetbrains.jetpad.base.Asyncs;
+import jetbrains.jetpad.base.Registration;
 import jetbrains.jetpad.base.Runnables;
+import jetbrains.jetpad.cell.Cell;
+import jetbrains.jetpad.cell.TextCell;
+import jetbrains.jetpad.cell.completion.Completion;
+import jetbrains.jetpad.cell.completion.CompletionHelper;
+import jetbrains.jetpad.cell.completion.CompletionSupport;
+import jetbrains.jetpad.cell.event.CompletionEvent;
+import jetbrains.jetpad.cell.trait.CellTraitPropertySpec;
 import jetbrains.jetpad.cell.util.Cells;
 import jetbrains.jetpad.completion.BaseCompletionParameters;
 import jetbrains.jetpad.completion.CompletionController;
 import jetbrains.jetpad.completion.CompletionItem;
 import jetbrains.jetpad.event.*;
-import jetbrains.jetpad.event.TextClipboardContent;
-import jetbrains.jetpad.base.Registration;
-import jetbrains.jetpad.cell.*;
-import jetbrains.jetpad.cell.completion.*;
-import jetbrains.jetpad.cell.event.CompletionEvent;
-import jetbrains.jetpad.cell.trait.CellTraitPropertySpec;
 
 import java.util.List;
 
@@ -68,12 +69,12 @@ public class TextEditingTrait extends TextNavigationTrait {
         if (isActive()) {
           throw new IllegalStateException();
         }
-        CompletionSupport.showCompletion(view, Asyncs.constant(view.get(Completion.COMPLETION).get(new BaseCompletionParameters() {
+        CompletionSupport.showCompletion(view, view.get(Completion.COMPLETION).getAsync(new BaseCompletionParameters() {
           @Override
           public boolean isMenu() {
             return true;
           }
-        })), Registration.EMPTY, restoreState);
+        }), Registration.EMPTY, restoreState);
       }
 
       @Override

@@ -70,13 +70,12 @@ public class CompletionSupport {
             if (isActive()) {
               throw new IllegalStateException();
             }
-            List<CompletionItem> items = cell.get(Completion.COMPLETION).get(new BaseCompletionParameters() {
+            showPopup(cell, cell.frontPopup(), cell.get(Completion.COMPLETION).getAsync(new BaseCompletionParameters() {
               @Override
               public boolean isMenu() {
                 return true;
               }
-            });
-            showPopup(cell, cell.frontPopup(), Asyncs.constant(items), restoreState);
+            }), restoreState);
           }
 
           @Override
