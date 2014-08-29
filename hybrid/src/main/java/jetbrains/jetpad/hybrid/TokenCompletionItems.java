@@ -41,6 +41,11 @@ public class TokenCompletionItems {
       public Runnable complete(String text) {
         return myTokenHandler.apply(token);
       }
+
+      @Override
+      public String toString() {
+        return "Token[" + token + "]";
+      }
     };
   }
 
