@@ -54,7 +54,7 @@ class CompletionMenu {
   private static class CompletionMenuModelMapper extends Mapper<CompletionMenuModel, ScrollCell> {
     private VerticalCell myRootCell = new VerticalCell();
     private VerticalCell myVerticalCell = new VerticalCell();
-    private TextCell myEmptyCell = new TextCell("<no completion items>");
+    private TextCell myEmptyCell = new TextCell();
     private Handler<CompletionItem> myCompleter;
 
     private CompletionMenuModelMapper(CompletionMenuModel source, Handler<CompletionItem> completer) {
@@ -88,6 +88,7 @@ class CompletionMenu {
           }
         }));
 
+      conf.add(Synchronizers.forPropsOneWay(getSource().loading, Properties.ifProp(myEmptyCell.text(), "Loading...", "<no completion items>")));
       conf.add(Synchronizers.forPropsOneWay(Properties.isEmpty(getSource().visibleItems), myEmptyCell.visible()));
     }
   }

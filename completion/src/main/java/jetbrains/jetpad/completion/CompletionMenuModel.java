@@ -29,6 +29,7 @@ public class CompletionMenuModel {
   public final Property<String> text = new ValueProperty<>();
   public final ObservableList<CompletionItem> items = new ObservableArrayList<>();
   public final Property<CompletionItem> selectedItem = new ValueProperty<>();
+  public final Property<Boolean> loading = new ValueProperty<>(false);
 
   public final ObservableList<CompletionItem> visibleItems;
 
