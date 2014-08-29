@@ -83,10 +83,6 @@ public class SvgElementMapper<SourceT extends SvgElement, TargetT extends OMSVGE
             myHandlerRegs.remove(spec).removeHandler();
           }
           if (!value.contains(spec) || myHandlerRegs.containsKey(spec)) continue;
-          if (getSource().parent().get() == null) {
-            // bug in lib-gwt-svg, getOwnerSvgElement throws exception
-            throw new IllegalStateException("Can't add handlers to root svg element");
-          }
 
           switch (spec) {
             case MOUSE_CLICKED:

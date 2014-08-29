@@ -15,7 +15,11 @@
  */
 package jetbrains.jetpad.projectional.svg;
 
+import jetbrains.jetpad.base.Registration;
+import jetbrains.jetpad.event.Event;
 import jetbrains.jetpad.model.property.Property;
+import jetbrains.jetpad.projectional.svg.event.SvgEventHandler;
+import jetbrains.jetpad.projectional.svg.event.SvgEventSpec;
 
 public class SvgSvgElement extends SvgStylableElement {
   private static final SvgAttrSpec<Double> HEIGHT = SvgAttrSpec.createSpec("height");
@@ -38,5 +42,11 @@ public class SvgSvgElement extends SvgStylableElement {
 
   public Property<Double> getWidth() {
     return getAttr(WIDTH);
+  }
+
+  @Override
+  public <EventT extends Event> Registration addEventHandler(SvgEventSpec spec, SvgEventHandler<EventT> handler) {
+    // due to bug in lib-gwt-svg, getOwnerSvgElement throws exception on root svg element
+    throw new IllegalStateException("Can't add handlers to <svg> element");
   }
 }

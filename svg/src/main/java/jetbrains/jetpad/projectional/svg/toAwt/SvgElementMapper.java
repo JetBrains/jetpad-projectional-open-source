@@ -86,10 +86,6 @@ public class SvgElementMapper<SourceT extends SvgElement, TargetT extends SVGOME
             myHandlerRegs.remove(spec).remove();
           }
           if (!value.contains(spec) || myHandlerRegs.containsKey(spec)) continue;
-          if (getSource().parent().get() == null) {
-            // bug in lib-gwt-svg, getOwnerSvgElement throws exception (check here for consistency between awt and gwt)
-            throw new IllegalStateException("Can't add handlers to root svg element");
-          }
 
           switch (spec) {
             case MOUSE_CLICKED:
