@@ -17,23 +17,11 @@ package jetbrains.jetpad.cell.completion;
 
 import jetbrains.jetpad.cell.trait.CellTraitPropertySpec;
 import jetbrains.jetpad.completion.CompletionController;
-import jetbrains.jetpad.completion.CompletionItem;
-import jetbrains.jetpad.completion.CompletionParameters;
 import jetbrains.jetpad.completion.CompletionSupplier;
 
-import java.util.Collections;
-import java.util.List;
-
 public class Completion {
-  private static final CompletionSupplier EMPTY_SUPPLIER = new CompletionSupplier() {
-    @Override
-    public List<CompletionItem> get(CompletionParameters cp) {
-      return Collections.emptyList();
-    }
-  };
-
-  public static final CellTraitPropertySpec<CompletionSupplier> COMPLETION = new CellTraitPropertySpec<>("completion", EMPTY_SUPPLIER);
-  public static final CellTraitPropertySpec<CompletionSupplier> LEFT_TRANSFORM = new CellTraitPropertySpec<>("leftTransform", EMPTY_SUPPLIER);
-  public static final CellTraitPropertySpec<CompletionSupplier> RIGHT_TRANSFORM = new CellTraitPropertySpec<>("rightTransform", EMPTY_SUPPLIER);
+  public static final CellTraitPropertySpec<CompletionSupplier> COMPLETION = new CellTraitPropertySpec<>("completion", CompletionSupplier.EMPTY);
+  public static final CellTraitPropertySpec<CompletionSupplier> LEFT_TRANSFORM = new CellTraitPropertySpec<>("leftTransform", CompletionSupplier.EMPTY);
+  public static final CellTraitPropertySpec<CompletionSupplier> RIGHT_TRANSFORM = new CellTraitPropertySpec<>("rightTransform", CompletionSupplier.EMPTY);
   public static final CellTraitPropertySpec<CompletionController> COMPLETION_CONTROLLER = new CellTraitPropertySpec<>("completionController");
 }
