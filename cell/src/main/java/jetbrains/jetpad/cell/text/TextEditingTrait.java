@@ -156,12 +156,12 @@ public class TextEditingTrait extends TextNavigationTrait {
     CompletionController handler = getCompletionController(textCell);
 
     if (textCell.bottomPopup().get() == null) {
-      CompletionHelper completion = new CompletionHelper(textCell.get(Completion.COMPLETION).get(new BaseCompletionParameters() {
+      CompletionHelper completion = new CompletionHelper(textCell.get(Completion.COMPLETION), new BaseCompletionParameters() {
         @Override
         public boolean isMenu() {
           return true;
         }
-      }));
+      });
       String prefixText = textCell.prefixText().get();
       if (textCell.isEnd()) {
         List<CompletionItem> matches = completion.matches(prefixText);

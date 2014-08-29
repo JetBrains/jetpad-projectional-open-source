@@ -58,7 +58,7 @@ class TokenCompletion {
   }
 
   CompletionHelper completion(Function<Token, Runnable> handler) {
-    return new CompletionHelper(positionSpec().getTokenCompletion(handler).get(CompletionParameters.EMPTY));
+    return new CompletionHelper(positionSpec().getTokenCompletion(handler), CompletionParameters.EMPTY);
   }
 
   CompletionSupplier placeholderCompletion() {

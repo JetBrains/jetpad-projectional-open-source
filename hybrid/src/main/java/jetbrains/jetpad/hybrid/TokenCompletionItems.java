@@ -119,6 +119,11 @@ public class TokenCompletionItems {
         }
         return myTokenHandler.apply(new IntValueToken(value));
       }
+
+      @Override
+      public String toString() {
+        return "number completion";
+      }
     };
   }
 }

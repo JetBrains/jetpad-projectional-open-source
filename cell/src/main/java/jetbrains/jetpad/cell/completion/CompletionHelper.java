@@ -39,26 +39,32 @@ public class CompletionHelper {
   }
 
   public static CompletionHelper completionFor(Cell cell, CompletionParameters cp, CellTraitPropertySpec<CompletionSupplier> prop) {
-    return new CompletionHelper(cell.get(prop).get(cp));
+    return new CompletionHelper(cell.get(prop), cp);
   }
 
-  private List<CompletionItem> myCompletionItems = new ArrayList<>();
+  private CompletionSupplier mySupplier;
+  private CompletionParameters myParameters;
+  private List<CompletionItem> myCachedItems;
 
-  public CompletionHelper(List<CompletionItem> items) {
-    myCompletionItems.addAll(items);
+  public CompletionHelper(CompletionSupplier supplier, CompletionParameters params) {
+    mySupplier = supplier;
+    myParameters = params;
   }
 
   public boolean isEmpty() {
-    return myCompletionItems.isEmpty();
+    return mySupplier.get(myParameters).isEmpty();
   }
 
   public List<CompletionItem> getItems() {
-    return Collections.unmodifiableList(myCompletionItems);
+    if (myCachedItems == null) {
+      myCachedItems = Collections.unmodifiableList(mySupplier.get(myParameters));
+    }
+    return myCachedItems;
   }
 
   public List<CompletionItem> prefixedBy(String prefix) {
     List<CompletionItem> result = new ArrayList<>();
-    for (CompletionItem item : myCompletionItems) {
+    for (CompletionItem item : getItems()) {
       if (item.isMatchPrefix(prefix)) {
         result.add(item);
       }
@@ -68,7 +74,7 @@ public class CompletionHelper {
 
   public List<CompletionItem> strictlyPrefixedBy(String prefix) {
     List<CompletionItem> result = new ArrayList<>();
-    for (CompletionItem item : myCompletionItems) {
+    for (CompletionItem item : getItems()) {
       if (item.isStrictMatchPrefix(prefix)) {
         result.add(item);
       }
@@ -78,7 +84,7 @@ public class CompletionHelper {
 
   public List<CompletionItem> matches(String text) {
     List<CompletionItem> result = new ArrayList<>();
-    for (CompletionItem item : myCompletionItems) {
+    for (CompletionItem item : getItems()) {
       if (item.isMatch(text)) {
         result.add(item);
       }

@@ -297,7 +297,12 @@ public class CompletionSupport {
       }
     };
     final Value<Handler<Boolean>> dismiss = new Value<>();
-    final CompletionHelper completion = new CompletionHelper(wrappedItems);
+    final CompletionHelper completion = new CompletionHelper(new CompletionSupplier() {
+      @Override
+      public List<CompletionItem> get(CompletionParameters cp) {
+        return wrappedItems;
+      }
+    }, CompletionParameters.EMPTY);
     textView.focusable().set(true);
     final Registration traitReg = textView.addTrait(new TextEditingTrait() {
       @Override
