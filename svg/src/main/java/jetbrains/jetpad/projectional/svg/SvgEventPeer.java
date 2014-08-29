@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package jetbrains.jetpad.projectional.svg.event;
+package jetbrains.jetpad.projectional.svg;
 
 import jetbrains.jetpad.base.Registration;
 import jetbrains.jetpad.event.Event;
@@ -22,18 +22,19 @@ import jetbrains.jetpad.model.event.ListenerCaller;
 import jetbrains.jetpad.model.event.Listeners;
 import jetbrains.jetpad.model.property.PropertyChangeEvent;
 import jetbrains.jetpad.model.property.ReadableProperty;
-import jetbrains.jetpad.projectional.svg.SvgNode;
+import jetbrains.jetpad.projectional.svg.event.SvgEventHandler;
+import jetbrains.jetpad.projectional.svg.event.SvgEventSpec;
 
 import java.util.EnumMap;
 import java.util.EnumSet;
 import java.util.Map;
 import java.util.Set;
 
-public class SvgEventPeer {
+class SvgEventPeer {
   private Map<SvgEventSpec, Listeners<SvgEventHandler<?>>> myEventHandlers;
   private Listeners<EventHandler<? super PropertyChangeEvent<Set<SvgEventSpec>>>> myListeners;
 
-  public ReadableProperty<Set<SvgEventSpec>> handlersSet() {
+  ReadableProperty<Set<SvgEventSpec>> handlersSet() {
     return new ReadableProperty<Set<SvgEventSpec>>() {
       @Override
       public String getPropExpr() {
@@ -68,7 +69,7 @@ public class SvgEventPeer {
     return myEventHandlers == null ? EnumSet.noneOf(SvgEventSpec.class) : myEventHandlers.keySet();
   }
 
-  public <EventT extends Event> Registration addEventHandler(final SvgEventSpec spec, SvgEventHandler<EventT> handler) {
+  <EventT extends Event> Registration addEventHandler(final SvgEventSpec spec, SvgEventHandler<EventT> handler) {
     if (myEventHandlers == null) {
       myEventHandlers = new EnumMap<>(SvgEventSpec.class);
     }
@@ -101,7 +102,7 @@ public class SvgEventPeer {
     return disposeReg;
   }
 
-  public <EventT extends Event> void dispatch(SvgEventSpec spec, final EventT event, final SvgNode target) {
+  <EventT extends Event> void dispatch(SvgEventSpec spec, final EventT event, final SvgNode target) {
     if (myEventHandlers != null && myEventHandlers.containsKey(spec)) {
       myEventHandlers.get(spec).fire(new ListenerCaller<SvgEventHandler<?>>() {
         @Override

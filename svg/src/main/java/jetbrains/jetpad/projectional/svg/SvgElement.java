@@ -22,10 +22,10 @@ import jetbrains.jetpad.model.event.ListenerCaller;
 import jetbrains.jetpad.model.event.Listeners;
 import jetbrains.jetpad.model.property.Property;
 import jetbrains.jetpad.model.property.PropertyChangeEvent;
+import jetbrains.jetpad.model.property.ReadableProperty;
 import jetbrains.jetpad.model.util.ListMap;
 import jetbrains.jetpad.projectional.svg.event.SvgAttributeEvent;
 import jetbrains.jetpad.projectional.svg.event.SvgEventHandler;
-import jetbrains.jetpad.projectional.svg.event.SvgEventPeer;
 import jetbrains.jetpad.projectional.svg.event.SvgEventSpec;
 
 import java.util.Collections;
@@ -43,9 +43,10 @@ public abstract class SvgElement extends SvgNode {
     return getAttr(ID);
   }
 
-  public SvgEventPeer getEventPeer() {
-    return myEventPeer;
+  public ReadableProperty<Set<SvgEventSpec>> handlersSet() {
+    return myEventPeer.handlersSet();
   }
+
 
   public <EventT extends Event> Registration addEventHandler(SvgEventSpec spec, SvgEventHandler<EventT> handler) {
     return myEventPeer.addEventHandler(spec, handler);

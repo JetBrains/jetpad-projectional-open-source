@@ -71,7 +71,7 @@ public class SvgElementMapper<SourceT extends SvgElement, TargetT extends OMSVGE
       }
     });
 
-    conf.add(Synchronizers.forPropsOneWay(getSource().getEventPeer().handlersSet(), new WritableProperty<Set<SvgEventSpec>>() {
+    conf.add(Synchronizers.forPropsOneWay(getSource().handlersSet(), new WritableProperty<Set<SvgEventSpec>>() {
       @Override
       public void set(Set<SvgEventSpec> value) {
         if (myHandlerRegs == null) {
