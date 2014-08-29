@@ -90,7 +90,7 @@ class BinaryExpressionMapper extends Mapper<BinaryExpression, BinaryExpressionCe
     conf.add(rightSync);
   }
 
-  static class SignCompletion implements CompletionSupplier {
+  static class SignCompletion extends CompletionSupplier {
     private BinaryExpressionMapper myMapper;
 
     SignCompletion(BinaryExpressionMapper mapper) {

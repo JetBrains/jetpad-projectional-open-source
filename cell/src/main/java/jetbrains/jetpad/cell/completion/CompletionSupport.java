@@ -65,7 +65,7 @@ public class CompletionSupport {
           @Override
           public boolean canActivate() {
             CompletionSupplier supplier = cell.get(Completion.COMPLETION);
-            return !supplier.get(CompletionParameters.EMPTY).isEmpty();
+            return !supplier.isEmpty(CompletionParameters.EMPTY);
           }
 
           @Override

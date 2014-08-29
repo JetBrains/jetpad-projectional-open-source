@@ -54,12 +54,12 @@ public class TextEditingTrait extends TextNavigationTrait {
 
       @Override
       public boolean canActivate() {
-        return !view.get(Completion.COMPLETION).get(new BaseCompletionParameters() {
+        return !view.get(Completion.COMPLETION).isEmpty(new BaseCompletionParameters() {
           @Override
           public boolean isMenu() {
             return true;
           }
-        }).isEmpty();
+        });
       }
 
       @Override

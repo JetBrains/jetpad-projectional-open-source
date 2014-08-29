@@ -18,7 +18,7 @@ package jetbrains.jetpad.completion;
 import java.util.Collections;
 import java.util.List;
 
-public interface CompletionSupplier {
+public abstract class CompletionSupplier {
   public static final CompletionSupplier EMPTY = new CompletionSupplier() {
     @Override
     public List<CompletionItem> get(CompletionParameters cp) {
@@ -26,5 +26,9 @@ public interface CompletionSupplier {
     }
   };
 
-  List<CompletionItem> get(CompletionParameters cp);
+  public abstract List<CompletionItem> get(CompletionParameters cp);
+
+  public boolean isEmpty(CompletionParameters cp) {
+    return get(cp).isEmpty();
+  }
 }
