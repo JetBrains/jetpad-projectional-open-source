@@ -224,7 +224,6 @@ class TextNavigationTrait extends CellTrait {
 
   private boolean showSideCompletion(final TextCell textCell, CellTraitPropertySpec<CompletionSupplier> key, Property<Cell> popupProp) {
     CompletionHelper completion = CompletionHelper.completionFor(textCell, CompletionParameters.EMPTY, key);
-    completion.load();
     if (!completion.isEmpty()) {
       final TextCell popup = CompletionSupport.showSideTransformPopup(textCell, popupProp, completion.getItems());
       final CompletionController controller = popup.get(Completion.COMPLETION_CONTROLLER);
@@ -242,7 +241,6 @@ class TextNavigationTrait extends CellTrait {
 
   private boolean showCompletion(Cell cell, String text, CellTraitPropertySpec<CompletionSupplier> key, Property<Cell> popup) {
     CompletionHelper completion = CompletionHelper.completionFor(cell, CompletionParameters.EMPTY, key);
-    completion.load();
     if (completion.hasMatches(text)) {
       if (completion.hasSingleMatch(text, cell.get(TextEditing.EAGER_COMPLETION))) {
         completion.completeFirstMatch(text);

@@ -183,7 +183,6 @@ public class TextEditing {
           @Override
           public Runnable apply(String sideText) {
             CompletionHelper sideCompletion = CompletionHelper.completionFor(cell, CompletionParameters.EMPTY, side.getKey());
-            sideCompletion.load();
             TextCell popupView = CompletionSupport.showSideTransformPopup(cell, side.getPopup(cell), sideCompletion.getItems());
             popupView.text().set(sideText);
             return CellActions.toEnd(popupView);

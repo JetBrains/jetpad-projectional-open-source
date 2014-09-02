@@ -44,11 +44,10 @@ class ValidTextEditingTrait extends TextEditingTrait {
   public void onKeyPressed(Cell cell, KeyEvent event) {
     TextCell textCell = (TextCell) cell;
     if (event.is(Key.ENTER) && !isEmpty(textCell) && !isValid(textCell)) {
-      CompletionHelper completion = new CompletionHelper(textCell.get(Completion.COMPLETION), CompletionParameters.EMPTY);
-      completion.load();
+      CompletionHelper completionHelper = new CompletionHelper(textCell.get(Completion.COMPLETION), CompletionParameters.EMPTY);
       String prefixText = textCell.prefixText().get();
-      if (completion.hasSingleMatch(prefixText, true)) {
-        completion.completeFirstMatch(prefixText);
+      if (completionHelper.hasSingleMatch(prefixText, true)) {
+        completionHelper.completeFirstMatch(prefixText);
         event.consume();
         return;
       }
@@ -93,8 +92,6 @@ class ValidTextEditingTrait extends TextEditingTrait {
 
     //simple validation
     CompletionHelper completion = CompletionHelper.completionFor(textCell, CompletionParameters.EMPTY);
-    completion.load();
-
     if (eagerCompletion && completion.hasSingleMatch(text, true)) {
       completion.completeFirstMatch(text);
       return true;
@@ -132,7 +129,6 @@ class ValidTextEditingTrait extends TextEditingTrait {
 
   private void handleSideTransform(TextCell textCell, String cellText, String sideText, Side side) {
     CompletionHelper sideCompletion = CompletionHelper.completionFor(textCell, CompletionParameters.EMPTY, side.getKey());
-    sideCompletion.load();
     if (sideCompletion.hasSingleMatch(sideText, textCell.get(TextEditing.EAGER_COMPLETION))) {
       setText(textCell, cellText);
       sideCompletion.completeFirstMatch(sideText);
@@ -162,7 +158,6 @@ class ValidTextEditingTrait extends TextEditingTrait {
     int caret = textCell.caretPosition().get();
     CellContainer cellContainer = textCell.cellContainer().get();
     CompletionHelper completion = CompletionHelper.completionFor(textCell, CompletionParameters.EMPTY);
-    completion.load();
     if (completion.hasSingleMatch(text, textCell.get(TextEditing.EAGER_COMPLETION))) {
       completion.completeFirstMatch(text);
       Cell focusedCell = cellContainer.focusedCell.get();

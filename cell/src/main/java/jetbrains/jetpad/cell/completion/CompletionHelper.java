@@ -15,9 +15,6 @@
  */
 package jetbrains.jetpad.cell.completion;
 
-import jetbrains.jetpad.base.Async;
-import jetbrains.jetpad.base.Handler;
-import jetbrains.jetpad.base.SimpleAsync;
 import jetbrains.jetpad.cell.Cell;
 import jetbrains.jetpad.cell.trait.CellTraitPropertySpec;
 import jetbrains.jetpad.completion.CompletionItem;
@@ -47,30 +44,11 @@ public class CompletionHelper {
 
   private CompletionSupplier mySupplier;
   private CompletionParameters myParameters;
-  private List<CompletionItem> myItems;
+  private List<CompletionItem> myCachedItems;
 
   public CompletionHelper(CompletionSupplier supplier, CompletionParameters params) {
     mySupplier = supplier;
     myParameters = params;
-  }
-
-  public Async<?> load() {
-    final SimpleAsync<Object> result = new SimpleAsync<>();
-    Async<List<CompletionItem>> items = mySupplier.getAsync(myParameters);
-    items.onSuccess(new Handler<List<CompletionItem>>() {
-      @Override
-      public void handle(List<CompletionItem> items) {
-        myItems = new ArrayList<>(items);
-        result.success(null);
-      }
-    });
-    items.onFailure(new Handler<Throwable>() {
-      @Override
-      public void handle(Throwable t) {
-        result.failure(t);
-      }
-    });
-    return result;
   }
 
   public boolean isEmpty() {
@@ -78,10 +56,10 @@ public class CompletionHelper {
   }
 
   public List<CompletionItem> getItems() {
-    if (myItems == null) {
-      throw new IllegalStateException("Items should have been loaded");
+    if (myCachedItems == null) {
+      myCachedItems = Collections.unmodifiableList(mySupplier.get(myParameters));
     }
-    return Collections.unmodifiableList(myItems);
+    return myCachedItems;
   }
 
   public List<CompletionItem> prefixedBy(String prefix) {

@@ -193,7 +193,6 @@ class TokenCompletion {
         return Runnables.EMPTY;
       }
     });
-    completion.load();
     List<CompletionItem> matches = completion.matches(text);
     if (matches.size() == 1) {
       matches.get(0).complete(text);
