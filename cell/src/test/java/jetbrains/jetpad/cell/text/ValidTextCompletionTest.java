@@ -131,17 +131,16 @@ public class ValidTextCompletionTest extends CompletionTestCase {
     assertCompleted("c");
   }
 
-//  @Test
-//  public void asyncCompletion() {
-//    text.addTrait(createAsyncCompletionTrait("xxxx", "yyyy"));
-//
-//    complete();
-//    type("xxxx");
-//
-//    enter();
-//    assertCompleted("xxxx");
-//  }
+  @Test
+  public void asyncCompletion() {
+    text.addTrait(createAsyncCompletionTrait("fff", "yyyy"));
 
+    complete();
+    type("fff");
+
+    enter();
+    assertCompleted("fff");
+  }
 
   @Test
   public void completionConflict() {
