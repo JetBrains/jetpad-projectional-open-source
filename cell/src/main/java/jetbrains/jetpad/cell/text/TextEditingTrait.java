@@ -17,7 +17,6 @@ package jetbrains.jetpad.cell.text;
 
 import com.google.common.base.Strings;
 import com.google.common.base.Supplier;
-import jetbrains.jetpad.base.Asyncs;
 import jetbrains.jetpad.base.Registration;
 import jetbrains.jetpad.base.Runnables;
 import jetbrains.jetpad.cell.Cell;
@@ -48,21 +47,22 @@ public class TextEditingTrait extends TextNavigationTrait {
     return super.get(cell, spec);
   }
 
-  private CompletionController getCompletionController(final TextCell view) {
+  private CompletionController getCompletionController(final TextCell cell) {
     return new CompletionController() {
       @Override
       public boolean isActive() {
-        return view.bottomPopup().get() != null;
+        return cell.bottomPopup().get() != null;
       }
 
       @Override
       public boolean canActivate() {
-        return !view.get(Completion.COMPLETION).isEmpty(new BaseCompletionParameters() {
+        BaseCompletionParameters params = new BaseCompletionParameters() {
           @Override
           public boolean isMenu() {
             return true;
           }
-        });
+        };
+        return !Completion.isCompletionEmpty(cell, params);
       }
 
       @Override
@@ -70,12 +70,12 @@ public class TextEditingTrait extends TextNavigationTrait {
         if (isActive()) {
           throw new IllegalStateException();
         }
-        CompletionSupport.showCompletion(view, Asyncs.constant(view.get(Completion.COMPLETION).get(new BaseCompletionParameters() {
+        CompletionSupport.showCompletion(cell, Completion.allCompletion(cell, new BaseCompletionParameters() {
           @Override
           public boolean isMenu() {
             return true;
           }
-        })), Registration.EMPTY, restoreState);
+        }), Registration.EMPTY, restoreState);
       }
 
       @Override
@@ -89,14 +89,14 @@ public class TextEditingTrait extends TextNavigationTrait {
           throw new IllegalStateException();
         }
 
-        view.get(CompletionSupport.HIDE_COMPLETION).run();
+        cell.get(CompletionSupport.HIDE_COMPLETION).run();
       }
 
 
       @Override
       public boolean hasAmbiguousMatches() {
-        String text = view.prefixText().get();
-        CompletionHelper helper = CompletionHelper.completionFor(view, new BaseCompletionParameters() {
+        String text = cell.prefixText().get();
+        CompletionHelper helper = CompletionHelper.completionFor(cell, new BaseCompletionParameters() {
           @Override
           public boolean isMenu() {
             return true;

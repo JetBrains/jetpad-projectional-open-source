@@ -15,13 +15,49 @@
  */
 package jetbrains.jetpad.cell.completion;
 
+import jetbrains.jetpad.base.Async;
+import jetbrains.jetpad.base.Handler;
+import jetbrains.jetpad.base.SimpleAsync;
+import jetbrains.jetpad.cell.Cell;
 import jetbrains.jetpad.cell.trait.CellTraitPropertySpec;
-import jetbrains.jetpad.completion.CompletionController;
-import jetbrains.jetpad.completion.CompletionSupplier;
+import jetbrains.jetpad.completion.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class Completion {
   public static final CellTraitPropertySpec<CompletionSupplier> COMPLETION = new CellTraitPropertySpec<>("completion", CompletionSupplier.EMPTY);
   public static final CellTraitPropertySpec<CompletionSupplier> LEFT_TRANSFORM = new CellTraitPropertySpec<>("leftTransform", CompletionSupplier.EMPTY);
   public static final CellTraitPropertySpec<CompletionSupplier> RIGHT_TRANSFORM = new CellTraitPropertySpec<>("rightTransform", CompletionSupplier.EMPTY);
   public static final CellTraitPropertySpec<CompletionController> COMPLETION_CONTROLLER = new CellTraitPropertySpec<>("completionController");
+
+  public static final CellTraitPropertySpec<AsyncCompletionSupplier> ASYNC_COMPLETION = new CellTraitPropertySpec<AsyncCompletionSupplier>("asyncCompletion", AsyncCompletionSupplier.EMPTY);
+
+  public static Async<List<CompletionItem>> allCompletion(Cell cell, CompletionParameters params) {
+    final List<CompletionItem> syncCompletion = cell.get(COMPLETION).get(params);
+    AsyncCompletionSupplier async = cell.get(ASYNC_COMPLETION);
+
+    Async<List<CompletionItem>> asyncCompletion = async.get(params);
+
+    final SimpleAsync<List<CompletionItem>> allItems = new SimpleAsync<>();
+    asyncCompletion.onSuccess(new Handler<List<CompletionItem>>() {
+      @Override
+      public void handle(List<CompletionItem> items) {
+        List<CompletionItem> result = new ArrayList<>(items);
+        result.addAll(syncCompletion);
+        allItems.success(result);
+      }
+    }).onFailure(new Handler<Throwable>() {
+      @Override
+      public void handle(Throwable item) {
+        allItems.failure(item);
+      }
+    });
+
+    return allItems;
+  }
+
+  public static boolean isCompletionEmpty(Cell cell, CompletionParameters params) {
+    return cell.get(Completion.COMPLETION).isEmpty(params) && cell.get(Completion.ASYNC_COMPLETION).isEmpty(params);
+  }
 }

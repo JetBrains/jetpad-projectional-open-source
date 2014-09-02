@@ -61,21 +61,21 @@ public class CompletionSupport {
 
           @Override
           public boolean canActivate() {
-            CompletionSupplier supplier = cell.get(Completion.COMPLETION);
-            return !supplier.isEmpty(CompletionParameters.EMPTY);
+            return !Completion.isCompletionEmpty(cell, CompletionParameters.EMPTY);
           }
 
           @Override
-          public void activate(Runnable restoreState) {
+          public void activate(final Runnable restoreState) {
             if (isActive()) {
               throw new IllegalStateException();
             }
-            showPopup(cell, cell.frontPopup(), Asyncs.constant(cell.get(Completion.COMPLETION).get(new BaseCompletionParameters() {
+
+            showPopup(cell, cell.frontPopup(), Completion.allCompletion(cell, new BaseCompletionParameters() {
               @Override
               public boolean isMenu() {
                 return true;
               }
-            })), restoreState);
+            }), restoreState);
           }
 
           @Override
