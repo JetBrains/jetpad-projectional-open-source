@@ -116,7 +116,7 @@ class ValidTextEditingTrait extends TextEditingTrait {
           }
         }
       }
-    } else if (textCell.caretPosition().get() == 1 && !(textCell.bottomPopup().get() != null)) {
+    } else if (textCell.caretPosition().get() == 1 && textCell.bottomPopup().get() == null) {
       //left transform
       String prefix = text.substring(0, 1).trim();
       String suffix = text.substring(1);

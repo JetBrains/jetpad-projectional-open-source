@@ -15,12 +15,9 @@
  */
 package jetbrains.jetpad.cell.text;
 
-import jetbrains.jetpad.cell.completion.Completion;
-import jetbrains.jetpad.cell.completion.CompletionHandlerTestCase;
-import jetbrains.jetpad.cell.trait.CellTrait;
-import jetbrains.jetpad.cell.trait.CellTraitPropertySpec;
-import jetbrains.jetpad.cell.TextCell;
 import jetbrains.jetpad.cell.Cell;
+import jetbrains.jetpad.cell.TextCell;
+import jetbrains.jetpad.cell.completion.CompletionHandlerTestCase;
 import org.junit.Before;
 
 public class TextEditorCompletionHandlerTest extends CompletionHandlerTestCase {
@@ -35,16 +32,7 @@ public class TextEditorCompletionHandlerTest extends CompletionHandlerTestCase {
 
     text.addTrait(TextEditing.textEditing());
 
-    text.addTrait(new CellTrait() {
-      @Override
-      public Object get(Cell cell, CellTraitPropertySpec<?> spec) {
-        if (spec == Completion.COMPLETION) {
-          return createCompletion("a", "b", "c");
-        }
-
-        return null;
-      }
-    });
+    text.addTrait(createCompletionTrait("a", "b", "c"));
 
     text.focus();
   }

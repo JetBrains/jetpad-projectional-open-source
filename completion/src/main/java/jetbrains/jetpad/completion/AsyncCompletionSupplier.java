@@ -21,5 +21,7 @@ public abstract class AsyncCompletionSupplier {
 
   public abstract Async<List<CompletionItem>> get(CompletionParameters cp);
 
-  public abstract boolean isEmpty(CompletionParameters cp);
+  public boolean isEmpty(CompletionParameters cp) {
+    return false;
+  }
 }

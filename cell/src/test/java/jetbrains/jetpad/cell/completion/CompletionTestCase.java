@@ -15,12 +15,14 @@
  */
 package jetbrains.jetpad.cell.completion;
 
-import jetbrains.jetpad.cell.EditingTestCase;
+import jetbrains.jetpad.base.Async;
+import jetbrains.jetpad.base.Asyncs;
 import jetbrains.jetpad.base.Runnables;
-import jetbrains.jetpad.completion.CompletionItem;
-import jetbrains.jetpad.completion.CompletionParameters;
-import jetbrains.jetpad.completion.CompletionSupplier;
-import jetbrains.jetpad.completion.SimpleCompletionItem;
+import jetbrains.jetpad.cell.Cell;
+import jetbrains.jetpad.cell.EditingTestCase;
+import jetbrains.jetpad.cell.trait.CellTrait;
+import jetbrains.jetpad.cell.trait.CellTraitPropertySpec;
+import jetbrains.jetpad.completion.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,13 +37,51 @@ public abstract class CompletionTestCase extends EditingTestCase {
     return new CompletionSupplier() {
       @Override
       public List<CompletionItem> get(CompletionParameters cp) {
-        List<CompletionItem> result = new ArrayList<>();
-        for (String i : items) {
-          result.add(new SetTextToCompletionItem(i));
-        }
-        return result;
+        return createItems(items);
       }
     };
+  }
+
+  protected CellTrait createCompletionTrait(final String... items) {
+    return new CellTrait() {
+      @Override
+      public Object get(Cell cell, CellTraitPropertySpec<?> spec) {
+        if (spec == Completion.COMPLETION) {
+          return createCompletion(items);
+        }
+        return super.get(cell, spec);
+      }
+    };
+  }
+
+  protected AsyncCompletionSupplier createAsyncCompletion(final String... items) {
+    return new AsyncCompletionSupplier() {
+      @Override
+      public Async<List<CompletionItem>> get(CompletionParameters cp) {
+        return Asyncs.constant(createItems(items));
+      }
+    };
+  }
+
+  protected CellTrait createAsyncCompletionTrait(final String... items) {
+    return new CellTrait() {
+      @Override
+      public Object get(Cell cell, CellTraitPropertySpec<?> spec) {
+        if (spec == Completion.ASYNC_COMPLETION) {
+          return createAsyncCompletion(items);
+        }
+
+        return super.get(cell, spec);
+      }
+    };
+  }
+
+  private List<CompletionItem> createItems(String... items) {
+    List<CompletionItem> result = new ArrayList<>();
+    for (String i : items) {
+      result.add(new SetTextToCompletionItem(i));
+    }
+    return result;
   }
 
   protected void assertCompleted(String text) {

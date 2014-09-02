@@ -16,16 +16,16 @@
 package jetbrains.jetpad.cell.completion;
 
 import com.google.common.base.Predicates;
-import jetbrains.jetpad.cell.*;
+import jetbrains.jetpad.cell.HorizontalCell;
+import jetbrains.jetpad.cell.TextCell;
 import jetbrains.jetpad.cell.text.TextEditing;
-import jetbrains.jetpad.cell.trait.CellTrait;
-import jetbrains.jetpad.cell.trait.CellTraitPropertySpec;
 import jetbrains.jetpad.cell.util.CellFactory;
 import jetbrains.jetpad.completion.CompletionController;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 public class NonTextCellCompletionTest extends CompletionTestCase {
   private HorizontalCell target = new HorizontalCell();
@@ -34,15 +34,7 @@ public class NonTextCellCompletionTest extends CompletionTestCase {
 
   @Before
   public void init() {
-    target.addTrait(new CellTrait() {
-      @Override
-      public Object get(Cell cell, CellTraitPropertySpec<?> spec) {
-        if (spec == Completion.COMPLETION) {
-          return createCompletion("a", "b", "zz");
-        }
-        return super.get(cell, spec);
-      }
-    });
+    target.addTrait(createCompletionTrait("a", "b", "zz"));
     target.addTrait(CompletionSupport.trait());
 
     target.focusable().set(true);
@@ -60,6 +52,18 @@ public class NonTextCellCompletionTest extends CompletionTestCase {
 
     assertCompleted("a");
   }
+
+  @Test
+  public void asyncCompletion() {
+    target.addTrait(createAsyncCompletionTrait("xxxx", "yyyy"));
+
+    complete();
+    type("xxxx");
+    enter();
+
+    assertCompleted("xxxx");
+  }
+
 
   @Test
   public void completionDismissWithEscape() {
