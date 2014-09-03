@@ -114,7 +114,7 @@ public class ViewContainerToElementMapper extends Mapper<ViewContainer, Element>
       public Registration get() {
         CompositeRegistration reg = new CompositeRegistration();
 
-        reg.add(eventRegistration(Event.ONMOUSEDOWN, $(myRootDiv).mousedown(new Function() {
+        reg.add(eventRegistration(Event.ONMOUSEDOWN, myRootDiv, new Function() {
           @Override
           public boolean f(Event e) {
             myRootDiv.focus();
@@ -125,8 +125,8 @@ public class ViewContainerToElementMapper extends Mapper<ViewContainer, Element>
             pressedOutside.set(false);
             return false;
           }
-        })));
-        reg.add(eventRegistration(Event.ONMOUSEDOWN, $(Document.get()).mousedown(new Function() {
+        }));
+        reg.add(eventRegistration(Event.ONMOUSEDOWN, Document.get(), new Function() {
           @Override
           public boolean f(Event e) {
             pressed.set(true);
@@ -136,17 +136,17 @@ public class ViewContainerToElementMapper extends Mapper<ViewContainer, Element>
             }
             return true;
           }
-        })));
+        }));
 
-        reg.add(eventRegistration(Event.ONMOUSEUP, $(Document.get()).mouseup(new Function() {
+        reg.add(eventRegistration(Event.ONMOUSEUP, Document.get(), new Function() {
           @Override
           public boolean f(Event e) {
             pressed.set(false);
             pressedOutside.set(false);
             return true;
           }
-        })));
-        reg.add(eventRegistration(Event.ONMOUSEUP, $(myRootDiv).mouseup(new Function() {
+        }));
+        reg.add(eventRegistration(Event.ONMOUSEUP, myRootDiv, new Function() {
           @Override
           public boolean f(Event e) {
             pressed.set(false);
@@ -155,9 +155,9 @@ public class ViewContainerToElementMapper extends Mapper<ViewContainer, Element>
             getSource().mouseReleased(me);
             return false;
           }
-        })));
+        }));
 
-        reg.add(eventRegistration(Event.ONMOUSEMOVE, $(Document.get()).mousemove(new Function() {
+        reg.add(eventRegistration(Event.ONMOUSEMOVE, Document.get(), new Function() {
           @Override
           public boolean f(Event e) {
             MouseEvent evt = toMouseEvent(e);
@@ -166,8 +166,8 @@ public class ViewContainerToElementMapper extends Mapper<ViewContainer, Element>
             }
             return true;
           }
-        })));
-        reg.add(eventRegistration(Event.ONMOUSEMOVE, $(myRootDiv).mousemove(new Function() {
+        }));
+        reg.add(eventRegistration(Event.ONMOUSEMOVE, myRootDiv, new Function() {
           @Override
           public boolean f(Event e) {
             MouseEvent evt = toMouseEvent(e);
@@ -178,26 +178,26 @@ public class ViewContainerToElementMapper extends Mapper<ViewContainer, Element>
             }
             return true;
           }
-        })));
+        }));
 
-        reg.add(eventRegistration(Event.ONMOUSEOVER, $(myRootDiv).mouseenter(new Function() {
+        reg.add(eventRegistration(Event.ONMOUSEOVER, myRootDiv, new Function() {
           @Override
           public boolean f(Event e) {
             MouseEvent me = toMouseEvent(e);
             getSource().mouseEntered(me);
             return false;
           }
-        })));
-        reg.add(eventRegistration(Event.ONMOUSEOUT, $(myRootDiv).mouseout(new Function() {
+        }));
+        reg.add(eventRegistration(Event.ONMOUSEOUT, myRootDiv, new Function() {
           @Override
           public boolean f(Event e) {
             getSource().mouseLeft(toMouseEvent(e));
             return false;
           }
-        })));
+        }));
 
         final ClipboardSupport clipboardSupport = new ClipboardSupport(myRootDiv);
-        reg.add(eventRegistration(Event.ONKEYDOWN, $(myRootDiv).keydown(new Function() {
+        reg.add(eventRegistration(Event.ONKEYDOWN, myRootDiv, new Function() {
           @Override
           public boolean f(Event e) {
             return EventTranslator.dispatchKeyPress(e, new Handler<KeyEvent>() {
@@ -241,8 +241,8 @@ public class ViewContainerToElementMapper extends Mapper<ViewContainer, Element>
               }
             });
           }
-        })));
-        reg.add(eventRegistration(Event.ONKEYUP, $(myRootDiv).keyup(new Function() {
+        }));
+        reg.add(eventRegistration(Event.ONKEYUP, myRootDiv, new Function() {
           @Override
           public boolean f(Event e) {
             return EventTranslator.dispatchKeyRelease(e, new Handler<KeyEvent>() {
@@ -252,8 +252,8 @@ public class ViewContainerToElementMapper extends Mapper<ViewContainer, Element>
               }
             });
           }
-        })));
-        reg.add(eventRegistration(Event.ONKEYPRESS, $(myRootDiv).keypress(new Function() {
+        }));
+        reg.add(eventRegistration(Event.ONKEYPRESS, myRootDiv, new Function() {
           @Override
           public boolean f(Event e) {
             return EventTranslator.dispatchKeyType(e, new Handler<KeyEvent>() {
@@ -265,7 +265,7 @@ public class ViewContainerToElementMapper extends Mapper<ViewContainer, Element>
               }
             });
           }
-        })));
+        }));
 
         return reg;
       }
@@ -449,11 +449,13 @@ public class ViewContainerToElementMapper extends Mapper<ViewContainer, Element>
     return new MouseEvent(x, y);
   }
 
-  private Registration eventRegistration(final int event, final GQuery query) {
+  private Registration eventRegistration(final int event, Object e, Function f) {
+    final GQuery q = $(e);
+    q.bind(event, null, f);
     return new Registration() {
       @Override
       public void remove() {
-        query.unbind(event);
+        q.unbind(event);
       }
     };
   }
