@@ -255,15 +255,30 @@ class TextNavigationTrait extends CellTrait {
   }
 
   @Override
-  public void onMousePressed(Cell v, MouseEvent event) {
-    TextCell view = (TextCell) v;
-    if (!view.focusable().get()) return;
-    int max = getMaxPos(view);
-    int min = getMinPos(view);
-    int offset = event.x() - view.origin().x;
-    view.caretPosition().set(Math.max(min, Math.min(view.getCaretAt(offset), max)));
-    view.focus();
-    view.selectionVisible().set(false);
+  public void onMousePressed(Cell c, MouseEvent event) {
+    TextCell cell = (TextCell) c;
+    if (!cell.focusable().get()) return;
+    int pos = getPosAt(cell, event);
+    cell.caretPosition().set(pos);
+    cell.focus();
+    cell.selectionVisible().set(false);
     event.consume();
+  }
+
+  @Override
+  public void onMouseDragged(Cell c, MouseEvent event) {
+    TextCell cell = (TextCell) c;
+    if (!cell.focusable().get()) return;
+    int pos = getPosAt(cell, event);
+    cell.selectionVisible().set(true);
+    cell.selectionStart().set(pos);
+    event.consume();
+  }
+
+  private int getPosAt(TextCell cell, MouseEvent event) {
+    int max = getMaxPos(cell);
+    int min = getMinPos(cell);
+    int offset = event.x() - cell.origin().x;
+    return Math.max(min, Math.min(cell.getCaretAt(offset), max));
   }
 }
