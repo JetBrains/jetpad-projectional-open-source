@@ -321,7 +321,7 @@ public class CellContainerToViewMapper extends Mapper<CellContainer, View> {
       .on(ViewEvents.MOUSE_DRAGGED, new ViewEventHandler<MouseEvent>() {
         @Override
         public void handle(View view, MouseEvent e) {
-          cellContainer.mouseMoved(e);
+          cellContainer.mouseDragged(e);
         }
       })
       .on(ViewEvents.KEY_PRESSED, new ViewEventHandler<KeyEvent>() {

@@ -236,7 +236,17 @@ public class CellContainer {
   }
 
   private void mouseEventHappened(MouseEvent e, CellEventSpec<MouseEvent> eventSpec) {
-    dispatch(findCell(e.location()), e, eventSpec);
+    Cell target = findCell(e.location());
+
+    if (eventSpec == CellEventSpec.MOUSE_PRESSED) {
+      myDragStart = target;
+    }
+
+    if (eventSpec == CellEventSpec.MOUSE_DRAGGED && myDragStart != null) {
+      dispatch(myDragStart, e, eventSpec);
+    } else {
+      dispatch(target, e, eventSpec);
+    }
   }
 
   public Cell findCell(Cell current, Vector loc) {
