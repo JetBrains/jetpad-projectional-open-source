@@ -18,10 +18,10 @@ package jetbrains.jetpad.projectional.svg;
 import jetbrains.jetpad.model.property.Property;
 
 public class SvgEllipseElement extends SvgStylableElement {
-  private static final SvgAttrSpec<Double> CX = SvgAttrSpec.createSpec("cx");
-  private static final SvgAttrSpec<Double> CY = SvgAttrSpec.createSpec("cy");
-  private static final SvgAttrSpec<Double> RX = SvgAttrSpec.createSpec("rx");
-  private static final SvgAttrSpec<Double> RY = SvgAttrSpec.createSpec("ry");
+  private static final SvgAttributeSpec<Double> CX = SvgAttributeSpec.createSpec("cx");
+  private static final SvgAttributeSpec<Double> CY = SvgAttributeSpec.createSpec("cy");
+  private static final SvgAttributeSpec<Double> RX = SvgAttributeSpec.createSpec("rx");
+  private static final SvgAttributeSpec<Double> RY = SvgAttributeSpec.createSpec("ry");
 
   public SvgEllipseElement() {
     super();
@@ -30,25 +30,25 @@ public class SvgEllipseElement extends SvgStylableElement {
   public SvgEllipseElement(Double cx, Double cy, Double rx, Double ry) {
     this();
 
-    setAttr(CX, cx);
-    setAttr(CY, cy);
-    setAttr(RX, rx);
-    setAttr(RY, ry);
+    setAttribute(CX, cx);
+    setAttribute(CY, cy);
+    setAttribute(RX, rx);
+    setAttribute(RY, ry);
   }
 
   public Property<Double> cx() {
-    return getAttr(CX);
+    return getAttribute(CX);
   }
 
   public Property<Double> cy() {
-    return getAttr(CY);
+    return getAttribute(CY);
   }
 
   public Property<Double> rx() {
-    return getAttr(RX);
+    return getAttribute(RX);
   }
 
   public Property<Double> ry() {
-    return getAttr(RY);
+    return getAttribute(RY);
   }
 }

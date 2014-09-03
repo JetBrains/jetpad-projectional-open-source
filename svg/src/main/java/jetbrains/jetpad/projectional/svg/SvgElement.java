@@ -33,14 +33,14 @@ import java.util.Objects;
 import java.util.Set;
 
 public abstract class SvgElement extends SvgNode {
-  private AttrMap myAttrs = new AttrMap();
+  private AttributeMap myAttrs = new AttributeMap();
   private Listeners<SvgElementListener<?>> myListeners;
   private SvgEventPeer myEventPeer = new SvgEventPeer();
 
-  private static final SvgAttrSpec<String> ID = SvgAttrSpec.createSpec("id");
+  private static final SvgAttributeSpec<String> ID = SvgAttributeSpec.createSpec("id");
 
   public Property<String> getId() {
-    return getAttr(ID);
+    return getAttribute(ID);
   }
 
   public ReadableProperty<Set<SvgEventSpec>> handlersSet() {
@@ -60,11 +60,11 @@ public abstract class SvgElement extends SvgNode {
     }
   }
 
-  protected <ValueT> SvgAttrSpec<ValueT> getSpecByName(String name) {
-    return SvgAttrSpec.createSpec(name);
+  protected <ValueT> SvgAttributeSpec<ValueT> getSpecByName(String name) {
+    return SvgAttributeSpec.createSpec(name);
   }
 
-  protected <ValueT> Property<ValueT> getAttr(final SvgAttrSpec<ValueT> spec) {
+  protected <ValueT> Property<ValueT> getAttribute(final SvgAttributeSpec<ValueT> spec) {
     return new Property<ValueT>() {
       @Override
       public String getPropExpr() {
@@ -96,25 +96,25 @@ public abstract class SvgElement extends SvgNode {
     };
   }
 
-  public <ValueT> Property<ValueT> getAttr(String name) {
-    SvgAttrSpec<ValueT> spec = getSpecByName(name);
-    return getAttr(spec);
+  public <ValueT> Property<ValueT> getAttribute(String name) {
+    SvgAttributeSpec<ValueT> spec = getSpecByName(name);
+    return getAttribute(spec);
   }
 
-  protected <ValueT> void setAttr(SvgAttrSpec<ValueT> spec, ValueT value) {
-    getAttr(spec).set(value);
+  protected <ValueT> void setAttribute(SvgAttributeSpec<ValueT> spec, ValueT value) {
+    getAttribute(spec).set(value);
   }
 
   // if attr is one of pre-defined typed attrs (like CX in ellipse), the behaviour of this method is undefined
-  public void setAttr(String name, String value) {
-    getAttr(name).set(value);
+  public void setAttribute(String name, String value) {
+    getAttribute(name).set(value);
   }
 
-  public Set<SvgAttrSpec<?>> getAttrKeys() {
+  public Set<SvgAttributeSpec<?>> getAttributeKeys() {
     return myAttrs.keySet();
   }
 
-  private void onAttrChanged(final SvgAttributeEvent<?> event) {
+  private void onAttributeChanged(final SvgAttributeEvent<?> event) {
     if (myListeners != null) {
       myListeners.fire(new ListenerCaller<SvgElementListener<?>>() {
         @Override
@@ -145,8 +145,8 @@ public abstract class SvgElement extends SvgNode {
     };
   }
 
-  private class AttrMap {
-    private ListMap<SvgAttrSpec<?>, Object> myAttrs;
+  private class AttributeMap {
+    private ListMap<SvgAttributeSpec<?>, Object> myAttrs;
 
     public int size() {
       return (myAttrs == null ? 0 : myAttrs.size());
@@ -156,18 +156,18 @@ public abstract class SvgElement extends SvgNode {
       return (myAttrs == null || myAttrs.isEmpty());
     }
 
-    public boolean containsKey(SvgAttrSpec<?> key) {
+    public boolean containsKey(SvgAttributeSpec<?> key) {
       return (myAttrs != null && myAttrs.containsKey(key));
     }
 
-    public <ValueT> ValueT get(SvgAttrSpec<ValueT> spec) {
+    public <ValueT> ValueT get(SvgAttributeSpec<ValueT> spec) {
       if (myAttrs != null && myAttrs.containsKey(spec)) {
         return (ValueT) myAttrs.get(spec);
       }
       return null;
     }
 
-    public <ValueT> ValueT set(SvgAttrSpec<ValueT> spec, ValueT value) {
+    public <ValueT> ValueT set(SvgAttributeSpec<ValueT> spec, ValueT value) {
       if (myAttrs == null) {
         myAttrs = new ListMap<>();
       }
@@ -181,17 +181,17 @@ public abstract class SvgElement extends SvgNode {
 
       if (!Objects.equals(value, oldValue)) {
         final SvgAttributeEvent<ValueT> event = new SvgAttributeEvent<>(spec, oldValue, value);
-        SvgElement.this.onAttrChanged(event);
+        SvgElement.this.onAttributeChanged(event);
       }
 
       return oldValue;
     }
 
-    public <ValueT> ValueT remove(SvgAttrSpec<ValueT> spec) {
+    public <ValueT> ValueT remove(SvgAttributeSpec<ValueT> spec) {
       return set(spec, null);
     }
 
-    public Set<SvgAttrSpec<?>> keySet() {
+    public Set<SvgAttributeSpec<?>> keySet() {
       if (myAttrs == null) {
         return Collections.emptySet();
       }

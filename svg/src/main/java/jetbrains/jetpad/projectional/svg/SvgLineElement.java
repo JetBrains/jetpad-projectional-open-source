@@ -18,10 +18,10 @@ package jetbrains.jetpad.projectional.svg;
 import jetbrains.jetpad.model.property.Property;
 
 public class SvgLineElement extends SvgStylableElement {
-  private static final SvgAttrSpec<Double> X1 = SvgAttrSpec.createSpec("x1");
-  private static final SvgAttrSpec<Double> Y1 = SvgAttrSpec.createSpec("y1");
-  private static final SvgAttrSpec<Double> X2 = SvgAttrSpec.createSpec("x2");
-  private static final SvgAttrSpec<Double> Y2 = SvgAttrSpec.createSpec("y2");
+  private static final SvgAttributeSpec<Double> X1 = SvgAttributeSpec.createSpec("x1");
+  private static final SvgAttributeSpec<Double> Y1 = SvgAttributeSpec.createSpec("y1");
+  private static final SvgAttributeSpec<Double> X2 = SvgAttributeSpec.createSpec("x2");
+  private static final SvgAttributeSpec<Double> Y2 = SvgAttributeSpec.createSpec("y2");
 
   public SvgLineElement() {
     super();
@@ -30,25 +30,25 @@ public class SvgLineElement extends SvgStylableElement {
   public SvgLineElement(Double x1, Double y1, Double x2, Double y2) {
     this();
 
-    setAttr(X1, x1);
-    setAttr(Y1, y1);
-    setAttr(X2, x2);
-    setAttr(Y2, y2);
+    setAttribute(X1, x1);
+    setAttribute(Y1, y1);
+    setAttribute(X2, x2);
+    setAttribute(Y2, y2);
   }
 
   public Property<Double> x1() {
-    return getAttr(X1);
+    return getAttribute(X1);
   }
 
   public Property<Double> y1() {
-    return getAttr(Y1);
+    return getAttribute(Y1);
   }
 
   public Property<Double> x2() {
-    return getAttr(X2);
+    return getAttribute(X2);
   }
 
   public Property<Double> y2() {
-    return getAttr(Y2);
+    return getAttribute(Y2);
   }
 }

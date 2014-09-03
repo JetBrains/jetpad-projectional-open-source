@@ -21,7 +21,7 @@ import jetbrains.jetpad.mapper.Synchronizer;
 import jetbrains.jetpad.mapper.SynchronizerContext;
 import jetbrains.jetpad.mapper.Synchronizers;
 import jetbrains.jetpad.model.property.WritableProperty;
-import jetbrains.jetpad.projectional.svg.SvgAttrSpec;
+import jetbrains.jetpad.projectional.svg.SvgAttributeSpec;
 import jetbrains.jetpad.projectional.svg.SvgElement;
 import jetbrains.jetpad.projectional.svg.SvgElementListener;
 import jetbrains.jetpad.projectional.svg.event.SvgAttributeEvent;
@@ -63,8 +63,8 @@ public class SvgElementMapper<SourceT extends SvgElement, TargetT extends SVGOME
           }
         });
 
-        for (SvgAttrSpec<?> key : getSource().getAttrKeys()) {
-          getTarget().setAttribute(key.toString(), getSource().getAttr(key.getName()).get().toString());
+        for (SvgAttributeSpec<?> key : getSource().getAttributeKeys()) {
+          getTarget().setAttribute(key.toString(), getSource().getAttribute(key.getName()).get().toString());
         }
       }
 

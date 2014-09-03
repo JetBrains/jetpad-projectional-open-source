@@ -18,10 +18,10 @@ package jetbrains.jetpad.projectional.svg;
 import jetbrains.jetpad.model.property.Property;
 
 public class SvgRectElement extends SvgStylableElement {
-  private static final SvgAttrSpec<Double> X = SvgAttrSpec.createSpec("x");
-  private static final SvgAttrSpec<Double> Y = SvgAttrSpec.createSpec("y");
-  private static final SvgAttrSpec<Double> HEIGHT = SvgAttrSpec.createSpec("height");
-  private static final SvgAttrSpec<Double> WIDTH = SvgAttrSpec.createSpec("width");
+  private static final SvgAttributeSpec<Double> X = SvgAttributeSpec.createSpec("x");
+  private static final SvgAttributeSpec<Double> Y = SvgAttributeSpec.createSpec("y");
+  private static final SvgAttributeSpec<Double> HEIGHT = SvgAttributeSpec.createSpec("height");
+  private static final SvgAttributeSpec<Double> WIDTH = SvgAttributeSpec.createSpec("width");
 
   public SvgRectElement() {
     super();
@@ -30,25 +30,25 @@ public class SvgRectElement extends SvgStylableElement {
   public SvgRectElement(Double x, Double y, Double height, Double width) {
     this();
 
-    setAttr(X, x);
-    setAttr(Y, y);
-    setAttr(HEIGHT, height);
-    setAttr(WIDTH, width);
+    setAttribute(X, x);
+    setAttribute(Y, y);
+    setAttribute(HEIGHT, height);
+    setAttribute(WIDTH, width);
   }
 
   public Property<Double> x() {
-    return getAttr(X);
+    return getAttribute(X);
   }
 
   public Property<Double> y() {
-    return getAttr(Y);
+    return getAttribute(Y);
   }
 
   public Property<Double> height() {
-    return getAttr(HEIGHT);
+    return getAttribute(HEIGHT);
   }
 
   public Property<Double> width() {
-    return getAttr(WIDTH);
+    return getAttribute(WIDTH);
   }
 }

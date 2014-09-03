@@ -31,24 +31,24 @@ public class SvgAttrTest {
   @Test
   public void testSetAttr() {
     element.cx().set(100.);
-    element.getAttr("fill").set("yellow");
-    element.setAttr("stroke", "black");
+    element.getAttribute("fill").set("yellow");
+    element.setAttribute("stroke", "black");
 
     assertTrue(element.cx().get().equals(100.));
-    assertTrue(element.getAttr("fill").get().equals("yellow"));
-    assertTrue(element.getAttr("stroke").get().equals("black"));
+    assertTrue(element.getAttribute("fill").get().equals("yellow"));
+    assertTrue(element.getAttribute("stroke").get().equals("black"));
   }
 
   @Test
   public void testNotSetAttr() {
-    assertTrue(element.getAttr("fill").get() == null);
+    assertTrue(element.getAttribute("fill").get() == null);
   }
 
   @Test
   public void testResetAttr() {
-    element.setAttr("fill", "yellow");
-    element.getAttr("fill").set("red");
+    element.setAttribute("fill", "yellow");
+    element.getAttribute("fill").set("red");
 
-    assertTrue(element.getAttr("fill").get().equals("red"));
+    assertTrue(element.getAttribute("fill").get().equals("red"));
   }
 }

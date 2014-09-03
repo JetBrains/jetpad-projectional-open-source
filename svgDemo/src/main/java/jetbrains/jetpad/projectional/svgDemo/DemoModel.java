@@ -34,7 +34,7 @@ public class DemoModel {
         "}");
 
     SvgEllipseElement ellipse = new SvgEllipseElement(200., 80., 170., 50.);
-    ellipse.getAttr("style").set("stroke:#006600;");
+    ellipse.getAttribute("style").set("stroke:#006600;");
     ellipse.xmlClass().set("ellipse-yellow");
 
     SvgTextElement text = new SvgTextElement(20., 20., "Example Text");
@@ -46,15 +46,15 @@ public class DemoModel {
         .closePath();
 
     SvgPathElement path = new SvgPathElement(pathBuilder.build());
-    path.getAttr("fill").set("red");
-    path.getAttr("stroke").set("blue");
-    path.getAttr("stroke-width").set("5");
+    path.getAttribute("fill").set("red");
+    path.getAttribute("stroke").set("blue");
+    path.getAttribute("stroke-width").set("5");
 
     SvgEllipseElement ellipse2 = new SvgEllipseElement(250., 85., 40., 85.);
-    ellipse2.getAttr("fill").set(Color.GREEN.toCssColor());
+    ellipse2.getAttribute("fill").set(Color.GREEN.toCssColor());
 
     SvgRectElement rect = new SvgRectElement(180., 50., 50., 80.);
-    rect.getAttr("fill").set(Color.RED.toCssColor());
+    rect.getAttribute("fill").set(Color.RED.toCssColor());
 
     svgRoot.children().add(style);
     svgRoot.children().add(ellipse);
@@ -89,7 +89,7 @@ public class DemoModel {
     ellipse.cy().set(190.);
     ellipse.rx().set(50.);
     ellipse.ry().set(50.);
-    ellipse.getAttr("fill").set(Color.RED.toCssColor());
+    ellipse.getAttribute("fill").set(Color.RED.toCssColor());
 
     svgRoot.children().add(rect);
     svgRoot.children().add(ellipse);
@@ -106,7 +106,7 @@ public class DemoModel {
 
   public static void addCircle(SvgSvgElement svgRoot, int x, int y) {
     SvgCircleElement circle = new SvgCircleElement((double) x, (double) y, 10.);
-    circle.getAttr("fill").set(Color.BLACK.toCssColor());
+    circle.getAttribute("fill").set(Color.BLACK.toCssColor());
 
     svgRoot.children().add(circle);
   }
@@ -136,7 +136,7 @@ public class DemoModel {
       @Override
       public void handle(View view, KeyEvent e) {
         if (e.key() == Key.SPACE) {
-          ((SvgElement) model.children().get(1)).getAttr("stroke-width").set("7");
+          ((SvgElement) model.children().get(1)).getAttribute("stroke-width").set("7");
           return;
         }
 

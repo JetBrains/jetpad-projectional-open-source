@@ -15,14 +15,14 @@
  */
 package jetbrains.jetpad.projectional.svg;
 
-public final class SvgAttrSpec<ValueT> {
-  public static <ValueT> SvgAttrSpec<ValueT> createSpec(String name) {
-    return new SvgAttrSpec<>(name);
+public final class SvgAttributeSpec<ValueT> {
+  public static <ValueT> SvgAttributeSpec<ValueT> createSpec(String name) {
+    return new SvgAttributeSpec<>(name);
   }
 
   private String myName;
 
-  protected SvgAttrSpec(String name) {
+  protected SvgAttributeSpec(String name) {
     myName = name;
   }
 
@@ -38,9 +38,9 @@ public final class SvgAttrSpec<ValueT> {
   @Override
   public boolean equals(Object o) {
     if (this == o) return true;
-    if (!(o instanceof SvgAttrSpec)) return false;
+    if (!(o instanceof SvgAttributeSpec)) return false;
 
-    SvgAttrSpec that = (SvgAttrSpec) o;
+    SvgAttributeSpec that = (SvgAttributeSpec) o;
 
     if (!myName.equals(that.myName)) return false;
 

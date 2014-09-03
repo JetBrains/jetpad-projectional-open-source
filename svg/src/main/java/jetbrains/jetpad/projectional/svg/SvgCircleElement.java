@@ -18,9 +18,9 @@ package jetbrains.jetpad.projectional.svg;
 import jetbrains.jetpad.model.property.Property;
 
 public class SvgCircleElement extends SvgStylableElement {
-  private static final SvgAttrSpec<Double> CX = SvgAttrSpec.createSpec("cx");
-  private static final SvgAttrSpec<Double> CY = SvgAttrSpec.createSpec("cy");
-  private static final SvgAttrSpec<Double> R = SvgAttrSpec.createSpec("r");
+  private static final SvgAttributeSpec<Double> CX = SvgAttributeSpec.createSpec("cx");
+  private static final SvgAttributeSpec<Double> CY = SvgAttributeSpec.createSpec("cy");
+  private static final SvgAttributeSpec<Double> R = SvgAttributeSpec.createSpec("r");
 
   public SvgCircleElement() {
     super();
@@ -29,20 +29,20 @@ public class SvgCircleElement extends SvgStylableElement {
   public SvgCircleElement(Double cx, Double cy, Double r) {
     this();
 
-    setAttr(CX, cx);
-    setAttr(CY, cy);
-    setAttr(R, r);
+    setAttribute(CX, cx);
+    setAttribute(CY, cy);
+    setAttribute(R, r);
   }
 
   public Property<Double> cx() {
-    return getAttr(CX);
+    return getAttribute(CX);
   }
 
   public Property<Double> cy() {
-    return getAttr(CY);
+    return getAttribute(CY);
   }
 
   public Property<Double> r() {
-    return getAttr(R);
+    return getAttribute(R);
   }
 }

@@ -22,8 +22,8 @@ import jetbrains.jetpad.projectional.svg.event.SvgEventHandler;
 import jetbrains.jetpad.projectional.svg.event.SvgEventSpec;
 
 public class SvgSvgElement extends SvgStylableElement {
-  private static final SvgAttrSpec<Double> HEIGHT = SvgAttrSpec.createSpec("height");
-  private static final SvgAttrSpec<Double> WIDTH = SvgAttrSpec.createSpec("width");
+  private static final SvgAttributeSpec<Double> HEIGHT = SvgAttributeSpec.createSpec("height");
+  private static final SvgAttributeSpec<Double> WIDTH = SvgAttributeSpec.createSpec("width");
 
   public SvgSvgElement() {
     super();
@@ -32,16 +32,16 @@ public class SvgSvgElement extends SvgStylableElement {
   public SvgSvgElement(Double height, Double width) {
     this();
 
-    setAttr(HEIGHT, height);
-    setAttr(WIDTH, width);
+    setAttribute(HEIGHT, height);
+    setAttribute(WIDTH, width);
   }
 
   public Property<Double> height() {
-    return getAttr(HEIGHT);
+    return getAttribute(HEIGHT);
   }
 
   public Property<Double> width() {
-    return getAttr(WIDTH);
+    return getAttribute(WIDTH);
   }
 
   @Override

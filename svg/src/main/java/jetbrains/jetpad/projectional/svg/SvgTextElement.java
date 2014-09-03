@@ -19,8 +19,8 @@ import jetbrains.jetpad.model.collections.list.ObservableList;
 import jetbrains.jetpad.model.property.Property;
 
 public class SvgTextElement extends SvgStylableElement {
-  private static final SvgAttrSpec<Double> X = SvgAttrSpec.createSpec("x");
-  private static final SvgAttrSpec<Double> Y = SvgAttrSpec.createSpec("y");
+  private static final SvgAttributeSpec<Double> X = SvgAttributeSpec.createSpec("x");
+  private static final SvgAttributeSpec<Double> Y = SvgAttributeSpec.createSpec("y");
 
   public SvgTextElement() {
     super();
@@ -29,17 +29,17 @@ public class SvgTextElement extends SvgStylableElement {
   public SvgTextElement(Double x, Double y, String content) {
     this();
 
-    setAttr(X, x);
-    setAttr(Y, y);
+    setAttribute(X, x);
+    setAttribute(Y, y);
     addTextNode(content);
   }
 
   public Property<Double> x() {
-    return getAttr(X);
+    return getAttribute(X);
   }
 
   public Property<Double> y() {
-    return getAttr(Y);
+    return getAttribute(Y);
   }
 
   public void addTextNode(String text) {
