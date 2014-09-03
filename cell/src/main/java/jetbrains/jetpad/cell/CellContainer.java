@@ -164,16 +164,16 @@ public class CellContainer {
 
   public void mouseMoved(MouseEvent e) {
     mouseEventHappened(e, CellEventSpec.MOUSE_MOVED);
-    changeCellUnderMouse(e, findCellUnderMouse(e.location()));
+    changeCellUnderMouse(e, findCell(e.location()));
   }
 
   public void mouseDragged(MouseEvent e) {
     mouseEventHappened(e, CellEventSpec.MOUSE_DRAGGED);
-    changeCellUnderMouse(e, findCellUnderMouse(e.location()));
+    changeCellUnderMouse(e, findCell(e.location()));
   }
 
   public void mouseEntered(MouseEvent e) {
-    changeCellUnderMouse(e, findCellUnderMouse(e.location()));
+    changeCellUnderMouse(e, findCell(e.location()));
   }
 
   public void mouseLeft(MouseEvent e) {
@@ -236,10 +236,14 @@ public class CellContainer {
   }
 
   private void mouseEventHappened(MouseEvent e, CellEventSpec<MouseEvent> eventSpec) {
-    dispatch(findCellUnderMouse(e.location()), e, eventSpec);
+    dispatch(findCell(e.location()), e, eventSpec);
   }
 
-  private Cell findCellUnderMouse(Vector loc) {
+  public Cell findCell(Cell current, Vector loc) {
+    return getCellContainerPeer().findCell(current, loc);
+  }
+
+  public Cell findCell(Vector loc) {
     Cell target = null;
     for (Cell popup : myPopups) {
       target = findCell(popup, loc);
@@ -252,10 +256,6 @@ public class CellContainer {
       target = root;
     }
     return target;
-  }
-
-  public Cell findCell(Cell current, Vector loc) {
-    return getCellContainerPeer().findCell(current, loc);
   }
 
   private <EventT extends Event> void dispatch(final EventT e, final CellEventSpec<EventT> spec) {
