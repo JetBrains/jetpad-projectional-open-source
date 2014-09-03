@@ -20,7 +20,7 @@ import jetbrains.jetpad.mapper.MapperFactory;
 import jetbrains.jetpad.projectional.svg.*;
 import org.vectomatic.dom.svg.*;
 
-public class SvgNodeMapperFactory implements MapperFactory<SvgNode, OMNode> {
+class SvgNodeMapperFactory implements MapperFactory<SvgNode, OMNode> {
   @Override
   public Mapper<? extends SvgNode, ? extends OMNode> createMapper(SvgNode source) {
     Mapper<? extends SvgNode, ? extends OMNode> result;

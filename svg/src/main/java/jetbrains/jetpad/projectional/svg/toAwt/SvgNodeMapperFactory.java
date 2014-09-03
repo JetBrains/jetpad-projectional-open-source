@@ -22,10 +22,10 @@ import org.apache.batik.dom.AbstractDocument;
 import org.apache.batik.dom.svg.*;
 import org.w3c.dom.Node;
 
-public class SvgNodeMapperFactory implements MapperFactory<SvgNode, Node> {
+class SvgNodeMapperFactory implements MapperFactory<SvgNode, Node> {
   private AbstractDocument myDoc;
 
-  public SvgNodeMapperFactory(AbstractDocument doc) {
+  SvgNodeMapperFactory(AbstractDocument doc) {
     myDoc = doc;
   }
 

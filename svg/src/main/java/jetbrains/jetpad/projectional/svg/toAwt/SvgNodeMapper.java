@@ -21,10 +21,10 @@ import jetbrains.jetpad.projectional.svg.SvgNode;
 import org.apache.batik.dom.AbstractDocument;
 import org.w3c.dom.Node;
 
-public class SvgNodeMapper<SourceT extends SvgNode, TargetT extends Node> extends Mapper<SourceT, TargetT> {
+class SvgNodeMapper<SourceT extends SvgNode, TargetT extends Node> extends Mapper<SourceT, TargetT> {
   private AbstractDocument myDoc;
 
-  public SvgNodeMapper(SourceT source, TargetT target, AbstractDocument doc) {
+  SvgNodeMapper(SourceT source, TargetT target, AbstractDocument doc) {
     super(source, target);
     myDoc = doc;
   }

@@ -20,8 +20,8 @@ import org.vectomatic.dom.svg.OMNode;
 import java.util.AbstractList;
 import java.util.List;
 
-public class Utils {
-  public static List<OMNode> elementChildren(final OMNode e) {
+class Utils {
+  static List<OMNode> elementChildren(final OMNode e) {
     return new AbstractList<OMNode>() {
       @Override
       public OMNode get(int index) {

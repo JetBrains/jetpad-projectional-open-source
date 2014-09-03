@@ -20,8 +20,8 @@ import jetbrains.jetpad.mapper.Synchronizers;
 import jetbrains.jetpad.projectional.svg.SvgNode;
 import org.vectomatic.dom.svg.OMNode;
 
-public class SvgNodeMapper<SourceT extends SvgNode, TargetT extends OMNode> extends Mapper<SourceT, TargetT> {
-  public SvgNodeMapper(SourceT source, TargetT target) {
+class SvgNodeMapper<SourceT extends SvgNode, TargetT extends OMNode> extends Mapper<SourceT, TargetT> {
+  SvgNodeMapper(SourceT source, TargetT target) {
     super(source, target);
   }
 

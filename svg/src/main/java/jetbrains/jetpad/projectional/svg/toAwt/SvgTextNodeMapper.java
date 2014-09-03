@@ -7,7 +7,7 @@ import jetbrains.jetpad.projectional.svg.SvgTextNode;
 import org.apache.batik.dom.AbstractDocument;
 import org.w3c.dom.Text;
 
-public class SvgTextNodeMapper extends SvgNodeMapper<SvgTextNode, Text> {
+class SvgTextNodeMapper extends SvgNodeMapper<SvgTextNode, Text> {
   public SvgTextNodeMapper(SvgTextNode source, Text target, AbstractDocument doc) {
     super(source, target, doc);
   }

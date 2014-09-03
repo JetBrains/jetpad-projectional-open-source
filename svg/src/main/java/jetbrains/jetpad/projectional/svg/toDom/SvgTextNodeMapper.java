@@ -20,8 +20,8 @@ import jetbrains.jetpad.model.property.WritableProperty;
 import jetbrains.jetpad.projectional.svg.SvgTextNode;
 import org.vectomatic.dom.svg.OMText;
 
-public class SvgTextNodeMapper extends SvgNodeMapper<SvgTextNode, OMText> {
-  public SvgTextNodeMapper(SvgTextNode source, OMText target) {
+class SvgTextNodeMapper extends SvgNodeMapper<SvgTextNode, OMText> {
+  SvgTextNodeMapper(SvgTextNode source, OMText target) {
     super(source, target);
   }
 
