@@ -142,6 +142,7 @@ public class ViewContainerToElementMapper extends Mapper<ViewContainer, Element>
           @Override
           public boolean f(Event e) {
             pressed.set(false);
+            pressedOutside.set(false);
             return true;
           }
         })));

@@ -18,6 +18,7 @@ package jetbrains.jetpad.cell.toDom;
 import com.google.common.base.Strings;
 import com.google.common.base.Supplier;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.StyleInjector;
@@ -447,7 +448,29 @@ public class CellContainerToDomMapper extends Mapper<CellContainer, Element> {
       }
     })));
 
+    reg.add(eventRegistration(Event.ONMOUSEDOWN, $(Document.get()).mousedown(new Function() {
+      @Override
+      public boolean f(Event e) {
+        pressed.set(true);
+        MouseEvent evt = toMouseEvent(e);
+        if (!isContainerEvent(evt)) {
+          pressedOutside.set(true);
+        }
+        return false;
+      }
+    })));
+
     reg.add(eventRegistration(Event.ONMOUSEUP, $(target).mouseup(new Function() {
+      @Override
+      public boolean f(Event e) {
+        pressed.set(false);
+        pressedOutside.set(false);
+        return false;
+      }
+    })));
+
+    reg.add(eventRegistration(Event.ONMOUSEUP, $(target).mouseup(new Function() {
+      @Override
       public boolean f(Event e) {
         pressed.set(false);
         MouseEvent event = toMouseEvent(e);
@@ -457,11 +480,22 @@ public class CellContainerToDomMapper extends Mapper<CellContainer, Element> {
       }
     })));
 
+    reg.add(eventRegistration(Event.ONMOUSEMOVE, $(Document.get()).mousemove(new Function() {
+      @Override
+      public boolean f(Event e) {
+        MouseEvent evt = toMouseEvent(e);
+        if (pressed.get() && !pressedOutside.get()) {
+          getSource().mouseDragged(evt);
+        }
+        return true;
+      }
+    })));
+
     reg.add(eventRegistration(Event.ONMOUSEMOVE, $(target).mousemove(new Function() {
       public boolean f(Event e) {
         MouseEvent event = toMouseEvent(e);
         if (isDomCellEvent(event)) return true;
-        if (pressed.get()) {
+        if (pressed.get() && !pressedOutside.get()) {
           getSource().mouseDragged(event);
         } else {
           getSource().mouseMoved(event);
@@ -592,5 +626,9 @@ public class CellContainerToDomMapper extends Mapper<CellContainer, Element> {
         query.unbind(event);
       }
     };
+  }
+
+  private boolean isContainerEvent(MouseEvent evt) {
+    return getSource().root.getBounds().contains(evt.location());
   }
 }
