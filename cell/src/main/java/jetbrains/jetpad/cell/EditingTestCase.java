@@ -161,8 +161,16 @@ public abstract class EditingTestCase {
     myViewContainer.mousePressed(new MouseEvent(x, y));
   }
 
+  protected final void mouseDrag(int x, int y) {
+    myViewContainer.mouseDragged(new MouseEvent(x, y));
+  }
+
   protected final void mousePress(Vector v) {
     mousePress(v.x, v.y);
+  }
+
+  protected final void mouseDrag(Vector v) {
+    mouseDrag(v.x, v.y);
   }
 
   protected void assertFocused(Cell cell) {

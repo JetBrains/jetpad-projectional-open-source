@@ -26,6 +26,8 @@ import jetbrains.jetpad.cell.*;
 import jetbrains.jetpad.cell.completion.*;
 import jetbrains.jetpad.cell.position.PositionHandler;
 import jetbrains.jetpad.cell.trait.CellTraitPropertySpec;
+import jetbrains.jetpad.geometry.Rectangle;
+import jetbrains.jetpad.geometry.Vector;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -455,6 +457,17 @@ public class TextEditingTest extends EditingTestCase {
     mousePress(textView.getBounds().center());
 
     assertFalse(textView.selectionVisible().get());
+  }
+
+  @Test
+  public void mouseDragSelects() {
+    Rectangle bounds = textView.getBounds();
+    mousePress(bounds.origin);
+    mouseDrag(bounds.origin.add(new Vector(bounds.dimension.x, 0)));
+
+    assertTrue(textView.selectionVisible().get());
+    assertEquals(0, (int) textView.caretPosition().get());
+    assertEquals(3, (int) textView.selectionStart().get());
   }
 
   @Test
