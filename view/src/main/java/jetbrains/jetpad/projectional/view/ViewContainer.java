@@ -42,8 +42,6 @@ public class ViewContainer {
   private boolean myInCommand;
   private View myViewUnderMouse;
 
-  private Throwable myCreatedAt = new Throwable();
-
   public ViewContainer() {
     myPeer.attach(this);
     myContentRoot.attach(this);
