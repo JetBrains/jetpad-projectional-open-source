@@ -51,6 +51,9 @@ public abstract class CellTrait {
   public void onMouseMoved(Cell cell, MouseEvent event) {
   }
 
+  public void onMouseDragged(Cell cell, MouseEvent event) {
+  }
+
   public void onMouseEntered(Cell cell, MouseEvent event) {
   }
 

@@ -254,6 +254,8 @@ public abstract class Cell implements NavComposite<Cell>, HasVisibility, HasFocu
           t.onMouseReleased(this, (MouseEvent) e);
         } else if (spec == CellEventSpec.MOUSE_MOVED) {
           t.onMouseMoved(this, (MouseEvent) e);
+        } else if (spec == CellEventSpec.MOUSE_DRAGGED) {
+          t.onMouseDragged(this, (MouseEvent) e);
         } else if (spec == CellEventSpec.MOUSE_ENTERED) {
           t.onMouseEntered(this, (MouseEvent) e);
         } else if (spec == CellEventSpec.MOUSE_LEFT) {

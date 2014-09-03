@@ -68,6 +68,13 @@ public abstract class CompositeCellTrait extends CellTrait {
   }
 
   @Override
+  public void onMouseDragged(Cell cell, MouseEvent event) {
+    for (CellTrait t : getBaseTraits(cell)) {
+      t.onMouseDragged(cell, event);
+    }
+  }
+
+  @Override
   public void onMouseEntered(Cell cell, MouseEvent event) {
     for (CellTrait t : getBaseTraits(cell)) {
       t.onMouseEntered(cell, event);

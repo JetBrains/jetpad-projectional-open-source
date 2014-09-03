@@ -165,6 +165,11 @@ public class CellContainer {
     changeCellUnderMouse(e, findCell(root, e.location()));
   }
 
+  public void mouseDragged(MouseEvent e) {
+    mouseEventHappened(e, CellEventSpec.MOUSE_DRAGGED);
+    changeCellUnderMouse(e, findCell(root, e.location()));
+  }
+
   public void mouseEntered(MouseEvent e) {
     changeCellUnderMouse(e, findCell(root, e.location()));
   }
