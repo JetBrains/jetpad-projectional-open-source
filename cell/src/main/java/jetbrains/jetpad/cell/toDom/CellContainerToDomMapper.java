@@ -22,6 +22,7 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.StyleInjector;
 import com.google.gwt.query.client.Function;
+import com.google.gwt.query.client.GQuery;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
@@ -158,7 +159,6 @@ public class CellContainerToDomMapper extends Mapper<CellContainer, Element> {
     getTarget().setTabIndex(0);
     getTarget().addClassName(CSS.rootContainer());
 
-    registerListeners();
   }
 
   @Override
@@ -223,6 +223,13 @@ public class CellContainerToDomMapper extends Mapper<CellContainer, Element> {
             mapper.childRemoved(change);
           }
         });
+      }
+    }));
+
+    conf.add(Synchronizers.forRegistration(new Supplier<Registration>() {
+      @Override
+      public Registration get() {
+        return registerListeners();
       }
     }));
 
@@ -418,14 +425,17 @@ public class CellContainerToDomMapper extends Mapper<CellContainer, Element> {
     };
   }
 
-  private void registerListeners() {
+  private Registration registerListeners() {
+    final CompositeRegistration reg = new CompositeRegistration();
+
     final Element focusTarget = getFocusTarget();
     final Element target = getTarget();
     final ClipboardSupport clipboardSupport = new ClipboardSupport(focusTarget);
 
     final Value<Boolean> pressed = new Value<>(false);
+    final Value<Boolean> pressedOutside = new Value<>(false);
 
-    $(target).mousedown(new Function() {
+    reg.add(eventRegistration(Event.ONMOUSEDOWN, $(target).mousedown(new Function() {
       @Override
       public boolean f(Event e) {
         pressed.set(true);
@@ -435,9 +445,9 @@ public class CellContainerToDomMapper extends Mapper<CellContainer, Element> {
         $(focusTarget).focus();
         return false;
       }
-    });
+    })));
 
-    $(target).mouseup(new Function() {
+    reg.add(eventRegistration(Event.ONMOUSEUP, $(target).mouseup(new Function() {
       public boolean f(Event e) {
         pressed.set(false);
         MouseEvent event = toMouseEvent(e);
@@ -445,9 +455,9 @@ public class CellContainerToDomMapper extends Mapper<CellContainer, Element> {
         getSource().mouseReleased(event);
         return false;
       }
-    });
+    })));
 
-    $(target).mousemove(new Function() {
+    reg.add(eventRegistration(Event.ONMOUSEMOVE, $(target).mousemove(new Function() {
       public boolean f(Event e) {
         MouseEvent event = toMouseEvent(e);
         if (isDomCellEvent(event)) return true;
@@ -458,27 +468,27 @@ public class CellContainerToDomMapper extends Mapper<CellContainer, Element> {
         }
         return false;
       }
-    });
+    })));
 
-    $(target).mouseenter(new Function() {
+    reg.add(eventRegistration(Event.ONMOUSEOVER, $(target).mouseenter(new Function() {
       public boolean f(Event e) {
         MouseEvent event = toMouseEvent(e);
         if (isDomCellEvent(event)) return true;
         getSource().mouseEntered(event);
         return false;
       }
-    });
+    })));
 
-    $(target).mouseleave(new Function() {
+    reg.add(eventRegistration(Event.ONMOUSEOUT, $(target).mouseleave(new Function() {
       public boolean f(Event e) {
         MouseEvent event = toMouseEvent(e);
         if (isDomCellEvent(event)) return true;
         getSource().mouseLeft(event);
         return false;
       }
-    });
+    })));
 
-    $(focusTarget).keydown(new Function() {
+    reg.add(eventRegistration(Event.ONKEYDOWN, $(focusTarget).keydown(new Function() {
       @Override
       public boolean f(Event e) {
         return EventTranslator.dispatchKeyPress(e, new Handler<KeyEvent>() {
@@ -522,8 +532,8 @@ public class CellContainerToDomMapper extends Mapper<CellContainer, Element> {
           }
         });
       }
-    });
-    $(focusTarget).keyup(new Function() {
+    })));
+    reg.add(eventRegistration(Event.ONKEYUP, $(focusTarget).keyup(new Function() {
       @Override
       public boolean f(Event e) {
         return EventTranslator.dispatchKeyRelease(e, new Handler<KeyEvent>() {
@@ -533,8 +543,8 @@ public class CellContainerToDomMapper extends Mapper<CellContainer, Element> {
           }
         });
       }
-    });
-    $(focusTarget).keypress(new Function() {
+    })));
+    reg.add(eventRegistration(Event.ONKEYPRESS, $(focusTarget).keypress(new Function() {
       @Override
       public boolean f(Event e) {
         return EventTranslator.dispatchKeyType(e, new Handler<KeyEvent>() {
@@ -546,22 +556,24 @@ public class CellContainerToDomMapper extends Mapper<CellContainer, Element> {
           }
         });
       }
-    });
+    })));
 
-    $(focusTarget).focus(new Function() {
+    reg.add(eventRegistration(Event.ONFOCUS, $(focusTarget).focus(new Function() {
       @Override
       public boolean f(Event e) {
         myCellToDomContext.focused.set(true);
         return false;
       }
-    });
-    $(focusTarget).blur(new Function() {
+    })));
+    reg.add(eventRegistration(Event.ONBLUR, $(focusTarget).blur(new Function() {
       @Override
       public boolean f(Event e) {
         myCellToDomContext.focused.set(false);
         return false;
       }
-    });
+    })));
+
+    return reg;
   }
 
   private boolean isDomCellEvent(MouseEvent e) {
@@ -571,5 +583,14 @@ public class CellContainerToDomMapper extends Mapper<CellContainer, Element> {
 
   private Mapper<? extends Cell, Element> rootMapper() {
     return (Mapper<? extends Cell, Element>) getDescendantMapper(getSource().root);
+  }
+
+  private Registration eventRegistration(final int event, final GQuery query) {
+    return new Registration() {
+      @Override
+      public void remove() {
+        query.unbind(event);
+      }
+    };
   }
 }
