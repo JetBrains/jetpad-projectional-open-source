@@ -30,11 +30,11 @@ public class SvgAttrTest {
 
   @Test
   public void testSetAttr() {
-    element.getCx().set(100.);
+    element.cx().set(100.);
     element.getAttr("fill").set("yellow");
     element.setAttr("stroke", "black");
 
-    assertTrue(element.getCx().get().equals(100.));
+    assertTrue(element.cx().get().equals(100.));
     assertTrue(element.getAttr("fill").get().equals("yellow"));
     assertTrue(element.getAttr("stroke").get().equals("black"));
   }

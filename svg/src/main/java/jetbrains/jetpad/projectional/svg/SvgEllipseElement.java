@@ -36,19 +36,19 @@ public class SvgEllipseElement extends SvgStylableElement {
     setAttr(RY, ry);
   }
 
-  public Property<Double> getCx() {
+  public Property<Double> cx() {
     return getAttr(CX);
   }
 
-  public Property<Double> getCy() {
+  public Property<Double> cy() {
     return getAttr(CY);
   }
 
-  public Property<Double> getRx() {
+  public Property<Double> rx() {
     return getAttr(RX);
   }
 
-  public Property<Double> getRy() {
+  public Property<Double> ry() {
     return getAttr(RY);
   }
 }

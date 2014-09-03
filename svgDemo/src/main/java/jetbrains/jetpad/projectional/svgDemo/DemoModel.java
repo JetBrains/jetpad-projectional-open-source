@@ -35,7 +35,7 @@ public class DemoModel {
 
     SvgEllipseElement ellipse = new SvgEllipseElement(200., 80., 170., 50.);
     ellipse.getAttr("style").set("stroke:#006600;");
-    ellipse.getXmlClass().set("ellipse-yellow");
+    ellipse.xmlClass().set("ellipse-yellow");
 
     SvgTextElement text = new SvgTextElement(20., 20., "Example Text");
 
@@ -75,20 +75,20 @@ public class DemoModel {
 
   public static SvgSvgElement createAltModel() {
     final SvgSvgElement svgRoot = new SvgSvgElement();
-    svgRoot.getHeight().set(400.);
-    svgRoot.getWidth().set(200.);
+    svgRoot.height().set(400.);
+    svgRoot.width().set(200.);
 
     SvgRectElement rect = new SvgRectElement();
-    rect.getX().set(10.);
-    rect.getY().set(100.);
-    rect.getHeight().set(180.);
-    rect.getWidth().set(180.);
+    rect.x().set(10.);
+    rect.y().set(100.);
+    rect.height().set(180.);
+    rect.width().set(180.);
 
     SvgEllipseElement ellipse = new SvgEllipseElement();
-    ellipse.getCx().set(100.);
-    ellipse.getCy().set(190.);
-    ellipse.getRx().set(50.);
-    ellipse.getRy().set(50.);
+    ellipse.cx().set(100.);
+    ellipse.cy().set(190.);
+    ellipse.rx().set(50.);
+    ellipse.ry().set(50.);
     ellipse.getAttr("fill").set(Color.RED.toCssColor());
 
     svgRoot.children().add(rect);

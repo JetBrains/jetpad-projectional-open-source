@@ -59,8 +59,8 @@ public class SvgView extends View {
   @Override
   protected void doValidate(ValidationContext ctx) {
     super.doValidate(ctx);
-    Vector bounds = new Vector((int) Math.ceil(root().get().getWidth().get()),
-        (int) Math.ceil(root().get().getHeight().get()));
+    Vector bounds = new Vector((int) Math.ceil(root().get().width().get()),
+        (int) Math.ceil(root().get().height().get()));
     ctx.bounds(bounds, baseLine());
   }
 }

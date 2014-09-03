@@ -30,7 +30,7 @@ public class SvgPathElement extends SvgStylableElement {
     setAttr(D, d);
   }
 
-  public Property<String> getD() {
+  public Property<String> d() {
     return getAttr(D);
   }
 }

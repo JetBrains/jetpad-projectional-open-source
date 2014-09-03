@@ -20,7 +20,7 @@ import jetbrains.jetpad.model.property.Property;
 public abstract class SvgStylableElement extends SvgElement {
   private static final SvgAttrSpec<String> CLASS = SvgAttrSpec.createSpec("class");
 
-  public Property<String> getXmlClass() {
+  public Property<String> xmlClass() {
     return getAttr(CLASS);
   }
 }

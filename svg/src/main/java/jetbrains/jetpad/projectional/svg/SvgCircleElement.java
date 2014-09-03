@@ -34,15 +34,15 @@ public class SvgCircleElement extends SvgStylableElement {
     setAttr(R, r);
   }
 
-  public Property<Double> getCx() {
+  public Property<Double> cx() {
     return getAttr(CX);
   }
 
-  public Property<Double> getCy() {
+  public Property<Double> cy() {
     return getAttr(CY);
   }
 
-  public Property<Double> getR() {
+  public Property<Double> r() {
     return getAttr(R);
   }
 }

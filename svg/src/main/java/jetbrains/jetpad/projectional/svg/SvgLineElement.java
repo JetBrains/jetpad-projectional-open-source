@@ -36,19 +36,19 @@ public class SvgLineElement extends SvgStylableElement {
     setAttr(Y2, y2);
   }
 
-  public Property<Double> getX1() {
+  public Property<Double> x1() {
     return getAttr(X1);
   }
 
-  public Property<Double> getY1() {
+  public Property<Double> y1() {
     return getAttr(Y1);
   }
 
-  public Property<Double> getX2() {
+  public Property<Double> x2() {
     return getAttr(X2);
   }
 
-  public Property<Double> getY2() {
+  public Property<Double> y2() {
     return getAttr(Y2);
   }
 }

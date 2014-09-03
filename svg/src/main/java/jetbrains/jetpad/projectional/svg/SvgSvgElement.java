@@ -36,11 +36,11 @@ public class SvgSvgElement extends SvgStylableElement {
     setAttr(WIDTH, width);
   }
 
-  public Property<Double> getHeight() {
+  public Property<Double> height() {
     return getAttr(HEIGHT);
   }
 
-  public Property<Double> getWidth() {
+  public Property<Double> width() {
     return getAttr(WIDTH);
   }
 
