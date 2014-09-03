@@ -40,6 +40,8 @@ public class CellContainer {
   public final RootCell root = new RootCell(this);
 
   private Cell myCellUnderMouse;
+  private Cell myDragStart;
+
   private List<Cell> myPopups = new ArrayList<>();
   private Listeners<CellContainerListener> myListeners = new Listeners<>();
   private boolean myInCommand;
@@ -162,16 +164,16 @@ public class CellContainer {
 
   public void mouseMoved(MouseEvent e) {
     mouseEventHappened(e, CellEventSpec.MOUSE_MOVED);
-    changeCellUnderMouse(e, findCell(root, e.location()));
+    changeCellUnderMouse(e, findCellUnderMouse(e.location()));
   }
 
   public void mouseDragged(MouseEvent e) {
     mouseEventHappened(e, CellEventSpec.MOUSE_DRAGGED);
-    changeCellUnderMouse(e, findCell(root, e.location()));
+    changeCellUnderMouse(e, findCellUnderMouse(e.location()));
   }
 
   public void mouseEntered(MouseEvent e) {
-    changeCellUnderMouse(e, findCell(root, e.location()));
+    changeCellUnderMouse(e, findCellUnderMouse(e.location()));
   }
 
   public void mouseLeft(MouseEvent e) {
@@ -234,19 +236,22 @@ public class CellContainer {
   }
 
   private void mouseEventHappened(MouseEvent e, CellEventSpec<MouseEvent> eventSpec) {
+    dispatch(findCellUnderMouse(e.location()), e, eventSpec);
+  }
+
+  private Cell findCellUnderMouse(Vector loc) {
     Cell target = null;
     for (Cell popup : myPopups) {
-      target = findCell(popup, e.location());
+      target = findCell(popup, loc);
       if (target != null) break;
     }
     if (target == null) {
-      target = findCell(root, e.location());
+      target = findCell(root, loc);
     }
     if (target == null) {
       target = root;
     }
-
-    dispatch(target, e, eventSpec);
+    return target;
   }
 
   public Cell findCell(Cell current, Vector loc) {
