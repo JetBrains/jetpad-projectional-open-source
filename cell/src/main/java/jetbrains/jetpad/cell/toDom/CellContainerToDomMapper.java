@@ -423,9 +423,12 @@ public class CellContainerToDomMapper extends Mapper<CellContainer, Element> {
     final Element target = getTarget();
     final ClipboardSupport clipboardSupport = new ClipboardSupport(focusTarget);
 
+    final Value<Boolean> pressed = new Value<>(false);
+
     $(target).mousedown(new Function() {
       @Override
       public boolean f(Event e) {
+        pressed.set(true);
         MouseEvent event = toMouseEvent(e);
         if (isDomCellEvent(event)) return true;
         getSource().mousePressed(event);
@@ -436,6 +439,7 @@ public class CellContainerToDomMapper extends Mapper<CellContainer, Element> {
 
     $(target).mouseup(new Function() {
       public boolean f(Event e) {
+        pressed.set(false);
         MouseEvent event = toMouseEvent(e);
         if (isDomCellEvent(event)) return true;
         getSource().mouseReleased(event);
@@ -447,7 +451,11 @@ public class CellContainerToDomMapper extends Mapper<CellContainer, Element> {
       public boolean f(Event e) {
         MouseEvent event = toMouseEvent(e);
         if (isDomCellEvent(event)) return true;
-        getSource().mouseMoved(event);
+        if (pressed.get()) {
+          getSource().mouseDragged(event);
+        } else {
+          getSource().mouseMoved(event);
+        }
         return false;
       }
     });
