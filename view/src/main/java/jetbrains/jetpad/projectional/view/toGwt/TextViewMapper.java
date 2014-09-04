@@ -49,61 +49,61 @@ class TextViewMapper extends BaseViewMapper<TextView, Element> {
     conf.add(Synchronizers.forPropsOneWay(getSource().selectionVisible(), new WritableProperty<Boolean>() {
       @Override
       public void set(Boolean value) {
-        editor.selectionVisble(value);
+        editor.setSelectionVisible(value);
       }
     }));
     conf.add(Synchronizers.forPropsOneWay(getSource().selectionStart(), new WritableProperty<Integer>() {
       @Override
       public void set(Integer value) {
-        editor.selectionStart(value);
+        editor.setSelectionStart(value);
       }
     }));
     conf.add(Synchronizers.forPropsOneWay(getSource().text(), new WritableProperty<String>() {
       @Override
       public void set(String value) {
-        editor.text(value);
+        editor.setText(value);
       }
     }));
     conf.add(Synchronizers.forPropsOneWay(getSource().textColor(), new WritableProperty<Color>() {
       @Override
       public void set(Color value) {
-        editor.textColor(value);
+        editor.setTextColor(value);
       }
     }));
     conf.add(Synchronizers.forPropsOneWay(getSource().caretVisible(), new WritableProperty<Boolean>() {
       @Override
       public void set(Boolean value) {
-        editor.caretVisible(value);
+        editor.setCaretVisible(value);
       }
     }));
     conf.add(Synchronizers.forPropsOneWay(getSource().caretPosition(), new WritableProperty<Integer>() {
       @Override
       public void set(Integer value) {
-        editor.caretPosition(value);
+        editor.setCaretPosition(value);
       }
     }));
     conf.add(Synchronizers.forPropsOneWay(getSource().bold(), new WritableProperty<Boolean>() {
       @Override
       public void set(Boolean value) {
-        editor.bold(value);
+        editor.setBold(value);
       }
     }));
     conf.add(Synchronizers.forPropsOneWay(getSource().italic(), new WritableProperty<Boolean>() {
       @Override
       public void set(Boolean value) {
-        editor.italic(value);
+        editor.setItalic(value);
       }
     }));
     conf.add(Synchronizers.forPropsOneWay(getSource().fontFamily(), new WritableProperty<FontFamily>() {
       @Override
       public void set(FontFamily value) {
-        editor.fontFamily(value);
+        editor.setFontFamily(value);
       }
     }));
     conf.add(Synchronizers.forPropsOneWay(getSource().fontSize(), new WritableProperty<Integer>() {
       @Override
       public void set(Integer value) {
-        editor.fontSize(value);
+        editor.setFontSize(value);
       }
     }));
   }

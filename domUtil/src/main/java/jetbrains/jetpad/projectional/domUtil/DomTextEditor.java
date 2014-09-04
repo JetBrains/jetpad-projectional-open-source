@@ -86,93 +86,93 @@ public class DomTextEditor {
     updateCaretAndSelectionVisibility();
   }
 
-  public boolean bold() {
+  public boolean isBold() {
     return myBold;
   }
 
-  public void bold(boolean bold) {
+  public void setBold(boolean bold) {
     myBold = bold;
     updateText();
   }
 
-  public boolean italic() {
+  public boolean isItalic() {
     return myItalic;
   }
 
-  public void italic(boolean italic) {
+  public void setItalic(boolean italic) {
     myItalic = italic;
     updateText();
   }
 
-  public FontFamily fontFamily() {
+  public FontFamily getFontFamily() {
     return myFontFamily;
   }
 
-  public void fontFamily(FontFamily family) {
+  public void setFontFamily(FontFamily family) {
     myFontFamily = family;
     updateText();
   }
 
-  public int fontSize() {
+  public int getFontSize() {
     return myFontSize;
   }
 
-  public void fontSize(int size) {
+  public void setFontSize(int size) {
     myFontSize = size;
     updateText();
   }
 
-  public Color textColor() {
+  public Color getTextColor() {
     return myTextColor;
   }
 
-  public void textColor(Color textColor) {
+  public void setTextColor(Color textColor) {
     myTextColor = textColor;
     updateText();
   }
 
-  public String text() {
+  public String getText() {
     return myText;
   }
 
-  public void text(String text) {
+  public void setText(String text) {
     if (Objects.equal(text, myText)) return;
     myText = text;
     updateText();
   }
 
-  public int caretPosition() {
+  public int getCaretPosition() {
     return myCaretPosition;
   }
 
-  public void caretPosition(int caretPosition) {
+  public void setCaretPosition(int caretPosition) {
     myCaretPosition = caretPosition;
     updateCaretAndSelection();
   }
 
-  public boolean selectionVisible() {
+  public boolean getSelectionVisible() {
     return mySelectionVisible;
   }
 
-  public void selectionVisble(boolean visible) {
+  public void setSelectionVisible(boolean visible) {
     mySelectionVisible = visible;
     updateCaretAndSelectionVisibility();
   }
 
-  public int selectionStart() {
+  public int getSelectionStart() {
     return mySelectionStart;
   }
 
-  public void selectionStart(int selectionStart) {
+  public void setSelectionStart(int selectionStart) {
     mySelectionStart = selectionStart;
     updateCaretAndSelection();
   }
 
-  public boolean caretVisible() {
+  public boolean isCaretVisible() {
     return myCaretVisible;
   }
 
-  public void caretVisible(boolean caretVisible) {
+  public void setCaretVisible(boolean caretVisible) {
     myCaretVisible = caretVisible;
     updateCaretAndSelectionVisibility();
   }
@@ -196,10 +196,10 @@ public class DomTextEditor {
 
   private void updateCaretAndSelection() {
     Style caretStyle = myCaretDiv.getStyle();
-    caretStyle.setLeft(caretOffset(myCaretPosition), Style.Unit.PX);
+    caretStyle.setLeft(setCaretOffset(myCaretPosition), Style.Unit.PX);
     caretStyle.setTop(0, Style.Unit.PX);
     caretStyle.setWidth(1, Style.Unit.PX);
-    caretStyle.setHeight(lineHeight(), Style.Unit.PX);
+    caretStyle.setHeight(getLineHeight(), Style.Unit.PX);
     caretStyle.setBackgroundColor("black");
 
     int left = Math.min(myCaretPosition, mySelectionStart);
@@ -207,9 +207,9 @@ public class DomTextEditor {
 
     Style selectionStyle = mySelectionDiv.getStyle();
     selectionStyle.setTop(0, Style.Unit.PX);
-    selectionStyle.setHeight(lineHeight(), Style.Unit.PX);
-    selectionStyle.setLeft(caretOffset(left), Style.Unit.PX);
-    selectionStyle.setWidth(caretOffset(right) - caretOffset(left), Style.Unit.PX);
+    selectionStyle.setHeight(getLineHeight(), Style.Unit.PX);
+    selectionStyle.setLeft(setCaretOffset(left), Style.Unit.PX);
+    selectionStyle.setWidth(setCaretOffset(right) - setCaretOffset(left), Style.Unit.PX);
     selectionStyle.setBackgroundColor("cyan");
   }
 
@@ -240,24 +240,23 @@ public class DomTextEditor {
     myTextContainer.setInnerText(normalize(newValue));
 
     myRoot.getStyle().setProperty("font", myFontSize + "px " + TextMetricsCalculator.getFontName(myFontFamily));
-    myRoot.getStyle().setHeight(lineHeight(), Style.Unit.PX);
+    myRoot.getStyle().setHeight(getLineHeight(), Style.Unit.PX);
   }
 
   private Font getFont() {
     return new Font(myFontFamily, myFontSize, myBold, myItalic);
   }
 
-  public int caretOffset(int caretOffset) {
+  public int setCaretOffset(int caretOffset) {
     if (caretOffset == 0) return 0;
     if (isDefaultFont()) {
       return caretOffset * ourCharWidth;
     } else {
       return TextMetricsCalculator.calculateAprox(getFont(), myText.substring(0, caretOffset)).dimension().x;
     }
-
   }
 
-  private int lineHeight() {
+  private int getLineHeight() {
     if (isDefaultFont()) {
       return ourLineHeight;
     } else {
@@ -265,7 +264,7 @@ public class DomTextEditor {
     }
   }
 
-  public int caretPositionAt(int caretOffset) {
+  public int getCaretPositionAt(int caretOffset) {
     String textValue = myText;
     if (caretOffset <= 0) return 0;
     if (textValue == null) return 0;

@@ -70,7 +70,7 @@ class IndentRootCellMapper extends BaseCellMapper<IndentCell> {
         public Element newIndent(int size) {
           Element result = DOM.createDiv();
           DomTextEditor editor = new DomTextEditor(result);
-          editor.text(Strings.repeat("  ", size));
+          editor.setText(Strings.repeat("  ", size));
           return result;
         }
 

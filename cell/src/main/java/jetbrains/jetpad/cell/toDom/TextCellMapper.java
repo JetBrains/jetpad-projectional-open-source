@@ -56,11 +56,11 @@ class TextCellMapper extends BaseCellMapper<TextCell> {
   }
 
   int getCaretOffset(int caret) {
-    return myTextEditor.caretOffset(caret);
+    return myTextEditor.setCaretOffset(caret);
   }
 
   int getCaretAt(int x) {
-    return myTextEditor.caretPositionAt(x);
+    return myTextEditor.getCaretPositionAt(x);
   }
 
   @Override
@@ -109,18 +109,18 @@ class TextCellMapper extends BaseCellMapper<TextCell> {
 
     myLastChangeTime = System.currentTimeMillis();
 
-    myTextEditor.text(getSource().text().get());
-    myTextEditor.caretPosition(getSource().caretPosition().get());
-    myTextEditor.caretVisible(getSource().caretVisible().get() && getSource().focused().get());
-    myTextEditor.textColor(getSource().textColor().get());
-    myTextEditor.bold(getSource().bold().get());
+    myTextEditor.setText(getSource().text().get());
+    myTextEditor.setCaretPosition(getSource().caretPosition().get());
+    myTextEditor.setCaretVisible(getSource().caretVisible().get() && getSource().focused().get());
+    myTextEditor.setTextColor(getSource().textColor().get());
+    myTextEditor.setBold(getSource().bold().get());
 
-    myTextEditor.selectionVisble(getSource().selectionVisible().get() && getSource().focused().get());
-    myTextEditor.selectionStart(getSource().selectionStart().get());
+    myTextEditor.setSelectionVisible(getSource().selectionVisible().get() && getSource().focused().get());
+    myTextEditor.setSelectionStart(getSource().selectionStart().get());
   }
 
   private void updateCaretVisibility() {
-    myTextEditor.caretVisible(myContainerFocused && myCaretVisible && getSource().caretVisible().get());
+    myTextEditor.setCaretVisible(myContainerFocused && myCaretVisible && getSource().caretVisible().get());
   }
 
 }
