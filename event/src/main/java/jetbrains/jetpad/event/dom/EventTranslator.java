@@ -52,18 +52,23 @@ public class EventTranslator {
     //disable back button
     if (event.key() == Key.BACKSPACE) return false;
 
+    //disable navigation keys to prevent browser scrolling
+    if (event.key() == Key.UP || event.key() == Key.DOWN || event.key() == Key.LEFT || event.key() == Key.RIGHT) return false;
+
     //disable space scrolling in case of unhandled space
     if (event.key() == Key.SPACE) return false;
 
     //disable shift+arrow selection
     if (event.is(KeyStrokeSpecs.SELECT_BEFORE) || event.is(KeyStrokeSpecs.SELECT_AFTER)) return false;
 
-
     //disable back forward with Ctrl/Cmd + [ / ]
     if (event.is(KeyStrokeSpecs.MATCHING_CONSTRUCTS)) return false;
 
     //disable tab navigation
     if (event.is(Key.TAB) || event.is(Key.TAB, ModifierKey.SHIFT)) return false;
+
+
+
 
     return !event.isConsumed();
   }
