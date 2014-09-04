@@ -170,8 +170,8 @@ public abstract class Cell implements NavComposite<Cell>, HasVisibility, HasFocu
   public Animation fadeIn(final int duration) {
     return animate(new Function<CellContainerPeer, Animation>() {
       @Override
-      public Animation apply(CellContainerPeer input) {
-        return input.fadeIn(Cell.this, duration);
+      public Animation apply(CellContainerPeer peer) {
+        return peer.fadeIn(Cell.this, duration);
       }
     });
   }
@@ -179,8 +179,8 @@ public abstract class Cell implements NavComposite<Cell>, HasVisibility, HasFocu
   public Animation fadeOut(final int duration) {
     return animate(new Function<CellContainerPeer, Animation>() {
       @Override
-      public Animation apply(CellContainerPeer input) {
-        return input.fadeOut(Cell.this, duration);
+      public Animation apply(CellContainerPeer peer) {
+        return peer.fadeOut(Cell.this, duration);
       }
     });
   }
@@ -188,8 +188,8 @@ public abstract class Cell implements NavComposite<Cell>, HasVisibility, HasFocu
   public Animation showSlide(final int duration) {
     return animate(new Function<CellContainerPeer, Animation>() {
       @Override
-      public Animation apply(CellContainerPeer input) {
-        return input.showSlide(Cell.this, duration);
+      public Animation apply(CellContainerPeer peer) {
+        return peer.showSlide(Cell.this, duration);
       }
     });
   }
@@ -197,8 +197,8 @@ public abstract class Cell implements NavComposite<Cell>, HasVisibility, HasFocu
   public Animation hideSlide(final int duration) {
     return animate(new Function<CellContainerPeer, Animation>() {
       @Override
-      public Animation apply(CellContainerPeer input) {
-        return input.hideSlide(Cell.this, duration);
+      public Animation apply(CellContainerPeer peer) {
+        return peer.hideSlide(Cell.this, duration);
       }
     });
   }
