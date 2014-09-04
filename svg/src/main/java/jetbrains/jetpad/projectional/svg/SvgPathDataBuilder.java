@@ -15,7 +15,39 @@
  */
 package jetbrains.jetpad.projectional.svg;
 
+import jetbrains.jetpad.geometry.DoubleVector;
+
+import java.util.ArrayList;
+import java.util.Collection;
+
 public class SvgPathDataBuilder {
+  public static enum Interpolation {
+    LINEAR, MONOTONE
+  }
+
+  private static enum Action {
+    MOVE_TO('m'),
+    LINE_TO('l'),
+    HORIZONTAL_LINE_TO('h'),
+    VERTICAL_LINE_TO('v'),
+    CURVE_TO('c'),
+    SMOOTH_CURVE_TO('s'),
+    QUADRATIC_BEZIER_CURVE_TO('q'),
+    SMOOTH_QUADRATIC_BEZIER_CURVE_TO('t'),
+    ELLIPTICAL_ARC('a'),
+    CLOSE_PATH('z');
+
+    private final char myChar;
+
+    Action(char c) {
+      myChar = c;
+    }
+
+    char getChar() {
+      return myChar;
+    }
+  }
+
   private StringBuilder myStringBuilder;
   private boolean myDefaultAbsolute;
 
@@ -155,26 +187,134 @@ public class SvgPathDataBuilder {
     return this;
   }
 
-  private static enum Action {
-    MOVE_TO('m'),
-    LINE_TO('l'),
-    HORIZONTAL_LINE_TO('h'),
-    VERTICAL_LINE_TO('v'),
-    CURVE_TO('c'),
-    SMOOTH_CURVE_TO('s'),
-    QUADRATIC_BEZIER_CURVE_TO('q'),
-    SMOOTH_QUADRATIC_BEZIER_CURVE_TO('t'),
-    ELLIPTICAL_ARC('a'),
-    CLOSE_PATH('z');
+  private double lineSlope(DoubleVector v1, DoubleVector v2) {
+    return (v2.y - v1.y) / (v2.x - v1.x);
+  }
 
-    private final char myChar;
+  private ArrayList<Double> finiteDifferences(ArrayList<DoubleVector> points) {
+    ArrayList<Double> result = new ArrayList<>(points.size());
+    Double curSlope = lineSlope(points.get(0), points.get(1));
+    result.add(curSlope);
 
-    Action(char c) {
-      myChar = c;
+    for (int i = 1; i < points.size() - 1; ++i) {
+      Double newSlope = lineSlope(points.get(i), points.get(i + 1));
+      result.add((curSlope + newSlope) / 2);
+      curSlope = newSlope;
     }
 
-    char getChar() {
-      return myChar;
+    result.add(curSlope);
+
+    return result;
+  }
+
+  private void doLinearInterpolation(ArrayList<DoubleVector> points) {
+    for (DoubleVector point : points) {
+      lineTo(point.x, point.y);
     }
+  }
+
+  private void doHermiteInterpolation(ArrayList<DoubleVector> points, ArrayList<DoubleVector> tangents) {
+    if (tangents.size() < 1 ||
+        (points.size() != tangents.size() && points.size() != tangents.size() + 2)) {
+      doLinearInterpolation(points);
+    }
+
+    boolean quad = (points.size() != tangents.size());
+    DoubleVector initPoint = points.get(0);
+    DoubleVector curPoint = points.get(1);
+    DoubleVector initTangent = tangents.get(0);
+    DoubleVector curTangent = initTangent;
+    int pointIndex = 1;
+
+    if (quad) {
+      quadraticBezierCurveTo(points.get(1).x - tangents.get(0).x * 2 / 3, curPoint.y - initTangent.y * 2 / 3, curPoint.x, curPoint.y, true);
+      initPoint = points.get(1);
+      pointIndex = 2;
+    }
+
+    if (tangents.size() > 1) {
+      curTangent = tangents.get(1);
+      curPoint = points.get(pointIndex);
+      pointIndex++;
+      curveTo(initPoint.x + initTangent.x, initPoint.y + initTangent.y, curPoint.x - curTangent.x, curPoint.y - curTangent.y, curPoint.x, curPoint.y, true);
+
+      for (int tangentIndex = 2; tangentIndex < tangents.size(); ++tangentIndex, ++pointIndex) {
+        curPoint = points.get(pointIndex);
+        curTangent = tangents.get(tangentIndex);
+        smoothCurveTo(curPoint.x - curTangent.x, curPoint.y - curTangent.y, curPoint.x, curPoint.y);
+      }
+    }
+
+    if (quad) {
+      DoubleVector lastPoint = points.get(pointIndex);
+      quadraticBezierCurveTo(curPoint.x + curTangent.x * 2 / 3, curPoint.y + curTangent.y * 2 / 3, lastPoint.x, lastPoint.y, true);
+    }
+  }
+
+  private ArrayList<DoubleVector> monotoneTangents(ArrayList<DoubleVector> points) {
+    ArrayList<Double> m = finiteDifferences(points);
+    Double eps = 1e-7;
+
+    for (int i = 0; i < points.size() - 1; ++i) {
+      Double slope = lineSlope(points.get(i), points.get(i + 1));
+
+      if (Math.abs(slope) < eps) {
+        m.set(i, 0.);
+        m.set(i + 1, 0.);
+      } else {
+        Double a = m.get(i) / slope;
+        Double b = m.get(i + 1) / slope;
+
+        Double s = a * a + b * b;
+        if (s > 9) {
+          s = slope * 3 / Math.sqrt(s);
+          m.set(i, s * a);
+          m.set(i + 1, s * b);
+        }
+      }
+    }
+
+    ArrayList<DoubleVector> tangents = new ArrayList<>();
+
+    for (int i = 0; i < points.size(); ++i) {
+      Double slope = (points.get(Math.min(i + 1, points.size() - 1)).x - points.get(Math.max(i - 1, 0)).x) / (6 * (1 + m.get(i) * m.get(i)));
+      tangents.add(new DoubleVector(slope, m.get(i) * slope));
+    }
+
+    return tangents;
+  }
+
+  // see https://github.com/mbostock/d3/blob/master/src/svg/line.js for reference
+  public SvgPathDataBuilder interpolatePoints(Collection<Double> xs, Collection<Double> ys, Interpolation interpolation) {
+    // NOTE: only absolute commands will be produced
+
+    if (xs.size() != ys.size()) {
+      throw new IllegalArgumentException("Sizes of xs and ys must be equal");
+    }
+
+    ArrayList<DoubleVector> points = new ArrayList<>(xs.size());
+    ArrayList<Double> xsArray = new ArrayList<>(xs);
+    ArrayList<Double> ysArray = new ArrayList<>(ys);
+
+    for (int i = 0; i < xs.size(); ++i) {
+      points.add(new DoubleVector(xsArray.get(i), ysArray.get(i)));
+    }
+
+    switch (interpolation) {
+      case LINEAR:
+        doLinearInterpolation(points);
+        break;
+      case MONOTONE:
+        if (points.size() < 3) {
+          doLinearInterpolation(points);
+        } else {
+          doHermiteInterpolation(points, monotoneTangents(points));
+        }
+        break;
+      default:
+        throw new IllegalArgumentException("Unsupported interpolation parameter");
+    }
+
+    return this;
   }
 }
