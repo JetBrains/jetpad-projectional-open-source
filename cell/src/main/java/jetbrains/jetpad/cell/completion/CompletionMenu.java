@@ -89,6 +89,7 @@ class CompletionMenu {
         }));
 
       conf.add(Synchronizers.forPropsOneWay(getSource().loading, Properties.ifProp(myEmptyCell.text(), "Loading...", "<no completion items>")));
+      conf.add(Synchronizers.forPropsOneWay(getSource().loading, Properties.ifProp(myEmptyCell.textColor(), Color.GREEN, Color.RED)));
       conf.add(Synchronizers.forPropsOneWay(Properties.isEmpty(getSource().visibleItems), myEmptyCell.visible()));
     }
   }
