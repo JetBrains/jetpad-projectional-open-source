@@ -59,7 +59,7 @@ public abstract class Cell implements NavComposite<Cell>, HasVisibility, HasFocu
   public static final CellPropertySpec<Cell> LEFT_POPUP = new CellPropertySpec<>("leftPopup");
   public static final CellPropertySpec<Cell> RIGHT_POPUP = new CellPropertySpec<>("rightPopup");
 
-  private static final CellPropertySpec<Cell>[] POPUP_SPECS = new CellPropertySpec[] { LEFT_POPUP, RIGHT_POPUP, BOTTOM_POPUP, FRONT_POPUP };
+  private static final List<CellPropertySpec<Cell>> POPUP_SPECS = Arrays.asList(LEFT_POPUP, RIGHT_POPUP, BOTTOM_POPUP, FRONT_POPUP);
 
   public static final CellPropertySpec<Boolean> VISIBLE = new CellPropertySpec<>("visible", true);
   public static final CellPropertySpec<Boolean> SELECTED = new CellPropertySpec<>("selected", false);
@@ -71,7 +71,7 @@ public abstract class Cell implements NavComposite<Cell>, HasVisibility, HasFocu
   public static final CellPropertySpec<Boolean> HAS_SHADOW = new CellPropertySpec<>("hasShadow", false);
 
   public static boolean isPopupProp(CellPropertySpec<?> prop) {
-    return prop == BOTTOM_POPUP || prop == FRONT_POPUP || prop == LEFT_POPUP || prop == RIGHT_POPUP;
+    return POPUP_SPECS.contains(prop);
   }
 
   private CellTrait[] myCellTraits = CellTrait.EMPTY_ARRAY;
