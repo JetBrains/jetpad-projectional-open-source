@@ -15,6 +15,8 @@
  */
 package jetbrains.jetpad.cell.event;
 
+import jetbrains.jetpad.cell.Cell;
+import jetbrains.jetpad.cell.trait.CellTrait;
 import jetbrains.jetpad.event.*;
 
 public class CellEventSpec<EventT extends Event> {
@@ -43,6 +45,36 @@ public class CellEventSpec<EventT extends Event> {
 
   private CellEventSpec(String name) {
     myName = name;
+  }
+
+  public void dispatch(Cell c, EventT e, CellTrait ct) {
+    if (this == CellEventSpec.FOCUS_GAINED) {
+      ct.onFocusGained(c, (FocusEvent) e);
+    } else if (this == CellEventSpec.FOCUS_LOST) {
+      ct.onFocusLost(c, (FocusEvent) e);
+    } else if (this == CellEventSpec.MOUSE_PRESSED) {
+      ct.onMousePressed(c, (MouseEvent) e);
+    } else if (this == CellEventSpec.MOUSE_RELEASED) {
+      ct.onMouseReleased(c, (MouseEvent) e);
+    } else if (this == CellEventSpec.MOUSE_MOVED) {
+      ct.onMouseMoved(c, (MouseEvent) e);
+    } else if (this == CellEventSpec.MOUSE_DRAGGED) {
+      ct.onMouseDragged(c, (MouseEvent) e);
+    } else if (this == CellEventSpec.MOUSE_ENTERED) {
+      ct.onMouseEntered(c, (MouseEvent) e);
+    } else if (this == CellEventSpec.MOUSE_LEFT) {
+      ct.onMouseLeft(c, (MouseEvent) e);
+    } else if (this == CellEventSpec.COPY) {
+      ct.onCopy(c, (CopyCutEvent) e);
+    } else if (this == CellEventSpec.CUT) {
+      ct.onCut(c, (CopyCutEvent) e);
+    } else if (this == CellEventSpec.PASTE) {
+      ct.onPaste(c, (PasteEvent) e);
+    } else if (this == CellEventSpec.COMPLETE) {
+      ct.onComplete(c, (CompletionEvent) e);
+    } else {
+      throw new IllegalStateException("Unknown event type " + e);
+    }
   }
 
   @Override

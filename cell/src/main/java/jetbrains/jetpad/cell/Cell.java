@@ -21,13 +21,12 @@ import jetbrains.jetpad.base.Registration;
 import jetbrains.jetpad.base.animation.Animation;
 import jetbrains.jetpad.base.animation.Animations;
 import jetbrains.jetpad.cell.event.CellEventSpec;
-import jetbrains.jetpad.cell.event.CompletionEvent;
 import jetbrains.jetpad.cell.event.EventPriority;
-import jetbrains.jetpad.cell.event.FocusEvent;
 import jetbrains.jetpad.cell.trait.CellTrait;
 import jetbrains.jetpad.cell.trait.CellTraitEventSpec;
 import jetbrains.jetpad.cell.trait.CellTraitPropertySpec;
-import jetbrains.jetpad.event.*;
+import jetbrains.jetpad.event.Event;
+import jetbrains.jetpad.event.KeyEvent;
 import jetbrains.jetpad.geometry.Rectangle;
 import jetbrains.jetpad.geometry.Vector;
 import jetbrains.jetpad.model.collections.CollectionItemEvent;
@@ -244,34 +243,7 @@ public abstract class Cell implements NavComposite<Cell>, HasVisibility, HasFocu
       }
     } else {
       for (CellTrait t : myCellTraits) {
-        if (spec == CellEventSpec.FOCUS_GAINED) {
-          t.onFocusGained(this, (FocusEvent) e);
-        } else if (spec == CellEventSpec.FOCUS_LOST) {
-          t.onFocusLost(this, (FocusEvent) e);
-        } else if (spec == CellEventSpec.MOUSE_PRESSED) {
-          t.onMousePressed(this, (MouseEvent) e);
-        } else if (spec == CellEventSpec.MOUSE_RELEASED) {
-          t.onMouseReleased(this, (MouseEvent) e);
-        } else if (spec == CellEventSpec.MOUSE_MOVED) {
-          t.onMouseMoved(this, (MouseEvent) e);
-        } else if (spec == CellEventSpec.MOUSE_DRAGGED) {
-          t.onMouseDragged(this, (MouseEvent) e);
-        } else if (spec == CellEventSpec.MOUSE_ENTERED) {
-          t.onMouseEntered(this, (MouseEvent) e);
-        } else if (spec == CellEventSpec.MOUSE_LEFT) {
-          t.onMouseLeft(this, (MouseEvent) e);
-        } else if (spec == CellEventSpec.COPY) {
-          t.onCopy(this, (CopyCutEvent) e);
-        } else if (spec == CellEventSpec.CUT) {
-          t.onCut(this, (CopyCutEvent) e);
-        } else if (spec == CellEventSpec.PASTE) {
-          t.onPaste(this, (PasteEvent) e);
-        } else if (spec == CellEventSpec.COMPLETE) {
-          t.onComplete(this, (CompletionEvent) e);
-        } else {
-          throw new IllegalStateException("Unknown event type " + e);
-        }
-
+        spec.dispatch(this, e, t);
         if (e.isConsumed()) return;
       }
     }
