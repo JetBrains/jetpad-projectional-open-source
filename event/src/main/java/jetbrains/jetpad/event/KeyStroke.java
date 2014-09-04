@@ -58,7 +58,7 @@ public class KeyStroke implements KeyStrokeSpec {
     return Collections.singleton(this);
   }
 
-  public KeyStroke addModifier(ModifierKey key) {
+  public KeyStroke with(ModifierKey key) {
     Set<ModifierKey> keys = new HashSet<>(myModifiers);
     keys.add(key);
     return new KeyStroke(myKey, keys);

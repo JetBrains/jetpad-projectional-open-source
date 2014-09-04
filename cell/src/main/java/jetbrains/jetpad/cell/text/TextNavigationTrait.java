@@ -116,7 +116,7 @@ class TextNavigationTrait extends CellTrait {
           event.is(KeyStrokeSpecs.END) ||
           (event.is(KeyStrokeSpecs.SELECT_END) && selectionAvailable) ||
           event.is(KeyStrokeSpecs.NEXT_WORD_ALT)) && caret < maxCaret ||
-          event.is(KeyStrokeSpecs.NEXT_WORD_CONTROL.addModifier(ModifierKey.SHIFT))) {
+          event.is(KeyStrokeSpecs.NEXT_WORD_CONTROL.with(ModifierKey.SHIFT))) {
         cell.caretPosition().set(maxCaret);
         cell.scrollToCaret();
         event.consume();
