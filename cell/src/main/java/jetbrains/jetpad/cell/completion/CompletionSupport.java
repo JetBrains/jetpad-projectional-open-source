@@ -127,8 +127,8 @@ public class CompletionSupport {
     };
   }
 
-  public static void showCompletion(final TextCell textView, Async<List<CompletionItem>> items, final Registration removeOnClose, final Runnable restoreState) {
-    if (!textView.focused().get()) {
+  public static void showCompletion(final TextCell textCell, Async<List<CompletionItem>> items, final Registration removeOnClose, final Runnable restoreState) {
+    if (!textCell.focused().get()) {
       throw new IllegalArgumentException();
     }
 
@@ -136,7 +136,7 @@ public class CompletionSupport {
     menuModel.loading.set(true);
 
     final CompositeRegistration reg = new CompositeRegistration();
-    final ReadableProperty<String> prefixText = textView.prefixText();
+    final ReadableProperty<String> prefixText = textCell.prefixText();
     reg.add(PropertyBinding.bindOneWay(prefixText, menuModel.text));
 
     final Handler<CompletionItem> completer = new Handler<CompletionItem>() {
@@ -148,8 +148,8 @@ public class CompletionSupport {
       }
     };
 
-    final Cell completionCell = CompletionMenu.createView(menuModel, completer, reg);
-    reg.add(textView.addTrait(new CellTrait() {
+    final Cell completionCell = CompletionMenu.createCell(menuModel, completer, reg);
+    reg.add(textCell.addTrait(new CellTrait() {
       @Override
       public void onPropertyChanged(Cell cell, CellPropertySpec<?> propery, PropertyChangeEvent<?> event) {
         if (propery == Cell.FOCUSED) {
@@ -165,7 +165,7 @@ public class CompletionSupport {
       @Override
       public void onKeyPressed(Cell cell, KeyEvent event) {
         CompletionItem selectedItem = menuModel.selectedItem.get();
-        int pageHeight = completionCell.getBounds().dimension.y / textView.dimension().y;
+        int pageHeight = completionCell.getBounds().dimension.y / textCell.dimension().y;
         if (selectedItem == null) return;
 
         if (event.is(Key.ENTER)) {
@@ -235,7 +235,7 @@ public class CompletionSupport {
       }
     });
 
-    textView.bottomPopup().set(completionCell);
+    textCell.bottomPopup().set(completionCell);
     completionCell.showSlide(150);
 
     items.onSuccess(new Handler<List<CompletionItem>>() {
@@ -260,23 +260,23 @@ public class CompletionSupport {
       Runnable onDeactivate) {
     CellContainer container = cell.cellContainer().get();
     final HorizontalCell popup = new HorizontalCell();
-    final TextCell textView = new TextCell();
+    final TextCell textCell = new TextCell();
 
-    textView.focusable().set(true);
-    final Registration textEditingReg = textView.addTrait(new TextEditingTrait());
+    textCell.focusable().set(true);
+    final Registration textEditingReg = textCell.addTrait(new TextEditingTrait());
 
-    popup.children().add(textView);
+    popup.children().add(textCell);
     targetPopup.set(popup);
     final Runnable state = container.saveState();
-    textView.focus();
-    showCompletion(textView, items, new Registration() {
+    textCell.focus();
+    showCompletion(textCell, items, new Registration() {
       @Override
       public void remove() {
         popup.removeFromParent();
         textEditingReg.remove();
       }
     }, Runnables.seq(state, onDeactivate));
-    return textView;
+    return textCell;
   }
 
   public static TextCell showSideTransformPopup(
@@ -300,7 +300,7 @@ public class CompletionSupport {
     }
 
     final HorizontalCell popup = new HorizontalCell();
-    final TextCell textView = new TextCell() {
+    final TextCell textCell = new TextCell() {
       @Override
       public Registration addTrait(CellTrait trait) {
         return super.addTrait(trait);
@@ -313,8 +313,8 @@ public class CompletionSupport {
         return wrappedItems;
       }
     }, CompletionParameters.EMPTY);
-    textView.focusable().set(true);
-    final Registration traitReg = textView.addTrait(new TextEditingTrait() {
+    textCell.focusable().set(true);
+    final Registration traitReg = textCell.addTrait(new TextEditingTrait() {
       @Override
       public Object get(Cell cell, CellTraitPropertySpec<?> spec) {
         if (spec == Completion.COMPLETION) {
@@ -356,9 +356,9 @@ public class CompletionSupport {
       protected boolean onAfterType(TextCell tv) {
         if (super.onAfterType(tv)) return true;
 
-        if (!textView.isEnd()) return false;
+        if (!textCell.isEnd()) return false;
 
-        String text = textView.text().get();
+        String text = textCell.text().get();
         if (completion.hasSingleMatch(text, cell.get(TextEditing.EAGER_COMPLETION))) {
           completion.matches(text).get(0).complete(text).run();
           return true;
@@ -382,14 +382,14 @@ public class CompletionSupport {
       }
     });
 
-    popup.children().add(textView);
+    popup.children().add(textCell);
 
     if (targetPopup.get() != null) {
       throw new IllegalStateException();
     }
 
     targetPopup.set(popup);
-    textView.focus();
+    textCell.focus();
 
     dismiss.set(new Handler<Boolean>() {
       @Override
@@ -404,6 +404,6 @@ public class CompletionSupport {
       }
     });
 
-    return textView;
+    return textCell;
   }
 }

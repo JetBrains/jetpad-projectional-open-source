@@ -90,7 +90,7 @@ public abstract class CellTrait {
   public void onComplete(Cell cell, CompletionEvent event) {
   }
 
-  public void onViewTraitEvent(Cell cell, CellTraitEventSpec<?> spec, Event event) {
+  public void onCellTraitEvent(Cell cell, CellTraitEventSpec<?> spec, Event event) {
   }
 
   public final Set<CellPropertySpec<?>> getChangedProperties(Cell cell) {

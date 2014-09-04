@@ -22,7 +22,7 @@ public interface CellContainerListener {
   void onBeforeCommand();
   void onAfterCommand();
 
-  void onViewPropertyChanged(Cell cell, CellPropertySpec<?> prop, PropertyChangeEvent<?> change);
+  void onCellPropertyChanged(Cell cell, CellPropertySpec<?> prop, PropertyChangeEvent<?> change);
   void onChildAdded(Cell parent, CollectionItemEvent<Cell> change);
   void onChildRemoved(Cell parent, CollectionItemEvent<Cell> change);
 }

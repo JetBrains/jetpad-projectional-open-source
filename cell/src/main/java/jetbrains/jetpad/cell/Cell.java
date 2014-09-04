@@ -279,7 +279,7 @@ public abstract class Cell implements NavComposite<Cell>, HasVisibility, HasFocu
 
   public <EventT extends Event> void dispatch(EventT e, CellTraitEventSpec<EventT> spec) {
     for (CellTrait t : myCellTraits) {
-      t.onViewTraitEvent(this, spec, e);
+      t.onCellTraitEvent(this, spec, e);
       if (e.isConsumed()) return;
     }
 
@@ -495,7 +495,7 @@ public abstract class Cell implements NavComposite<Cell>, HasVisibility, HasFocu
     }
 
     if (myContainer != null) {
-      myContainer.viewPropertyChanged(this, prop, event);
+      myContainer.cellPropertyChanged(this, prop, event);
     }
   }
 
@@ -544,8 +544,8 @@ public abstract class Cell implements NavComposite<Cell>, HasVisibility, HasFocu
       public Registration addHandler(final EventHandler<? super PropertyChangeEvent<ValueT>> handler) {
         return addListener(new CellAdapter() {
           @Override
-          public void onPropertyChanged(CellPropertySpec<?> viewProp, PropertyChangeEvent<?> event) {
-            if (!Objects.equal(prop, viewProp)) return;
+          public void onPropertyChanged(CellPropertySpec<?> cellProp, PropertyChangeEvent<?> event) {
+            if (!Objects.equal(prop, cellProp)) return;
             handler.onEvent((PropertyChangeEvent<ValueT>) event);
           }
         });
@@ -585,7 +585,7 @@ public abstract class Cell implements NavComposite<Cell>, HasVisibility, HasFocu
     }
 
     myContainer = container;
-    myContainer.viewAdded(this);
+    myContainer.cellAdded(this);
 
     if (myListeners != null) {
       myListeners.fire(new ListenerCaller<CellListener>() {
@@ -611,7 +611,7 @@ public abstract class Cell implements NavComposite<Cell>, HasVisibility, HasFocu
       throw new IllegalStateException();
     }
 
-    myContainer.viewRemoved(this);
+    myContainer.cellRemoved(this);
 
     final CellContainer oldContainer = myContainer;
     myContainer = null;
@@ -759,7 +759,7 @@ public abstract class Cell implements NavComposite<Cell>, HasVisibility, HasFocu
       onChildAdded(event);
 
       if (myContainer != null) {
-        myContainer.viewChildAdded(Cell.this, event);
+        myContainer.cellChildAdded(Cell.this, event);
       }
 
       if (myListeners != null) {
@@ -805,7 +805,7 @@ public abstract class Cell implements NavComposite<Cell>, HasVisibility, HasFocu
       onChildRemoved(event);
 
       if (myContainer != null) {
-        myContainer.viewChildRemoved(Cell.this, event);
+        myContainer.cellChildRemoved(Cell.this, event);
       }
 
       if (myListeners != null) {

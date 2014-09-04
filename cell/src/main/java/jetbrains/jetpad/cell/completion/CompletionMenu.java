@@ -35,7 +35,7 @@ import jetbrains.jetpad.values.Color;
 import java.util.Arrays;
 
 class CompletionMenu {
-  static Cell createView(CompletionMenuModel model, Handler<CompletionItem> completer, CompositeRegistration reg) {
+  static Cell createCell(CompletionMenuModel model, Handler<CompletionItem> completer, CompositeRegistration reg) {
     final CompletionMenuModelMapper mapper = new CompletionMenuModelMapper(model, completer);
     mapper.attachRoot();
 

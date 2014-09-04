@@ -147,7 +147,7 @@ class TokenCellTraits {
     }
 
     @Override
-    public void onViewTraitEvent(Cell cell, CellTraitEventSpec<?> spec, Event event) {
+    public void onCellTraitEvent(Cell cell, CellTraitEventSpec<?> spec, Event event) {
       if (spec == Cells.BECAME_EMPTY) {
         int index = tokenViews(cell).indexOf(cell);
 
@@ -164,7 +164,7 @@ class TokenCellTraits {
         }
       }
 
-      super.onViewTraitEvent(cell, spec, event);
+      super.onCellTraitEvent(cell, spec, event);
     }
 
     @Override

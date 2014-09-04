@@ -15,8 +15,6 @@
  */
 package jetbrains.jetpad.completion;
 
-import jetbrains.jetpad.completion.CompletionItem;
-
 public class WrapperCompletionItem implements CompletionItem {
   private CompletionItem myItem;
 

@@ -28,7 +28,7 @@ public class CellContainerAdapter implements CellContainerListener {
   }
 
   @Override
-  public void onViewPropertyChanged(Cell cell, CellPropertySpec<?> prop, PropertyChangeEvent<?> change) {
+  public void onCellPropertyChanged(Cell cell, CellPropertySpec<?> prop, PropertyChangeEvent<?> change) {
   }
 
   @Override

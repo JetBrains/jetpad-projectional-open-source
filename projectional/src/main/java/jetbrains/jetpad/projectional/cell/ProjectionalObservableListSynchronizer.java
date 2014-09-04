@@ -111,7 +111,7 @@ class ProjectionalObservableListSynchronizer<ContextT, SourceItemT> extends Base
       }
 
       @Override
-      public void onViewTraitEvent(Cell cell, CellTraitEventSpec<?> spec, Event event) {
+      public void onCellTraitEvent(Cell cell, CellTraitEventSpec<?> spec, Event event) {
         if (spec == Cells.BECAME_EMPTY && cell.get(ProjectionalSynchronizers.DELETE_ON_EMPTY)) {
           int index = childCells().indexOf(cell);
           if (index == -1) return;
@@ -120,7 +120,7 @@ class ProjectionalObservableListSynchronizer<ContextT, SourceItemT> extends Base
           return;
         }
 
-        super.onViewTraitEvent(cell, spec, event);
+        super.onCellTraitEvent(cell, spec, event);
       }
     });
   }

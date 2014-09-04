@@ -159,7 +159,6 @@ public class CellContainerToDomMapper extends Mapper<CellContainer, Element> {
     disablePopup(getTarget());
     getTarget().setTabIndex(0);
     getTarget().addClassName(CSS.rootContainer());
-
   }
 
   @Override
@@ -198,7 +197,7 @@ public class CellContainerToDomMapper extends Mapper<CellContainer, Element> {
       public Registration get() {
         return getSource().addListener(new CellContainerAdapter() {
           @Override
-          public void onViewPropertyChanged(Cell cell, CellPropertySpec<?> prop, PropertyChangeEvent<?> event) {
+          public void onCellPropertyChanged(Cell cell, CellPropertySpec<?> prop, PropertyChangeEvent<?> event) {
             BaseCellMapper<?> mapper = (BaseCellMapper<?>) rootMapper().getDescendantMapper(cell);
             if (mapper == null) return;
             if (Cell.isPopupProp(prop)) {

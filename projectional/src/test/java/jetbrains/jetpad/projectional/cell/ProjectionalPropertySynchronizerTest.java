@@ -224,14 +224,14 @@ public class ProjectionalPropertySynchronizerTest extends EditingTestCase {
       }
 
       @Override
-      public void onViewTraitEvent(Cell cell, CellTraitEventSpec<?> spec, Event event) {
+      public void onCellTraitEvent(Cell cell, CellTraitEventSpec<?> spec, Event event) {
         if (spec == Cells.BECAME_EMPTY) {
           becameEmptyFired.set(true);
           event.consume();
           return;
         }
 
-        super.onViewTraitEvent(cell, spec, event);
+        super.onCellTraitEvent(cell, spec, event);
       }
     });
 

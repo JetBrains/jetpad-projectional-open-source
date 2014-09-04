@@ -44,11 +44,11 @@ import static jetbrains.jetpad.model.property.Properties.validatedProperty;
 
 public class ValueEditors {
 
-  public static <EnumT extends Enum<EnumT>> Property<EnumT> enumProperty(final TextCell textView, final Class<EnumT> cls) {
-    return enumProperty(textView, cls, Color.BLACK);
+  public static <EnumT extends Enum<EnumT>> Property<EnumT> enumProperty(final TextCell textCell, final Class<EnumT> cls) {
+    return enumProperty(textCell, cls, Color.BLACK);
   }
 
-  public static <EnumT extends Enum<EnumT>> Property<EnumT> enumProperty(final TextCell textView, final Class<EnumT> cls, final Color color) {
+  public static <EnumT extends Enum<EnumT>> Property<EnumT> enumProperty(final TextCell textCell, final Class<EnumT> cls, final Color color) {
     class MyEnumValidator implements Predicate<String> {
       @Override
       public boolean apply(String input) {
@@ -62,7 +62,7 @@ public class ValueEditors {
       }
     }
 
-    textView.addTrait(new DerivedCellTrait() {
+    textCell.addTrait(new DerivedCellTrait() {
       @Override
       protected CellTrait getBase(Cell cell) {
         return TextEditing.validTextEditing(new MyEnumValidator(), color);
@@ -79,8 +79,8 @@ public class ValueEditors {
                 result.add(new SimpleCompletionItem(v.toString()) {
                   @Override
                   public Runnable complete(String text) {
-                    textView.text().set(v.toString());
-                    return CellActions.toEnd(textView);
+                    textCell.text().set(v.toString());
+                    return CellActions.toEnd(textCell);
                   }
                 });
               }
@@ -97,7 +97,7 @@ public class ValueEditors {
       }
     });
 
-    return Properties.map(validatedProperty(textView.text(), new MyEnumValidator()), new Function<String, EnumT>() {
+    return Properties.map(validatedProperty(textCell.text(), new MyEnumValidator()), new Function<String, EnumT>() {
         @Override
         public EnumT apply(String s) {
           return Strings.isNullOrEmpty(s) ? null : Enums.valueOf(cls, s);
@@ -111,9 +111,9 @@ public class ValueEditors {
     );
   }
 
-  public static Property<Integer> intProperty(TextCell textView) {
-    textView.addTrait(TextEditing.validTextEditing(Validators.unsignedInteger(), Color.BLUE));
-    Property<String> validated = validatedProperty(textView.text(), Validators.unsignedInteger());
+  public static Property<Integer> intProperty(TextCell textCell) {
+    textCell.addTrait(TextEditing.validTextEditing(Validators.unsignedInteger(), Color.BLUE));
+    Property<String> validated = validatedProperty(textCell.text(), Validators.unsignedInteger());
 
     return Properties.map(validated, new Function<String, Integer>() {
         @Override
@@ -133,9 +133,9 @@ public class ValueEditors {
     return booleanProperty(textView, true);
   }
 
-  public static Property<Boolean> booleanProperty(final TextCell textView, final boolean completion) {
-    final Color color = textView.textColor().get();
-    textView.addTrait(new DerivedCellTrait() {
+  public static Property<Boolean> booleanProperty(final TextCell textCell, final boolean completion) {
+    final Color color = textCell.textColor().get();
+    textCell.addTrait(new DerivedCellTrait() {
       @Override
       protected CellTrait getBase(Cell cell) {
         return TextEditing.validTextEditing(Validators.bool(), color);
@@ -151,14 +151,14 @@ public class ValueEditors {
               result.add(new SimpleCompletionItem("true") {
                 @Override
                 public Runnable complete(String text) {
-                  textView.text().set("true");
+                  textCell.text().set("true");
                   return Runnables.EMPTY;
                 }
               });
               result.add(new SimpleCompletionItem("false") {
                 @Override
                 public Runnable complete(String text) {
-                  textView.text().set("false");
+                  textCell.text().set("false");
                   return Runnables.EMPTY;
                 }
               });
@@ -172,7 +172,7 @@ public class ValueEditors {
       }
     });
 
-    return Properties.map(textView.text(), new Function<String, Boolean>() {
+    return Properties.map(textCell.text(), new Function<String, Boolean>() {
         @Override
         public Boolean apply(String s) {
           return s == null ? null : Boolean.parseBoolean(s);

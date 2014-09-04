@@ -67,9 +67,6 @@ public class EventTranslator {
     //disable tab navigation
     if (event.is(Key.TAB) || event.is(Key.TAB, ModifierKey.SHIFT)) return false;
 
-
-
-
     return !event.isConsumed();
   }
 

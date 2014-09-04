@@ -109,8 +109,8 @@ public abstract class DerivedCellTrait extends CellTrait {
   }
 
   @Override
-  public void onViewTraitEvent(Cell cell, CellTraitEventSpec<?> spec, Event event) {
-    getBase(cell).onViewTraitEvent(cell, spec, event);
+  public void onCellTraitEvent(Cell cell, CellTraitEventSpec<?> spec, Event event) {
+    getBase(cell).onCellTraitEvent(cell, spec, event);
   }
 
   @Override

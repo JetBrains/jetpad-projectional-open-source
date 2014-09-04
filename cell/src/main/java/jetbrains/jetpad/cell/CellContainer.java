@@ -316,28 +316,28 @@ public class CellContainer {
     }
   }
 
-  void viewAdded(Cell c) {
+  void cellAdded(Cell c) {
     for (Cell p : c.popups()) {
       myPopups.add(p);
     }
   }
 
-  void viewRemoved(Cell c) {
+  void cellRemoved(Cell c) {
     for (Cell p : c.popups()) {
       myPopups.remove(p);
     }
   }
 
-  void viewPropertyChanged(final Cell cell, final CellPropertySpec<?> prop, final PropertyChangeEvent<?> change) {
+  void cellPropertyChanged(final Cell cell, final CellPropertySpec<?> prop, final PropertyChangeEvent<?> change) {
     myListeners.fire(new ListenerCaller<CellContainerListener>() {
       @Override
       public void call(CellContainerListener l) {
-        l.onViewPropertyChanged(cell, prop, change);
+        l.onCellPropertyChanged(cell, prop, change);
       }
     });
   }
 
-  void viewChildAdded(final Cell cell, final CollectionItemEvent<Cell> change) {
+  void cellChildAdded(final Cell cell, final CollectionItemEvent<Cell> change) {
     myListeners.fire(new ListenerCaller<CellContainerListener>() {
       @Override
       public void call(CellContainerListener l) {
@@ -346,7 +346,7 @@ public class CellContainer {
     });
   }
 
-  void viewChildRemoved(final Cell cell, final CollectionItemEvent<Cell> change) {
+  void cellChildRemoved(final Cell cell, final CollectionItemEvent<Cell> change) {
     myListeners.fire(new ListenerCaller<CellContainerListener>() {
       @Override
       public void call(CellContainerListener l) {

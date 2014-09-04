@@ -159,9 +159,9 @@ public abstract class CompositeCellTrait extends CellTrait {
   }
 
   @Override
-  public void onViewTraitEvent(Cell cell, CellTraitEventSpec<?> spec, Event event) {
+  public void onCellTraitEvent(Cell cell, CellTraitEventSpec<?> spec, Event event) {
     for (CellTrait t : getBaseTraits(cell)) {
-      t.onViewTraitEvent(cell, spec, event);
+      t.onCellTraitEvent(cell, spec, event);
     }
   }
 

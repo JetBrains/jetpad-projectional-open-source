@@ -44,8 +44,8 @@ public class TextEditing {
 
   public static final CellTraitPropertySpec<Boolean> EAGER_COMPLETION = new CellTraitPropertySpec<>("eagerCompletion", false);
 
-  private static final TextCellStateHandler TEXT_VIEW_STATE_HANDLER = new TextCellStateHandler(false);
-  private static final TextCellStateHandler EDITABLE_TEXT_VIEW_STATE_HANDLER = new TextCellStateHandler(true);
+  private static final TextCellStateHandler TEXT_CELL_STATE_HANDLER = new TextCellStateHandler(false);
+  private static final TextCellStateHandler EDITABLE_TEXT_CELL_STATE_HANDLER = new TextCellStateHandler(true);
 
   public static CellTrait textNavigation(final boolean firstAllowed, final boolean lastAllowed) {
     return new DerivedCellTrait() {
@@ -65,7 +65,7 @@ public class TextEditing {
         }
 
         if (spec == CellStateHandler.PROPERTY) {
-          return TEXT_VIEW_STATE_HANDLER;
+          return TEXT_CELL_STATE_HANDLER;
         }
 
         return super.get(cell, spec);
@@ -90,7 +90,7 @@ public class TextEditing {
       @Override
       public Object get(Cell cell, CellTraitPropertySpec<?> spec) {
         if (spec == CellStateHandler.PROPERTY) {
-          return TEXT_VIEW_STATE_HANDLER;
+          return TEXT_CELL_STATE_HANDLER;
         }
 
         return super.get(cell, spec);
@@ -159,7 +159,7 @@ public class TextEditing {
         }
 
         if (spec == CellStateHandler.PROPERTY) {
-          return EDITABLE_TEXT_VIEW_STATE_HANDLER;
+          return EDITABLE_TEXT_CELL_STATE_HANDLER;
         }
 
         return super.get(cell, spec);
@@ -183,16 +183,16 @@ public class TextEditing {
           @Override
           public Runnable apply(String sideText) {
             CompletionHelper sideCompletion = CompletionHelper.completionFor(cell, CompletionParameters.EMPTY, side.getKey());
-            TextCell popupView = CompletionSupport.showSideTransformPopup(cell, side.getPopup(cell), sideCompletion.getItems());
-            popupView.text().set(sideText);
-            return CellActions.toEnd(popupView);
+            TextCell popupCell = CompletionSupport.showSideTransformPopup(cell, side.getPopup(cell), sideCompletion.getItems());
+            popupCell.text().set(sideText);
+            return CellActions.toEnd(popupCell);
           }
         };
       }
     };
   }
 
-  private static class TextCellStateHandler implements CellStateHandler<TextCell, TextViewState> {
+  private static class TextCellStateHandler implements CellStateHandler<TextCell, TextCellState> {
     private boolean mySaveText;
 
     private TextCellStateHandler(boolean saveText) {
@@ -205,8 +205,8 @@ public class TextEditing {
     }
 
     @Override
-    public TextViewState saveState(TextCell cell) {
-      TextViewState result = new TextViewState();
+    public TextCellState saveState(TextCell cell) {
+      TextCellState result = new TextCellState();
       if (mySaveText) {
         result.text = cell.text().get();
       }
@@ -215,7 +215,7 @@ public class TextEditing {
     }
 
     @Override
-    public void restoreState(TextCell cell, TextViewState state) {
+    public void restoreState(TextCell cell, TextCellState state) {
       if (mySaveText) {
         cell.text().set(state.text);
       }
@@ -223,16 +223,16 @@ public class TextEditing {
     }
   }
 
-  private static class TextViewState {
+  private static class TextCellState {
     int caretPosition;
     String text;
 
 
     @Override
     public boolean equals(Object o) {
-      if (!(o instanceof TextViewState)) return false;
+      if (!(o instanceof TextCellState)) return false;
 
-      TextViewState otherState = (TextViewState) o;
+      TextCellState otherState = (TextCellState) o;
 
       return Objects.equal(text, otherState.text) && caretPosition == otherState.caretPosition;
     }

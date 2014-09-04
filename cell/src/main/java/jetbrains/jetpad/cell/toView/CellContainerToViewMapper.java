@@ -370,7 +370,7 @@ public class CellContainerToViewMapper extends Mapper<CellContainer, View> {
   private CellContainerAdapter createCellContainerListener() {
     return new CellContainerAdapter() {
       @Override
-      public void onViewPropertyChanged(Cell cell, CellPropertySpec<?> prop, PropertyChangeEvent<?> event) {
+      public void onCellPropertyChanged(Cell cell, CellPropertySpec<?> prop, PropertyChangeEvent<?> event) {
         BaseCellMapper<?, ?> target = (BaseCellMapper<?, ?>) rootMapper().getDescendantMapper(cell);
         if (target == null) return;
 

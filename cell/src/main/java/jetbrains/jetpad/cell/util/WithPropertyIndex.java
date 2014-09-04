@@ -51,7 +51,7 @@ public abstract class WithPropertyIndex {
   protected void init(CellContainer cellContainer) {
     myReg = cellContainer.addListener(new CellContainerAdapter() {
       @Override
-      public void onViewPropertyChanged(Cell cell, CellPropertySpec<?> prop, PropertyChangeEvent<?> change) {
+      public void onCellPropertyChanged(Cell cell, CellPropertySpec<?> prop, PropertyChangeEvent<?> change) {
         if (!isProp(prop)) return;
 
         if (isNonTrivialValue(cell)) {
