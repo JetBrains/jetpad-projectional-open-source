@@ -35,7 +35,7 @@ public class DemoModel {
 
     SvgEllipseElement ellipse = new SvgEllipseElement(200., 80., 170., 50.);
     ellipse.getAttribute("style").set("stroke:#006600;");
-    ellipse.xmlClass().set("ellipse-yellow");
+    ellipse.addClass("ellipse-yellow");
 
     SvgTextElement text = new SvgTextElement(20., 20., "Example Text");
 
