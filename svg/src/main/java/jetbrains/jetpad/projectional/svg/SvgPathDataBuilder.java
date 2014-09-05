@@ -39,7 +39,7 @@ public class SvgPathDataBuilder {
 
     private final char myChar;
 
-    Action(char c) {
+    private Action(char c) {
       myChar = c;
     }
 

@@ -17,7 +17,7 @@ package jetbrains.jetpad.projectional.svg;
 
 import jetbrains.jetpad.model.property.Property;
 
-public class SvgCircleElement extends SvgStylableElement {
+public class SvgCircleElement extends SvgGraphicsElement {
   private static final SvgAttributeSpec<Double> CX = SvgAttributeSpec.createSpec("cx");
   private static final SvgAttributeSpec<Double> CY = SvgAttributeSpec.createSpec("cy");
   private static final SvgAttributeSpec<Double> R = SvgAttributeSpec.createSpec("r");

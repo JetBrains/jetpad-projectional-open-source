@@ -15,5 +15,5 @@
  */
 package jetbrains.jetpad.projectional.svg;
 
-public class SvgGElement extends SvgStylableElement {
+public class SvgGElement extends SvgGraphicsElement {
 }

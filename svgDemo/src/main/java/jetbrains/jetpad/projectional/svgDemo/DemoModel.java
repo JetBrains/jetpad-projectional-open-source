@@ -136,7 +136,7 @@ public class DemoModel {
       @Override
       public void handle(View view, KeyEvent e) {
         if (e.key() == Key.SPACE) {
-          ((SvgElement) model.children().get(1)).getAttribute("stroke-width").set("7");
+          ((SvgElement) model.children().get(1)).getAttribute("stroke-width").set("20");
           return;
         }
 
