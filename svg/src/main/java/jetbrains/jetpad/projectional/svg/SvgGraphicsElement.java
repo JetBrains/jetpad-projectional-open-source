@@ -18,7 +18,7 @@ package jetbrains.jetpad.projectional.svg;
 import jetbrains.jetpad.model.property.Property;
 
 public abstract class SvgGraphicsElement extends SvgStylableElement {
-  public static enum PointerEventsEnum {
+  public static enum PointerEvents {
     VISIBLE_PAINTED("visiblePainted"),
     VISIBLE_FILL("visibleFill"),
     VISIBLE_STROKE("visibleStroke"),
@@ -32,7 +32,7 @@ public abstract class SvgGraphicsElement extends SvgStylableElement {
 
     private String myAttrString;
 
-    private PointerEventsEnum(String attrString) {
+    private PointerEvents(String attrString) {
       myAttrString = attrString;
     }
 
@@ -42,9 +42,9 @@ public abstract class SvgGraphicsElement extends SvgStylableElement {
     }
   }
 
-  private static final SvgAttributeSpec<PointerEventsEnum> POINTER_EVENTS = SvgAttributeSpec.createSpec("pointer-events");
+  private static final SvgAttributeSpec<PointerEvents> POINTER_EVENTS = SvgAttributeSpec.createSpec("pointer-events");
 
-  public Property<PointerEventsEnum> pointerEvents() {
+  public Property<PointerEvents> pointerEvents() {
     return getAttribute(POINTER_EVENTS);
   }
 }
