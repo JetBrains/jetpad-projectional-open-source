@@ -82,6 +82,7 @@ public abstract class SvgStylableElement extends SvgElement {
       return getFullClass();
     }
   }
+
   private static final SvgAttributeSpec<ClassAttribute> CLASS = SvgAttributeSpec.createSpec("class");
 
   public Property<ClassAttribute> classAttribute() {
