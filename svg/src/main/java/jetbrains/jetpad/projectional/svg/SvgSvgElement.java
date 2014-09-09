@@ -29,11 +29,11 @@ public class SvgSvgElement extends SvgStylableElement {
     super();
   }
 
-  public SvgSvgElement(Double height, Double width) {
+  public SvgSvgElement(Double width, Double height) {
     this();
 
-    setAttribute(HEIGHT, height);
     setAttribute(WIDTH, width);
+    setAttribute(HEIGHT, height);
   }
 
   public void setStyle(SvgCssResource css) {

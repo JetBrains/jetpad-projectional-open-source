@@ -27,7 +27,7 @@ public class SvgRectElement extends SvgGraphicsElement {
     super();
   }
 
-  public SvgRectElement(Double x, Double y, Double height, Double width) {
+  public SvgRectElement(Double x, Double y, Double width, Double height) {
     this();
 
     setAttribute(X, x);

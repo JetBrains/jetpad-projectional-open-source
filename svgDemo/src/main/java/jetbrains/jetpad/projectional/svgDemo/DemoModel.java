@@ -27,7 +27,7 @@ import jetbrains.jetpad.values.Color;
 
 public class DemoModel {
   public static SvgSvgElement createModel() {
-    final SvgSvgElement svgRoot = new SvgSvgElement(200., 400.);
+    final SvgSvgElement svgRoot = new SvgSvgElement(400., 200.);
     svgRoot.setStyle(new CssRes());
 
     SvgEllipseElement ellipse = new SvgEllipseElement(200., 80., 170., 50.);
@@ -50,7 +50,7 @@ public class DemoModel {
     SvgEllipseElement ellipse2 = new SvgEllipseElement(250., 85., 40., 85.);
     ellipse2.getAttribute("fill").set(Color.GREEN.toCssColor());
 
-    SvgRectElement rect = new SvgRectElement(180., 50., 50., 80.);
+    SvgRectElement rect = new SvgRectElement(180., 50., 80., 50.);
     rect.getAttribute("fill").set(Color.RED.toCssColor());
 
     svgRoot.children().add(ellipse);
