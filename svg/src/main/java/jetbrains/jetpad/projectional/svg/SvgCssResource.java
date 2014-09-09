@@ -15,30 +15,6 @@
  */
 package jetbrains.jetpad.projectional.svg;
 
-import jetbrains.jetpad.model.collections.list.ObservableList;
-
-public class SvgStyleElement extends SvgElement {
-  public SvgStyleElement() {
-    super();
-  }
-
-  public SvgStyleElement(String content) {
-    this();
-
-    setContent(content);
-  }
-
-  public SvgStyleElement(SvgCssResource resource) {
-    this(resource.css());
-  }
-
-  public void setContent(String content) {
-    ObservableList<SvgNode> children = children();
-    while (!children.isEmpty()) {
-      children.remove(0);
-    }
-    SvgTextNode textNode = new SvgTextNode(content);
-    children.add(textNode);
-    setAttribute("type", "text/css");
-  }
+public interface SvgCssResource {
+  public String css();
 }

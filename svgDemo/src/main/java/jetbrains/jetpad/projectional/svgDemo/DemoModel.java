@@ -28,10 +28,7 @@ import jetbrains.jetpad.values.Color;
 public class DemoModel {
   public static SvgSvgElement createModel() {
     final SvgSvgElement svgRoot = new SvgSvgElement(200., 400.);
-
-    SvgStyleElement style = new SvgStyleElement(".ellipse-yellow { \n" +
-        "fill: yellow;\n" +
-        "}");
+    svgRoot.setStyle(new CssRes());
 
     SvgEllipseElement ellipse = new SvgEllipseElement(200., 80., 170., 50.);
     ellipse.getAttribute("style").set("stroke:#006600;");
@@ -56,7 +53,6 @@ public class DemoModel {
     SvgRectElement rect = new SvgRectElement(180., 50., 50., 80.);
     rect.getAttribute("fill").set(Color.RED.toCssColor());
 
-    svgRoot.children().add(style);
     svgRoot.children().add(ellipse);
     svgRoot.children().add(rect);
     svgRoot.children().add(ellipse2);

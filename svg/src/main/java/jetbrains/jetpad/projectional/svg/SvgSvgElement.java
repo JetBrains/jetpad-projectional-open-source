@@ -36,6 +36,10 @@ public class SvgSvgElement extends SvgStylableElement {
     setAttribute(WIDTH, width);
   }
 
+  public void setStyle(SvgCssResource css) {
+    children().add(new SvgStyleElement(css));
+  }
+
   public Property<Double> height() {
     return getAttribute(HEIGHT);
   }
