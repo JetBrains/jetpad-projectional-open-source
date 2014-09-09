@@ -15,12 +15,15 @@
  */
 package jetbrains.jetpad.projectional.svg;
 
+import jetbrains.jetpad.base.Value;
+import jetbrains.jetpad.projectional.svg.event.SvgAttributeEvent;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
 
 public class SvgClassAttrTest {
   private static String cl = "class";
+  private static String altCl = "alt-class";
 
   SvgStylableElement element = new SvgEllipseElement();
 
@@ -47,7 +50,6 @@ public class SvgClassAttrTest {
   @Test
   public void replaceClass() {
     element.addClass(cl);
-    String altCl = "alt-class";
     element.replaceClass(cl, altCl);
     assertFalse(element.hasClass(cl));
     assertTrue(element.hasClass(altCl));
@@ -57,7 +59,78 @@ public class SvgClassAttrTest {
   public void toggleClass() {
     element.toggleClass(cl);
     assertTrue(element.hasClass(cl));
+    element.toggleClass(altCl);
+    assertTrue(element.hasClass(altCl));
     element.toggleClass(cl);
     assertFalse(element.hasClass(cl));
+  }
+
+  @Test
+  public void eventsTriggerOnAdd() {
+    final Value<Boolean> trigger = new Value<>(false);
+    element.addClass("init");
+    element.addListener(new SvgElementListener<Object>() {
+      @Override
+      public void onAttrSet(SvgAttributeEvent<Object> event) {
+        if (event.getAttrSpec().equals(SvgAttributeSpec.createSpec("class"))) {
+          trigger.set(true);
+        }
+      }
+    });
+    element.addClass(cl);
+    assertTrue(trigger.get());
+  }
+
+  @Test
+  public void eventsTriggerOnRemove() {
+    final Value<Boolean> trigger = new Value<>(false);
+    element.addClass("init");
+    element.addClass(cl);
+    element.addListener(new SvgElementListener<Object>() {
+      @Override
+      public void onAttrSet(SvgAttributeEvent<Object> event) {
+        if (event.getAttrSpec().equals(SvgAttributeSpec.createSpec("class"))) {
+          trigger.set(true);
+        }
+      }
+    });
+    element.removeClass(cl);
+    assertTrue(trigger.get());
+  }
+
+  @Test
+  public void eventsTriggerOnReplace() {
+    final Value<Boolean> trigger = new Value<>(false);
+    element.addClass("init");
+    element.addClass(cl);
+    element.addListener(new SvgElementListener<Object>() {
+      @Override
+      public void onAttrSet(SvgAttributeEvent<Object> event) {
+        if (event.getAttrSpec().equals(SvgAttributeSpec.createSpec("class"))) {
+          trigger.set(true);
+        }
+      }
+    });
+    element.replaceClass(cl, altCl);
+    assertTrue(trigger.get());
+  }
+
+  @Test
+  public void eventsTriggerOnToggle() {
+    final Value<Boolean> trigger = new Value<>(false);
+    element.addListener(new SvgElementListener<Object>() {
+      @Override
+      public void onAttrSet(SvgAttributeEvent<Object> event) {
+        if (event.getAttrSpec().equals(SvgAttributeSpec.createSpec("class"))) {
+          trigger.set(true);
+        }
+      }
+    });
+    element.toggleClass(cl);
+    assertTrue(trigger.get());
+
+    trigger.set(false);
+    element.toggleClass(cl);
+    assertTrue(trigger.get());
   }
 }
