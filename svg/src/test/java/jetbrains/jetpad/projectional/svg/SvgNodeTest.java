@@ -46,8 +46,6 @@ public class SvgNodeTest {
     assertTrue(node1.children().isEmpty());
   }
 
-
-
   private SvgNode newNode() {
     return new MySvgNode();
   }
