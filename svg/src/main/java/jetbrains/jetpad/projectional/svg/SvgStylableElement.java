@@ -17,118 +17,85 @@ package jetbrains.jetpad.projectional.svg;
 
 import jetbrains.jetpad.model.property.Property;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 public abstract class SvgStylableElement extends SvgElement {
-  public static class ClassAttribute {
-    private Set<String> classes;
+  private static final SvgAttributeSpec<String> CLASS = SvgAttributeSpec.createSpec("class");
 
-    public boolean add(String cl) {
-      if (classes == null) {
-        classes = new HashSet<>();
-      }
-
-      return classes.add(cl);
-    }
-
-    public boolean remove(String cl) {
-      if (classes == null) {
-        return false;
-      }
-
-      boolean result = classes.remove(cl);
-      if (classes.isEmpty()) {
-        classes = null;
-      }
-
-      return result;
-    }
-
-    public void replace(String oldClass, String newClass) {
-      if (!has(oldClass)) {
-        throw new IllegalStateException("Class attribute does not contain specified oldClass");
-      }
-
-      classes.remove(oldClass);
-      classes.add(newClass);
-    }
-
-    public void toggle(String cl) {
-      if (has(cl)) {
-        remove(cl);
-      } else {
-        add(cl);
-      }
-    }
-
-    public boolean has(String cl) {
-      return classes != null && classes.contains(cl);
-    }
-
-    public String getFullClass() {
-      if (classes == null || classes.isEmpty()) {
-        return "";
-      }
-      StringBuilder builder = new StringBuilder();
-      for (String cl : classes) {
-        builder.append(cl).append(' ');
-      }
-      return builder.toString();
-    }
-
-    @Override
-    public String toString() {
-      return getFullClass();
-    }
-  }
-
-  private static final SvgAttributeSpec<ClassAttribute> CLASS = SvgAttributeSpec.createSpec("class");
-
-  public Property<ClassAttribute> classAttribute() {
+  public Property<String> classAttribute() {
     return getAttribute(CLASS);
   }
 
   public boolean addClass(String cl) {
-    Property<ClassAttribute> attr = classAttribute();
+    Property<String> attr = classAttribute();
     if (attr.get() == null) {
-      attr.set(new ClassAttribute());
+      attr.set(cl);
+      return true;
     }
-    return attr.get().add(cl);
+
+    if (Arrays.asList(attr.get().split(" ")).contains(cl)) {
+      return false;
+    }
+
+    attr.set(attr.get() + " " + cl);
+    return true;
   }
 
   public boolean removeClass(String cl) {
-    ClassAttribute attr = classAttribute().get();
-    return attr != null && attr.remove(cl);
+    Property<String> attr = classAttribute();
+    if (attr.get() == null) {
+      return false;
+    }
+
+    List<String> classes = new ArrayList<>(Arrays.asList(attr.get().split(" ")));
+    boolean result = classes.remove(cl);
+
+    if (result) {
+      attr.set(buildClassString(classes));
+    }
+
+    return result;
   }
 
   public void replaceClass(String oldClass, String newClass) {
-    ClassAttribute attr = classAttribute().get();
-    if (attr == null) {
+    Property<String> attr = classAttribute();
+    if (attr.get() == null) {
       throw new IllegalStateException("Trying to replace class when class is empty");
     }
-    attr.replace(oldClass, newClass);
+
+    List<String> classes = Arrays.asList(attr.get().split(" "));
+    if (!classes.contains(oldClass)) {
+      throw new IllegalStateException("Class attribute does not contain specified oldClass");
+    }
+
+    classes.set(classes.indexOf(oldClass), newClass);
+
+    attr.set(buildClassString(classes));
   }
 
   public void toggleClass(String cl) {
-    ClassAttribute attr = classAttribute().get();
-    if (attr == null) {
-      addClass(cl);
+    if (hasClass(cl)) {
+      removeClass(cl);
     } else {
-      attr.toggle(cl);
+      addClass(cl);
     }
   }
 
   public boolean hasClass(String cl) {
-    ClassAttribute attr = classAttribute().get();
-    return attr != null && attr.has(cl);
+    Property<String> attr = classAttribute();
+    return attr.get() != null && Arrays.asList(attr.get().split(" ")).contains(cl);
   }
 
   public String fullClass() {
-    ClassAttribute attr = classAttribute().get();
-    if (attr == null) {
-      return "";
+    Property<String> attr = classAttribute();
+    return (attr.get() == null ? "" : attr.get());
+  }
+
+  private String buildClassString(List<String> classes) {
+    StringBuilder builder = new StringBuilder();
+    for (String className : classes) {
+      builder.append(className).append(' ');
     }
-    return attr.getFullClass();
+    return builder.toString();
   }
 }
