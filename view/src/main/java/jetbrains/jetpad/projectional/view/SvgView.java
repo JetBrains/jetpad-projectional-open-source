@@ -20,10 +20,7 @@ import jetbrains.jetpad.geometry.Vector;
 import jetbrains.jetpad.model.event.EventHandler;
 import jetbrains.jetpad.model.property.Property;
 import jetbrains.jetpad.model.property.PropertyChangeEvent;
-import jetbrains.jetpad.projectional.svg.SvgContainer;
-import jetbrains.jetpad.projectional.svg.SvgContainerAdapter;
-import jetbrains.jetpad.projectional.svg.SvgNode;
-import jetbrains.jetpad.projectional.svg.SvgSvgElement;
+import jetbrains.jetpad.projectional.svg.*;
 import jetbrains.jetpad.projectional.svg.event.SvgAttributeEvent;
 
 public class SvgView extends View {
@@ -43,8 +40,8 @@ public class SvgView extends View {
     });
     svgContainer.addListener(new SvgContainerAdapter() {
       @Override
-      public void onAttrSet(SvgNode node, SvgAttributeEvent event) {
-        if (node == root().get() &&
+      public void onAttrSet(SvgElement element, SvgAttributeEvent event) {
+        if (element == root().get() &&
             (event.getAttrSpec().toString().equalsIgnoreCase("height") || (event.getAttrSpec().toString().equalsIgnoreCase("width")))){
           invalidate();
         }

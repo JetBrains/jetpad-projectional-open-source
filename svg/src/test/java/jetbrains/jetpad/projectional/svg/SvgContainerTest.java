@@ -90,7 +90,7 @@ public class SvgContainerTest {
     final Value<Boolean> trigger = new Value<>(false);
     container.addListener(new SvgContainerAdapter() {
       @Override
-      public void onAttrSet(SvgNode node, SvgAttributeEvent event) {
+      public void onAttrSet(SvgElement elt, SvgAttributeEvent event) {
         trigger.set(true);
       }
     });
