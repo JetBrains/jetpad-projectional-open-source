@@ -17,7 +17,7 @@ package jetbrains.jetpad.projectional.svg;
 
 import jetbrains.jetpad.model.property.Property;
 
-public class SvgLineElement extends SvgGraphicsElement {
+public class SvgLineElement extends SvgGraphicsElement implements SvgTransformable {
   private static final SvgAttributeSpec<Double> X1 = SvgAttributeSpec.createSpec("x1");
   private static final SvgAttributeSpec<Double> Y1 = SvgAttributeSpec.createSpec("y1");
   private static final SvgAttributeSpec<Double> X2 = SvgAttributeSpec.createSpec("x2");
@@ -50,5 +50,10 @@ public class SvgLineElement extends SvgGraphicsElement {
 
   public Property<Double> y2() {
     return getAttribute(Y2);
+  }
+
+  @Override
+  public Property<String> transform() {
+    return getAttribute(TRANSFORM);
   }
 }

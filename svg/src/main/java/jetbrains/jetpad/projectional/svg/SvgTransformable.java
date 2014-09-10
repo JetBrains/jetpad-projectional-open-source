@@ -17,9 +17,8 @@ package jetbrains.jetpad.projectional.svg;
 
 import jetbrains.jetpad.model.property.Property;
 
-public class SvgGElement extends SvgGraphicsElement implements SvgTransformable {
-  @Override
-  public Property<String> transform() {
-    return getAttribute(TRANSFORM);
-  }
+public interface SvgTransformable {
+  static final SvgAttributeSpec<String> TRANSFORM = SvgAttributeSpec.createSpec("transform");
+
+  public Property<String> transform();
 }
