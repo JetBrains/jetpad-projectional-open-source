@@ -54,53 +54,53 @@ public class SvgContainerTest {
 
   @Test
   public void attachEvent() {
-    final Value<Boolean> trigger = new Value<>(false);
+    final Value<Boolean> nodeAttached = new Value<>(false);
     container.addListener(new SvgContainerAdapter() {
       @Override
       public void onNodeAttached(SvgNode node) {
-        trigger.set(true);
+        nodeAttached.set(true);
       }
     });
     SvgNode node = newNode();
     root.children().add(node);
-    assertTrue(trigger.get());
+    assertTrue(nodeAttached.get());
   }
 
   @Test
   public void detachEvent() {
-    final Value<Boolean> trigger = new Value<>(false);
+    final Value<Boolean> nodeDetached = new Value<>(false);
     container.addListener(new SvgContainerAdapter() {
       @Override
       public void onNodeDetached(SvgNode element) {
-        trigger.set(true);
+        nodeDetached.set(true);
       }
     });
     SvgNode node = newNode();
     root.children().add(node);
-    assertFalse(trigger.get());
+    assertFalse(nodeDetached.get());
     root.children().remove(node);
-    assertTrue(trigger.get());
+    assertTrue(nodeDetached.get());
   }
 
   @Test
-  public void attrSetEvent() {
+  public void attributeSetEvent() {
     SvgEllipseElement element = new SvgEllipseElement();
     root.children().add(element);
 
-    final Value<Boolean> trigger = new Value<>(false);
+    final Value<Boolean> isAttributeSet = new Value<>(false);
     container.addListener(new SvgContainerAdapter() {
       @Override
       public void onAttributeSet(SvgElement elt, SvgAttributeEvent event) {
-        trigger.set(true);
+        isAttributeSet.set(true);
       }
     });
 
     element.setAttribute("attr", "value");
-    assertTrue(trigger.get());
+    assertTrue(isAttributeSet.get());
 
-    trigger.set(false);
+    isAttributeSet.set(false);
     element.cx().set(10.);
-    assertTrue(trigger.get());
+    assertTrue(isAttributeSet.get());
   }
 
   private SvgNode newNode() {

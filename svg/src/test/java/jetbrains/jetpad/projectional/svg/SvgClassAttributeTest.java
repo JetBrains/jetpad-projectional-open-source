@@ -67,70 +67,70 @@ public class SvgClassAttributeTest {
 
   @Test
   public void eventsTriggerOnAdd() {
-    final Value<Boolean> trigger = new Value<>(false);
+    final Value<Boolean> classAdded = new Value<>(false);
     element.addClass("init");
     element.addListener(new SvgElementListener<Object>() {
       @Override
       public void onAttrSet(SvgAttributeEvent<Object> event) {
         if (event.getAttrSpec().equals(SvgAttributeSpec.createSpec("class"))) {
-          trigger.set(true);
+          classAdded.set(true);
         }
       }
     });
     element.addClass(cl);
-    assertTrue(trigger.get());
+    assertTrue(classAdded.get());
   }
 
   @Test
   public void eventsTriggerOnRemove() {
-    final Value<Boolean> trigger = new Value<>(false);
+    final Value<Boolean> classRemoved = new Value<>(false);
     element.addClass("init");
     element.addClass(cl);
     element.addListener(new SvgElementListener<Object>() {
       @Override
       public void onAttrSet(SvgAttributeEvent<Object> event) {
         if (event.getAttrSpec().equals(SvgAttributeSpec.createSpec("class"))) {
-          trigger.set(true);
+          classRemoved.set(true);
         }
       }
     });
     element.removeClass(cl);
-    assertTrue(trigger.get());
+    assertTrue(classRemoved.get());
   }
 
   @Test
   public void eventsTriggerOnReplace() {
-    final Value<Boolean> trigger = new Value<>(false);
+    final Value<Boolean> classReplaced = new Value<>(false);
     element.addClass("init");
     element.addClass(cl);
     element.addListener(new SvgElementListener<Object>() {
       @Override
       public void onAttrSet(SvgAttributeEvent<Object> event) {
         if (event.getAttrSpec().equals(SvgAttributeSpec.createSpec("class"))) {
-          trigger.set(true);
+          classReplaced.set(true);
         }
       }
     });
     element.replaceClass(cl, altCl);
-    assertTrue(trigger.get());
+    assertTrue(classReplaced.get());
   }
 
   @Test
   public void eventsTriggerOnToggle() {
-    final Value<Boolean> trigger = new Value<>(false);
+    final Value<Boolean> classToggled = new Value<>(false);
     element.addListener(new SvgElementListener<Object>() {
       @Override
       public void onAttrSet(SvgAttributeEvent<Object> event) {
         if (event.getAttrSpec().equals(SvgAttributeSpec.createSpec("class"))) {
-          trigger.set(true);
+          classToggled.set(true);
         }
       }
     });
     element.toggleClass(cl);
-    assertTrue(trigger.get());
+    assertTrue(classToggled.get());
 
-    trigger.set(false);
+    classToggled.set(false);
     element.toggleClass(cl);
-    assertTrue(trigger.get());
+    assertTrue(classToggled.get());
   }
 }
