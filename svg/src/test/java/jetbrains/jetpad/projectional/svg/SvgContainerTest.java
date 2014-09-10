@@ -33,6 +33,17 @@ public class SvgContainerTest {
   }
 
   @Test
+  public void changeRoot() {
+    SvgSvgElement newRoot = new SvgSvgElement();
+    container.root().set(newRoot);
+    assertTrue(newRoot.isAttached());
+    assertSame(newRoot.container(), container);
+
+    assertFalse(root.isAttached());
+    assertNull(root.container());
+  }
+
+  @Test
   public void attach() {
     SvgNode node = newNode();
     assertNull(node.container());
