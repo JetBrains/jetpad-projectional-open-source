@@ -51,7 +51,7 @@ public class SvgContainer {
     myListeners.fire(new ListenerCaller<SvgContainerListener>() {
       @Override
       public void call(SvgContainerListener l) {
-        l.onAttrSet(element, event);
+        l.onAttributeSet(element, event);
       }
     });
   }

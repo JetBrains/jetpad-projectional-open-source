@@ -40,7 +40,7 @@ public class SvgView extends View {
     });
     svgContainer.addListener(new SvgContainerAdapter() {
       @Override
-      public void onAttrSet(SvgElement element, SvgAttributeEvent event) {
+      public void onAttributeSet(SvgElement element, SvgAttributeEvent event) {
         if (element == root().get() &&
             (event.getAttrSpec().toString().equalsIgnoreCase("height") || (event.getAttrSpec().toString().equalsIgnoreCase("width")))){
           invalidate();

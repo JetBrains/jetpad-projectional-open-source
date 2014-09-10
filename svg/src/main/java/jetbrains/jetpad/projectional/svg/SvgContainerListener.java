@@ -18,7 +18,7 @@ package jetbrains.jetpad.projectional.svg;
 import jetbrains.jetpad.projectional.svg.event.SvgAttributeEvent;
 
 public interface SvgContainerListener {
-  void onAttrSet(SvgElement element, SvgAttributeEvent<?> event);
+  void onAttributeSet(SvgElement element, SvgAttributeEvent<?> event);
   void onNodeAttached(SvgNode node);
   void onNodeDetached(SvgNode node);
 }
