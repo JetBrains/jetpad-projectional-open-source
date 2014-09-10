@@ -17,6 +17,7 @@ package jetbrains.jetpad.projectional.svg;
 
 import jetbrains.jetpad.model.property.Property;
 
+import javax.validation.constraints.NotNull;
 import java.util.*;
 
 public abstract class SvgStylableElement extends SvgElement {
@@ -26,7 +27,11 @@ public abstract class SvgStylableElement extends SvgElement {
     return getAttribute(CLASS);
   }
 
-  public boolean addClass(String cl) {
+  public boolean addClass(@NotNull String cl) {
+    if (cl.contains(" ")) {
+      throw new IllegalArgumentException("Class name cannot contain spaces");
+    }
+
     Property<String> attr = classAttribute();
     if (attr.get() == null) {
       attr.set(cl);
@@ -41,7 +46,11 @@ public abstract class SvgStylableElement extends SvgElement {
     return true;
   }
 
-  public boolean removeClass(String cl) {
+  public boolean removeClass(@NotNull String cl) {
+    if (cl.contains(" ")) {
+      throw new IllegalArgumentException("Class name cannot contain spaces");
+    }
+
     Property<String> attr = classAttribute();
     if (attr.get() == null) {
       return false;
@@ -57,7 +66,11 @@ public abstract class SvgStylableElement extends SvgElement {
     return result;
   }
 
-  public void replaceClass(String oldClass, String newClass) {
+  public void replaceClass(@NotNull String oldClass, @NotNull String newClass) {
+    if (oldClass.contains(" ") || newClass.contains(" ")) {
+      throw new IllegalArgumentException("Class name cannot contain spaces");
+    }
+
     Property<String> attr = classAttribute();
     if (attr.get() == null) {
       throw new IllegalStateException("Trying to replace class when class is empty");
@@ -73,15 +86,21 @@ public abstract class SvgStylableElement extends SvgElement {
     attr.set(buildClassString(classes));
   }
 
-  public void toggleClass(String cl) {
+  public boolean toggleClass(@NotNull String cl) {
     if (hasClass(cl)) {
       removeClass(cl);
+      return false;
     } else {
       addClass(cl);
+      return true;
     }
   }
 
-  public boolean hasClass(String cl) {
+  public boolean hasClass(@NotNull String cl) {
+    if (cl.contains(" ")) {
+      throw new IllegalArgumentException("Class name cannot contain spaces");
+    }
+
     Property<String> attr = classAttribute();
     return attr.get() != null && Arrays.asList(attr.get().split(" ")).contains(cl);
   }
