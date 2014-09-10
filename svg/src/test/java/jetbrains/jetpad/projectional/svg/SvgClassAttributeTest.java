@@ -21,7 +21,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.*;
 
-public class SvgClassAttrTest {
+public class SvgClassAttributeTest {
   private static String cl = "class";
   private static String altCl = "alt-class";
 
