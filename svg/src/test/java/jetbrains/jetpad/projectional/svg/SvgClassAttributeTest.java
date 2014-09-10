@@ -24,6 +24,7 @@ import static org.junit.Assert.*;
 public class SvgClassAttributeTest {
   private static String cl = "class";
   private static String altCl = "alt-class";
+  private final String illegalCl = cl + " " + altCl;
 
   SvgStylableElement element = new SvgEllipseElement();
 
@@ -36,15 +37,26 @@ public class SvgClassAttributeTest {
   @Test
   public void addClass() {
     assertFalse(element.hasClass(cl));
-    element.addClass(cl);
+    assertTrue(element.addClass(cl));
     assertTrue(element.hasClass(cl));
+  }
+
+  @Test
+  public void addExistingClass() {
+    assertTrue(element.addClass(cl));
+    assertFalse(element.addClass(cl));
   }
 
   @Test
   public void removeClass() {
     element.addClass(cl);
-    element.removeClass(cl);
+    assertTrue(element.removeClass(cl));
     assertFalse(element.hasClass(cl));
+  }
+
+  @Test
+  public void removeNonexistentClass() {
+    assertFalse(element.removeClass(cl));
   }
 
   @Test
@@ -55,14 +67,49 @@ public class SvgClassAttributeTest {
     assertTrue(element.hasClass(altCl));
   }
 
+  @Test(expected = IllegalStateException.class)
+  public void replaceEmptyClass() {
+    element.replaceClass(cl, altCl);
+  }
+
+  @Test(expected = IllegalStateException.class)
+  public void replaceNonexistentClassException() {
+    element.addClass(cl);
+    element.replaceClass(altCl, cl);
+  }
+
   @Test
   public void toggleClass() {
-    element.toggleClass(cl);
+    assertTrue(element.toggleClass(cl));
     assertTrue(element.hasClass(cl));
-    element.toggleClass(altCl);
+    assertTrue(element.toggleClass(altCl));
     assertTrue(element.hasClass(altCl));
-    element.toggleClass(cl);
+    assertFalse(element.toggleClass(cl));
     assertFalse(element.hasClass(cl));
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void addIllegalClassException() {
+    element.addClass(illegalCl);
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void removeIllegalClassException() {
+    element.addClass(cl);
+    element.addClass(altCl);
+    element.removeClass(illegalCl);
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void replaceIllegalClassException() {
+    element.addClass(cl);
+    element.addClass(altCl);
+    element.replaceClass(illegalCl, cl);
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void toggleIllegalClassException() {
+    element.toggleClass(illegalCl);
   }
 
   @Test
