@@ -53,6 +53,29 @@ public class SvgContainerTest {
   }
 
   @Test
+  public void attachWithChildren() {
+    SvgNode node1 = newNode();
+    SvgNode node2 = newNode();
+    node1.children().add(node2);
+    assertFalse(node2.isAttached());
+
+    root.children().add(node1);
+    assertTrue(node2.isAttached());
+  }
+
+  @Test
+  public void detachWithChildren() {
+    SvgNode node1 = newNode();
+    SvgNode node2 = newNode();
+    node1.children().add(node2);
+
+    root.children().add(node1);
+    root.children().remove(node1);
+    assertFalse(node2.isAttached());
+    assertNull(node2.container());
+  }
+
+  @Test
   public void attachEvent() {
     final Value<Boolean> nodeAttached = new Value<>(false);
     container.addListener(new SvgContainerAdapter() {
@@ -80,6 +103,16 @@ public class SvgContainerTest {
     assertFalse(nodeDetached.get());
     root.children().remove(node);
     assertTrue(nodeDetached.get());
+  }
+
+  @Test(expected = IllegalStateException.class)
+  public void alreadyAttachedException() {
+    root.attach(container);
+  }
+
+  @Test(expected = IllegalStateException.class)
+  public void notAttachedDetachException() {
+    newNode().detach();
   }
 
   @Test
