@@ -43,15 +43,15 @@ public class DemoModel {
         .closePath();
 
     SvgPathElement path = new SvgPathElement(pathBuilder.build());
-    path.getAttribute("fill").set("red");
-    path.getAttribute("stroke").set("blue");
+    path.getAttribute(SvgConstants.SVG_FILL_ATTRIBUTE).set("red");
+    path.getAttribute(SvgConstants.SVG_STROKE_ATTRIBUTE).set("blue");
     path.getAttribute("stroke-width").set("5");
 
     SvgEllipseElement ellipse2 = new SvgEllipseElement(250., 85., 40., 85.);
-    ellipse2.getAttribute("fill").set(Color.GREEN.toCssColor());
+    ellipse2.getAttribute(SvgConstants.SVG_FILL_ATTRIBUTE).set(Color.GREEN.toCssColor());
 
     SvgRectElement rect = new SvgRectElement(180., 50., 80., 50.);
-    rect.getAttribute("fill").set(Color.RED.toCssColor());
+    rect.getAttribute(SvgConstants.SVG_FILL_ATTRIBUTE).set(Color.RED.toCssColor());
 
     svgRoot.children().add(ellipse);
     svgRoot.children().add(rect);
@@ -85,7 +85,7 @@ public class DemoModel {
     ellipse.cy().set(190.);
     ellipse.rx().set(50.);
     ellipse.ry().set(50.);
-    ellipse.getAttribute("fill").set(Color.RED.toCssColor());
+    ellipse.getAttribute(SvgConstants.SVG_FILL_ATTRIBUTE).set(Color.RED.toCssColor());
 
     svgRoot.children().add(rect);
     svgRoot.children().add(ellipse);
@@ -102,7 +102,7 @@ public class DemoModel {
 
   public static void addCircle(SvgSvgElement svgRoot, int x, int y) {
     SvgCircleElement circle = new SvgCircleElement((double) x, (double) y, 10.);
-    circle.getAttribute("fill").set(Color.BLACK.toCssColor());
+    circle.getAttribute(SvgConstants.SVG_FILL_ATTRIBUTE).set(Color.BLACK.toCssColor());
 
     svgRoot.children().add(circle);
   }
