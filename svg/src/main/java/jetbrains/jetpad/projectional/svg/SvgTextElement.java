@@ -26,12 +26,18 @@ public class SvgTextElement extends SvgGraphicsElement implements SvgTransformab
     super();
   }
 
+  public SvgTextElement(String content) {
+    this();
+
+    setTextNode(content);
+  }
+
   public SvgTextElement(Double x, Double y, String content) {
     this();
 
     setAttribute(X, x);
     setAttribute(Y, y);
-    addTextNode(content);
+    setTextNode(content);
   }
 
   public Property<Double> x() {
@@ -47,9 +53,13 @@ public class SvgTextElement extends SvgGraphicsElement implements SvgTransformab
     return getAttribute(TRANSFORM);
   }
 
+  public void setTextNode(String text) {
+    children().clear();
+    addTextNode(text);
+  }
+
   public void addTextNode(String text) {
-    ObservableList<SvgNode> children = children();
     SvgTextNode textNode = new SvgTextNode(text);
-    children.add(textNode);
+    children().add(textNode);
   }
 }
