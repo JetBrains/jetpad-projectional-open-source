@@ -28,9 +28,7 @@ public abstract class SvgStylableElement extends SvgElement {
   }
 
   public boolean addClass(@NotNull String cl) {
-    if (cl.contains(" ")) {
-      throw new IllegalArgumentException("Class name cannot contain spaces");
-    }
+    validateClassName(cl);
 
     Property<String> attr = classAttribute();
     if (attr.get() == null) {
@@ -47,9 +45,7 @@ public abstract class SvgStylableElement extends SvgElement {
   }
 
   public boolean removeClass(@NotNull String cl) {
-    if (cl.contains(" ")) {
-      throw new IllegalArgumentException("Class name cannot contain spaces");
-    }
+    validateClassName(cl);
 
     Property<String> attr = classAttribute();
     if (attr.get() == null) {
@@ -67,9 +63,8 @@ public abstract class SvgStylableElement extends SvgElement {
   }
 
   public void replaceClass(@NotNull String oldClass, @NotNull String newClass) {
-    if (oldClass.contains(" ") || newClass.contains(" ")) {
-      throw new IllegalArgumentException("Class name cannot contain spaces");
-    }
+    validateClassName(oldClass);
+    validateClassName(newClass);
 
     Property<String> attr = classAttribute();
     if (attr.get() == null) {
@@ -97,9 +92,7 @@ public abstract class SvgStylableElement extends SvgElement {
   }
 
   public boolean hasClass(@NotNull String cl) {
-    if (cl.contains(" ")) {
-      throw new IllegalArgumentException("Class name cannot contain spaces");
-    }
+    validateClassName(cl);
 
     Property<String> attr = classAttribute();
     return attr.get() != null && Arrays.asList(attr.get().split(" ")).contains(cl);
@@ -116,5 +109,11 @@ public abstract class SvgStylableElement extends SvgElement {
       builder.append(className).append(' ');
     }
     return builder.toString();
+  }
+
+  private void validateClassName(@NotNull String cl) {
+    if (cl.contains(" ")) {
+      throw new IllegalArgumentException("Class name cannot contain spaces");
+    }
   }
 }
