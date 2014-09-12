@@ -29,7 +29,7 @@ public class SvgSvgElement extends SvgStylableElement {
     super();
   }
 
-  public SvgSvgElement(Double width, Double height) {
+  public SvgSvgElement(double width, double height) {
     this();
 
     setAttribute(WIDTH, width);

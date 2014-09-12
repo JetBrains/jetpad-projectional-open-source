@@ -27,7 +27,7 @@ public class SvgEllipseElement extends SvgGraphicsElement implements SvgTransfor
     super();
   }
 
-  public SvgEllipseElement(Double cx, Double cy, Double rx, Double ry) {
+  public SvgEllipseElement(double cx, double cy, double rx, double ry) {
     this();
 
     setAttribute(CX, cx);

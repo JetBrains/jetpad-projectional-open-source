@@ -27,7 +27,7 @@ public class SvgLineElement extends SvgGraphicsElement implements SvgTransformab
     super();
   }
 
-  public SvgLineElement(Double x1, Double y1, Double x2, Double y2) {
+  public SvgLineElement(double x1, double y1, double x2, double y2) {
     this();
 
     setAttribute(X1, x1);

@@ -26,7 +26,7 @@ public class SvgCircleElement extends SvgGraphicsElement implements SvgTransform
     super();
   }
 
-  public SvgCircleElement(Double cx, Double cy, Double r) {
+  public SvgCircleElement(double cx, double cy, double r) {
     this();
 
     setAttribute(CX, cx);

@@ -32,7 +32,7 @@ public class SvgTextElement extends SvgGraphicsElement implements SvgTransformab
     setTextNode(content);
   }
 
-  public SvgTextElement(Double x, Double y, String content) {
+  public SvgTextElement(double x, double y, String content) {
     this();
 
     setAttribute(X, x);

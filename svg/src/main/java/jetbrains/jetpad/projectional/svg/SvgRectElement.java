@@ -27,7 +27,7 @@ public class SvgRectElement extends SvgGraphicsElement implements SvgTransformab
     super();
   }
 
-  public SvgRectElement(Double x, Double y, Double width, Double height) {
+  public SvgRectElement(double x, double y, double width, double height) {
     this();
 
     setAttribute(X, x);
