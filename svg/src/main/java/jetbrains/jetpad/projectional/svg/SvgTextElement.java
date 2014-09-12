@@ -18,7 +18,7 @@ package jetbrains.jetpad.projectional.svg;
 import jetbrains.jetpad.model.collections.list.ObservableList;
 import jetbrains.jetpad.model.property.Property;
 
-public class SvgTextElement extends SvgGraphicsElement implements SvgTransformable {
+public class SvgTextElement extends SvgGraphicsElement implements SvgTransformable, SvgTextContent {
   private static final SvgAttributeSpec<Double> X = SvgAttributeSpec.createSpec("x");
   private static final SvgAttributeSpec<Double> Y = SvgAttributeSpec.createSpec("y");
 
@@ -61,5 +61,15 @@ public class SvgTextElement extends SvgGraphicsElement implements SvgTransformab
   public void addTextNode(String text) {
     SvgTextNode textNode = new SvgTextNode(text);
     children().add(textNode);
+  }
+
+  @Override
+  public Property<SvgColor> fill() {
+    return getAttribute(FILL);
+  }
+
+  @Override
+  public Property<SvgColor> stroke() {
+    return getAttribute(STROKE);
   }
 }

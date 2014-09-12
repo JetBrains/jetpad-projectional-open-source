@@ -17,35 +17,11 @@ package jetbrains.jetpad.projectional.svg;
 
 import jetbrains.jetpad.model.property.Property;
 
-public class SvgPathElement extends SvgGraphicsElement implements SvgTransformable, SvgShape {
-  private static final SvgAttributeSpec<String> D = SvgAttributeSpec.createSpec("d");
+public interface SvgTextContent {
+  static final SvgAttributeSpec<SvgColor> FILL = SvgAttributeSpec.createSpec("fill");
+  static final SvgAttributeSpec<SvgColor> STROKE = SvgAttributeSpec.createSpec("stroke");
 
-  public SvgPathElement() {
-    super();
-  }
+  public Property<SvgColor> fill();
 
-  public SvgPathElement(String d) {
-    this();
-
-    setAttribute(D, d);
-  }
-
-  public Property<String> d() {
-    return getAttribute(D);
-  }
-
-  @Override
-  public Property<String> transform() {
-    return getAttribute(TRANSFORM);
-  }
-
-  @Override
-  public Property<SvgColor> fill() {
-    return getAttribute(FILL);
-  }
-
-  @Override
-  public Property<SvgColor> stroke() {
-    return getAttribute(STROKE);
-  }
+  public Property<SvgColor> stroke();
 }

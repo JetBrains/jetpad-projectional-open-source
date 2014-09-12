@@ -43,8 +43,8 @@ public class DemoModel {
         .closePath();
 
     SvgPathElement path = new SvgPathElement(pathBuilder.build());
-    path.getAttribute(SvgConstants.SVG_FILL_ATTRIBUTE).set("red");
-    path.getAttribute(SvgConstants.SVG_STROKE_ATTRIBUTE).set("blue");
+    path.fill().set(SvgColor.RED);
+    path.stroke().set(SvgColor.create(0, 0, 255));
     path.getAttribute("stroke-width").set("5");
 
     SvgEllipseElement ellipse2 = new SvgEllipseElement(250., 85., 40., 85.);
