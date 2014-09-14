@@ -175,6 +175,9 @@ public abstract class SvgColor {
   }
 
   public static SvgColor create(Color color) {
+    if (color == null) {
+      return NONE;
+    }
     return new SvgColorRgb(color.getRed(), color.getGreen(), color.getBlue());
   }
 
