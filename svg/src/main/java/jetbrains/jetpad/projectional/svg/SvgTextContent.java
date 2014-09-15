@@ -16,12 +16,24 @@
 package jetbrains.jetpad.projectional.svg;
 
 import jetbrains.jetpad.model.property.Property;
+import jetbrains.jetpad.model.property.WritableProperty;
+import jetbrains.jetpad.values.Color;
 
 public interface SvgTextContent {
   static final SvgAttributeSpec<SvgColor> FILL = SvgAttributeSpec.createSpec("fill");
   static final SvgAttributeSpec<SvgColor> STROKE = SvgAttributeSpec.createSpec("stroke");
+  static final SvgAttributeSpec<Double> FILL_OPACITY = SvgAttributeSpec.createSpec("fill-opacity");
+  static final SvgAttributeSpec<Double> STROKE_OPACITY = SvgAttributeSpec.createSpec("stroke-opacity");
 
   public Property<SvgColor> fill();
 
+  public WritableProperty<Color> fillColor();
+
+  public Property<Double> fillOpacity();
+
   public Property<SvgColor> stroke();
+
+  public WritableProperty<Color> strokeColor();
+
+  public Property<Double> strokeOpacity();
 }

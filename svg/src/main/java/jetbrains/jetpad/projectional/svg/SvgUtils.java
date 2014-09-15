@@ -15,7 +15,23 @@
  */
 package jetbrains.jetpad.projectional.svg;
 
+import jetbrains.jetpad.model.property.Property;
+import jetbrains.jetpad.model.property.WritableProperty;
+import jetbrains.jetpad.values.Color;
+
 public final class SvgUtils {
+  static WritableProperty<Color> colorAttributeTransform(final Property<SvgColor> color, final Property<Double> opacity) {
+    return new WritableProperty<Color>() {
+      @Override
+      public void set(Color value) {
+        color.set(SvgColor.create(value));
+        if (value != null && value.getAlpha() != 255) {
+          opacity.set(value.getAlpha() / 255.);
+        }
+      }
+    };
+  }
+
   public static void transformMatrix(SvgTransformable element, double a, double b, double c, double d, double e, double f) {
     element.transform().set(new SvgTransformBuilder().matrix(a, b, c, d, e, f).build());
   }

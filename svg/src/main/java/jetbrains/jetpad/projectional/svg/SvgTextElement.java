@@ -17,6 +17,8 @@ package jetbrains.jetpad.projectional.svg;
 
 import jetbrains.jetpad.model.collections.list.ObservableList;
 import jetbrains.jetpad.model.property.Property;
+import jetbrains.jetpad.model.property.WritableProperty;
+import jetbrains.jetpad.values.Color;
 
 public class SvgTextElement extends SvgGraphicsElement implements SvgTransformable, SvgTextContent {
   private static final SvgAttributeSpec<Double> X = SvgAttributeSpec.createSpec("x");
@@ -69,7 +71,27 @@ public class SvgTextElement extends SvgGraphicsElement implements SvgTransformab
   }
 
   @Override
+  public WritableProperty<Color> fillColor() {
+    return SvgUtils.colorAttributeTransform(fill(), fillOpacity());
+  }
+
+  @Override
+  public Property<Double> fillOpacity() {
+    return getAttribute(FILL_OPACITY);
+  }
+
+  @Override
   public Property<SvgColor> stroke() {
     return getAttribute(STROKE);
+  }
+
+  @Override
+  public WritableProperty<Color> strokeColor() {
+    return SvgUtils.colorAttributeTransform(stroke(), strokeOpacity());
+  }
+
+  @Override
+  public Property<Double> strokeOpacity() {
+    return getAttribute(STROKE_OPACITY);
   }
 }
