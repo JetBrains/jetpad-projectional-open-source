@@ -88,4 +88,9 @@ public class SvgEllipseElement extends SvgGraphicsElement implements SvgTransfor
   public Property<Double> strokeOpacity() {
     return getAttribute(STROKE_OPACITY);
   }
+
+  @Override
+  public Property<Double> strokeWidth() {
+    return getAttribute(STROKE_WIDTH);
+  }
 }

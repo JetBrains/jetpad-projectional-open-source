@@ -21,9 +21,10 @@ import jetbrains.jetpad.values.Color;
 
 public interface SvgShape {
   static final SvgAttributeSpec<SvgColor> FILL = SvgAttributeSpec.createSpec("fill");
-  static final SvgAttributeSpec<SvgColor> STROKE = SvgAttributeSpec.createSpec("stroke");
   static final SvgAttributeSpec<Double> FILL_OPACITY = SvgAttributeSpec.createSpec("fill-opacity");
+  static final SvgAttributeSpec<SvgColor> STROKE = SvgAttributeSpec.createSpec("stroke");
   static final SvgAttributeSpec<Double> STROKE_OPACITY = SvgAttributeSpec.createSpec("stroke-opacity");
+  static final SvgAttributeSpec<Double> STROKE_WIDTH = SvgAttributeSpec.createSpec("stroke-width");
 
   public Property<SvgColor> fill();
 
@@ -36,4 +37,6 @@ public interface SvgShape {
   public WritableProperty<Color> strokeColor();
 
   public Property<Double> strokeOpacity();
+
+  public Property<Double> strokeWidth();
 }

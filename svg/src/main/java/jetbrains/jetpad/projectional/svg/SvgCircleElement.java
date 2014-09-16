@@ -82,4 +82,9 @@ public class SvgCircleElement extends SvgGraphicsElement implements SvgTransform
   public Property<Double> strokeOpacity() {
     return getAttribute(STROKE_OPACITY);
   }
+
+  @Override
+  public Property<Double> strokeWidth() {
+    return getAttribute(STROKE_WIDTH);
+  }
 }
