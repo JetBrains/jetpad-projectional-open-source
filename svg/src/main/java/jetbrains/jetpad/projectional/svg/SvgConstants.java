@@ -16,7 +16,5 @@
 package jetbrains.jetpad.projectional.svg;
 
 public interface SvgConstants {
-  String SVG_FILL_ATTRIBUTE = "fill";
-  String SVG_STROKE_ATTRIBUTE = "stroke";
   String SVG_TEXT_ANCHOR_ATTRIBUTE = "text-anchor";
 }
