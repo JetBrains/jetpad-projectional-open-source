@@ -25,8 +25,10 @@ public final class SvgUtils {
       @Override
       public void set(Color value) {
         color.set(SvgColor.create(value));
-        if (value != null && value.getAlpha() != 255) {
+        if (value != null) {
           opacity.set(value.getAlpha() / 255.);
+        } else {
+          opacity.set(1.);
         }
       }
     };
