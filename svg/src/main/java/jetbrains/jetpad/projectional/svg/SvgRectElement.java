@@ -15,6 +15,7 @@
  */
 package jetbrains.jetpad.projectional.svg;
 
+import jetbrains.jetpad.geometry.Rectangle;
 import jetbrains.jetpad.model.property.Property;
 import jetbrains.jetpad.model.property.WritableProperty;
 import jetbrains.jetpad.values.Color;
@@ -36,6 +37,10 @@ public class SvgRectElement extends SvgGraphicsElement implements SvgTransformab
     setAttribute(Y, y);
     setAttribute(HEIGHT, height);
     setAttribute(WIDTH, width);
+  }
+
+  public SvgRectElement(Rectangle rect) {
+    this(rect.origin.x, rect.origin.y, rect.dimension.x, rect.dimension.y);
   }
 
   public Property<Double> x() {
