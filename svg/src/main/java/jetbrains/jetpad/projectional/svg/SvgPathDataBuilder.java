@@ -50,6 +50,7 @@ public class SvgPathDataBuilder {
 
   private StringBuilder myStringBuilder;
   private boolean myDefaultAbsolute;
+  private double myTension = .7;
 
   public SvgPathDataBuilder(boolean defaultAbsolute) {
     myStringBuilder = new StringBuilder();
@@ -187,6 +188,13 @@ public class SvgPathDataBuilder {
     return this;
   }
 
+  public void setTension(double tension) {
+    if (0 > tension || tension > 1) {
+      throw new IllegalArgumentException("Tension should be within [0, 1] interval");
+    }
+    myTension = tension;
+  }
+
   private double lineSlope(DoubleVector v1, DoubleVector v2) {
     return (v2.y - v1.y) / (v2.x - v1.x);
   }
@@ -214,7 +222,7 @@ public class SvgPathDataBuilder {
   }
 
   private void doCardinalInterpolation(ArrayList<DoubleVector> points) {
-    doCardinalInterpolation(points, 0.7);
+    doCardinalInterpolation(points, myTension);
   }
 
   private void doCardinalInterpolation(ArrayList<DoubleVector> points, double tension) {
