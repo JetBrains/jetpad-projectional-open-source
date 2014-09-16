@@ -22,7 +22,7 @@ import java.util.Collection;
 
 public class SvgPathDataBuilder {
   public static enum Interpolation {
-    LINEAR, MONOTONE
+    LINEAR, CARDINAL, MONOTONE
   }
 
   private static enum Action {
@@ -213,6 +213,14 @@ public class SvgPathDataBuilder {
     }
   }
 
+  private void doCardinalInterpolation(ArrayList<DoubleVector> points) {
+    doCardinalInterpolation(points, 0.7);
+  }
+
+  private void doCardinalInterpolation(ArrayList<DoubleVector> points, double tension) {
+    doHermiteInterpolation(points, cardinalTangents(points, tension));
+  }
+
   private void doHermiteInterpolation(ArrayList<DoubleVector> points, ArrayList<DoubleVector> tangents) {
     if (tangents.size() < 1 ||
         (points.size() != tangents.size() && points.size() != tangents.size() + 2)) {
@@ -249,6 +257,23 @@ public class SvgPathDataBuilder {
       DoubleVector lastPoint = points.get(pointIndex);
       quadraticBezierCurveTo(curPoint.x + curTangent.x * 2 / 3, curPoint.y + curTangent.y * 2 / 3, lastPoint.x, lastPoint.y, true);
     }
+  }
+
+  private ArrayList<DoubleVector> cardinalTangents(ArrayList<DoubleVector> points, double tension) {
+    ArrayList<DoubleVector> tangents = new ArrayList<>();
+    double a = (1 - tension) / 2;
+    DoubleVector prevPoint;
+    DoubleVector curPoint = points.get(0);
+    DoubleVector nextPoint = points.get(1);
+
+    for (int i = 2; i < points.size(); ++i) {
+      prevPoint = curPoint;
+      curPoint = nextPoint;
+      nextPoint = points.get(i);
+      tangents.add(new DoubleVector(a * (nextPoint.x - prevPoint.x), a * (nextPoint.y - prevPoint.y)));
+    }
+
+    return tangents;
   }
 
   private ArrayList<DoubleVector> monotoneTangents(ArrayList<DoubleVector> points) {
@@ -307,6 +332,13 @@ public class SvgPathDataBuilder {
     switch (interpolation) {
       case LINEAR:
         doLinearInterpolation(points);
+        break;
+      case CARDINAL:
+        if (points.size() < 3) {
+          doLinearInterpolation(points);
+        } else {
+          doCardinalInterpolation(points);
+        }
         break;
       case MONOTONE:
         if (points.size() < 3) {
