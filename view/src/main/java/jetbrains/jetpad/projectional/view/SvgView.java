@@ -25,19 +25,19 @@ import jetbrains.jetpad.projectional.svg.event.SvgAttributeEvent;
 public class SvgView extends View {
   public static final ViewPropertySpec<SvgSvgElement> SVG_ROOT = new ViewPropertySpec<>("svgRoot", ViewPropertyKind.RELAYOUT);
 
-  private final SvgContainer mySvgContainer;
+  private final SvgElementContainer mySvgElementContainer;
 
   public SvgView(SvgSvgElement root) {
     root().set(root);
-    mySvgContainer = new SvgContainer(root);
+    mySvgElementContainer = new SvgElementContainer(root);
     root().addHandler(new EventHandler<PropertyChangeEvent<SvgSvgElement>>() {
       @Override
       public void onEvent(PropertyChangeEvent<SvgSvgElement> event) {
-        mySvgContainer.root().set(event.getNewValue());
+        mySvgElementContainer.root().set(event.getNewValue());
         invalidate();
       }
     });
-    mySvgContainer.addListener(new SvgContainerAdapter() {
+    mySvgElementContainer.addListener(new SvgElementContainerAdapter() {
       @Override
       public void onAttributeSet(SvgElement element, SvgAttributeEvent event) {
         if (element == root().get() &&
@@ -59,8 +59,8 @@ public class SvgView extends View {
     });
   }
 
-  SvgContainer svgContainer() {
-    return mySvgContainer;
+  SvgElementContainer svgContainer() {
+    return mySvgElementContainer;
   }
 
   public Property<SvgSvgElement> root() {

@@ -22,7 +22,7 @@ import jetbrains.jetpad.model.property.Property;
 import jetbrains.jetpad.model.property.ValueProperty;
 import jetbrains.jetpad.projectional.svg.event.SvgAttributeEvent;
 
-public class SvgContainer {
+public class SvgElementContainer {
   private Property<SvgSvgElement> mySvgRoot = new ValueProperty<SvgSvgElement>() {
     @Override
     public void set(SvgSvgElement value) {
@@ -30,12 +30,12 @@ public class SvgContainer {
         mySvgRoot.get().detach();
       }
       super.set(value);
-      mySvgRoot.get().attach(SvgContainer.this);
+      mySvgRoot.get().attach(SvgElementContainer.this);
     }
   };
-  private Listeners<SvgContainerListener> myListeners = new Listeners<>();
+  private Listeners<SvgElementContainerListener> myListeners = new Listeners<>();
 
-  public SvgContainer(SvgSvgElement root) {
+  public SvgElementContainer(SvgSvgElement root) {
     mySvgRoot.set(root);
   }
 
@@ -43,32 +43,32 @@ public class SvgContainer {
     return mySvgRoot;
   }
 
-  public Registration addListener(SvgContainerListener l) {
+  public Registration addListener(SvgElementContainerListener l) {
     return myListeners.add(l);
   }
 
   void attributeChanged(final SvgElement element, final SvgAttributeEvent<?> event) {
-    myListeners.fire(new ListenerCaller<SvgContainerListener>() {
+    myListeners.fire(new ListenerCaller<SvgElementContainerListener>() {
       @Override
-      public void call(SvgContainerListener l) {
+      public void call(SvgElementContainerListener l) {
         l.onAttributeSet(element, event);
       }
     });
   }
 
   void svgNodeAttached(final SvgNode node) {
-    myListeners.fire(new ListenerCaller<SvgContainerListener>() {
+    myListeners.fire(new ListenerCaller<SvgElementContainerListener>() {
       @Override
-      public void call(SvgContainerListener l) {
+      public void call(SvgElementContainerListener l) {
         l.onNodeAttached(node);
       }
     });
   }
 
   void svgNodeDetached(final SvgNode node) {
-    myListeners.fire(new ListenerCaller<SvgContainerListener>() {
+    myListeners.fire(new ListenerCaller<SvgElementContainerListener>() {
       @Override
-      public void call(SvgContainerListener l) {
+      public void call(SvgElementContainerListener l) {
         l.onNodeDetached(node);
       }
     });

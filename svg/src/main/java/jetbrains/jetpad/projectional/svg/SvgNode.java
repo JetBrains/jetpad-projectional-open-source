@@ -21,11 +21,11 @@ import jetbrains.jetpad.model.collections.list.ObservableList;
 
 
 public abstract class SvgNode extends HasParent<SvgNode, SvgNode> {
-  private SvgContainer myContainer;
+  private SvgElementContainer myContainer;
 
   private SvgChildList myChildren;
 
-  public SvgContainer container() {
+  public SvgElementContainer container() {
     return myContainer;
   }
 
@@ -40,7 +40,7 @@ public abstract class SvgNode extends HasParent<SvgNode, SvgNode> {
     return myContainer != null;
   }
 
-  void attach(SvgContainer container) {
+  void attach(SvgElementContainer container) {
     if (isAttached()) {
       throw new IllegalStateException("Svg element is already attached");
     }
