@@ -42,9 +42,32 @@ public abstract class SvgGraphicsElement extends SvgStylableElement {
     }
   }
 
+  public static enum Visibility {
+    VISIBLE("visible"),
+    HIDDEN("hidden"),
+    COLLAPSE("collapse"),
+    INHERIT("inherit");
+
+    private String myAttrString;
+
+    private Visibility(String attrString) {
+      myAttrString = attrString;
+    }
+
+    @Override
+    public String toString() {
+      return myAttrString;
+    }
+  }
+
   private static final SvgAttributeSpec<PointerEvents> POINTER_EVENTS = SvgAttributeSpec.createSpec("pointer-events");
+  private static final SvgAttributeSpec<Visibility> VISIBILITY = SvgAttributeSpec.createSpec("visibility");
 
   public Property<PointerEvents> pointerEvents() {
     return getAttribute(POINTER_EVENTS);
+  }
+
+  public Property<Visibility> visibility() {
+    return getAttribute(VISIBILITY);
   }
 }
