@@ -21,7 +21,7 @@ import jetbrains.jetpad.model.property.Property;
 import jetbrains.jetpad.projectional.svg.event.SvgEventHandler;
 import jetbrains.jetpad.projectional.svg.event.SvgEventSpec;
 
-public class SvgSvgElement extends SvgStylableElement {
+public class SvgSvgElement extends SvgStylableElement implements SvgContainer {
   private static final SvgAttributeSpec<Double> HEIGHT = SvgAttributeSpec.createSpec("height");
   private static final SvgAttributeSpec<Double> WIDTH = SvgAttributeSpec.createSpec("width");
 
@@ -46,6 +46,11 @@ public class SvgSvgElement extends SvgStylableElement {
 
   public Property<Double> width() {
     return getAttribute(WIDTH);
+  }
+
+  @Override
+  public Property<Double> opacity() {
+    return getAttribute(OPACITY);
   }
 
   @Override

@@ -17,9 +17,8 @@ package jetbrains.jetpad.projectional.svg;
 
 import jetbrains.jetpad.model.property.Property;
 
-public class SvgGElement extends SvgGraphicsElement implements SvgTransformable, SvgContainer {
-  @Override
-  public Property<String> transform() {
-    return getAttribute(TRANSFORM);
-  }
+public interface SvgContainer {
+  static final SvgAttributeSpec<Double> OPACITY = SvgAttributeSpec.createSpec("opacity");
+
+  public Property<Double> opacity();
 }
