@@ -15,7 +15,6 @@
  */
 package jetbrains.jetpad.projectional.svg;
 
-import jetbrains.jetpad.model.collections.list.ObservableList;
 import jetbrains.jetpad.model.property.Property;
 import jetbrains.jetpad.model.property.WritableProperty;
 import jetbrains.jetpad.values.Color;
@@ -40,6 +39,11 @@ public class SvgTextElement extends SvgGraphicsElement implements SvgTransformab
     setAttribute(X, x);
     setAttribute(Y, y);
     setTextNode(content);
+  }
+
+  @Override
+  public String getElementName() {
+    return "text";
   }
 
   public Property<Double> x() {

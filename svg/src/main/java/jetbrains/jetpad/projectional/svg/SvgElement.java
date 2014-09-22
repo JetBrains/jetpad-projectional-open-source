@@ -33,11 +33,13 @@ import java.util.Objects;
 import java.util.Set;
 
 public abstract class SvgElement extends SvgNode {
-  private AttributeMap myAttrs = new AttributeMap();
+  private static final SvgAttributeSpec<String> ID = SvgAttributeSpec.createSpec("id");
+
+  public abstract String getElementName();
+
+  private AttributeMap myAttributes = new AttributeMap();
   private Listeners<SvgElementListener<?>> myListeners;
   private SvgEventPeer myEventPeer = new SvgEventPeer();
-
-  private static final SvgAttributeSpec<String> ID = SvgAttributeSpec.createSpec("id");
 
   public Property<String> id() {
     return getAttribute(ID);
@@ -73,12 +75,12 @@ public abstract class SvgElement extends SvgNode {
 
       @Override
       public ValueT get() {
-        return myAttrs.get(spec);
+        return myAttributes.get(spec);
       }
 
       @Override
       public void set(ValueT value) {
-        myAttrs.set(spec, value);
+        myAttributes.set(spec, value);
       }
 
       @Override
@@ -111,7 +113,7 @@ public abstract class SvgElement extends SvgNode {
   }
 
   public Set<SvgAttributeSpec<?>> getAttributeKeys() {
-    return myAttrs.keySet();
+    return myAttributes.keySet();
   }
 
   private void onAttributeChanged(final SvgAttributeEvent<?> event) {
@@ -143,6 +145,11 @@ public abstract class SvgElement extends SvgNode {
         }
       }
     };
+  }
+
+  @Override
+  public String toString() {
+    return "<" + getElementName() + " " + myAttributes + "/>";
   }
 
   private class AttributeMap {
@@ -196,6 +203,18 @@ public abstract class SvgElement extends SvgNode {
         return Collections.emptySet();
       }
       return myAttrs.keySet();
+    }
+
+    @Override
+    public String toString() {
+      StringBuilder builder = new StringBuilder();
+      for (SvgAttributeSpec<?> spec : keySet()) {
+        builder.append(spec.getName())
+            .append("=\"")
+            .append(get(spec))
+            .append("\" ");
+      }
+      return builder.toString();
     }
   }
 }

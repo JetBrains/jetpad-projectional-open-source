@@ -36,6 +36,11 @@ public class SvgSvgElement extends SvgStylableElement implements SvgContainer {
     setAttribute(HEIGHT, height);
   }
 
+  @Override
+  public String getElementName() {
+    return "svg";
+  }
+
   public void setStyle(SvgCssResource css) {
     children().add(new SvgStyleElement(css));
   }

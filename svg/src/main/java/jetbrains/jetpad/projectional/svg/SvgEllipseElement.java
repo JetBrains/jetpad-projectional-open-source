@@ -38,6 +38,11 @@ public class SvgEllipseElement extends SvgGraphicsElement implements SvgTransfor
     setAttribute(RY, ry);
   }
 
+  @Override
+  public String getElementName() {
+    return "ellipse";
+  }
+
   public Property<Double> cx() {
     return getAttribute(CX);
   }

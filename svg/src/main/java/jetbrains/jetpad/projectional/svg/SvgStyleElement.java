@@ -32,6 +32,11 @@ public class SvgStyleElement extends SvgElement {
     this(resource.css());
   }
 
+  @Override
+  public String getElementName() {
+    return "style";
+  }
+
   public void setContent(String content) {
     ObservableList<SvgNode> children = children();
     while (!children.isEmpty()) {

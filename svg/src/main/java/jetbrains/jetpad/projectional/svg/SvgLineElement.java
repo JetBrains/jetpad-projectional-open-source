@@ -38,6 +38,11 @@ public class SvgLineElement extends SvgGraphicsElement implements SvgTransformab
     setAttribute(Y2, y2);
   }
 
+  @Override
+  public String getElementName() {
+    return "line";
+  }
+
   public Property<Double> x1() {
     return getAttribute(X1);
   }

@@ -43,6 +43,11 @@ public class SvgRectElement extends SvgGraphicsElement implements SvgTransformab
     this(rect.origin.x, rect.origin.y, rect.dimension.x, rect.dimension.y);
   }
 
+  @Override
+  public String getElementName() {
+    return "rect";
+  }
+
   public Property<Double> x() {
     return getAttribute(X);
   }

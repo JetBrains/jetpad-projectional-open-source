@@ -19,6 +19,11 @@ import jetbrains.jetpad.model.property.Property;
 
 public class SvgGElement extends SvgGraphicsElement implements SvgTransformable, SvgContainer {
   @Override
+  public String getElementName() {
+    return "g";
+  }
+
+  @Override
   public Property<String> transform() {
     return getAttribute(TRANSFORM);
   }

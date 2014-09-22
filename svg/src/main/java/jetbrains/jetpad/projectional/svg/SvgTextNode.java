@@ -40,12 +40,17 @@ public class SvgTextNode extends SvgNode {
     myContent.set(text);
   }
 
-  public Property<String> getTextContent() {
+  public Property<String> textContent() {
     return myContent;
   }
 
   @Override
   public ObservableList<SvgNode> children() {
     return NO_CHILDREN_LIST;
+  }
+
+  @Override
+  public String toString() {
+    return textContent().get();
   }
 }

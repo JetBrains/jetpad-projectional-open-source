@@ -30,7 +30,7 @@ class SvgTextNodeMapper extends SvgNodeMapper<SvgTextNode, Text> {
   protected void registerSynchronizers(SynchronizersConfiguration conf) {
     super.registerSynchronizers(conf);
 
-    conf.add(Synchronizers.forPropsOneWay(getSource().getTextContent(), new WritableProperty<String>() {
+    conf.add(Synchronizers.forPropsOneWay(getSource().textContent(), new WritableProperty<String>() {
       @Override
       public void set(String value) {
         getTarget().setNodeValue(value);

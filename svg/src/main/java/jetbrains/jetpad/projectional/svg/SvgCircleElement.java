@@ -36,6 +36,11 @@ public class SvgCircleElement extends SvgGraphicsElement implements SvgTransform
     setAttribute(R, r);
   }
 
+  @Override
+  public String getElementName() {
+    return "circle";
+  }
+
   public Property<Double> cx() {
     return getAttribute(CX);
   }

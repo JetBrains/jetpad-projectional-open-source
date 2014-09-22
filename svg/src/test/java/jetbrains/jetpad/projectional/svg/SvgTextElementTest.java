@@ -33,7 +33,7 @@ public class SvgTextElementTest {
   public void initString() {
     SvgTextElement element = new SvgTextElement(str);
     assertSame(element.children().size(), 1);
-    assertSame(((SvgTextNode) element.children().get(0)).getTextContent().get(), str);
+    assertSame(((SvgTextNode) element.children().get(0)).textContent().get(), str);
   }
 
   @Test
@@ -41,7 +41,7 @@ public class SvgTextElementTest {
     SvgTextElement element = new SvgTextElement(str);
     element.setTextNode(altStr);
     assertSame(element.children().size(), 1);
-    assertSame(((SvgTextNode) element.children().get(0)).getTextContent().get(), altStr);
+    assertSame(((SvgTextNode) element.children().get(0)).textContent().get(), altStr);
   }
 
   @Test
@@ -49,7 +49,7 @@ public class SvgTextElementTest {
     SvgTextElement element = new SvgTextElement(str);
     element.addTextNode(altStr);
     assertSame(element.children().size(), 2);
-    assertSame(((SvgTextNode) element.children().get(0)).getTextContent().get(), str);
-    assertSame(((SvgTextNode) element.children().get(1)).getTextContent().get(), altStr);
+    assertSame(((SvgTextNode) element.children().get(0)).textContent().get(), str);
+    assertSame(((SvgTextNode) element.children().get(1)).textContent().get(), altStr);
   }
 }

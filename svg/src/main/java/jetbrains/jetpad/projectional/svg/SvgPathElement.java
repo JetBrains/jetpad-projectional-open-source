@@ -32,6 +32,11 @@ public class SvgPathElement extends SvgGraphicsElement implements SvgTransformab
     setAttribute(D, d);
   }
 
+  @Override
+  public String getElementName() {
+    return "line";
+  }
+
   public Property<String> d() {
     return getAttribute(D);
   }
