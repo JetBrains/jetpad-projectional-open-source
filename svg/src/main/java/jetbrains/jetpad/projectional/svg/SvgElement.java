@@ -39,7 +39,7 @@ public abstract class SvgElement extends SvgNode {
 
   private static final SvgAttributeSpec<String> ID = SvgAttributeSpec.createSpec("id");
 
-  public Property<String> getId() {
+  public Property<String> id() {
     return getAttribute(ID);
   }
 
