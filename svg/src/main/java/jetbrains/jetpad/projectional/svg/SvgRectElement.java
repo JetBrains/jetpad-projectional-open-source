@@ -23,8 +23,8 @@ import jetbrains.jetpad.values.Color;
 public class SvgRectElement extends SvgGraphicsElement implements SvgTransformable, SvgShape {
   private static final SvgAttributeSpec<Double> X = SvgAttributeSpec.createSpec("x");
   private static final SvgAttributeSpec<Double> Y = SvgAttributeSpec.createSpec("y");
-  private static final SvgAttributeSpec<Double> HEIGHT = SvgAttributeSpec.createSpec("height");
   private static final SvgAttributeSpec<Double> WIDTH = SvgAttributeSpec.createSpec("width");
+  private static final SvgAttributeSpec<Double> HEIGHT = SvgAttributeSpec.createSpec("height");
 
   public SvgRectElement() {
     super();
