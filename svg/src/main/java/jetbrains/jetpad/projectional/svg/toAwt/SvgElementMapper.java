@@ -37,7 +37,7 @@ import java.util.EnumMap;
 import java.util.Map;
 import java.util.Set;
 
-public class SvgElementMapper<SourceT extends SvgElement, TargetT extends SVGOMElement> extends SvgNodeMapper<SourceT, TargetT> {
+class SvgElementMapper<SourceT extends SvgElement, TargetT extends SVGOMElement> extends SvgNodeMapper<SourceT, TargetT> {
   private Map<SvgEventSpec, Registration> myHandlerRegs;
 
   public SvgElementMapper(SourceT source, TargetT target, AbstractDocument doc, SvgAwtPeer peer) {

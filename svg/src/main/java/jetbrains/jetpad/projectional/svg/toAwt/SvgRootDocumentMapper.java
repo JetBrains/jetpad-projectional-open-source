@@ -30,7 +30,7 @@ public class SvgRootDocumentMapper extends Mapper<SvgSvgElement, SVGOMDocument> 
     return (SVGOMDocument) impl.createDocument(svgNS, "svg", null);
   }
 
-  private SvgElementMapper<SvgSvgElement, SVGOMSVGElement> myElementMapper;
+  private SvgElementMapper<SvgSvgElement, SVGOMSVGElement> myRootMapper;
   private SvgAwtPeer myPeer;
 
   public SvgRootDocumentMapper(SvgSvgElement source) {
@@ -47,9 +47,9 @@ public class SvgRootDocumentMapper extends Mapper<SvgSvgElement, SVGOMDocument> 
     myPeer = new SvgAwtPeer();
     getSource().container().setPeer(myPeer);
 
-    myElementMapper = new SvgElementMapper<>(getSource(), (SVGOMSVGElement) getTarget().getDocumentElement(), getTarget(), myPeer);
+    myRootMapper = new SvgElementMapper<>(getSource(), (SVGOMSVGElement) getTarget().getDocumentElement(), getTarget(), myPeer);
     getTarget().getDocumentElement().setAttribute("shape-rendering", "geometricPrecision");
-    myElementMapper.attachRoot();
+    myRootMapper.attachRoot();
   }
 
   @Override
@@ -58,7 +58,7 @@ public class SvgRootDocumentMapper extends Mapper<SvgSvgElement, SVGOMDocument> 
 
     myPeer = null;
 
-    myElementMapper.detachRoot();
-    myElementMapper = null;
+    myRootMapper.detachRoot();
+    myRootMapper = null;
   }
 }
