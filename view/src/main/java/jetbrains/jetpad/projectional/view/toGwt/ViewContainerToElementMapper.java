@@ -275,7 +275,7 @@ public class ViewContainerToElementMapper extends Mapper<ViewContainer, Element>
               @Override
               public void handle(KeyEvent e) {
                 //Space is a special key in Chrome. We emulate its typing in keydown
-                if (e.keyChar() == ' ') return;
+                if (e.getKeyChar() == ' ') return;
                 getSource().keyTyped(e);
               }
             });

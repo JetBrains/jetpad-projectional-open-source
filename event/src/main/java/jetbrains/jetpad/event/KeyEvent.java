@@ -30,20 +30,20 @@ public class KeyEvent extends Event {
     myKeyChar = ch;
   }
 
-  public Key key() {
-    return myKeyStroke.key();
+  public Key getKey() {
+    return myKeyStroke.getKey();
   }
 
-  public KeyStroke keyStroke() {
+  public KeyStroke getKeyStroke() {
     return myKeyStroke;
   }
 
-  public char keyChar() {
+  public char getKeyChar() {
     return myKeyChar;
   }
 
-  public Set<ModifierKey> modifiers() {
-    return myKeyStroke.modifiers();
+  public Set<ModifierKey> getModifiers() {
+    return myKeyStroke.getModifiers();
   }
 
   public boolean is(Key key, ModifierKey... modifiers) {
@@ -59,7 +59,7 @@ public class KeyEvent extends Event {
   }
 
   public KeyEvent copy() {
-    return new KeyEvent(key(), keyChar(), modifiers());
+    return new KeyEvent(getKey(), getKeyChar(), getModifiers());
   }
 
   @Override

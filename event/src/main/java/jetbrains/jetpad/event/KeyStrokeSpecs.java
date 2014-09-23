@@ -83,10 +83,10 @@ public class KeyStrokeSpecs {
       }
 
       @Override
-      public Set<KeyStroke> keyStrokes() {
+      public Set<KeyStroke> getKeyStrokes() {
         Set<KeyStroke> result = new LinkedHashSet<>();
         for (KeyStrokeSpec s : specs) {
-          result.addAll(s.keyStrokes());
+          result.addAll(s.getKeyStrokes());
         }
         return result;
       }

@@ -188,7 +188,7 @@ class TextNavigationTrait extends CellTrait {
   @Override
   public void onKeyTypedLowPriority(Cell cell, KeyEvent event) {
     TextCell textCell = (TextCell) cell;
-    String s = ("" + event.keyChar()).trim();
+    String s = ("" + event.getKeyChar()).trim();
     if (textCell.isEnd() && showCompletion(textCell, s, Completion.RIGHT_TRANSFORM, textCell.rightPopup()) ) {
       event.consume();
     }

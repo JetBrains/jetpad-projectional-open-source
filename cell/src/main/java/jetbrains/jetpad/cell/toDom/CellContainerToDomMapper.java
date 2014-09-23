@@ -584,7 +584,7 @@ public class CellContainerToDomMapper extends Mapper<CellContainer, Element> {
           @Override
           public void handle(KeyEvent e) {
             //Space is a special key in Chrome. We emulate its typing in keydown
-            if (e.keyChar() == ' ') return;
+            if (e.getKeyChar() == ' ') return;
             getSource().keyTyped(e);
           }
         });

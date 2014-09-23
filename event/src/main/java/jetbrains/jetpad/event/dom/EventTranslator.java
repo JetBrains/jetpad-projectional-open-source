@@ -50,13 +50,13 @@ public class EventTranslator {
     handler.handle(event);
 
     //disable back button
-    if (event.key() == Key.BACKSPACE) return false;
+    if (event.getKey() == Key.BACKSPACE) return false;
 
     //disable navigation keys to prevent browser scrolling
-    if (event.key() == Key.UP || event.key() == Key.DOWN || event.key() == Key.LEFT || event.key() == Key.RIGHT) return false;
+    if (event.getKey() == Key.UP || event.getKey() == Key.DOWN || event.getKey() == Key.LEFT || event.getKey() == Key.RIGHT) return false;
 
     //disable space scrolling in case of unhandled space
-    if (event.key() == Key.SPACE) return false;
+    if (event.getKey() == Key.SPACE) return false;
 
     //disable shift+arrow selection
     if (event.is(KeyStrokeSpecs.SELECT_BEFORE) || event.is(KeyStrokeSpecs.SELECT_AFTER)) return false;

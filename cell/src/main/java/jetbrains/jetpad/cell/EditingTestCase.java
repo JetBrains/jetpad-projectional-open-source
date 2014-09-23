@@ -57,14 +57,14 @@ public abstract class EditingTestCase {
   }
 
   protected KeyEvent press(KeyStrokeSpec spec) {
-    if (spec.keyStrokes().isEmpty()) {
+    if (spec.getKeyStrokes().isEmpty()) {
       throw new IllegalArgumentException();
     }
-    return press(spec.keyStrokes().iterator().next());
+    return press(spec.getKeyStrokes().iterator().next());
   }
 
   protected KeyEvent press(KeyStroke ks) {
-    KeyEvent event = new KeyEvent(ks.key(), (char) 0, ks.modifiers());
+    KeyEvent event = new KeyEvent(ks.getKey(), (char) 0, ks.getModifiers());
     myViewContainer.keyPressed(event);
     return event;
   }

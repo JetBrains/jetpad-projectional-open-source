@@ -132,19 +132,19 @@ public class DemoModel {
     .on(ViewEvents.KEY_PRESSED, new ViewEventHandler<KeyEvent>() {
       @Override
       public void handle(View view, KeyEvent e) {
-        if (e.key() == Key.SPACE) {
+        if (e.getKey() == Key.SPACE) {
           ((SvgElement) model.children().get(1)).getAttribute("stroke-width").set("20");
           return;
         }
 
-        if (e.key() == Key.P) {
+        if (e.getKey() == Key.P) {
           if (!viewState.get()) return;
           hView.children().remove(svgView);
           viewState.set(false);
           return;
         }
 
-        if (e.key() == Key.O) {
+        if (e.getKey() == Key.O) {
           if (viewState.get()) return;
           hView.children().add(0, svgView);
           viewState.set(true);

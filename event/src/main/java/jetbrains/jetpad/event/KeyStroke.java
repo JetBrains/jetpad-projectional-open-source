@@ -32,11 +32,11 @@ public class KeyStroke implements KeyStrokeSpec {
     myModifiers = new HashSet<>(modifiers);
   }
 
-  public Key key() {
+  public Key getKey() {
     return myKey;
   }
 
-  public Set<ModifierKey> modifiers() {
+  public Set<ModifierKey> getModifiers() {
     return Collections.unmodifiableSet(myModifiers);
   }
 
@@ -54,7 +54,7 @@ public class KeyStroke implements KeyStrokeSpec {
   }
 
   @Override
-  public Set<KeyStroke> keyStrokes() {
+  public Set<KeyStroke> getKeyStrokes() {
     return Collections.singleton(this);
   }
 
