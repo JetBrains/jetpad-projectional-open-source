@@ -21,13 +21,13 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 public class SvgPlatformPeerTest {
-  SvgElementContainer container;
+  SvgNodeContainer container;
   SvgSvgElement root;
 
   @Before
   public void setUp() throws Exception {
     root = new SvgSvgElement();
-    container = new SvgElementContainer(root);
+    container = new SvgNodeContainer(root);
   }
 
   @Test

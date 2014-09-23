@@ -23,7 +23,7 @@ import static org.junit.Assert.*;
 
 public class SvgElementContainerTest {
   private SvgSvgElement root = new SvgSvgElement();
-  private SvgElementContainer container = new SvgElementContainer(root);
+  private SvgNodeContainer container = new SvgNodeContainer(root);
 
   @Test
   public void root() {
@@ -89,7 +89,7 @@ public class SvgElementContainerTest {
   @Test
   public void attachEvent() {
     final Value<Boolean> nodeAttached = new Value<>(false);
-    container.addListener(new SvgElementContainerAdapter() {
+    container.addListener(new SvgNodeContainerAdapter() {
       @Override
       public void onNodeAttached(SvgNode node) {
         nodeAttached.set(true);
@@ -103,7 +103,7 @@ public class SvgElementContainerTest {
   @Test
   public void detachEvent() {
     final Value<Boolean> nodeDetached = new Value<>(false);
-    container.addListener(new SvgElementContainerAdapter() {
+    container.addListener(new SvgNodeContainerAdapter() {
       @Override
       public void onNodeDetached(SvgNode element) {
         nodeDetached.set(true);
@@ -132,7 +132,7 @@ public class SvgElementContainerTest {
     root.children().add(element);
 
     final Value<Boolean> isAttributeSet = new Value<>(false);
-    container.addListener(new SvgElementContainerAdapter() {
+    container.addListener(new SvgNodeContainerAdapter() {
       @Override
       public void onAttributeSet(SvgElement elt, SvgAttributeEvent event) {
         isAttributeSet.set(true);

@@ -15,7 +15,7 @@
  */
 package jetbrains.jetpad.projectional.svg.toAwt;
 
-import jetbrains.jetpad.projectional.svg.SvgElementContainer;
+import jetbrains.jetpad.projectional.svg.SvgNodeContainer;
 import jetbrains.jetpad.projectional.svg.SvgSvgElement;
 import org.junit.Before;
 import org.junit.Test;
@@ -24,14 +24,14 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
 public class SvgAwtPeerTest {
-  SvgElementContainer container;
+  SvgNodeContainer container;
   SvgSvgElement root;
   SvgRootDocumentMapper mapper;
 
   @Before
   public void setUp() throws Exception {
     root = new SvgSvgElement();
-    container = new SvgElementContainer(root);
+    container = new SvgNodeContainer(root);
     mapper = new SvgRootDocumentMapper(root);
   }
 
