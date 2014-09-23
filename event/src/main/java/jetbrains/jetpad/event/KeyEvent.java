@@ -30,6 +30,11 @@ public class KeyEvent extends Event {
     myKeyChar = ch;
   }
 
+  @Deprecated
+  public Key key() {
+    return getKey();
+  }
+
   public Key getKey() {
     return myKeyStroke.getKey();
   }
