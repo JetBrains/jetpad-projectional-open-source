@@ -48,7 +48,7 @@ public class SvgElementContainer {
     myPeer = peer;
   }
 
-  SvgPlatformPeer getPeer() {
+  public SvgPlatformPeer getPeer() {
     return myPeer;
   }
 
