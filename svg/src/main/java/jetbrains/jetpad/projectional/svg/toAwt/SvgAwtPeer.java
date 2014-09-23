@@ -23,7 +23,7 @@ import org.w3c.dom.Node;
 import java.util.HashMap;
 import java.util.Map;
 
-public class SvgAwtPeer implements SvgPlatformPeer {
+class SvgAwtPeer implements SvgPlatformPeer {
   private Map<SvgNode, Mapper<? extends SvgNode, ? extends Node>> myMappingMap = new HashMap<>();
 
   void registerMapper(SvgNode source, SvgNodeMapper<? extends SvgNode, ? extends Node> mapper) {

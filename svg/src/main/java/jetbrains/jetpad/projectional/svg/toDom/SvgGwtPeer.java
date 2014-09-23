@@ -25,7 +25,7 @@ import org.vectomatic.dom.svg.OMSVGTextContentElement;
 import java.util.HashMap;
 import java.util.Map;
 
-public class SvgGwtPeer implements SvgPlatformPeer{
+class SvgGwtPeer implements SvgPlatformPeer{
   private Map<SvgNode, Mapper<? extends SvgNode, ? extends OMNode>> myMappingMap = new HashMap<>();
 
   void registerMapper(SvgNode source, SvgNodeMapper<? extends SvgNode, ? extends OMNode> mapper) {
@@ -41,7 +41,7 @@ public class SvgGwtPeer implements SvgPlatformPeer{
     if (!myMappingMap.containsKey(node)) {
       throw new IllegalStateException("Trying to getCompudedTextLength of umapped node");
     }
-    
+
     return ((OMSVGTextContentElement) myMappingMap.get(node).getTarget()).getComputedTextLength();
   }
 }
