@@ -40,8 +40,8 @@ import java.util.Set;
 public class SvgElementMapper<SourceT extends SvgElement, TargetT extends SVGOMElement> extends SvgNodeMapper<SourceT, TargetT> {
   private Map<SvgEventSpec, Registration> myHandlerRegs;
 
-  public SvgElementMapper(SourceT source, TargetT target, AbstractDocument doc) {
-    super(source, target, doc);
+  public SvgElementMapper(SourceT source, TargetT target, AbstractDocument doc, SvgAwtPeer peer) {
+    super(source, target, doc, peer);
   }
 
   @Override

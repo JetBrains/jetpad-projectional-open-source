@@ -39,4 +39,6 @@ public interface SvgTextContent {
   public Property<Double> strokeOpacity();
 
   public Property<Double> strokeWidth();
+
+  public double getComputedTextLength();
 }

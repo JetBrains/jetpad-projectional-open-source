@@ -16,6 +16,7 @@
 package jetbrains.jetpad.projectional.svg.toAwt;
 
 import jetbrains.jetpad.mapper.Mapper;
+import jetbrains.jetpad.mapper.MappingContext;
 import jetbrains.jetpad.mapper.Synchronizers;
 import jetbrains.jetpad.projectional.svg.SvgNode;
 import org.apache.batik.dom.AbstractDocument;
@@ -23,16 +24,33 @@ import org.w3c.dom.Node;
 
 class SvgNodeMapper<SourceT extends SvgNode, TargetT extends Node> extends Mapper<SourceT, TargetT> {
   private AbstractDocument myDoc;
+  private SvgAwtPeer myPeer;
 
-  SvgNodeMapper(SourceT source, TargetT target, AbstractDocument doc) {
+  SvgNodeMapper(SourceT source, TargetT target, AbstractDocument doc, SvgAwtPeer peer) {
     super(source, target);
     myDoc = doc;
+    myPeer = peer;
   }
 
   @Override
   protected void registerSynchronizers(final Mapper.SynchronizersConfiguration conf) {
     super.registerSynchronizers(conf);
 
-    conf.add(Synchronizers.forObservableRole(this, getSource().children(), Utils.elementChildren(getTarget()), new SvgNodeMapperFactory(myDoc)));
+    conf.add(Synchronizers.forObservableRole(this, getSource().children(), Utils.elementChildren(getTarget()),
+        new SvgNodeMapperFactory(myDoc, myPeer)));
+  }
+
+  @Override
+  protected void onAttach(MappingContext ctx) {
+    super.onAttach(ctx);
+
+    myPeer.registerMapper(getSource(), this);
+  }
+
+  @Override
+  protected void onDetach() {
+    super.onDetach();
+
+    myPeer.unregisterMapper(getSource());
   }
 }

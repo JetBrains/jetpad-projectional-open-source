@@ -22,8 +22,8 @@ import org.apache.batik.dom.AbstractDocument;
 import org.w3c.dom.Text;
 
 class SvgTextNodeMapper extends SvgNodeMapper<SvgTextNode, Text> {
-  public SvgTextNodeMapper(SvgTextNode source, Text target, AbstractDocument doc) {
-    super(source, target, doc);
+  public SvgTextNodeMapper(SvgTextNode source, Text target, AbstractDocument doc, SvgAwtPeer peer) {
+    super(source, target, doc, peer);
   }
 
   @Override

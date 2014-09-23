@@ -103,4 +103,9 @@ public class SvgTextElement extends SvgGraphicsElement implements SvgTransformab
   public Property<Double> strokeWidth() {
     return getAttribute(STROKE_WIDTH);
   }
+
+  @Override
+  public double getComputedTextLength() {
+    return container().getPeer().getComputedTextLength(this);
+  }
 }

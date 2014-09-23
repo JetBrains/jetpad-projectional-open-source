@@ -34,6 +34,7 @@ public class SvgElementContainer {
     }
   };
   private Listeners<SvgElementContainerListener> myListeners = new Listeners<>();
+  private SvgPlatformPeer myPeer;
 
   public SvgElementContainer(SvgSvgElement root) {
     mySvgRoot.set(root);
@@ -41,6 +42,14 @@ public class SvgElementContainer {
 
   public Property<SvgSvgElement> root() {
     return mySvgRoot;
+  }
+
+  public void setPeer(SvgPlatformPeer peer) {
+    myPeer = peer;
+  }
+
+  SvgPlatformPeer getPeer() {
+    return myPeer;
   }
 
   public Registration addListener(SvgElementContainerListener l) {
