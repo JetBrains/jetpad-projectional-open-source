@@ -40,7 +40,6 @@ public class SvgRootDocumentMapper extends Mapper<SvgSvgElement, OMSVGSVGElement
 
     myRootMapper = new SvgElementMapper<>(getSource(), getTarget(), myPeer);
 
-
     myRootMapper.attachRoot();
   }
 
@@ -48,6 +47,9 @@ public class SvgRootDocumentMapper extends Mapper<SvgSvgElement, OMSVGSVGElement
   protected void onDetach() {
     super.onDetach();
 
+    if (getSource().isAttached()) {
+      getSource().container().setPeer(null);
+    }
     myPeer = null;
 
     myRootMapper.detachRoot();

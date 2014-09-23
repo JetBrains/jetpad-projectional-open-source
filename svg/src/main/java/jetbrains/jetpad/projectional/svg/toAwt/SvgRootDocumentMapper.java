@@ -56,6 +56,9 @@ public class SvgRootDocumentMapper extends Mapper<SvgSvgElement, SVGOMDocument> 
   protected void onDetach() {
     super.onDetach();
 
+    if (getSource().isAttached()) {
+      getSource().container().setPeer(null);
+    }
     myPeer = null;
 
     myRootMapper.detachRoot();
