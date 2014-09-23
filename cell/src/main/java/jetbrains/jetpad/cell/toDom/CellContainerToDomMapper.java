@@ -610,7 +610,7 @@ public class CellContainerToDomMapper extends Mapper<CellContainer, Element> {
   }
 
   private boolean isDomCellEvent(MouseEvent e) {
-    Cell target = getSource().findCell(getSource().root, e.location());
+    Cell target = getSource().findCell(getSource().root, e.getLocation());
     return target instanceof DomCell;
   }
 
@@ -630,6 +630,6 @@ public class CellContainerToDomMapper extends Mapper<CellContainer, Element> {
   }
 
   private boolean isContainerEvent(MouseEvent evt) {
-    return getSource().root.getBounds().contains(evt.location());
+    return getSource().root.getBounds().contains(evt.getLocation());
   }
 }

@@ -63,7 +63,7 @@ public class DemoModel {
     ellipse.addEventHandler(SvgEventSpec.MOUSE_PRESSED, new SvgEventHandler<MouseEvent>() {
       @Override
       public void handle(SvgNode node, MouseEvent e) {
-        DemoModel.addCircle(svgRoot, e.x(), e.y());
+        DemoModel.addCircle(svgRoot, e.getX(), e.getY());
       }
     });
 
@@ -94,7 +94,7 @@ public class DemoModel {
     ellipse.addEventHandler(SvgEventSpec.MOUSE_PRESSED, new SvgEventHandler<MouseEvent>() {
       @Override
       public void handle(SvgNode node, MouseEvent e) {
-        DemoModel.addCircle(svgRoot, e.x(), e.y());
+        DemoModel.addCircle(svgRoot, e.getX(), e.getY());
       }
     });
 

@@ -39,18 +39,18 @@ public class OutputPortMapper extends Mapper<OutputPort, RectView> {
         if (connector.get() == null) {
           Connector newConnector = new Connector();
           newConnector.output.set(getSource());
-          newConnector.inputLocation.set(e.location());
+          newConnector.inputLocation.set(e.getLocation());
           getSource().parent().get().parent().get().connectors.add(newConnector);
           connector.set(newConnector);
         } else {
-          connector.get().inputLocation.set(e.location());
+          connector.get().inputLocation.set(e.getLocation());
         }
       }
     }).on(ViewEvents.MOUSE_RELEASED, new ViewEventHandler<MouseEvent>() {
       @Override
       public void handle(View view, MouseEvent e) {
         if (connector.get() == null) return;
-        View atEvent = getTarget().container().root().viewAt(e.location());
+        View atEvent = getTarget().container().root().viewAt(e.getLocation());
         if (atEvent == null || atEvent.getProp(InputPortMapper.PORT).get() == null) {
           connector.get().removeFromParent();
         } else {

@@ -278,7 +278,7 @@ class TextNavigationTrait extends CellTrait {
   private int getPosAt(TextCell cell, MouseEvent event) {
     int max = getMaxPos(cell);
     int min = getMinPos(cell);
-    int offset = event.x() - cell.origin().x;
+    int offset = event.getX() - cell.origin().x;
     return Math.max(min, Math.min(cell.getCaretAt(offset), max));
   }
 }

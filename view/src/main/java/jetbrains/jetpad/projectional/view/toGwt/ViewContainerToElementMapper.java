@@ -437,7 +437,7 @@ public class ViewContainerToElementMapper extends Mapper<ViewContainer, Element>
   }-*/;
 
   private boolean isDomViewEvent(MouseEvent e) {
-    View targetView = getSource().root().viewAt(e.location());
+    View targetView = getSource().root().viewAt(e.getLocation());
     if (targetView instanceof DomView) {
       return true;
     }
@@ -476,6 +476,6 @@ public class ViewContainerToElementMapper extends Mapper<ViewContainer, Element>
   }
 
   private boolean isContainerEvent(MouseEvent evt) {
-    return getSource().contentRoot().bounds().get().contains(evt.location());
+    return getSource().contentRoot().bounds().get().contains(evt.getLocation());
   }
 }

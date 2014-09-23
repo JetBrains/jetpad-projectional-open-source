@@ -109,13 +109,13 @@ public class ViewContainer {
   }
 
   public void mouseMoved(MouseEvent e) {
-    changeViewUnderMouse(e, root().viewAt(e.location()));
+    changeViewUnderMouse(e, root().viewAt(e.getLocation()));
     dispatchMouseEvent(e, ViewEvents.MOUSE_MOVED);
   }
 
   public void mouseEntered(MouseEvent e) {
     root().validate();
-    changeViewUnderMouse(e, root().viewAt(e.location()));
+    changeViewUnderMouse(e, root().viewAt(e.getLocation()));
   }
 
   public void mouseLeft(MouseEvent e) {
@@ -130,7 +130,7 @@ public class ViewContainer {
       executeCommand(new Runnable() {
         @Override
         public void run() {
-          myViewUnderMouse.dispatch(ViewEvents.MOUSE_LEFT, new MouseEvent(e.location()));
+          myViewUnderMouse.dispatch(ViewEvents.MOUSE_LEFT, new MouseEvent(e.getLocation()));
         }
       });
     }
@@ -139,7 +139,7 @@ public class ViewContainer {
       executeCommand(new Runnable() {
         @Override
         public void run() {
-          newView.dispatch(ViewEvents.MOUSE_ENTERED, new MouseEvent(e.location()));
+          newView.dispatch(ViewEvents.MOUSE_ENTERED, new MouseEvent(e.getLocation()));
         }
       });
     }
@@ -166,7 +166,7 @@ public class ViewContainer {
       public void run() {
         root().validate();
 
-        View target = root().viewAt(e.location());
+        View target = root().viewAt(e.getLocation());
         if (target == null) {
           target = root();
         }

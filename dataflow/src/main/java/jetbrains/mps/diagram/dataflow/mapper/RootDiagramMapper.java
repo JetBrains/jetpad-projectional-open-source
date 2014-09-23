@@ -87,7 +87,7 @@ public class RootDiagramMapper extends Mapper<Diagram, ViewContainer> {
       @Override
       public void handle(View view, MouseEvent e) {
         if (newBlock.get() != null) {
-          newBlock.get().location.set(e.location());
+          newBlock.get().location.set(e.getLocation());
           diagram.blocks.add(newBlock.get());
           newBlock.set(null);
           e.consume();

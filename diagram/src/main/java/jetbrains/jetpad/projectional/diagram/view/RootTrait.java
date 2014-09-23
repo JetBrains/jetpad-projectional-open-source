@@ -35,8 +35,8 @@ public class RootTrait {
     builder.on(ViewEvents.MOUSE_PRESSED, new ViewEventHandler<MouseEvent>() {
       @Override
       public void handle(View view, MouseEvent e) {
-        view.getProp(prevPoint).set(e.location());
-        View current = view.viewAt(e.location());
+        view.getProp(prevPoint).set(e.getLocation());
+        View current = view.viewAt(e.getLocation());
 
         while (current != null) {
           MoveHandler mh = current.getProp(MOVE_HANDLER).get();
@@ -46,7 +46,7 @@ public class RootTrait {
         }
 
         ViewContainer container = view.container();
-        View target = container.root().viewAt(e.location());
+        View target = container.root().viewAt(e.getLocation());
         while (target != null) {
           if (target.focusable().get()) {
             container.focusedView().set(target);
@@ -74,9 +74,9 @@ public class RootTrait {
       public void handle(View view, MouseEvent e) {
         MoveHandler mh = view.getProp(moveHandler).get();
         if (mh != null) {
-          mh.move(e.location().sub(view.getProp(prevPoint).get()));
+          mh.move(e.getLocation().sub(view.getProp(prevPoint).get()));
         }
-        view.getProp(prevPoint).set(e.location());
+        view.getProp(prevPoint).set(e.getLocation());
       }
     });
 

@@ -164,16 +164,16 @@ public class CellContainer {
 
   public void mouseMoved(MouseEvent e) {
     mouseEventHappened(e, CellEventSpec.MOUSE_MOVED);
-    changeCellUnderMouse(e, findCell(e.location()));
+    changeCellUnderMouse(e, findCell(e.getLocation()));
   }
 
   public void mouseDragged(MouseEvent e) {
     mouseEventHappened(e, CellEventSpec.MOUSE_DRAGGED);
-    changeCellUnderMouse(e, findCell(e.location()));
+    changeCellUnderMouse(e, findCell(e.getLocation()));
   }
 
   public void mouseEntered(MouseEvent e) {
-    changeCellUnderMouse(e, findCell(e.location()));
+    changeCellUnderMouse(e, findCell(e.getLocation()));
   }
 
   public void mouseLeft(MouseEvent e) {
@@ -184,11 +184,11 @@ public class CellContainer {
     if (newCell == myCellUnderMouse) return;
 
     if (myCellUnderMouse != null) {
-      dispatch(myCellUnderMouse, new MouseEvent(e.location()), CellEventSpec.MOUSE_LEFT);
+      dispatch(myCellUnderMouse, new MouseEvent(e.getLocation()), CellEventSpec.MOUSE_LEFT);
     }
 
     if (newCell != null) {
-      dispatch(newCell, new MouseEvent(e.location()), CellEventSpec.MOUSE_ENTERED);
+      dispatch(newCell, new MouseEvent(e.getLocation()), CellEventSpec.MOUSE_ENTERED);
     }
 
     myCellUnderMouse = newCell;
@@ -236,7 +236,7 @@ public class CellContainer {
   }
 
   private void mouseEventHappened(MouseEvent e, CellEventSpec<MouseEvent> eventSpec) {
-    Cell target = findCell(e.location());
+    Cell target = findCell(e.getLocation());
 
     if (eventSpec == CellEventSpec.MOUSE_PRESSED) {
       myDragStart = target;

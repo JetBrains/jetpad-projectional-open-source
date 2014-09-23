@@ -61,7 +61,7 @@ public class RootSimpleDiagramMapper extends Mapper<SimpleDiagram, ViewContainer
         public void handle(View view, MouseEvent e) {
           if (newItem.get()) {
             DiagramNode node = new DiagramNode();
-            node.location.set(e.location());
+            node.location.set(e.getLocation());
             getSource().nodes.add(node);
             newItem.set(false);
             e.consume();

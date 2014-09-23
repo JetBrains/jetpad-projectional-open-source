@@ -30,15 +30,15 @@ public class MouseEvent extends Event {
     this(v.x, v.y);
   }
 
-  public int x() {
+  public int getX() {
     return myX;
   }
 
-  public int y() {
+  public int getY() {
     return myY;
   }
 
-  public Vector location() {
+  public Vector getLocation() {
     return new Vector(myX, myY);
   }
 }
