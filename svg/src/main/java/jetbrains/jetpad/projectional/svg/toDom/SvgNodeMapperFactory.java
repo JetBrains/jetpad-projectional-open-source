@@ -21,29 +21,35 @@ import jetbrains.jetpad.projectional.svg.*;
 import org.vectomatic.dom.svg.*;
 
 class SvgNodeMapperFactory implements MapperFactory<SvgNode, OMNode> {
+  private SvgGwtPeer myPeer;
+
+  public SvgNodeMapperFactory(SvgGwtPeer peer) {
+    myPeer = peer;
+  }
+
   @Override
   public Mapper<? extends SvgNode, ? extends OMNode> createMapper(SvgNode source) {
     Mapper<? extends SvgNode, ? extends OMNode> result;
     if (source instanceof SvgEllipseElement) {
-      result = new SvgElementMapper<>((SvgEllipseElement) source, new OMSVGEllipseElement());
+      result = new SvgElementMapper<>((SvgEllipseElement) source, new OMSVGEllipseElement(), myPeer);
     } else if (source instanceof SvgCircleElement) {
-      result = new SvgElementMapper<>((SvgCircleElement) source, new OMSVGCircleElement());
+      result = new SvgElementMapper<>((SvgCircleElement) source, new OMSVGCircleElement(), myPeer);
     } else if (source instanceof SvgRectElement) {
-      result = new SvgElementMapper<>((SvgRectElement) source, new OMSVGRectElement());
+      result = new SvgElementMapper<>((SvgRectElement) source, new OMSVGRectElement(), myPeer);
     } else if (source instanceof SvgTextElement) {
-      result = new SvgElementMapper<>((SvgTextElement) source, new OMSVGTextElement());
+      result = new SvgElementMapper<>((SvgTextElement) source, new OMSVGTextElement(), myPeer);
     } else if (source instanceof SvgPathElement) {
-      result = new SvgElementMapper<>((SvgPathElement) source, new OMSVGPathElement());
+      result = new SvgElementMapper<>((SvgPathElement) source, new OMSVGPathElement(), myPeer);
     } else if (source instanceof SvgLineElement) {
-      result = new SvgElementMapper<>((SvgLineElement) source, new OMSVGLineElement());
+      result = new SvgElementMapper<>((SvgLineElement) source, new OMSVGLineElement(), myPeer);
     } else if (source instanceof SvgSvgElement) {
-      result = new SvgElementMapper<>((SvgSvgElement) source, new OMSVGSVGElement());
+      result = new SvgElementMapper<>((SvgSvgElement) source, new OMSVGSVGElement(), myPeer);
     } else if (source instanceof SvgGElement) {
-      result = new SvgElementMapper<>((SvgGElement) source, new OMSVGGElement());
+      result = new SvgElementMapper<>((SvgGElement) source, new OMSVGGElement(), myPeer);
     } else if (source instanceof SvgStyleElement) {
-      result = new SvgElementMapper<>((SvgStyleElement) source, new OMSVGStyleElement());
+      result = new SvgElementMapper<>((SvgStyleElement) source, new OMSVGStyleElement(), myPeer);
     } else if (source instanceof SvgTextNode) {
-      result = new SvgTextNodeMapper((SvgTextNode) source, new OMText(null));
+      result = new SvgTextNodeMapper((SvgTextNode) source, new OMText(null), myPeer);
     } else {
       throw new IllegalStateException("Unsupported SvgNode");
     }

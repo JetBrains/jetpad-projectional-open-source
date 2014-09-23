@@ -37,8 +37,8 @@ import java.util.Set;
 class SvgElementMapper<SourceT extends SvgElement, TargetT extends OMSVGElement> extends SvgNodeMapper<SourceT, TargetT> {
   private Map<SvgEventSpec, HandlerRegistration> myHandlerRegs;
 
-  public SvgElementMapper(SourceT source, TargetT target) {
-    super(source, target);
+  public SvgElementMapper(SourceT source, TargetT target, SvgGwtPeer peer) {
+    super(source, target, peer);
   }
 
   @Override

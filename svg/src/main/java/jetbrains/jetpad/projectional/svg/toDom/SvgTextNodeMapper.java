@@ -21,8 +21,8 @@ import jetbrains.jetpad.projectional.svg.SvgTextNode;
 import org.vectomatic.dom.svg.OMText;
 
 class SvgTextNodeMapper extends SvgNodeMapper<SvgTextNode, OMText> {
-  SvgTextNodeMapper(SvgTextNode source, OMText target) {
-    super(source, target);
+  SvgTextNodeMapper(SvgTextNode source, OMText target, SvgGwtPeer peer) {
+    super(source, target, peer);
   }
 
   @Override

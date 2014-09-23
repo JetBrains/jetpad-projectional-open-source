@@ -16,19 +16,38 @@
 package jetbrains.jetpad.projectional.svg.toDom;
 
 import jetbrains.jetpad.mapper.Mapper;
+import jetbrains.jetpad.mapper.MappingContext;
 import jetbrains.jetpad.mapper.Synchronizers;
 import jetbrains.jetpad.projectional.svg.SvgNode;
 import org.vectomatic.dom.svg.OMNode;
 
 class SvgNodeMapper<SourceT extends SvgNode, TargetT extends OMNode> extends Mapper<SourceT, TargetT> {
-  SvgNodeMapper(SourceT source, TargetT target) {
+  private SvgGwtPeer myPeer;
+
+  SvgNodeMapper(SourceT source, TargetT target, SvgGwtPeer peer) {
     super(source, target);
+    myPeer = peer;
   }
 
   @Override
   protected void registerSynchronizers(SynchronizersConfiguration conf) {
     super.registerSynchronizers(conf);
 
-    conf.add(Synchronizers.forObservableRole(this, getSource().children(), Utils.elementChildren(getTarget()), new SvgNodeMapperFactory()));
+    conf.add(Synchronizers.forObservableRole(this, getSource().children(), Utils.elementChildren(getTarget()),
+        new SvgNodeMapperFactory(myPeer)));
+  }
+
+  @Override
+  protected void onAttach(MappingContext ctx) {
+    super.onAttach(ctx);
+
+    myPeer.registerMapper(getSource(), this);
+  }
+
+  @Override
+  protected void onDetach() {
+    super.onDetach();
+
+    myPeer.unregisterMapper(getSource());
   }
 }

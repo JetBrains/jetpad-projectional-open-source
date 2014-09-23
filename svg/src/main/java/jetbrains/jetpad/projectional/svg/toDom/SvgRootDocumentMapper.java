@@ -22,15 +22,24 @@ import org.vectomatic.dom.svg.OMSVGSVGElement;
 
 public class SvgRootDocumentMapper extends Mapper<SvgSvgElement, OMSVGSVGElement> {
   private SvgElementMapper<SvgSvgElement, OMSVGSVGElement> myRootMapper;
+  private SvgGwtPeer myPeer;
 
   public SvgRootDocumentMapper(SvgSvgElement source, OMSVGSVGElement target) {
     super(source, target);
-    myRootMapper = new SvgElementMapper<>(source, target);
   }
 
   @Override
   protected void onAttach(MappingContext ctx) {
     super.onAttach(ctx);
+
+    if (!getSource().isAttached()) {
+      throw new IllegalStateException("Element must be attached");
+    }
+    myPeer = new SvgGwtPeer();
+    getSource().container().setPeer(myPeer);
+
+    myRootMapper = new SvgElementMapper<>(getSource(), getTarget(), myPeer);
+
 
     myRootMapper.attachRoot();
   }
@@ -39,6 +48,9 @@ public class SvgRootDocumentMapper extends Mapper<SvgSvgElement, OMSVGSVGElement
   protected void onDetach() {
     super.onDetach();
 
+    myPeer = null;
+
     myRootMapper.detachRoot();
+    myRootMapper = null;
   }
 }
