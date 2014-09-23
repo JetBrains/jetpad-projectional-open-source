@@ -15,6 +15,7 @@
  */
 package jetbrains.jetpad.projectional.svg;
 
+import jetbrains.jetpad.geometry.DoubleVector;
 import jetbrains.jetpad.model.property.Property;
 import jetbrains.jetpad.model.property.WritableProperty;
 import jetbrains.jetpad.values.Color;
@@ -40,6 +41,10 @@ public final class SvgUtils {
 
   public static void transformTranslate(SvgTransformable element, double x, double y) {
     element.transform().set(new SvgTransformBuilder().translate(x, y).build());
+  }
+
+  public static void transformTranslate(SvgTransformable element, DoubleVector vector) {
+    transformTranslate(element, vector.x, vector.y);
   }
 
   public static void transformTranslate(SvgTransformable element, double x) {

@@ -15,6 +15,8 @@
  */
 package jetbrains.jetpad.projectional.svg;
 
+import jetbrains.jetpad.geometry.DoubleVector;
+
 public class SvgTransformBuilder {
   private StringBuilder myStringBuilder = new StringBuilder();
 
@@ -37,6 +39,10 @@ public class SvgTransformBuilder {
 
   public SvgTransformBuilder translate(double x, double y) {
     return addTransformation("translate", x, y);
+  }
+
+  public SvgTransformBuilder translate(DoubleVector vector) {
+    return translate(vector.x, vector.y);
   }
 
   public SvgTransformBuilder translate(double x) {
