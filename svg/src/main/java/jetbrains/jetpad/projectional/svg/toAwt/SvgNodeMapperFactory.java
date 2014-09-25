@@ -39,7 +39,7 @@ class SvgNodeMapperFactory implements MapperFactory<SvgNode, Node> {
     } else if (source instanceof SvgCircleElement) {
       result = new SvgElementMapper<>((SvgCircleElement) source, new SVGOMCircleElement(null, myDoc), myDoc, myPeer);
     } else if (source instanceof SvgRectElement) {
-      result = new SvgElementMapper<>( (SvgRectElement) source, new SVGOMRectElement(null, myDoc), myDoc, myPeer);
+      result = new SvgElementMapper<>((SvgRectElement) source, new SVGOMRectElement(null, myDoc), myDoc, myPeer);
     } else if (source instanceof SvgTextElement) {
       result = new SvgElementMapper<>((SvgTextElement) source, new SVGOMTextElement(null, myDoc), myDoc, myPeer);
     } else if (source instanceof SvgPathElement) {

@@ -15,10 +15,13 @@
  */
 package jetbrains.jetpad.projectional.svg;
 
+import jetbrains.jetpad.geometry.DoubleVector;
 import jetbrains.jetpad.model.property.Property;
 
 public interface SvgTransformable {
   static final SvgAttributeSpec<String> TRANSFORM = SvgAttributeSpec.createSpec("transform");
 
   public Property<String> transform();
+
+  public DoubleVector inverseTransform(DoubleVector point);
 }

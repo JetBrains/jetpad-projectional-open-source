@@ -15,6 +15,7 @@
  */
 package jetbrains.jetpad.projectional.svg;
 
+import jetbrains.jetpad.geometry.DoubleVector;
 import jetbrains.jetpad.model.property.Property;
 
 public class SvgGElement extends SvgGraphicsElement implements SvgTransformable, SvgContainer {
@@ -26,5 +27,10 @@ public class SvgGElement extends SvgGraphicsElement implements SvgTransformable,
   @Override
   public Property<String> transform() {
     return getAttribute(TRANSFORM);
+  }
+
+  @Override
+  public DoubleVector inverseTransform(DoubleVector point) {
+    return container().getPeer().invertTransform(this, point);
   }
 }

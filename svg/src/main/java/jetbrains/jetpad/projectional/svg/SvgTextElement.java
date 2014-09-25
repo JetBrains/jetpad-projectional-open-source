@@ -15,6 +15,7 @@
  */
 package jetbrains.jetpad.projectional.svg;
 
+import jetbrains.jetpad.geometry.DoubleVector;
 import jetbrains.jetpad.model.property.Property;
 import jetbrains.jetpad.model.property.WritableProperty;
 import jetbrains.jetpad.values.Color;
@@ -107,5 +108,10 @@ public class SvgTextElement extends SvgGraphicsElement implements SvgTransformab
   @Override
   public double getComputedTextLength() {
     return container().getPeer().getComputedTextLength(this);
+  }
+
+  @Override
+  public DoubleVector inverseTransform(DoubleVector point) {
+    return container().getPeer().invertTransform(this, point);
   }
 }

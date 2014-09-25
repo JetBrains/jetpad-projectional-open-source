@@ -15,10 +15,16 @@
  */
 package jetbrains.jetpad.projectional.svg.toAwt;
 
+import jetbrains.jetpad.geometry.DoubleVector;
 import jetbrains.jetpad.mapper.Mapper;
 import jetbrains.jetpad.projectional.svg.*;
+import org.apache.batik.dom.svg.SVGOMElement;
+import org.apache.batik.dom.svg.SVGOMPoint;
 import org.apache.batik.dom.svg.SVGOMTextContentElement;
 import org.w3c.dom.Node;
+import org.w3c.dom.svg.SVGMatrix;
+import org.w3c.dom.svg.SVGPoint;
+import org.w3c.dom.svg.SVGTransformable;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -26,7 +32,32 @@ import java.util.Map;
 class SvgAwtPeer implements SvgPlatformPeer {
   private Map<SvgNode, Mapper<? extends SvgNode, ? extends Node>> myMappingMap = new HashMap<>();
 
+  private void ensureElementConsistency(SvgNode source, Node target) {
+    if (source instanceof SvgElement && !(target instanceof SVGOMElement)) {
+      throw new IllegalStateException("Target of SvgElement must be SVGOMElement");
+    }
+  }
+
+  private void ensureTextContentConsistency(SvgNode source, Node target) {
+    if (source instanceof SvgTextContent && !(target instanceof SVGOMTextContentElement)) {
+      throw new IllegalStateException("Target of SvgTextContent must be SVGOMTextContentElement");
+    }
+  }
+
+  private void ensureTransformableConsistency(SvgNode source, Node target) {
+    if (source instanceof SvgTransformable && !(target instanceof SVGTransformable)) {
+      throw new IllegalStateException("Target of SvgTransformable must be SVGTransformable");
+    }
+  }
+
+  private void ensureSourceTargetConsistency(SvgNode source, Node target) {
+    ensureElementConsistency(source, target);
+    ensureTextContentConsistency(source, target);
+    ensureTransformableConsistency(source, target);
+  }
+
   void registerMapper(SvgNode source, SvgNodeMapper<? extends SvgNode, ? extends Node> mapper) {
+    ensureSourceTargetConsistency(source, mapper.getTarget());
     myMappingMap.put(source, mapper);
   }
 
@@ -40,6 +71,21 @@ class SvgAwtPeer implements SvgPlatformPeer {
       throw new IllegalStateException("Trying to getComputedTextLength of unmapped node");
     }
 
-    return ((SVGOMTextContentElement) myMappingMap.get(node).getTarget()).getComputedTextLength();
+    Node target = myMappingMap.get(node).getTarget();
+    return ((SVGOMTextContentElement) target).getComputedTextLength();
+  }
+
+  @Override
+  public DoubleVector invertTransform(SvgTransformable relative, DoubleVector point) {
+    if (!myMappingMap.containsKey(relative)) {
+      throw new IllegalStateException("Trying to invertTransform of unmapped relative element");
+    }
+
+    Node relativeTarget = myMappingMap.get(relative).getTarget();
+    SVGMatrix inverseMatrix = ((SVGTransformable) relativeTarget).
+        getTransformToElement(((SVGOMElement) relativeTarget).getOwnerSVGElement()).inverse();
+    SVGPoint pt = new SVGOMPoint((float) point.x, (float) point.y);
+    SVGPoint inversePt = pt.matrixTransform(inverseMatrix);
+    return new DoubleVector(inversePt.getX(), inversePt.getY());
   }
 }

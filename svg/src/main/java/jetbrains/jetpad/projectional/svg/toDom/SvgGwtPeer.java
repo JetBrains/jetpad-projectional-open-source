@@ -15,12 +15,11 @@
  */
 package jetbrains.jetpad.projectional.svg.toDom;
 
+import jetbrains.jetpad.geometry.DoubleVector;
 import jetbrains.jetpad.mapper.Mapper;
-import jetbrains.jetpad.projectional.svg.SvgNode;
-import jetbrains.jetpad.projectional.svg.SvgPlatformPeer;
-import jetbrains.jetpad.projectional.svg.SvgTextContent;
-import org.vectomatic.dom.svg.OMNode;
-import org.vectomatic.dom.svg.OMSVGTextContentElement;
+import jetbrains.jetpad.projectional.svg.*;
+import org.vectomatic.dom.svg.*;
+import org.vectomatic.dom.svg.itf.ISVGTransformable;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -28,7 +27,32 @@ import java.util.Map;
 class SvgGwtPeer implements SvgPlatformPeer{
   private Map<SvgNode, Mapper<? extends SvgNode, ? extends OMNode>> myMappingMap = new HashMap<>();
 
+  private void ensureElementConsistency(SvgNode source, OMNode target) {
+    if (source instanceof SvgElement && !(target instanceof OMSVGElement)) {
+      throw new IllegalStateException("Target of SvgElement must be OMSVGElement");
+    }
+  }
+
+  private void ensureTextContentConsistency(SvgNode source, OMNode target) {
+    if (source instanceof SvgTextContent && !(target instanceof OMSVGTextContentElement)) {
+      throw new IllegalStateException("Target of SvgTextContent must be OMSVGTextContentElement");
+    }
+  }
+
+  private void ensureTransformableConsistency(SvgNode source, OMNode target) {
+    if (source instanceof SvgTransformable && !(target instanceof ISVGTransformable)) {
+      throw new IllegalStateException("Target of SvgTransformable must be ISVGTransformable");
+    }
+  }
+
+  private void ensureSourceTargetConsistency(SvgNode source, OMNode target) {
+    ensureElementConsistency(source, target);
+    ensureTextContentConsistency(source, target);
+    ensureTransformableConsistency(source, target);
+  }
+
   void registerMapper(SvgNode source, SvgNodeMapper<? extends SvgNode, ? extends OMNode> mapper) {
+    ensureSourceTargetConsistency(source, mapper.getTarget());
     myMappingMap.put(source, mapper);
   }
 
@@ -42,6 +66,21 @@ class SvgGwtPeer implements SvgPlatformPeer{
       throw new IllegalStateException("Trying to getCompudedTextLength of umapped node");
     }
 
-    return ((OMSVGTextContentElement) myMappingMap.get(node).getTarget()).getComputedTextLength();
+    OMNode target = myMappingMap.get(node).getTarget();
+    return ((OMSVGTextContentElement) target).getComputedTextLength();
+  }
+
+  @Override
+  public DoubleVector invertTransform(SvgTransformable relative, DoubleVector point) {
+    if (!myMappingMap.containsKey(relative)) {
+      throw new IllegalStateException("Trying to invertTransform of unmapped relative element");
+    }
+
+    OMNode relativeTarget = myMappingMap.get(relative).getTarget();
+    OMSVGMatrix inverseMatrix = ((ISVGTransformable) relativeTarget)
+        .getTransformToElement(((OMSVGElement) relativeTarget).getOwnerSVGElement()).inverse();
+    OMSVGPoint pt = ((OMSVGElement) relativeTarget).getOwnerSVGElement().createSVGPoint((float) point.x, (float) point.y);
+    OMSVGPoint inversePt = pt.matrixTransform(inverseMatrix);
+    return new DoubleVector(inversePt.getX(), inversePt.getY());
   }
 }

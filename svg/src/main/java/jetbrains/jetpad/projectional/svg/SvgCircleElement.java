@@ -15,6 +15,7 @@
  */
 package jetbrains.jetpad.projectional.svg;
 
+import jetbrains.jetpad.geometry.DoubleVector;
 import jetbrains.jetpad.model.property.Property;
 import jetbrains.jetpad.model.property.WritableProperty;
 import jetbrains.jetpad.values.Color;
@@ -91,5 +92,10 @@ public class SvgCircleElement extends SvgGraphicsElement implements SvgTransform
   @Override
   public Property<Double> strokeWidth() {
     return getAttribute(STROKE_WIDTH);
+  }
+
+  @Override
+  public DoubleVector inverseTransform(DoubleVector point) {
+    return container().getPeer().invertTransform(this, point);
   }
 }
