@@ -15,6 +15,7 @@
  */
 package jetbrains.jetpad.projectional.svg;
 
+import jetbrains.jetpad.geometry.DoubleRectangle;
 import jetbrains.jetpad.geometry.DoubleVector;
 import jetbrains.jetpad.model.property.Property;
 import jetbrains.jetpad.model.property.WritableProperty;
@@ -97,5 +98,10 @@ public class SvgCircleElement extends SvgGraphicsElement implements SvgTransform
   @Override
   public DoubleVector inverseTransform(DoubleVector point) {
     return container().getPeer().invertTransform(this, point);
+  }
+
+  @Override
+  public DoubleRectangle getBBox() {
+    return container().getPeer().getBBox(this);
   }
 }

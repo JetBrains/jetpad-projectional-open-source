@@ -15,10 +15,12 @@
  */
 package jetbrains.jetpad.projectional.svg.toDom;
 
+import jetbrains.jetpad.geometry.DoubleRectangle;
 import jetbrains.jetpad.geometry.DoubleVector;
 import jetbrains.jetpad.mapper.Mapper;
 import jetbrains.jetpad.projectional.svg.*;
 import org.vectomatic.dom.svg.*;
+import org.vectomatic.dom.svg.itf.ISVGLocatable;
 import org.vectomatic.dom.svg.itf.ISVGTransformable;
 
 import java.util.HashMap;
@@ -82,5 +84,16 @@ class SvgGwtPeer implements SvgPlatformPeer{
     OMSVGPoint pt = ((OMSVGElement) relativeTarget).getOwnerSVGElement().createSVGPoint((float) point.x, (float) point.y);
     OMSVGPoint inversePt = pt.matrixTransform(inverseMatrix);
     return new DoubleVector(inversePt.getX(), inversePt.getY());
+  }
+
+  @Override
+  public DoubleRectangle getBBox(SvgTransformable element) {
+    if (!myMappingMap.containsKey(element)) {
+      throw new IllegalStateException("Trying to getBBox of unmapped element");
+    }
+
+    OMNode target = myMappingMap.get(element).getTarget();
+    OMSVGRect bBox = ((ISVGLocatable) target).getBBox();
+    return new DoubleRectangle(bBox.getX(), bBox.getY(), bBox.getWidth(), bBox.getHeight());
   }
 }

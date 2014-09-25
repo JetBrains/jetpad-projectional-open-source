@@ -15,6 +15,7 @@
  */
 package jetbrains.jetpad.projectional.svg.toAwt;
 
+import jetbrains.jetpad.geometry.DoubleRectangle;
 import jetbrains.jetpad.geometry.DoubleVector;
 import jetbrains.jetpad.mapper.Mapper;
 import jetbrains.jetpad.projectional.svg.*;
@@ -22,9 +23,7 @@ import org.apache.batik.dom.svg.SVGOMElement;
 import org.apache.batik.dom.svg.SVGOMPoint;
 import org.apache.batik.dom.svg.SVGOMTextContentElement;
 import org.w3c.dom.Node;
-import org.w3c.dom.svg.SVGMatrix;
-import org.w3c.dom.svg.SVGPoint;
-import org.w3c.dom.svg.SVGTransformable;
+import org.w3c.dom.svg.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -87,5 +86,16 @@ class SvgAwtPeer implements SvgPlatformPeer {
     SVGPoint pt = new SVGOMPoint((float) point.x, (float) point.y);
     SVGPoint inversePt = pt.matrixTransform(inverseMatrix);
     return new DoubleVector(inversePt.getX(), inversePt.getY());
+  }
+
+  @Override
+  public DoubleRectangle getBBox(SvgTransformable element) {
+    if (!myMappingMap.containsKey(element)) {
+      throw new IllegalStateException("Trying to getBBox of unmapped element");
+    }
+
+    Node target = myMappingMap.get(element).getTarget();
+    SVGRect bBox = ((SVGLocatable) target).getBBox();
+    return new DoubleRectangle(bBox.getX(), bBox.getY(), bBox.getWidth(), bBox.getHeight());
   }
 }

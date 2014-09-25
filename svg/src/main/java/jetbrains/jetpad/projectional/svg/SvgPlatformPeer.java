@@ -15,10 +15,13 @@
  */
 package jetbrains.jetpad.projectional.svg;
 
+import jetbrains.jetpad.geometry.DoubleRectangle;
 import jetbrains.jetpad.geometry.DoubleVector;
 
 public interface SvgPlatformPeer {
   double getComputedTextLength(SvgTextContent node);
 
   DoubleVector invertTransform(SvgTransformable relative, DoubleVector point);
+
+  DoubleRectangle getBBox(SvgTransformable element);
 }

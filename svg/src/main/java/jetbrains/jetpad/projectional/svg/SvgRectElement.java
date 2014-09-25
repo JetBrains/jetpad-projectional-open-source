@@ -15,6 +15,7 @@
  */
 package jetbrains.jetpad.projectional.svg;
 
+import jetbrains.jetpad.geometry.DoubleRectangle;
 import jetbrains.jetpad.geometry.DoubleVector;
 import jetbrains.jetpad.geometry.Rectangle;
 import jetbrains.jetpad.model.property.Property;
@@ -41,6 +42,10 @@ public class SvgRectElement extends SvgGraphicsElement implements SvgTransformab
   }
 
   public SvgRectElement(Rectangle rect) {
+    this(rect.origin.x, rect.origin.y, rect.dimension.x, rect.dimension.y);
+  }
+
+  public SvgRectElement(DoubleRectangle rect) {
     this(rect.origin.x, rect.origin.y, rect.dimension.x, rect.dimension.y);
   }
 
@@ -108,5 +113,10 @@ public class SvgRectElement extends SvgGraphicsElement implements SvgTransformab
   @Override
   public DoubleVector inverseTransform(DoubleVector point) {
     return container().getPeer().invertTransform(this, point);
+  }
+
+  @Override
+  public DoubleRectangle getBBox() {
+    return container().getPeer().getBBox(this);
   }
 }

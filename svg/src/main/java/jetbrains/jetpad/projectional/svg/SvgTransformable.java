@@ -15,6 +15,7 @@
  */
 package jetbrains.jetpad.projectional.svg;
 
+import jetbrains.jetpad.geometry.DoubleRectangle;
 import jetbrains.jetpad.geometry.DoubleVector;
 import jetbrains.jetpad.model.property.Property;
 
@@ -24,4 +25,6 @@ public interface SvgTransformable {
   public Property<String> transform();
 
   public DoubleVector inverseTransform(DoubleVector point);
+
+  public DoubleRectangle getBBox();
 }
