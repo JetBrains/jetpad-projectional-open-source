@@ -18,10 +18,8 @@ package jetbrains.jetpad.projectional.svg;
 import jetbrains.jetpad.geometry.DoubleRectangle;
 import jetbrains.jetpad.geometry.DoubleVector;
 
-public interface SvgPlatformPeer {
-  double getComputedTextLength(SvgTextContent node);
+public interface SvgLocatable {
+  public DoubleVector inverseTransform(DoubleVector point);
 
-  DoubleVector invertTransform(SvgLocatable relative, DoubleVector point);
-
-  DoubleRectangle getBBox(SvgLocatable element);
+  public DoubleRectangle getBBox();
 }

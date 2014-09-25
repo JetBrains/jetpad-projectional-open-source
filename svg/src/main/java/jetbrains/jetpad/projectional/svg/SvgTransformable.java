@@ -15,16 +15,10 @@
  */
 package jetbrains.jetpad.projectional.svg;
 
-import jetbrains.jetpad.geometry.DoubleRectangle;
-import jetbrains.jetpad.geometry.DoubleVector;
 import jetbrains.jetpad.model.property.Property;
 
-public interface SvgTransformable {
+public interface SvgTransformable extends SvgLocatable {
   static final SvgAttributeSpec<String> TRANSFORM = SvgAttributeSpec.createSpec("transform");
 
   public Property<String> transform();
-
-  public DoubleVector inverseTransform(DoubleVector point);
-
-  public DoubleRectangle getBBox();
 }

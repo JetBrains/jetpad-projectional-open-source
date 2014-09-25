@@ -35,6 +35,12 @@ class SvgGwtPeer implements SvgPlatformPeer{
     }
   }
 
+  private void ensureLocatableConsistency(SvgNode source, OMNode target) {
+    if (source instanceof SvgLocatable && !(target instanceof ISVGLocatable)) {
+      throw new IllegalStateException("Target of SvgLocatable must be ISVGLocatable");
+    }
+  }
+
   private void ensureTextContentConsistency(SvgNode source, OMNode target) {
     if (source instanceof SvgTextContent && !(target instanceof OMSVGTextContentElement)) {
       throw new IllegalStateException("Target of SvgTextContent must be OMSVGTextContentElement");
@@ -49,6 +55,7 @@ class SvgGwtPeer implements SvgPlatformPeer{
 
   private void ensureSourceTargetConsistency(SvgNode source, OMNode target) {
     ensureElementConsistency(source, target);
+    ensureLocatableConsistency(source, target);
     ensureTextContentConsistency(source, target);
     ensureTransformableConsistency(source, target);
   }
@@ -73,13 +80,13 @@ class SvgGwtPeer implements SvgPlatformPeer{
   }
 
   @Override
-  public DoubleVector invertTransform(SvgTransformable relative, DoubleVector point) {
+  public DoubleVector invertTransform(SvgLocatable relative, DoubleVector point) {
     if (!myMappingMap.containsKey(relative)) {
       throw new IllegalStateException("Trying to invertTransform of unmapped relative element");
     }
 
     OMNode relativeTarget = myMappingMap.get(relative).getTarget();
-    OMSVGMatrix inverseMatrix = ((ISVGTransformable) relativeTarget)
+    OMSVGMatrix inverseMatrix = ((ISVGLocatable) relativeTarget)
         .getTransformToElement(((OMSVGElement) relativeTarget).getOwnerSVGElement()).inverse();
     OMSVGPoint pt = ((OMSVGElement) relativeTarget).getOwnerSVGElement().createSVGPoint((float) point.x, (float) point.y);
     OMSVGPoint inversePt = pt.matrixTransform(inverseMatrix);
@@ -87,7 +94,7 @@ class SvgGwtPeer implements SvgPlatformPeer{
   }
 
   @Override
-  public DoubleRectangle getBBox(SvgTransformable element) {
+  public DoubleRectangle getBBox(SvgLocatable element) {
     if (!myMappingMap.containsKey(element)) {
       throw new IllegalStateException("Trying to getBBox of unmapped element");
     }

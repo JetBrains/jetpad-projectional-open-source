@@ -37,6 +37,12 @@ class SvgAwtPeer implements SvgPlatformPeer {
     }
   }
 
+  private void ensureLocatableConsistency(SvgNode source, Node target) {
+    if (source instanceof SvgLocatable && !(target instanceof SVGLocatable)) {
+      throw new IllegalStateException("Target of SvgLocatable must be SVGLocatable");
+    }
+  }
+
   private void ensureTextContentConsistency(SvgNode source, Node target) {
     if (source instanceof SvgTextContent && !(target instanceof SVGOMTextContentElement)) {
       throw new IllegalStateException("Target of SvgTextContent must be SVGOMTextContentElement");
@@ -51,6 +57,7 @@ class SvgAwtPeer implements SvgPlatformPeer {
 
   private void ensureSourceTargetConsistency(SvgNode source, Node target) {
     ensureElementConsistency(source, target);
+    ensureLocatableConsistency(source, target);
     ensureTextContentConsistency(source, target);
     ensureTransformableConsistency(source, target);
   }
@@ -75,13 +82,13 @@ class SvgAwtPeer implements SvgPlatformPeer {
   }
 
   @Override
-  public DoubleVector invertTransform(SvgTransformable relative, DoubleVector point) {
+  public DoubleVector invertTransform(SvgLocatable relative, DoubleVector point) {
     if (!myMappingMap.containsKey(relative)) {
       throw new IllegalStateException("Trying to invertTransform of unmapped relative element");
     }
 
     Node relativeTarget = myMappingMap.get(relative).getTarget();
-    SVGMatrix inverseMatrix = ((SVGTransformable) relativeTarget).
+    SVGMatrix inverseMatrix = ((SVGLocatable) relativeTarget).
         getTransformToElement(((SVGOMElement) relativeTarget).getOwnerSVGElement()).inverse();
     SVGPoint pt = new SVGOMPoint((float) point.x, (float) point.y);
     SVGPoint inversePt = pt.matrixTransform(inverseMatrix);
@@ -89,7 +96,7 @@ class SvgAwtPeer implements SvgPlatformPeer {
   }
 
   @Override
-  public DoubleRectangle getBBox(SvgTransformable element) {
+  public DoubleRectangle getBBox(SvgLocatable element) {
     if (!myMappingMap.containsKey(element)) {
       throw new IllegalStateException("Trying to getBBox of unmapped element");
     }
