@@ -28,12 +28,10 @@ import jetbrains.jetpad.projectional.svg.event.SvgAttributeEvent;
 import jetbrains.jetpad.projectional.svg.event.SvgEventSpec;
 import org.apache.batik.dom.AbstractDocument;
 import org.apache.batik.dom.events.DOMMouseEvent;
-import org.apache.batik.dom.svg.*;
+import org.apache.batik.dom.svg.SVGOMElement;
 import org.apache.batik.util.SVGConstants;
 import org.w3c.dom.events.Event;
 import org.w3c.dom.events.EventListener;
-import org.w3c.dom.svg.SVGElement;
-import org.w3c.dom.svg.SVGMatrix;
 
 import java.util.EnumMap;
 import java.util.Map;

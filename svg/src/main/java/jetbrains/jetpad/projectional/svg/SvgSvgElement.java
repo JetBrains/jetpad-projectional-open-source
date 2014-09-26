@@ -17,11 +17,13 @@ package jetbrains.jetpad.projectional.svg;
 
 import jetbrains.jetpad.base.Registration;
 import jetbrains.jetpad.event.Event;
+import jetbrains.jetpad.geometry.DoubleRectangle;
+import jetbrains.jetpad.geometry.DoubleVector;
 import jetbrains.jetpad.model.property.Property;
 import jetbrains.jetpad.projectional.svg.event.SvgEventHandler;
 import jetbrains.jetpad.projectional.svg.event.SvgEventSpec;
 
-public class SvgSvgElement extends SvgStylableElement implements SvgContainer {
+public class SvgSvgElement extends SvgStylableElement implements SvgContainer, SvgLocatable {
   private static final SvgAttributeSpec<Double> WIDTH = SvgAttributeSpec.createSpec("width");
   private static final SvgAttributeSpec<Double> HEIGHT = SvgAttributeSpec.createSpec("height");
 
@@ -62,5 +64,15 @@ public class SvgSvgElement extends SvgStylableElement implements SvgContainer {
   public <EventT extends Event> Registration addEventHandler(SvgEventSpec spec, SvgEventHandler<EventT> handler) {
     // due to bug in lib-gwt-svg, getOwnerSvgElement throws exception on root svg element
     throw new IllegalStateException("Can't add handlers to <svg> element");
+  }
+
+  @Override
+  public DoubleVector inverseTransform(DoubleVector point) {
+    return container().getPeer().invertTransform(this, point);
+  }
+
+  @Override
+  public DoubleRectangle getBBox() {
+    return container().getPeer().getBBox(this);
   }
 }
