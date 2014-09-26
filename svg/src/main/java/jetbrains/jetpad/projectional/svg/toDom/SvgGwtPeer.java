@@ -60,6 +60,12 @@ class SvgGwtPeer implements SvgPlatformPeer{
     ensureTransformableConsistency(source, target);
   }
 
+  private void ensureSourceRegistered(SvgNode source) {
+    if (!myMappingMap.containsKey(source)) {
+      throw new IllegalStateException("Trying to call platform peer method of unmapped node");
+    }
+  }
+
   void registerMapper(SvgNode source, SvgNodeMapper<? extends SvgNode, ? extends OMNode> mapper) {
     ensureSourceTargetConsistency(source, mapper.getTarget());
     myMappingMap.put(source, mapper);
@@ -71,47 +77,39 @@ class SvgGwtPeer implements SvgPlatformPeer{
 
   @Override
   public double getComputedTextLength(SvgTextContent node) {
-    if (!myMappingMap.containsKey(node)) {
-      throw new IllegalStateException("Trying to getCompudedTextLength of umapped node");
-    }
+    ensureSourceRegistered((SvgNode) node);
 
     OMNode target = myMappingMap.get(node).getTarget();
     return ((OMSVGTextContentElement) target).getComputedTextLength();
   }
 
-  @Override
-  public DoubleVector invertTransform(SvgLocatable relative, DoubleVector point) {
-    if (!myMappingMap.containsKey(relative)) {
-      throw new IllegalStateException("Trying to invertTransform relative to unmapped element");
-    }
-
-    OMNode relativeTarget = myMappingMap.get(relative).getTarget();
-    OMSVGMatrix inverseMatrix = ((ISVGLocatable) relativeTarget)
-        .getTransformToElement(((OMSVGElement) relativeTarget).getOwnerSVGElement()).inverse();
-    OMSVGPoint pt = ((OMSVGElement) relativeTarget).getOwnerSVGElement().createSVGPoint((float) point.x, (float) point.y);
-    OMSVGPoint inversePt = pt.matrixTransform(inverseMatrix);
-    return new DoubleVector(inversePt.getX(), inversePt.getY());
-  }
-
-  @Override
-  public DoubleVector forwardTransform(SvgLocatable relative, DoubleVector point) {
-    if (!myMappingMap.containsKey(relative)) {
-      throw new IllegalStateException("Trying to forwardTransform relative to unmapped element");
-    }
+  private DoubleVector transformCoordinates(SvgLocatable relative, DoubleVector point, boolean inverse) {
+    ensureSourceRegistered((SvgNode) relative);
 
     OMNode relativeTarget = myMappingMap.get(relative).getTarget();
     OMSVGMatrix matrix = ((ISVGLocatable) relativeTarget)
         .getTransformToElement(((OMSVGElement) relativeTarget).getOwnerSVGElement());
+    if (inverse) {
+      matrix = matrix.inverse();
+    }
     OMSVGPoint pt = ((OMSVGElement) relativeTarget).getOwnerSVGElement().createSVGPoint((float) point.x, (float) point.y);
     OMSVGPoint inversePt = pt.matrixTransform(matrix);
     return new DoubleVector(inversePt.getX(), inversePt.getY());
   }
 
   @Override
+  public DoubleVector invertTransform(SvgLocatable relative, DoubleVector point) {
+    return transformCoordinates(relative, point, true);
+  }
+
+  @Override
+  public DoubleVector applyTransform(SvgLocatable relative, DoubleVector point) {
+    return transformCoordinates(relative, point, false);
+  }
+
+  @Override
   public DoubleRectangle getBBox(SvgLocatable element) {
-    if (!myMappingMap.containsKey(element)) {
-      throw new IllegalStateException("Trying to getBBox of unmapped element");
-    }
+    ensureSourceRegistered((SvgNode) element);
 
     OMNode target = myMappingMap.get(element).getTarget();
     OMSVGRect bBox = ((ISVGLocatable) target).getBBox();

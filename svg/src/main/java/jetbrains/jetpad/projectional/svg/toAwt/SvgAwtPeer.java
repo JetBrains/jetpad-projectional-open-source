@@ -62,6 +62,12 @@ class SvgAwtPeer implements SvgPlatformPeer {
     ensureTransformableConsistency(source, target);
   }
 
+  private void ensureSourceRegistered(SvgNode source) {
+    if (!myMappingMap.containsKey(source)) {
+      throw new IllegalStateException("Trying to call platform peer method of unmapped node");
+    }
+  }
+
   void registerMapper(SvgNode source, SvgNodeMapper<? extends SvgNode, ? extends Node> mapper) {
     ensureSourceTargetConsistency(source, mapper.getTarget());
     myMappingMap.put(source, mapper);
@@ -73,47 +79,39 @@ class SvgAwtPeer implements SvgPlatformPeer {
 
   @Override
   public double getComputedTextLength(SvgTextContent node) {
-    if (!myMappingMap.containsKey(node)) {
-      throw new IllegalStateException("Trying to getComputedTextLength of unmapped node");
-    }
+    ensureSourceRegistered((SvgNode) node);
 
     Node target = myMappingMap.get(node).getTarget();
     return ((SVGOMTextContentElement) target).getComputedTextLength();
   }
 
-  @Override
-  public DoubleVector invertTransform(SvgLocatable relative, DoubleVector point) {
-    if (!myMappingMap.containsKey(relative)) {
-      throw new IllegalStateException("Trying to invertTransform relative to unmapped element");
-    }
-
-    Node relativeTarget = myMappingMap.get(relative).getTarget();
-    SVGMatrix inverseMatrix = ((SVGLocatable) relativeTarget).
-        getTransformToElement(((SVGOMElement) relativeTarget).getOwnerSVGElement()).inverse();
-    SVGPoint pt = new SVGOMPoint((float) point.x, (float) point.y);
-    SVGPoint inversePt = pt.matrixTransform(inverseMatrix);
-    return new DoubleVector(inversePt.getX(), inversePt.getY());
-  }
-
-  @Override
-  public DoubleVector forwardTransform(SvgLocatable relative, DoubleVector point) {
-    if (!myMappingMap.containsKey(relative)) {
-      throw new IllegalStateException("Trying to forwardTransform relative to unmapped element");
-    }
+  private DoubleVector transformCoordinates(SvgLocatable relative, DoubleVector point, boolean inverse) {
+    ensureSourceRegistered((SvgNode) relative);
 
     Node relativeTarget = myMappingMap.get(relative).getTarget();
     SVGMatrix matrix = ((SVGLocatable) relativeTarget).
         getTransformToElement(((SVGOMElement) relativeTarget).getOwnerSVGElement());
+    if (inverse) {
+      matrix = matrix.inverse();
+    }
     SVGPoint pt = new SVGOMPoint((float) point.x, (float) point.y);
     SVGPoint inversePt = pt.matrixTransform(matrix);
     return new DoubleVector(inversePt.getX(), inversePt.getY());
   }
 
   @Override
+  public DoubleVector invertTransform(SvgLocatable relative, DoubleVector point) {
+    return transformCoordinates(relative, point, true);
+  }
+
+  @Override
+  public DoubleVector applyTransform(SvgLocatable relative, DoubleVector point) {
+    return transformCoordinates(relative, point, false);
+  }
+
+  @Override
   public DoubleRectangle getBBox(SvgLocatable element) {
-    if (!myMappingMap.containsKey(element)) {
-      throw new IllegalStateException("Trying to getBBox of unmapped element");
-    }
+    ensureSourceRegistered((SvgNode) element);
 
     Node target = myMappingMap.get(element).getTarget();
     SVGRect bBox = ((SVGLocatable) target).getBBox();

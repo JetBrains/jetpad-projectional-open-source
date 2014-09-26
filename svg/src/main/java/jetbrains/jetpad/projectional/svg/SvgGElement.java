@@ -31,13 +31,13 @@ public class SvgGElement extends SvgGraphicsElement implements SvgTransformable,
   }
 
   @Override
-  public DoubleVector inverseTransform(DoubleVector point) {
+  public DoubleVector pointToTransformedCoordinates(DoubleVector point) {
     return container().getPeer().invertTransform(this, point);
   }
 
   @Override
-  public DoubleVector forwardTransform(DoubleVector point) {
-    return container().getPeer().forwardTransform(this, point);
+  public DoubleVector pointToAbsoluteCoordinates(DoubleVector point) {
+    return container().getPeer().applyTransform(this, point);
   }
 
   @Override

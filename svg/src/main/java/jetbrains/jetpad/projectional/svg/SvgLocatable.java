@@ -19,9 +19,9 @@ import jetbrains.jetpad.geometry.DoubleRectangle;
 import jetbrains.jetpad.geometry.DoubleVector;
 
 public interface SvgLocatable {
-  public DoubleVector inverseTransform(DoubleVector point);
+  public DoubleVector pointToTransformedCoordinates(DoubleVector point);
 
-  public DoubleVector forwardTransform(DoubleVector point);
+  public DoubleVector pointToAbsoluteCoordinates(DoubleVector point);
 
   public DoubleRectangle getBBox();
 }
