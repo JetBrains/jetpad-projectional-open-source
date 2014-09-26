@@ -101,6 +101,11 @@ public class SvgCircleElement extends SvgGraphicsElement implements SvgTransform
   }
 
   @Override
+  public DoubleVector forwardTransform(DoubleVector point) {
+    return container().getPeer().forwardTransform(this, point);
+  }
+
+  @Override
   public DoubleRectangle getBBox() {
     return container().getPeer().getBBox(this);
   }

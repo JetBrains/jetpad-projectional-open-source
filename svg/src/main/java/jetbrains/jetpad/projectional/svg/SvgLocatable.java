@@ -21,5 +21,7 @@ import jetbrains.jetpad.geometry.DoubleVector;
 public interface SvgLocatable {
   public DoubleVector inverseTransform(DoubleVector point);
 
+  public DoubleVector forwardTransform(DoubleVector point);
+
   public DoubleRectangle getBBox();
 }

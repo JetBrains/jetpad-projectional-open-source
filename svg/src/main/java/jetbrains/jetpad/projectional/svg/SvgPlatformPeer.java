@@ -23,5 +23,7 @@ public interface SvgPlatformPeer {
 
   DoubleVector invertTransform(SvgLocatable relative, DoubleVector point);
 
+  DoubleVector forwardTransform(SvgLocatable relative, DoubleVector point);
+
   DoubleRectangle getBBox(SvgLocatable element);
 }

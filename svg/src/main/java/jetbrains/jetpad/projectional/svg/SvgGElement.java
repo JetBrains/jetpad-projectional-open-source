@@ -36,6 +36,11 @@ public class SvgGElement extends SvgGraphicsElement implements SvgTransformable,
   }
 
   @Override
+  public DoubleVector forwardTransform(DoubleVector point) {
+    return container().getPeer().forwardTransform(this, point);
+  }
+
+  @Override
   public DoubleRectangle getBBox() {
     return container().getPeer().getBBox(this);
   }

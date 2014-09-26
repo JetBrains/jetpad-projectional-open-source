@@ -107,6 +107,11 @@ public class SvgEllipseElement extends SvgGraphicsElement implements SvgTransfor
   }
 
   @Override
+  public DoubleVector forwardTransform(DoubleVector point) {
+    return container().getPeer().forwardTransform(this, point);
+  }
+
+  @Override
   public DoubleRectangle getBBox() {
     return container().getPeer().getBBox(this);
   }

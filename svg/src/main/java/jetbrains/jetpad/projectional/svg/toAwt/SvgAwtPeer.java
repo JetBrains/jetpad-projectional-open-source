@@ -84,7 +84,7 @@ class SvgAwtPeer implements SvgPlatformPeer {
   @Override
   public DoubleVector invertTransform(SvgLocatable relative, DoubleVector point) {
     if (!myMappingMap.containsKey(relative)) {
-      throw new IllegalStateException("Trying to invertTransform of unmapped relative element");
+      throw new IllegalStateException("Trying to invertTransform relative to unmapped element");
     }
 
     Node relativeTarget = myMappingMap.get(relative).getTarget();
@@ -92,6 +92,20 @@ class SvgAwtPeer implements SvgPlatformPeer {
         getTransformToElement(((SVGOMElement) relativeTarget).getOwnerSVGElement()).inverse();
     SVGPoint pt = new SVGOMPoint((float) point.x, (float) point.y);
     SVGPoint inversePt = pt.matrixTransform(inverseMatrix);
+    return new DoubleVector(inversePt.getX(), inversePt.getY());
+  }
+
+  @Override
+  public DoubleVector forwardTransform(SvgLocatable relative, DoubleVector point) {
+    if (!myMappingMap.containsKey(relative)) {
+      throw new IllegalStateException("Trying to forwardTransform relative to unmapped element");
+    }
+
+    Node relativeTarget = myMappingMap.get(relative).getTarget();
+    SVGMatrix matrix = ((SVGLocatable) relativeTarget).
+        getTransformToElement(((SVGOMElement) relativeTarget).getOwnerSVGElement());
+    SVGPoint pt = new SVGOMPoint((float) point.x, (float) point.y);
+    SVGPoint inversePt = pt.matrixTransform(matrix);
     return new DoubleVector(inversePt.getX(), inversePt.getY());
   }
 
