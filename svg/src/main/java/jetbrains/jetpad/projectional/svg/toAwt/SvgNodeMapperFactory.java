@@ -54,6 +54,8 @@ class SvgNodeMapperFactory implements MapperFactory<SvgNode, Node> {
       result = new SvgElementMapper<>((SvgStyleElement) source, new SVGOMStyleElement(null, myDoc), myDoc, myPeer);
     } else if (source instanceof SvgTextNode) {
       result = new SvgTextNodeMapper((SvgTextNode) source, myDoc.createTextNode(null), myDoc, myPeer);
+    } else if (source instanceof SvgTSpanElement) {
+      result = new SvgElementMapper<>((SvgTSpanElement) source, new SVGOMTSpanElement(null, myDoc), myDoc, myPeer);
     } else {
       throw new IllegalStateException("Unsupported SvgElement");
     }

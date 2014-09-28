@@ -15,37 +15,34 @@
  */
 package jetbrains.jetpad.projectional.svg;
 
-import jetbrains.jetpad.geometry.DoubleRectangle;
-import jetbrains.jetpad.geometry.DoubleVector;
 import jetbrains.jetpad.model.property.Property;
 import jetbrains.jetpad.model.property.WritableProperty;
 import jetbrains.jetpad.values.Color;
 
-public class SvgTextElement extends SvgGraphicsElement implements SvgTransformable, SvgTextContent {
+public class SvgTSpanElement extends SvgElement implements SvgTextContent {
   private static final SvgAttributeSpec<Double> X = SvgAttributeSpec.createSpec("x");
   private static final SvgAttributeSpec<Double> Y = SvgAttributeSpec.createSpec("y");
 
-  public SvgTextElement() {
+  public SvgTSpanElement() {
     super();
   }
 
-  public SvgTextElement(String content) {
+  public SvgTSpanElement(String text) {
     this();
 
-    setTextNode(content);
+    setText(text);
   }
 
-  public SvgTextElement(double x, double y, String content) {
-    this();
+  public SvgTSpanElement(double x, double y, String text) {
+    this(text);
 
     setAttribute(X, x);
     setAttribute(Y, y);
-    setTextNode(content);
   }
 
   @Override
   public String getElementName() {
-    return "text";
+    return "tspan";
   }
 
   public Property<Double> x() {
@@ -56,36 +53,14 @@ public class SvgTextElement extends SvgGraphicsElement implements SvgTransformab
     return getAttribute(Y);
   }
 
-  @Override
-  public Property<String> transform() {
-    return getAttribute(TRANSFORM);
-  }
-
-  public void setTextNode(String text) {
+  public void setText(String text) {
     children().clear();
-    addTextNode(text);
+    addText(text);
   }
 
-  public void addTextNode(String text) {
-    SvgTextNode textNode = new SvgTextNode(text);
-    children().add(textNode);
-  }
-
-  public void setTSpan(SvgTSpanElement tspan) {
-    children().clear();
-    addTSpan(tspan);
-  }
-
-  public void setTSpan(String text) {
-    addTSpan(text);
-  }
-
-  public void addTSpan(SvgTSpanElement tspan) {
-    children().add(tspan);
-  }
-
-  public void addTSpan(String text) {
-    children().add(new SvgTSpanElement(text));
+  public void addText(String text) {
+    SvgTextNode node = new SvgTextNode(text);
+    children().add(node);
   }
 
   @Override
@@ -126,20 +101,5 @@ public class SvgTextElement extends SvgGraphicsElement implements SvgTransformab
   @Override
   public double getComputedTextLength() {
     return container().getPeer().getComputedTextLength(this);
-  }
-
-  @Override
-  public DoubleVector pointToTransformedCoordinates(DoubleVector point) {
-    return container().getPeer().invertTransform(this, point);
-  }
-
-  @Override
-  public DoubleVector pointToAbsoluteCoordinates(DoubleVector point) {
-    return container().getPeer().applyTransform(this, point);
-  }
-
-  @Override
-  public DoubleRectangle getBBox() {
-    return container().getPeer().getBBox(this);
   }
 }

@@ -50,6 +50,8 @@ class SvgNodeMapperFactory implements MapperFactory<SvgNode, OMNode> {
       result = new SvgElementMapper<>((SvgStyleElement) source, new OMSVGStyleElement(), myPeer);
     } else if (source instanceof SvgTextNode) {
       result = new SvgTextNodeMapper((SvgTextNode) source, new OMText(null), myPeer);
+    } else if (source instanceof SvgTSpanElement) {
+      result = new SvgElementMapper<>((SvgTSpanElement) source, new OMSVGTSpanElement(), myPeer);
     } else {
       throw new IllegalStateException("Unsupported SvgNode");
     }
