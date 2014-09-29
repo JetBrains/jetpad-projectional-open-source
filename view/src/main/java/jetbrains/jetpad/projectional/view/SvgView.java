@@ -27,6 +27,10 @@ public class SvgView extends View {
 
   private final SvgNodeContainer mySvgElementContainer;
 
+  public SvgView(double width, double height) {
+    this(new SvgSvgElement(width, height));
+  }
+
   public SvgView(SvgSvgElement root) {
     root().set(root);
     mySvgElementContainer = new SvgNodeContainer(root);
