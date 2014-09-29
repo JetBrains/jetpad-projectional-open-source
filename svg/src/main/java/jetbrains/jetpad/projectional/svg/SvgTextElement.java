@@ -77,6 +77,7 @@ public class SvgTextElement extends SvgGraphicsElement implements SvgTransformab
   }
 
   public void setTSpan(String text) {
+    children().clear();
     addTSpan(text);
   }
 
