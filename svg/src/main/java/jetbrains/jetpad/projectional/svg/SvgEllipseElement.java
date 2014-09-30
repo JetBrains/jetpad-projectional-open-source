@@ -62,7 +62,7 @@ public class SvgEllipseElement extends SvgGraphicsElement implements SvgTransfor
   }
 
   @Override
-  public Property<String> transform() {
+  public Property<SvgTransform> transform() {
     return getAttribute(TRANSFORM);
   }
 

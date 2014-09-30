@@ -26,7 +26,7 @@ public class SvgGElement extends SvgGraphicsElement implements SvgTransformable,
   }
 
   @Override
-  public Property<String> transform() {
+  public Property<SvgTransform> transform() {
     return getAttribute(TRANSFORM);
   }
 

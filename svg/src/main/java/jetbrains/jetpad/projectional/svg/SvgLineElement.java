@@ -62,7 +62,7 @@ public class SvgLineElement extends SvgGraphicsElement implements SvgTransformab
   }
 
   @Override
-  public Property<String> transform() {
+  public Property<SvgTransform> transform() {
     return getAttribute(TRANSFORM);
   }
 

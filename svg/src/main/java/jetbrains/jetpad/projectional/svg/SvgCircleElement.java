@@ -56,7 +56,7 @@ public class SvgCircleElement extends SvgGraphicsElement implements SvgTransform
   }
 
   @Override
-  public Property<String> transform() {
+  public Property<SvgTransform> transform() {
     return getAttribute(TRANSFORM);
   }
 

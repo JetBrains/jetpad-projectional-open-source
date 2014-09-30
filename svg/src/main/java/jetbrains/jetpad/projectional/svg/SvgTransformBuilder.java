@@ -20,8 +20,8 @@ import jetbrains.jetpad.geometry.DoubleVector;
 public class SvgTransformBuilder {
   private StringBuilder myStringBuilder = new StringBuilder();
 
-  public String build() {
-    return myStringBuilder.toString();
+  public SvgTransform build() {
+    return new SvgTransform(myStringBuilder.toString());
   }
 
   private SvgTransformBuilder addTransformation(String name, double... values) {

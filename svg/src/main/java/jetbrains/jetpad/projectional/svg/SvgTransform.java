@@ -15,10 +15,15 @@
  */
 package jetbrains.jetpad.projectional.svg;
 
-import jetbrains.jetpad.model.property.Property;
+public class SvgTransform {
+  private String myTransform;
 
-public interface SvgTransformable extends SvgLocatable {
-  static final SvgAttributeSpec<SvgTransform> TRANSFORM = SvgAttributeSpec.createSpec("transform");
+  SvgTransform(String transformString) {
+    myTransform = transformString;
+  }
 
-  public Property<SvgTransform> transform();
+  @Override
+  public String toString() {
+    return myTransform;
+  }
 }
