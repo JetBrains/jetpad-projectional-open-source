@@ -94,8 +94,15 @@ public class SvgPathDataBuilder {
   }
 
   public SvgPathDataBuilder moveTo(double x, double y) {
-    moveTo(x, y, myDefaultAbsolute);
-    return this;
+    return moveTo(x, y, myDefaultAbsolute);
+  }
+
+  public SvgPathDataBuilder moveTo(DoubleVector point, boolean absolute) {
+    return moveTo(point.x, point.y, absolute);
+  }
+
+  public SvgPathDataBuilder moveTo(DoubleVector point) {
+    return moveTo(point.x, point.y);
   }
 
   public SvgPathDataBuilder lineTo(double x, double y, boolean absolute) {
@@ -104,8 +111,15 @@ public class SvgPathDataBuilder {
   }
 
   public SvgPathDataBuilder lineTo(double x, double y) {
-    lineTo(x, y, myDefaultAbsolute);
-    return this;
+    return lineTo(x, y, myDefaultAbsolute);
+  }
+
+  public SvgPathDataBuilder lineTo(DoubleVector point, boolean absolute) {
+    return lineTo(point.x, point.y, absolute);
+  }
+
+  public SvgPathDataBuilder lineTo(DoubleVector point) {
+    return lineTo(point.x, point.y);
   }
 
   public SvgPathDataBuilder horizontalLineTo(double x, boolean absolute) {
@@ -114,8 +128,7 @@ public class SvgPathDataBuilder {
   }
 
   public SvgPathDataBuilder horizontalLineTo(double x) {
-    horizontalLineTo(x, myDefaultAbsolute);
-    return this;
+    return horizontalLineTo(x, myDefaultAbsolute);
   }
 
   public SvgPathDataBuilder verticalLineTo(double y, boolean absolute) {
@@ -124,8 +137,7 @@ public class SvgPathDataBuilder {
   }
 
   public SvgPathDataBuilder verticalLineTo(double y) {
-    verticalLineTo(y, myDefaultAbsolute);
-    return this;
+    return verticalLineTo(y, myDefaultAbsolute);
   }
 
   public SvgPathDataBuilder curveTo(double x1, double y1, double x2, double y2, double x, double y, boolean absolute) {
@@ -134,8 +146,15 @@ public class SvgPathDataBuilder {
   }
 
   public SvgPathDataBuilder curveTo(double x1, double y1, double x2, double y2, double x, double y) {
-    curveTo(x1, y1, x2, y2, x, y, myDefaultAbsolute);
-    return this;
+    return curveTo(x1, y1, x2, y2, x, y, myDefaultAbsolute);
+  }
+
+  public SvgPathDataBuilder curveTo(DoubleVector controlStart, DoubleVector controlEnd, DoubleVector to, boolean absolute) {
+    return curveTo(controlStart.x, controlStart.y, controlEnd.x, controlEnd.y, to.x, to.y, absolute);
+  }
+
+  public SvgPathDataBuilder curveTo(DoubleVector controlStart, DoubleVector controlEnd, DoubleVector to) {
+    return curveTo(controlStart.x, controlStart.y, controlEnd.x, controlEnd.y, to.x, to.y);
   }
 
   public SvgPathDataBuilder smoothCurveTo(double x2, double y2, double x, double y, boolean absolute) {
@@ -144,8 +163,15 @@ public class SvgPathDataBuilder {
   }
 
   public SvgPathDataBuilder smoothCurveTo(double x2, double y2, double x, double y) {
-    smoothCurveTo(x2, y2, x, y, myDefaultAbsolute);
-    return this;
+    return smoothCurveTo(x2, y2, x, y, myDefaultAbsolute);
+  }
+
+  public SvgPathDataBuilder smoothCurveTo(DoubleVector controlEnd, DoubleVector to, boolean absolute) {
+    return smoothCurveTo(controlEnd.x, controlEnd.y, to.x, to.y, absolute);
+  }
+
+  public SvgPathDataBuilder smoothCurveTo(DoubleVector controlEnd, DoubleVector to) {
+    return smoothCurveTo(controlEnd.x, controlEnd.y, to.x, to.y);
   }
 
   public SvgPathDataBuilder quadraticBezierCurveTo(double x1, double y1, double x, double y, boolean absolute) {
@@ -154,8 +180,15 @@ public class SvgPathDataBuilder {
   }
 
   public SvgPathDataBuilder quadraticBezierCurveTo(double x1, double y1, double x, double y) {
-    quadraticBezierCurveTo(x1, y1, x, y, myDefaultAbsolute);
-    return this;
+    return quadraticBezierCurveTo(x1, y1, x, y, myDefaultAbsolute);
+  }
+
+  public SvgPathDataBuilder quadraticBezierCurveTo(DoubleVector control, DoubleVector to, boolean absolute) {
+    return quadraticBezierCurveTo(control.x, control.y, to.x, to.y, absolute);
+  }
+
+  public SvgPathDataBuilder quadraticBezierCurveTo(DoubleVector control, DoubleVector to) {
+    return quadraticBezierCurveTo(control.x, control.y, to.x, to.y);
   }
 
   public SvgPathDataBuilder smoothQuadraticBezierCurveTo(double x, double y, boolean absolute) {
@@ -164,8 +197,15 @@ public class SvgPathDataBuilder {
   }
 
   public SvgPathDataBuilder smoothQuadraticBezierCurveTo(double x, double y) {
-    smoothQuadraticBezierCurveTo(x, y, myDefaultAbsolute);
-    return this;
+    return smoothQuadraticBezierCurveTo(x, y, myDefaultAbsolute);
+  }
+
+  public SvgPathDataBuilder smoothQuadraticBezierCurveTo(DoubleVector to, boolean absolute) {
+    return smoothQuadraticBezierCurveTo(to.x, to.y, absolute);
+  }
+
+  public SvgPathDataBuilder smoothQuadraticBezierCurveTo(DoubleVector to) {
+    return smoothQuadraticBezierCurveTo(to.x, to.y);
   }
 
   public SvgPathDataBuilder ellipticalArc(double rx, double ry, double xAxisRotation, boolean largeArc, boolean sweep,
@@ -179,8 +219,17 @@ public class SvgPathDataBuilder {
 
   public SvgPathDataBuilder ellipticalArc(double rx, double ry, double xAxisRotation, boolean largeArc, boolean sweep,
                             double x, double y) {
-    ellipticalArc(rx, ry, xAxisRotation, largeArc, sweep, x, y, myDefaultAbsolute);
-    return this;
+    return ellipticalArc(rx, ry, xAxisRotation, largeArc, sweep, x, y, myDefaultAbsolute);
+  }
+
+  public SvgPathDataBuilder ellipticalArc(double rx, double ry, double xAxisRotation, boolean largeArc, boolean sweep,
+                                          DoubleVector to, boolean absolute) {
+    return ellipticalArc(rx, ry, xAxisRotation, largeArc, sweep, to.x, to.y, absolute);
+  }
+
+  public SvgPathDataBuilder ellipticalArc(double rx, double ry, double xAxisRotation, boolean largeArc, boolean sweep,
+                                          DoubleVector to) {
+    return ellipticalArc(rx, ry, xAxisRotation, largeArc, sweep, to.x, to.y);
   }
 
   public SvgPathDataBuilder closePath() {
