@@ -22,13 +22,13 @@ import jetbrains.jetpad.model.property.WritableProperty;
 import jetbrains.jetpad.values.Color;
 
 public class SvgPathElement extends SvgGraphicsElement implements SvgTransformable, SvgShape {
-  private static final SvgAttributeSpec<String> D = SvgAttributeSpec.createSpec("d");
+  private static final SvgAttributeSpec<SvgPathData> D = SvgAttributeSpec.createSpec("d");
 
   public SvgPathElement() {
     super();
   }
 
-  public SvgPathElement(String d) {
+  public SvgPathElement(SvgPathData d) {
     this();
 
     setAttribute(D, d);
@@ -39,7 +39,7 @@ public class SvgPathElement extends SvgGraphicsElement implements SvgTransformab
     return "line";
   }
 
-  public Property<String> d() {
+  public Property<SvgPathData> d() {
     return getAttribute(D);
   }
 

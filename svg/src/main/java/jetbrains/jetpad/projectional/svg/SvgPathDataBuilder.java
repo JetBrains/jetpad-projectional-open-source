@@ -61,8 +61,8 @@ public class SvgPathDataBuilder {
     this(true);
   }
 
-  public String build() {
-    return myStringBuilder.toString();
+  public SvgPathData build() {
+    return new SvgPathData(myStringBuilder.toString());
   }
 
   // FIXME: varargs has bad performance, use verbose appends in building methods
