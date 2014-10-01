@@ -61,6 +61,10 @@ public class SvgTransformBuilder {
     return addTransformation("rotate", a, x, y);
   }
 
+  public SvgTransformBuilder rotate(double a, DoubleVector origin) {
+    return rotate(a, origin.x, origin.y);
+  }
+
   public SvgTransformBuilder rotate(double a) {
     return addTransformation("rotate", a);
   }
