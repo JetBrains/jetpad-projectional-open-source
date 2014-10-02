@@ -16,6 +16,7 @@
 package jetbrains.jetpad.cell.completion;
 
 import com.google.common.base.Strings;
+import com.google.common.base.Supplier;
 import jetbrains.jetpad.base.*;
 import jetbrains.jetpad.cell.*;
 import jetbrains.jetpad.cell.event.CompletionEvent;
@@ -40,6 +41,7 @@ import java.util.List;
 
 public class CompletionSupport {
   public static final CellTraitPropertySpec<Runnable> HIDE_COMPLETION = new CellTraitPropertySpec<>("hideCompletion");
+  public static final CellTraitPropertySpec<Supplier<String>> INITIAL_TEXT_PROVIDER = new CellTraitPropertySpec<Supplier<String>>("initialTextProvider");
 
   public static CellTrait trait() {
     return new CellTrait() {
@@ -253,7 +255,7 @@ public class CompletionSupport {
     });
   }
 
-  public static TextCell showPopup(
+  private static TextCell showPopup(
       Cell cell,
       Property<Cell> targetPopup,
       Async<List<CompletionItem>> items,
@@ -264,6 +266,13 @@ public class CompletionSupport {
 
     textCell.focusable().set(true);
     final Registration textEditingReg = textCell.addTrait(new TextEditingTrait());
+
+    Supplier<String> initialProvider = cell.get(INITIAL_TEXT_PROVIDER);
+    if (initialProvider != null) {
+      String initialText = initialProvider.get();
+      textCell.text().set(initialText);
+      textCell.caretPosition().set(initialText.length());
+    }
 
     popup.children().add(textCell);
     targetPopup.set(popup);
