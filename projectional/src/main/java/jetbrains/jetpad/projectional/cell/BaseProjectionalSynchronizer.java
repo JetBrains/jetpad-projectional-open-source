@@ -59,6 +59,7 @@ abstract class BaseProjectionalSynchronizer<SourceT, ContextT, SourceItemT> impl
   private Function<SourceItemT, SourceItemT> myCloner;
   private Runnable myOnLastItemDeleted;
   private List<Cell> myTargetList;
+  private Character mySeparatorChar;
 
   BaseProjectionalSynchronizer(
       Mapper<? extends ContextT, ? extends Cell> mapper,
@@ -194,6 +195,15 @@ abstract class BaseProjectionalSynchronizer<SourceT, ContextT, SourceItemT> impl
   @Override
   public void setItemFactory(Supplier<SourceItemT> itemFactory) {
     myItemFactory = itemFactory;
+  }
+
+  @Override
+  public void setSeparator(Character ch) {
+    mySeparatorChar = ch;
+  }
+
+  Character getSeparator() {
+    return mySeparatorChar;
   }
 
   protected Runnable getOnLastItemDeleted() {

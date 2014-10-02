@@ -115,6 +115,17 @@ public class ProjectionalListSynchronizerTest extends EditingTestCase {
   }
 
   @Test
+  public void insertAfterWithSeparator() {
+    container.children.add(new EmptyChild());
+    selectChild(0);
+    type(',');
+
+    assertEquals(2, container.children.size());
+    assertFocused(1);
+  }
+
+
+  @Test
   public void insertBefore() {
     container.children.add(new EmptyChild());
     selectChild(0);
@@ -781,6 +792,7 @@ public class ProjectionalListSynchronizerTest extends EditingTestCase {
       list,
       target,
       myWithSeparator ? CellLists.separated(target.children(), " ") : target.children(), createChildMapperFactory());
+    result.setSeparator(',');
 
     result.setItemFactory(new Supplier<Child>() {
       @Override

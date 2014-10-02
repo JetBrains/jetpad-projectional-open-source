@@ -122,6 +122,19 @@ class ProjectionalObservableListSynchronizer<ContextT, SourceItemT> extends Base
 
         super.onCellTraitEvent(cell, spec, event);
       }
+
+      @Override
+      public void onKeyTyped(Cell cell, KeyEvent event) {
+        if (getSeparator() != null && getSeparator() == event.getKeyChar()) {
+          int index = childCells().indexOf(cell);
+          SourceItemT newItem = newItem();
+          mySource.add(index + 1, newItem);
+          selectOnCreation(index + 1).run();
+          event.consume();
+        }
+
+        super.onKeyTyped(cell, event);
+      }
     });
   }
 

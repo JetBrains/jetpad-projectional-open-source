@@ -31,6 +31,7 @@ public interface ProjectionalRoleSynchronizer<ContextT, SourceT> extends RoleSyn
   void setOnLastItemDeleted(Runnable action);
   void setPlaceholderText(String text);
   void setItemFactory(Supplier<SourceT> itemFactory);
+  void setSeparator(Character ch);
 
   SourceT getFocusedItem();
 

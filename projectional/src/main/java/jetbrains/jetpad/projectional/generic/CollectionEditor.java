@@ -131,7 +131,6 @@ public abstract class CollectionEditor<ItemT, ViewT> {
     }
   }
 
-
   protected boolean isDeleteEvent(KeyEvent event) {
     return isAnyPositionDeleteEvent(event) || event.is(Key.BACKSPACE) || event.is(Key.DELETE);
   }
