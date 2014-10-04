@@ -20,6 +20,7 @@ import jetbrains.jetpad.base.Value;
 import jetbrains.jetpad.cell.Cell;
 import jetbrains.jetpad.cell.CellContainer;
 import jetbrains.jetpad.cell.CellPropertySpec;
+import jetbrains.jetpad.cell.TextCell;
 import jetbrains.jetpad.cell.position.PositionHandler;
 import jetbrains.jetpad.cell.trait.CellTrait;
 import jetbrains.jetpad.cell.util.Cells;
@@ -277,11 +278,16 @@ public class CellNavigationController {
     }
     if (next != null) {
       focusedCell().set(next);
-      scrollTo(next);
 
       if (restoreOffset) {
         moveCaretTo(next, currentOffset - next.getBounds().origin.x);
         myPrevXOffset.set(currentOffset);
+      }
+
+      if (next instanceof TextCell) {
+        ((TextCell) next).scrollToCaret();
+      } else {
+        scrollTo(next);
       }
 
       event.consume();
