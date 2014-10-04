@@ -318,7 +318,6 @@ public class CellContainerToDomMapper extends Mapper<CellContainer, Element> {
         if (result == null) {
           result = new Rectangle(Vector.ZERO, Vector.ZERO);
         }
-
         return result;
       }
 

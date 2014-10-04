@@ -276,13 +276,13 @@ public class CellNavigationController {
       restoreOffset = false;
     }
     if (next != null) {
-      focusedCell().set(next);
-      scrollTo(next);
-
       if (restoreOffset) {
         moveCaretTo(next, currentOffset - next.getBounds().origin.x);
         myPrevXOffset.set(currentOffset);
       }
+
+      focusedCell().set(next);
+      scrollTo(next);
 
       event.consume();
     }
