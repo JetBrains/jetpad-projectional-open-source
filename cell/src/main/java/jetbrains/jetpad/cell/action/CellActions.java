@@ -17,7 +17,9 @@ package jetbrains.jetpad.cell.action;
 
 import jetbrains.jetpad.cell.Cell;
 import jetbrains.jetpad.cell.TextCell;
+import jetbrains.jetpad.cell.completion.Completion;
 import jetbrains.jetpad.cell.position.PositionHandler;
+import jetbrains.jetpad.completion.CompletionController;
 import jetbrains.jetpad.model.composite.Composites;
 
 public class CellActions {
@@ -121,6 +123,18 @@ public class CellActions {
         cell.focus();
         cell.caretPosition().set(pos);
         cell.scrollTo();
+      }
+    };
+  }
+
+  public static Runnable showCompletion(final Cell cell) {
+    return new Runnable() {
+      @Override
+      public void run() {
+        cell.focus();
+        CompletionController controller = cell.get(Completion.COMPLETION_CONTROLLER);
+        if (controller == null || !controller.canActivate() || controller.isActive()) return;
+        controller.activate();
       }
     };
   }
