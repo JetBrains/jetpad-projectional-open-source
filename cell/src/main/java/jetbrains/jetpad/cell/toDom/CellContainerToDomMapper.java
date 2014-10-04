@@ -112,12 +112,6 @@ public class CellContainerToDomMapper extends Mapper<CellContainer, Element> {
     return $wnd.orientation !== undefined;
   }-*/;
 
-  private static MouseEvent toMouseEvent(Event e) {
-    int x = e.getClientX() + Window.getScrollLeft();
-    int y = e.getClientY() + Window.getScrollTop();
-    return new MouseEvent(x, y);
-  }
-
   private static void ensureIndentInjected() {
     if (ourIndentInjected) return;
 
@@ -170,6 +164,10 @@ public class CellContainerToDomMapper extends Mapper<CellContainer, Element> {
     getTarget().removeClassName(CSS.rootContainer());
 
     $(getTarget()).unbind(Event.KEYEVENTS | Event.MOUSEEVENTS);
+  }
+
+  private Vector getRootOrigin() {
+    return new Vector(myCellToDomContext.rootElement.getAbsoluteLeft(), myCellToDomContext.rootElement.getAbsoluteTop());
   }
 
   @Override
@@ -318,6 +316,7 @@ public class CellContainerToDomMapper extends Mapper<CellContainer, Element> {
         if (result == null) {
           result = new Rectangle(Vector.ZERO, Vector.ZERO);
         }
+
         return result;
       }
 
@@ -337,7 +336,7 @@ public class CellContainerToDomMapper extends Mapper<CellContainer, Element> {
           int y = target.getAbsoluteTop();
           int width = target.getScrollWidth();
           int height = target.getScrollHeight();
-          return new Rectangle(x, y, width, height);
+          return new Rectangle(x, y, width, height).sub(getRootOrigin());
         }
       }
 
@@ -360,6 +359,7 @@ public class CellContainerToDomMapper extends Mapper<CellContainer, Element> {
 
       @Override
       public Cell findCell(Cell root, Vector loc) {
+        loc = loc.add(getRootOrigin());
         Element e = elementAt(loc.x - Window.getScrollLeft(), loc.y - Window.getScrollTop());
         if (e == null) return null;
         Cell result = findCellFor(e);
@@ -630,5 +630,10 @@ public class CellContainerToDomMapper extends Mapper<CellContainer, Element> {
 
   private boolean isContainerEvent(MouseEvent evt) {
     return getSource().root.getBounds().contains(evt.getLocation());
+  }
+
+  private MouseEvent toMouseEvent(Event e) {
+    Vector base = new Vector(e.getClientX() + Window.getScrollLeft(), e.getClientY() + Window.getScrollTop());
+    return new MouseEvent(base.sub(getRootOrigin()));
   }
 }
