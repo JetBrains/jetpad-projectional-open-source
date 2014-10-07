@@ -16,6 +16,8 @@
 package jetbrains.jetpad.projectional.svg;
 
 public class SvgTransform {
+  public static final SvgTransform EMPTY = new SvgTransform("");
+
   private String myTransform;
 
   SvgTransform(String transformString) {

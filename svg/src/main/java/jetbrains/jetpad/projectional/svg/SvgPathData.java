@@ -16,6 +16,8 @@
 package jetbrains.jetpad.projectional.svg;
 
 public class SvgPathData {
+  public static final SvgPathData EMPTY = new SvgPathData("");
+
   private String myPathData;
 
   SvgPathData(String pathData) {
