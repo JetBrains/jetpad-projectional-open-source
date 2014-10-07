@@ -378,10 +378,6 @@ public class SvgPathDataBuilder {
     ArrayList<Double> xsArray = new ArrayList<>(xs);
     ArrayList<Double> ysArray = new ArrayList<>(ys);
 
-    if (xs.size() > 0) {
-      moveTo(xsArray.get(0), ysArray.get(0));
-    }
-
     for (int i = 0; i < xs.size(); ++i) {
       points.add(new DoubleVector(xsArray.get(i), ysArray.get(i)));
     }
