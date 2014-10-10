@@ -193,6 +193,7 @@ public class ExprHybridPositionSpec implements HybridPositionSpec<Expression> {
       type = result == null ? Types.OBJECT : getContextType(result);
     }
 
+
     return new CompletionSupplier() {
       @Override
       public List<CompletionItem> get(CompletionParameters cp) {
