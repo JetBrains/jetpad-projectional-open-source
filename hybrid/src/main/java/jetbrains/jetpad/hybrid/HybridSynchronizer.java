@@ -83,6 +83,7 @@ public class HybridSynchronizer<SourceT> implements Synchronizer {
   private Runnable myLastItemDeleted;
   private Synchronizer[] mySynchronizers = Synchronizer.EMPTY_ARRAY;
   private String myPlaceHolderText = "empty";
+  private boolean myHideTokensInMenu = false;
 
   public HybridSynchronizer(Mapper<?, ?> contextMapper, Property<SourceT> prop, Cell target, HybridPositionSpec<SourceT> spec) {
     myContextMapper = contextMapper;
@@ -574,6 +575,14 @@ public class HybridSynchronizer<SourceT> implements Synchronizer {
 
   public void setOnLastItemDeleted(Runnable action) {
     myLastItemDeleted = action;
+  }
+
+  public void setHideTokensInMenu(boolean hideTokens) {
+    myHideTokensInMenu = hideTokens;
+  }
+
+  public boolean isHideTokensInMenu() {
+    return myHideTokensInMenu;
   }
 
   public int focusedIndex() {

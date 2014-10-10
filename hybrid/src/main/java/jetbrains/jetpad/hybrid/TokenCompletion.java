@@ -170,12 +170,14 @@ class TokenCompletion {
       @Override
       public List<CompletionItem> get(CompletionParameters cp) {
         List<CompletionItem> result = new ArrayList<>();
-        result.addAll(positionSpec().getTokenCompletion(new Function<Token, Runnable>() {
-          @Override
-          public Runnable apply(Token input) {
-            return completer.complete(input);
-          }
-        }).get(cp));
+        if (!(cp.isMenu() && mySync.isHideTokensInMenu())) {
+          result.addAll(positionSpec().getTokenCompletion(new Function<Token, Runnable>() {
+            @Override
+            public Runnable apply(Token input) {
+              return completer.complete(input);
+            }
+          }).get(cp));
+        }
         if (cp.isMenu()) {
           result.addAll(positionSpec().getAdditionalCompletion(ctx, completer).get(cp));
         }
