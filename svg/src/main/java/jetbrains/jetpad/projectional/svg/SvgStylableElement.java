@@ -17,7 +17,7 @@ package jetbrains.jetpad.projectional.svg;
 
 import jetbrains.jetpad.model.property.Property;
 
-import javax.validation.constraints.NotNull;
+import javax.annotation.Nonnull;
 import java.util.*;
 
 public abstract class SvgStylableElement extends SvgElement {
@@ -27,7 +27,7 @@ public abstract class SvgStylableElement extends SvgElement {
     return getAttribute(CLASS);
   }
 
-  public boolean addClass(@NotNull String cl) {
+  public boolean addClass(@Nonnull String cl) {
     validateClassName(cl);
 
     Property<String> attr = classAttribute();
@@ -44,7 +44,7 @@ public abstract class SvgStylableElement extends SvgElement {
     return true;
   }
 
-  public boolean removeClass(@NotNull String cl) {
+  public boolean removeClass(@Nonnull String cl) {
     validateClassName(cl);
 
     Property<String> attr = classAttribute();
@@ -62,7 +62,7 @@ public abstract class SvgStylableElement extends SvgElement {
     return result;
   }
 
-  public void replaceClass(@NotNull String oldClass, @NotNull String newClass) {
+  public void replaceClass(@Nonnull String oldClass, @Nonnull String newClass) {
     validateClassName(oldClass);
     validateClassName(newClass);
 
@@ -81,7 +81,7 @@ public abstract class SvgStylableElement extends SvgElement {
     attr.set(buildClassString(classes));
   }
 
-  public boolean toggleClass(@NotNull String cl) {
+  public boolean toggleClass(@Nonnull String cl) {
     if (hasClass(cl)) {
       removeClass(cl);
       return false;
@@ -91,7 +91,7 @@ public abstract class SvgStylableElement extends SvgElement {
     }
   }
 
-  public boolean hasClass(@NotNull String cl) {
+  public boolean hasClass(@Nonnull String cl) {
     validateClassName(cl);
 
     Property<String> attr = classAttribute();
@@ -111,7 +111,7 @@ public abstract class SvgStylableElement extends SvgElement {
     return builder.toString();
   }
 
-  private void validateClassName(@NotNull String cl) {
+  private void validateClassName(@Nonnull String cl) {
     if (cl.contains(" ")) {
       throw new IllegalArgumentException("Class name cannot contain spaces");
     }

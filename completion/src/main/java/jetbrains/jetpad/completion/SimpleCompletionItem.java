@@ -15,20 +15,17 @@
  */
 package jetbrains.jetpad.completion;
 
-import jetbrains.jetpad.completion.BaseCompletionItem;
-
-import javax.validation.constraints.NotNull;
-
+import javax.annotation.Nonnull;
 
 public abstract class SimpleCompletionItem extends BaseCompletionItem {
   private String myMatchingText;
   private String myVisibleText;
 
-  protected SimpleCompletionItem(@NotNull String matchingText) {
+  protected SimpleCompletionItem(@Nonnull String matchingText) {
     this(matchingText, matchingText);
   }
 
-  protected SimpleCompletionItem(@NotNull String matchingText, @NotNull String visibleText) {
+  protected SimpleCompletionItem(@Nonnull String matchingText, @Nonnull String visibleText) {
     if (matchingText == null) {
       throw new NullPointerException();
     }

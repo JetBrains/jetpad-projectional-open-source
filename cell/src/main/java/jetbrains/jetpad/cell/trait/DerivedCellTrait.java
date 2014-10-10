@@ -22,10 +22,10 @@ import jetbrains.jetpad.cell.event.FocusEvent;
 import jetbrains.jetpad.event.*;
 import jetbrains.jetpad.model.property.PropertyChangeEvent;
 
-import javax.validation.constraints.NotNull;
+import javax.annotation.Nonnull;
 
 public abstract class DerivedCellTrait extends CellTrait {
-  @NotNull
+  @Nonnull
   protected abstract CellTrait getBase(Cell cell);
 
   @Override
