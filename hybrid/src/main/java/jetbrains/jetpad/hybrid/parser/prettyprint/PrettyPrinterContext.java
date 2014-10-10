@@ -99,7 +99,10 @@ public class PrettyPrinterContext<NodeT>  {
 
   public void append(final ObservableList<? extends NodeT> list, Token separator) {
     myChangeSources.add(list);
+    append((List<? extends NodeT>) list, separator);
+  }
 
+  public void append(final List<? extends NodeT> list, Token separator) {
     for (int i = 0; i < list.size(); i++) {
       if (i != 0) {
         append(separator);
