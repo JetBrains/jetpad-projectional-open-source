@@ -30,18 +30,24 @@ import java.util.*;
 public class PrettyPrinterContext<NodeT>  {
   private PrettyPrinter<NodeT> myPrettyPrinter;
 
-  private List<Token> myTokens = new ArrayList<>();
-  private Stack<List<BaseParseNode>> myStack = new Stack<>();
-  private boolean myPrinted;
-  private List<EventSource<?>> myChangeSources = new ArrayList<>();
+  private PrettyPrintResult myResult;
 
   public PrettyPrinterContext(PrettyPrinter<NodeT> pp) {
+    this(new PrettyPrintResult(), pp);
+    myResult.myStack.add(new ArrayList<BaseParseNode>());
+  }
+
+  private PrettyPrinterContext(PrettyPrintResult result, PrettyPrinter<NodeT> pp) {
+    myResult = result;
     myPrettyPrinter = pp;
-    myStack.add(new ArrayList<BaseParseNode>());
+  }
+
+  public <NewNodeT> PrettyPrinterContext<NewNodeT> withPrinter(PrettyPrinter<NewNodeT> pp) {
+    return new PrettyPrinterContext<>(myResult, pp);
   }
 
   public void print(final NodeT obj) {
-    if (myPrinted) {
+    if (myResult.myPrinted) {
       throw new IllegalStateException();
     }
 
@@ -52,7 +58,7 @@ public class PrettyPrinterContext<NodeT>  {
       }
     });
 
-    myPrinted = true;
+    myResult.myPrinted = true;
   }
 
   public void append(Token token) {
@@ -60,19 +66,19 @@ public class PrettyPrinterContext<NodeT>  {
       throw new NullPointerException("Token can't be null");
     }
 
-    myTokens.add(token);
-    TokenParseNode result = new TokenParseNode(token, myTokens.size() - 1);
-    myStack.peek().add(result);
+    myResult.myTokens.add(token);
+    TokenParseNode result = new TokenParseNode(token, myResult.myTokens.size() - 1);
+    myResult.myStack.peek().add(result);
   }
 
   public <ValueT> void append(Property<ValueT> prop, Function<ValueT, Token> f) {
-    myChangeSources.add(prop);
+    myResult.myChangeSources.add(prop);
 
     append(f.apply(prop.get()));
   }
 
   public void append(Property<? extends NodeT> prop) {
-    myChangeSources.add(prop);
+    myResult.myChangeSources.add(prop);
 
     final NodeT value = prop.get();
     if (value == null) return;
@@ -85,7 +91,7 @@ public class PrettyPrinterContext<NodeT>  {
   }
 
   public void append(ObservableList<? extends NodeT> list) {
-    myChangeSources.add(list);
+    myResult.myChangeSources.add(list);
 
     for (final NodeT e : list) {
       print(e, new Runnable() {
@@ -98,7 +104,7 @@ public class PrettyPrinterContext<NodeT>  {
   }
 
   public void append(final ObservableList<? extends NodeT> list, Token separator) {
-    myChangeSources.add(list);
+    myResult.myChangeSources.add(list);
     append((List<? extends NodeT>) list, separator);
   }
 
@@ -154,30 +160,30 @@ public class PrettyPrinterContext<NodeT>  {
   }
 
   private void print(NodeT obj, Runnable r) {
-    myStack.push(new ArrayList<BaseParseNode>());
+    myResult.myStack.push(new ArrayList<BaseParseNode>());
     r.run();
-    List<BaseParseNode> nodes = myStack.pop();
+    List<BaseParseNode> nodes = myResult.myStack.pop();
 
     BaseParseNode result;
     if (nodes.isEmpty()) {
-      result = new EmptyParseNode(obj, myTokens.size());
+      result = new EmptyParseNode(obj, myResult.myTokens.size());
     } else {
       result = new CompositeParseNode(obj, nodes);
     }
-    myStack.peek().add(result);
+    myResult.myStack.peek().add(result);
   }
 
   public List<Token> tokens() {
     ensurePrinted();
-    return Collections.unmodifiableList(myTokens);
+    return Collections.unmodifiableList(myResult.myTokens);
   }
 
   public ParseNode result() {
     ensurePrinted();
-    if (myStack.size() != 1 || myStack.peek().size() != 1) {
+    if (myResult.myStack.size() != 1 || myResult.myStack.peek().size() != 1) {
       throw new IllegalStateException();
     }
-    return myStack.peek().get(0);
+    return myResult.myStack.peek().get(0);
   }
 
   public EventSource<Object> changeSource() {
@@ -185,7 +191,7 @@ public class PrettyPrinterContext<NodeT>  {
       @Override
       public Registration addHandler(EventHandler<? super Object> handler) {
         CompositeRegistration reg = new CompositeRegistration();
-        for (EventSource<?> s : myChangeSources) {
+        for (EventSource<?> s : myResult.myChangeSources) {
           reg.add(s.addHandler(handler));
         }
         return reg;
@@ -194,9 +200,16 @@ public class PrettyPrinterContext<NodeT>  {
   }
 
   private void ensurePrinted() {
-    if (!myPrinted) {
+    if (!myResult.myPrinted) {
       throw new IllegalStateException();
     }
+  }
+
+  private static class PrettyPrintResult {
+    private List<Token> myTokens = new ArrayList<>();
+    private Stack<List<BaseParseNode>> myStack = new Stack<>();
+    private boolean myPrinted;
+    private List<EventSource<?>> myChangeSources = new ArrayList<>();
   }
 
   private static abstract class BaseParseNode implements ParseNode {
