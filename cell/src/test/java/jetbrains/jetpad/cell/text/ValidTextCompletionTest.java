@@ -114,7 +114,7 @@ public class ValidTextCompletionTest extends CompletionTestCase {
           };
         }
 
-        if (spec == TextEditing.DOT_LIKE_RT) {
+        if (spec == TextEditing.RT_ON_END) {
           return true;
         }
 

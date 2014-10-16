@@ -181,7 +181,7 @@ public class TextEditingTrait extends TextNavigationTrait {
               return true;
             }
           });
-          if (!rightTransform.isEmpty() && textCell.get(TextEditing.DOT_LIKE_RT)) {
+          if (!rightTransform.isEmpty() && textCell.get(TextEditing.RT_ON_END)) {
             if (textCell.rightPopup().get() == null) {
               TextCell popup = CompletionSupport.showSideTransformPopup(textCell, textCell.rightPopup(), rightTransform.getItems());
               popup.get(Completion.COMPLETION_CONTROLLER).activate(new Runnable() {

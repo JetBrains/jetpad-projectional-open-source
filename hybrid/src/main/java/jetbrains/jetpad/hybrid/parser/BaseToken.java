@@ -27,7 +27,7 @@ public abstract class BaseToken implements Token {
   }
 
   @Override
-  public boolean isDotLike() {
+  public boolean isRtOnEnd() {
     return false;
   }
 }

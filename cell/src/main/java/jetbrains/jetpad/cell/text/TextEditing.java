@@ -35,7 +35,7 @@ import jetbrains.jetpad.values.Color;
 public class TextEditing {
   public static final CellTraitPropertySpec<Boolean> FIRST_ALLOWED = new CellTraitPropertySpec<>("firstAllowed", true);
   public static final CellTraitPropertySpec<Boolean> LAST_ALLOWED = new CellTraitPropertySpec<>("firstAllowed", true);
-  public static final CellTraitPropertySpec<Boolean> DOT_LIKE_RT = new CellTraitPropertySpec<>("dotLikeRt", false);
+  public static final CellTraitPropertySpec<Boolean> RT_ON_END = new CellTraitPropertySpec<>("dotLikeRt", false);
   public static final CellTraitPropertySpec<Boolean> CLEAR_ON_DELETE = new CellTraitPropertySpec<>("clearOnDelete", false);
 
   public static final CellTraitPropertySpec<Function<String, Runnable>> EXPAND_LEFT = new CellTraitPropertySpec<>("expandLeft", expansionProvider(Side.LEFT));

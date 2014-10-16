@@ -88,7 +88,7 @@ class TextTokenCell extends TextCell {
       public Object get(final Cell cell, CellTraitPropertySpec<?> spec) {
         if (spec == TextEditing.FIRST_ALLOWED) return !noSpaceToLeft();
         if (spec == TextEditing.LAST_ALLOWED) return !noSpaceToRight();
-        if (spec == TextEditing.DOT_LIKE_RT) return myToken.isDotLike();
+        if (spec == TextEditing.RT_ON_END) return myToken.isRtOnEnd();
         if (spec == TextEditing.EAGER_COMPLETION) return true;
 
         if (myToken.noSpaceToLeft() || myToken.noSpaceToRight()) {

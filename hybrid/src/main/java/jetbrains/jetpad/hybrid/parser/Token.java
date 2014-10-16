@@ -22,7 +22,7 @@ public interface Token {
   /**
    * If returns true, then we can invoke right transform by pressing ctrl+space on the end of the token
    */
-  boolean isDotLike();
+  boolean isRtOnEnd();
 
   String text();
 }

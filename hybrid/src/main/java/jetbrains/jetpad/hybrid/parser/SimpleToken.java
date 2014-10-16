@@ -21,7 +21,7 @@ public class SimpleToken extends BaseToken {
   private String myName;
   private boolean myNoSpaceLeft;
   private boolean myNoSpaceRight;
-  private boolean myDotLike;
+  private boolean myRtOnEnd;
 
   public SimpleToken() {
     this(null);
@@ -35,11 +35,11 @@ public class SimpleToken extends BaseToken {
     this(name, false, noSpaceLeft, noSpaceRight);
   }
 
-  public SimpleToken(String name, boolean dotLike, boolean noSpaceLeft, boolean noSpaceRight) {
+  public SimpleToken(String name, boolean rtOnEnd, boolean noSpaceLeft, boolean noSpaceRight) {
     myName = name;
     myNoSpaceLeft = noSpaceLeft;
     myNoSpaceRight = noSpaceRight;
-    myDotLike = dotLike;
+    myRtOnEnd = rtOnEnd;
   }
 
   @Override
@@ -53,8 +53,8 @@ public class SimpleToken extends BaseToken {
   }
 
   @Override
-  public boolean isDotLike() {
-    return myDotLike;
+  public boolean isRtOnEnd() {
+    return myRtOnEnd;
   }
 
   public boolean isBold() {
