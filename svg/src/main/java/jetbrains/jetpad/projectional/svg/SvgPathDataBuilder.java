@@ -406,4 +406,19 @@ public class SvgPathDataBuilder {
 
     return this;
   }
+
+  public SvgPathDataBuilder interpolatePoints(Collection<DoubleVector> points, Interpolation interpolation) {
+    Collection<Double> xs = new ArrayList<>(points.size());
+    Collection<Double> ys = new ArrayList<>(points.size());
+    for (DoubleVector point : points) {
+      if (point == null) {
+        throw new IllegalArgumentException("Points list for interpolation must not contain nulls");
+      }
+
+      xs.add(point.x);
+      ys.add(point.y);
+    }
+
+    return interpolatePoints(xs, ys, interpolation);
+  }
 }
