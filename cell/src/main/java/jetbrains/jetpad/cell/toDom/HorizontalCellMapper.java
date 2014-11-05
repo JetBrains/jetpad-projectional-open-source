@@ -21,6 +21,6 @@ import jetbrains.jetpad.cell.HorizontalCell;
 class HorizontalCellMapper extends BaseCellMapper<HorizontalCell> {
   HorizontalCellMapper(HorizontalCell source, CellToDomContext ctx) {
     super(source, ctx, DOM.createDiv());
-    getTarget().addClassName(CellContainerToDomMapper.CSS.horizontal());
+    getTarget().addClassName(ctx.flexBox ? CellContainerToDomMapper.CSS.horizontalFlex() : CellContainerToDomMapper.CSS.horizontal());
   }
 }

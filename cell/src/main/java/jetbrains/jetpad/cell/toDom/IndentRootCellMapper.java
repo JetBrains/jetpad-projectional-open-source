@@ -33,6 +33,7 @@ import jetbrains.jetpad.cell.indent.updater.IndentUpdaterTarget;
 import jetbrains.jetpad.geometry.Rectangle;
 import jetbrains.jetpad.mapper.Mapper;
 import jetbrains.jetpad.mapper.MappingContext;
+import jetbrains.jetpad.mapper.gwt.DomUtil;
 import jetbrains.jetpad.model.collections.CollectionItemEvent;
 import jetbrains.jetpad.model.composite.Composites;
 import jetbrains.jetpad.model.event.EventHandler;
@@ -51,7 +52,7 @@ class IndentRootCellMapper extends BaseCellMapper<IndentCell> {
   private Timer myPositionUpdater;
   private Map<Mapper<?, ?>, Runnable> myPositionUpdaters = new HashMap<>();
 
-  IndentRootCellMapper(IndentCell source, CellToDomContext ctx) {
+  IndentRootCellMapper(IndentCell source, final CellToDomContext ctx) {
     super(source, ctx, DOM.createDiv());
     myCellMappers = createChildSet();
 
@@ -62,7 +63,7 @@ class IndentRootCellMapper extends BaseCellMapper<IndentCell> {
         @Override
         public Element newLine() {
           Element result = DOM.createDiv();
-          result.addClassName(CellContainerToDomMapper.CSS.horizontal());
+          result.addClassName(ctx.flexBox ? CellContainerToDomMapper.CSS.horizontalFlex() : CellContainerToDomMapper.CSS.horizontal());
           return result;
         }
 
@@ -103,7 +104,7 @@ class IndentRootCellMapper extends BaseCellMapper<IndentCell> {
         @Override
         public List<Node> children(Node item) {
           if (item instanceof Element) {
-            return divWrappedElementChildren((Element) item);
+            return getContext().flexBox ? DomUtil.elementChildren((Element) item) : divWrappedElementChildren((Element) item);
           } else {
             throw new IllegalStateException();
           }

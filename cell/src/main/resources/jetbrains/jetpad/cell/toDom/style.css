@@ -39,6 +39,25 @@
   font-size: 0px;
 }
 
+.horizontalFlex {
+  display: flex;
+  display: -webkit-flex;
+
+  flex-direction: row;
+  align-items: baseline;
+
+  white-space: nowrap;
+}
+
+.verticalFlex {
+  display: flex;
+  display: -webkit-flex;
+  flex-direction: column;
+
+  font-size: 0px;
+}
+
+
 
 .domCell {
   font-size: 12px;

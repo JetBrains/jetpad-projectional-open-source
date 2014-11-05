@@ -25,6 +25,7 @@ import jetbrains.jetpad.cell.Cell;
 import jetbrains.jetpad.geometry.Rectangle;
 import jetbrains.jetpad.mapper.Mapper;
 import jetbrains.jetpad.mapper.MappingContext;
+import jetbrains.jetpad.mapper.gwt.DomUtil;
 import jetbrains.jetpad.model.collections.CollectionItemEvent;
 import jetbrains.jetpad.model.collections.set.ObservableSet;
 import jetbrains.jetpad.model.composite.Composites;
@@ -67,7 +68,7 @@ abstract class BaseCellMapper<SourceT extends Cell> extends Mapper<SourceT, Elem
   protected void registerSynchronizers(SynchronizersConfiguration conf) {
     super.registerSynchronizers(conf);
 
-    myTarget = divWrappedElementChildren(getTarget());
+    myTarget = myContext.flexBox ? DomUtil.elementChildren(getTarget()) : divWrappedElementChildren(getTarget());
 
     if (isAutoChildManagement()) {
       myChildrenMappers = createChildList();
