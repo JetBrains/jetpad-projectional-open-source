@@ -464,7 +464,7 @@ public class CellContainerToDomMapper extends Mapper<CellContainer, Element> {
       public boolean f(Event e) {
         pressed.set(false);
         pressedOutside.set(false);
-        return false;
+        return true;
       }
     }));
 
@@ -475,7 +475,7 @@ public class CellContainerToDomMapper extends Mapper<CellContainer, Element> {
         MouseEvent event = toMouseEvent(e);
         if (isDomCellEvent(event)) return true;
         getSource().mouseReleased(event);
-        return false;
+        return true;
       }
     }));
 
