@@ -147,9 +147,6 @@ public class CellContainerToDomMapper extends Mapper<CellContainer, Element> {
   @Override
   protected void onAttach(MappingContext ctx) {
     super.onAttach(ctx);
-
-    System.out.println("init for " + getSource());
-
     getSource().setCellContainerPeer(createCellContainerPeer());
 
     disablePopup(getTarget());
@@ -444,7 +441,7 @@ public class CellContainerToDomMapper extends Mapper<CellContainer, Element> {
         if (isDomCellEvent(event)) return true;
         getSource().mousePressed(event);
         $(focusTarget).focus();
-        return true;
+        return false;
       }
     }));
 
