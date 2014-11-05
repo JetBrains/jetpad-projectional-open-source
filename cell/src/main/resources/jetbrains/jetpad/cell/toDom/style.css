@@ -49,12 +49,22 @@
   white-space: nowrap;
 }
 
+
+.horizontalFlex > div {
+  flex-shrink: 0;
+}
+
+
 .verticalFlex {
   display: flex;
   display: -webkit-flex;
   flex-direction: column;
 
   font-size: 0px;
+}
+
+.verticalFlex > div {
+  flex-shrink: 0;
 }
 
 
