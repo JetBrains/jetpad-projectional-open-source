@@ -453,8 +453,9 @@ public class CellContainerToDomMapper extends Mapper<CellContainer, Element> {
         MouseEvent evt = toMouseEvent(e);
         if (!isContainerEvent(evt)) {
           pressedOutside.set(true);
+          return true;
         }
-        return true;
+        return false;
       }
     }));
 

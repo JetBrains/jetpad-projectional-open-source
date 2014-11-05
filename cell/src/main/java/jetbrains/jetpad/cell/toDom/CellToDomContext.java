@@ -27,7 +27,7 @@ class CellToDomContext {
   final Element rootElement;
   final Element focusElement;
 
-  final boolean flexBox = true;
+  final boolean flexBox = false;
 
   private final Map<Element, BaseCellMapper<?>> myMappers = new HashMap<>();
 
