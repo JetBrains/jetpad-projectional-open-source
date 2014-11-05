@@ -148,6 +148,8 @@ public class CellContainerToDomMapper extends Mapper<CellContainer, Element> {
   protected void onAttach(MappingContext ctx) {
     super.onAttach(ctx);
 
+    System.out.println("init for " + getSource());
+
     getSource().setCellContainerPeer(createCellContainerPeer());
 
     disablePopup(getTarget());
@@ -620,7 +622,7 @@ public class CellContainerToDomMapper extends Mapper<CellContainer, Element> {
 
   private Registration eventRegistration(final int event, Object o, Function f) {
     final GQuery q = $(o);
-    q.bind(event, null, f);
+    q.bind(event, f);
     return new Registration() {
       @Override
       public void remove() {
