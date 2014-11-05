@@ -455,7 +455,7 @@ public class CellContainerToDomMapper extends Mapper<CellContainer, Element> {
           pressedOutside.set(true);
           return true;
         }
-        return false;
+        return true;
       }
     }));
 
