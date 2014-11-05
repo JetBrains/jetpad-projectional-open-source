@@ -466,7 +466,7 @@ public class ViewContainerToElementMapper extends Mapper<ViewContainer, Element>
 
   private Registration eventRegistration(final int event, Object e, Function f) {
     final GQuery q = $(e);
-    q.bind(event, null, f);
+    q.bind(event, f);
     return new Registration() {
       @Override
       public void remove() {
