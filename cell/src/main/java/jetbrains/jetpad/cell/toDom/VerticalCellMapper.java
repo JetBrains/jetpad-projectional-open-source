@@ -21,7 +21,7 @@ import jetbrains.jetpad.cell.VerticalCell;
 class VerticalCellMapper extends BaseCellMapper<VerticalCell> {
   VerticalCellMapper(VerticalCell source, CellToDomContext ctx) {
     super(source, ctx, DOM.createDiv());
-    getTarget().addClassName(ctx.flexBox ? CellContainerToDomMapper.CSS.verticalFlex() : CellContainerToDomMapper.CSS.vertical());
+    getTarget().addClassName(CellContainerToDomMapper.CSS.vertical());
   }
 
   @Override

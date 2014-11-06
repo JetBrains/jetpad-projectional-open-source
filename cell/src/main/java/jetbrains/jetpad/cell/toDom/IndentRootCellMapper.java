@@ -63,7 +63,7 @@ class IndentRootCellMapper extends BaseCellMapper<IndentCell> {
         @Override
         public Element newLine() {
           Element result = DOM.createDiv();
-          result.addClassName(ctx.flexBox ? CellContainerToDomMapper.CSS.horizontalFlex() : CellContainerToDomMapper.CSS.horizontal());
+          result.addClassName(CellContainerToDomMapper.CSS.horizontal());
           return result;
         }
 
@@ -104,7 +104,7 @@ class IndentRootCellMapper extends BaseCellMapper<IndentCell> {
         @Override
         public List<Node> children(Node item) {
           if (item instanceof Element) {
-            return getContext().flexBox ? DomUtil.elementChildren((Element) item) : divWrappedElementChildren((Element) item);
+            return DomUtil.elementChildren((Element) item);
           } else {
             throw new IllegalStateException();
           }

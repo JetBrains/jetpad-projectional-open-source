@@ -18,7 +18,6 @@ package jetbrains.jetpad.cell.toDom;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Node;
 import com.google.gwt.dom.client.Style;
-import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Timer;
 import jetbrains.jetpad.base.Registration;
 import jetbrains.jetpad.cell.Cell;
@@ -32,7 +31,6 @@ import jetbrains.jetpad.model.composite.Composites;
 import jetbrains.jetpad.model.property.PropertyChangeEvent;
 import jetbrains.jetpad.values.Color;
 
-import java.util.AbstractList;
 import java.util.List;
 
 abstract class BaseCellMapper<SourceT extends Cell> extends Mapper<SourceT, Element> {
@@ -68,7 +66,7 @@ abstract class BaseCellMapper<SourceT extends Cell> extends Mapper<SourceT, Elem
   protected void registerSynchronizers(SynchronizersConfiguration conf) {
     super.registerSynchronizers(conf);
 
-    myTarget = myContext.flexBox ? DomUtil.elementChildren(getTarget()) : divWrappedElementChildren(getTarget());
+    myTarget = DomUtil.elementChildren(getTarget());
 
     if (isAutoChildManagement()) {
       myChildrenMappers = createChildList();
@@ -244,58 +242,6 @@ abstract class BaseCellMapper<SourceT extends Cell> extends Mapper<SourceT, Elem
       getTarget().getAbsoluteLeft(), getTarget().getAbsoluteTop(),
       getTarget().getClientWidth(), getTarget().getClientHeight()
     );
-  }
-
-  List<Node> divWrappedElementChildren(final Element e) {
-    return new AbstractList<Node>() {
-      @Override
-      public Node get(int index) {
-        return e.getChild(index).getFirstChild();
-      }
-
-      @Override
-      public Node set(int index, Node element) {
-        if (element.getParentElement() != null) {
-          throw new IllegalStateException();
-        }
-
-        Element wrapperDiv = DOM.createDiv();
-        wrapperDiv.appendChild(element);
-
-        Node child = e.getChild(index);
-        e.replaceChild(child, wrapperDiv);
-        return child;
-      }
-
-      @Override
-      public void add(int index, Node element) {
-        if (element.getParentElement() != null) {
-          throw new IllegalStateException();
-        }
-
-        Element wrapperDiv = DOM.createDiv();
-        wrapperDiv.appendChild(element);
-        if (index == 0) {
-          e.insertFirst(wrapperDiv);
-        } else {
-          Node prev = e.getChild(index - 1);
-          e.insertAfter(wrapperDiv, prev);
-        }
-      }
-
-      @Override
-      public Node remove(int index) {
-        Element childWrapper = (Element) e.getChild(index);
-        get(index).removeFromParent();
-        e.removeChild(childWrapper);
-        return childWrapper;
-      }
-
-      @Override
-      public int size() {
-        return e.getChildCount();
-      }
-    };
   }
 
   void childAdded(CollectionItemEvent<Cell> event) {
