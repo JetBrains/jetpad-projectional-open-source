@@ -30,7 +30,7 @@ class TextCellMapper extends BaseCellMapper<TextCell> {
 
   private DomTextEditor myTextEditor;
   private long myLastChangeTime = System.currentTimeMillis();
-  private boolean myCaretVisible;
+  private boolean myCaretVisible = true;
   private boolean myContainerFocused;
   private Registration myFocusRegistration;
 
@@ -90,6 +90,15 @@ class TextCellMapper extends BaseCellMapper<TextCell> {
             public void onEvent(PropertyChangeEvent<Boolean> event) {
               myContainerFocused = event.getNewValue();
               updateCaretVisibility();
+            }
+          }),
+          getSource().caretVisible().addHandler(new EventHandler<PropertyChangeEvent<Boolean>>() {
+            @Override
+            public void onEvent(PropertyChangeEvent<Boolean> event) {
+              if (event.getNewValue()) {
+                myLastChangeTime = System.currentTimeMillis();
+                myCaretVisible = true;
+              }
             }
           }),
           new Registration() {
