@@ -40,14 +40,14 @@ public class Completion {
     Async<List<CompletionItem>> asyncCompletion = async.get(params);
 
     final SimpleAsync<List<CompletionItem>> allItems = new SimpleAsync<>();
-    asyncCompletion.onSuccess(new Handler<List<CompletionItem>>() {
+    asyncCompletion.handle(new Handler<List<CompletionItem>>() {
       @Override
       public void handle(List<CompletionItem> items) {
         List<CompletionItem> result = new ArrayList<>(items);
         result.addAll(syncCompletion);
         allItems.success(result);
       }
-    }).onFailure(new Handler<Throwable>() {
+    }, new Handler<Throwable>() {
       @Override
       public void handle(Throwable item) {
         allItems.failure(item);
