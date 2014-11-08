@@ -62,6 +62,8 @@ public class KeyStrokeSpecs {
 
   public static final KeyStrokeSpec MATCHING_CONSTRUCTS = composite(commandOrMeta(Key.LEFT_BRACE), commandOrMeta(Key.RIGHT_BRACE));
 
+  public static final KeyStrokeSpec NAVIGATE = commandOrMeta(Key.B);
+
   public static KeyStrokeSpec commandOrMeta(Key key, ModifierKey... modifiers) {
     return composite(new KeyStroke(key, add(ModifierKey.CONTROL, modifiers)), new KeyStroke(key, add(ModifierKey.META, modifiers)));
   }
