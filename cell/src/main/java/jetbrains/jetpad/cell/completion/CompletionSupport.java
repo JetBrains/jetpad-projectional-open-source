@@ -240,14 +240,14 @@ public class CompletionSupport {
     textCell.bottomPopup().set(completionCell);
     completionCell.showSlide(150);
 
-    items.handle(new Handler<List<CompletionItem>>() {
+    items.onSuccess(new Handler<List<CompletionItem>>() {
       @Override
       public void handle(List<CompletionItem> items) {
         menuModel.loading.set(false);
         menuModel.items.addAll(items);
       }
     });
-    items.handleFailure(new Handler<Throwable>() {
+    items.onFailure(new Handler<Throwable>() {
       @Override
       public void handle(Throwable item) {
         menuModel.loading.set(true);
