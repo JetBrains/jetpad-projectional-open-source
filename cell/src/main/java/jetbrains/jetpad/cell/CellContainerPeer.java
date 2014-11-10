@@ -63,7 +63,7 @@ public interface CellContainerPeer {
 
     @Override
     public ReadableProperty<Boolean> focused() {
-      return Properties.constant(true);
+      return Properties.TRUE;
     }
 
     @Override
