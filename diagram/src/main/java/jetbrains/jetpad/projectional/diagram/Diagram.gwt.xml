@@ -6,7 +6,6 @@
 <module>
   <source path="" />
 
-  <inherits name="jetbrains.jetpad.test.Test" />
   <inherits name="jetbrains.jetpad.projectional.view.View"/>
   <inherits name="jetbrains.jetpad.cell.Cell"/>
   <inherits name="jetbrains.jetpad.projectional.Projectional"/>

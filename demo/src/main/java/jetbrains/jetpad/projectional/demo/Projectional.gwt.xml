@@ -19,7 +19,6 @@
 
   <inherits name="jetbrains.jetpad.model.Model" />
   <inherits name="jetbrains.jetpad.mapper.Mapper" />
-  <inherits name="jetbrains.jetpad.test.Test" />
   <inherits name="com.google.gwt.query.Query"/>
   <inherits name="jetbrains.jetpad.projectional.view.View" />
 
