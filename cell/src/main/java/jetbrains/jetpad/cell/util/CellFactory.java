@@ -92,6 +92,12 @@ public class CellFactory {
     return label(text, true, true);
   }
 
+  public static TextCell text(String text) {
+    TextCell result = new TextCell();
+    result.text().set(text);
+    return result;
+  }
+
   public static TextCell keyword(final String text) {
     TextCell result = new TextCell();
     result.addTrait(new DerivedCellTrait() {
