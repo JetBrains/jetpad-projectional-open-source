@@ -17,4 +17,6 @@
   <inherits name="jetbrains.jetpad.projectional.Projectional"/>
 
   <entry-point class="jetbrains.mps.diagram.dataflow.DataFlowEntryPoint" />
+
+  <add-linker name="xsiframe"/>
 </module>

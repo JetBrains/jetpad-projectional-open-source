@@ -13,4 +13,5 @@
 
   <entry-point class='jetbrains.jetpad.projectional.svgDemo.GwtDemo'/>
 
+  <add-linker name="xsiframe"/>
 </module>
