@@ -49,7 +49,6 @@ public abstract class SvgElement extends SvgNode {
     return myEventPeer.handlersSet();
   }
 
-
   public <EventT extends Event> Registration addEventHandler(SvgEventSpec spec, SvgEventHandler<EventT> handler) {
     return myEventPeer.addEventHandler(spec, handler);
   }

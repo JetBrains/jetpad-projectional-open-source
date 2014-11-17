@@ -19,6 +19,7 @@ import com.google.gwt.event.dom.client.*;
 import com.google.gwt.event.shared.HandlerRegistration;
 import jetbrains.jetpad.base.Registration;
 import jetbrains.jetpad.event.MouseEvent;
+import jetbrains.jetpad.geometry.DoubleVector;
 import jetbrains.jetpad.mapper.Synchronizer;
 import jetbrains.jetpad.mapper.SynchronizerContext;
 import jetbrains.jetpad.mapper.Synchronizers;
@@ -26,6 +27,7 @@ import jetbrains.jetpad.model.property.WritableProperty;
 import jetbrains.jetpad.projectional.svg.SvgAttributeSpec;
 import jetbrains.jetpad.projectional.svg.SvgElement;
 import jetbrains.jetpad.projectional.svg.SvgElementListener;
+import jetbrains.jetpad.projectional.svg.SvgLocatable;
 import jetbrains.jetpad.projectional.svg.event.SvgAttributeEvent;
 import jetbrains.jetpad.projectional.svg.event.SvgEventSpec;
 import org.vectomatic.dom.svg.OMSVGElement;
@@ -36,9 +38,11 @@ import java.util.Set;
 
 class SvgElementMapper<SourceT extends SvgElement, TargetT extends OMSVGElement> extends SvgNodeMapper<SourceT, TargetT> {
   private Map<SvgEventSpec, HandlerRegistration> myHandlerRegs;
+  private SvgGwtPeer myPeer;
 
   public SvgElementMapper(SourceT source, TargetT target, SvgGwtPeer peer) {
     super(source, target, peer);
+    myPeer = peer;
   }
 
   @Override
@@ -147,7 +151,14 @@ class SvgElementMapper<SourceT extends SvgElement, TargetT extends OMSVGElement>
 
   private MouseEvent createMouseEvent(com.google.gwt.event.dom.client.MouseEvent<?> evt) {
     evt.stopPropagation();
-    return new MouseEvent(evt.getRelativeX(getTarget().getOwnerSVGElement().getElement()),
-        evt.getRelativeY(getTarget().getOwnerSVGElement().getElement()));
+    DoubleVector coords;
+    if (getSource() instanceof SvgLocatable) {
+      coords = myPeer.applyTransform((SvgLocatable) getSource(), new DoubleVector(evt.getX(), evt.getY()));
+    } else {
+      // works incorrect in FireFox, if any element is (partially) outside of the root svg element
+      coords = new DoubleVector(evt.getRelativeX(getTarget().getOwnerSVGElement().getElement()),
+          evt.getRelativeY(getTarget().getOwnerSVGElement().getElement()));
+    }
+    return new MouseEvent((int) coords.x, (int) coords.y);
   }
 }
