@@ -20,9 +20,32 @@ import jetbrains.jetpad.geometry.DoubleVector;
 import jetbrains.jetpad.model.property.Property;
 
 public class SvgClipPathElement extends SvgGraphicsElement implements SvgTransformable {
+  public static enum ClipPathUnits {
+    USER_SPACE_ON_USE("userSpaceOnUse"),
+    OBJECT_BOUNDING_BOX("objectBoundingBox");
+
+    private String myAttributeString;
+
+    private ClipPathUnits(String attributeString) {
+      myAttributeString = attributeString;
+    }
+
+
+    @Override
+    public String toString() {
+      return myAttributeString;
+    }
+  }
+
+  private static final SvgAttributeSpec<ClipPathUnits> CLIP_PATH_UNITS = SvgAttributeSpec.createSpec("clipPathUnits");
+
   @Override
   public String getElementName() {
     return "clipPath";
+  }
+
+  public Property<ClipPathUnits> clipPathUnits() {
+    return getAttribute(CLIP_PATH_UNITS);
   }
 
   @Override

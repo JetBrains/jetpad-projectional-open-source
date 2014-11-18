@@ -30,15 +30,15 @@ public abstract class SvgGraphicsElement extends SvgStylableElement {
     NONE("none"),
     INHERIT("inherit");
 
-    private String myAttrString;
+    private String myAttributeString;
 
-    private PointerEvents(String attrString) {
-      myAttrString = attrString;
+    private PointerEvents(String attributeString) {
+      myAttributeString = attributeString;
     }
 
     @Override
     public String toString() {
-      return myAttrString;
+      return myAttributeString;
     }
   }
 
