@@ -63,6 +63,7 @@ public abstract class SvgGraphicsElement extends SvgStylableElement {
   private static final SvgAttributeSpec<PointerEvents> POINTER_EVENTS = SvgAttributeSpec.createSpec("pointer-events");
   private static final SvgAttributeSpec<Double> OPACITY = SvgAttributeSpec.createSpec("opacity");
   private static final SvgAttributeSpec<Visibility> VISIBILITY = SvgAttributeSpec.createSpec("visibility");
+  private static final SvgAttributeSpec<SvgIRI> CLIP_PATH = SvgAttributeSpec.createSpec("clip-path");
 
   public Property<PointerEvents> pointerEvents() {
     return getAttribute(POINTER_EVENTS);
@@ -74,5 +75,9 @@ public abstract class SvgGraphicsElement extends SvgStylableElement {
 
   public Property<Visibility> visibility() {
     return getAttribute(VISIBILITY);
+  }
+
+  public Property<SvgIRI> clipPath() {
+    return getAttribute(CLIP_PATH);
   }
 }

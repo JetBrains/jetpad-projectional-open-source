@@ -87,6 +87,11 @@ public class SvgSvgElement extends SvgStylableElement implements SvgContainer, S
   }
 
   @Override
+  public Property<SvgIRI> clipPath() {
+    return getAttribute(CLIP_PATH);
+  }
+
+  @Override
   public <EventT extends Event> Registration addEventHandler(SvgEventSpec spec, SvgEventHandler<EventT> handler) {
     // due to bug in lib-gwt-svg, getOwnerSvgElement throws exception on root svg element
     throw new IllegalStateException("Can't add handlers to <svg> element");

@@ -15,12 +15,15 @@
  */
 package jetbrains.jetpad.projectional.svg;
 
-import jetbrains.jetpad.model.property.Property;
+public class SvgIRI {
+  private String myElementId;
 
-public interface SvgContainer {
-  static final SvgAttributeSpec<Double> OPACITY = SvgAttributeSpec.createSpec("opacity");
-  static final SvgAttributeSpec<SvgIRI> CLIP_PATH = SvgAttributeSpec.createSpec("clip-path");
+  public SvgIRI(String elementId) {
+    myElementId = elementId;
+  }
 
-  public Property<Double> opacity();
-  public Property<SvgIRI> clipPath();
+  @Override
+  public String toString() {
+    return "url(#" + myElementId + ")";
+  }
 }
