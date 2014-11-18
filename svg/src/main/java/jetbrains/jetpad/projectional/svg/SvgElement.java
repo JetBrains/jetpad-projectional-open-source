@@ -45,6 +45,17 @@ public abstract class SvgElement extends SvgNode {
     return getAttribute(ID);
   }
 
+  public SvgSvgElement getOwnerSvgElement() {
+    SvgNode cur = this;
+    while (cur != null && !(cur instanceof SvgSvgElement)) {
+      cur = cur.parent().get();
+    }
+    if (cur != null) {
+      return (SvgSvgElement) cur;
+    }
+    return null;
+  }
+
   public ReadableProperty<Set<SvgEventSpec>> handlersSet() {
     return myEventPeer.handlersSet();
   }

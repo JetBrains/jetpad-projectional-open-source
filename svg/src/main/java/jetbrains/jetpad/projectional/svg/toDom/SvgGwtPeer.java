@@ -107,6 +107,20 @@ class SvgGwtPeer implements SvgPlatformPeer{
     return transformCoordinates(relative, point, false);
   }
 
+  public DoubleVector inverseScreenTransform(SvgElement relative, DoubleVector point) {
+    ensureSourceRegistered(relative);
+
+    SvgSvgElement owner = relative.getOwnerSvgElement();
+    ensureSourceRegistered(owner);
+
+    OMNode ownerTarget = myMappingMap.get(owner).getTarget();
+    OMSVGMatrix matrix = ((ISVGLocatable) ownerTarget).getScreenCTM().inverse();
+    OMSVGPoint pt = ((OMSVGSVGElement) ownerTarget).createSVGPoint((float) point.x, (float) point.y);
+    pt = pt.matrixTransform(matrix);
+
+    return new DoubleVector(pt.getX(), pt.getY());
+  }
+
   @Override
   public DoubleRectangle getBBox(SvgLocatable element) {
     ensureSourceRegistered((SvgNode) element);
