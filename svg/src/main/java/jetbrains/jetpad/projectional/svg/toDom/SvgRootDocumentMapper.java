@@ -17,32 +17,15 @@ package jetbrains.jetpad.projectional.svg.toDom;
 
 import jetbrains.jetpad.mapper.Mapper;
 import jetbrains.jetpad.mapper.MappingContext;
-import jetbrains.jetpad.mapper.Synchronizers;
-import jetbrains.jetpad.projectional.svg.SvgGraphicsElement;
-import jetbrains.jetpad.projectional.svg.SvgRectElement;
 import jetbrains.jetpad.projectional.svg.SvgSvgElement;
 import org.vectomatic.dom.svg.OMSVGSVGElement;
 
 public class SvgRootDocumentMapper extends Mapper<SvgSvgElement, OMSVGSVGElement> {
   private SvgElementMapper<SvgSvgElement, OMSVGSVGElement> myRootMapper;
   private SvgGwtPeer myPeer;
-  private SvgRectElement myFirefoxHackRect;
 
   public SvgRootDocumentMapper(SvgSvgElement source, OMSVGSVGElement target) {
     super(source, target);
-
-    // hack for Firefox: prevent root svg element from shrinking
-    myFirefoxHackRect = new SvgRectElement(0, 0, getSource().width().get(), getSource().height().get());
-    myFirefoxHackRect.visibility().set(SvgGraphicsElement.Visibility.HIDDEN);
-    getSource().children().add(myFirefoxHackRect);
-  }
-
-  @Override
-  protected void registerSynchronizers(SynchronizersConfiguration conf) {
-    super.registerSynchronizers(conf);
-
-    conf.add(Synchronizers.forPropsOneWay(getSource().width(), myFirefoxHackRect.width()));
-    conf.add(Synchronizers.forPropsOneWay(getSource().height(), myFirefoxHackRect.height()));
   }
 
   @Override
