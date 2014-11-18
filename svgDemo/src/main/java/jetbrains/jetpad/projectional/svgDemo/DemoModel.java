@@ -75,11 +75,19 @@ public class DemoModel {
     svgRoot.height().set(400.);
     svgRoot.width().set(200.);
 
+    SvgDefsElement defs = new SvgDefsElement();
+    SvgClipPathElement clip = new SvgClipPathElement();
+    clip.id().set("myClip");
+    defs.children().add(clip);
+    SvgCircleElement clipCircle = new SvgCircleElement(100, 190, 100);
+    clip.children().add(clipCircle);
+
     SvgRectElement rect = new SvgRectElement();
     rect.x().set(10.);
     rect.y().set(100.);
     rect.height().set(180.);
     rect.width().set(180.);
+    rect.clipPath().set(new SvgIRI("myClip"));
 
     SvgEllipseElement ellipse = new SvgEllipseElement();
     ellipse.cx().set(100.);
@@ -88,6 +96,7 @@ public class DemoModel {
     ellipse.ry().set(50.);
     ellipse.fill().set(SvgColor.RED);
 
+    svgRoot.children().add(defs);
     svgRoot.children().add(rect);
     svgRoot.children().add(ellipse);
 
