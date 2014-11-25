@@ -135,6 +135,7 @@ public class CellFactory {
 
       @Override
       public void onMousePressed(Cell cell, MouseEvent event) {
+        if (!textCell.focusable().get()) return;
         textCell.focus();
         event.consume();
       }
