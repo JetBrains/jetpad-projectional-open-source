@@ -32,6 +32,7 @@ import jetbrains.jetpad.cell.trait.CellTraitPropertySpec;
 import java.util.List;
 
 public class SelectionSupport<ItemT> {
+  public static final CellTraitPropertySpec<Cell> EXPANDS_TO = new CellTraitPropertySpec<>("expandsTo", (Cell) null);
   private static final CellTraitPropertySpec<SelectionSupport<?>> SELECTION_SUPPORT = new CellTraitPropertySpec<>("selectionSupport");
 
   private ObservableList<ItemT> mySelectedItems = new ObservableArrayList<>();
@@ -148,13 +149,13 @@ public class SelectionSupport<ItemT> {
 
   private void handleFocusGain(FocusEvent event) {
     Cell newValue = event.getNewValue();
-    Cell normalizedNewValue = newValue != null ? normalizeFocus(newValue) : null;
-    if (normalizedNewValue == null || !myTargetList.contains(normalizedNewValue)) return;
+    Cell expandedNewValue = newValue != null ? expand(newValue) : null;
+    if (expandedNewValue == null || !myTargetList.contains(expandedNewValue)) return;
 
     if (myChangingSelection) return;
 
     if (!Cells.isLeaf(newValue)) {
-      int index = myTargetList.indexOf(normalizedNewValue);
+      int index = myTargetList.indexOf(expandedNewValue);
       select(mySource.get(index), mySource.get(index));
     } else {
       mySelectedItems.clear();
@@ -273,12 +274,12 @@ public class SelectionSupport<ItemT> {
     }
   }
 
-  private Cell normalizeFocus(Cell cell) {
+  private Cell expand(Cell cell) {
     Cell current = cell;
     while (true) {
+      Cell parent = current.parent().get();
       if (isSingleChild(current)) {
-        Cell parent = current.parent().get();
-        if (parent == null || parent == myTarget) return current;
+        if (parent == myTarget) return current;
         current = parent;
       } else {
         return current;
