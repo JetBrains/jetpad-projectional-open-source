@@ -250,7 +250,7 @@ public class ViewContainerComponent extends JComponent implements Scrollable {
               if (e.is(KeyStrokeSpecs.CUT)) {
                 myContainer.cut(event = new CopyCutEvent(true));
               } else {
-                myContainer.copy(event = new CopyCutEvent(true));
+                myContainer.copy(event = new CopyCutEvent(false));
               }
               ClipboardContent content = event.getResult();
               if (content != null) {

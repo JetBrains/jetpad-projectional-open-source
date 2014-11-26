@@ -85,7 +85,6 @@ public class CellLists {
   }
 
   public static List<Cell> animated(List<Cell> baseList) {
-
     return animated(baseList, new Function<Cell, Animation>() {
       @Override
       public Animation apply(Cell input) {
