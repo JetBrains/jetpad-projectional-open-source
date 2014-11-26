@@ -18,6 +18,7 @@ package jetbrains.jetpad.cell;
 import jetbrains.jetpad.base.Value;
 import jetbrains.jetpad.cell.event.FocusEvent;
 import jetbrains.jetpad.cell.trait.CellTrait;
+import jetbrains.jetpad.cell.trait.CellTraitPropertySpec;
 import jetbrains.jetpad.model.event.EventHandler;
 import jetbrains.jetpad.base.Registration;
 import jetbrains.jetpad.model.property.Property;
@@ -248,6 +249,16 @@ public class CellTest {
     reg.remove();
 
     verify(listener).onEvent(new PropertyChangeEvent<>("xxx", null));
+  }
+
+  @Test
+  public void cellTraitPropSet() {
+    CellTraitPropertySpec<String> testProp = new CellTraitPropertySpec<String>("testProp");
+    TextCell cell = new TextCell();
+
+    cell.set(testProp, "abc");
+
+    assertEquals("abc", cell.get(testProp));
   }
 
   static class TestTrait extends CellTrait {

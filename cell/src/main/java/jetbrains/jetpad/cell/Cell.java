@@ -690,6 +690,18 @@ public abstract class Cell implements NavComposite<Cell>, HasVisibility, HasFocu
   protected void onChildRemoved(CollectionItemEvent<Cell> event) {
   }
 
+  public <ValueT> Registration set(final CellTraitPropertySpec<ValueT> spec, final ValueT value) {
+    return addTrait(new CellTrait() {
+      @Override
+      public Object get(Cell cell, CellTraitPropertySpec<?> propSpec) {
+        if (spec == propSpec) {
+          return value;
+        }
+        return super.get(cell, spec);
+      }
+    });
+  }
+
   @Override
   public String toString() {
     String name = getClass().getName();
