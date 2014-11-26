@@ -156,7 +156,6 @@ public class SelectionSupport<ItemT> {
     if (myTargetList.contains(newValue) && !Cells.isLeaf(newValue)) {
       int index = myTargetList.indexOf(newValue);
       select(mySource.get(index), mySource.get(index));
-      return;
     } else {
       mySelectedItems.clear();
     }
