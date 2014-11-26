@@ -153,8 +153,8 @@ public class SelectionSupport<ItemT> {
 
     if (myChangingSelection) return;
 
-    if (myTargetList.contains(newValue) && !Cells.isLeaf(newValue)) {
-      int index = myTargetList.indexOf(newValue);
+    if (!Cells.isLeaf(newValue)) {
+      int index = myTargetList.indexOf(normalizedNewValue);
       select(mySource.get(index), mySource.get(index));
     } else {
       mySelectedItems.clear();
