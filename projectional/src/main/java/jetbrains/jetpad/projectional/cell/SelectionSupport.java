@@ -275,13 +275,16 @@ public class SelectionSupport<ItemT> {
   }
 
   private Cell normalizeFocus(Cell cell) {
-    if (isSingleChild(cell)) {
-      Cell parent = cell.parent().get();
-      if (parent == null || parent == myTarget) return cell;
-      Cell parentParent = parent.parent().get();
-      if (parentParent == myTarget) return parent;
+    Cell current = cell;
+    while (true) {
+      if (isSingleChild(current)) {
+        Cell parent = current.parent().get();
+        if (parent == null || parent == myTarget) return current;
+        current = parent;
+      } else {
+        return current;
+      }
     }
-    return cell;
   }
 
   private boolean isSingleChild(Cell cell) {
