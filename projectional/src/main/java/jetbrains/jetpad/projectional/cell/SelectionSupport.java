@@ -32,7 +32,7 @@ import jetbrains.jetpad.cell.trait.CellTraitPropertySpec;
 import java.util.List;
 
 public class SelectionSupport<ItemT> {
-  public static final CellTraitPropertySpec<Cell> EXPANDS_TO = new CellTraitPropertySpec<>("expandsTo", (Cell) null);
+  public static final CellTraitPropertySpec<Boolean> LOGICAL_SINGLE_CELL_CONTAINER = new CellTraitPropertySpec<>("logicalSingleCellContainer", false);
   private static final CellTraitPropertySpec<SelectionSupport<?>> SELECTION_SUPPORT = new CellTraitPropertySpec<>("selectionSupport");
 
   private ObservableList<ItemT> mySelectedItems = new ObservableArrayList<>();
@@ -149,13 +149,16 @@ public class SelectionSupport<ItemT> {
 
   private void handleFocusGain(FocusEvent event) {
     Cell newValue = event.getNewValue();
-    Cell expandedNewValue = newValue != null ? expand(newValue) : null;
-    if (expandedNewValue == null || !myTargetList.contains(expandedNewValue)) return;
+    Cell expanded = newValue != null ? expand(newValue) : null;
+    if (expanded == null || !myTargetList.contains(expanded)) {
+      expand(newValue);
+      return;
+    }
 
     if (myChangingSelection) return;
 
     if (!Cells.isLeaf(newValue)) {
-      int index = myTargetList.indexOf(expandedNewValue);
+      int index = myTargetList.indexOf(expanded);
       select(mySource.get(index), mySource.get(index));
     } else {
       mySelectedItems.clear();
@@ -278,6 +281,7 @@ public class SelectionSupport<ItemT> {
     Cell current = cell;
     while (true) {
       Cell parent = current.parent().get();
+      if (parent == null) return current;
       if (isSingleChild(current)) {
         if (parent == myTarget) return current;
         current = parent;
@@ -290,6 +294,7 @@ public class SelectionSupport<ItemT> {
   private boolean isSingleChild(Cell cell) {
     if (cell.parent().get() == null) return false;
     Cell parent = cell.parent().get();
+    if (parent.get(LOGICAL_SINGLE_CELL_CONTAINER)) return true;
     List<Cell> siblings = parent.children();
     return siblings.contains(cell) && siblings.size() == 1;
   }
