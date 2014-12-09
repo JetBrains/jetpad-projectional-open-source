@@ -17,6 +17,8 @@
 
   -webkit-touch-callout: none;
   -webkit-user-select: none;
+
+  width: fit-content;
 }
 
 .horizontal {
@@ -32,6 +34,10 @@
   -ms-align-items: baseline;
 
   white-space: nowrap;
+
+  width: fit-content;
+  width: -webkit-fit-content;
+  width: -moz-fit-content;
 }
 
 
@@ -51,22 +57,28 @@
   -ms-flex-direction: column;
 
   font-size: 0px;
+
+
+  width: fit-content;
+  width: -webkit-fit-content;
+  width: -moz-fit-content;
 }
 
 .vertical > div {
   flex-shrink: 0;
 }
 
-
-
 .domCell {
   font-size: 12px;
-
   user-select: text;
   -moz-user-select: text;
   -webkit-user-select: text;
   -ms-user-select: text;
   -webkit-user-select: text;
+
+  width: fit-content;
+  width: -webkit-fit-content;
+  width: -moz-fit-content;
 }
 
 .indented {
