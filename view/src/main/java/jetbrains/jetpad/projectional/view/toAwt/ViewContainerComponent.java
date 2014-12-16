@@ -15,6 +15,7 @@
  */
 package jetbrains.jetpad.projectional.view.toAwt;
 
+import jetbrains.jetpad.base.Disposable;
 import jetbrains.jetpad.base.Handler;
 import jetbrains.jetpad.base.Registration;
 import jetbrains.jetpad.base.animation.Animation;
@@ -877,10 +878,9 @@ public class ViewContainerComponent extends JComponent implements Scrollable {
     }
   }
 
-  private static interface PaintHelper<ViewT extends View> {
+  private static interface PaintHelper<ViewT extends View> extends Disposable {
     void paint(ViewT view, Graphics2D g);
     void update(ViewT view);
-    void dispose();
     void handleMouseEvent(MouseEvent e);
   }
 
