@@ -201,7 +201,7 @@ public class ViewContainerComponent extends JComponent implements Scrollable {
               return;
             }
           }
-          current = current.parent().get();
+          current = current.getParent();
         }
 
         // hack: since java 1.7 mousewheel events aren't bubbling so we have to use this to fix that

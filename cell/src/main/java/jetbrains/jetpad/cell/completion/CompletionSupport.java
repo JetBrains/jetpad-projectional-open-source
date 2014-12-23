@@ -116,7 +116,7 @@ public class CompletionSupport {
       private boolean canComplete(Cell cell) {
         Cell current = cell.cellContainer().get().focusedCell.get();
         while (current != cell) {
-          Cell parent = current.parent().get();
+          Cell parent = current.getParent();
           if (parent == null) {
             throw new IllegalStateException();
           }

@@ -42,7 +42,7 @@ public class RootTrait {
           MoveHandler mh = current.getProp(MOVE_HANDLER).get();
           view.getProp(moveHandler).set(mh);
           if (mh != null) break;
-          current = current.parent().get();
+          current = current.getParent();
         }
 
         ViewContainer container = view.container();
@@ -53,7 +53,7 @@ public class RootTrait {
             e.consume();
             return;
           }
-          target = target.parent().get();
+          target = target.getParent();
         }
 
         container.focusedView().set(null);
@@ -94,8 +94,7 @@ public class RootTrait {
               e.consume();
               return;
             }
-
-            current = current.parent().get();
+            current = current.getParent();
           }
         }
       }

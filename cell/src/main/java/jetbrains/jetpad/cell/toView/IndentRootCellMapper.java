@@ -86,7 +86,7 @@ class IndentRootCellMapper extends BaseCellMapper<IndentCell, VerticalView> {
 
         @Override
         public View parent(View item) {
-          return item.parent().get();
+          return item.getParent();
         }
       }
     ) {

@@ -36,14 +36,14 @@ public class Cells {
     while (true) {
       Cell next = getContainingPopup(current);
       if (next == null) return current;
-      current = next.parent().get();
+      current = next.getParent();
     }
   }
 
   private static Cell getContainingPopup(Cell c) {
     Cell current = c;
     while (true) {
-      Cell parent = current.parent().get();
+      Cell parent = current.getParent();
       if (parent == null) return null;
       List<Cell> siblings = parent.children();
       if (siblings.indexOf(current) == -1) return current;

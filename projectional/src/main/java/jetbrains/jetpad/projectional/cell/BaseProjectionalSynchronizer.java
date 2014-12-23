@@ -221,7 +221,7 @@ abstract class BaseProjectionalSynchronizer<SourceT, ContextT, SourceItemT> impl
   private SourceItemT currentItem() {
     Cell focused = myTarget.cellContainer().get().focusedCell.get();
     if (focused == null) return null;
-    if (focused.parent().get() == myTarget && !myTargetCellList.myHasPlaceholder) {
+    if (focused.getParent() == myTarget && !myTargetCellList.myHasPlaceholder) {
       int index = myTargetList.indexOf(focused);
       return myRoleSynchronizer.getMappers().get(index).getSource();
     } else {

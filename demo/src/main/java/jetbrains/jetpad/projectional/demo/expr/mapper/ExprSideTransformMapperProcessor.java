@@ -166,7 +166,7 @@ class ExprSideTransformMapperProcessor implements MapperProcessor<Expression, Ce
     new ExprBinOpTransformer().balanceUp(newExpr);
 
     Mapper<?, ? extends Cell> placeholderMapper = (Mapper<?, ? extends Cell>) root.getDescendantMapper(placeholder);
-    final Cell targetCell = placeholderMapper.getTarget().parent().get();
+    final Cell targetCell = placeholderMapper.getTarget().getParent();
 
     placeholder.removeFromParent();
 

@@ -44,13 +44,13 @@ class TokenCellTraits {
     protected HybridSynchronizer<?> hybridSync(Cell cell) {
       HybridSynchronizer<?> sync = cell.get(HybridSynchronizer.HYBRID_SYNCHRONIZER);
       if (sync != null) return sync;
-      Cell parent = cell.parent().get();
+      Cell parent = cell.getParent();
       if (parent == null) return null;
       return hybridSync(parent);
     }
 
     protected Cell tokenView(Cell context) {
-      Cell parent = context.parent().get();
+      Cell parent = context.getParent();
       if (parent == null) return null;
       if (parent.get(HybridSynchronizer.HYBRID_SYNCHRONIZER) != null) return context;
       return tokenView(parent);

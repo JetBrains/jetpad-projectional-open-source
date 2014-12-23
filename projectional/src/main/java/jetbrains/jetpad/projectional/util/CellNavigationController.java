@@ -130,8 +130,8 @@ public class CellNavigationController {
   }
 
   private void scrollTo(Cell cell) {
-    if (cell.parent().get() != null) {
-      Cell parent = cell.parent().get();
+    if (cell.getParent() != null) {
+      Cell parent = cell.getParent();
 
       Rectangle parentBounds = parent.getBounds();
       Rectangle cellBounds = cell.getBounds();

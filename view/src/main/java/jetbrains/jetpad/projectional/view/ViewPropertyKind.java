@@ -48,8 +48,8 @@ public enum ViewPropertyKind {
   RELAYOUT_PARENT() {
     @Override
     void invalidate(View view) {
-      if (view.parent().get() == null) return;
-      view.parent().get().invalidate();
+      if (view.getParent() == null) return;
+      view.getParent().invalidate();
     }
   };
 

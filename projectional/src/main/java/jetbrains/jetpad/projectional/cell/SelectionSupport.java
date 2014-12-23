@@ -87,7 +87,7 @@ public class SelectionSupport<ItemT> {
 
     Cell current = myTarget.cellContainer().get().focusedCell.get();
     while (current != null) {
-      Cell parent = current.parent().get();
+      Cell parent = current.getParent();
       if (parent == myTarget) {
         return current;
       }
@@ -266,7 +266,7 @@ public class SelectionSupport<ItemT> {
   private boolean isLowerPrioritySelection() {
     Cell current = myTarget;
     while (true) {
-      Cell parent = current.parent().get();
+      Cell parent = current.getParent();
       if (parent == null) return false;
       SelectionSupport<?> selection = parent.get(SELECTION_SUPPORT);
       if (selection != null) {
@@ -280,7 +280,7 @@ public class SelectionSupport<ItemT> {
   private Cell expand(Cell cell) {
     Cell current = cell;
     while (true) {
-      Cell parent = current.parent().get();
+      Cell parent = current.getParent();
       if (parent == null) return current;
       if (isSingleChild(current)) {
         if (parent == myTarget) return current;
@@ -292,8 +292,8 @@ public class SelectionSupport<ItemT> {
   }
 
   private boolean isSingleChild(Cell cell) {
-    if (cell.parent().get() == null) return false;
-    Cell parent = cell.parent().get();
+    if (cell.getParent() == null) return false;
+    Cell parent = cell.getParent();
     if (parent.get(LOGICAL_SINGLE_CELL_CONTAINER)) return true;
     List<Cell> siblings = parent.children();
     return siblings.contains(cell) && siblings.size() == 1;

@@ -42,7 +42,7 @@ public class IndentCell extends Cell {
 
   public boolean isRootIndent() {
     if (cellContainer() == null) return false;
-    Cell parent = parent().get();
+    Cell parent = getParent();
     if (parent instanceof IndentCell) return false;
     return true;
   }
@@ -60,7 +60,7 @@ public class IndentCell extends Cell {
     if (isRootIndent()) {
       return this;
     }
-    Cell parent = parent().get();
+    Cell parent = getParent();
     if (parent instanceof IndentCell) {
       return ((IndentCell) parent).indentContainer();
     }

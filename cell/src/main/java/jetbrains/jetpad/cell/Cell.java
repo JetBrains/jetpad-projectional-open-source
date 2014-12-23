@@ -212,8 +212,8 @@ public abstract class Cell implements NavComposite<Cell>, HasVisibility, HasFocu
     dispatchStep(e, spec);
     if (e.isConsumed()) return;
 
-    if (parent().get() != null) {
-      parent().get().dispatch(e, spec);
+    if (getParent() != null) {
+      getParent().dispatch(e, spec);
     }
   }
 
@@ -255,8 +255,8 @@ public abstract class Cell implements NavComposite<Cell>, HasVisibility, HasFocu
       if (e.isConsumed()) return;
     }
 
-    if (parent().get() != null && spec.isBubbling()) {
-      parent().get().dispatch(e, spec);
+    if (getParent() != null && spec.isBubbling()) {
+      getParent().dispatch(e, spec);
     }
   }
 
@@ -307,11 +307,11 @@ public abstract class Cell implements NavComposite<Cell>, HasVisibility, HasFocu
   }
 
   @Override
-  public Cell getParent() {
+  public final Cell getParent() {
     return myParent;
   }
 
-  public ReadableProperty<Cell> parent() {
+  public final ReadableProperty<Cell> parent() {
     return new BaseReadableProperty<Cell>() {
       @Override
       public Cell get() {
@@ -713,7 +713,7 @@ public abstract class Cell implements NavComposite<Cell>, HasVisibility, HasFocu
   private class ChildList extends ObservableArrayList<Cell> {
     @Override
     public void add(final int index, final Cell item) {
-      if (item.parent().get() != null) {
+      if (item.getParent() != null) {
         throw new IllegalStateException();
       }
 

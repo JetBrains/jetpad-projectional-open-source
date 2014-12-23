@@ -56,10 +56,12 @@ public class ViewTest {
     View v2 = newView();
 
     assertNull(v1.parent().get());
+    assertNull(v1.getParent());
 
     v2.children().add(v1);
 
     assertSame(v2, v1.parent().get());
+    assertSame(v2, v1.getParent());
   }
 
   @Test
@@ -70,6 +72,7 @@ public class ViewTest {
     v1.children().remove(v2);
 
     assertNull(v2.parent().get());
+    assertNull(v2.getParent());
   }
 
   @Test

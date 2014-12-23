@@ -99,11 +99,11 @@ public abstract class View implements NavComposite<View>, HasFocusability, HasVi
   }
 
   @Override
-  public View getParent() {
+  public final View getParent() {
     return myParent;
   }
 
-  public ReadableProperty<View> parent() {
+  public final ReadableProperty<View> parent() {
     return new BaseReadableProperty<View>() {
       @Override
       public View get() {
@@ -419,8 +419,8 @@ public abstract class View implements NavComposite<View>, HasFocusability, HasVi
       }
     });
 
-    if (parent().get() != null) {
-      parent().get().invalidate();
+    if (getParent() != null) {
+      getParent().invalidate();
     }
   }
 
@@ -645,8 +645,8 @@ public abstract class View implements NavComposite<View>, HasFocusability, HasVi
     myDeltaX += delta.x;
     myDeltaY += delta.y;
 
-    if (parent().get() != null) {
-      parent().get().invalidate();
+    if (getParent() != null) {
+      getParent().invalidate();
     }
 
     if (container() != null) {
@@ -687,22 +687,19 @@ public abstract class View implements NavComposite<View>, HasFocusability, HasVi
         }
       }
     }
-
-    if (parent().get() != null) {
-      parent().get().dispatch(spec, event);
+    if (getParent() != null) {
+      getParent().dispatch(spec, event);
     }
   }
 
   private void scrollInScrollViews() {
-    View current = parent().get();
-
+    View current = getParent();
     while (current != null) {
       if (current instanceof ScrollView) {
         ScrollView scrolView = (ScrollView) current;
         scrolView.scrollTo(this);
       }
-
-      current = current.parent().get();
+      current = current.getParent();
     }
   }
 
