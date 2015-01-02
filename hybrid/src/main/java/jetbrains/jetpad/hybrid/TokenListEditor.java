@@ -52,9 +52,9 @@ class TokenListEditor<SourceT> {
   TokenListEditor(HybridPositionSpec<SourceT> spec) {
     mySpec = spec;
 
-    tokens.addHandler(new EventHandler<CollectionItemEvent<Token>>() {
+    tokens.addHandler(new EventHandler<CollectionItemEvent<? extends Token>>() {
       @Override
-      public void onEvent(CollectionItemEvent<Token> event) {
+      public void onEvent(CollectionItemEvent<? extends Token> event) {
         sync(new Runnable() {
           @Override
           public void run() {

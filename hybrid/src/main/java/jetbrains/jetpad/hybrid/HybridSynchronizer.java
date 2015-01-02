@@ -108,9 +108,9 @@ public class HybridSynchronizer<SourceT> implements Synchronizer {
 
     addPlaceholder();
 
-    myTokenListEditor.tokens.addHandler(new EventHandler<CollectionItemEvent<Token>>() {
+    myTokenListEditor.tokens.addHandler(new EventHandler<CollectionItemEvent<? extends Token>>() {
       @Override
-      public void onEvent(CollectionItemEvent<Token> event) {
+      public void onEvent(CollectionItemEvent<? extends Token> event) {
         mySelectionSupport.clearSelection();
       }
     });
@@ -138,7 +138,7 @@ public class HybridSynchronizer<SourceT> implements Synchronizer {
     final ObservableList<Cell> selection = mySelectionSupport.selection();
     selection.addListener(new CollectionAdapter<Cell>() {
       @Override
-      public void onItemAdded(CollectionItemEvent<Cell> event) {
+      public void onItemAdded(CollectionItemEvent<? extends Cell> event) {
         event.getItem().selected().set(true);
 
         int index = myTargetList.indexOf(event.getItem());
@@ -152,7 +152,7 @@ public class HybridSynchronizer<SourceT> implements Synchronizer {
       }
 
       @Override
-      public void onItemRemoved(CollectionItemEvent<Cell> event) {
+      public void onItemRemoved(CollectionItemEvent<? extends Cell> event) {
         event.getItem().selected().set(false);
 
         int index = myTargetList.indexOf(event.getItem());
@@ -354,7 +354,7 @@ public class HybridSynchronizer<SourceT> implements Synchronizer {
   private CollectionListener<Token> createTokensListener() {
     return new CollectionListener<Token>() {
       @Override
-      public void onItemAdded(CollectionItemEvent<Token> event) {
+      public void onItemAdded(CollectionItemEvent<? extends Token> event) {
         if (myPlaceholder != null) {
           removePlaceholder();
         }
@@ -393,7 +393,7 @@ public class HybridSynchronizer<SourceT> implements Synchronizer {
       }
 
       @Override
-      public void onItemRemoved(CollectionItemEvent<Token> event) {
+      public void onItemRemoved(CollectionItemEvent<? extends Token> event) {
         final int index = event.getIndex();
         Cell removedCell = myTargetList.remove(index);
 

@@ -924,15 +924,15 @@ public abstract class View implements NavComposite<View>, HasFocusability, HasVi
     }
 
     @Override
-    public Registration addHandler(final EventHandler<? super CollectionItemEvent<View>> handler) {
+    public Registration addHandler(final EventHandler<? super CollectionItemEvent<? extends View>> handler) {
       return addListener(new CollectionListener<View>() {
         @Override
-        public void onItemAdded(CollectionItemEvent<View> event) {
+        public void onItemAdded(CollectionItemEvent<? extends View> event) {
           handler.onEvent(event);
         }
 
         @Override
-        public void onItemRemoved(CollectionItemEvent<View> event) {
+        public void onItemRemoved(CollectionItemEvent<? extends View> event) {
           handler.onEvent(event);
         }
       });

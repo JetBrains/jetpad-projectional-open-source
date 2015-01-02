@@ -868,15 +868,15 @@ public abstract class Cell implements NavComposite<Cell>, HasVisibility, HasFocu
     }
 
     @Override
-    public Registration addHandler(final EventHandler<? super CollectionItemEvent<Cell>> handler) {
+    public Registration addHandler(final EventHandler<? super CollectionItemEvent<? extends Cell>> handler) {
       return addListener(new CollectionListener<Cell>() {
         @Override
-        public void onItemAdded(CollectionItemEvent<Cell> event) {
+        public void onItemAdded(CollectionItemEvent<? extends Cell> event) {
           handler.onEvent(event);
         }
 
         @Override
-        public void onItemRemoved(CollectionItemEvent<Cell> event) {
+        public void onItemRemoved(CollectionItemEvent<? extends Cell> event) {
           handler.onEvent(event);
         }
       });

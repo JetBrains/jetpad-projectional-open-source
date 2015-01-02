@@ -78,12 +78,12 @@ abstract class BaseProjectionalSynchronizer<SourceT, ContextT, SourceItemT> impl
 
     mySelectedItems.addListener(new CollectionAdapter<SourceItemT>() {
       @Override
-      public void onItemAdded(CollectionItemEvent<SourceItemT> event) {
+      public void onItemAdded(CollectionItemEvent<? extends SourceItemT> event) {
         childCells().get(BaseProjectionalSynchronizer.this.indexOf(event.getItem())).selected().set(true);
       }
 
       @Override
-      public void onItemRemoved(CollectionItemEvent<SourceItemT> event) {
+      public void onItemRemoved(CollectionItemEvent<? extends SourceItemT> event) {
         int itemIndex = BaseProjectionalSynchronizer.this.indexOf(event.getItem());
         if (itemIndex == -1) return;
         childCells().get(itemIndex).selected().set(false);

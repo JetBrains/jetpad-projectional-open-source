@@ -72,9 +72,9 @@ public class CompletionMenuModel {
       })
     ).transform(items).getTarget();
 
-    visibleItems.addHandler(new EventHandler<CollectionItemEvent<CompletionItem>>() {
+    visibleItems.addHandler(new EventHandler<CollectionItemEvent<? extends CompletionItem>>() {
       @Override
-      public void onEvent(CollectionItemEvent<CompletionItem> event) {
+      public void onEvent(CollectionItemEvent<? extends CompletionItem> event) {
         if (visibleItems.isEmpty()) {
           selectedItem.set(null);
         } else {

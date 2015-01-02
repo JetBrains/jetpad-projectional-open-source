@@ -55,12 +55,12 @@ public class DiagramView extends GroupView {
 
     myConnectionAttachReg = connections.addListener(new CollectionListener<Connection>() {
       @Override
-      public void onItemAdded(CollectionItemEvent<Connection> event) {
+      public void onItemAdded(CollectionItemEvent<? extends Connection> event) {
         event.getItem().attach();
       }
 
       @Override
-      public void onItemRemoved(CollectionItemEvent<Connection> event) {
+      public void onItemRemoved(CollectionItemEvent<? extends Connection> event) {
         event.getItem().detach();
       }
     });

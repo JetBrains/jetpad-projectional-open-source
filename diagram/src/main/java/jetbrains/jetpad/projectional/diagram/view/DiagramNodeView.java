@@ -50,7 +50,7 @@ public abstract class DiagramNodeView extends GroupView {
     contentView.children().addListener(new CollectionListener<View>() {
       private Registration myReg = null;
       @Override
-      public void onItemAdded(CollectionItemEvent<View> event) {
+      public void onItemAdded(CollectionItemEvent<? extends View> event) {
         if (contentView.children().size() > 1) {
           throw new IllegalStateException();
         }
@@ -64,30 +64,30 @@ public abstract class DiagramNodeView extends GroupView {
       }
 
       @Override
-      public void onItemRemoved(CollectionItemEvent<View> event) {
+      public void onItemRemoved(CollectionItemEvent<? extends View> event) {
         myReg.remove();
       }
     });
 
     inputs.children().addListener(new CollectionListener<View>() {
       @Override
-      public void onItemAdded(CollectionItemEvent<View> event) {
+      public void onItemAdded(CollectionItemEvent<? extends View> event) {
         event.getItem().getProp(DiagramViewSpecs.CONNECTOR_DIR).set(myPortsDirection.opposite());
       }
 
       @Override
-      public void onItemRemoved(CollectionItemEvent<View> event) {
+      public void onItemRemoved(CollectionItemEvent<? extends View> event) {
         event.getItem().getProp(DiagramViewSpecs.CONNECTOR_DIR).set(null);
       }
     });
     outputs.children().addListener(new CollectionListener<View>() {
       @Override
-      public void onItemAdded(CollectionItemEvent<View> event) {
+      public void onItemAdded(CollectionItemEvent<? extends View> event) {
         event.getItem().getProp(DiagramViewSpecs.CONNECTOR_DIR).set(myPortsDirection);
       }
 
       @Override
-      public void onItemRemoved(CollectionItemEvent<View> event) {
+      public void onItemRemoved(CollectionItemEvent<? extends View> event) {
         event.getItem().getProp(DiagramViewSpecs.CONNECTOR_DIR).set(null);
       }
     });
