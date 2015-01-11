@@ -45,8 +45,7 @@ public class Cells {
     while (true) {
       Cell parent = current.getParent();
       if (parent == null) return null;
-      List<Cell> siblings = parent.children();
-      if (siblings.indexOf(current) == -1) return current;
+      if (current.isPopup()) return current;
       current = parent;
     }
   }

@@ -61,6 +61,7 @@ public abstract class Cell implements NavComposite<Cell>, HasVisibility, HasFocu
   private static final List<CellPropertySpec<Cell>> POPUP_SPECS = Arrays.asList(LEFT_POPUP, RIGHT_POPUP, BOTTOM_POPUP, FRONT_POPUP);
 
   public static final CellPropertySpec<Boolean> VISIBLE = new CellPropertySpec<>("visible", true);
+  public static final CellPropertySpec<Boolean> POPUP = new CellPropertySpec<>("popup", false);
   public static final CellPropertySpec<Boolean> SELECTED = new CellPropertySpec<>("selected", false);
   public static final CellPropertySpec<Boolean> HIGHLIGHTED = new CellPropertySpec<>("highlighted", false);
   public static final CellPropertySpec<Boolean> BRIGHT_HIGHLIGHT = new CellPropertySpec<>("brightHighlight", false);
@@ -309,6 +310,10 @@ public abstract class Cell implements NavComposite<Cell>, HasVisibility, HasFocu
   @Override
   public final Cell getParent() {
     return myParent;
+  }
+
+  public boolean isPopup() {
+    return get(POPUP);
   }
 
   public final ReadableProperty<Cell> parent() {
@@ -636,10 +641,12 @@ public abstract class Cell implements NavComposite<Cell>, HasVisibility, HasFocu
       if (cellContainer != null) {
         if (oldValue != null) {
           cellContainer.popupRemoved(oldValue);
+          oldValue.set(POPUP, false);
           oldValue.changeParent(null);
         }
         if (value != null) {
           cellContainer.popupAdded(value);
+          value.set(POPUP, true);
           value.changeParent(Cell.this);
         }
       }
