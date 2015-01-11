@@ -22,6 +22,7 @@ import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.StyleInjector;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.query.client.Function;
 import com.google.gwt.query.client.GQuery;
 import com.google.gwt.user.client.Event;
@@ -134,6 +135,9 @@ public class CellContainerToDomMapper extends Mapper<CellContainer, Element> {
 
 
   private CellToDomContext myCellToDomContext;
+  private int myScrollLeft;
+  private int myScrollTop;
+  private HandlerRegistration myWindowReg;
 
   public CellContainerToDomMapper(CellContainer source, Element target) {
     super(source, target);
@@ -152,6 +156,17 @@ public class CellContainerToDomMapper extends Mapper<CellContainer, Element> {
     disablePopup(getTarget());
     getTarget().setTabIndex(0);
     getTarget().addClassName(CSS.rootContainer());
+
+    myScrollLeft = Window.getScrollLeft();
+    myScrollTop = Window.getScrollTop();
+
+    myWindowReg = Window.addWindowScrollHandler(new Window.ScrollHandler() {
+      @Override
+      public void onWindowScroll(Window.ScrollEvent event) {
+        myScrollLeft = event.getScrollLeft();
+        myScrollTop = event.getScrollTop();
+      }
+    });
   }
 
   @Override
@@ -163,6 +178,8 @@ public class CellContainerToDomMapper extends Mapper<CellContainer, Element> {
     getTarget().removeClassName(CSS.rootContainer());
 
     $(getTarget()).unbind(Event.KEYEVENTS | Event.MOUSEEVENTS);
+
+    myWindowReg.removeHandler();
   }
 
   private Vector getRootOrigin() {
@@ -633,7 +650,7 @@ public class CellContainerToDomMapper extends Mapper<CellContainer, Element> {
   }
 
   private MouseEvent toMouseEvent(Event e) {
-    Vector base = new Vector(e.getClientX() + Window.getScrollLeft(), e.getClientY() + Window.getScrollTop());
+    Vector base = new Vector(e.getClientX() + myScrollLeft, e.getClientY() + myScrollTop);
     return new MouseEvent(base.sub(getRootOrigin()));
   }
 }
