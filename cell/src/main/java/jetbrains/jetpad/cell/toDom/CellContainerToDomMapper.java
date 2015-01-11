@@ -457,7 +457,9 @@ public class CellContainerToDomMapper extends Mapper<CellContainer, Element> {
         MouseEvent event = toMouseEvent(e);
         if (isDomCellEvent(event)) return true;
         getSource().mousePressed(event);
-        $(focusTarget).focus();
+        if (!myCellToDomContext.focused.get()) {
+          $(focusTarget).focus();
+        }
         return false;
       }
     }));
