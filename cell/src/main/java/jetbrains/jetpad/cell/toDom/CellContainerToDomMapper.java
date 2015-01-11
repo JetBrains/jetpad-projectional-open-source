@@ -352,7 +352,7 @@ public class CellContainerToDomMapper extends Mapper<CellContainer, Element> {
           int y = target.getAbsoluteTop();
           int width = target.getScrollWidth();
           int height = target.getScrollHeight();
-          return new Rectangle(x, y, width, height).sub(getRootOrigin());
+          return new Rectangle(x, y, width, height);
         }
       }
 
@@ -375,7 +375,6 @@ public class CellContainerToDomMapper extends Mapper<CellContainer, Element> {
 
       @Override
       public Cell findCell(Cell root, Vector loc) {
-        loc = loc.add(getRootOrigin());
         Element e = elementAt(loc.x - myScrollLeft, loc.y - myScrollTop);
         if (e == null) return null;
         Cell result = findCellFor(e);
@@ -653,6 +652,6 @@ public class CellContainerToDomMapper extends Mapper<CellContainer, Element> {
 
   private MouseEvent toMouseEvent(Event e) {
     Vector base = new Vector(e.getClientX() + myScrollLeft, e.getClientY() + myScrollTop);
-    return new MouseEvent(base.sub(getRootOrigin()));
+    return new MouseEvent(base);
   }
 }
