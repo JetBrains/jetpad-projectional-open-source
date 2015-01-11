@@ -376,7 +376,7 @@ public class CellContainerToDomMapper extends Mapper<CellContainer, Element> {
       @Override
       public Cell findCell(Cell root, Vector loc) {
         loc = loc.add(getRootOrigin());
-        Element e = elementAt(loc.x - Window.getScrollLeft(), loc.y - Window.getScrollTop());
+        Element e = elementAt(loc.x - myScrollLeft, loc.y - myScrollTop);
         if (e == null) return null;
         Cell result = findCellFor(e);
         if (result == null) return null;
