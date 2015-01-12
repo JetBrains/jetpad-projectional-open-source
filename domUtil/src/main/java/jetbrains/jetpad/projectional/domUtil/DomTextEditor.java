@@ -82,7 +82,7 @@ public class DomTextEditor {
     myRoot.appendChild(selectionDiv);
     mySelectionDiv = selectionDiv;
 
-    updateText();
+    update();
     updateCaretAndSelectionVisibility();
   }
 
@@ -91,8 +91,9 @@ public class DomTextEditor {
   }
 
   public void setBold(boolean bold) {
+    if (myBold == bold) return;
     myBold = bold;
-    updateText();
+    updateBold();
   }
 
   public boolean isItalic() {
@@ -100,8 +101,9 @@ public class DomTextEditor {
   }
 
   public void setItalic(boolean italic) {
+    if (myItalic == italic) return;
     myItalic = italic;
-    updateText();
+    updateItalic();
   }
 
   public FontFamily getFontFamily() {
@@ -110,7 +112,7 @@ public class DomTextEditor {
 
   public void setFontFamily(FontFamily family) {
     myFontFamily = family;
-    updateText();
+    updateFontSize();
   }
 
   public int getFontSize() {
@@ -118,8 +120,9 @@ public class DomTextEditor {
   }
 
   public void setFontSize(int size) {
+    if (myFontSize == size) return;
     myFontSize = size;
-    updateText();
+    updateFontSize();
   }
 
   public Color getTextColor() {
@@ -127,8 +130,9 @@ public class DomTextEditor {
   }
 
   public void setTextColor(Color textColor) {
+    if (Objects.equal(textColor, myTextColor)) return;
     myTextColor = textColor;
-    updateText();
+    updateColor();
   }
 
   public String getText() {
@@ -138,7 +142,7 @@ public class DomTextEditor {
   public void setText(String text) {
     if (Objects.equal(text, myText)) return;
     myText = text;
-    updateText();
+    update();
   }
 
   public int getCaretPosition() {
@@ -196,7 +200,7 @@ public class DomTextEditor {
 
   private void updateCaretAndSelection() {
     Style caretStyle = myCaretDiv.getStyle();
-    caretStyle.setLeft(setCaretOffset(myCaretPosition), Style.Unit.PX);
+    caretStyle.setLeft(getCaretOffset(myCaretPosition), Style.Unit.PX);
     caretStyle.setTop(0, Style.Unit.PX);
     caretStyle.setWidth(1, Style.Unit.PX);
     caretStyle.setHeight(getLineHeight(), Style.Unit.PX);
@@ -208,38 +212,58 @@ public class DomTextEditor {
     Style selectionStyle = mySelectionDiv.getStyle();
     selectionStyle.setTop(0, Style.Unit.PX);
     selectionStyle.setHeight(getLineHeight(), Style.Unit.PX);
-    selectionStyle.setLeft(setCaretOffset(left), Style.Unit.PX);
-    selectionStyle.setWidth(setCaretOffset(right) - setCaretOffset(left), Style.Unit.PX);
+    selectionStyle.setLeft(getCaretOffset(left), Style.Unit.PX);
+    selectionStyle.setWidth(getCaretOffset(right) - getCaretOffset(left), Style.Unit.PX);
     selectionStyle.setBackgroundColor("cyan");
   }
 
-  private void updateText() {
-    String newValue = myText;
+  private void update() {
+    updateColor();
+    updateBold();
+    updateItalic();
+    updateText();
+    updateFontSize();
+    updateLineHeight();
+  }
+
+
+  private void updateColor() {
     String cssColor = myTextColor != null ? myTextColor.toCssColor() : null;
     myTextContainer.getStyle().setColor(cssColor);
+  }
 
+  private void updateBold() {
     if (myBold) {
       myTextContainer.getStyle().setFontWeight(Style.FontWeight.BOLD);
     } else {
       myTextContainer.getStyle().setFontWeight(Style.FontWeight.NORMAL);
     }
+  }
 
+  private void updateItalic() {
     if (myItalic) {
       myTextContainer.getStyle().setFontStyle(Style.FontStyle.ITALIC);
     } else {
       myTextContainer.getStyle().setFontStyle(Style.FontStyle.NORMAL);
     }
+  }
 
-    if (newValue == null || newValue.isEmpty()) {
-      newValue = " ";
+  private void updateText() {
+    String value = myText;
+    if (value == null || value.isEmpty()) {
+      value = " ";
       myTextContainer.getStyle().setWidth(1, Style.Unit.PX);
     } else {
       myTextContainer.getStyle().clearWidth();
     }
+    myTextContainer.setInnerText(normalize(value));
+  }
 
-    myTextContainer.setInnerText(normalize(newValue));
-
+  private void updateFontSize() {
     myRoot.getStyle().setProperty("font", myFontSize + "px " + TextMetricsCalculator.getFontName(myFontFamily));
+  }
+
+  private void updateLineHeight() {
     myRoot.getStyle().setHeight(getLineHeight(), Style.Unit.PX);
   }
 
@@ -247,7 +271,7 @@ public class DomTextEditor {
     return new Font(myFontFamily, myFontSize, myBold, myItalic);
   }
 
-  public int setCaretOffset(int caretOffset) {
+  public int getCaretOffset(int caretOffset) {
     if (caretOffset == 0) return 0;
     if (isDefaultFont()) {
       return caretOffset * ourCharWidth;
