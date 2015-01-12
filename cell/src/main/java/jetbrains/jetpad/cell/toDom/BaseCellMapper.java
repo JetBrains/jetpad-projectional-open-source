@@ -32,6 +32,7 @@ import jetbrains.jetpad.model.property.PropertyChangeEvent;
 import jetbrains.jetpad.values.Color;
 
 import java.util.List;
+import java.util.Objects;
 
 abstract class BaseCellMapper<SourceT extends Cell> extends Mapper<SourceT, Element> {
   private ObservableSet<Mapper<? extends Cell, ? extends Element>> myPopupMappers;
@@ -44,6 +45,8 @@ abstract class BaseCellMapper<SourceT extends Cell> extends Mapper<SourceT, Elem
 
   private int myExternalHighlightCount;
   private int myExternalSelectCount;
+
+  private Color myBorderColor;
 
   BaseCellMapper(SourceT source, CellToDomContext ctx, Element target) {
     super(source, target);
@@ -151,9 +154,13 @@ abstract class BaseCellMapper<SourceT extends Cell> extends Mapper<SourceT, Elem
     style.setBackgroundColor(background == null ? "" : background.toCssColor());
 
     Color borderColor = getSource().borderColor().get();
-    style.setBorderStyle(borderColor == null ? Style.BorderStyle.NONE : Style.BorderStyle.SOLID);
-    style.setBorderWidth(borderColor == null ? 0 : 1, Style.Unit.PX);
-    style.setBorderColor(borderColor == null ? null : borderColor.toCssColor());
+    //we need this because FF does complete reflow if border is changed
+    if (!Objects.equals(myBorderColor, borderColor)) {
+      style.setBorderStyle(borderColor == null ? Style.BorderStyle.NONE : Style.BorderStyle.SOLID);
+      style.setBorderWidth(borderColor == null ? 0 : 1, Style.Unit.PX);
+      style.setBorderColor(borderColor == null ? null : borderColor.toCssColor());
+      myBorderColor = borderColor;
+    }
 
     if (!getSource().visible().get()) {
       getTarget().addClassName(CellContainerToDomMapper.CSS.hidden());

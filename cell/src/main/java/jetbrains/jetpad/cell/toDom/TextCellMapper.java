@@ -56,7 +56,7 @@ class TextCellMapper extends BaseCellMapper<TextCell> {
   }
 
   int getCaretOffset(int caret) {
-    return myTextEditor.setCaretOffset(caret);
+    return myTextEditor.getCaretOffset(caret);
   }
 
   int getCaretAt(int x) {
