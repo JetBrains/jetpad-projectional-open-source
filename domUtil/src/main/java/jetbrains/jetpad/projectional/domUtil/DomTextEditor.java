@@ -84,6 +84,7 @@ public class DomTextEditor {
 
     update();
     updateCaretAndSelectionVisibility();
+    updateCaretAndSelection();
   }
 
   public boolean isBold() {
@@ -150,8 +151,13 @@ public class DomTextEditor {
   }
 
   public void setCaretPosition(int caretPosition) {
+    if (myCaretPosition == caretPosition) return;
     myCaretPosition = caretPosition;
-    updateCaretAndSelection();
+    updateCaretPosition();
+
+    if (mySelectionVisible) {
+      updateSelectionBounds();
+    }
   }
 
   public boolean getSelectionVisible() {
@@ -168,8 +174,9 @@ public class DomTextEditor {
   }
 
   public void setSelectionStart(int selectionStart) {
+    if (mySelectionStart == selectionStart) return;
     mySelectionStart = selectionStart;
-    updateCaretAndSelection();
+    updateSelectionBounds();
   }
 
   public boolean isCaretVisible() {
@@ -198,23 +205,34 @@ public class DomTextEditor {
     }
   }
 
-  private void updateCaretAndSelection() {
+  private void updateCaretPosition() {
     Style caretStyle = myCaretDiv.getStyle();
     caretStyle.setLeft(getCaretOffset(myCaretPosition), Style.Unit.PX);
+  }
+
+  private void updateCaretAndSelection() {
+    Style caretStyle = myCaretDiv.getStyle();
+    updateCaretPosition();
     caretStyle.setTop(0, Style.Unit.PX);
     caretStyle.setWidth(1, Style.Unit.PX);
     caretStyle.setHeight(getLineHeight(), Style.Unit.PX);
     caretStyle.setBackgroundColor("black");
 
+    Style selectionStyle = mySelectionDiv.getStyle();
+    selectionStyle.setTop(0, Style.Unit.PX);
+    selectionStyle.setHeight(getLineHeight(), Style.Unit.PX);
+    selectionStyle.setBackgroundColor("cyan");
+
+    updateSelectionBounds();
+  }
+
+  private void updateSelectionBounds() {
     int left = Math.min(myCaretPosition, mySelectionStart);
     int right = Math.max(myCaretPosition, mySelectionStart);
 
     Style selectionStyle = mySelectionDiv.getStyle();
-    selectionStyle.setTop(0, Style.Unit.PX);
-    selectionStyle.setHeight(getLineHeight(), Style.Unit.PX);
     selectionStyle.setLeft(getCaretOffset(left), Style.Unit.PX);
     selectionStyle.setWidth(getCaretOffset(right) - getCaretOffset(left), Style.Unit.PX);
-    selectionStyle.setBackgroundColor("cyan");
   }
 
   private void update() {
