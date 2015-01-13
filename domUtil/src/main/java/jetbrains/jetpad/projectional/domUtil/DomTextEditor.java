@@ -267,17 +267,17 @@ public class DomTextEditor {
 
   private void updateBold() {
     if (myBold) {
-      myTextContainer.getStyle().setFontWeight(Style.FontWeight.BOLD);
+      myRoot.getStyle().setFontWeight(Style.FontWeight.BOLD);
     } else {
-      myTextContainer.getStyle().setFontWeight(Style.FontWeight.NORMAL);
+      myRoot.getStyle().setFontWeight(Style.FontWeight.NORMAL);
     }
   }
 
   private void updateItalic() {
     if (myItalic) {
-      myTextContainer.getStyle().setFontStyle(Style.FontStyle.ITALIC);
+      myRoot.getStyle().setFontStyle(Style.FontStyle.ITALIC);
     } else {
-      myTextContainer.getStyle().setFontStyle(Style.FontStyle.NORMAL);
+      myRoot.getStyle().setFontStyle(Style.FontStyle.NORMAL);
     }
   }
 
