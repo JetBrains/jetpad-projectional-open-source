@@ -263,7 +263,7 @@ public class DomTextEditor {
 
   private void updateColor() {
     String cssColor = myTextColor != null ? myTextColor.toCssColor() : null;
-    myTextContainer.getStyle().setColor(cssColor);
+    myRoot.getStyle().setColor(cssColor);
   }
 
   private void updateBold() {
