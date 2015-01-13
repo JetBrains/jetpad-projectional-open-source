@@ -63,7 +63,7 @@ public class DomTextEditor {
     rootStyle.setDisplay(Style.Display.INLINE_BLOCK);
     rootStyle.setPosition(Style.Position.RELATIVE);
 
-    myTextContainer = DOM.createDiv();
+    myTextContainer = DOM.createSpan();
     Style textStyle = myTextContainer.getStyle();
     textStyle.setZIndex(2);
     textStyle.setWhiteSpace(Style.WhiteSpace.NOWRAP);
