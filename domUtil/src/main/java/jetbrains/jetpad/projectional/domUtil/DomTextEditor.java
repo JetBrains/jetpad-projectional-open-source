@@ -65,20 +65,22 @@ public class DomTextEditor {
 
     myTextContainer = DOM.createDiv();
     Style textStyle = myTextContainer.getStyle();
+//    textStyle.setPosition(Style.Position.ABSOLUTE);
     textStyle.setZIndex(2);
-    textStyle.setPosition(Style.Position.RELATIVE);
     textStyle.setWhiteSpace(Style.WhiteSpace.NOWRAP);
     myRoot.appendChild(myTextContainer);
 
     Element caretDiv = DOM.createDiv();
     Style caretStyle = caretDiv.getStyle();
     caretStyle.setPosition(Style.Position.ABSOLUTE);
+    caretStyle.setZIndex(2);
     myRoot.appendChild(caretDiv);
     myCaretDiv = caretDiv;
 
     Element selectionDiv = DOM.createDiv();
     Style selectionStyle = selectionDiv.getStyle();
     selectionStyle.setPosition(Style.Position.ABSOLUTE);
+    selectionStyle.setZIndex(1);
     myRoot.appendChild(selectionDiv);
     mySelectionDiv = selectionDiv;
 
@@ -146,6 +148,10 @@ public class DomTextEditor {
     if (Objects.equal(text, myText)) return;
     myText = text;
     update();
+
+    if (mySelectionVisible) {
+      updateSelectionBoundsAndText();
+    }
   }
 
   public int getCaretPosition() {
@@ -158,7 +164,7 @@ public class DomTextEditor {
     updateCaretPosition();
 
     if (mySelectionVisible) {
-      updateSelectionBounds();
+      updateSelectionBoundsAndText();
     }
   }
 
@@ -179,7 +185,7 @@ public class DomTextEditor {
   public void setSelectionStart(int selectionStart) {
     if (mySelectionStart == selectionStart) return;
     mySelectionStart = selectionStart;
-    updateSelectionBounds();
+    updateSelectionBoundsAndText();
   }
 
   public boolean isCaretVisible() {
@@ -228,16 +234,21 @@ public class DomTextEditor {
     selectionStyle.setHeight(getLineHeight(), Style.Unit.PX);
     selectionStyle.setBackgroundColor("cyan");
 
-    updateSelectionBounds();
+    updateSelectionBoundsAndText();
   }
 
-  private void updateSelectionBounds() {
+  private void updateSelectionBoundsAndText() {
     int left = Math.min(myCaretPosition, mySelectionStart);
     int right = Math.max(myCaretPosition, mySelectionStart);
+
+    String text = myText == null ? "" : myText;
+    text = text.substring(left, right);
 
     Style selectionStyle = mySelectionDiv.getStyle();
     selectionStyle.setLeft(getCaretOffset(left), Style.Unit.PX);
     selectionStyle.setWidth(getCaretOffset(right) - getCaretOffset(left), Style.Unit.PX);
+
+    mySelectionDiv.setInnerText(normalize(text));
   }
 
   private void update() {
