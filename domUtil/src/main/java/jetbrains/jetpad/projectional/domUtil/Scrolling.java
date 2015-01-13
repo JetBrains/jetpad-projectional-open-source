@@ -73,44 +73,44 @@ public class Scrolling {
   }
 
   private static void adjustScrollers(Rectangle rect, Element element) {
-    int left = element.getOffsetLeft() + rect.origin.x;
-    int top = element.getOffsetTop() + rect.origin.y;
+    int left = element.getAbsoluteLeft() + rect.origin.x;
+    int top = element.getAbsoluteTop() + rect.origin.y;
     int width = rect.dimension.x;
     int height = rect.dimension.y;
 
     while (element.getParentElement() != null) {
       Element parent = element.getParentElement();
-      Element offsetParent = element.getOffsetParent();
 
       String overflow = $(parent).css("overflow");
       if ("scroll".equals(overflow) || "auto".equals(overflow)) {
-        int parentTop = parent.getScrollTop();
-        int parentLeft = parent.getScrollLeft();
-        int clientWidth = parent.getClientWidth();
-        int clientHeight = parent.getClientHeight();
+        int scrollTop = parent.getScrollTop();
+        int parentTop = parent.getAbsoluteTop();
+        int parentHeight = parent.getClientHeight();
+        int scrollLeft = parent.getScrollLeft();
+        int parentLeft = parent.getAbsoluteLeft();
+        int parentWidth = parent.getClientWidth();
 
         if (top < parentTop) {
-          parent.setScrollTop(top);
+          int delta = parentTop - top;
+          parent.setScrollTop(scrollTop - delta);
+          top += delta;
+        } else if (top + height > parentTop + parentHeight) {
+          int delta = (parentTop + parentHeight) - (top + height);
+          parent.setScrollTop(scrollTop - delta);
+          top += delta;
         }
+
         if (left < parentLeft) {
-          if (left + width < clientWidth) {
-            parent.setScrollLeft(0);
-          } else {
-            parent.setScrollLeft(left);
-          }
-        }
-        if (top + height > parentTop + clientHeight) {
-          parent.setScrollTop(top + height - clientHeight);
-        }
-        if (left + width > parentLeft + clientWidth) {
-          parent.setScrollLeft(left + width - clientWidth);
+          int delta = parentLeft - left;
+          parent.setScrollLeft(scrollLeft - delta);
+          left += delta;
+        } else if (left + width > parentLeft + parentWidth) {
+          int delta = (parentLeft + parentWidth) - (left + width);
+          parent.setScrollLeft(scrollLeft - delta);
+          left += delta;
         }
       }
 
-      if (parent == offsetParent) {
-        top += parent.getOffsetTop() - parent.getScrollTop();
-        left += parent.getOffsetLeft() - parent.getScrollLeft();
-      }
       element = parent;
     }
   }
