@@ -83,7 +83,8 @@ public class DomTextEditor {
     mySelectionDiv = selectionDiv;
 
     update();
-    updateCaretAndSelectionVisibility();
+    updateCaretVisibility();
+    updateSelectionVisibility();
     updateCaretAndSelection();
   }
 
@@ -165,8 +166,9 @@ public class DomTextEditor {
   }
 
   public void setSelectionVisible(boolean visible) {
+    if (mySelectionVisible == visible) return;
     mySelectionVisible = visible;
-    updateCaretAndSelectionVisibility();
+    updateSelectionVisibility();
   }
 
   public int getSelectionStart() {
@@ -184,20 +186,22 @@ public class DomTextEditor {
   }
 
   public void setCaretVisible(boolean caretVisible) {
+    if (myCaretVisible == caretVisible) return;
     myCaretVisible = caretVisible;
-    updateCaretAndSelectionVisibility();
+    updateCaretVisibility();
   }
 
-  private void updateCaretAndSelectionVisibility() {
+  private void updateCaretVisibility() {
     Style caretStyle = myCaretDiv.getStyle();
     if (myCaretVisible) {
       caretStyle.setVisibility(Style.Visibility.VISIBLE);
     } else {
       caretStyle.setVisibility(Style.Visibility.HIDDEN);
     }
+  }
 
+  private void updateSelectionVisibility() {
     Style selectionStyle = mySelectionDiv.getStyle();
-
     if (mySelectionVisible) {
       selectionStyle.setVisibility(Style.Visibility.VISIBLE);
     } else {
