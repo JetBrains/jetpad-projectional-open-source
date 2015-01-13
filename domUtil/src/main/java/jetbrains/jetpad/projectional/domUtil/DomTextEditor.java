@@ -175,6 +175,7 @@ public class DomTextEditor {
     if (mySelectionVisible == visible) return;
     mySelectionVisible = visible;
     updateSelectionVisibility();
+    updateSelectionBoundsAndText();
   }
 
   public int getSelectionStart() {
