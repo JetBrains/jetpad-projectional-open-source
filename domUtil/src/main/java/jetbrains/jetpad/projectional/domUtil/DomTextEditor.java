@@ -61,24 +61,24 @@ public class DomTextEditor {
 
     Style rootStyle = myRoot.getStyle();
     rootStyle.setDisplay(Style.Display.INLINE_BLOCK);
+    rootStyle.setPosition(Style.Position.RELATIVE);
 
     myTextContainer = DOM.createDiv();
     Style textStyle = myTextContainer.getStyle();
-    textStyle.setZIndex(3);
+    textStyle.setZIndex(2);
+    textStyle.setPosition(Style.Position.RELATIVE);
     textStyle.setWhiteSpace(Style.WhiteSpace.NOWRAP);
     myRoot.appendChild(myTextContainer);
 
     Element caretDiv = DOM.createDiv();
     Style caretStyle = caretDiv.getStyle();
     caretStyle.setPosition(Style.Position.ABSOLUTE);
-    caretStyle.setZIndex(2);
     myRoot.appendChild(caretDiv);
     myCaretDiv = caretDiv;
 
     Element selectionDiv = DOM.createDiv();
     Style selectionStyle = selectionDiv.getStyle();
     selectionStyle.setPosition(Style.Position.ABSOLUTE);
-    caretStyle.setZIndex(1);
     myRoot.appendChild(selectionDiv);
     mySelectionDiv = selectionDiv;
 
