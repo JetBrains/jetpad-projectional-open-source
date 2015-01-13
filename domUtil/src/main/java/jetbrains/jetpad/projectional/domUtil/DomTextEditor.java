@@ -65,7 +65,6 @@ public class DomTextEditor {
 
     myTextContainer = DOM.createDiv();
     Style textStyle = myTextContainer.getStyle();
-//    textStyle.setPosition(Style.Position.ABSOLUTE);
     textStyle.setZIndex(2);
     textStyle.setWhiteSpace(Style.WhiteSpace.NOWRAP);
     myRoot.appendChild(myTextContainer);
