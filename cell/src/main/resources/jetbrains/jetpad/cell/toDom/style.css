@@ -22,17 +22,7 @@
 }
 
 .horizontal {
-  display: flex;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-
-  flex-direction: row;
-  -webkit-flex-direction: row;
-  -ms-flex-direction: row;
-  align-items: baseline;
-  -webkit-align-items: baseline;
-  -ms-align-items: baseline;
-
+  display: inline-block;
   white-space: nowrap;
 
   width: fit-content;
@@ -40,22 +30,13 @@
   width: -moz-fit-content;
 }
 
-
 .horizontal > div {
-  flex-shrink: 0;
-  -webkit-flex-shrink: 0;
-  -ms-flex-shrink: 0;
+  display: inline-block;
+  vertical-align : top;
 }
 
-
-.vertical {
-  display: flex;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  flex-direction: column;
-  -webkit-flex-direction: column;
-  -ms-flex-direction: column;
-
+.vertical > div {
+  display: block;
   font-size: 0px;
 
 
@@ -64,8 +45,9 @@
   width: -moz-fit-content;
 }
 
-.vertical > div {
-  flex-shrink: 0;
+.horizontal > div > .vertical {
+  display: inline-block;
+  font-size: 0px;
 }
 
 .domCell {

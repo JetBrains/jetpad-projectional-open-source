@@ -18,11 +18,9 @@ package jetbrains.jetpad.cell.toDom;
 import com.google.gwt.resources.client.CssResource;
 
 public interface CellToDomCss extends CssResource {
-  String rootContainer();
-
   String vertical();
+  String rootContainer();
   String horizontal();
-
   String indented();
   String hidden();
   String selected();
@@ -30,5 +28,4 @@ public interface CellToDomCss extends CssResource {
   String brightlyHighlighted();
   String domCell();
   String hasShadow();
-
 }

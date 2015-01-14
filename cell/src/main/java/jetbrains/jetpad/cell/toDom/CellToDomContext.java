@@ -26,7 +26,6 @@ class CellToDomContext {
   final Property<Boolean> focused = new ValueProperty<>(false);
   final Element rootElement;
   final Element focusElement;
-
   private final Map<Element, BaseCellMapper<?>> myMappers = new HashMap<>();
 
   CellToDomContext(Element rootElement) {
