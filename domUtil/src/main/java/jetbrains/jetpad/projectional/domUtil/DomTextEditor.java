@@ -285,12 +285,12 @@ public class DomTextEditor {
   private void updateText() {
     String value = myText;
     if (value == null || value.isEmpty()) {
-      value = " ";
+      myTextContainer.setInnerText(" ");
       myTextContainer.getStyle().setWidth(1, Style.Unit.PX);
     } else {
       myTextContainer.getStyle().clearWidth();
+      myTextContainer.setInnerText(normalize(value));
     }
-    myTextContainer.setInnerText(normalize(value));
   }
 
   private void updateFont() {
