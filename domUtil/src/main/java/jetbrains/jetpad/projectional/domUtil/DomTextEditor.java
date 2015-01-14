@@ -23,6 +23,8 @@ import jetbrains.jetpad.values.Color;
 import jetbrains.jetpad.values.Font;
 import jetbrains.jetpad.values.FontFamily;
 
+import java.util.Arrays;
+
 public class DomTextEditor {
   public static final int DEFAULT_FONT_SIZE = 15;
 
@@ -51,10 +53,12 @@ public class DomTextEditor {
   private FontFamily myFontFamily = FontFamily.MONOSPACED;
   private int myFontSize = 15;
 
-  private Element myTextContainer;
-  private Element myCaretDiv;
-  private Element mySelectionDiv;
   private Element myRoot;
+  private Element myCaretDiv;
+
+  private Element myPrefix;
+  private Element myCenter;
+  private Element mySuffix;
 
   public DomTextEditor(Element root) {
     myRoot = root;
@@ -63,16 +67,14 @@ public class DomTextEditor {
     rootStyle.setDisplay(Style.Display.INLINE_BLOCK);
     rootStyle.setPosition(Style.Position.RELATIVE);
 
-    myTextContainer = DOM.createSpan();
-    Style textStyle = myTextContainer.getStyle();
-    textStyle.setZIndex(2);
-    textStyle.setWhiteSpace(Style.WhiteSpace.NOWRAP);
-    myRoot.appendChild(myTextContainer);
-
     Element caretDiv = DOM.createDiv();
     Style caretStyle = caretDiv.getStyle();
     caretStyle.setPosition(Style.Position.ABSOLUTE);
     caretStyle.setZIndex(2);
+    caretStyle.setTop(0, Style.Unit.PX);
+    caretStyle.setWidth(1, Style.Unit.PX);
+    caretStyle.setHeight(getLineHeight(), Style.Unit.PX);
+    caretStyle.setBackgroundColor("black");
     myRoot.appendChild(caretDiv);
     myCaretDiv = caretDiv;
 
@@ -81,12 +83,23 @@ public class DomTextEditor {
     selectionStyle.setPosition(Style.Position.ABSOLUTE);
     selectionStyle.setZIndex(1);
     myRoot.appendChild(selectionDiv);
-    mySelectionDiv = selectionDiv;
+
+    myPrefix = DOM.createSpan();
+    myCenter = DOM.createSpan();
+    mySuffix = DOM.createSpan();
+
+    for (Element e : Arrays.asList(myPrefix, myCenter, mySuffix)) {
+      e.getStyle().setWhiteSpace(Style.WhiteSpace.NOWRAP);
+    }
+    myCenter.getStyle().setBackgroundColor("cyan");
+
+    myRoot.appendChild(myPrefix);
+    myRoot.appendChild(myCenter);
+    myRoot.appendChild(mySuffix);
 
     update();
     updateCaretVisibility();
-    updateSelectionVisibility();
-    updateCaretAndSelection();
+    updateCaretPosition();
   }
 
   public boolean isBold() {
@@ -146,11 +159,7 @@ public class DomTextEditor {
   public void setText(String text) {
     if (Objects.equal(text, myText)) return;
     myText = text;
-    update();
-
-    if (mySelectionVisible) {
-      updateSelectionBoundsAndText();
-    }
+    updateText();
   }
 
   public int getCaretPosition() {
@@ -161,10 +170,7 @@ public class DomTextEditor {
     if (myCaretPosition == caretPosition) return;
     myCaretPosition = caretPosition;
     updateCaretPosition();
-
-    if (mySelectionVisible) {
-      updateSelectionBoundsAndText();
-    }
+    updateText();
   }
 
   public boolean getSelectionVisible() {
@@ -174,8 +180,7 @@ public class DomTextEditor {
   public void setSelectionVisible(boolean visible) {
     if (mySelectionVisible == visible) return;
     mySelectionVisible = visible;
-    updateSelectionVisibility();
-    updateSelectionBoundsAndText();
+    updateText();
   }
 
   public int getSelectionStart() {
@@ -185,7 +190,7 @@ public class DomTextEditor {
   public void setSelectionStart(int selectionStart) {
     if (mySelectionStart == selectionStart) return;
     mySelectionStart = selectionStart;
-    updateSelectionBoundsAndText();
+    updateText();
   }
 
   public boolean isCaretVisible() {
@@ -207,48 +212,9 @@ public class DomTextEditor {
     }
   }
 
-  private void updateSelectionVisibility() {
-    Style selectionStyle = mySelectionDiv.getStyle();
-    if (mySelectionVisible) {
-      selectionStyle.setVisibility(Style.Visibility.VISIBLE);
-    } else {
-      selectionStyle.setVisibility(Style.Visibility.HIDDEN);
-    }
-  }
-
   private void updateCaretPosition() {
     Style caretStyle = myCaretDiv.getStyle();
     caretStyle.setLeft(getCaretOffset(myCaretPosition), Style.Unit.PX);
-  }
-
-  private void updateCaretAndSelection() {
-    Style caretStyle = myCaretDiv.getStyle();
-    updateCaretPosition();
-    caretStyle.setTop(0, Style.Unit.PX);
-    caretStyle.setWidth(1, Style.Unit.PX);
-    caretStyle.setHeight(getLineHeight(), Style.Unit.PX);
-    caretStyle.setBackgroundColor("black");
-
-    Style selectionStyle = mySelectionDiv.getStyle();
-    selectionStyle.setTop(0, Style.Unit.PX);
-    selectionStyle.setHeight(getLineHeight(), Style.Unit.PX);
-    selectionStyle.setBackgroundColor("cyan");
-
-    updateSelectionBoundsAndText();
-  }
-
-  private void updateSelectionBoundsAndText() {
-    int left = Math.min(myCaretPosition, mySelectionStart);
-    int right = Math.max(myCaretPosition, mySelectionStart);
-
-    String text = myText == null ? "" : myText;
-    text = text.substring(left, right);
-
-    Style selectionStyle = mySelectionDiv.getStyle();
-    selectionStyle.setLeft(getCaretOffset(left), Style.Unit.PX);
-    selectionStyle.setWidth(getCaretOffset(right) - getCaretOffset(left), Style.Unit.PX);
-
-    mySelectionDiv.setInnerText(normalize(text));
   }
 
   private void update() {
@@ -283,14 +249,34 @@ public class DomTextEditor {
   }
 
   private void updateText() {
-    String value = myText;
-    if (value == null || value.isEmpty()) {
-      value = " ";
-      myTextContainer.getStyle().setWidth(1, Style.Unit.PX);
+    String value = myText == null ? "" : myText;
+
+    int left = Math.min(myCaretPosition, mySelectionStart);
+    int right = Math.max(myCaretPosition, mySelectionStart);
+
+    String prefix;
+    String center;
+    String suffix;
+    if (mySelectionVisible) {
+      prefix = value.substring(0, left);
+      center = value.substring(left, right);
+      suffix = value.substring(right);
     } else {
-      myTextContainer.getStyle().clearWidth();
+      prefix = value;
+      center = "";
+      suffix = "";
     }
-    myTextContainer.setInnerText(normalize(value));
+
+    myPrefix.setInnerText(normalize(prefix));
+    myCenter.setInnerText(normalize(center));
+    mySuffix.setInnerText(normalize(suffix));
+
+
+    if (value.isEmpty()) {
+      myPrefix.getStyle().setWidth(1, Style.Unit.PX);
+    } else {
+      myPrefix.getStyle().clearWidth();
+    }
   }
 
   private void updateFont() {
