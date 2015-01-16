@@ -184,7 +184,9 @@ public class CellContainerToViewMapper extends Mapper<CellContainer, View> {
 
       @Override
       public Cell findCell(Cell root, Vector loc) {
-        View view = myTargetView.viewAt(loc);
+        final View rootView = getViewFor(root);
+        if (rootView == null) return null;
+        View view = rootView.viewAt(loc);
         if (view == null) return null;
         return findCellFor(view);
       }
