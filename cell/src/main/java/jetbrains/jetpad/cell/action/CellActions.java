@@ -21,6 +21,7 @@ import jetbrains.jetpad.cell.completion.Completion;
 import jetbrains.jetpad.cell.position.PositionHandler;
 import jetbrains.jetpad.completion.CompletionController;
 import jetbrains.jetpad.model.composite.Composites;
+import jetbrains.jetpad.model.property.ReadableProperty;
 
 public class CellActions {
 
@@ -135,6 +136,19 @@ public class CellActions {
         CompletionController controller = cell.get(Completion.COMPLETION_CONTROLLER);
         if (controller == null || !controller.canActivate() || controller.isActive()) return;
         controller.activate();
+      }
+    };
+  }
+
+  public static Runnable ifAction(final ReadableProperty<Boolean> cond, final Runnable ifTrue, final Runnable ifFalse) {
+    return new Runnable() {
+      @Override
+      public void run() {
+        if (cond.get()) {
+          ifTrue.run();
+        } else {
+          ifFalse.run();
+        }
       }
     };
   }
