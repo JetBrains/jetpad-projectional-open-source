@@ -18,7 +18,7 @@
     <dependency>
       <groupId>org.vectomatic</groupId>
       <artifactId>lib-gwt-svg</artifactId>
-      <version>0.5.10</version>
+      <version>0.5.7</version>
     </dependency>
 
     <dependency>
