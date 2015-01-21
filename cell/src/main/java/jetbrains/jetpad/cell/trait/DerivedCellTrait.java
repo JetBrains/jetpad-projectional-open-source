@@ -25,7 +25,6 @@ import jetbrains.jetpad.model.property.PropertyChangeEvent;
 import javax.annotation.Nonnull;
 
 public abstract class DerivedCellTrait extends CellTrait {
-  @Nonnull
   protected abstract CellTrait getBase(Cell cell);
 
   @Override
