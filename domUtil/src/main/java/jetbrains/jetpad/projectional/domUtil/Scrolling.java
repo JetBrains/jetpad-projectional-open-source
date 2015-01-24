@@ -101,7 +101,7 @@ public class Scrolling {
         }
 
         if (left < parentLeft) {
-          int delta = parentLeft - left;
+          int delta = parentLeft + parentWidth - (left + width);
           parent.setScrollLeft(scrollLeft - delta);
           left += delta;
         } else if (left + width > parentLeft + parentWidth) {
@@ -114,6 +114,10 @@ public class Scrolling {
       element = parent;
     }
   }
+
+  private static native void log(String text) /*-{
+    $wnd.console.log(text);
+  }-*/;
 
   private static native int getScrollX() /*-{
     return $wnd.pageXOffset;
