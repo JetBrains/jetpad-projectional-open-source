@@ -17,6 +17,7 @@ package jetbrains.jetpad.projectional.domUtil;
 
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.user.client.Window;
+import jetbrains.jetpad.base.Interval;
 import jetbrains.jetpad.geometry.Rectangle;
 
 import static com.google.gwt.query.client.GQuery.$;
@@ -42,25 +43,12 @@ public class Scrolling {
       int winWidth = getScrollWidth();
       int winHeigh = getScrollHeight();
 
-      int x = winLeft;
-      int y = winTop;
-      if (top < winTop) {
-        y = top;
+      int deltaX = getDelta(new Interval(winLeft, winLeft + winWidth), new Interval(left, left + width));
+      int deltaY = getDelta(new Interval(winTop, winTop + winHeigh), new Interval(top, top + height));
+
+      if (deltaX != 0 || deltaY != 0) {
+        Window.scrollTo(winLeft + deltaX, winTop + deltaY);
       }
-      if (left < winLeft) {
-        if (left + width < winWidth) {
-          x = 0;
-        } else {
-          x = left;
-        }
-      }
-      if (top + height > winTop + winHeigh) {
-        y = top + height - winHeigh;
-      }
-      if (left + width > winLeft + winWidth) {
-        x = left + width - winWidth;
-      }
-      Window.scrollTo(x, y);
     }
   }
 
@@ -90,24 +78,13 @@ public class Scrolling {
         int parentLeft = parent.getAbsoluteLeft();
         int parentWidth = parent.getClientWidth();
 
-        if (top < parentTop) {
-          int delta = parentTop - top;
-          parent.setScrollTop(scrollTop - delta);
-          top += delta;
-        } else if (top + height > parentTop + parentHeight) {
-          int delta = (parentTop + parentHeight) - (top + height);
-          parent.setScrollTop(scrollTop - delta);
-          top += delta;
+        int deltaX = getDelta(new Interval(parentLeft, parentLeft + parentWidth), new Interval(left, left + width));
+        if (deltaX != 0) {
+          parent.setScrollLeft(scrollLeft + deltaX);
         }
-
-        if (left < parentLeft) {
-          int delta = parentLeft + parentWidth - (left + width);
-          parent.setScrollLeft(scrollLeft - delta);
-          left += delta;
-        } else if (left + width > parentLeft + parentWidth) {
-          int delta = (parentLeft + parentWidth) - (left + width);
-          parent.setScrollLeft(scrollLeft - delta);
-          left += delta;
+        int deltaY = getDelta(new Interval(parentTop, parentTop + parentHeight), new Interval(top, top + height));
+        if (deltaY != 0) {
+          parent.setScrollTop(scrollTop + deltaY);
         }
       }
 
@@ -115,9 +92,13 @@ public class Scrolling {
     }
   }
 
-  private static native void log(String text) /*-{
-    $wnd.console.log(text);
-  }-*/;
+
+  private static int getDelta(Interval vis, Interval target) {
+    if (target.getLowerBound() < vis.getLowerBound() || target.getUpperBound() > vis.getUpperBound()) {
+      return target.getUpperBound() - vis.getUpperBound();
+    }
+    return 0;
+  }
 
   private static native int getScrollX() /*-{
     return $wnd.pageXOffset;
