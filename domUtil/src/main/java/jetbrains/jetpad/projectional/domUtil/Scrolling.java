@@ -81,10 +81,12 @@ public class Scrolling {
         int deltaX = getDelta(new Interval(parentLeft, parentLeft + parentWidth), new Interval(left, left + width));
         if (deltaX != 0) {
           parent.setScrollLeft(scrollLeft + deltaX);
+          left -= deltaX;
         }
         int deltaY = getDelta(new Interval(parentTop, parentTop + parentHeight), new Interval(top, top + height));
         if (deltaY != 0) {
           parent.setScrollTop(scrollTop + deltaY);
+          top -= deltaY;
         }
       }
 
