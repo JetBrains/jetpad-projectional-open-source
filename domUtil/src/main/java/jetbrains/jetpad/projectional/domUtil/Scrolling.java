@@ -43,8 +43,8 @@ public class Scrolling {
       int winWidth = getScrollWidth();
       int winHeigh = getScrollHeight();
 
-      int deltaX = getDelta(new Interval(winLeft, winLeft + winWidth), new Interval(left, left + width));
-      int deltaY = getDelta(new Interval(winTop, winTop + winHeigh), new Interval(top, top + height));
+      int deltaX = getScrollAdjustment(new Interval(winLeft, winLeft + winWidth), new Interval(left, left + width), winLeft);
+      int deltaY = getScrollAdjustment(new Interval(winTop, winTop + winHeigh), new Interval(top, top + height), winTop);
 
       if (deltaX != 0 || deltaY != 0) {
         Window.scrollTo(winLeft + deltaX, winTop + deltaY);
@@ -66,6 +66,8 @@ public class Scrolling {
     int width = rect.dimension.x;
     int height = rect.dimension.y;
 
+    log("adjust scrollers to [" + top + " - " + (top + height) + "]");
+
     while (element.getParentElement() != null) {
       Element parent = element.getParentElement();
 
@@ -73,12 +75,12 @@ public class Scrolling {
       if ("scroll".equals(overflow) || "auto".equals(overflow)) {
         int scrollTop = parent.getScrollTop();
         int parentTop = parent.getAbsoluteTop();
-        int parentHeight = parent.getClientHeight();
+        int parentHeight = parent.getOffsetHeight();
         int scrollLeft = parent.getScrollLeft();
         int parentLeft = parent.getAbsoluteLeft();
-        int parentWidth = parent.getClientWidth();
+        int parentWidth = parent.getOffsetWidth();
 
-        int deltaX = getDelta(new Interval(parentLeft, parentLeft + parentWidth), new Interval(left, left + width));
+        int deltaX = getScrollAdjustment(new Interval(parentLeft, parentLeft + parentWidth), new Interval(left, left + width), scrollLeft);
         if (deltaX != 0) {
           parent.setScrollLeft(scrollLeft + deltaX);
           left -= deltaX;
@@ -94,6 +96,14 @@ public class Scrolling {
     }
   }
 
+  private static int getScrollAdjustment(Interval vis, Interval target, int current) {
+    int delta = getDelta(vis, target);
+    if (current + delta < 0) {
+      delta = -current;
+    }
+    return delta;
+  }
+
   static int getDelta(Interval vis, Interval target) {
     if (vis.getLength() < target.getLength()) {
       return target.getLowerBound() - vis.getLowerBound();
@@ -104,6 +114,10 @@ public class Scrolling {
     }
     return 0;
   }
+
+  private static native void log(String text) /*-{
+    $wnd.console.log(text);
+  }-*/;
 
   private static native int getScrollX() /*-{
     return $wnd.pageXOffset;
