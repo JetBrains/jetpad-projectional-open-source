@@ -93,6 +93,10 @@ public class Scrolling {
   }
 
   static int getDelta(Interval vis, Interval target) {
+    if (vis.getLength() < target.getLength()) {
+      return target.getLowerBound() - vis.getLowerBound();
+    }
+
     if (target.getLowerBound() < vis.getLowerBound() || target.getUpperBound() > vis.getUpperBound()) {
       return target.getUpperBound() - vis.getUpperBound();
     }

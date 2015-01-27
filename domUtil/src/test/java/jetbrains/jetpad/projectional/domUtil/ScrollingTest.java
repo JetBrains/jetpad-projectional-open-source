@@ -15,5 +15,10 @@ public class ScrollingTest {
   public void ifFitsAlignRight() {
     assertEquals(5, Scrolling.getDelta(new Interval(0, 100), new Interval(95, 105)));
   }
+
+  @Test
+  public void ifNotFitAlignLeft() {
+    assertEquals(7, Scrolling.getDelta(new Interval(0, 100), new Interval(7, 110)));
+  }
 }
 
