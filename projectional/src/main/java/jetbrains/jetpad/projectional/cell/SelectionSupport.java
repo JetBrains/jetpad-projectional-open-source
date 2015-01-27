@@ -36,6 +36,7 @@ public class SelectionSupport<ItemT> {
   private static final CellTraitPropertySpec<SelectionSupport<?>> SELECTION_SUPPORT = new CellTraitPropertySpec<>("selectionSupport");
 
   private ObservableList<ItemT> mySelectedItems = new ObservableArrayList<>();
+  private Boolean myForward;
   private boolean myChangingSelection;
   private List<ItemT> mySource;
   private Cell myTarget;
@@ -128,6 +129,7 @@ public class SelectionSupport<ItemT> {
         for (int i = start; i <= end; i++) {
           mySelectedItems.add(mySource.get(i));
         }
+        myForward = true;
       }
     });
   }
@@ -137,6 +139,7 @@ public class SelectionSupport<ItemT> {
       @Override
       public void run() {
         mySelectedItems.clear();
+        myForward = null;
       }
     });
   }
@@ -144,7 +147,7 @@ public class SelectionSupport<ItemT> {
   private void handleFocusLost(FocusEvent event) {
     if (myChangingSelection) return;
 
-    mySelectedItems.clear();
+    clearSelection();
   }
 
   private void handleFocusGain(FocusEvent event) {
@@ -161,7 +164,7 @@ public class SelectionSupport<ItemT> {
       int index = myTargetList.indexOf(expanded);
       select(mySource.get(index), mySource.get(index));
     } else {
-      mySelectedItems.clear();
+      clearSelection();
     }
   }
 
@@ -194,22 +197,27 @@ public class SelectionSupport<ItemT> {
             return;
           }
 
+          boolean consumed = false;
           if (!mySelectedItems.contains(currentItem) && Positions.isHomePosition(currentCell) && Positions.isEndPosition(currentCell)) {
             mySelectedItems.add(currentItem);
+            consumed = true;
           }
 
-          if (currentIndex == myTargetList.size() - 1) return;
-
-          ItemT nextItem = mySource.get(currentIndex + 1);
-
-          if (mySelectedItems.contains(nextItem)) {
-            mySelectedItems.remove(currentItem);
-            focusAndScrollTo(currentIndex + 1, true).run();
-          } else {
-            mySelectedItems.add(nextItem);
-            focusAndScrollTo(currentIndex + 1, false).run();
+          if (currentIndex < myTargetList.size() - 1) {
+            ItemT nextItem = mySource.get(currentIndex + 1);
+            if (mySelectedItems.contains(nextItem)) {
+              mySelectedItems.remove(currentItem);
+              focusAndScrollTo(currentIndex + 1, true).run();
+            } else {
+              mySelectedItems.add(nextItem);
+              focusAndScrollTo(currentIndex + 1, false).run();
+            }
+            consumed = true;
           }
-          event.consume();
+
+          if (consumed) {
+            event.consume();
+          }
         }
       });
     }
