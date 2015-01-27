@@ -66,8 +66,6 @@ public class Scrolling {
     int width = rect.dimension.x;
     int height = rect.dimension.y;
 
-    log("adjust scrollers to [" + top + " - " + (top + height) + "]");
-
     while (element.getParentElement() != null) {
       Element parent = element.getParentElement();
 
