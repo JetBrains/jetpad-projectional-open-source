@@ -232,7 +232,8 @@ public class DomTextEditor {
     Style selectionStyle = mySelectionDiv.getStyle();
     selectionStyle.setTop(0, Style.Unit.PX);
     selectionStyle.setHeight(getLineHeight(), Style.Unit.PX);
-    selectionStyle.setBackgroundColor("cyan");
+    selectionStyle.setBackgroundColor("Highlight");
+    selectionStyle.setColor("HighlightText");
 
     updateSelectionBoundsAndText();
   }
