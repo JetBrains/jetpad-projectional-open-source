@@ -17,28 +17,31 @@ package jetbrains.jetpad.projectional.cell;
 
 import com.google.common.base.Function;
 import com.google.common.base.Supplier;
-import jetbrains.jetpad.cell.trait.CellTrait;
-import jetbrains.jetpad.cell.trait.CellTraitPropertySpec;
-import jetbrains.jetpad.cell.util.Cells;
-import jetbrains.jetpad.event.*;
-import jetbrains.jetpad.mapper.Mapper;
-import jetbrains.jetpad.mapper.MapperFactory;
-import jetbrains.jetpad.model.collections.list.ObservableArrayList;
-import jetbrains.jetpad.model.collections.list.ObservableList;
+import jetbrains.jetpad.base.Validators;
 import jetbrains.jetpad.cell.*;
 import jetbrains.jetpad.cell.action.CellActions;
+import jetbrains.jetpad.cell.position.PositionHandler;
+import jetbrains.jetpad.cell.text.TextEditing;
+import jetbrains.jetpad.cell.trait.CellTrait;
+import jetbrains.jetpad.cell.trait.CellTraitPropertySpec;
+import jetbrains.jetpad.cell.util.CellFactory;
+import jetbrains.jetpad.cell.util.CellLists;
+import jetbrains.jetpad.cell.util.Cells;
 import jetbrains.jetpad.completion.CompletionItem;
 import jetbrains.jetpad.completion.CompletionParameters;
 import jetbrains.jetpad.completion.SimpleCompletionItem;
-import jetbrains.jetpad.cell.position.PositionHandler;
-import jetbrains.jetpad.cell.text.TextEditing;
-import jetbrains.jetpad.cell.util.CellFactory;
-import jetbrains.jetpad.cell.util.CellLists;
+import jetbrains.jetpad.event.*;
+import jetbrains.jetpad.mapper.Mapper;
+import jetbrains.jetpad.mapper.MapperFactory;
+import jetbrains.jetpad.mapper.Synchronizers;
+import jetbrains.jetpad.model.collections.list.ObservableArrayList;
+import jetbrains.jetpad.model.collections.list.ObservableList;
 import jetbrains.jetpad.model.composite.Composites;
+import jetbrains.jetpad.model.property.Property;
+import jetbrains.jetpad.model.property.ValueProperty;
 import jetbrains.jetpad.projectional.generic.Role;
 import jetbrains.jetpad.projectional.generic.RoleCompletion;
 import jetbrains.jetpad.projectional.util.RootController;
-import jetbrains.jetpad.base.Validators;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -591,6 +594,41 @@ public class ProjectionalListSynchronizerTest extends EditingTestCase {
     assertEquals(Arrays.<Child>asList(c3), container.children);
   }
 
+
+  @Test
+  public void selectAfterInDecoratedChild() {
+    DecoratedChild c1 = new DecoratedChild();
+    DecoratedChild c2 = new DecoratedChild();
+
+    container.children.addAll(Arrays.asList(c1, c2));
+    selectFirst(0);
+
+    press(KeyStrokeSpecs.SELECT_AFTER);
+    c1.after.set(true);
+
+    press(KeyStrokeSpecs.SELECT_AFTER);
+    press(KeyStrokeSpecs.SELECT_AFTER);
+
+    assertSelected(c1, c2);
+  }
+
+  @Test
+  public void selectBeforeInDecoratedChild() {
+    DecoratedChild c1 = new DecoratedChild();
+    DecoratedChild c2 = new DecoratedChild();
+
+    container.children.addAll(Arrays.asList(c1, c2));
+    selectLast(1);
+
+    press(KeyStrokeSpecs.SELECT_BEFORE);
+    c1.before.set(true);
+
+    press(KeyStrokeSpecs.SELECT_BEFORE);
+    press(KeyStrokeSpecs.SELECT_BEFORE);
+
+    assertSelected(c1, c2);
+  }
+
   @Test
   public void selectBeforeInEmpty() {
     EmptyChild c1 = new EmptyChild();
@@ -781,6 +819,10 @@ public class ProjectionalListSynchronizerTest extends EditingTestCase {
           return new DeleteOnEmptyChildMapper((DeleteOnEmptyChild) source);
         }
 
+        if (source instanceof DecoratedChild) {
+          return new DecoratedChildMapper((DecoratedChild) source);
+        }
+
         return null;
       }
     };
@@ -851,6 +893,11 @@ public class ProjectionalListSynchronizerTest extends EditingTestCase {
   }
 
   private class DeleteOnEmptyChild extends Child {
+  }
+
+  private class DecoratedChild extends Child {
+    final Property<Boolean> before = new ValueProperty<>(false);
+    final Property<Boolean> after = new ValueProperty<>(false);
   }
 
 
@@ -964,6 +1011,38 @@ public class ProjectionalListSynchronizerTest extends EditingTestCase {
   private class DeleteOnEmptyChildMapper extends Mapper<DeleteOnEmptyChild, DeleteOnEmptyChildCell> {
     private DeleteOnEmptyChildMapper(DeleteOnEmptyChild source) {
       super(source, new DeleteOnEmptyChildCell());
+    }
+  }
+
+  private class DecoratedChildCell extends VerticalCell {
+    final TextCell before = new TextCell("");
+    final TextCell target = new TextCell("");
+    final TextCell after = new TextCell("");
+
+    public DecoratedChildCell() {
+      CellFactory.to(this, before, target, after);
+
+      target.text().set("   ");
+      before.text().set("before");
+      after.text().set("after");
+
+      target.focusable().set(true);
+      before.focusable().set(true);
+      after.focusable().set(true);
+    }
+  }
+
+  private class DecoratedChildMapper extends Mapper<DecoratedChild, DecoratedChildCell> {
+    public DecoratedChildMapper(DecoratedChild source) {
+      super(source, new DecoratedChildCell());
+    }
+
+    @Override
+    protected void registerSynchronizers(SynchronizersConfiguration conf) {
+      super.registerSynchronizers(conf);
+
+      conf.add(Synchronizers.forPropsOneWay(getSource().before, getTarget().before.visible()));
+      conf.add(Synchronizers.forPropsOneWay(getSource().after, getTarget().after.visible()));
     }
   }
 }

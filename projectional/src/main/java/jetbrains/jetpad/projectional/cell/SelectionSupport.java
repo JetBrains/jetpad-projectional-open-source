@@ -187,11 +187,15 @@ public class SelectionSupport<ItemT> {
               mySelectedItems.add(currentItem);
               focusAndScrollTo(currentIndex, false).run();
             } else {
-              mySelectedItems.remove(currentItem);
-              if (currentIndex == myTargetList.size() - 1) {
+              if (myDirection == Direction.FORWARD) {
                 focusAndScrollTo(currentIndex, false).run();
               } else {
-                focusAndScrollTo(currentIndex + 1, true).run();
+                mySelectedItems.remove(currentItem);
+                if (currentIndex == myTargetList.size() - 1) {
+                  focusAndScrollTo(currentIndex, false).run();
+                } else {
+                  focusAndScrollTo(currentIndex + 1, true).run();
+                }
               }
             }
 
@@ -217,6 +221,9 @@ public class SelectionSupport<ItemT> {
 
 
           if (consumed) {
+            if (myDirection == null) {
+              myDirection = Direction.FORWARD;
+            }
             event.consume();
           }
         }
@@ -241,11 +248,15 @@ public class SelectionSupport<ItemT> {
               mySelectedItems.add(0, currentItem);
               focusAndScrollTo(currentIndex, true).run();
             } else {
-              mySelectedItems.remove(currentItem);
-              if (currentIndex == 0) {
+              if (myDirection == Direction.BACKWARD) {
                 focusAndScrollTo(currentIndex, true).run();
               } else {
-                focusAndScrollTo(currentIndex - 1, false).run();
+                mySelectedItems.remove(currentItem);
+                if (currentIndex == 0) {
+                  focusAndScrollTo(currentIndex, true).run();
+                } else {
+                  focusAndScrollTo(currentIndex - 1, false).run();
+                }
               }
             }
             consumed = true;
@@ -270,6 +281,9 @@ public class SelectionSupport<ItemT> {
           }
 
           if (consumed) {
+            if (myDirection == null) {
+              myDirection = Direction.BACKWARD;
+            }
             event.consume();
           }
         }
