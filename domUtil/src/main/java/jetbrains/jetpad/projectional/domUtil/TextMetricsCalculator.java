@@ -41,13 +41,7 @@ public class TextMetricsCalculator {
     Context2d ctx = canvas.getContext2d();
     ctx.setFont(getFontString(font));
     final int width = (int) ctx.measureText(normalize(text)).getWidth();
-    String agent = Window.Navigator.getUserAgent().toLowerCase();
-    int height = font.getSize();
-    if (agent.contains("firefox")) {
-      height += 1;
-    } else if (agent.contains("chrome")) {
-      height += 2;
-    }
+    int height = adjustHeight(font.getSize());
     final Vector dimension = new Vector(width, height);
     return new TextMetrics() {
       @Override
@@ -71,13 +65,7 @@ public class TextMetricsCalculator {
     ctx.setFont(getFontString(font));
     final int width = (int) ctx.measureText(normalize(text)).getWidth();
 
-    String agent = Window.Navigator.getUserAgent().toLowerCase();
-    int height = font.getSize();
-    if (agent.contains("firefox")) {
-      height += 1;
-    } else if (agent.contains("chrome")) {
-      height += 2;
-    }
+    int height = adjustHeight(font.getSize());
     final Vector dimension = new Vector(width, height);
 
     final int baseLine = fontBaseLine(font);
@@ -92,6 +80,14 @@ public class TextMetricsCalculator {
         return baseLine;
       }
     };
+  }
+
+  private static int adjustHeight(int height) {
+    String agent = Window.Navigator.getUserAgent().toLowerCase();
+    if (agent.contains("firefox")) {
+      height += 1;
+    }
+    return height;
   }
 
   private static int fontBaseLine(Font font) {
