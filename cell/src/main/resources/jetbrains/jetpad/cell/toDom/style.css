@@ -69,27 +69,27 @@
   display: none !important;
 }
 
-.currentHighlighted {
+.selectedLeaf {
   background-color: currentHighlightColor;
 }
 
-.currentHighlighted .horizontal {
+.selectedLeaf .horizontal {
   background-color: currentHighlightColor;
 }
 
-.currentHighlighted[style] {
+.selectedLeaf[style] {
   background-color: currentHighlightColor !important;
 }
 
-.pairHighlighted {
+.paired {
   background-color: pairHighlightColor;
 }
 
-.pairHighlighted .horizontal {
+.paired .horizontal {
   background-color: pairHighlightColor;
 }
 
-.pairHighlighted[style] {
+.paired[style] {
   background-color: pairHighlightColor !important;
 }
 
