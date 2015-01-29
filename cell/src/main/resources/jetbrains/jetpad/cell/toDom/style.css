@@ -1,5 +1,5 @@
 @eval textFont jetbrains.jetpad.projectional.view.gwt.View2Dom.font();
-@eval currentHighlightColor jetbrains.jetpad.cell.Cell.CURRENT_FOCUS_COLOR.toCssColor();
+@eval currentHighlightColor jetbrains.jetpad.cell.Cell.FOCUS_HIGHLIGHT_COLOR.toCssColor();
 @eval pairHighlightColor jetbrains.jetpad.cell.Cell.PAIR_HIGHLIGHT_COLOR.toCssColor();
 
 .rootContainer:focus {
