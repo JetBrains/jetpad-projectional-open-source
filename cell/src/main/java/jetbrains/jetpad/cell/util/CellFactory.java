@@ -152,9 +152,9 @@ public class CellFactory {
 
       @Override
       public void onPropertyChanged(Cell c, CellPropertySpec<?> prop, PropertyChangeEvent<?> e) {
-        if (prop == Cell.HIGHLIGHTED) {
+        if (prop == Cell.CURRENT_HIGHLIGHTED) {
           PropertyChangeEvent<Boolean> event = (PropertyChangeEvent<Boolean>) e;
-          textCell.get(PLACEHOLDER_CELL).highlighted().set(event.getNewValue());
+          textCell.get(PLACEHOLDER_CELL).currentHighlighted().set(event.getNewValue());
         }
 
         if (prop == TextCell.TEXT) {

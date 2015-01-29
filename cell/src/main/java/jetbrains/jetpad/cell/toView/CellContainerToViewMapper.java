@@ -401,8 +401,8 @@ public class CellContainerToViewMapper extends Mapper<CellContainer, View> {
           }
         }
 
-        if (prop == Cell.HIGHLIGHTED) {
-          if (cell.highlighted().get()) {
+        if (prop == Cell.CURRENT_HIGHLIGHTED) {
+          if (cell.currentHighlighted().get()) {
             myHighlighted.add(cell);
           } else {
             myHighlighted.remove(cell);
@@ -438,7 +438,7 @@ public class CellContainerToViewMapper extends Mapper<CellContainer, View> {
           }
         }
 
-        if (cell.highlighted().get()) {
+        if (cell.currentHighlighted().get()) {
           myHighlighted.add(cell);
         }
 

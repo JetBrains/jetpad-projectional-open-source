@@ -1,6 +1,6 @@
 @eval textFont jetbrains.jetpad.projectional.view.gwt.View2Dom.font();
-@eval highlightColor jetbrains.jetpad.cell.Cell.HIGHLIGHT_COLOR.toCssColor();
-@eval brightHighlightColor jetbrains.jetpad.cell.Cell.BRIGHT_HIGHLIGHT_COLOR.toCssColor();
+@eval currentHighlightColor jetbrains.jetpad.cell.Cell.CURRENT_HIGHLIGHT_COLOR.toCssColor();
+@eval pairHighlightColor jetbrains.jetpad.cell.Cell.PAIR_HIGHLIGHT_COLOR.toCssColor();
 
 .rootContainer:focus {
   outline: 0;
@@ -69,29 +69,28 @@
   display: none !important;
 }
 
-.highlighted {
-  background-color: highlightColor;
+.currentHighlighted {
+  background-color: currentHighlightColor;
 }
 
-.highlighted .horizontal {
-  background-color: highlightColor;
+.currentHighlighted .horizontal {
+  background-color: currentHighlightColor;
 }
 
-.highlighted[style] {
-  background-color: highlightColor !important;
+.currentHighlighted[style] {
+  background-color: currentHighlightColor !important;
 }
 
-
-.brightlyHighlighted {
-  background-color: brightHighlightColor;
+.pairHighlighted {
+  background-color: pairHighlightColor;
 }
 
-.brightlyHighlighted .horizontal {
-  background-color: brightHighlightColor;
+.pairHighlighted .horizontal {
+  background-color: pairHighlightColor;
 }
 
-.brightlyHighlighted[style] {
-  background-color: brightHighlightColor !important;
+.pairHighlighted[style] {
+  background-color: pairHighlightColor !important;
 }
 
 .selected {

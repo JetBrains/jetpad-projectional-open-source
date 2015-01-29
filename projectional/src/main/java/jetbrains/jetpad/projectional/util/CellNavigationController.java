@@ -99,23 +99,23 @@ public class CellNavigationController {
       public void onEvent(PropertyChangeEvent<Cell> event) {
         Cell oldCell = event.getOldValue();
         if (oldCell != null) {
-          oldCell.highlighted().set(false);
+          oldCell.currentHighlighted().set(false);
           if (myPair != null) {
-            oldCell.brightHighlight().set(false);
-            myPair.brightHighlight().set(false);
-            myPair.highlighted().set(false);
+            oldCell.pairHighlighted().set(false);
+            myPair.pairHighlighted().set(false);
+            myPair.currentHighlighted().set(false);
             myPair = null;
           }
         }
 
         Cell newCell = event.getNewValue();
         if (newCell != null) {
-          newCell.highlighted().set(true);
+          newCell.currentHighlighted().set(true);
           Cell pair = newCell.get(PAIR_CELL);
           if (pair != null) {
-            newCell.brightHighlight().set(true);
-            pair.brightHighlight().set(true);
-            pair.highlighted().set(true);
+            newCell.pairHighlighted().set(true);
+            pair.pairHighlighted().set(true);
+            pair.currentHighlighted().set(true);
             myPair = pair;
           }
         }

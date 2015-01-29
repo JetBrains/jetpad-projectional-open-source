@@ -57,7 +57,7 @@ public class IndentPropertiesTest {
 
   @Test
   public void highlightingUpdate() {
-    c1.highlighted().set(true);
+    c1.currentHighlighted().set(true);
 
     assertHighlighted(l11, l12);
     assertBlank(l21, l22);
@@ -65,9 +65,9 @@ public class IndentPropertiesTest {
 
   @Test
   public void overlappingHighlightUpdate() {
-    indentCell.highlighted().set(true);
-    c1.highlighted().set(true);
-    indentCell.highlighted().set(false);
+    indentCell.currentHighlighted().set(true);
+    c1.currentHighlighted().set(true);
+    indentCell.currentHighlighted().set(false);
   }
 
   @Test
@@ -81,7 +81,7 @@ public class IndentPropertiesTest {
   @Test
   public void selectionIsHigherPriorityThanHighlighting() {
     c1.selected().set(true);
-    c1.highlighted().set(true);
+    c1.currentHighlighted().set(true);
 
     assertSelected(l11);
   }
@@ -100,7 +100,7 @@ public class IndentPropertiesTest {
 
   private void assertHighlighted(Cell... cs) {
     for (Cell c : cs) {
-      assertEquals(Cell.HIGHLIGHT_COLOR, getView(c).background().get());
+      assertEquals(Cell.CURRENT_HIGHLIGHT_COLOR, getView(c).background().get());
     }
   }
 
