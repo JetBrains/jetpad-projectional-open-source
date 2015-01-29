@@ -47,7 +47,7 @@ import jetbrains.jetpad.values.Color;
 import java.util.*;
 
 public abstract class Cell implements NavComposite<Cell>, HasVisibility, HasFocusability, HasBounds {
-  public static final Color CURRENT_HIGHLIGHT_COLOR = new Color(200, 200, 200);
+  public static final Color FOCUS_HIGHLIGHT_COLOR = new Color(200, 200, 200);
   public static final Color PAIR_HIGHLIGHT_COLOR = new Color(168, 214, 255);
   public static final Color SELECTION_COLOR = Color.LIGHT_BLUE;
 
@@ -63,7 +63,7 @@ public abstract class Cell implements NavComposite<Cell>, HasVisibility, HasFocu
   public static final CellPropertySpec<Boolean> VISIBLE = new CellPropertySpec<>("visible", true);
   public static final CellPropertySpec<Boolean> POPUP = new CellPropertySpec<>("popup", false);
   public static final CellPropertySpec<Boolean> SELECTED = new CellPropertySpec<>("selected", false);
-  public static final CellPropertySpec<Boolean> CURRENT_HIGHLIGHTED = new CellPropertySpec<>("currentHighlighted", false);
+  public static final CellPropertySpec<Boolean> FOCUS_HIGHLIGHTED = new CellPropertySpec<>("focusHighlighted", false);
   public static final CellPropertySpec<Boolean> PAIR_HIGHLIGHTED = new CellPropertySpec<>("pairHighlighted", false);
   public static final CellPropertySpec<Boolean> FOCUSABLE = new CellPropertySpec<>("focusable", false);
   public static final CellPropertySpec<Color> BACKGROUND = new CellPropertySpec<>("background");
@@ -132,8 +132,8 @@ public abstract class Cell implements NavComposite<Cell>, HasVisibility, HasFocu
     return getProp(PAIR_HIGHLIGHTED);
   }
 
-  public Property<Boolean> currentHighlighted() {
-    return getProp(CURRENT_HIGHLIGHTED);
+  public Property<Boolean> focusHighlighted() {
+    return getProp(FOCUS_HIGHLIGHTED);
   }
 
   public Property<Boolean> focusable() {

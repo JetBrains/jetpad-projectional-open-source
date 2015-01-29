@@ -24,7 +24,7 @@ public interface CellToDomCss extends CssResource {
   String indented();
   String hidden();
   String selected();
-  String selectedLeaf();
+  String focusedLeaf();
   String paired();
   String domCell();
   String hasShadow();

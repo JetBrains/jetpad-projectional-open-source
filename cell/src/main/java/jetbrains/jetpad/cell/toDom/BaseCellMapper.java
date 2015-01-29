@@ -44,7 +44,7 @@ abstract class BaseCellMapper<SourceT extends Cell> extends Mapper<SourceT, Elem
   private boolean myWasPopup;
   private CellToDomContext myContext;
 
-  private int myExternalHighlightCount;
+  private int myExternalFocusHighlight;
   private int myExternalSelectCount;
 
   private Color myBorderColor;
@@ -124,8 +124,8 @@ abstract class BaseCellMapper<SourceT extends Cell> extends Mapper<SourceT, Elem
     super.onDetach();
   }
 
-  void changeExtenralHighlight(int delta) {
-    myExternalHighlightCount += delta;
+  void changeFocusHighlight(int delta) {
+    myExternalFocusHighlight += delta;
   }
 
   void changeExternalSelect(int delta) {
@@ -136,20 +136,37 @@ abstract class BaseCellMapper<SourceT extends Cell> extends Mapper<SourceT, Elem
     return false;
   }
 
+  boolean isLeaf() {
+    return false;
+  }
+
   protected void refreshProperties() {
     Style style = getTarget().getStyle();
-    if (getSource().selected().get() || myExternalSelectCount > 0) {
-      getTarget().addClassName(CellContainerToDomMapper.CSS.selected());
-    } else {
-      getTarget().removeClassName(CellContainerToDomMapper.CSS.selected());
+
+    boolean selected = getSource().selected().get() || myExternalSelectCount > 0;
+    boolean paired = getSource().pairHighlighted().get();
+    boolean focusHighlighted = getSource().focusHighlighted().get() || myExternalFocusHighlight > 0;
+
+    getTarget().removeClassName(CellContainerToDomMapper.CSS.selected());
+    getTarget().removeClassName(CellContainerToDomMapper.CSS.paired());
+    getTarget().removeClassName(CellContainerToDomMapper.CSS.focusedLeaf());
+
+    if (focusHighlighted) {
+      if (isLeaf()) {
+        getTarget().addClassName(CellContainerToDomMapper.CSS.focusedLeaf());
+      } else {
+        getTarget().addClassName(CellContainerToDomMapper.CSS.selected());
+      }
     }
 
-    if (!isEmpty() && (getSource().currentHighlighted().get() || myExternalHighlightCount > 0)) {
-      getTarget().addClassName(getSource().pairHighlighted().get() ? CellContainerToDomMapper.CSS.paired() : CellContainerToDomMapper.CSS.selectedLeaf());
-    } else {
-      getTarget().removeClassName(CellContainerToDomMapper.CSS.selectedLeaf());
-      getTarget().removeClassName(CellContainerToDomMapper.CSS.paired());
+    if (paired) {
+      getTarget().addClassName(CellContainerToDomMapper.CSS.paired());
     }
+
+    if (selected) {
+      getTarget().addClassName(CellContainerToDomMapper.CSS.selected());
+    }
+
 
     Color background = getSource().background().get();
     style.setBackgroundColor(background == null ? "" : background.toCssColor());

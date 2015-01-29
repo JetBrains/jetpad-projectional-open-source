@@ -158,16 +158,16 @@ class IndentRootCellMapper extends BaseCellMapper<IndentCell> {
 
       @Override
       public void propertyChanged(Cell cell, final CellPropertySpec<?> prop, final PropertyChangeEvent<?> event) {
-        if (prop == Cell.CURRENT_HIGHLIGHTED || prop == Cell.SELECTED) {
+        if (prop == Cell.FOCUS_HIGHLIGHTED || prop == Cell.SELECTED) {
           iterateLeaves(cell, new Handler<Cell>() {
             @Override
             public void handle(Cell item) {
               BaseCellMapper<?> mapper = (BaseCellMapper<?>) getDescendantMapper(item);
-              if (prop == Cell.CURRENT_HIGHLIGHTED) {
+              if (prop == Cell.FOCUS_HIGHLIGHTED) {
                 if ((Boolean) event.getNewValue()) {
-                  mapper.changeExtenralHighlight(1);
+                  mapper.changeFocusHighlight(1);
                 } else {
-                  mapper.changeExtenralHighlight(-1);
+                  mapper.changeFocusHighlight(-1);
                 }
                 mapper.refreshProperties();
               } else if (prop == Cell.SELECTED) {

@@ -15,23 +15,24 @@
  */
 package jetbrains.jetpad.cell.toView;
 
+import jetbrains.jetpad.base.Registration;
+import jetbrains.jetpad.cell.Cell;
 import jetbrains.jetpad.geometry.Rectangle;
 import jetbrains.jetpad.mapper.Mapper;
 import jetbrains.jetpad.mapper.MappingContext;
 import jetbrains.jetpad.model.collections.list.ObservableList;
 import jetbrains.jetpad.model.collections.set.ObservableSet;
 import jetbrains.jetpad.model.event.EventHandler;
-import jetbrains.jetpad.base.Registration;
 import jetbrains.jetpad.model.property.PropertyChangeEvent;
-import jetbrains.jetpad.cell.*;
 import jetbrains.jetpad.projectional.view.View;
+import jetbrains.jetpad.values.Color;
 
 class BaseCellMapper<SourceT extends Cell, TargetT extends View> extends Mapper<SourceT, TargetT> {
   private CellToViewContext myContext;
 
   private ObservableList<BaseCellMapper<?, ?>> myChildMappers;
   private ObservableSet<BaseCellMapper<?, ?>> myPopupMappers;
-  private int myExternalHighlightCount;
+  private int myExternalFocusHighlightCount;
   private int myExternalSelectCount;
   private Registration myPopupUpdateReg;
   
@@ -88,24 +89,35 @@ class BaseCellMapper<SourceT extends Cell, TargetT extends View> extends Mapper<
   }
 
   void changeExternalHighlight(int delta) {
-    myExternalHighlightCount += delta;
+    myExternalFocusHighlightCount += delta;
   }
 
   void changeExternalSelect(int delta) {
     myExternalSelectCount += delta;
   }
 
+  boolean isLeaf() {
+    return false;
+  }
+
   void refreshProperties() {
     Cell cell = getSource();
     View view = getTarget();
 
-    if (cell.selected().get() || myExternalSelectCount > 0) {
-      view.background().set(Cell.SELECTION_COLOR);
-    } else if ((cell.currentHighlighted().get() || myExternalHighlightCount > 0) && myContext.containerFocused().get()) {
-      view.background().set(cell.pairHighlighted().get() ? Cell.PAIR_HIGHLIGHT_COLOR : Cell.CURRENT_HIGHLIGHT_COLOR);
-    } else {
-      view.background().set(cell.background().get());
+    boolean selected = getSource().selected().get() || myExternalSelectCount > 0;
+    boolean paired = getSource().pairHighlighted().get();
+    boolean focusHighlighted = getSource().focusHighlighted().get() || myExternalFocusHighlightCount > 0;
+
+    Color background = cell.background().get();
+    if (selected) {
+      background = Cell.SELECTION_COLOR;
+    } else if (focusHighlighted) {
+      background = isLeaf() ? Cell.FOCUS_HIGHLIGHT_COLOR : Cell.SELECTION_COLOR;
+    } else if (paired) {
+      background = Cell.PAIR_HIGHLIGHT_COLOR;
     }
+    view.background().set(background);
+
     view.border().set(cell.borderColor().get());
     view.visible().set(cell.visible().get());
     view.hasShadow().set(cell.hasShadow().get());

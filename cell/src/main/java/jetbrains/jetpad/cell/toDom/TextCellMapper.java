@@ -69,6 +69,11 @@ class TextCellMapper extends BaseCellMapper<TextCell> {
   }
 
   @Override
+  boolean isLeaf() {
+    return true;
+  }
+
+  @Override
   protected void refreshProperties() {
     super.refreshProperties();
 

@@ -69,15 +69,15 @@
   display: none !important;
 }
 
-.selectedLeaf {
+.focusedLeaf {
   background-color: currentHighlightColor;
 }
 
-.selectedLeaf .horizontal {
+.focusedLeaf .horizontal {
   background-color: currentHighlightColor;
 }
 
-.selectedLeaf[style] {
+.focusedLeaf[style] {
   background-color: currentHighlightColor !important;
 }
 

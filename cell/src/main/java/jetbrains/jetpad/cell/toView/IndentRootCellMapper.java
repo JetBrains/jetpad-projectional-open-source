@@ -131,7 +131,7 @@ class IndentRootCellMapper extends BaseCellMapper<IndentCell, VerticalView> {
 
       @Override
       public void propertyChanged(Cell cell, final CellPropertySpec<?> prop, final PropertyChangeEvent<?> event) {
-        if (prop == Cell.CURRENT_HIGHLIGHTED || prop == Cell.SELECTED) {
+        if (prop == Cell.FOCUS_HIGHLIGHTED || prop == Cell.SELECTED) {
           iterateLeaves(cell, new Handler<Cell>() {
             @Override
             public void handle(Cell item) {
@@ -139,7 +139,7 @@ class IndentRootCellMapper extends BaseCellMapper<IndentCell, VerticalView> {
               if (mapper == null) {
                 throw new IllegalStateException();
               }
-              if (prop == Cell.CURRENT_HIGHLIGHTED) {
+              if (prop == Cell.FOCUS_HIGHLIGHTED) {
                 if ((Boolean) event.getNewValue()) {
                   mapper.changeExternalHighlight(1);
                 } else {
