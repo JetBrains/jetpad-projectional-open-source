@@ -39,7 +39,7 @@ public class CompletionMenuModel {
       public ReadableProperty<Boolean> apply(final CompletionItem input) {
         return new DerivedProperty<Boolean>(text) {
           @Override
-          public Boolean get() {
+          public Boolean doGet() {
             return input.isMatchPrefix(text.get() == null ? "" : text.get());
           }
 

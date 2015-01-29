@@ -121,14 +121,14 @@ class CompletionMenu {
 
       conf.add(Synchronizers.forPropsOneWay(Properties.ifProp(new DerivedProperty<Boolean>(text) {
         @Override
-        public Boolean get() {
+        public Boolean doGet() {
           return getSource().isMatch(text.get());
         }
       }, Color.BLUE, Color.BLACK), myText.textColor()));
 
       conf.add(Synchronizers.forPropsOneWay(new DerivedProperty<String>() {
         @Override
-        public String get() {
+        public String doGet() {
           return getSource().visibleText(text.get());
         }
 

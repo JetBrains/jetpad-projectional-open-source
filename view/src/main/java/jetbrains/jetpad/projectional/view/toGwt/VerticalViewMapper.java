@@ -39,7 +39,7 @@ class VerticalViewMapper extends CompositeViewMapper<VerticalView, Element> {
 
     conf.add(Synchronizers.forPropsOneWay(new DerivedProperty<Boolean>(getSource().bounds(), context().visibleArea()) {
                                             @Override
-                                            public Boolean get() {
+                                            public Boolean doGet() {
                                               return getSource().bounds().get().intersects(context().visibleArea().get());
                                             }
                                           },

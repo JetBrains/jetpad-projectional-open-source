@@ -93,7 +93,7 @@ class BaseViewMapper<ViewT extends View, ElementT extends Element> extends Mappe
         final BaseViewMapper<?, ?> parent = (BaseViewMapper<?, ?>) getParent();
         positionInParent = new DerivedProperty<Rectangle>(getSource().bounds(), parent.getSource().bounds()) {
           @Override
-          public Rectangle get() {
+          public Rectangle doGet() {
             Rectangle sourceBounds = getSource().bounds().get();
             Rectangle parentSourceBounds = parent.getSource().bounds().get();
             return sourceBounds.sub(parentSourceBounds.origin);

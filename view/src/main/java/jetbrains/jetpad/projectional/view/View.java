@@ -954,7 +954,7 @@ public abstract class View implements NavComposite<View>, HasFocusability, HasVi
     }
 
     @Override
-    public Vector get() {
+    public Vector doGet() {
       return myBaseProperty.get().add(toRootDelta().get());
     }
 

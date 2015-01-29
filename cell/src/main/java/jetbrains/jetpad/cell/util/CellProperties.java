@@ -34,7 +34,7 @@ public class CellProperties {
 
     return new DerivedProperty<Boolean>(focusedCell) {
       @Override
-      public Boolean get() {
+      public Boolean doGet() {
         Cell focused = focusedCell.get();
         if (focused == null) return false;
         return Composites.isDescendant(cell, focused);

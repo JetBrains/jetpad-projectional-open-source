@@ -49,7 +49,7 @@ class LineViewMapper extends BaseViewMapper<LineView, Element> {
 
     conf.add(Synchronizers.forPropsOneWay(new DerivedProperty<Vector>(getSource().bounds(), getSource().start()) {
       @Override
-      public Vector get() {
+      public Vector doGet() {
         return getSource().start().get().sub(getSource().bounds().get().origin);
       }
     }, new WritableProperty<Vector>() {
@@ -66,7 +66,7 @@ class LineViewMapper extends BaseViewMapper<LineView, Element> {
     }));
     conf.add(Synchronizers.forPropsOneWay(new DerivedProperty<Vector>(getSource().bounds(), getSource().start()) {
       @Override
-      public Vector get() {
+      public Vector doGet() {
         return getSource().end().get().sub(getSource().bounds().get().origin);
       }
     }, new WritableProperty<Vector>() {

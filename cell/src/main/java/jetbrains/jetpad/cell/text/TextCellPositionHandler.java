@@ -58,7 +58,7 @@ public class TextCellPositionHandler implements PositionHandler {
   public Property<Integer> caretOffset() {
     final ReadableProperty<Integer> derivedOffset = new DerivedProperty<Integer>(myTextCell.caretPosition()) {
       @Override
-      public Integer get() {
+      public Integer doGet() {
         return myTextCell.getCaretOffset(myTextCell.caretPosition().get());
       }
 

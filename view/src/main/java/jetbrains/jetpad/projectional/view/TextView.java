@@ -83,7 +83,7 @@ public class TextView extends View {
   public ReadableProperty<Font> font() {
     return new DerivedProperty<Font>(fontFamily(), fontSize(), bold(), italic()) {
       @Override
-      public Font get() {
+      public Font doGet() {
         return new Font(fontFamily().get(), fontSize().get(), bold().get(), italic().get());
       }
     };

@@ -97,7 +97,7 @@ public class TextCell extends Cell {
   public ReadableProperty<String> prefixText() {
     return new DerivedProperty<String>(text(), caretPosition()) {
       @Override
-      public String get() {
+      public String doGet() {
         int caret = caretPosition().get();
         String textValue = text().get() != null ? text().get() : "";
         return textValue.substring(0, caret);

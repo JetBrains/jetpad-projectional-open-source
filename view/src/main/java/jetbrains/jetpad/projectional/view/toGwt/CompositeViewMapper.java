@@ -49,7 +49,7 @@ class CompositeViewMapper<ViewT extends View, ElementT extends Element> extends 
         public ReadableProperty<Boolean> apply(final View input) {
           return new DerivedProperty<Boolean>(input.bounds(), context().visibleArea()) {
             @Override
-            public Boolean get() {
+            public Boolean doGet() {
               return input.bounds().get().intersects(context().visibleArea().get());
             }
           };
