@@ -1,5 +1,5 @@
 @eval textFont jetbrains.jetpad.projectional.view.gwt.View2Dom.font();
-@def currentHighlightColor rgb(200, 200, 200);
+@def currentHighlightColor rgb(220, 220, 220);
 @def pairHighlightColor rgb(168, 214, 255);
 
 .rootContainer:focus {
@@ -71,7 +71,6 @@
 
 .focusedLeaf {
   background-color: currentHighlightColor;
-  outline: 1px dotted black;
 }
 
 .focusedLeaf .horizontal {
