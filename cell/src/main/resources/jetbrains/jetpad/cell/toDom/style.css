@@ -1,5 +1,6 @@
 @eval textFont jetbrains.jetpad.projectional.view.gwt.View2Dom.font();
-@def currentHighlightColor rgb(220, 220, 220);
+@def currentHighlightColor rgb(227, 229, 215);
+@def lineHighlightColor rgb(254, 255, 215);
 @def pairHighlightColor rgb(168, 214, 255);
 
 .rootContainer:focus {
