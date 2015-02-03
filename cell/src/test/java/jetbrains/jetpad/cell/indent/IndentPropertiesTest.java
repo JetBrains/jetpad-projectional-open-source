@@ -94,13 +94,13 @@ public class IndentPropertiesTest {
 
   private void assertSelected(Cell... cs) {
     for (Cell c : cs) {
-      assertEquals(Cell.SELECTION_COLOR, getView(c).background().get());
+      assertEquals(CellContainerToViewMapper.SELECTION_COLOR, getView(c).background().get());
     }
   }
 
   private void assertHighlighted(Cell... cs) {
     for (Cell c : cs) {
-      assertEquals(Cell.FOCUS_HIGHLIGHT_COLOR, getView(c).background().get());
+      assertEquals(CellContainerToViewMapper.FOCUS_HIGHLIGHT_COLOR, getView(c).background().get());
     }
   }
 

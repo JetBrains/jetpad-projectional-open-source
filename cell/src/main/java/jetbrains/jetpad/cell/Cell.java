@@ -47,9 +47,6 @@ import jetbrains.jetpad.values.Color;
 import java.util.*;
 
 public abstract class Cell implements NavComposite<Cell>, HasVisibility, HasFocusability, HasBounds {
-  public static final Color FOCUS_HIGHLIGHT_COLOR = new Color(200, 200, 200);
-  public static final Color PAIR_HIGHLIGHT_COLOR = new Color(168, 214, 255);
-  public static final Color SELECTION_COLOR = Color.LIGHT_BLUE;
 
   public static final CellPropertySpec<Boolean> FOCUSED = new CellPropertySpec<>("focused", false);
 
