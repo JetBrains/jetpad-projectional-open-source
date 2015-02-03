@@ -1,6 +1,6 @@
 @eval textFont jetbrains.jetpad.projectional.view.gwt.View2Dom.font();
-@def currentHighlightColor rgb(200, 200, 200)
-@def pairHighlightColor rbg(168, 214, 255)
+@def currentHighlightColor rgb(200, 200, 200);
+@def pairHighlightColor rgb(168, 214, 255);
 
 .rootContainer:focus {
   outline: 0;
