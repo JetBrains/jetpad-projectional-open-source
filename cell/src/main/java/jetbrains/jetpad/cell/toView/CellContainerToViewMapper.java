@@ -46,8 +46,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class CellContainerToViewMapper extends Mapper<CellContainer, View> {
-
-
   public static final Color FOCUS_HIGHLIGHT_COLOR = new Color(200, 200, 200);
   public static final Color PAIR_HIGHLIGHT_COLOR = new Color(168, 214, 255);
   public static final Color SELECTION_COLOR = Color.LIGHT_BLUE;
