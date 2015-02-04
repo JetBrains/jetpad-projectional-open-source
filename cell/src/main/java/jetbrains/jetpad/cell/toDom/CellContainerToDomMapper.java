@@ -27,7 +27,6 @@ import com.google.gwt.query.client.Function;
 import com.google.gwt.query.client.GQuery;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
-import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import jetbrains.jetpad.base.Handler;
 import jetbrains.jetpad.base.Registration;
@@ -37,7 +36,6 @@ import jetbrains.jetpad.base.edt.EventDispatchThread;
 import jetbrains.jetpad.base.edt.JsEventDispatchThread;
 import jetbrains.jetpad.cell.*;
 import jetbrains.jetpad.cell.dom.DomCell;
-import jetbrains.jetpad.cell.event.CompletionEvent;
 import jetbrains.jetpad.cell.indent.IndentCell;
 import jetbrains.jetpad.cell.indent.NewLineCell;
 import jetbrains.jetpad.cell.util.Cells;
@@ -109,10 +107,6 @@ public class CellContainerToDomMapper extends Mapper<CellContainer, Element> {
 
   static final CellToDomBundle BUNDLE = GWT.create(CellToDomBundle.class);
   static final CellToDomCss CSS = BUNDLE.style();
-
-  static native boolean isMobile() /*-{
-    return $wnd.orientation !== undefined;
-  }-*/;
 
   private static void ensureIndentInjected() {
     if (ourIndentInjected) return;
@@ -282,66 +276,6 @@ public class CellContainerToDomMapper extends Mapper<CellContainer, Element> {
         return registerListeners();
       }
     }));
-
-    if (isMobile()) {
-      conf.add(Synchronizers.forRegistration(new Supplier<Registration>() {
-        @Override
-        public Registration get() {
-          return getSource().focusedCell.addHandler(new EventHandler<PropertyChangeEvent<Cell>>() {
-            @Override
-            public void onEvent(PropertyChangeEvent<Cell> event) {
-              getFocusTarget().getStyle().setTop(event.getNewValue() == null ? 0 : event.getNewValue().getBounds().origin.y - getTarget().getAbsoluteTop(), Style.Unit.PX);
-            }
-          });
-        }
-      }));
-
-      conf.add(Synchronizers.forRegistration(new Supplier<Registration>() {
-        @Override
-        public Registration get() {
-          return new Registration() {
-            private Timer myTimer;
-            private Registration myReg;
-
-            {
-
-              myReg = getSource().focusedCell.addHandler(new EventHandler<PropertyChangeEvent<Cell>>() {
-                @Override
-                public void onEvent(PropertyChangeEvent<Cell> event) {
-                  stopTimer();
-                  if (event.getNewValue() != null) {
-                    startTimer();
-                  }
-                }
-              });
-            }
-
-            private void startTimer() {
-              myTimer = new Timer() {
-                @Override
-                public void run() {
-                  getSource().complete(new CompletionEvent(true));
-                }
-              };
-              myTimer.schedule(500);
-            }
-
-            private void stopTimer() {
-              if (myTimer != null) {
-                myTimer.cancel();
-                myTimer = null;
-              }
-            }
-
-            @Override
-            public void remove() {
-              stopTimer();
-              myReg.remove();
-            }
-          };
-        }
-      }));
-    }
   }
 
   private Element getFocusTarget() {
