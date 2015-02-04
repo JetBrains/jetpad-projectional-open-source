@@ -25,6 +25,7 @@ import com.google.gwt.dom.client.StyleInjector;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.query.client.Function;
 import com.google.gwt.query.client.GQuery;
+import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
@@ -138,12 +139,21 @@ public class CellContainerToDomMapper extends Mapper<CellContainer, Element> {
   private int myScrollLeft;
   private int myScrollTop;
   private HandlerRegistration myWindowReg;
+  private Element myLineHighlight;
+  private Element myContent;
 
   public CellContainerToDomMapper(CellContainer source, Element target) {
     super(source, target);
 
     CSS.ensureInjected();
     ensureIndentInjected();
+
+    myLineHighlight = DOM.createDiv();
+    myLineHighlight.addClassName(CSS.lineHighight());
+
+    myContent = DOM.createDiv();
+    myContent.addClassName(CSS.content());
+
 
     myCellToDomContext = new CellToDomContext(target);
   }
@@ -156,6 +166,11 @@ public class CellContainerToDomMapper extends Mapper<CellContainer, Element> {
     disablePopup(getTarget());
     getTarget().setTabIndex(0);
     getTarget().addClassName(CSS.rootContainer());
+
+    getTarget().appendChild(myLineHighlight);
+    getTarget().appendChild(myContent);
+
+    refreshLineHighlight();
 
     myScrollLeft = Window.getScrollLeft();
     myScrollTop = Window.getScrollTop();
@@ -177,13 +192,27 @@ public class CellContainerToDomMapper extends Mapper<CellContainer, Element> {
     getSource().resetContainerPeer();
     getTarget().removeClassName(CSS.rootContainer());
 
+    myContent.removeFromParent();
+    myLineHighlight.removeFromParent();
+
     $(getTarget()).unbind(Event.KEYEVENTS | Event.MOUSEEVENTS);
 
     myWindowReg.removeHandler();
   }
 
-  private Vector getRootOrigin() {
-    return new Vector(myCellToDomContext.rootElement.getAbsoluteLeft(), myCellToDomContext.rootElement.getAbsoluteTop());
+  private void refreshLineHighlight() {
+    Cell current = getSource().focusedCell.get();
+    Style style = myLineHighlight.getStyle();
+    if (current == null || !Cells.isLeaf(current)) {
+      style.setVisibility(Style.Visibility.HIDDEN);
+    } else {
+      style.setVisibility(Style.Visibility.VISIBLE);
+      int rootTop = myContent.getAbsoluteTop();
+      final Element currentElement = getElement(current);
+      int currentTop = currentElement.getAbsoluteTop();
+      style.setTop(currentTop - rootTop, Style.Unit.PX);
+      style.setHeight(currentElement.getClientHeight(), Style.Unit.PX);
+    }
   }
 
   @Override
@@ -194,9 +223,9 @@ public class CellContainerToDomMapper extends Mapper<CellContainer, Element> {
       @Override
       public void set(Element value) {
         if (value != null) {
-          $(getTarget()).append(value);
+          $(myContent).append(value);
         } else {
-          $(getTarget()).html("");
+          $(myContent).html("");
         }
       }
     }, new MapperFactory<Cell, Element>() {
@@ -213,14 +242,17 @@ public class CellContainerToDomMapper extends Mapper<CellContainer, Element> {
           @Override
           public void onCellPropertyChanged(Cell cell, CellPropertySpec<?> prop, PropertyChangeEvent<?> event) {
             BaseCellMapper<?> mapper = (BaseCellMapper<?>) rootMapper().getDescendantMapper(cell);
-            if (mapper == null) return;
-            if (Cell.isPopupProp(prop)) {
-              if (mapper.isAutoPopupManagement()) {
-                mapper.updatePopup((PropertyChangeEvent<Cell>) event);
+            if (mapper != null) {
+              if (Cell.isPopupProp(prop)) {
+                if (mapper.isAutoPopupManagement()) {
+                  mapper.updatePopup((PropertyChangeEvent<Cell>) event);
+                }
+              } else {
+                mapper.refreshProperties();
               }
-            } else {
-              mapper.refreshProperties();
             }
+
+            refreshLineHighlight();
           }
 
           @Override
@@ -228,6 +260,8 @@ public class CellContainerToDomMapper extends Mapper<CellContainer, Element> {
             BaseCellMapper<?> mapper = (BaseCellMapper<?>) rootMapper().getDescendantMapper(parent);
             if (mapper == null) return;
             mapper.childAdded(change);
+
+            refreshLineHighlight();
           }
 
           @Override
@@ -235,6 +269,8 @@ public class CellContainerToDomMapper extends Mapper<CellContainer, Element> {
             BaseCellMapper<?> mapper = (BaseCellMapper<?>) rootMapper().getDescendantMapper(parent);
             if (mapper == null) return;
             mapper.childRemoved(change);
+
+            refreshLineHighlight();
           }
         });
       }
@@ -312,6 +348,26 @@ public class CellContainerToDomMapper extends Mapper<CellContainer, Element> {
     return getTarget();
   }
 
+  private Cell findCellFor(Element e) {
+    BaseCellMapper<?> result = myCellToDomContext.findMapper(e);
+    if (result != null) return result.getSource();
+    Element parent = e.getParentElement();
+    if (parent == null) return null;
+    return findCellFor(parent);
+  }
+
+  private Mapper<? extends Cell, ? extends Element> getMapper(Cell cell) {
+    return (Mapper<? extends Cell, ? extends Element>) rootMapper().getDescendantMapper(cell);
+  }
+
+  private Element getElement(Cell cell) {
+    Mapper<? extends Cell, ? extends Element> mapper = getMapper(cell);
+    if (mapper == null) {
+      return getElement(cell.getParent());
+    }
+    return mapper.getTarget();
+  }
+
   private CellContainerPeer createCellContainerPeer() {
     return new CellContainerPeer() {
       @Override
@@ -356,17 +412,6 @@ public class CellContainerToDomMapper extends Mapper<CellContainer, Element> {
         }
       }
 
-      private Element getElement(Cell cell) {
-        Mapper<? extends Cell, ? extends Element> mapper = getMapper(cell);
-        if (mapper == null) {
-          return getElement(cell.getParent());
-        }
-        return mapper.getTarget();
-      }
-
-      private Mapper<? extends Cell, ? extends Element> getMapper(Cell cell) {
-        return (Mapper<? extends Cell, ? extends Element>) rootMapper().getDescendantMapper(cell);
-      }
 
       @Override
       public void scrollTo(Rectangle rect, Cell cell) {
@@ -385,13 +430,6 @@ public class CellContainerToDomMapper extends Mapper<CellContainer, Element> {
         return null;
       }
 
-      private Cell findCellFor(Element e) {
-        BaseCellMapper<?> result = myCellToDomContext.findMapper(e);
-        if (result != null) return result.getSource();
-        Element parent = e.getParentElement();
-        if (parent == null) return null;
-        return findCellFor(parent);
-      }
 
       private native Element elementAt(int x, int y) /*-{
         return $doc.elementFromPoint(x, y);
@@ -620,6 +658,13 @@ public class CellContainerToDomMapper extends Mapper<CellContainer, Element> {
       public boolean f(Event e) {
         myCellToDomContext.focused.set(false);
         return false;
+      }
+    }));
+
+    reg.add(getSource().focusedCell.addHandler(new EventHandler<PropertyChangeEvent<Cell>>() {
+      @Override
+      public void onEvent(PropertyChangeEvent<Cell> event) {
+        refreshLineHighlight();
       }
     }));
 

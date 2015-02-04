@@ -28,4 +28,7 @@ public interface CellToDomCss extends CssResource {
   String paired();
   String domCell();
   String hasShadow();
+
+  String lineHighight();
+  String content();
 }

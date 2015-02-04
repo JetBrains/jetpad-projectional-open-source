@@ -21,6 +21,17 @@
   width: fit-content;
 }
 
+.content {
+}
+
+.lineHighight {
+  background: lineHighlightColor;
+  position: absolute;
+  left: 0px;
+  top:0px;
+  width: 100%;
+}
+
 .horizontal {
   display: inline-block;
   white-space: nowrap;
