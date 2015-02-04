@@ -19,9 +19,12 @@
   -webkit-user-select: none;
 
   width: fit-content;
+
+  padding: 20px;
 }
 
 .content {
+  padding: 0px;
 }
 
 .lineHighight {
@@ -124,3 +127,4 @@
 .hasShadow {
   box-shadow: 5px 5px 10px black;
 }
+

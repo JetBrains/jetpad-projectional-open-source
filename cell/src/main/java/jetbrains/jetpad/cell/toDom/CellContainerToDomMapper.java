@@ -200,11 +200,12 @@ public class CellContainerToDomMapper extends Mapper<CellContainer, Element> {
     if (current == null || !Cells.isLeaf(current)) {
       style.setVisibility(Style.Visibility.HIDDEN);
     } else {
+      int deltaTop = myContent.getAbsoluteTop() - getTarget().getAbsoluteTop();
       style.setVisibility(Style.Visibility.VISIBLE);
       int rootTop = myContent.getAbsoluteTop();
       final Element currentElement = getElement(current);
       int currentTop = currentElement.getAbsoluteTop();
-      style.setTop(currentTop - rootTop, Style.Unit.PX);
+      style.setTop(currentTop - rootTop + deltaTop, Style.Unit.PX);
       style.setHeight(currentElement.getClientHeight(), Style.Unit.PX);
     }
   }
