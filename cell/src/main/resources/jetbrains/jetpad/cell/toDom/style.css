@@ -114,6 +114,10 @@
   color: HighlightText;
 }
 
+.selected .selected {
+  outline: 0px;
+}
+
 .selected .horizontal {
   background-color: Highlight;
   color: HighlightText;
