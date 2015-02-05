@@ -116,6 +116,11 @@
   color: HighlightText;
 }
 
+.selected * {
+  background-color: Highlight !important;
+  color: HighlightText !important;
+}
+
 .selected .selected {
   outline: 0px;
 }
