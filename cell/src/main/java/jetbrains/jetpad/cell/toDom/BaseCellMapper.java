@@ -103,6 +103,8 @@ abstract class BaseCellMapper<SourceT extends Cell> extends Mapper<SourceT, Elem
 
     getSource().getProp(CellContainerToDomMapper.ELEMENT).set(getTarget());
 
+    getTarget().addClassName(CellContainerToDomMapper.CSS.cell());
+
     myContext.register(this);
   }
 
@@ -111,6 +113,8 @@ abstract class BaseCellMapper<SourceT extends Cell> extends Mapper<SourceT, Elem
     myContext.unregister(this);
 
     getSource().getProp(CellContainerToDomMapper.ELEMENT).set(null);
+
+    getTarget().removeClassName(CellContainerToDomMapper.CSS.cell());
 
     if (myWasPopup) {
       getTarget().removeFromParent();

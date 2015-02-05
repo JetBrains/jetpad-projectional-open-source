@@ -29,6 +29,9 @@
   z-index: 1;
 }
 
+.cell {
+}
+
 .lineHighight {
   background: lineHighlightColor;
   position: absolute;
@@ -111,21 +114,17 @@
 }
 
 .selected {
-  background-color: Highlight;
+  background-color: Highlight !important;
+  color: HighlightText !important;
+
   outline: 1px dotted black;
-  color: HighlightText;
 }
 
 .selected .selected {
   outline: 0px;
 }
 
-.selected .horizontal {
-  background-color: Highlight;
-  color: HighlightText;
-}
-
-.selected[style] {
+.selected .cell {
   background-color: Highlight !important;
   color: HighlightText !important;
 }
