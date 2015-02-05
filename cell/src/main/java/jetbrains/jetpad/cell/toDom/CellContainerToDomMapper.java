@@ -431,7 +431,7 @@ public class CellContainerToDomMapper extends Mapper<CellContainer, Element> {
         if (!myCellToDomContext.focused.get()) {
           $(focusTarget).focus();
         }
-        return false;
+        return !event.isConsumed();
       }
     }));
 
@@ -488,7 +488,7 @@ public class CellContainerToDomMapper extends Mapper<CellContainer, Element> {
         } else {
           getSource().mouseMoved(event);
         }
-        return false;
+        return !event.isConsumed();
       }
     }));
 
