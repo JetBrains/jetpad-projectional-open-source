@@ -19,9 +19,17 @@
   -webkit-user-select: none;
 
   width: fit-content;
+
+  padding: 15px;
 }
 
 .content {
+  padding: 0px;
+  position: relative;
+  z-index: 1;
+}
+
+.cell {
 }
 
 .lineHighight {
@@ -106,17 +114,17 @@
 }
 
 .selected {
-  background-color: Highlight;
+  background-color: Highlight !important;
+  color: HighlightText !important;
+
   outline: 1px dotted black;
-  color: HighlightText;
 }
 
-.selected .horizontal {
-  background-color: Highlight;
-  color: HighlightText;
+.selected .selected {
+  outline: 0px;
 }
 
-.selected[style] {
+.selected .cell {
   background-color: Highlight !important;
   color: HighlightText !important;
 }
@@ -124,3 +132,4 @@
 .hasShadow {
   box-shadow: 5px 5px 10px black;
 }
+
