@@ -197,6 +197,21 @@ public class ProjectionalListSynchronizerTest extends EditingTestCase {
   }
 
   @Test
+  public void smartInsertWorksWithIgnoredSeparators() {
+    enableItemHandler();
+
+    container.children.add(new EmptyChild());
+    container.parensVisible.set(true);
+    rootMapper.getTarget().set(ProjectionalSynchronizers.IGNORED_ON_BOUNDARY, true);
+
+    selectChild(0);
+    enter();
+
+    assertTrue(container.children.isEmpty());
+    assertTrue(itemHandlerWasCalled.get());
+  }
+
+  @Test
   public void smartInsertDoesntWorkInTheMiddle() {
     enableItemHandler();
 
