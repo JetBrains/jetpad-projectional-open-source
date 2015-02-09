@@ -468,6 +468,14 @@ public class ProjectionalListSynchronizerTest extends EditingTestCase {
   }
 
   @Test
+  public void selectBeforeConsumed() {
+    add3Items();
+    selectChild(2);
+
+    assertConsumed(press(KeyStrokeSpecs.SELECT_BEFORE));
+  }
+
+  @Test
   public void selectAfterInsideSelectsChildViewFirst() {
     container.children.add(new ComplexChild());
     CellActions.toFirstFocusable(getChild(0)).run();

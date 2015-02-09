@@ -196,4 +196,10 @@ public abstract class EditingTestCase {
   protected void assertNoFrontPopup(Cell cell) {
     assertNull(cell.frontPopup().get());
   }
+
+  protected void assertConsumed(Event... es) {
+    for (Event e : es) {
+      assertTrue(e.isConsumed());
+    }
+  }
 }

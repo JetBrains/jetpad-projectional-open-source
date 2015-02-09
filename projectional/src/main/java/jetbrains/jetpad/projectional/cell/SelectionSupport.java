@@ -261,7 +261,6 @@ public class SelectionSupport<ItemT> {
             }
             consumed = true;
           } else {
-
             if (!mySelectedItems.contains(currentItem) && Positions.isHomePosition(currentCell) && Positions.isEndPosition(currentCell)) {
               mySelectedItems.add(currentItem);
               consumed = true;
@@ -277,6 +276,7 @@ public class SelectionSupport<ItemT> {
                 mySelectedItems.add(0, prevItem);
                 focusAndScrollTo(currentIndex - 1, true).run();
               }
+              consumed = true;
             }
           }
 
