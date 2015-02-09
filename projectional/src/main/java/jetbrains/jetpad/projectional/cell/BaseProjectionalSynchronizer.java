@@ -79,14 +79,14 @@ abstract class BaseProjectionalSynchronizer<SourceT, ContextT, SourceItemT> impl
     mySelectedItems.addListener(new CollectionAdapter<SourceItemT>() {
       @Override
       public void onItemAdded(CollectionItemEvent<? extends SourceItemT> event) {
-        childCells().get(BaseProjectionalSynchronizer.this.indexOf(event.getItem())).selected().set(true);
+        getChildCells().get(BaseProjectionalSynchronizer.this.indexOf(event.getItem())).selected().set(true);
       }
 
       @Override
       public void onItemRemoved(CollectionItemEvent<? extends SourceItemT> event) {
         int itemIndex = BaseProjectionalSynchronizer.this.indexOf(event.getItem());
         if (itemIndex == -1) return;
-        childCells().get(itemIndex).selected().set(false);
+        getChildCells().get(itemIndex).selected().set(false);
       }
     });
   }
@@ -143,7 +143,7 @@ abstract class BaseProjectionalSynchronizer<SourceT, ContextT, SourceItemT> impl
     };
   }
 
-  protected List<Cell> childCells() {
+  protected List<Cell> getChildCells() {
     return myTargetCellList;
   }
 
@@ -164,7 +164,7 @@ abstract class BaseProjectionalSynchronizer<SourceT, ContextT, SourceItemT> impl
   }
 
   protected Runnable selectOnCreation(int index) {
-    return childCells().get(index).get(ProjectionalSynchronizers.ON_CREATE);
+    return getChildCells().get(index).get(ProjectionalSynchronizers.ON_CREATE);
   }
 
   @Override

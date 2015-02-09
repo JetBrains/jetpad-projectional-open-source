@@ -17,7 +17,9 @@ package jetbrains.jetpad.projectional.cell;
 
 import com.google.common.base.Function;
 import com.google.common.base.Supplier;
+import jetbrains.jetpad.base.Runnables;
 import jetbrains.jetpad.base.Validators;
+import jetbrains.jetpad.base.Value;
 import jetbrains.jetpad.cell.*;
 import jetbrains.jetpad.cell.action.CellActions;
 import jetbrains.jetpad.cell.position.PositionHandler;
@@ -37,6 +39,7 @@ import jetbrains.jetpad.mapper.Synchronizers;
 import jetbrains.jetpad.model.collections.list.ObservableArrayList;
 import jetbrains.jetpad.model.collections.list.ObservableList;
 import jetbrains.jetpad.model.composite.Composites;
+import jetbrains.jetpad.model.property.Properties;
 import jetbrains.jetpad.model.property.Property;
 import jetbrains.jetpad.model.property.ValueProperty;
 import jetbrains.jetpad.projectional.generic.Role;
@@ -67,6 +70,7 @@ public class ProjectionalListSynchronizerTest extends EditingTestCase {
 
   private Container container = new Container();
   private ContainerMapper rootMapper;
+  private Value<Boolean> itemHandlerWasCalled = new Value<>(false);
 
   public ProjectionalListSynchronizerTest(boolean withSeparator) {
     myWithSeparator = withSeparator;
@@ -127,7 +131,6 @@ public class ProjectionalListSynchronizerTest extends EditingTestCase {
     assertFocused(1);
   }
 
-
   @Test
   public void insertBefore() {
     container.children.add(new EmptyChild());
@@ -164,6 +167,46 @@ public class ProjectionalListSynchronizerTest extends EditingTestCase {
     assertEquals(2, container.children.size());
     assertFocused(1);
     assertSame(nec, container.children.get(1));
+  }
+
+  @Test
+  public void smartInsert() {
+    enableItemHandler();
+
+    container.children.add(new EmptyChild());
+
+    selectChild(0);
+    enter();
+
+    assertTrue(container.children.isEmpty());
+    assertTrue(itemHandlerWasCalled.get());
+  }
+
+  @Test
+  public void smartInsertDoesntWorkWithSeparators() {
+    enableItemHandler();
+
+    container.children.add(new EmptyChild());
+    container.parensVisible.set(true);
+
+    selectChild(0);
+    enter();
+
+    assertEquals(2, container.children.size());
+    assertFalse(itemHandlerWasCalled.get());
+  }
+
+  @Test
+  public void smartInsertDoesntWorkInTheMiddle() {
+    enableItemHandler();
+
+    container.children.addAll(Arrays.asList(new EmptyChild(), new EmptyChild()));
+
+    selectChild(0);
+    enter();
+
+    assertEquals(3, container.children.size());
+    assertFalse(itemHandlerWasCalled.get());
   }
 
   @Test
@@ -727,7 +770,7 @@ public class ProjectionalListSynchronizerTest extends EditingTestCase {
     container.children.addAll(Arrays.asList(new DeleteOnEmptyChild(), new NonEmptyChild()));
     selectChild(0);
 
-    rootMapper.getTarget().children().get(0).dispatch(new Event(), Cells.BECAME_EMPTY);
+    rootMapper.getTarget().container.children().get(0).dispatch(new Event(), Cells.BECAME_EMPTY);
 
     assertEquals(1, container.children.size());
     assertTrue(container.children.get(0) instanceof NonEmptyChild);
@@ -873,7 +916,18 @@ public class ProjectionalListSynchronizerTest extends EditingTestCase {
     return result;
   }
 
+  private void enableItemHandler() {
+    rootMapper.getTarget().set(ProjectionalObservableListSynchronizer.ITEM_HANDLER, new ProjectionalObservableListSynchronizer.ItemHandler() {
+      @Override
+      public Runnable addEmptyAfter() {
+        itemHandlerWasCalled.set(true);
+        return Runnables.EMPTY;
+      }
+    });
+  }
+
   private class Container {
+    final Property<Boolean> parensVisible = new ValueProperty<>(false);
     final ObservableList<Child> children = new ObservableArrayList<>();
   }
 
@@ -908,18 +962,30 @@ public class ProjectionalListSynchronizerTest extends EditingTestCase {
     final Property<Boolean> after = new ValueProperty<>(false);
   }
 
-
-  private class ContainerMapper extends Mapper<Container, VerticalCell> {
+  private class ContainerMapper extends Mapper<Container, ContainerCell> {
     private ProjectionalRoleSynchronizer<Object, Child> mySynchronizer;
 
     ContainerMapper(Container source) {
-      super(source, new VerticalCell());
+      super(source, new ContainerCell());
+
     }
 
     @Override
     protected void registerSynchronizers(SynchronizersConfiguration conf) {
       super.registerSynchronizers(conf);
-      conf.add(mySynchronizer = createSynchronizer(this, getTarget(), getSource().children));
+      conf.add(mySynchronizer = createSynchronizer(this, getTarget().container, getSource().children));
+
+      conf.add(Synchronizers.forPropsOneWay(getSource().parensVisible, Properties.compose(getTarget().lp.visible(), getTarget().rp.visible())));
+    }
+  }
+
+  private class ContainerCell extends VerticalCell {
+    final TextCell lp = CellFactory.text("(");
+    final TextCell rp = CellFactory.text(")");
+    final VerticalCell container = CellFactory.vertical();
+
+    ContainerCell() {
+      CellFactory.to(this, lp, container, rp);
     }
   }
 

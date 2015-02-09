@@ -38,6 +38,7 @@ import jetbrains.jetpad.mapper.MapperFactory;
 import jetbrains.jetpad.mapper.RoleSynchronizer;
 import jetbrains.jetpad.mapper.Synchronizers;
 import jetbrains.jetpad.model.collections.list.ObservableList;
+import jetbrains.jetpad.model.composite.Composites;
 import jetbrains.jetpad.projectional.generic.CollectionEditor;
 import jetbrains.jetpad.projectional.generic.Role;
 
@@ -45,6 +46,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 class ProjectionalObservableListSynchronizer<ContextT, SourceItemT> extends BaseProjectionalSynchronizer<ObservableList<SourceItemT>, ContextT, SourceItemT> {
+  static final CellTraitPropertySpec<ItemHandler> ITEM_HANDLER = new CellTraitPropertySpec<ItemHandler>("itemHandler");
+
   private ObservableList<SourceItemT> mySource;
 
   ProjectionalObservableListSynchronizer(
@@ -63,7 +66,7 @@ class ProjectionalObservableListSynchronizer<ContextT, SourceItemT> extends Base
   }
 
   @Override
-  protected Registration registerChild(SourceItemT child, final Cell childCell) {
+  protected Registration registerChild(final SourceItemT child, final Cell childCell) {
     return childCell.addTrait(new DerivedCellTrait() {
       @Override
       protected CellTrait getBase(Cell cell) {
@@ -107,13 +110,25 @@ class ProjectionalObservableListSynchronizer<ContextT, SourceItemT> extends Base
           };
         }
 
+        if (spec == ITEM_HANDLER) {
+          return new ItemHandler() {
+            @Override
+            public Runnable addEmptyAfter() {
+              int index = mySource.indexOf(child);
+              final SourceItemT newItem = newItem();
+              mySource.add(index + 1, newItem);
+              return selectOnCreation(index + 1);
+            }
+          };
+        }
+
         return super.get(cell, spec);
       }
 
       @Override
       public void onCellTraitEvent(Cell cell, CellTraitEventSpec<?> spec, Event event) {
         if (spec == Cells.BECAME_EMPTY && cell.get(ProjectionalSynchronizers.DELETE_ON_EMPTY)) {
-          int index = childCells().indexOf(cell);
+          int index = getChildCells().indexOf(cell);
           if (index == -1) return;
           clear(mySource.subList(index, index + 1));
           event.consume();
@@ -126,7 +141,7 @@ class ProjectionalObservableListSynchronizer<ContextT, SourceItemT> extends Base
       @Override
       public void onKeyTyped(Cell cell, KeyEvent event) {
         if (getSeparator() != null && getSeparator() == event.getKeyChar()) {
-          int index = childCells().indexOf(cell);
+          int index = getChildCells().indexOf(cell);
           SourceItemT newItem = newItem();
           mySource.add(index + 1, newItem);
           selectOnCreation(index + 1).run();
@@ -139,7 +154,7 @@ class ProjectionalObservableListSynchronizer<ContextT, SourceItemT> extends Base
   }
 
   private void keyPressedInChild(KeyEvent event) {
-    new CollectionEditor<SourceItemT, Cell>(mySource, childCells(), canCreateNewItem()) {
+    new CollectionEditor<SourceItemT, Cell>(mySource, getChildCells(), canCreateNewItem()) {
       @Override
       protected SourceItemT newItem() {
         return ProjectionalObservableListSynchronizer.this.newItem();
@@ -167,17 +182,34 @@ class ProjectionalObservableListSynchronizer<ContextT, SourceItemT> extends Base
 
       @Override
       protected void selectHome(int index) {
-        CellActions.toFirstFocusable(childCells().get(index)).run();
+        CellActions.toFirstFocusable(getChildCells().get(index)).run();
       }
 
       @Override
       protected void selectEnd(int index) {
-        CellActions.toLastFocusable(childCells().get(index)).run();
+        CellActions.toLastFocusable(getChildCells().get(index)).run();
       }
 
       @Override
       protected void selectPlaceholder() {
         getOnLastItemDeleted().run();
+      }
+
+      @Override
+      protected boolean addAfterParent() {
+        Cell current = getTarget();
+        Cell nextVisible = Composites.nextVisible(current);
+
+        while (current != null && Composites.nextVisible(current) == nextVisible) {
+          final ItemHandler handler = current.get(ITEM_HANDLER);
+          if (handler != null) {
+            handler.addEmptyAfter().run();
+            return true;
+          }
+          current = current.getParent();
+        }
+
+        return false;
       }
     }.handleKey(currentCell(), event);
   }
@@ -190,21 +222,21 @@ class ProjectionalObservableListSynchronizer<ContextT, SourceItemT> extends Base
     return createCompletion(new Role<SourceItemT>() {
       @Override
       public SourceItemT get() {
-        return mySource.get(childCells().indexOf(currentCell()));
+        return mySource.get(getChildCells().indexOf(currentCell()));
       }
 
       @Override
       public Runnable set(SourceItemT target) {
-        int index = childCells().indexOf(currentCell());
+        int index = getChildCells().indexOf(currentCell());
         mySource.set(index, target);
-        return childCells().get(index).get(ProjectionalSynchronizers.ON_CREATE);
+        return getChildCells().get(index).get(ProjectionalSynchronizers.ON_CREATE);
       }
     });
   }
 
   @Override
   protected Runnable insertItems(List<SourceItemT> items) {
-    int index = childCells().indexOf(currentCell());
+    int index = getChildCells().indexOf(currentCell());
     if (index == -1) {
       mySource.addAll(items);
       return selectOnCreation(items.size() - 1);
@@ -236,16 +268,20 @@ class ProjectionalObservableListSynchronizer<ContextT, SourceItemT> extends Base
       getOnLastItemDeleted().run();
     } else {
       if (index < mySource.size()) {
-        Cell target = childCells().get(index);
+        Cell target = getChildCells().get(index);
         CellActions.toFirstFocusable(target).run();
       } else {
-        Cell target = childCells().get(index - 1);
+        Cell target = getChildCells().get(index - 1);
         CellActions.toLastFocusable(target).run();
       }
     }
   }
 
   private boolean isEmpty(int index) {
-    return Cells.isEmpty(childCells().get(index));
+    return Cells.isEmpty(getChildCells().get(index));
+  }
+
+  static interface ItemHandler {
+    Runnable addEmptyAfter();
   }
 }

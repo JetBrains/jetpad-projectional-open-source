@@ -44,6 +44,8 @@ public abstract class CollectionEditor<ItemT, ViewT> {
   protected abstract void selectEnd(int index);
   protected abstract void selectPlaceholder();
 
+  protected abstract boolean addAfterParent();
+
   private boolean isEmpty() {
     return myItems.isEmpty();
   }
@@ -70,6 +72,11 @@ public abstract class CollectionEditor<ItemT, ViewT> {
         myItems.add(index, newItem());
         if (!isEmpty(index)) {
           selectOnCreation(index);
+        } else if (isEmpty(index + 1) && index + 1 == myViews.size() - 1) {
+          if (addAfterParent()) {
+            myItems.remove(index + 1);
+            myItems.remove(index);
+          }
         }
         event.consume();
         return;
