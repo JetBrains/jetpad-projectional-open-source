@@ -15,8 +15,9 @@
  */
 package jetbrains.jetpad.projectional.cell;
 
-import com.google.common.base.*;
+import com.google.common.base.Function;
 import com.google.common.base.Objects;
+import com.google.common.base.Supplier;
 import jetbrains.jetpad.base.Registration;
 import jetbrains.jetpad.base.Validators;
 import jetbrains.jetpad.cell.Cell;
@@ -59,7 +60,6 @@ abstract class BaseProjectionalSynchronizer<SourceT, ContextT, SourceItemT> impl
   private Runnable myOnLastItemDeleted;
   private List<Cell> myTargetList;
   private Character mySeparatorChar;
-  private Predicate<SourceItemT> myEmtpyPredicate = Predicates.alwaysFalse();
 
   BaseProjectionalSynchronizer(
       Mapper<? extends ContextT, ? extends Cell> mapper,
@@ -204,15 +204,6 @@ abstract class BaseProjectionalSynchronizer<SourceT, ContextT, SourceItemT> impl
 
   Character getSeparator() {
     return mySeparatorChar;
-  }
-
-  @Override
-  public void setEmptyPredicate(Predicate<SourceItemT> emptyPredicate) {
-    myEmtpyPredicate = emptyPredicate;
-  }
-
-  boolean isEmpty(SourceItemT item) {
-    return myEmtpyPredicate.apply(item);
   }
 
   protected Runnable getOnLastItemDeleted() {

@@ -16,11 +16,10 @@
 package jetbrains.jetpad.projectional.cell;
 
 import com.google.common.base.Function;
-import com.google.common.base.Predicate;
 import com.google.common.base.Supplier;
-import jetbrains.jetpad.cell.Cell;
 import jetbrains.jetpad.event.ContentKind;
 import jetbrains.jetpad.mapper.RoleSynchronizer;
+import jetbrains.jetpad.cell.Cell;
 import jetbrains.jetpad.projectional.generic.RoleCompletion;
 
 import java.util.List;
@@ -33,7 +32,6 @@ public interface ProjectionalRoleSynchronizer<ContextT, SourceT> extends RoleSyn
   void setPlaceholderText(String text);
   void setItemFactory(Supplier<SourceT> itemFactory);
   void setSeparator(Character ch);
-  void setEmptyPredicate(Predicate<SourceT> emptyPredicate);
 
   SourceT getFocusedItem();
 
