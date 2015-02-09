@@ -35,6 +35,7 @@ public class ProjectionalSynchronizers {
       return CellActions.toLastFocusable(input);
     }
   });
+  public static final CellTraitPropertySpec<Boolean> IGNORED_ON_BOUNDARY = new CellTraitPropertySpec<Boolean>("ignoredCell", false);
   public static final CellTraitPropertySpec<Boolean> DELETE_ON_EMPTY = new CellTraitPropertySpec<>("deleteOnEmpty", false);
 
 

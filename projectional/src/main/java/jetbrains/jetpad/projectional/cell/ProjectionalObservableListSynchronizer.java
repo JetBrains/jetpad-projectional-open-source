@@ -198,9 +198,9 @@ class ProjectionalObservableListSynchronizer<ContextT, SourceItemT> extends Base
       @Override
       protected boolean addAfterParent() {
         Cell current = getTarget();
-        Cell nextVisible = Composites.nextVisible(current);
+        Cell nextVisible = nextCell(current);
 
-        while (current != null && Composites.nextVisible(current) == nextVisible) {
+        while (current != null && nextCell(current) == nextVisible) {
           final ItemHandler handler = current.get(ITEM_HANDLER);
           if (handler != null) {
             handler.addEmptyAfter().run();
@@ -211,8 +211,27 @@ class ProjectionalObservableListSynchronizer<ContextT, SourceItemT> extends Base
 
         return false;
       }
+
+      private boolean isIgnored(Cell cell) {
+        if (cell.get(ProjectionalSynchronizers.IGNORED_ON_BOUNDARY)) {
+          return true;
+        }
+        if (cell.getParent() != null) {
+          return isIgnored(cell.getParent());
+        }
+        return false;
+      }
+
+      private Cell nextCell(Cell root) {
+        for (Cell c : Composites.nextNavOrder(root)) {
+          if (Composites.isVisible(c) && !isIgnored(c)) return c;
+        }
+        return null;
+      }
+
     }.handleKey(currentCell(), event);
   }
+
 
   private void scrollToSelection() {
     getTarget().cellContainer().get().focusedCell.get().scrollTo();
