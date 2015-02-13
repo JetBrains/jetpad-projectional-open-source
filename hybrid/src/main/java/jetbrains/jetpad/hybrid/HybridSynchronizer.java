@@ -18,6 +18,7 @@ package jetbrains.jetpad.hybrid;
 import com.google.common.base.Predicates;
 import com.google.common.collect.Range;
 import jetbrains.jetpad.base.Handler;
+import jetbrains.jetpad.base.JsDebug;
 import jetbrains.jetpad.base.Registration;
 import jetbrains.jetpad.base.Runnables;
 import jetbrains.jetpad.cell.Cell;

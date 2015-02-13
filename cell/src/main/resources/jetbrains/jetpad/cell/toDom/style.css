@@ -92,18 +92,6 @@
   display: none !important;
 }
 
-.focusedLeaf {
-  background-color: currentHighlightColor;
-}
-
-.focusedLeaf .horizontal {
-  background-color: currentHighlightColor;
-}
-
-.focusedLeaf[style] {
-  background-color: currentHighlightColor !important;
-}
-
 .paired {
   background-color: pairHighlightColor;
 }

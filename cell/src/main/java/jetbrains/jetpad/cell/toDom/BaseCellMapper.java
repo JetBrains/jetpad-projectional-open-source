@@ -15,11 +15,13 @@
  */
 package jetbrains.jetpad.cell.toDom;
 
+import com.google.common.base.Joiner;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Node;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Timer;
+import jetbrains.jetpad.base.JsDebug;
 import jetbrains.jetpad.base.Registration;
 import jetbrains.jetpad.cell.Cell;
 import jetbrains.jetpad.geometry.Rectangle;
@@ -32,9 +34,11 @@ import jetbrains.jetpad.model.property.PropertyChangeEvent;
 import jetbrains.jetpad.values.Color;
 
 import java.util.AbstractList;
+import java.util.ArrayList;
 import java.util.List;
 
-import static jetbrains.jetpad.cell.toDom.CellContainerToDomMapper.*;
+import static jetbrains.jetpad.cell.toDom.CellContainerToDomMapper.CSS;
+import static jetbrains.jetpad.cell.toDom.CellContainerToDomMapper.ELEMENT;
 
 abstract class BaseCellMapper<SourceT extends Cell> extends Mapper<SourceT, Element> {
   private ObservableSet<Mapper<? extends Cell, ? extends Element>> myPopupMappers;
@@ -151,12 +155,9 @@ abstract class BaseCellMapper<SourceT extends Cell> extends Mapper<SourceT, Elem
 
     getTarget().removeClassName(CSS.selected());
     getTarget().removeClassName(CSS.paired());
-    getTarget().removeClassName(CSS.focusedLeaf());
 
     if (focusHighlighted) {
-      if (isLeaf()) {
-        getTarget().addClassName(CSS.focusedLeaf());
-      } else {
+      if (!isLeaf()) {
         getTarget().addClassName(CSS.selected());
       }
     }
@@ -170,7 +171,26 @@ abstract class BaseCellMapper<SourceT extends Cell> extends Mapper<SourceT, Elem
     }
 
     Color background = getSource().background().get();
-    style.setBackgroundColor(background == null ? "" : background.toCssColor());
+    List<String> backgrounds = new ArrayList<>();
+    if (isLeaf() && focusHighlighted) {
+      backgrounds.add(CSS.currentHighlightColor());
+    } else if (background != null) {
+      backgrounds.add(background.toCssColor());
+    }
+
+    String underlineSuffix = " bottom repeat-x";
+    if (getSource().hasError().get()) {
+      JsDebug.log("Has error: " + getSource().hasError().get() + " from " + getSource());
+      backgrounds.add(0, CSS.redUnderline() + underlineSuffix);
+    } else if (getSource().hasWarning().get()) {
+      backgrounds.add(0, CSS.yellowUnderline() + underlineSuffix);
+    }
+
+    if (backgrounds.isEmpty()) {
+      style.clearProperty("background");
+    } else {
+      style.setProperty("background", Joiner.on(",").join(backgrounds));
+    }
 
     Color borderColor = getSource().borderColor().get();
     style.setBorderStyle(borderColor == null ? Style.BorderStyle.NONE : Style.BorderStyle.SOLID);
