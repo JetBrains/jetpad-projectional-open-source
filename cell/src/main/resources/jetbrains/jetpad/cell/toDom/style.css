@@ -133,3 +133,15 @@
   box-shadow: 5px 5px 10px black;
 }
 
+.hasError {
+  background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAYAAAAECAYAAACtBE5DAAAALklEQVQIW2P8z8Dwn5GBAYhQAVgAXRLInw9XCZME0vFAtY4oRgAF/wEFHwEFFQA95gxCDQl2XAAAAABJRU5ErkJggg==) bottom repeat-x !important;
+}
+
+.hasWarning {
+  background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAYAAAAECAYAAACtBE5DAAAANElEQVQIW2O8d4/hv5ISAyMDGgALoEvevcswH64SJnn/PkP8//8MjihGACX/AQ14BDRaAQCJ1RO6xCxNQgAAAABJRU5ErkJggg==) bottom repeat-x !important;
+}
+
+.decorations {
+  width: 100%;
+  height: 100%;
+}

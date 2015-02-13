@@ -53,6 +53,7 @@ import jetbrains.jetpad.model.event.CompositeRegistration;
 import jetbrains.jetpad.model.event.EventHandler;
 import jetbrains.jetpad.model.property.Property;
 import jetbrains.jetpad.model.property.PropertyBinding;
+import jetbrains.jetpad.model.property.PropertyChangeEvent;
 import jetbrains.jetpad.model.property.ReadableProperty;
 import jetbrains.jetpad.projectional.cell.SelectionSupport;
 
@@ -85,7 +86,7 @@ public class HybridSynchronizer<SourceT> implements Synchronizer {
   private String myPlaceHolderText = "empty";
   private boolean myHideTokensInMenu = false;
 
-  public HybridSynchronizer(Mapper<?, ?> contextMapper, Property<SourceT> prop, Cell target, HybridPositionSpec<SourceT> spec) {
+  public HybridSynchronizer(Mapper<?, ?> contextMapper, Property<SourceT> prop, final Cell target, HybridPositionSpec<SourceT> spec) {
     myContextMapper = contextMapper;
     myProperty = prop;
     mySpec = spec;
@@ -167,6 +168,14 @@ public class HybridSynchronizer<SourceT> implements Synchronizer {
             myTarget.children().get(index * 2 - 1).selected().set(false);
           }
         }
+      }
+    });
+
+
+    myTokenListEditor.valid.addHandler(new EventHandler<PropertyChangeEvent<Boolean>>() {
+      @Override
+      public void onEvent(PropertyChangeEvent<Boolean> event) {
+        target.hasError().set(!myTokenListEditor.valid.get());
       }
     });
   }

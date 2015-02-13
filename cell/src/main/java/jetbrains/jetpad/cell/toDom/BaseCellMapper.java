@@ -33,7 +33,8 @@ import jetbrains.jetpad.values.Color;
 
 import java.util.AbstractList;
 import java.util.List;
-import java.util.Objects;
+
+import static jetbrains.jetpad.cell.toDom.CellContainerToDomMapper.*;
 
 abstract class BaseCellMapper<SourceT extends Cell> extends Mapper<SourceT, Element> {
   private ObservableSet<Mapper<? extends Cell, ? extends Element>> myPopupMappers;
@@ -43,11 +44,8 @@ abstract class BaseCellMapper<SourceT extends Cell> extends Mapper<SourceT, Elem
   private List<Node> myTarget;
   private boolean myWasPopup;
   private CellToDomContext myContext;
-
   private int myExternalFocusHighlight;
   private int myExternalSelectCount;
-
-  private Color myBorderColor;
 
   BaseCellMapper(SourceT source, CellToDomContext ctx, Element target) {
     super(source, target);
@@ -101,9 +99,9 @@ abstract class BaseCellMapper<SourceT extends Cell> extends Mapper<SourceT, Elem
       }
     }
 
-    getSource().getProp(CellContainerToDomMapper.ELEMENT).set(getTarget());
+    getSource().getProp(ELEMENT).set(getTarget());
 
-    getTarget().addClassName(CellContainerToDomMapper.CSS.cell());
+    getTarget().addClassName(CSS.cell());
 
     myContext.register(this);
   }
@@ -112,9 +110,9 @@ abstract class BaseCellMapper<SourceT extends Cell> extends Mapper<SourceT, Elem
   protected void onDetach() {
     myContext.unregister(this);
 
-    getSource().getProp(CellContainerToDomMapper.ELEMENT).set(null);
+    getSource().getProp(ELEMENT).set(null);
 
-    getTarget().removeClassName(CellContainerToDomMapper.CSS.cell());
+    getTarget().removeClassName(CSS.cell());
 
     if (myWasPopup) {
       getTarget().removeFromParent();
@@ -151,49 +149,44 @@ abstract class BaseCellMapper<SourceT extends Cell> extends Mapper<SourceT, Elem
     boolean paired = getSource().pairHighlighted().get();
     boolean focusHighlighted = getSource().focusHighlighted().get() || myExternalFocusHighlight > 0;
 
-    getTarget().removeClassName(CellContainerToDomMapper.CSS.selected());
-    getTarget().removeClassName(CellContainerToDomMapper.CSS.paired());
-    getTarget().removeClassName(CellContainerToDomMapper.CSS.focusedLeaf());
+    getTarget().removeClassName(CSS.selected());
+    getTarget().removeClassName(CSS.paired());
+    getTarget().removeClassName(CSS.focusedLeaf());
 
     if (focusHighlighted) {
       if (isLeaf()) {
-        getTarget().addClassName(CellContainerToDomMapper.CSS.focusedLeaf());
+        getTarget().addClassName(CSS.focusedLeaf());
       } else {
-        getTarget().addClassName(CellContainerToDomMapper.CSS.selected());
+        getTarget().addClassName(CSS.selected());
       }
     }
 
     if (paired) {
-      getTarget().addClassName(CellContainerToDomMapper.CSS.paired());
+      getTarget().addClassName(CSS.paired());
     }
 
     if (selected) {
-      getTarget().addClassName(CellContainerToDomMapper.CSS.selected());
+      getTarget().addClassName(CSS.selected());
     }
-
 
     Color background = getSource().background().get();
     style.setBackgroundColor(background == null ? "" : background.toCssColor());
 
     Color borderColor = getSource().borderColor().get();
-    //we need this because FF does complete reflow if border is changed
-    if (!Objects.equals(myBorderColor, borderColor)) {
-      style.setBorderStyle(borderColor == null ? Style.BorderStyle.NONE : Style.BorderStyle.SOLID);
-      style.setBorderWidth(borderColor == null ? 0 : 1, Style.Unit.PX);
-      style.setBorderColor(borderColor == null ? null : borderColor.toCssColor());
-      myBorderColor = borderColor;
-    }
+    style.setBorderStyle(borderColor == null ? Style.BorderStyle.NONE : Style.BorderStyle.SOLID);
+    style.setBorderWidth(borderColor == null ? 0 : 1, Style.Unit.PX);
+    style.setBorderColor(borderColor == null ? null : borderColor.toCssColor());
 
     if (!getSource().visible().get()) {
-      getTarget().addClassName(CellContainerToDomMapper.CSS.hidden());
+      getTarget().addClassName(CSS.hidden());
     } else {
-      getTarget().removeClassName(CellContainerToDomMapper.CSS.hidden());
+      getTarget().removeClassName(CSS.hidden());
     }
 
     if (getSource().hasShadow().get()) {
-      getTarget().addClassName(CellContainerToDomMapper.CSS.hasShadow());
+      getTarget().addClassName(CSS.hasShadow());
     } else {
-      getTarget().removeClassName(CellContainerToDomMapper.CSS.hasShadow());
+      getTarget().removeClassName(CSS.hasShadow());
     }
   }
 
