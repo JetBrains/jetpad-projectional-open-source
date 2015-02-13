@@ -3,6 +3,9 @@
 @def lineHighlightColor rgb(254, 255, 215);
 @def pairHighlightColor rgb(168, 214, 255);
 
+@def redUnderline url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAYAAAAECAYAAACtBE5DAAAALklEQVQIW2P8z8Dwn5GBAYhQAVgAXRLInw9XCZME0vFAtY4oRgAF/wEFHwEFFQA95gxCDQl2XAAAAABJRU5ErkJggg==);
+@def yellowUnderline url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAYAAAAECAYAAACtBE5DAAAANElEQVQIW2O8d4/hv5ISAyMDGgALoEvevcswH64SJnn/PkP8//8MjihGACX/AQ14BDRaAQCJ1RO6xCxNQgAAAABJRU5ErkJggg==);
+
 .rootContainer:focus {
   outline: 0;
 }
@@ -134,11 +137,11 @@
 }
 
 .hasError {
-  background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAYAAAAECAYAAACtBE5DAAAALklEQVQIW2P8z8Dwn5GBAYhQAVgAXRLInw9XCZME0vFAtY4oRgAF/wEFHwEFFQA95gxCDQl2XAAAAABJRU5ErkJggg==) bottom repeat-x !important;
+  background: redUnderline bottom repeat-x !important;
 }
 
 .hasWarning {
-  background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAYAAAAECAYAAACtBE5DAAAANElEQVQIW2O8d4/hv5ISAyMDGgALoEvevcswH64SJnn/PkP8//8MjihGACX/AQ14BDRaAQCJ1RO6xCxNQgAAAABJRU5ErkJggg==) bottom repeat-x !important;
+  background: yellowUnderline bottom repeat-x !important;
 }
 
 .decorations {
