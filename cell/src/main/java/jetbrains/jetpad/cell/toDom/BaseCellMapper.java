@@ -21,9 +21,10 @@ import com.google.gwt.dom.client.Node;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Timer;
-import jetbrains.jetpad.base.JsDebug;
 import jetbrains.jetpad.base.Registration;
 import jetbrains.jetpad.cell.Cell;
+import jetbrains.jetpad.cell.util.CounterSpec;
+import jetbrains.jetpad.cell.util.Counters;
 import jetbrains.jetpad.geometry.Rectangle;
 import jetbrains.jetpad.mapper.Mapper;
 import jetbrains.jetpad.mapper.MappingContext;
@@ -41,6 +42,9 @@ import static jetbrains.jetpad.cell.toDom.CellContainerToDomMapper.CSS;
 import static jetbrains.jetpad.cell.toDom.CellContainerToDomMapper.ELEMENT;
 
 abstract class BaseCellMapper<SourceT extends Cell> extends Mapper<SourceT, Element> {
+  static final CounterSpec HIGHLIGHT_COUNT = new CounterSpec("focusHighlight");
+  static final CounterSpec SELECT_COUNT = new CounterSpec("selectCount");
+
   private ObservableSet<Mapper<? extends Cell, ? extends Element>> myPopupMappers;
   private Registration myPopupUpdateReg;
 
@@ -48,8 +52,8 @@ abstract class BaseCellMapper<SourceT extends Cell> extends Mapper<SourceT, Elem
   private List<Node> myTarget;
   private boolean myWasPopup;
   private CellToDomContext myContext;
-  private int myExternalFocusHighlight;
-  private int myExternalSelectCount;
+
+  private Counters myCounters;
 
   BaseCellMapper(SourceT source, CellToDomContext ctx, Element target) {
     super(source, target);
@@ -130,12 +134,19 @@ abstract class BaseCellMapper<SourceT extends Cell> extends Mapper<SourceT, Elem
     super.onDetach();
   }
 
-  void changeFocusHighlight(int delta) {
-    myExternalFocusHighlight += delta;
+  int getCounter(CounterSpec spec) {
+    if (myCounters == null) return 0;
+    return myCounters.getCounter(spec);
   }
 
-  void changeExternalSelect(int delta) {
-    myExternalSelectCount += delta;
+  void changeCounter(CounterSpec spec, int delta) {
+    if (myCounters == null) {
+      myCounters = new Counters();
+    }
+    myCounters.changeCounter(spec, delta);
+    if (myCounters.isEmpty()) {
+      myCounters = null;
+    }
   }
 
   boolean isEmpty() {
@@ -149,9 +160,9 @@ abstract class BaseCellMapper<SourceT extends Cell> extends Mapper<SourceT, Elem
   protected void refreshProperties() {
     Style style = getTarget().getStyle();
 
-    boolean selected = getSource().selected().get() || myExternalSelectCount > 0;
+    boolean selected = getSource().selected().get() || getCounter(SELECT_COUNT) > 0;
     boolean paired = getSource().pairHighlighted().get();
-    boolean focusHighlighted = getSource().focusHighlighted().get() || myExternalFocusHighlight > 0;
+    boolean focusHighlighted = getSource().focusHighlighted().get() || getCounter(HIGHLIGHT_COUNT) > 0;
 
     getTarget().removeClassName(CSS.selected());
     getTarget().removeClassName(CSS.paired());

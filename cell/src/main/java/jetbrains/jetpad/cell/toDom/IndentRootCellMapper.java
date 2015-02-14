@@ -30,6 +30,7 @@ import jetbrains.jetpad.cell.indent.IndentContainerCellListener;
 import jetbrains.jetpad.cell.indent.updater.CellWrapper;
 import jetbrains.jetpad.cell.indent.updater.IndentUpdater;
 import jetbrains.jetpad.cell.indent.updater.IndentUpdaterTarget;
+import jetbrains.jetpad.cell.util.CounterSpec;
 import jetbrains.jetpad.geometry.Rectangle;
 import jetbrains.jetpad.mapper.Mapper;
 import jetbrains.jetpad.mapper.MappingContext;
@@ -163,19 +164,17 @@ class IndentRootCellMapper extends BaseCellMapper<IndentCell> {
             @Override
             public void handle(Cell item) {
               BaseCellMapper<?> mapper = (BaseCellMapper<?>) getDescendantMapper(item);
+              int delta = (Boolean) event.getNewValue() ? 1 : -1;
+              CounterSpec counter = null;
+
               if (prop == Cell.FOCUS_HIGHLIGHTED) {
-                if ((Boolean) event.getNewValue()) {
-                  mapper.changeFocusHighlight(1);
-                } else {
-                  mapper.changeFocusHighlight(-1);
-                }
-                mapper.refreshProperties();
+                counter = BaseCellMapper.HIGHLIGHT_COUNT;
               } else if (prop == Cell.SELECTED) {
-                if ((Boolean) event.getNewValue()) {
-                  mapper.changeExternalSelect(1);
-                } else {
-                  mapper.changeExternalSelect(-1);
-                }
+                counter = BaseCellMapper.SELECT_COUNT;
+              }
+
+              if (counter != null) {
+                mapper.changeCounter(counter, delta);
                 mapper.refreshProperties();
               }
             }

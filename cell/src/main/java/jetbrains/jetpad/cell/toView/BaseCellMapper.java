@@ -30,10 +30,10 @@ import jetbrains.jetpad.projectional.view.View;
 import jetbrains.jetpad.values.Color;
 
 class BaseCellMapper<SourceT extends Cell, TargetT extends View> extends Mapper<SourceT, TargetT> {
-  public static final CounterSpec HIGHLIGHT_COUNT = new CounterSpec("focusHighlight");
-  public static final CounterSpec SELECT_COUNT = new CounterSpec("selectCount");
-  public static final CounterSpec ERROR_COUNT = new CounterSpec("errors");
-  public static final CounterSpec WARNING_COUNT = new CounterSpec("warning");
+  static final CounterSpec HIGHLIGHT_COUNT = new CounterSpec("focusHighlight");
+  static final CounterSpec SELECT_COUNT = new CounterSpec("selectCount");
+  static final CounterSpec ERROR_COUNT = new CounterSpec("errors");
+  static final CounterSpec WARNING_COUNT = new CounterSpec("warning");
 
   private CellToViewContext myContext;
 
