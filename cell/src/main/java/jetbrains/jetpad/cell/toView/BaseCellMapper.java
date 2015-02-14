@@ -118,7 +118,15 @@ class BaseCellMapper<SourceT extends Cell, TargetT extends View> extends Mapper<
     }
     view.background().set(background);
 
-    view.border().set(cell.borderColor().get());
+    Color borderColor;
+    if (cell.hasError().get()) {
+      borderColor = Color.RED;
+    } else if (cell.hasWarning().get()) {
+      borderColor = Color.YELLOW;
+    } else {
+      borderColor = cell.borderColor().get();
+    }
+    view.border().set(borderColor);
     view.visible().set(cell.visible().get());
     view.hasShadow().set(cell.hasShadow().get());
   }
