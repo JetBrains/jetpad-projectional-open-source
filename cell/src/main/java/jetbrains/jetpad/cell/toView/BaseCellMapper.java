@@ -24,16 +24,22 @@ import jetbrains.jetpad.model.collections.list.ObservableList;
 import jetbrains.jetpad.model.collections.set.ObservableSet;
 import jetbrains.jetpad.model.event.EventHandler;
 import jetbrains.jetpad.model.property.PropertyChangeEvent;
+import jetbrains.jetpad.model.util.ListMap;
 import jetbrains.jetpad.projectional.view.View;
 import jetbrains.jetpad.values.Color;
 
 class BaseCellMapper<SourceT extends Cell, TargetT extends View> extends Mapper<SourceT, TargetT> {
+  public static final CounterSpec HIGHLIGHT_COUNT = new CounterSpec("focusHighlight");
+  public static final CounterSpec SELECT_COUNT = new CounterSpec("selectCount");
+  public static final CounterSpec ERROR_COUNT = new CounterSpec("errors");
+  public static final CounterSpec WARNING_COUNT = new CounterSpec("warning");
+
   private CellToViewContext myContext;
 
   private ObservableList<BaseCellMapper<?, ?>> myChildMappers;
   private ObservableSet<BaseCellMapper<?, ?>> myPopupMappers;
-  private int myExternalFocusHighlightCount;
-  private int myExternalSelectCount;
+
+  private ListMap<CounterSpec, Integer> myCounters;
   private Registration myPopupUpdateReg;
   
   BaseCellMapper(SourceT source, TargetT target, CellToViewContext ctx) {
@@ -88,12 +94,29 @@ class BaseCellMapper<SourceT extends Cell, TargetT extends View> extends Mapper<
     super.onDetach();
   }
 
-  void changeExternalHighlight(int delta) {
-    myExternalFocusHighlightCount += delta;
+  int getCounter(CounterSpec spec) {
+    if (myCounters == null || !myCounters.containsKey(spec)) return 0;
+    return myCounters.get(spec);
   }
 
-  void changeExternalSelect(int delta) {
-    myExternalSelectCount += delta;
+  void changeCounter(CounterSpec spec, int delta) {
+    if (delta == 0) return;
+    int oldVal = getCounter(spec);
+    int newVal = oldVal + delta;
+
+    if (newVal != 0) {
+      if (myCounters == null) {
+        myCounters = new ListMap<>();
+      }
+      myCounters.put(spec, delta);
+    } else {
+      if (myCounters != null) {
+        myCounters.remove(spec);
+        if (myCounters.isEmpty()) {
+          myCounters = null;
+        }
+      }
+    }
   }
 
   boolean isLeaf() {
@@ -104,9 +127,9 @@ class BaseCellMapper<SourceT extends Cell, TargetT extends View> extends Mapper<
     Cell cell = getSource();
     View view = getTarget();
 
-    boolean selected = getSource().selected().get() || myExternalSelectCount > 0;
+    boolean selected = getSource().selected().get() || getCounter(SELECT_COUNT) > 0;
     boolean paired = getSource().pairHighlighted().get();
-    boolean focusHighlighted = getSource().focusHighlighted().get() || myExternalFocusHighlightCount > 0;
+    boolean focusHighlighted = getSource().focusHighlighted().get() || getCounter(HIGHLIGHT_COUNT) > 0;
 
     Color background = cell.background().get();
     if (selected) {
@@ -119,9 +142,9 @@ class BaseCellMapper<SourceT extends Cell, TargetT extends View> extends Mapper<
     view.background().set(background);
 
     Color borderColor;
-    if (cell.hasError().get()) {
+    if (cell.hasError().get() || getCounter(ERROR_COUNT) > 0) {
       borderColor = Color.RED;
-    } else if (cell.hasWarning().get()) {
+    } else if (cell.hasWarning().get() || getCounter(WARNING_COUNT) > 0) {
       borderColor = Color.YELLOW;
     } else {
       borderColor = cell.borderColor().get();
@@ -208,6 +231,27 @@ class BaseCellMapper<SourceT extends Cell, TargetT extends View> extends Mapper<
   
   protected BaseCellMapper<?, ?> createMapper(Cell cell) {
     return CellMappers.create(cell, myContext);
+  }
+
+  public static class CounterSpec {
+    private String myName;
+
+    public CounterSpec(String name) {
+      myName = name;
+    }
+
+    @Override
+    public int hashCode() {
+      return myName.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+      if (!(obj instanceof CounterSpec)) {
+        return false;
+      }
+      return myName.equals(((CounterSpec) obj).myName);
+    }
   }
 
 }

@@ -131,7 +131,7 @@ class IndentRootCellMapper extends BaseCellMapper<IndentCell, VerticalView> {
 
       @Override
       public void propertyChanged(Cell cell, final CellPropertySpec<?> prop, final PropertyChangeEvent<?> event) {
-        if (prop == Cell.FOCUS_HIGHLIGHTED || prop == Cell.SELECTED) {
+        if (prop == Cell.FOCUS_HIGHLIGHTED || prop == Cell.SELECTED || prop == Cell.HAS_ERROR || prop == Cell.HAS_WARNING) {
           iterateLeaves(cell, new Handler<Cell>() {
             @Override
             public void handle(Cell item) {
@@ -139,19 +139,19 @@ class IndentRootCellMapper extends BaseCellMapper<IndentCell, VerticalView> {
               if (mapper == null) {
                 throw new IllegalStateException();
               }
+              int delta = (Boolean) event.getNewValue() ? 1 : -1;
+              CounterSpec spec = null;
               if (prop == Cell.FOCUS_HIGHLIGHTED) {
-                if ((Boolean) event.getNewValue()) {
-                  mapper.changeExternalHighlight(1);
-                } else {
-                  mapper.changeExternalHighlight(-1);
-                }
-                mapper.refreshProperties();
+                spec = BaseCellMapper.HIGHLIGHT_COUNT;
               } else if (prop == Cell.SELECTED) {
-                if ((Boolean) event.getNewValue()) {
-                  mapper.changeExternalSelect(1);
-                } else {
-                  mapper.changeExternalSelect(-1);
-                }
+                spec = BaseCellMapper.SELECT_COUNT;
+              } else if (prop == Cell.HAS_ERROR) {
+                spec = BaseCellMapper.ERROR_COUNT;
+              } else if (prop == Cell.HAS_WARNING) {
+                spec = BaseCellMapper.WARNING_COUNT;
+              }
+              if (spec != null) {
+                mapper.changeCounter(spec, delta);
                 mapper.refreshProperties();
               }
             }
