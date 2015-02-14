@@ -17,6 +17,8 @@ package jetbrains.jetpad.cell.toView;
 
 import jetbrains.jetpad.base.Registration;
 import jetbrains.jetpad.cell.Cell;
+import jetbrains.jetpad.cell.util.CounterSpec;
+import jetbrains.jetpad.cell.util.Counters;
 import jetbrains.jetpad.geometry.Rectangle;
 import jetbrains.jetpad.mapper.Mapper;
 import jetbrains.jetpad.mapper.MappingContext;
@@ -24,7 +26,6 @@ import jetbrains.jetpad.model.collections.list.ObservableList;
 import jetbrains.jetpad.model.collections.set.ObservableSet;
 import jetbrains.jetpad.model.event.EventHandler;
 import jetbrains.jetpad.model.property.PropertyChangeEvent;
-import jetbrains.jetpad.model.util.ListMap;
 import jetbrains.jetpad.projectional.view.View;
 import jetbrains.jetpad.values.Color;
 
@@ -39,7 +40,8 @@ class BaseCellMapper<SourceT extends Cell, TargetT extends View> extends Mapper<
   private ObservableList<BaseCellMapper<?, ?>> myChildMappers;
   private ObservableSet<BaseCellMapper<?, ?>> myPopupMappers;
 
-  private ListMap<CounterSpec, Integer> myCounters;
+  private Counters myCounters;
+
   private Registration myPopupUpdateReg;
   
   BaseCellMapper(SourceT source, TargetT target, CellToViewContext ctx) {
@@ -95,27 +97,17 @@ class BaseCellMapper<SourceT extends Cell, TargetT extends View> extends Mapper<
   }
 
   int getCounter(CounterSpec spec) {
-    if (myCounters == null || !myCounters.containsKey(spec)) return 0;
-    return myCounters.get(spec);
+    if (myCounters == null) return 0;
+    return myCounters.getCounter(spec);
   }
 
   void changeCounter(CounterSpec spec, int delta) {
-    if (delta == 0) return;
-    int oldVal = getCounter(spec);
-    int newVal = oldVal + delta;
-
-    if (newVal != 0) {
-      if (myCounters == null) {
-        myCounters = new ListMap<>();
-      }
-      myCounters.put(spec, delta);
-    } else {
-      if (myCounters != null) {
-        myCounters.remove(spec);
-        if (myCounters.isEmpty()) {
-          myCounters = null;
-        }
-      }
+    if (myCounters == null) {
+      myCounters = new Counters();
+    }
+    myCounters.changeCounter(spec, delta);
+    if (myCounters.isEmpty()) {
+      myCounters = null;
     }
   }
 
@@ -231,27 +223,6 @@ class BaseCellMapper<SourceT extends Cell, TargetT extends View> extends Mapper<
   
   protected BaseCellMapper<?, ?> createMapper(Cell cell) {
     return CellMappers.create(cell, myContext);
-  }
-
-  public static class CounterSpec {
-    private String myName;
-
-    public CounterSpec(String name) {
-      myName = name;
-    }
-
-    @Override
-    public int hashCode() {
-      return myName.hashCode();
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-      if (!(obj instanceof CounterSpec)) {
-        return false;
-      }
-      return myName.equals(((CounterSpec) obj).myName);
-    }
   }
 
 }
