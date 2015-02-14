@@ -180,7 +180,6 @@ abstract class BaseCellMapper<SourceT extends Cell> extends Mapper<SourceT, Elem
 
     String underlineSuffix = " bottom repeat-x";
     if (getSource().hasError().get()) {
-      JsDebug.log("Has error: " + getSource().hasError().get() + " from " + getSource());
       backgrounds.add(0, CSS.redUnderline() + underlineSuffix);
     } else if (getSource().hasWarning().get()) {
       backgrounds.add(0, CSS.yellowUnderline() + underlineSuffix);
