@@ -25,8 +25,7 @@ import jetbrains.jetpad.cell.indent.IndentContainerCellListener;
 import jetbrains.jetpad.cell.indent.updater.CellWrapper;
 import jetbrains.jetpad.cell.indent.updater.IndentUpdater;
 import jetbrains.jetpad.cell.indent.updater.IndentUpdaterTarget;
-import jetbrains.jetpad.cell.toUtil.CounterSpec;
-import jetbrains.jetpad.cell.toUtil.Counters;
+import jetbrains.jetpad.cell.toUtil.CounterUtil;
 import jetbrains.jetpad.mapper.MappingContext;
 import jetbrains.jetpad.model.collections.CollectionItemEvent;
 import jetbrains.jetpad.model.collections.set.ObservableSet;
@@ -133,7 +132,7 @@ class IndentRootCellMapper extends BaseCellMapper<IndentCell, VerticalView> {
 
       @Override
       public void propertyChanged(Cell cell, final CellPropertySpec<?> prop, final PropertyChangeEvent<?> event) {
-        if (prop == Cell.FOCUS_HIGHLIGHTED || prop == Cell.SELECTED || prop == Cell.HAS_ERROR || prop == Cell.HAS_WARNING) {
+        if (CounterUtil.isCounterProp(prop)) {
           iterateLeaves(cell, new Handler<Cell>() {
             @Override
             public void handle(Cell item) {
@@ -141,19 +140,7 @@ class IndentRootCellMapper extends BaseCellMapper<IndentCell, VerticalView> {
               if (mapper == null) {
                 throw new IllegalStateException();
               }
-              int delta = (Boolean) event.getNewValue() ? 1 : -1;
-              CounterSpec spec = null;
-              if (prop == Cell.FOCUS_HIGHLIGHTED) {
-                spec = Counters.HIGHLIGHT_COUNT;
-              } else if (prop == Cell.SELECTED) {
-                spec = Counters.SELECT_COUNT;
-              } else if (prop == Cell.HAS_ERROR) {
-                spec = Counters.ERROR_COUNT;
-              } else if (prop == Cell.HAS_WARNING) {
-                spec = Counters.WARNING_COUNT;
-              }
-              if (spec != null) {
-                mapper.changeCounter(spec, delta);
+              if (CounterUtil.update(mapper, prop, event)) {
                 mapper.refreshProperties();
               }
             }
