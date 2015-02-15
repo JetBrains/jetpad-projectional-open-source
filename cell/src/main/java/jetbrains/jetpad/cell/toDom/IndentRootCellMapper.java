@@ -31,6 +31,7 @@ import jetbrains.jetpad.cell.indent.updater.CellWrapper;
 import jetbrains.jetpad.cell.indent.updater.IndentUpdater;
 import jetbrains.jetpad.cell.indent.updater.IndentUpdaterTarget;
 import jetbrains.jetpad.cell.toUtil.CounterSpec;
+import jetbrains.jetpad.cell.toUtil.Counters;
 import jetbrains.jetpad.geometry.Rectangle;
 import jetbrains.jetpad.mapper.Mapper;
 import jetbrains.jetpad.mapper.MappingContext;
@@ -168,9 +169,9 @@ class IndentRootCellMapper extends BaseCellMapper<IndentCell> {
               CounterSpec counter = null;
 
               if (prop == Cell.FOCUS_HIGHLIGHTED) {
-                counter = BaseCellMapper.HIGHLIGHT_COUNT;
+                counter = Counters.HIGHLIGHT_COUNT;
               } else if (prop == Cell.SELECTED) {
-                counter = BaseCellMapper.SELECT_COUNT;
+                counter = Counters.SELECT_COUNT;
               }
 
               if (counter != null) {

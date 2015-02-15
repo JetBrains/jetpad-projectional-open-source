@@ -43,9 +43,6 @@ import static jetbrains.jetpad.cell.toDom.CellContainerToDomMapper.CSS;
 import static jetbrains.jetpad.cell.toDom.CellContainerToDomMapper.ELEMENT;
 
 abstract class BaseCellMapper<SourceT extends Cell> extends Mapper<SourceT, Element> implements HasCounters {
-  static final CounterSpec HIGHLIGHT_COUNT = new CounterSpec("focusHighlight");
-  static final CounterSpec SELECT_COUNT = new CounterSpec("selectCount");
-
   private ObservableSet<Mapper<? extends Cell, ? extends Element>> myPopupMappers;
   private Registration myPopupUpdateReg;
 
@@ -161,9 +158,9 @@ abstract class BaseCellMapper<SourceT extends Cell> extends Mapper<SourceT, Elem
   protected void refreshProperties() {
     Style style = getTarget().getStyle();
 
-    boolean selected = getSource().selected().get() || getCounter(SELECT_COUNT) > 0;
+    boolean selected = getSource().selected().get() || getCounter(Counters.SELECT_COUNT) > 0;
     boolean paired = getSource().pairHighlighted().get();
-    boolean focusHighlighted = getSource().focusHighlighted().get() || getCounter(HIGHLIGHT_COUNT) > 0;
+    boolean focusHighlighted = getSource().focusHighlighted().get() || getCounter(Counters.HIGHLIGHT_COUNT) > 0;
 
     getTarget().removeClassName(CSS.selected());
     getTarget().removeClassName(CSS.paired());

@@ -3,6 +3,11 @@ package jetbrains.jetpad.cell.toUtil;
 import jetbrains.jetpad.model.util.ListMap;
 
 public class Counters implements HasCounters {
+  public static final CounterSpec HIGHLIGHT_COUNT = new CounterSpec("focusHighlight");
+  public static final CounterSpec SELECT_COUNT = new CounterSpec("selectCount");
+  public static final CounterSpec ERROR_COUNT = new CounterSpec("errors");
+  public static final CounterSpec WARNING_COUNT = new CounterSpec("warning");
+
   private ListMap<CounterSpec, Integer> myCounters;
 
   public int getCounter(CounterSpec spec) {

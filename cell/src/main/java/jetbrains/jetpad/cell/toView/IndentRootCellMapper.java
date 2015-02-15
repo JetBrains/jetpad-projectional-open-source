@@ -26,6 +26,7 @@ import jetbrains.jetpad.cell.indent.updater.CellWrapper;
 import jetbrains.jetpad.cell.indent.updater.IndentUpdater;
 import jetbrains.jetpad.cell.indent.updater.IndentUpdaterTarget;
 import jetbrains.jetpad.cell.toUtil.CounterSpec;
+import jetbrains.jetpad.cell.toUtil.Counters;
 import jetbrains.jetpad.mapper.MappingContext;
 import jetbrains.jetpad.model.collections.CollectionItemEvent;
 import jetbrains.jetpad.model.collections.set.ObservableSet;
@@ -143,13 +144,13 @@ class IndentRootCellMapper extends BaseCellMapper<IndentCell, VerticalView> {
               int delta = (Boolean) event.getNewValue() ? 1 : -1;
               CounterSpec spec = null;
               if (prop == Cell.FOCUS_HIGHLIGHTED) {
-                spec = BaseCellMapper.HIGHLIGHT_COUNT;
+                spec = Counters.HIGHLIGHT_COUNT;
               } else if (prop == Cell.SELECTED) {
-                spec = BaseCellMapper.SELECT_COUNT;
+                spec = Counters.SELECT_COUNT;
               } else if (prop == Cell.HAS_ERROR) {
-                spec = BaseCellMapper.ERROR_COUNT;
+                spec = Counters.ERROR_COUNT;
               } else if (prop == Cell.HAS_WARNING) {
-                spec = BaseCellMapper.WARNING_COUNT;
+                spec = Counters.WARNING_COUNT;
               }
               if (spec != null) {
                 mapper.changeCounter(spec, delta);

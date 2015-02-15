@@ -31,11 +31,6 @@ import jetbrains.jetpad.projectional.view.View;
 import jetbrains.jetpad.values.Color;
 
 class BaseCellMapper<SourceT extends Cell, TargetT extends View> extends Mapper<SourceT, TargetT> implements HasCounters {
-  static final CounterSpec HIGHLIGHT_COUNT = new CounterSpec("focusHighlight");
-  static final CounterSpec SELECT_COUNT = new CounterSpec("selectCount");
-  static final CounterSpec ERROR_COUNT = new CounterSpec("errors");
-  static final CounterSpec WARNING_COUNT = new CounterSpec("warning");
-
   private CellToViewContext myContext;
 
   private ObservableList<BaseCellMapper<?, ?>> myChildMappers;
@@ -120,9 +115,9 @@ class BaseCellMapper<SourceT extends Cell, TargetT extends View> extends Mapper<
     Cell cell = getSource();
     View view = getTarget();
 
-    boolean selected = getSource().selected().get() || getCounter(SELECT_COUNT) > 0;
+    boolean selected = getSource().selected().get() || getCounter(Counters.SELECT_COUNT) > 0;
     boolean paired = getSource().pairHighlighted().get();
-    boolean focusHighlighted = getSource().focusHighlighted().get() || getCounter(HIGHLIGHT_COUNT) > 0;
+    boolean focusHighlighted = getSource().focusHighlighted().get() || getCounter(Counters.HIGHLIGHT_COUNT) > 0;
 
     Color background = cell.background().get();
     if (selected) {
@@ -135,9 +130,9 @@ class BaseCellMapper<SourceT extends Cell, TargetT extends View> extends Mapper<
     view.background().set(background);
 
     Color borderColor;
-    if (cell.hasError().get() || getCounter(ERROR_COUNT) > 0) {
+    if (cell.hasError().get() || getCounter(Counters.ERROR_COUNT) > 0) {
       borderColor = Color.RED;
-    } else if (cell.hasWarning().get() || getCounter(WARNING_COUNT) > 0) {
+    } else if (cell.hasWarning().get() || getCounter(Counters.WARNING_COUNT) > 0) {
       borderColor = Color.YELLOW;
     } else {
       borderColor = cell.borderColor().get();
