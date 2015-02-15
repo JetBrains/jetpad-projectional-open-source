@@ -131,7 +131,7 @@ class BaseCellMapper<SourceT extends Cell, TargetT extends View> extends Mapper<
 
     Color borderColor;
     if (cell.hasError().get() || getCounter(Counters.ERROR_COUNT) > 0) {
-      borderColor = Color.RED;
+      borderColor = Color.PINK;
     } else if (cell.hasWarning().get() || getCounter(Counters.WARNING_COUNT) > 0) {
       borderColor = Color.YELLOW;
     } else {

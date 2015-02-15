@@ -79,6 +79,7 @@ class IndentRootCellMapper extends BaseCellMapper<IndentCell> {
         public CellWrapper<Node> wrap(final Cell cell) {
           final BaseCellMapper<?> mapper = createMapper(cell);
           myCellMappers.add(mapper);
+          CounterUtil.updateOnAdd(getSource(), cell, mapper);
 
           final Registration visibilityReg = cell.visible().addHandler(new EventHandler<PropertyChangeEvent<Boolean>>() {
             @Override
@@ -95,6 +96,7 @@ class IndentRootCellMapper extends BaseCellMapper<IndentCell> {
 
             @Override
             public void remove() {
+              CounterUtil.updateOnRemove(getSource(), cell, mapper);
               myCellMappers.remove(mapper);
               visibilityReg.remove();
             }

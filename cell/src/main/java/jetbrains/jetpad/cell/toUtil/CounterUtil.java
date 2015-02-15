@@ -4,9 +4,34 @@ import jetbrains.jetpad.cell.Cell;
 import jetbrains.jetpad.cell.CellPropertySpec;
 import jetbrains.jetpad.model.property.PropertyChangeEvent;
 
+import java.util.Arrays;
+import java.util.List;
+
 public class CounterUtil {
+  public static final List<CellPropertySpec<Boolean>> PROPS = Arrays.asList(Cell.FOCUS_HIGHLIGHTED, Cell.SELECTED, Cell.HAS_ERROR, Cell.HAS_WARNING);
+
   public static boolean isCounterProp(CellPropertySpec<?> prop) {
-    return prop == Cell.FOCUS_HIGHLIGHTED || prop == Cell.SELECTED || prop == Cell.HAS_ERROR || prop == Cell.HAS_WARNING;
+    return PROPS.indexOf(prop) != -1;
+  }
+
+  public static void updateOnAdd(Cell root, Cell cell, HasCounters target) {
+    update(true, root, cell, target);
+  }
+
+  public static void updateOnRemove(Cell root, Cell cell, HasCounters target) {
+    update(false, root, cell, target);
+  }
+
+  private static void update(boolean add, Cell root, Cell cell, HasCounters target) {
+    Cell current = cell;
+    do {
+      current = current.getParent();
+      for (CellPropertySpec<Boolean> cp : CounterUtil.PROPS) {
+        if (current.get(cp)) {
+          CounterUtil.update(target, cp, new PropertyChangeEvent<>(!add, add));
+        }
+      }
+    } while (current != root);
   }
 
   public static boolean update(HasCounters target, CellPropertySpec<?> prop, PropertyChangeEvent<?> event) {

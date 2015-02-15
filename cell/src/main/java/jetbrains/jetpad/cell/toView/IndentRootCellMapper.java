@@ -65,6 +65,8 @@ class IndentRootCellMapper extends BaseCellMapper<IndentCell, VerticalView> {
         @Override
         public CellWrapper<View> wrap(final Cell cell) {
           final BaseCellMapper<?, ?> mapper = createMapper(cell);
+
+          CounterUtil.updateOnAdd(getSource(), cell, mapper);
           myCellMappers.add(mapper);
 
           return new CellWrapper<View>() {
@@ -75,6 +77,7 @@ class IndentRootCellMapper extends BaseCellMapper<IndentCell, VerticalView> {
 
             @Override
             public void remove() {
+              CounterUtil.updateOnRemove(getSource(), cell, mapper);
               myCellMappers.remove(mapper);
             }
           };

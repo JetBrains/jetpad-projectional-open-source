@@ -71,6 +71,16 @@ public class IndentPropertiesTest {
   }
 
   @Test
+  public void addChildToHighlightePlace() {
+    c1.focusHighlighted().set(true);
+
+    TextCell l13 = new TextCell("l13");
+    c1.children().add(l13);
+
+    assertHighlighted(l13);
+  }
+
+  @Test
   public void selectionUpdate() {
     c1.selected().set(true);
 
