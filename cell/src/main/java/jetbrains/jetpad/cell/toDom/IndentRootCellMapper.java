@@ -30,7 +30,7 @@ import jetbrains.jetpad.cell.indent.IndentContainerCellListener;
 import jetbrains.jetpad.cell.indent.updater.CellWrapper;
 import jetbrains.jetpad.cell.indent.updater.IndentUpdater;
 import jetbrains.jetpad.cell.indent.updater.IndentUpdaterTarget;
-import jetbrains.jetpad.cell.util.CounterSpec;
+import jetbrains.jetpad.cell.toUtil.CounterSpec;
 import jetbrains.jetpad.geometry.Rectangle;
 import jetbrains.jetpad.mapper.Mapper;
 import jetbrains.jetpad.mapper.MappingContext;

@@ -1,4 +1,4 @@
-package jetbrains.jetpad.cell.util;
+package jetbrains.jetpad.cell.toUtil;
 
 public class CounterSpec {
   private String myName;

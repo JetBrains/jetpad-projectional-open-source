@@ -17,8 +17,8 @@ package jetbrains.jetpad.cell.toView;
 
 import jetbrains.jetpad.base.Registration;
 import jetbrains.jetpad.cell.Cell;
-import jetbrains.jetpad.cell.util.CounterSpec;
-import jetbrains.jetpad.cell.util.Counters;
+import jetbrains.jetpad.cell.toUtil.CounterSpec;
+import jetbrains.jetpad.cell.toUtil.Counters;
 import jetbrains.jetpad.geometry.Rectangle;
 import jetbrains.jetpad.mapper.Mapper;
 import jetbrains.jetpad.mapper.MappingContext;

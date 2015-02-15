@@ -25,7 +25,7 @@ import jetbrains.jetpad.cell.indent.IndentContainerCellListener;
 import jetbrains.jetpad.cell.indent.updater.CellWrapper;
 import jetbrains.jetpad.cell.indent.updater.IndentUpdater;
 import jetbrains.jetpad.cell.indent.updater.IndentUpdaterTarget;
-import jetbrains.jetpad.cell.util.CounterSpec;
+import jetbrains.jetpad.cell.toUtil.CounterSpec;
 import jetbrains.jetpad.mapper.MappingContext;
 import jetbrains.jetpad.model.collections.CollectionItemEvent;
 import jetbrains.jetpad.model.collections.set.ObservableSet;
@@ -189,8 +189,6 @@ class IndentRootCellMapper extends BaseCellMapper<IndentCell, VerticalView> {
 
     super.onDetach();
   }
-
-
 
   private void updateIndentCellPopup(Cell targetCell ,PropertyChangeEvent<Cell> event) {
     if (event.getOldValue() != null) {

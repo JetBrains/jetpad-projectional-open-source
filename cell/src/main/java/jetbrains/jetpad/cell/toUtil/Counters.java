@@ -1,4 +1,4 @@
-package jetbrains.jetpad.cell.util;
+package jetbrains.jetpad.cell.toUtil;
 
 import jetbrains.jetpad.model.util.ListMap;
 
