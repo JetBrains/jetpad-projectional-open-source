@@ -19,6 +19,7 @@ import jetbrains.jetpad.base.Registration;
 import jetbrains.jetpad.cell.Cell;
 import jetbrains.jetpad.cell.toUtil.CounterSpec;
 import jetbrains.jetpad.cell.toUtil.Counters;
+import jetbrains.jetpad.cell.toUtil.HasCounters;
 import jetbrains.jetpad.geometry.Rectangle;
 import jetbrains.jetpad.mapper.Mapper;
 import jetbrains.jetpad.mapper.MappingContext;
@@ -29,7 +30,7 @@ import jetbrains.jetpad.model.property.PropertyChangeEvent;
 import jetbrains.jetpad.projectional.view.View;
 import jetbrains.jetpad.values.Color;
 
-class BaseCellMapper<SourceT extends Cell, TargetT extends View> extends Mapper<SourceT, TargetT> {
+class BaseCellMapper<SourceT extends Cell, TargetT extends View> extends Mapper<SourceT, TargetT> implements HasCounters {
   static final CounterSpec HIGHLIGHT_COUNT = new CounterSpec("focusHighlight");
   static final CounterSpec SELECT_COUNT = new CounterSpec("selectCount");
   static final CounterSpec ERROR_COUNT = new CounterSpec("errors");
@@ -96,12 +97,12 @@ class BaseCellMapper<SourceT extends Cell, TargetT extends View> extends Mapper<
     super.onDetach();
   }
 
-  int getCounter(CounterSpec spec) {
+  public int getCounter(CounterSpec spec) {
     if (myCounters == null) return 0;
     return myCounters.getCounter(spec);
   }
 
-  void changeCounter(CounterSpec spec, int delta) {
+  public void changeCounter(CounterSpec spec, int delta) {
     if (myCounters == null) {
       myCounters = new Counters();
     }

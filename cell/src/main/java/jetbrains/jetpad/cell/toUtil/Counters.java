@@ -2,7 +2,7 @@ package jetbrains.jetpad.cell.toUtil;
 
 import jetbrains.jetpad.model.util.ListMap;
 
-public class Counters {
+public class Counters implements HasCounters {
   private ListMap<CounterSpec, Integer> myCounters;
 
   public int getCounter(CounterSpec spec) {
