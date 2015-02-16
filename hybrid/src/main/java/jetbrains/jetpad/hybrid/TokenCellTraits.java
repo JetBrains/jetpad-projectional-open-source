@@ -169,7 +169,6 @@ class TokenCellTraits {
 
     @Override
     public Object get(Cell cell, CellTraitPropertySpec<?> spec) {
-
       if (spec == Completion.COMPLETION && !hybridSync(cell).hasSelection()) return tokenCompletion(cell).tokenCompletion(cell);
 
       return super.get(cell, spec);
