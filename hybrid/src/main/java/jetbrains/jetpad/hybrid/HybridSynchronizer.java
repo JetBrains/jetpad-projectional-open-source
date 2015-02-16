@@ -82,7 +82,6 @@ public class HybridSynchronizer<SourceT> implements Synchronizer {
   private MapperFactory<Object, ? extends Cell> myMapperFactory;
   private SelectionSupport<Cell> mySelectionSupport;
   private Runnable myLastItemDeleted;
-  private Synchronizer[] mySynchronizers = Synchronizer.EMPTY_ARRAY;
   private String myPlaceHolderText = "empty";
   private boolean myHideTokensInMenu = false;
 
@@ -464,13 +463,6 @@ public class HybridSynchronizer<SourceT> implements Synchronizer {
     myMapperFactory = mapperFactory;
   }
 
-  public void addPart(Synchronizer sync) {
-    Synchronizer[] newSynchronizers = new Synchronizer[mySynchronizers.length + 1];
-    System.arraycopy(mySynchronizers, 0, newSynchronizers, 0, mySynchronizers.length);
-    newSynchronizers[newSynchronizers.length - 1] = sync;
-    mySynchronizers = newSynchronizers;
-  }
-
   private Cell createTokenCell(Token token) {
     if (token instanceof ValueToken) {
       ValueToken valueToken = (ValueToken) token;
@@ -739,10 +731,6 @@ public class HybridSynchronizer<SourceT> implements Synchronizer {
 
   @Override
   public void attach(SynchronizerContext ctx) {
-    for (Synchronizer sync : mySynchronizers) {
-      sync.attach(ctx);
-    }
-
     CollectionListener<Token> tokensListener = createTokensListener();
     myRegistration = new CompositeRegistration(
       PropertyBinding.bindTwoWay(myProperty, myTokenListEditor.value),
@@ -760,9 +748,6 @@ public class HybridSynchronizer<SourceT> implements Synchronizer {
   public void detach() {
     myRegistration.remove();
     myRegistration = null;
-    for (Synchronizer sync : mySynchronizers) {
-      sync.detach();
-    }
   }
 
   private boolean isAttached() {
