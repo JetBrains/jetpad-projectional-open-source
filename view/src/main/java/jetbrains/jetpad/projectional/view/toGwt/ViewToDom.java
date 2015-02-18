@@ -22,6 +22,10 @@ import jetbrains.jetpad.projectional.view.ViewContainer;
 
 public class ViewToDom {
   public static Registration map(final ViewContainer container, final Element element) {
-    return Mappers.attachRoot(new ViewContainerToElementMapper(container, element));
+    return Mappers.attachRoot(new ViewContainerToElementMapper(container, element, false));
+  }
+
+  public static Registration mapWithDisabledActions(final ViewContainer container, final Element element) {
+    return Mappers.attachRoot(new ViewContainerToElementMapper(container, element, true));
   }
 }

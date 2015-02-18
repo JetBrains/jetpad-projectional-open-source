@@ -68,20 +68,27 @@ public class ViewContainerToElementMapper extends Mapper<ViewContainer, Element>
   private Element myRootDiv = DOM.createDiv();
   private ValueProperty<Rectangle> myVisibleArea = new ValueProperty<>();
   private Property<Mapper<? extends View, ? extends Element>> myRootMapper = createChildProperty();
-  private ViewToDomContext myCtx = new ViewToDomContext() {
-    @Override
-    public ReadableProperty<Rectangle> visibleArea() {
-      return myVisibleArea;
-    }
+  private final ViewToDomContext myCtx;
 
-    @Override
-    public MapperFactory<View, Element> getFactory() {
-      return ViewMapperFactory.factory(myCtx);
-    }
-  };
-
-  public ViewContainerToElementMapper(ViewContainer source, Element target) {
+  public ViewContainerToElementMapper(ViewContainer source, Element target, final boolean eventsDisabled) {
     super(source, target);
+
+    myCtx = new ViewToDomContext() {
+      @Override
+      public ReadableProperty<Rectangle> visibleArea() {
+        return myVisibleArea;
+      }
+
+      @Override
+      public MapperFactory<View, Element> getFactory() {
+        return ViewMapperFactory.factory(this);
+      }
+
+      @Override
+      public Boolean getEventsDisabled() {
+        return eventsDisabled;
+      }
+    };
 
     disablePopup(myRootDiv);
     target.appendChild(myRootDiv);
@@ -121,6 +128,13 @@ public class ViewContainerToElementMapper extends Mapper<ViewContainer, Element>
       }
     }));
 
+    if (!myCtx.getEventsDisabled()) {
+      registerListeners(conf);
+    }
+
+  }
+
+  private void registerListeners(SynchronizersConfiguration conf) {
     final Value<Boolean> pressed = new Value<>(false);
     final Value<Boolean> pressedOutside = new Value<>(false);
 

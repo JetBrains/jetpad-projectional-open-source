@@ -136,7 +136,7 @@ public class CellContainerToDomMapper extends Mapper<CellContainer, Element> {
   private Element myLineHighlight;
   private Element myContent;
 
-  public CellContainerToDomMapper(CellContainer source, Element target) {
+  public CellContainerToDomMapper(CellContainer source, Element target, boolean eventsDisabled) {
     super(source, target);
 
     CSS.ensureInjected();
@@ -149,7 +149,11 @@ public class CellContainerToDomMapper extends Mapper<CellContainer, Element> {
     myContent.addClassName(CSS.content());
 
 
-    myCellToDomContext = new CellToDomContext(target);
+    myCellToDomContext = new CellToDomContext(target, eventsDisabled);
+  }
+
+  public CellContainerToDomMapper(CellContainer source, Element target) {
+    this(source, target, false);
   }
 
   @Override
@@ -271,12 +275,14 @@ public class CellContainerToDomMapper extends Mapper<CellContainer, Element> {
       }
     }));
 
-    conf.add(Synchronizers.forRegistration(new Supplier<Registration>() {
-      @Override
-      public Registration get() {
-        return registerListeners();
-      }
-    }));
+    if (!myCellToDomContext.eventsDisabled) {
+      conf.add(Synchronizers.forRegistration(new Supplier<Registration>() {
+        @Override
+        public Registration get() {
+          return registerListeners();
+        }
+      }));
+    }
   }
 
   private Element getFocusTarget() {

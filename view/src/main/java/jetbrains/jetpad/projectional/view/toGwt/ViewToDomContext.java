@@ -24,4 +24,5 @@ import jetbrains.jetpad.projectional.view.View;
 interface ViewToDomContext {
   ReadableProperty<Rectangle> visibleArea();
   MapperFactory<View, Element> getFactory();
+  Boolean getEventsDisabled();
 }

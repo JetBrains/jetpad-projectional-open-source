@@ -26,11 +26,13 @@ class CellToDomContext {
   final Property<Boolean> focused = new ValueProperty<>(false);
   final Element rootElement;
   final Element focusElement;
+  final boolean eventsDisabled;
   private final Map<Element, BaseCellMapper<?>> myMappers = new HashMap<>();
 
-  CellToDomContext(Element rootElement) {
+  CellToDomContext(Element rootElement, boolean eventsDisabled) {
     this.rootElement = rootElement;
     this.focusElement = rootElement;
+    this.eventsDisabled = eventsDisabled;
   }
 
   void register(BaseCellMapper<?> mapper) {

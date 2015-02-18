@@ -35,7 +35,11 @@ class ViewCellMapper extends BaseCellMapper<ViewCell> {
   protected void registerSynchronizers(SynchronizersConfiguration conf) {
     super.registerSynchronizers(conf);
 
-    conf.add(Synchronizers.forRegistration(ViewToDom.map(myViewContainer, getTarget())));
+    if (getContext().eventsDisabled) {
+      conf.add(Synchronizers.forRegistration(ViewToDom.mapWithDisabledActions(myViewContainer, getTarget())));
+    } else {
+      conf.add(Synchronizers.forRegistration(ViewToDom.map(myViewContainer, getTarget())));
+    }
 
     conf.add(Synchronizers.forPropsOneWay(getSource().view, new WritableProperty<View>() {
       @Override
