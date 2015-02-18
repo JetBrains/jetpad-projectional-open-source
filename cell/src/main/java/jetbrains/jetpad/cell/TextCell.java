@@ -29,7 +29,7 @@ public class TextCell extends Cell {
   public static final CellPropertySpec<Integer> CARET_POSITION = new CellPropertySpec<>("caretPosition", 0);
   public static final CellPropertySpec<Boolean> BOLD = new CellPropertySpec<>("bold", false);
 
-  public static final CellPropertySpec<Boolean> SELECTION_VISIBLE = new CellPropertySpec<>("selectioNVisible", false);
+  public static final CellPropertySpec<Boolean> SELECTION_VISIBLE = new CellPropertySpec<>("selectionVisible", false);
   public static final CellPropertySpec<Integer> SELECTION_START = new CellPropertySpec<>("selectionStart", 0);
 
   public TextCell() {
