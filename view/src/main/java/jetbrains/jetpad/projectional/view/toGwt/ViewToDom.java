@@ -25,7 +25,7 @@ public class ViewToDom {
     return Mappers.attachRoot(new ViewContainerToElementMapper(container, element, false));
   }
 
-  public static Registration mapWithDisabledActions(final ViewContainer container, final Element element) {
+  public static Registration mapWithDisabledEvents(final ViewContainer container, final Element element) {
     return Mappers.attachRoot(new ViewContainerToElementMapper(container, element, true));
   }
 }

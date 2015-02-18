@@ -85,7 +85,7 @@ public class ViewContainerToElementMapper extends Mapper<ViewContainer, Element>
       }
 
       @Override
-      public Boolean getEventsDisabled() {
+      public Boolean areEventsDisabled() {
         return eventsDisabled;
       }
     };
@@ -128,7 +128,7 @@ public class ViewContainerToElementMapper extends Mapper<ViewContainer, Element>
       }
     }));
 
-    if (!myCtx.getEventsDisabled()) {
+    if (!myCtx.areEventsDisabled()) {
       registerListeners(conf);
     }
 
