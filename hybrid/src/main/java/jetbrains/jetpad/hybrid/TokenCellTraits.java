@@ -19,6 +19,7 @@ import com.google.common.base.Function;
 import jetbrains.jetpad.cell.Cell;
 import jetbrains.jetpad.cell.CellContainer;
 import jetbrains.jetpad.cell.completion.Completion;
+import jetbrains.jetpad.cell.position.PositionHandler;
 import jetbrains.jetpad.cell.position.Positions;
 import jetbrains.jetpad.cell.text.TextEditing;
 import jetbrains.jetpad.cell.trait.CellTrait;
@@ -60,7 +61,7 @@ class TokenCellTraits {
       return hybridSync(cell).tokens();
     }
 
-    protected List<Cell> tokenViews(Cell cell) {
+    protected List<Cell> tokenCells(Cell cell) {
       return hybridSync(cell).tokenCells();
     }
 
@@ -149,7 +150,7 @@ class TokenCellTraits {
     @Override
     public void onCellTraitEvent(Cell cell, CellTraitEventSpec<?> spec, Event event) {
       if (spec == Cells.BECAME_EMPTY) {
-        int index = tokenViews(cell).indexOf(cell);
+        int index = tokenCells(cell).indexOf(cell);
 
         Token current = tokens(cell).get(index);
         Token prev = index == 0 ? null : tokens(cell).get(index - 1);
