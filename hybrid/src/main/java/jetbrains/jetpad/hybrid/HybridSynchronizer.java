@@ -66,6 +66,8 @@ import static jetbrains.jetpad.model.composite.Composites.firstFocusable;
 import static jetbrains.jetpad.model.composite.Composites.lastFocusable;
 
 public class HybridSynchronizer<SourceT> implements Synchronizer {
+  public static final CellTraitPropertySpec<Runnable> ON_LAST_ITEM_DELETED = new CellTraitPropertySpec<Runnable>("onLastItemDeleted");
+
   static final CellTraitPropertySpec<HybridSynchronizer<?>> HYBRID_SYNCHRONIZER = new CellTraitPropertySpec<>("hybridSynchronizer");
 
   private static final ContentKind<List<Token>> TOKENS_CONTENT = new ContentKind<List<Token>>() {};
@@ -83,7 +85,6 @@ public class HybridSynchronizer<SourceT> implements Synchronizer {
   private MapperFactory<Object, ? extends Cell> myMapperFactory;
   private SelectionSupport<Cell> mySelectionSupport;
 
-  private Runnable myLastItemDeleted;
   private String myPlaceHolderText = "empty";
   private boolean myHideTokensInMenu = false;
 
@@ -582,10 +583,6 @@ public class HybridSynchronizer<SourceT> implements Synchronizer {
     return tokenOperations().selectOnCreation(index, pos);
   }
 
-  public void setOnLastItemDeleted(Runnable action) {
-    myLastItemDeleted = action;
-  }
-
   public void setHideTokensInMenu(boolean hideTokens) {
     myHideTokensInMenu = hideTokens;
   }
@@ -638,11 +635,11 @@ public class HybridSynchronizer<SourceT> implements Synchronizer {
   }
 
   Runnable lastItemDeleted() {
-    if (myLastItemDeleted != null) {
-      return myLastItemDeleted;
-    } else {
-      return CellActions.toCell(myPlaceholder);
+    final Runnable result = myTarget.get(ON_LAST_ITEM_DELETED);
+    if (result != null) {
+      return result;
     }
+    return CellActions.toCell(myPlaceholder);
   }
 
   public ReadableProperty<Boolean> valid() {
