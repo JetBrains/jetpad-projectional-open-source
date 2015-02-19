@@ -20,7 +20,7 @@ import jetbrains.jetpad.base.Registration;
 import jetbrains.jetpad.model.property.Property;
 import jetbrains.jetpad.model.property.PropertyChangeEvent;
 
-class DefaultPositionHandler implements PositionHandler {
+public class DefaultPositionHandler implements PositionHandler {
   @Override
   public boolean isHome() {
     return false;
