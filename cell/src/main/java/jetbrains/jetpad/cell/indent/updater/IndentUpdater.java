@@ -227,7 +227,7 @@ public class IndentUpdater<TargetT> {
     Position current = from;
     while (current != null) {
       if (current.get() instanceof NewLineCell) {
-        return  current;
+        return current;
       }
       current = current.prev();
     }
@@ -293,11 +293,15 @@ public class IndentUpdater<TargetT> {
 
   private int indent(Cell part) {
     int result = 0;
-    Cell current = part;
-    while (current != null) {
-      if (isIndented(current)) {
+    Cell current = part.getParent();
+    Cell prevCurrent = part;
+    while (current != myRoot) {
+      Position prevNewLine = prevNewLine(new Position(this, prevCurrent));
+      if (isIndented(current) && prevNewLine != null && prevNewLine.get().getParent() == current) {
         result++;
       }
+
+      prevCurrent = current;
       current = current.getParent();
     }
     return result;

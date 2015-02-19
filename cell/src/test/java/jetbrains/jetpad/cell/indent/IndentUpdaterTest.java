@@ -318,6 +318,16 @@ public class IndentUpdaterTest {
     indentCell.bottomPopup().set(cell);
   }
 
+  @Test
+  public void indentAfterNewLineException() {
+    IndentCell cell = new IndentCell(true);
+    children.addAll(Arrays.asList(newLine(), cell));
+
+    final TextCell child = new TextCell("child");
+    cell.children().add(child);
+    cell.children().remove(child);
+  }
+
   private Cell composite(String text) {
     Cell result = new HorizontalCell();
     result.children().addAll(Arrays.asList(text("composite"), text(text)));
