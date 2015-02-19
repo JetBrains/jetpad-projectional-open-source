@@ -55,6 +55,7 @@ import jetbrains.jetpad.model.property.Property;
 import jetbrains.jetpad.model.property.PropertyBinding;
 import jetbrains.jetpad.model.property.PropertyChangeEvent;
 import jetbrains.jetpad.model.property.ReadableProperty;
+import jetbrains.jetpad.model.util.ListMap;
 import jetbrains.jetpad.projectional.cell.SelectionSupport;
 
 import java.util.*;
@@ -77,10 +78,11 @@ public class HybridSynchronizer<SourceT> implements Synchronizer {
   private Cell myTarget;
   private List<Cell> myTargetList;
   private Set<Mapper<?, ? extends Cell>> myValueMappers;
-  private Map<Cell, Mapper<?, ? extends Cell>> myValueCellToMapper = new HashMap<>();
+  private ListMap<Cell, Mapper<?, ? extends Cell>> myValueCellToMapper;
   private TextCell myPlaceholder;
   private MapperFactory<Object, ? extends Cell> myMapperFactory;
   private SelectionSupport<Cell> mySelectionSupport;
+
   private Runnable myLastItemDeleted;
   private String myPlaceHolderText = "empty";
   private boolean myHideTokensInMenu = false;
@@ -405,10 +407,13 @@ public class HybridSynchronizer<SourceT> implements Synchronizer {
         final int index = event.getIndex();
         Cell removedCell = myTargetList.remove(index);
 
-        if (myValueCellToMapper.containsKey(removedCell)) {
+        if (myValueCellToMapper != null && myValueCellToMapper.containsKey(removedCell)) {
           Mapper<?, ? extends Cell> valueMapper = myValueCellToMapper.get(removedCell);
           myValueMappers.remove(valueMapper);
           myValueCellToMapper.remove(removedCell);
+          if (myValueCellToMapper.isEmpty()) {
+            myValueCellToMapper = null;
+          }
         }
 
         if (myTargetList.isEmpty()) {
@@ -474,6 +479,9 @@ public class HybridSynchronizer<SourceT> implements Synchronizer {
 
       myValueMappers.add(mapper);
       Cell target = mapper.getTarget();
+      if (myValueCellToMapper == null) {
+        myValueCellToMapper = new ListMap<>();
+      }
       myValueCellToMapper.put(target, mapper);
 
       target.addTrait(new TokenCellTraits.TokenCellTrait(true) {
