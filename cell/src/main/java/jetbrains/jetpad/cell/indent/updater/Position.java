@@ -162,6 +162,7 @@ class Position {
     Cell current = c.prevSibling();
     while (current != null) {
       if (myUpdater.isAttached(current)) return current;
+      if (!myUpdater.isInitialized() && myUpdater.isVisible(current)) return null;
       current = current.prevSibling();
     }
     return null;
