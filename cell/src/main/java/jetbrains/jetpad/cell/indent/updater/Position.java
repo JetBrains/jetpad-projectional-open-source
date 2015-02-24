@@ -16,6 +16,7 @@
 package jetbrains.jetpad.cell.indent.updater;
 
 import jetbrains.jetpad.cell.Cell;
+import jetbrains.jetpad.cell.indent.IndentCell;
 import jetbrains.jetpad.model.composite.Composites;
 
 import java.util.Iterator;
@@ -50,7 +51,11 @@ class Position {
     if (Composites.isBefore(myCell, to.myCell)) {
       int count = 0;
       for (Cell p : nextLeaves(myCell)) {
-        count++;
+        //we don't consider empty indent cell as a position
+        if (!(p instanceof IndentCell)) {
+          count++;
+        }
+
         if (p == to.myCell) break;
       }
       return count;

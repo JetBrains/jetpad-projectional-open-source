@@ -328,6 +328,14 @@ public class IndentUpdaterTest {
     cell.children().remove(child);
   }
 
+  @Test
+  public void emptyIndentException() {
+    children.addAll(Arrays.asList(text("a"), indent(), text("b")));
+
+    assertTarget("[['a', 'b']]");
+
+  }
+
   private Cell composite(String text) {
     Cell result = new HorizontalCell();
     result.children().addAll(Arrays.asList(text("composite"), text(text)));
