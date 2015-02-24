@@ -18,6 +18,7 @@ package jetbrains.jetpad.cell.toDom;
 import com.google.common.base.Strings;
 import com.google.common.base.Supplier;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style;
@@ -135,6 +136,7 @@ public class CellContainerToDomMapper extends Mapper<CellContainer, Element> {
   private HandlerRegistration myWindowReg;
   private Element myLineHighlight;
   private Element myContent;
+  private boolean myLineHihglightUpToDate;
 
   public CellContainerToDomMapper(CellContainer source, Element target, boolean eventsDisabled) {
     super(source, target);
@@ -198,7 +200,19 @@ public class CellContainerToDomMapper extends Mapper<CellContainer, Element> {
     myWindowReg.removeHandler();
   }
 
+  private void invalidateLineHighlight() {
+    myLineHihglightUpToDate = false;
+
+    Scheduler.get().scheduleDeferred(new Scheduler.ScheduledCommand() {
+      @Override
+      public void execute() {
+        refreshLineHighlight();
+      }
+    });
+  }
+
   private void refreshLineHighlight() {
+    if (myLineHihglightUpToDate) return;
     Cell current = getSource().focusedCell.get();
     Style style = myLineHighlight.getStyle();
     if (current == null || !Cells.isLeaf(current)) {
@@ -212,6 +226,7 @@ public class CellContainerToDomMapper extends Mapper<CellContainer, Element> {
       style.setTop(currentTop - rootTop + deltaTop, Style.Unit.PX);
       style.setHeight(currentElement.getClientHeight(), Style.Unit.PX);
     }
+    myLineHihglightUpToDate = true;
   }
 
   @Override
@@ -251,7 +266,7 @@ public class CellContainerToDomMapper extends Mapper<CellContainer, Element> {
               }
             }
 
-            refreshLineHighlight();
+            invalidateLineHighlight();
           }
 
           @Override
@@ -260,7 +275,7 @@ public class CellContainerToDomMapper extends Mapper<CellContainer, Element> {
             if (mapper == null) return;
             mapper.childAdded(change);
 
-            refreshLineHighlight();
+            invalidateLineHighlight();
           }
 
           @Override
@@ -269,7 +284,7 @@ public class CellContainerToDomMapper extends Mapper<CellContainer, Element> {
             if (mapper == null) return;
             mapper.childRemoved(change);
 
-            refreshLineHighlight();
+            invalidateLineHighlight();
           }
         });
       }
@@ -605,7 +620,7 @@ public class CellContainerToDomMapper extends Mapper<CellContainer, Element> {
     reg.add(getSource().focusedCell.addHandler(new EventHandler<PropertyChangeEvent<Cell>>() {
       @Override
       public void onEvent(PropertyChangeEvent<Cell> event) {
-        refreshLineHighlight();
+        invalidateLineHighlight();
       }
     }));
 
