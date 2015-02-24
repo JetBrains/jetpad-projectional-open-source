@@ -19,6 +19,7 @@ import jetbrains.jetpad.cell.Cell;
 import jetbrains.jetpad.cell.CellContainer;
 import jetbrains.jetpad.cell.TextCell;
 import jetbrains.jetpad.cell.toView.CellContainerToViewMapper;
+import jetbrains.jetpad.cell.util.Cells;
 import jetbrains.jetpad.mapper.Mapper;
 import jetbrains.jetpad.projectional.view.View;
 import jetbrains.jetpad.projectional.view.ViewContainer;
@@ -94,6 +95,12 @@ public class IndentPropertiesTest {
     c1.focusHighlighted().set(true);
 
     assertSelected(l11);
+  }
+
+  @Test
+  public void emptyIndentBounds() {
+    c1.children().clear();
+    assertNotNull(Cells.indentBounds(c1));
   }
 
   View getView(Cell cell) {

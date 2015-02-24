@@ -138,6 +138,8 @@ public class Cells {
     IndentCell container = cell.indentContainer();
     Rectangle bounds = container.getBounds();
 
+    if (cell.children().isEmpty()) return bounds;
+
     Cell firstLeaf = firstVisibleLeaf(cell);
     if (firstLeaf == null) return null;
 
