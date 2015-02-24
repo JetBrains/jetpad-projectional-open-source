@@ -22,7 +22,6 @@ import org.junit.Test;
 import java.util.Arrays;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertSame;
 
 public class CompletionMenuTest {
   private CompletionMenuModel model = new CompletionMenuModel();
@@ -56,6 +55,22 @@ public class CompletionMenuTest {
     model.selectedItem.set(model.visibleItems.get(model.visibleItems.size() - 1));
     model.up();
     assertSelected("aaa");
+  }
+
+
+  @Test
+  public void additionalItemLoading() {
+    model = new CompletionMenuModel(3, 0);
+    for (int i = 0; i < 10; i++) {
+      model.items.add(createItem("" + i));
+    }
+
+    assertEquals(3, model.visibleItems.size());
+
+    model.selectedItem.set(model.visibleItems.get(0));
+    model.selectedItem.set(model.visibleItems.get(model.visibleItems.size() - 1));
+
+    assertEquals(6, model.visibleItems.size());
   }
 
   private void assertSelected(String text) {

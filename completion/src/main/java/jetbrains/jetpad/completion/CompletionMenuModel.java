@@ -26,14 +26,33 @@ import jetbrains.jetpad.model.transform.Transformers;
 import java.util.Comparator;
 
 public class CompletionMenuModel {
+  private static final int CHUNK_SIZE = 30;
+  private static final int DISTANCE_FROM_END_TO_LOAD = 10;
+
   public final Property<String> text = new ValueProperty<>();
   public final ObservableList<CompletionItem> items = new ObservableArrayList<>();
   public final Property<CompletionItem> selectedItem = new ValueProperty<>();
   public final Property<Boolean> loading = new ValueProperty<>(false);
 
+  private final Property<Integer> visibleCount;
+
+  private boolean myDisableReset;
+  private int myChunkSize;
+  private int myDistanceFromEndToLoad;
+
+
   public final ObservableList<CompletionItem> visibleItems;
 
-  {
+
+  public CompletionMenuModel() {
+    this(CHUNK_SIZE, DISTANCE_FROM_END_TO_LOAD);
+  }
+
+  public CompletionMenuModel(int chunkSize, int distanceFromEnd) {
+    myChunkSize = chunkSize;
+    myDistanceFromEndToLoad = distanceFromEnd;
+    visibleCount = new ValueProperty<>(myChunkSize);
+
     visibleItems = Transformers.filter(new Function<CompletionItem, ReadableProperty<Boolean>>() {
       @Override
       public ReadableProperty<Boolean> apply(final CompletionItem input) {
@@ -58,27 +77,47 @@ public class CompletionMenuModel {
       }, new Comparator<CompletionItem>() {
         @Override
         public int compare(CompletionItem c1, CompletionItem c2) {
-          String mt = text.get() == null ? "" : text.get();
-          String t1 = c1.visibleText(mt);
-          String t2 = c2.visibleText(mt);
-          if (c1.isMatch(mt) && !c2.isMatch(mt)) {
+          String text = "";
+          String t1 = c1.visibleText(text);
+          String t2 = c2.visibleText(text);
+          if (c1.isMatch(text) && !c2.isMatch(text)) {
             return -1;
           }
-          if (!c1.isMatch(mt) && c2.isMatch(mt)) {
+          if (!c1.isMatch(text) && c2.isMatch(text)) {
             return 1;
           }
           return t1.compareTo(t2);
         }
       })
+    ).andThen(
+      Transformers.<CompletionItem>firstN(visibleCount)
     ).transform(items).getTarget();
 
     visibleItems.addHandler(new EventHandler<CollectionItemEvent<? extends CompletionItem>>() {
       @Override
       public void onEvent(CollectionItemEvent<? extends CompletionItem> event) {
+        if (myDisableReset) return;
+
         if (visibleItems.isEmpty()) {
           selectedItem.set(null);
         } else {
           selectedItem.set(visibleItems.get(0));
+        }
+      }
+    });
+
+    selectedItem.addHandler(new EventHandler<PropertyChangeEvent<CompletionItem>>() {
+      @Override
+      public void onEvent(PropertyChangeEvent<CompletionItem> event) {
+        int index = visibleItems.lastIndexOf(event.getNewValue());
+        if (index == -1) return;
+        if ((visibleCount.get() - 1) - index <= myDistanceFromEndToLoad) {
+          myDisableReset = true;
+          try {
+            visibleCount.set(visibleCount.get() + myChunkSize);
+          } finally {
+            myDisableReset = false;
+          }
         }
       }
     });
