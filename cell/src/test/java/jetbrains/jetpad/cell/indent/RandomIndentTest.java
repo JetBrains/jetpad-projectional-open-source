@@ -34,16 +34,19 @@ public class RandomIndentTest {
   }
 
   public void doTest() {
-    for (int i = 0; i < 1000000; i++) {
+    for (int i = 0; i < 100000; i++) {
       step();
     }
   }
 
   private void step() {
     Cell target = findTarget(root);
-    boolean add = random.nextBoolean();
+
+    int opKind = random.nextInt(3);
+
     final ObservableList<Cell> children = target.children();
-    if (add) {
+
+    if (opKind == 0) {
       if (target instanceof IndentCell && !(target instanceof IndentCell)) {
         int kind = random.nextInt(3);
         Cell newCell;
@@ -56,10 +59,12 @@ public class RandomIndentTest {
         }
         children.add(random.nextInt(children.size() + 1), newCell);
       }
-    } else {
+    } else if (opKind == 1) {
       if (!children.isEmpty()) {
         children.remove(random.nextInt(children.size()));
       }
+    } else {
+      target.visible().set(!target.visible().get());
     }
   }
 
