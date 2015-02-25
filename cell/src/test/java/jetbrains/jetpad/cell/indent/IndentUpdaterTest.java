@@ -57,7 +57,6 @@ public class IndentUpdaterTest {
 
   @Test
   public void singleLineAdd() {
-
     children.addAll(Arrays.asList(text("a"), text("b")));
 
     assertTarget("[['a', 'b']]");
@@ -329,11 +328,19 @@ public class IndentUpdaterTest {
   }
 
   @Test
+  public void emptyFirstIndentLeafException() {
+    children.add(new IndentCell());
+    children.add(1, new NewLineCell());
+    children.add(1, new TextCell("a"));
+
+    assertTarget("[['a'], []]");
+  }
+
+  @Test
   public void emptyIndentException() {
     children.addAll(Arrays.asList(text("a"), indent(), text("b")));
 
     assertTarget("[['a', 'b']]");
-
   }
 
   private Cell composite(String text) {

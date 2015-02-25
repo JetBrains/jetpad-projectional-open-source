@@ -310,7 +310,7 @@ public class IndentUpdater<TargetT> {
   private Cell firstLeaf(Cell item) {
     if (isCell(item) || item.children().isEmpty()) return item;
     for (Cell child : item.children()) {
-      if (isVisible(child)) return firstLeaf(child);
+      if (isVisible(child) && !isEmptyIndent(child)) return firstLeaf(child);
     }
     throw new IllegalStateException();
   }
@@ -349,6 +349,16 @@ public class IndentUpdater<TargetT> {
 
   boolean isCell(Cell source) {
     return !(source instanceof IndentCell);
+  }
+
+  boolean isEmptyIndent(Cell source) {
+    if (!(source instanceof IndentCell)) return false;
+
+    for (Cell c : source.children()) {
+      if (!isEmptyIndent(c)) return false;
+    }
+
+    return true;
   }
 
   private Registration watch(final Cell child) {
