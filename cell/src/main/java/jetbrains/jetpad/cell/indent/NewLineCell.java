@@ -15,5 +15,13 @@
  */
 package jetbrains.jetpad.cell.indent;
 
+import jetbrains.jetpad.cell.Cell;
+import jetbrains.jetpad.model.collections.CollectionItemEvent;
+
 public class NewLineCell extends IndentCell {
+
+  @Override
+  protected void onChildAdded(CollectionItemEvent<Cell> event) {
+    throw new IllegalStateException("You shouldn't add anything to new line cells");
+  }
 }
