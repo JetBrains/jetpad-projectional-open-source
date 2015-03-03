@@ -75,7 +75,7 @@ public class TextEditingTrait extends TextNavigationTrait {
           public boolean isMenu() {
             return true;
           }
-        }), Registration.EMPTY, restoreState);
+        }), Registration.EMPTY, Runnables.EMPTY, restoreState);
       }
 
       @Override

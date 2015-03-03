@@ -129,7 +129,7 @@ public class CompletionSupport {
     };
   }
 
-  public static void showCompletion(final TextCell textCell, Async<List<CompletionItem>> items, final Registration removeOnClose, final Runnable restoreState) {
+  public static void showCompletion(final TextCell textCell, Async<List<CompletionItem>> items, final Registration removeOnClose, final Runnable beforeAnimation, final Runnable restoreState) {
     if (!textCell.focused().get()) {
       throw new IllegalArgumentException();
     }
@@ -230,6 +230,7 @@ public class CompletionSupport {
     reg.add(new Registration() {
       @Override
       public void remove() {
+        beforeAnimation.run();
         completionCell.hideSlide(300).whenDone(new Runnable() {
           @Override
           public void run() {
@@ -287,6 +288,11 @@ public class CompletionSupport {
       public void remove() {
         popup.removeFromParent();
         textEditingReg.remove();
+      }
+    }, new Runnable() {
+      @Override
+      public void run() {
+        textCell.text().set("");
       }
     }, Runnables.seq(state, onDeactivate));
     return textCell;
