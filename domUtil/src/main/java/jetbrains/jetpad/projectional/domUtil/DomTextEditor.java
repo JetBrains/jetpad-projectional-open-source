@@ -60,7 +60,6 @@ public class DomTextEditor {
     myRoot = root;
 
     Style rootStyle = myRoot.getStyle();
-    rootStyle.setDisplay(Style.Display.INLINE_BLOCK);
     rootStyle.setPosition(Style.Position.RELATIVE);
 
     myTextContainer = DOM.createSpan();
