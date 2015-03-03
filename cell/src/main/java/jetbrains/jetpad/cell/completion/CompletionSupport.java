@@ -167,7 +167,14 @@ public class CompletionSupport {
       @Override
       public void onKeyPressed(Cell cell, KeyEvent event) {
         CompletionItem selectedItem = menuModel.selectedItem.get();
-        int pageHeight = completionCell.getBounds().dimension.y / textCell.dimension().y;
+
+        if (event.is(Key.ESCAPE)) {
+          reg.remove();
+          restoreState.run();
+          event.consume();
+          return;
+        }
+
         if (selectedItem == null) return;
 
         if (event.is(Key.ENTER)) {
@@ -189,6 +196,7 @@ public class CompletionSupport {
         }
 
         if (event.is(Key.PAGE_UP) || event.is(Key.PAGE_DOWN)) {
+          int pageHeight = completionCell.getBounds().dimension.y / textCell.dimension().y;
           for (int i = 0; i < pageHeight; i++) {
             if (event.is(Key.PAGE_DOWN)) {
               menuModel.down();
@@ -197,13 +205,6 @@ public class CompletionSupport {
             }
           }
           event.consume();
-        }
-
-        if (event.is(Key.ESCAPE)) {
-          reg.remove();
-          restoreState.run();
-          event.consume();
-          return;
         }
 
         super.onKeyPressed(cell, event);

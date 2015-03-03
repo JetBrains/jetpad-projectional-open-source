@@ -74,6 +74,17 @@ public class NonTextCellCompletionTest extends CompletionTestCase {
   }
 
   @Test
+  public void completionDismissWithEscapeWithNoCurrentItem() {
+    complete();
+    type("zzzzz");
+
+    escape();
+
+    assertFocused(target);
+  }
+
+
+  @Test
   public void completionDismissedOnFocusLost() {
     complete();
 
