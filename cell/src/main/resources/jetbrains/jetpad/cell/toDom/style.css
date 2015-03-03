@@ -1,5 +1,5 @@
 @eval textFont jetbrains.jetpad.projectional.view.gwt.View2Dom.font();
-@def currentHighlightColor rgba(170, 172, 158, 0.50);
+@def currentHighlightColor rgb(220, 222, 208);
 @def lineHighlightColor rgb(254, 255, 215);
 @def pairHighlightColor rgb(168, 214, 255);
 
