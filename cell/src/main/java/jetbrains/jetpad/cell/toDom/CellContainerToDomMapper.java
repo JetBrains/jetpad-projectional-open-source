@@ -63,6 +63,7 @@ import jetbrains.jetpad.projectional.domUtil.Scrolling;
 import jetbrains.jetpad.projectional.domUtil.TextMetricsCalculator;
 import jetbrains.jetpad.projectional.view.TextView;
 
+import java.util.Arrays;
 import java.util.Collections;
 
 import static com.google.gwt.query.client.GQuery.$;
@@ -134,7 +135,8 @@ public class CellContainerToDomMapper extends Mapper<CellContainer, Element> {
   private int myScrollLeft;
   private int myScrollTop;
   private HandlerRegistration myWindowReg;
-  private Element myLineHighlight;
+  private Element myLineHighlight1;
+  private Element myLineHighlight2;
   private Element myContent;
   private boolean myLineHihglightUpToDate;
 
@@ -144,12 +146,15 @@ public class CellContainerToDomMapper extends Mapper<CellContainer, Element> {
     CSS.ensureInjected();
     ensureIndentInjected();
 
-    myLineHighlight = DOM.createDiv();
-    myLineHighlight.addClassName(CSS.lineHighight());
+    myLineHighlight1 = DOM.createDiv();
+    myLineHighlight1.addClassName(CSS.lineHighight());
+    myLineHighlight1.getStyle().setWidth(100, Style.Unit.PCT);
+
+    myLineHighlight2 = DOM.createDiv();
+    myLineHighlight2.addClassName(CSS.lineHighight());
 
     myContent = DOM.createDiv();
     myContent.addClassName(CSS.content());
-
 
     myCellToDomContext = new CellToDomContext(target, eventsDisabled);
   }
@@ -167,7 +172,8 @@ public class CellContainerToDomMapper extends Mapper<CellContainer, Element> {
     getTarget().setTabIndex(0);
     getTarget().addClassName(CSS.rootContainer());
 
-    getTarget().appendChild(myLineHighlight);
+    getTarget().appendChild(myLineHighlight1);
+    getTarget().appendChild(myLineHighlight2);
     getTarget().appendChild(myContent);
 
     refreshLineHighlight();
@@ -193,7 +199,8 @@ public class CellContainerToDomMapper extends Mapper<CellContainer, Element> {
     getTarget().removeClassName(CSS.rootContainer());
 
     myContent.removeFromParent();
-    myLineHighlight.removeFromParent();
+    myLineHighlight1.removeFromParent();
+    myLineHighlight2.removeFromParent();
 
     $(getTarget()).unbind(Event.KEYEVENTS | Event.MOUSEEVENTS);
 
@@ -214,17 +221,22 @@ public class CellContainerToDomMapper extends Mapper<CellContainer, Element> {
   private void refreshLineHighlight() {
     if (myLineHihglightUpToDate) return;
     Cell current = getSource().focusedCell.get();
-    Style style = myLineHighlight.getStyle();
-    if (current == null || !Cells.isLeaf(current)) {
-      style.setVisibility(Style.Visibility.HIDDEN);
-    } else {
-      int deltaTop = myContent.getAbsoluteTop() - getTarget().getAbsoluteTop();
-      style.setVisibility(Style.Visibility.VISIBLE);
-      int rootTop = myContent.getAbsoluteTop();
-      final Element currentElement = getElement(current);
-      int currentTop = currentElement.getAbsoluteTop();
-      style.setTop(currentTop - rootTop + deltaTop, Style.Unit.PX);
-      style.setHeight(currentElement.getClientHeight(), Style.Unit.PX);
+    for (Element e : Arrays.asList(myLineHighlight1, myLineHighlight2)) {
+      Style style = e.getStyle();
+      if (current == null || !Cells.isLeaf(current)) {
+        style.setVisibility(Style.Visibility.HIDDEN);
+      } else {
+        int deltaTop = myContent.getAbsoluteTop() - getTarget().getAbsoluteTop();
+        style.setVisibility(Style.Visibility.VISIBLE);
+        int rootTop = myContent.getAbsoluteTop();
+        final Element currentElement = getElement(current);
+        int currentTop = currentElement.getAbsoluteTop();
+        style.setTop(currentTop - rootTop + deltaTop, Style.Unit.PX);
+        style.setHeight(currentElement.getClientHeight(), Style.Unit.PX);
+        if (e == myLineHighlight2) {
+          style.setWidth(getTarget().getScrollWidth(), Style.Unit.PX);
+        }
+      }
     }
     myLineHihglightUpToDate = true;
   }
