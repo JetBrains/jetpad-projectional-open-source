@@ -150,7 +150,9 @@ public class CompletionSupport {
       }
     };
 
-    final Cell completionCell = CompletionMenu.createCell(menuModel, completer, reg);
+
+    final CompositeRegistration disposeMenuMapper = new CompositeRegistration();
+    final Cell completionCell = CompletionMenu.createCell(menuModel, completer, disposeMenuMapper);
     reg.add(textCell.addTrait(new CellTrait() {
       @Override
       public void onPropertyChanged(Cell cell, CellPropertySpec<?> propery, PropertyChangeEvent<?> event) {
@@ -233,13 +235,11 @@ public class CompletionSupport {
           public void run() {
             completionCell.removeFromParent();
             removeOnClose.remove();
+            disposeMenuMapper.remove();
           }
         });
       }
     });
-
-    textCell.bottomPopup().set(completionCell);
-    completionCell.showSlide(150);
 
     items.onSuccess(new Handler<List<CompletionItem>>() {
       @Override
@@ -254,6 +254,9 @@ public class CompletionSupport {
         menuModel.loading.set(true);
       }
     });
+
+    textCell.bottomPopup().set(completionCell);
+    completionCell.showSlide(150);
   }
 
   private static TextCell showPopup(
