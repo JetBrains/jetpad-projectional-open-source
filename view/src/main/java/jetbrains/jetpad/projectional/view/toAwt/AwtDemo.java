@@ -29,8 +29,15 @@ public class AwtDemo {
         JFrame frame = new JFrame("ViewContainer");
         frame.setLayout(new BorderLayout());
 
-        ViewContainerComponent component = new ViewContainerComponent();
+        final ViewContainerComponent component = new ViewContainerComponent();
         component.container(container);
+
+        SwingUtilities.invokeLater(new Runnable() {
+          @Override
+          public void run() {
+            component.requestFocus();
+          }
+        });
 
         frame.add(new JScrollPane(component), BorderLayout.CENTER);
 

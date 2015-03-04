@@ -15,8 +15,10 @@
  */
 package jetbrains.jetpad.projectional.util.awt;
 
+import jetbrains.jetpad.cell.Cell;
 import jetbrains.jetpad.cell.CellContainer;
 import jetbrains.jetpad.cell.toView.CellToView;
+import jetbrains.jetpad.model.composite.Composites;
 import jetbrains.jetpad.projectional.view.ViewContainer;
 import jetbrains.jetpad.projectional.view.toAwt.AwtDemo;
 
@@ -24,6 +26,12 @@ public class AwtComponent {
   public static void showDemo(final CellContainer container) {
     ViewContainer viewContainer = new ViewContainer();
     CellToView.map(container, viewContainer);
+
+    Cell firstFocusable = Composites.<Cell>firstFocusable(container.root);
+    if (firstFocusable != null) {
+      firstFocusable.focus();
+    }
+
     AwtDemo.show(viewContainer);
   }
 }

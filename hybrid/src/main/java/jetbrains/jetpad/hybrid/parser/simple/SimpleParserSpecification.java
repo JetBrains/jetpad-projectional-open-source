@@ -49,12 +49,10 @@ public class SimpleParserSpecification<ExprT> {
     this(false);
   }
 
-
   public SimpleParserSpecification(boolean userFullLR) {
     myGrammar.newRule(myGrammar.getStart(), myExpr);
     myUserFullLR = userFullLR;
   }
-
 
   public SimpleParserSpecification<ExprT> addBinaryOperator(Token token, final BinaryExpressionFactory<ExprT> factory, int priority, boolean leftAssoc) {
     Terminal term = getOrDeclareTerminal(token);
