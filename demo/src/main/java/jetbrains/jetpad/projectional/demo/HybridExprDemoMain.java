@@ -16,10 +16,10 @@
 package jetbrains.jetpad.projectional.demo;
 
 import jetbrains.jetpad.projectional.demo.hybridExpr.HybridExprDemo;
-import jetbrains.jetpad.projectional.util.awt.AwtComponent;
+import jetbrains.jetpad.projectional.util.awt.AwtCellDemo;
 
 public class HybridExprDemoMain {
   public static void main(String[] args) {
-    AwtComponent.showDemo(HybridExprDemo.createDemo());
+    AwtCellDemo.show(HybridExprDemo.createDemo());
   }
 }

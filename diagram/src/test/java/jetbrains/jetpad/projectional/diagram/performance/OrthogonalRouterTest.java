@@ -22,7 +22,7 @@ import jetbrains.jetpad.projectional.diagram.layout.OrthogonalRouter;
 import jetbrains.jetpad.projectional.diagram.view.DiagramView;
 import jetbrains.jetpad.projectional.diagram.view.PolyLineConnection;
 import jetbrains.jetpad.projectional.view.ViewContainer;
-import jetbrains.jetpad.projectional.view.toAwt.AwtDemo;
+import jetbrains.jetpad.projectional.view.toAwt.AwtViewDemo;
 
 import java.util.List;
 
@@ -52,6 +52,6 @@ public class OrthogonalRouterTest {
     System.out.println("reroute " + connectionsNum + " connections");
     long total = System.currentTimeMillis() - time;
     System.out.println("time: " + total);
-    AwtDemo.show(vc);
+    AwtViewDemo.show(vc);
   }
 }

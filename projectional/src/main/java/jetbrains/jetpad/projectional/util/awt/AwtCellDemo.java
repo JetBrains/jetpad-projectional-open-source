@@ -20,10 +20,10 @@ import jetbrains.jetpad.cell.CellContainer;
 import jetbrains.jetpad.cell.toView.CellToView;
 import jetbrains.jetpad.model.composite.Composites;
 import jetbrains.jetpad.projectional.view.ViewContainer;
-import jetbrains.jetpad.projectional.view.toAwt.AwtDemo;
+import jetbrains.jetpad.projectional.view.toAwt.AwtViewDemo;
 
-public class AwtComponent {
-  public static void showDemo(final CellContainer container) {
+public class AwtCellDemo {
+  public static void show(final CellContainer container) {
     ViewContainer viewContainer = new ViewContainer();
     CellToView.map(container, viewContainer);
 
@@ -32,6 +32,6 @@ public class AwtComponent {
       firstFocusable.focus();
     }
 
-    AwtDemo.show(viewContainer);
+    AwtViewDemo.show(viewContainer);
   }
 }

@@ -20,8 +20,7 @@ import jetbrains.jetpad.projectional.view.ViewContainer;
 import javax.swing.*;
 import java.awt.*;
 
-public class AwtDemo {
-
+public class AwtViewDemo {
   public static void show(final ViewContainer container) {
     SwingUtilities.invokeLater(new Runnable() {
       @Override

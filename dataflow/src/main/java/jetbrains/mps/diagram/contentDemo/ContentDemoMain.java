@@ -15,7 +15,7 @@
  */
 package jetbrains.mps.diagram.contentDemo;
 
-import jetbrains.jetpad.projectional.view.toAwt.AwtDemo;
+import jetbrains.jetpad.projectional.view.toAwt.AwtViewDemo;
 import jetbrains.mps.diagram.contentDemo.mapper.ContentRootMapper;
 import jetbrains.mps.diagram.contentDemo.model.Content;
 import jetbrains.mps.diagram.contentDemo.model.ContentItem;
@@ -29,7 +29,7 @@ public class ContentDemoMain {
     ContentRootMapper mapper = new ContentRootMapper(model, content);
     mapper.attachRoot();
 
-    AwtDemo.show(mapper.getTarget());
+    AwtViewDemo.show(mapper.getTarget());
   }
 
   private static Content createDemo() {

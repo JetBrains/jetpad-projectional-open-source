@@ -17,7 +17,7 @@ package jetbrains.jetpad.projectional.demo.diagram;
 
 import jetbrains.jetpad.projectional.demo.diagram.mapper.RootSimpleDiagramMapper;
 import jetbrains.jetpad.projectional.demo.diagram.model.SimpleDiagram;
-import jetbrains.jetpad.projectional.view.toAwt.AwtDemo;
+import jetbrains.jetpad.projectional.view.toAwt.AwtViewDemo;
 
 public class DiagramDemoMain {
   public static void main(String[] args) {
@@ -26,6 +26,6 @@ public class DiagramDemoMain {
     RootSimpleDiagramMapper rootMapper = new RootSimpleDiagramMapper(model);
     rootMapper.attachRoot();
 
-    AwtDemo.show(rootMapper.getTarget());
+    AwtViewDemo.show(rootMapper.getTarget());
   }
 }

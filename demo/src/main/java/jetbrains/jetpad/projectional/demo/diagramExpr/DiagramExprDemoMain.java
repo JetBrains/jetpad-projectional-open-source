@@ -15,10 +15,10 @@
  */
 package jetbrains.jetpad.projectional.demo.diagramExpr;
 
-import jetbrains.jetpad.projectional.view.toAwt.AwtDemo;
+import jetbrains.jetpad.projectional.view.toAwt.AwtViewDemo;
 
 public class DiagramExprDemoMain {
   public static void main(String[] args) {
-    AwtDemo.show(DiagramExprDemo.createContainer());
+    AwtViewDemo.show(DiagramExprDemo.createContainer());
   }
 }

@@ -17,6 +17,7 @@ package jetbrains.jetpad.projectional.svgDemo;
 
 import jetbrains.jetpad.projectional.svg.SvgSvgElement;
 import jetbrains.jetpad.projectional.svg.toAwt.SvgRootDocumentMapper;
+import jetbrains.jetpad.projectional.view.toAwt.AwtViewDemo;
 import org.apache.batik.swing.JSVGCanvas;
 import org.apache.batik.swing.svg.AbstractJSVGComponent;
 
@@ -27,7 +28,7 @@ import java.awt.event.MouseEvent;
 
 public class AwtDemo {
   public static void main(String[] args) {
-    jetbrains.jetpad.projectional.view.toAwt.AwtDemo.show(DemoModel.demoViewContainer());
+    AwtViewDemo.show(DemoModel.demoViewContainer());
 //    noViewDemo();
   }
 

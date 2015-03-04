@@ -16,10 +16,10 @@
 package jetbrains.jetpad.projectional.demo;
 
 import jetbrains.jetpad.projectional.demo.concept.ConceptDemo;
-import jetbrains.jetpad.projectional.util.awt.AwtComponent;
+import jetbrains.jetpad.projectional.util.awt.AwtCellDemo;
 
 public class ConceptDemoMain {
   public static void main(String[] args) {
-    AwtComponent.showDemo(ConceptDemo.create());
+    AwtCellDemo.show(ConceptDemo.create());
   }
 }

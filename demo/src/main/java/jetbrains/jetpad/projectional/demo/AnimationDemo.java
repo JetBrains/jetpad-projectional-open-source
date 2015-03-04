@@ -20,14 +20,14 @@ import jetbrains.jetpad.base.animation.TimerAnimation;
 import jetbrains.jetpad.event.MouseEvent;
 import jetbrains.jetpad.geometry.Vector;
 import jetbrains.jetpad.projectional.view.*;
-import jetbrains.jetpad.projectional.view.toAwt.AwtDemo;
+import jetbrains.jetpad.projectional.view.toAwt.AwtViewDemo;
 import jetbrains.jetpad.values.Color;
 
 public class AnimationDemo {
   public static void main(String[] args) {
     ViewContainer container = createContainer();
 
-    AwtDemo.show(container);
+    AwtViewDemo.show(container);
   }
 
   private static ViewContainer createContainer() {

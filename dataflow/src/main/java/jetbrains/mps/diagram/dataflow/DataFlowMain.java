@@ -15,7 +15,7 @@
  */
 package jetbrains.mps.diagram.dataflow;
 
-import jetbrains.jetpad.projectional.view.toAwt.AwtDemo;
+import jetbrains.jetpad.projectional.view.toAwt.AwtViewDemo;
 import jetbrains.mps.diagram.dataflow.mapper.RootDiagramMapper;
 import jetbrains.mps.diagram.dataflow.model.Diagram;
 
@@ -24,6 +24,6 @@ public class DataFlowMain {
     Diagram model = Demo.createDemoModel();
     RootDiagramMapper mapper = new RootDiagramMapper(model);
     mapper.attachRoot();
-    AwtDemo.show(mapper.getTarget());
+    AwtViewDemo.show(mapper.getTarget());
   }
 }

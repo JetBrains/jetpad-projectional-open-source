@@ -18,7 +18,7 @@ package jetbrains.jetpad.hybrid.testapp;
 import jetbrains.jetpad.mapper.Mapper;
 import jetbrains.jetpad.hybrid.testapp.mapper.ExprContainerMapper;
 import jetbrains.jetpad.hybrid.testapp.model.ExprContainer;
-import jetbrains.jetpad.projectional.util.awt.AwtComponent;
+import jetbrains.jetpad.projectional.util.awt.AwtCellDemo;
 import jetbrains.jetpad.cell.Cell;
 import jetbrains.jetpad.cell.CellContainer;
 import jetbrains.jetpad.projectional.util.RootController;
@@ -31,6 +31,6 @@ public class TestAppMain {
     CellContainer cellContainer = new CellContainer();
     cellContainer.root.children().add(rootMapper.getTarget());
     RootController.install(cellContainer);
-    AwtComponent.showDemo(cellContainer);
+    AwtCellDemo.show(cellContainer);
   }
 }
