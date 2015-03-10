@@ -52,6 +52,7 @@ abstract class BaseCellMapper<SourceT extends Cell> extends Mapper<SourceT, Elem
   private CellToDomContext myContext;
 
   private Counters myCounters;
+  private Color myAncestorBackground;
 
   BaseCellMapper(SourceT source, CellToDomContext ctx, Element target) {
     super(source, target);
@@ -147,6 +148,10 @@ abstract class BaseCellMapper<SourceT extends Cell> extends Mapper<SourceT, Elem
     }
   }
 
+  public void setAncestorBackground(Color color) {
+    myAncestorBackground = color;
+  }
+
   boolean isEmpty() {
     return false;
   }
@@ -179,7 +184,7 @@ abstract class BaseCellMapper<SourceT extends Cell> extends Mapper<SourceT, Elem
       getTarget().addClassName(CSS.selected());
     }
 
-    Color background = getSource().background().get();
+    Color background = getSource().background().get() != null ? getSource().background().get() : myAncestorBackground;
     List<String> backgrounds = new ArrayList<>();
     if (isLeaf() && focusHighlighted) {
       backgrounds.add(CSS.currentHighlightColor());

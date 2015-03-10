@@ -37,6 +37,7 @@ class BaseCellMapper<SourceT extends Cell, TargetT extends View> extends Mapper<
   private ObservableSet<BaseCellMapper<?, ?>> myPopupMappers;
 
   private Counters myCounters;
+  private Color myAncestorBackground;
 
   private Registration myPopupUpdateReg;
   
@@ -107,6 +108,10 @@ class BaseCellMapper<SourceT extends Cell, TargetT extends View> extends Mapper<
     }
   }
 
+  public void setAncestorBackground(Color color) {
+    myAncestorBackground = color;
+  }
+
   boolean isLeaf() {
     return false;
   }
@@ -119,7 +124,7 @@ class BaseCellMapper<SourceT extends Cell, TargetT extends View> extends Mapper<
     boolean paired = getSource().pairHighlighted().get();
     boolean focusHighlighted = getSource().focusHighlighted().get() || getCounter(Counters.HIGHLIGHT_COUNT) > 0;
 
-    Color background = cell.background().get();
+    Color background = cell.background().get() != null ? cell.background().get() : myAncestorBackground;
     if (selected) {
       background = CellContainerToViewMapper.SELECTION_COLOR;
     } else if (focusHighlighted) {

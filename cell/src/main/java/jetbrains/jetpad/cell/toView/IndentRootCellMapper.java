@@ -25,6 +25,7 @@ import jetbrains.jetpad.cell.indent.IndentContainerCellListener;
 import jetbrains.jetpad.cell.indent.updater.CellWrapper;
 import jetbrains.jetpad.cell.indent.updater.IndentUpdater;
 import jetbrains.jetpad.cell.indent.updater.IndentUpdaterTarget;
+import jetbrains.jetpad.cell.toUtil.AncestorUtil;
 import jetbrains.jetpad.cell.toUtil.CounterUtil;
 import jetbrains.jetpad.mapper.MappingContext;
 import jetbrains.jetpad.model.collections.CollectionItemEvent;
@@ -67,6 +68,9 @@ class IndentRootCellMapper extends BaseCellMapper<IndentCell, VerticalView> {
           final BaseCellMapper<?, ?> mapper = createMapper(cell);
 
           CounterUtil.updateOnAdd(getSource(), cell, mapper);
+
+          mapper.setAncestorBackground(AncestorUtil.getAncestorBackground(getSource(), cell));
+
           myCellMappers.add(mapper);
 
           return new CellWrapper<View>() {
@@ -152,6 +156,14 @@ class IndentRootCellMapper extends BaseCellMapper<IndentCell, VerticalView> {
           myIndentUpdater.visibilityChanged(cell, (PropertyChangeEvent<Boolean>) event);
         } else if (Cell.isPopupProp(prop)) {
           updateIndentCellPopup(cell, (PropertyChangeEvent<Cell>) event);
+        } else if (prop == Cell.BACKGROUND) {
+          iterateLeaves(cell, new Handler<Cell>() {
+            @Override
+            public void handle(Cell item) {
+              BaseCellMapper itemMapper = (BaseCellMapper) getDescendantMapper(item);
+              itemMapper.setAncestorBackground(AncestorUtil.getAncestorBackground(getSource(), item));
+            }
+          });
         }
       }
 
