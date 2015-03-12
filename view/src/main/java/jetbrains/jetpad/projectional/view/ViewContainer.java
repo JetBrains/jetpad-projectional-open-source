@@ -317,7 +317,7 @@ public class ViewContainer {
     @Override
     protected void doValidate(ValidationContext ctx) {
       super.doValidate(ctx);
-      Rectangle current = new Rectangle(Vector.ZERO, Vector.ZERO);
+      Rectangle current = new Rectangle(Vector.ZERO, Vector.ZERO,);
       for (View child : children()) {
         if (!child.visible().get()) continue;
         current = current.union(child.bounds().get());
