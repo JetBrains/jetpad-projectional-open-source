@@ -162,6 +162,7 @@ class IndentRootCellMapper extends BaseCellMapper<IndentCell, VerticalView> {
             public void handle(Cell item) {
               BaseCellMapper itemMapper = (BaseCellMapper) getDescendantMapper(item);
               itemMapper.setAncestorBackground(AncestorUtil.getAncestorBackground(getSource(), item));
+              itemMapper.refreshProperties();
             }
           });
         }
