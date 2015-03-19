@@ -29,6 +29,9 @@ import jetbrains.jetpad.model.property.Property;
 import java.util.List;
 
 public class ProjectionalSynchronizers {
+  /**
+   * Actions which is performed when new item is created. This item should change only the view properties. It SHOULD NOT change model.
+   */
   public static final CellTraitPropertySpec<Runnable> ON_CREATE = new CellTraitPropertySpec<>("onCreate", new Function<Cell, Runnable>() {
     @Override
     public Runnable apply(Cell input) {
