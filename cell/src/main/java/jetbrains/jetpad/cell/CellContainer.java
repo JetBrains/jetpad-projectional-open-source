@@ -289,6 +289,10 @@ public class CellContainer {
     });
   }
 
+  public boolean isInCommand() {
+    return myInCommand;
+  }
+
   /**
    * Executes a model related command. This method notifies CellContainerListener around the r.run() call.
    * For example, CellContainerListeners can save UI state, record undoable actions, and do other stuff.
