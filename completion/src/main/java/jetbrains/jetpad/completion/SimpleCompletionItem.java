@@ -36,6 +36,10 @@ public abstract class SimpleCompletionItem extends BaseCompletionItem {
     myVisibleText = visibleText;
   }
 
+  protected boolean isCaseSensitive() {
+    return true;
+  }
+
   @Override
   public String visibleText(String text) {
     return myVisibleText;
@@ -43,12 +47,17 @@ public abstract class SimpleCompletionItem extends BaseCompletionItem {
 
   @Override
   public boolean isStrictMatchPrefix(String text) {
-    return myMatchingText.startsWith(text) && !isMatch(text);
+    boolean startsWith = isCaseSensitive() ? myMatchingText.startsWith(text) : myMatchingText.toLowerCase().startsWith(text.toLowerCase());
+    return startsWith && !isMatch(text);
   }
 
   @Override
   public boolean isMatch(String text) {
-    return myMatchingText.equals(text);
+    if (isCaseSensitive()) {
+      return myMatchingText.equals(text);
+    } else {
+      return myMatchingText.equalsIgnoreCase(text);
+    }
   }
 
   @Override
