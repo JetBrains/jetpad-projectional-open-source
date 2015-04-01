@@ -52,4 +52,11 @@ class ViewCellMapper extends BaseCellMapper<ViewCell> {
       }
     }));
   }
+
+  @Override
+  protected void onDetach() {
+    super.onDetach();
+
+    myViewContainer.contentRoot().children().clear();
+  }
 }
