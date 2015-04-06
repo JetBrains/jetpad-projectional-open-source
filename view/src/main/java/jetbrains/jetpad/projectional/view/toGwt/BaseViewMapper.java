@@ -21,9 +21,9 @@ import jetbrains.jetpad.base.Value;
 import jetbrains.jetpad.geometry.Rectangle;
 import jetbrains.jetpad.mapper.Mapper;
 import jetbrains.jetpad.mapper.Synchronizers;
-import jetbrains.jetpad.model.event.CompositeEventSource;
 import jetbrains.jetpad.model.event.EventHandler;
 import jetbrains.jetpad.base.Registration;
+import jetbrains.jetpad.model.event.EventSources;
 import jetbrains.jetpad.model.property.DerivedProperty;
 import jetbrains.jetpad.model.property.ReadableProperty;
 import jetbrains.jetpad.model.property.WritableProperty;
@@ -105,7 +105,7 @@ class BaseViewMapper<ViewT extends View, ElementT extends Element> extends Mappe
 
       final Value<Boolean> valid = new Value<>(false);
 
-      conf.add(Synchronizers.forEventSource(new CompositeEventSource<Object>(positionInParent, getSource().border()), new Runnable() {
+      conf.add(Synchronizers.forEventSource(EventSources.composite(positionInParent, getSource().border()), new Runnable() {
         @Override
         public void run() {
           valid.set(false);

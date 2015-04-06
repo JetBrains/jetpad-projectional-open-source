@@ -20,7 +20,7 @@ import com.google.gwt.dom.client.Style;
 import com.google.gwt.user.client.DOM;
 import jetbrains.jetpad.geometry.Vector;
 import jetbrains.jetpad.mapper.Synchronizers;
-import jetbrains.jetpad.model.event.CompositeEventSource;
+import jetbrains.jetpad.model.event.EventSources;
 import jetbrains.jetpad.model.property.WritableProperty;
 import jetbrains.jetpad.projectional.view.EllipseView;
 import jetbrains.jetpad.values.Color;
@@ -54,7 +54,7 @@ class EllipseViewMapper extends BaseViewMapper<EllipseView, Element> {
 
     conf.add(GwtViewSynchronizers.svgBoundsSyncrhonizer(getSource(), svg));
 
-    conf.add(Synchronizers.forEventSource(new CompositeEventSource<>(getSource().center(), getSource().radius(), getSource().from(), getSource().to()), new Runnable() {
+    conf.add(Synchronizers.forEventSource(EventSources.composite(getSource().center(), getSource().radius(), getSource().from(), getSource().to()), new Runnable() {
       @Override
       public void run() {
         updatePath(fillPath, false);
