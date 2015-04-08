@@ -31,13 +31,10 @@ public class Completion {
   public static final CellTraitPropertySpec<CompletionSupplier> RIGHT_TRANSFORM = new CellTraitPropertySpec<>("rightTransform", CompletionSupplier.EMPTY);
   public static final CellTraitPropertySpec<CompletionController> COMPLETION_CONTROLLER = new CellTraitPropertySpec<>("completionController");
 
-  public static final CellTraitPropertySpec<AsyncCompletionSupplier> ASYNC_COMPLETION = new CellTraitPropertySpec<>("asyncCompletion", AsyncCompletionSupplier.EMPTY);
-
   public static Async<List<CompletionItem>> allCompletion(Cell cell, CompletionParameters params) {
-    final List<CompletionItem> syncCompletion = cell.get(COMPLETION).get(params);
-    AsyncCompletionSupplier async = cell.get(ASYNC_COMPLETION);
-
-    Async<List<CompletionItem>> asyncCompletion = async.get(params);
+    final CompletionSupplier supplier = cell.get(COMPLETION);
+    final List<CompletionItem> syncCompletion = supplier.get(params);
+    Async<List<CompletionItem>> asyncCompletion = supplier.getAsync(params);
 
     final SimpleAsync<List<CompletionItem>> allItems = new SimpleAsync<>();
     asyncCompletion.onResult(new Handler<List<CompletionItem>>() {
@@ -58,6 +55,6 @@ public class Completion {
   }
 
   public static boolean isCompletionEmpty(Cell cell, CompletionParameters params) {
-    return cell.get(Completion.COMPLETION).isEmpty(params) && cell.get(Completion.ASYNC_COMPLETION).isEmpty(params);
+    return cell.get(Completion.COMPLETION).isEmpty(params) && cell.get(Completion.COMPLETION).isAsyncEmpty(params);
   }
 }

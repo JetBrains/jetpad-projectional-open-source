@@ -15,6 +15,9 @@
  */
 package jetbrains.jetpad.completion;
 
+import jetbrains.jetpad.base.*;
+
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -40,9 +43,36 @@ public abstract class CompletionSupplier {
     return create(Arrays.asList(items));
   }
 
-  public abstract List<CompletionItem> get(CompletionParameters cp);
+  public List<CompletionItem> get(CompletionParameters cp) {
+    return Collections.emptyList();
+  }
+
+  public Async<List<CompletionItem>> getAsync(CompletionParameters cp) {
+    return Asyncs.constant(Collections.<CompletionItem>emptyList());
+  }
+
+  public boolean isAsyncEmpty(CompletionParameters cp) {
+    Async<List<CompletionItem>> async = getAsync(cp);
+    final Value<Boolean> loaded = new Value<>(false);
+    final List<CompletionItem> items = new ArrayList<>();
+    final Registration reg = async.onSuccess(new Handler<List<CompletionItem>>() {
+      @Override
+      public void handle(List<CompletionItem> result) {
+        loaded.set(true);
+        items.addAll(result);
+      }
+    });
+
+    reg.remove();
+    if (!loaded.get()) {
+      return false;
+    } else {
+      return items.isEmpty();
+    }
+  }
 
   public boolean isEmpty(CompletionParameters cp) {
     return get(cp).isEmpty();
   }
+
 }

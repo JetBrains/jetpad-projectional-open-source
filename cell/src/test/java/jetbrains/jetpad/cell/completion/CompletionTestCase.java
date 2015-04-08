@@ -54,10 +54,10 @@ public abstract class CompletionTestCase extends EditingTestCase {
     };
   }
 
-  protected AsyncCompletionSupplier createAsyncCompletion(final String... items) {
-    return new AsyncCompletionSupplier() {
+  protected CompletionSupplier createAsyncCompletion(final String... items) {
+    return new CompletionSupplier() {
       @Override
-      public Async<List<CompletionItem>> get(CompletionParameters cp) {
+      public Async<List<CompletionItem>> getAsync(CompletionParameters cp) {
         return Asyncs.constant(createItems(items));
       }
     };
@@ -67,7 +67,7 @@ public abstract class CompletionTestCase extends EditingTestCase {
     return new CellTrait() {
       @Override
       public Object get(Cell cell, CellTraitPropertySpec<?> spec) {
-        if (spec == Completion.ASYNC_COMPLETION) {
+        if (spec == Completion.COMPLETION) {
           return createAsyncCompletion(items);
         }
 
