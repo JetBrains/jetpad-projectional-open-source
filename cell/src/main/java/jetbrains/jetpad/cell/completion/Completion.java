@@ -31,7 +31,7 @@ public class Completion {
   public static final CellTraitPropertySpec<CompletionSupplier> RIGHT_TRANSFORM = new CellTraitPropertySpec<>("rightTransform", CompletionSupplier.EMPTY);
   public static final CellTraitPropertySpec<CompletionController> COMPLETION_CONTROLLER = new CellTraitPropertySpec<>("completionController");
 
-  public static final CellTraitPropertySpec<AsyncCompletionSupplier> ASYNC_COMPLETION = new CellTraitPropertySpec<AsyncCompletionSupplier>("asyncCompletion", AsyncCompletionSupplier.EMPTY);
+  public static final CellTraitPropertySpec<AsyncCompletionSupplier> ASYNC_COMPLETION = new CellTraitPropertySpec<>("asyncCompletion", AsyncCompletionSupplier.EMPTY);
 
   public static Async<List<CompletionItem>> allCompletion(Cell cell, CompletionParameters params) {
     final List<CompletionItem> syncCompletion = cell.get(COMPLETION).get(params);
