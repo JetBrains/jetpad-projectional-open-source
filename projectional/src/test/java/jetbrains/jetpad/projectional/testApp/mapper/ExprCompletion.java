@@ -15,45 +15,41 @@
  */
 package jetbrains.jetpad.projectional.testApp.mapper;
 
-import jetbrains.jetpad.mapper.Mapper;
-import jetbrains.jetpad.completion.CompletionItem;
-import jetbrains.jetpad.completion.CompletionParameters;
+import jetbrains.jetpad.completion.CompletionSupplier;
 import jetbrains.jetpad.completion.SimpleCompletionItem;
+import jetbrains.jetpad.mapper.Mapper;
 import jetbrains.jetpad.projectional.generic.Role;
 import jetbrains.jetpad.projectional.generic.RoleCompletion;
 import jetbrains.jetpad.projectional.testApp.model.*;
 
-import java.util.ArrayList;
-import java.util.List;
-
 class ExprCompletion implements RoleCompletion<ExprNode, Expr> {
   @Override
-  public List<CompletionItem> createRoleCompletion(CompletionParameters ctx, Mapper<?, ?> mapper, ExprNode contextNode, final Role<Expr> target) {
-    List<CompletionItem> result = new ArrayList<>();
-    result.add(new SimpleCompletionItem("id") {
-      @Override
-      public Runnable complete(String text) {
-        return target.set(new IdExpr());
+  public CompletionSupplier createRoleCompletion(Mapper<?, ?> mapper, ExprNode contextNode, final Role<Expr> target) {
+    return CompletionSupplier.create(
+      new SimpleCompletionItem("id") {
+        @Override
+        public Runnable complete(String text) {
+          return target.set(new IdExpr());
+        }
+      },
+      new SimpleCompletionItem("i") {
+        @Override
+        public Runnable complete(String text) {
+          return target.set(new IdExpr());
+        }
+      },
+      new SimpleCompletionItem("+") {
+        @Override
+        public Runnable complete(String text) {
+          return target.set(new PlusExpr());
+        }
+      },
+      new SimpleCompletionItem("-") {
+        @Override
+        public Runnable complete(String text) {
+          return target.set(new MinusExpr());
+        }
       }
-    });
-    result.add(new SimpleCompletionItem("i") {
-      @Override
-      public Runnable complete(String text) {
-        return target.set(new IdExpr());
-      }
-    });
-    result.add(new SimpleCompletionItem("+") {
-      @Override
-      public Runnable complete(String text) {
-        return target.set(new PlusExpr());
-      }
-    });
-    result.add(new SimpleCompletionItem("-") {
-      @Override
-      public Runnable complete(String text) {
-        return target.set(new MinusExpr());
-      }
-    });
-    return result;
+    );
   }
 }

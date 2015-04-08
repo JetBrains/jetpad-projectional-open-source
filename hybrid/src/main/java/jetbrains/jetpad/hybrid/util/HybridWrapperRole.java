@@ -33,75 +33,80 @@ public class HybridWrapperRole<ContainerT, WrapperT, TargetT> implements RoleCom
   }
 
   @Override
-  public List<CompletionItem> createRoleCompletion(CompletionParameters ctx, final Mapper<?, ?> mapper, ContainerT contextNode, final Role<WrapperT> target) {
-    List<CompletionItem> result = new ArrayList<>();
-
-    final BaseCompleter completer = new BaseCompleter() {
+  public CompletionSupplier createRoleCompletion(final Mapper<?, ?> mapper, ContainerT contextNode, final Role<WrapperT> target) {
+    return new CompletionSupplier() {
       @Override
-      public Runnable complete(int selectionIndex, Token... tokens) {
-        WrapperT targetItem = myFactory.get();
-        target.set(targetItem);
-        Mapper<?, ?> targetItemMapper =  mapper.getDescendantMapper(targetItem);
-        HybridSynchronizer<?> sync = mySyncProvider.apply(targetItemMapper);
-        sync.setTokens(Arrays.asList(tokens));
-        return sync.selectOnCreation(selectionIndex, LAST);
+      public List<CompletionItem> get(CompletionParameters cp) {
+        List<CompletionItem> result = new ArrayList<>();
 
+        final BaseCompleter completer = new BaseCompleter() {
+          @Override
+          public Runnable complete(int selectionIndex, Token... tokens) {
+            WrapperT targetItem = myFactory.get();
+            target.set(targetItem);
+            Mapper<?, ?> targetItemMapper =  mapper.getDescendantMapper(targetItem);
+            HybridSynchronizer<?> sync = mySyncProvider.apply(targetItemMapper);
+            sync.setTokens(Arrays.asList(tokens));
+            return sync.selectOnCreation(selectionIndex, LAST);
+
+          }
+        };
+
+        for (CompletionItem ci : mySpec.getTokenCompletion(new Function<Token, Runnable>() {
+          @Override
+          public Runnable apply(Token input) {
+            return completer.complete(input);
+          }
+        }).get(cp)) {
+          result.add(new WrapperCompletionItem(ci) {
+            @Override
+            public boolean isLowPriority() {
+              return true;
+            }
+          });
+        }
+
+        if (cp.isMenu()) {
+          CompletionSupplier compl = mySpec.getAdditionalCompletion(new CompletionContext() {
+            @Override
+            public int getTargetIndex() {
+              return 0;
+            }
+
+            @Override
+            public List<Token> getPrefix() {
+              return Collections.emptyList();
+            }
+
+            @Override
+            public List<Cell> getViews() {
+              return Collections.emptyList();
+            }
+
+            @Override
+            public List<Token> getTokens() {
+              return Collections.emptyList();
+            }
+
+            @Override
+            public List<Object> getObjects() {
+              return Collections.emptyList();
+            }
+
+            @Override
+            public Mapper<?, ?> getContextMapper() {
+              return mapper;
+            }
+
+            @Override
+            public Object getTarget() {
+              return target.get();
+            }
+          }, completer);
+          result.addAll(compl.get(new BaseCompletionParameters()));
+        }
+        return result;
       }
     };
-
-    for (CompletionItem ci : mySpec.getTokenCompletion(new Function<Token, Runnable>() {
-      @Override
-      public Runnable apply(Token input) {
-        return completer.complete(input);
-      }
-    }).get(ctx)) {
-      result.add(new WrapperCompletionItem(ci) {
-        @Override
-        public boolean isLowPriority() {
-          return true;
-        }
-      });
-    }
-
-    if (ctx.isMenu()) {
-      CompletionSupplier compl = mySpec.getAdditionalCompletion(new CompletionContext() {
-        @Override
-        public int getTargetIndex() {
-          return 0;
-        }
-
-        @Override
-        public List<Token> getPrefix() {
-          return Collections.emptyList();
-        }
-
-        @Override
-        public List<Cell> getViews() {
-          return Collections.emptyList();
-        }
-
-        @Override
-        public List<Token> getTokens() {
-          return Collections.emptyList();
-        }
-
-        @Override
-        public List<Object> getObjects() {
-          return Collections.emptyList();
-        }
-
-        @Override
-        public Mapper<?, ?> getContextMapper() {
-          return mapper;
-        }
-
-        @Override
-        public Object getTarget() {
-          return target.get();
-        }
-      }, completer);
-      result.addAll(compl.get(new BaseCompletionParameters()));
-    }
-    return result;
   }
 }

@@ -29,8 +29,7 @@ import jetbrains.jetpad.cell.trait.CellTraitPropertySpec;
 import jetbrains.jetpad.cell.util.CellFactory;
 import jetbrains.jetpad.cell.util.CellLists;
 import jetbrains.jetpad.cell.util.Cells;
-import jetbrains.jetpad.completion.CompletionItem;
-import jetbrains.jetpad.completion.CompletionParameters;
+import jetbrains.jetpad.completion.CompletionSupplier;
 import jetbrains.jetpad.completion.SimpleCompletionItem;
 import jetbrains.jetpad.event.*;
 import jetbrains.jetpad.mapper.Mapper;
@@ -50,7 +49,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -910,15 +908,13 @@ public class ProjectionalListSynchronizerTest extends EditingTestCase {
     });
     result.setCompletion(new RoleCompletion<Object, Child>() {
       @Override
-      public List<CompletionItem> createRoleCompletion(CompletionParameters ctx, Mapper<?, ?> mapper, Object contextNode, final Role<Child> target) {
-        List<CompletionItem> result = new ArrayList<>();
-        result.add(new SimpleCompletionItem("item") {
+      public CompletionSupplier createRoleCompletion(Mapper<?, ?> mapper, Object contextNode, final Role<Child> target) {
+        return CompletionSupplier.create(new SimpleCompletionItem("item") {
           @Override
           public Runnable complete(String text) {
             return target.set(new NonEmptyChild());
           }
         });
-        return result;
       }
     });
     result.setClipboardParameters(KIND, new Function<Child, Child>() {

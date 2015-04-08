@@ -15,6 +15,7 @@
  */
 package jetbrains.jetpad.completion;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -25,6 +26,19 @@ public abstract class CompletionSupplier {
       return Collections.emptyList();
     }
   };
+
+  public static CompletionSupplier create(final List<CompletionItem> items) {
+    return new CompletionSupplier() {
+      @Override
+      public List<CompletionItem> get(CompletionParameters cp) {
+        return items;
+      }
+    };
+  }
+
+  public static CompletionSupplier create(CompletionItem... items) {
+    return create(Arrays.asList(items));
+  }
 
   public abstract List<CompletionItem> get(CompletionParameters cp);
 

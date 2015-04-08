@@ -138,7 +138,7 @@ abstract class BaseProjectionalSynchronizer<SourceT, ContextT, SourceItemT> impl
       public List<CompletionItem> get(CompletionParameters cp) {
         if (myCompletion == null) return new ArrayList<>();
         ContextT context = myMapper.getSource();
-        return myCompletion.createRoleCompletion(cp, myMapper, context, role);
+        return myCompletion.createRoleCompletion(myMapper, context, role).get(cp);
       }
     };
   }
@@ -403,7 +403,7 @@ abstract class BaseProjectionalSynchronizer<SourceT, ContextT, SourceItemT> impl
       @Override
       public List<CompletionItem> get(CompletionParameters cp) {
         if (myCompletion == null) return new ArrayList<>();
-        return myCompletion.createRoleCompletion(cp, myMapper, myMapper.getSource(), new Role<SourceItemT>() {
+        return myCompletion.createRoleCompletion(myMapper, myMapper.getSource(), new Role<SourceItemT>() {
           @Override
           public SourceItemT get() {
             return null;
@@ -413,7 +413,7 @@ abstract class BaseProjectionalSynchronizer<SourceT, ContextT, SourceItemT> impl
           public Runnable set(SourceItemT target) {
             return insertItem(target);
           }
-        });
+        }).get(cp);
       }
     };
   }

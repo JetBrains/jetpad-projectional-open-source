@@ -17,20 +17,18 @@ package jetbrains.jetpad.projectional.demo.expr.mapper;
 
 import com.google.common.base.Supplier;
 import jetbrains.jetpad.base.Validators;
-import jetbrains.jetpad.mapper.*;
-import jetbrains.jetpad.model.property.Property;
-import jetbrains.jetpad.completion.BaseCompletionItem;
-import jetbrains.jetpad.completion.CompletionItem;
-import jetbrains.jetpad.completion.CompletionParameters;
-import jetbrains.jetpad.completion.SimpleCompletionItem;
-import jetbrains.jetpad.projectional.demo.expr.model.*;
 import jetbrains.jetpad.cell.Cell;
-import jetbrains.jetpad.projectional.cell.*;
+import jetbrains.jetpad.completion.BaseCompletionItem;
+import jetbrains.jetpad.completion.CompletionSupplier;
+import jetbrains.jetpad.completion.SimpleCompletionItem;
+import jetbrains.jetpad.mapper.Mapper;
+import jetbrains.jetpad.mapper.MapperFactory;
+import jetbrains.jetpad.model.property.Property;
+import jetbrains.jetpad.projectional.cell.ProjectionalRoleSynchronizer;
+import jetbrains.jetpad.projectional.cell.ProjectionalSynchronizers;
+import jetbrains.jetpad.projectional.demo.expr.model.*;
 import jetbrains.jetpad.projectional.generic.Role;
 import jetbrains.jetpad.projectional.generic.RoleCompletion;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class ExprSynchronizers {
   private static final MapperFactory<Expression, Cell> MAPPER_FACTORY = new MapperFactory<Expression, Cell>() {
@@ -78,7 +76,7 @@ public class ExprSynchronizers {
     });
     sync.setCompletion(new RoleCompletion<ExpressionAstNode, Expression>() {
       @Override
-      public List<CompletionItem> createRoleCompletion(CompletionParameters cp, Mapper<?, ?> mapper, ExpressionAstNode contextNode, Role<Expression> target) {
+      public CompletionSupplier createRoleCompletion(Mapper<?, ?> mapper, ExpressionAstNode contextNode, Role<Expression> target) {
         return exprCompletion(target);
       }
     });
@@ -86,68 +84,67 @@ public class ExprSynchronizers {
     return sync;
   }
 
-  private static List<CompletionItem> exprCompletion(final Role<Expression> target) {
-    List<CompletionItem> result = new ArrayList<>();
-    result.add(new SimpleCompletionItem("+") {
-      @Override
-      public Runnable complete(String text) {
-        return target.set(new PlusExpression());
-      }
-    });
-    result.add(new SimpleCompletionItem("-") {
-      @Override
-      public Runnable complete(String text) {
-        return target.set(new MinusExpression());
-      }
-    });
-    result.add(new SimpleCompletionItem("/") {
-      @Override
-      public Runnable complete(String text) {
-        return target.set(new DivExpression());
-      }
-    });
-    result.add(new SimpleCompletionItem("*") {
-      @Override
-      public Runnable complete(String text) {
-        return target.set(new MulExpression());
-      }
-    });
-    result.add(new SimpleCompletionItem("(expr)") {
-      @Override
-      public Runnable complete(String text) {
-        return target.set(new ParensExpression());
-      }
-    });
-
-    result.add(new BaseCompletionItem() {
-      @Override
-      public String visibleText(String text) {
-        return "number";
-      }
-
-      @Override
-      public boolean isStrictMatchPrefix(String text) {
-        if ("".equals(text)) return true;
-        return isMatch(text);
-      }
-
-      @Override
-      public boolean isMatch(String text) {
-        return Validators.unsignedInteger().apply(text);
-      }
-
-      @Override
-      public Runnable complete(String text) {
-        NumberExpression numberExpr = new NumberExpression();
-        if (text == null || text.isEmpty()) {
-          numberExpr.value.set(0);
-        } else {
-          numberExpr.value.set(Integer.parseInt(text));
+  private static CompletionSupplier exprCompletion(final Role<Expression> target) {
+    return CompletionSupplier.create(
+      new SimpleCompletionItem("+") {
+        @Override
+        public Runnable complete(String text) {
+          return target.set(new PlusExpression());
         }
-        return target.set(numberExpr);
+      },
+      new SimpleCompletionItem("-") {
+        @Override
+        public Runnable complete(String text) {
+          return target.set(new MinusExpression());
+        }
+      },
+      new SimpleCompletionItem("/") {
+        @Override
+        public Runnable complete(String text) {
+          return target.set(new DivExpression());
+        }
+      },
+      new SimpleCompletionItem("*") {
+        @Override
+        public Runnable complete(String text) {
+          return target.set(new MulExpression());
+        }
+      },
+      new SimpleCompletionItem("(expr)") {
+        @Override
+        public Runnable complete(String text) {
+          return target.set(new ParensExpression());
+        }
+      },
+      new BaseCompletionItem() {
+        @Override
+        public String visibleText(String text) {
+          return "number";
+        }
+
+        @Override
+        public boolean isStrictMatchPrefix(String text) {
+          if ("".equals(text)) return true;
+          return isMatch(text);
+        }
+
+        @Override
+        public boolean isMatch(String text) {
+          return Validators.unsignedInteger().apply(text);
+        }
+
+        @Override
+        public Runnable complete(String text) {
+          NumberExpression numberExpr = new NumberExpression();
+          if (text == null || text.isEmpty()) {
+            numberExpr.value.set(0);
+          } else {
+            numberExpr.value.set(Integer.parseInt(text));
+          }
+          return target.set(numberExpr);
+        }
       }
-    });
-    return result;
+    );
   }
 
 

@@ -18,24 +18,21 @@ package jetbrains.jetpad.projectional.demo.concept.mapper;
 import com.google.common.base.Function;
 import com.google.common.base.Supplier;
 import jetbrains.jetpad.base.Validators;
+import jetbrains.jetpad.cell.Cell;
+import jetbrains.jetpad.cell.text.TextEditing;
+import jetbrains.jetpad.cell.util.CellLists;
+import jetbrains.jetpad.cell.util.ValueEditors;
+import jetbrains.jetpad.completion.CompletionSupplier;
+import jetbrains.jetpad.completion.SimpleCompletionItem;
 import jetbrains.jetpad.event.ContentKinds;
 import jetbrains.jetpad.mapper.Mapper;
 import jetbrains.jetpad.mapper.MapperFactory;
 import jetbrains.jetpad.mapper.Synchronizers;
-import jetbrains.jetpad.completion.CompletionItem;
-import jetbrains.jetpad.completion.CompletionParameters;
-import jetbrains.jetpad.completion.SimpleCompletionItem;
-import jetbrains.jetpad.cell.text.TextEditing;
-import jetbrains.jetpad.cell.util.CellLists;
-import jetbrains.jetpad.cell.util.ValueEditors;
+import jetbrains.jetpad.projectional.cell.ProjectionalRoleSynchronizer;
+import jetbrains.jetpad.projectional.cell.ProjectionalSynchronizers;
 import jetbrains.jetpad.projectional.demo.concept.model.*;
-import jetbrains.jetpad.cell.Cell;
-import jetbrains.jetpad.projectional.cell.*;
 import jetbrains.jetpad.projectional.generic.Role;
 import jetbrains.jetpad.projectional.generic.RoleCompletion;
-
-import java.util.ArrayList;
-import java.util.List;
 
 class ConceptDeclarationMapper extends Mapper<ConceptDeclaration, ConceptDeclarationCell> {
   ConceptDeclarationMapper(ConceptDeclaration source) {
@@ -98,33 +95,34 @@ class ConceptDeclarationMapper extends Mapper<ConceptDeclaration, ConceptDeclara
 
   static class ConceptMemberCompletion implements RoleCompletion<Object, ConceptMember> {
     @Override
-    public List<CompletionItem> createRoleCompletion(CompletionParameters cp, Mapper<?, ?> mapper, Object contextNode, final Role<ConceptMember> target) {
-      List<CompletionItem> result = new ArrayList<>();
-      result.add(new SimpleCompletionItem("Property") {
-        @Override
-        public Runnable complete(String text) {
-          return target.set(new PropertyMember());
+    public CompletionSupplier createRoleCompletion(Mapper<?, ?> mapper, Object contextNode, final Role<ConceptMember> target) {
+
+      return CompletionSupplier.create(
+        new SimpleCompletionItem("Property") {
+          @Override
+          public Runnable complete(String text) {
+            return target.set(new PropertyMember());
+          }
+        },
+        new SimpleCompletionItem("Reference") {
+          @Override
+          public Runnable complete(String text) {
+            return target.set(new ReferenceMember());
+          }
+        },
+        new SimpleCompletionItem("Child") {
+          @Override
+          public Runnable complete(String text) {
+            return target.set(new ChildMember());
+          }
+        },
+        new SimpleCompletionItem("Empty") {
+          @Override
+          public Runnable complete(String text) {
+            return target.set(new EmptyMember());
+          }
         }
-      });
-      result.add(new SimpleCompletionItem("Reference") {
-        @Override
-        public Runnable complete(String text) {
-          return target.set(new ReferenceMember());
-        }
-      });
-      result.add(new SimpleCompletionItem("Child") {
-        @Override
-        public Runnable complete(String text) {
-          return target.set(new ChildMember());
-        }
-      });
-      result.add(new SimpleCompletionItem("Empty") {
-        @Override
-        public Runnable complete(String text) {
-          return target.set(new EmptyMember());
-        }
-      });
-      return result;
+      );
     }
   }
 

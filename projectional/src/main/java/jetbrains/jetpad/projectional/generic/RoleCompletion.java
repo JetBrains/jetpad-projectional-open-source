@@ -16,15 +16,11 @@
 package jetbrains.jetpad.projectional.generic;
 
 
+import jetbrains.jetpad.completion.CompletionSupplier;
 import jetbrains.jetpad.mapper.Mapper;
-import jetbrains.jetpad.completion.CompletionItem;
-import jetbrains.jetpad.completion.CompletionParameters;
-
-import java.util.List;
 
 public interface RoleCompletion<ContextT, TargetT> {
-  List<CompletionItem> createRoleCompletion(
-    CompletionParameters ctx,
+  CompletionSupplier createRoleCompletion(
     Mapper<?, ?> mapper,
     ContextT contextNode,
     Role<TargetT> target);

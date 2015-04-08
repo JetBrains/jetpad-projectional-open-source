@@ -30,8 +30,7 @@ import jetbrains.jetpad.cell.trait.CellTraitEventSpec;
 import jetbrains.jetpad.cell.trait.CellTraitPropertySpec;
 import jetbrains.jetpad.cell.trait.DerivedCellTrait;
 import jetbrains.jetpad.cell.util.Cells;
-import jetbrains.jetpad.completion.CompletionItem;
-import jetbrains.jetpad.completion.CompletionParameters;
+import jetbrains.jetpad.completion.CompletionSupplier;
 import jetbrains.jetpad.completion.SimpleCompletionItem;
 import jetbrains.jetpad.event.*;
 import jetbrains.jetpad.mapper.Mapper;
@@ -43,9 +42,6 @@ import jetbrains.jetpad.projectional.generic.RoleCompletion;
 import jetbrains.jetpad.projectional.util.RootController;
 import org.junit.Before;
 import org.junit.Test;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import static org.junit.Assert.*;
 
@@ -308,21 +304,22 @@ public class ProjectionalPropertySynchronizerTest extends EditingTestCase {
       });
       sync.setCompletion(new RoleCompletion<Object, Child>() {
         @Override
-        public List<CompletionItem> createRoleCompletion(CompletionParameters ctx, final Mapper<?, ?> mapper, final Object contextNode, final Role<Child> target) {
-          List<CompletionItem> result = new ArrayList<>();
-          result.add(new SimpleCompletionItem("c1") {
-            @Override
-            public Runnable complete(String text) {
-              return target.set(new Child1());
+        public CompletionSupplier createRoleCompletion(final Mapper<?, ?> mapper, final Object contextNode, final Role<Child> target) {
+
+          return CompletionSupplier.create(
+            new SimpleCompletionItem("c1") {
+              @Override
+              public Runnable complete(String text) {
+                return target.set(new Child1());
+              }
+            },
+            new SimpleCompletionItem("c2") {
+              @Override
+              public Runnable complete(String text) {
+                return target.set(new Child2());
+              }
             }
-          });
-          result.add(new SimpleCompletionItem("c2") {
-            @Override
-            public Runnable complete(String text) {
-              return target.set(new Child2());
-            }
-          });
-          return result;
+          );
         }
       });
       sync.setClipboardParameters(KIND, new Function<Child, Child>() {
