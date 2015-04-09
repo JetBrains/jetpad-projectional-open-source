@@ -391,6 +391,20 @@ public class ProjectionalListSynchronizerTest extends EditingTestCase {
   }
 
   @Test
+  public void asyncCompletionInItem() {
+    container.children.add(new EmptyChild());
+    selectChild(0);
+
+    complete();
+
+    type("async");
+
+    enter();
+
+    assertTrue(container.children.get(0) instanceof NonEmptyChild);
+  }
+
+  @Test
   public void selectAfter() {
     add3Items();
     selectFirst(0);
