@@ -17,9 +17,7 @@ package jetbrains.jetpad.projectional.cell;
 
 import com.google.common.base.Function;
 import com.google.common.base.Supplier;
-import jetbrains.jetpad.base.Runnables;
-import jetbrains.jetpad.base.Validators;
-import jetbrains.jetpad.base.Value;
+import jetbrains.jetpad.base.*;
 import jetbrains.jetpad.cell.*;
 import jetbrains.jetpad.cell.action.CellActions;
 import jetbrains.jetpad.cell.position.PositionHandler;
@@ -29,6 +27,8 @@ import jetbrains.jetpad.cell.trait.CellTraitPropertySpec;
 import jetbrains.jetpad.cell.util.CellFactory;
 import jetbrains.jetpad.cell.util.CellLists;
 import jetbrains.jetpad.cell.util.Cells;
+import jetbrains.jetpad.completion.CompletionItem;
+import jetbrains.jetpad.completion.CompletionParameters;
 import jetbrains.jetpad.completion.CompletionSupplier;
 import jetbrains.jetpad.completion.SimpleCompletionItem;
 import jetbrains.jetpad.event.*;
@@ -79,7 +79,7 @@ public class ProjectionalListSynchronizerTest extends EditingTestCase {
     rootMapper = new ContainerMapper(container);
     rootMapper.attachRoot();
     myCellContainer.root.children().add(rootMapper.getTarget());
-    CellActions.toFirstFocusable(rootMapper.getTarget()).run();
+    selectPlaceholder();
 
     RootController.install(myCellContainer);
   }
@@ -377,6 +377,20 @@ public class ProjectionalListSynchronizerTest extends EditingTestCase {
   }
 
   @Test
+  public void asyncCompletionInPlaceholder() {
+    selectPlaceholder();
+
+    complete();
+
+    type("async");
+
+    enter();
+
+    assertEquals(1, container.children.size());
+    assertTrue(container.children.get(0) instanceof NonEmptyChild);
+  }
+
+  @Test
   public void selectAfter() {
     add3Items();
     selectFirst(0);
@@ -388,7 +402,7 @@ public class ProjectionalListSynchronizerTest extends EditingTestCase {
 
   @Test
   public void selectAfterInEmptyList() {
-    CellActions.toFirstFocusable(rootMapper.getTarget()).run();
+    selectPlaceholder();
 
     press(KeyStrokeSpecs.SELECT_AFTER);
 
@@ -397,7 +411,7 @@ public class ProjectionalListSynchronizerTest extends EditingTestCase {
 
   @Test
   public void selectBeforeInEmptyList() {
-    CellActions.toFirstFocusable(rootMapper.getTarget()).run();
+    selectPlaceholder();
 
     press(KeyStrokeSpecs.SELECT_BEFORE);
 
@@ -721,11 +735,15 @@ public class ProjectionalListSynchronizerTest extends EditingTestCase {
 
   @Test
   public void selectAfterInPlaceholder() {
-    CellActions.toFirstFocusable(rootMapper.getTarget()).run();
+    selectPlaceholder();
 
     press(KeyStrokeSpecs.SELECT_AFTER);
 
     assertSelected();
+  }
+
+  private void selectPlaceholder() {
+    CellActions.toFirstFocusable(rootMapper.getTarget()).run();
   }
 
   @Test
@@ -909,12 +927,28 @@ public class ProjectionalListSynchronizerTest extends EditingTestCase {
     result.setCompletion(new RoleCompletion<Object, Child>() {
       @Override
       public CompletionSupplier createRoleCompletion(Mapper<?, ?> mapper, Object contextNode, final Role<Child> target) {
-        return CompletionSupplier.create(new SimpleCompletionItem("item") {
+
+        return new CompletionSupplier() {
           @Override
-          public Runnable complete(String text) {
-            return target.set(new NonEmptyChild());
+          public List<CompletionItem> get(CompletionParameters cp) {
+            return Arrays.<CompletionItem>asList(new SimpleCompletionItem("item") {
+              @Override
+              public Runnable complete(String text) {
+                return target.set(new NonEmptyChild());
+              }
+            });
           }
-        });
+
+          @Override
+          public Async<List<CompletionItem>> getAsync(CompletionParameters cp) {
+            return Asyncs.constant(Arrays.<CompletionItem>asList(new SimpleCompletionItem("asyncItem") {
+              @Override
+              public Runnable complete(String text) {
+                return target.set(new NonEmptyChild());
+              }
+            }));
+          }
+        };
       }
     });
     result.setClipboardParameters(KIND, new Function<Child, Child>() {
