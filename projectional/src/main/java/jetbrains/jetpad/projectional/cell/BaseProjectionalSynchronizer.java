@@ -30,8 +30,6 @@ import jetbrains.jetpad.cell.trait.CellTrait;
 import jetbrains.jetpad.cell.trait.CellTraitPropertySpec;
 import jetbrains.jetpad.cell.trait.DerivedCellTrait;
 import jetbrains.jetpad.cell.util.CellFactory;
-import jetbrains.jetpad.completion.CompletionItem;
-import jetbrains.jetpad.completion.CompletionParameters;
 import jetbrains.jetpad.completion.CompletionSupplier;
 import jetbrains.jetpad.event.*;
 import jetbrains.jetpad.mapper.*;
@@ -39,6 +37,7 @@ import jetbrains.jetpad.model.collections.CollectionAdapter;
 import jetbrains.jetpad.model.collections.CollectionItemEvent;
 import jetbrains.jetpad.model.collections.list.ObservableArrayList;
 import jetbrains.jetpad.model.collections.list.ObservableList;
+import jetbrains.jetpad.projectional.generic.EmptyRoleCompletion;
 import jetbrains.jetpad.projectional.generic.Role;
 import jetbrains.jetpad.projectional.generic.RoleCompletion;
 
@@ -53,7 +52,7 @@ abstract class BaseProjectionalSynchronizer<SourceT, ContextT, SourceItemT> impl
   private String myPlaceholderText;
   private TargetViewList myTargetCellList;
   private Supplier<SourceItemT> myItemFactory;
-  private RoleCompletion<? super ContextT, SourceItemT> myCompletion;
+  private RoleCompletion<? super ContextT, SourceItemT> myCompletion = new EmptyRoleCompletion<>();
   private DeleteHandler myDeleteHandler = DeleteHandler.EMPTY;
   private ContentKind<SourceItemT> myItemKind;
   private Function<SourceItemT, SourceItemT> myCloner;
@@ -133,14 +132,8 @@ abstract class BaseProjectionalSynchronizer<SourceT, ContextT, SourceItemT> impl
   }
 
   protected CompletionSupplier createCompletion(final Role<SourceItemT> role) {
-    return new CompletionSupplier() {
-      @Override
-      public List<CompletionItem> get(CompletionParameters cp) {
-        if (myCompletion == null) return new ArrayList<>();
-        ContextT context = myMapper.getSource();
-        return myCompletion.createRoleCompletion(myMapper, context, role).get(cp);
-      }
-    };
+    final ContextT context = myMapper.getSource();
+    return myCompletion.createRoleCompletion(myMapper, context, role);
   }
 
   protected List<Cell> getChildCells() {
@@ -398,26 +391,6 @@ abstract class BaseProjectionalSynchronizer<SourceT, ContextT, SourceItemT> impl
     return myRoleSynchronizer.getMappers().get(index).getSource();
   }
 
-  private CompletionSupplier getPlaceholderCompletion() {
-    return new CompletionSupplier() {
-      @Override
-      public List<CompletionItem> get(CompletionParameters cp) {
-        if (myCompletion == null) return new ArrayList<>();
-        return myCompletion.createRoleCompletion(myMapper, myMapper.getSource(), new Role<SourceItemT>() {
-          @Override
-          public SourceItemT get() {
-            return null;
-          }
-
-          @Override
-          public Runnable set(SourceItemT target) {
-            return insertItem(target);
-          }
-        }).get(cp);
-      }
-    };
-  }
-
   private void handlePlaceholderKeyPress(KeyEvent event) {
     if (canCreateNewItem() && (event.is(KeyStrokeSpecs.INSERT_AFTER) || event.is(KeyStrokeSpecs.INSERT_BEFORE))) {
       SourceItemT newItem = newItem();
@@ -463,7 +436,17 @@ abstract class BaseProjectionalSynchronizer<SourceT, ContextT, SourceItemT> impl
         @Override
         public Object get(Cell cell, CellTraitPropertySpec<?> spec) {
           if (spec == Completion.COMPLETION) {
-            return getPlaceholderCompletion();
+            return createCompletion(new Role<SourceItemT>() {
+              @Override
+              public SourceItemT get() {
+                return null;
+              }
+
+              @Override
+              public Runnable set(SourceItemT target) {
+                return insertItem(target);
+              }
+            });
           }
 
           return super.get(cell, spec);

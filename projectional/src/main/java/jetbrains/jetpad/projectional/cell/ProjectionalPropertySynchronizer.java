@@ -25,8 +25,6 @@ import jetbrains.jetpad.cell.trait.CellTraitEventSpec;
 import jetbrains.jetpad.cell.trait.CellTraitPropertySpec;
 import jetbrains.jetpad.cell.trait.DerivedCellTrait;
 import jetbrains.jetpad.cell.util.Cells;
-import jetbrains.jetpad.completion.CompletionItem;
-import jetbrains.jetpad.completion.CompletionParameters;
 import jetbrains.jetpad.completion.CompletionSupplier;
 import jetbrains.jetpad.event.Event;
 import jetbrains.jetpad.event.KeyEvent;
@@ -87,12 +85,7 @@ class ProjectionalPropertySynchronizer<ContextT, SourceItemT extends ContextT> e
       @Override
       public Object get(Cell cell, CellTraitPropertySpec<?> spec) {
         if (spec == Completion.COMPLETION) {
-          return new CompletionSupplier() {
-            @Override
-            public List<CompletionItem> get(CompletionParameters cp) {
-              return getCompletion().get(cp);
-            }
-          };
+          return getCompletion();
         }
 
         return super.get(cell, spec);
