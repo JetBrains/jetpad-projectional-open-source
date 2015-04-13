@@ -15,6 +15,7 @@
  */
 package jetbrains.jetpad.projectional.svg;
 
+import jetbrains.jetpad.base.BaseRegistration;
 import jetbrains.jetpad.base.Registration;
 import jetbrains.jetpad.event.Event;
 import jetbrains.jetpad.model.event.EventHandler;
@@ -52,9 +53,9 @@ class SvgEventPeer {
           myListeners = new Listeners<>();
         }
         final Registration addReg = myListeners.add(handler);
-        return new Registration() {
+        return new BaseRegistration() {
           @Override
-          public void remove() {
+          protected void doRemove() {
             addReg.remove();
             if (myListeners.isEmpty()) {
               myListeners = null;

@@ -29,6 +29,7 @@ import com.google.gwt.query.client.GQuery;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Window;
+import jetbrains.jetpad.base.BaseRegistration;
 import jetbrains.jetpad.base.Handler;
 import jetbrains.jetpad.base.Registration;
 import jetbrains.jetpad.base.Value;
@@ -94,9 +95,9 @@ public class CellContainerToDomMapper extends Mapper<CellContainer, Element> {
         }
       }));
 
-      return new Registration() {
+      return new BaseRegistration() {
         @Override
-        public void remove() {
+        protected void doRemove() {
           if (removed.get()) return;
           reg.remove();
           removed.set(true);
