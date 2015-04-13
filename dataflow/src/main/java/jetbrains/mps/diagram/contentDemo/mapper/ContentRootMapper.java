@@ -17,17 +17,17 @@ package jetbrains.mps.diagram.contentDemo.mapper;
 
 import com.google.common.base.Supplier;
 import jetbrains.jetpad.base.Handler;
+import jetbrains.jetpad.base.Registration;
+import jetbrains.jetpad.cell.TextCell;
+import jetbrains.jetpad.cell.text.TextEditing;
+import jetbrains.jetpad.cell.view.CellView;
 import jetbrains.jetpad.event.Key;
 import jetbrains.jetpad.event.KeyEvent;
 import jetbrains.jetpad.mapper.Mapper;
 import jetbrains.jetpad.mapper.MapperFactory;
 import jetbrains.jetpad.mapper.Synchronizers;
-import jetbrains.jetpad.base.Registration;
 import jetbrains.jetpad.model.property.Property;
 import jetbrains.jetpad.model.property.ValueProperty;
-import jetbrains.jetpad.cell.TextCell;
-import jetbrains.jetpad.cell.text.TextEditing;
-import jetbrains.jetpad.cell.view.CellView;
 import jetbrains.jetpad.projectional.util.RootController;
 import jetbrains.jetpad.projectional.view.*;
 import jetbrains.mps.diagram.contentDemo.model.Content;
@@ -111,11 +111,7 @@ public class ContentRootMapper extends Mapper<Diagram, ViewContainer> {
         for (Runnable r: myViewAdders) {
           r.run();
         }
-        return new Registration() {
-          @Override
-          public void remove() {
-          }
-        };
+        return Registration.EMPTY;
       }
     }));
   }

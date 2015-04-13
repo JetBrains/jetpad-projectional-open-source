@@ -15,21 +15,23 @@
  */
 package jetbrains.jetpad.cell.completion;
 
+import jetbrains.jetpad.base.BaseRegistration;
 import jetbrains.jetpad.base.Handler;
-import jetbrains.jetpad.base.Registration;
+import jetbrains.jetpad.cell.*;
 import jetbrains.jetpad.cell.trait.CellTrait;
 import jetbrains.jetpad.completion.CompletionItem;
 import jetbrains.jetpad.completion.CompletionMenuModel;
+import jetbrains.jetpad.event.MouseEvent;
 import jetbrains.jetpad.geometry.Rectangle;
 import jetbrains.jetpad.geometry.Vector;
-import jetbrains.jetpad.mapper.*;
+import jetbrains.jetpad.mapper.Mapper;
+import jetbrains.jetpad.mapper.MapperFactory;
+import jetbrains.jetpad.mapper.Synchronizers;
 import jetbrains.jetpad.model.event.CompositeRegistration;
 import jetbrains.jetpad.model.property.DerivedProperty;
 import jetbrains.jetpad.model.property.Properties;
 import jetbrains.jetpad.model.property.ReadableProperty;
 import jetbrains.jetpad.model.property.WritableProperty;
-import jetbrains.jetpad.event.MouseEvent;
-import jetbrains.jetpad.cell.*;
 import jetbrains.jetpad.values.Color;
 
 import java.util.Arrays;
@@ -41,9 +43,9 @@ class CompletionMenu {
 
     mapper.getTarget().hasShadow().set(true);
 
-    reg.add(new Registration() {
+    reg.add(new BaseRegistration() {
       @Override
-      public void remove() {
+      protected void doRemove() {
         mapper.detachRoot();
       }
     });

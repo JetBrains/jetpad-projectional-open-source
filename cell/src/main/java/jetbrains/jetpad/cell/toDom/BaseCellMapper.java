@@ -21,6 +21,7 @@ import com.google.gwt.dom.client.Node;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Timer;
+import jetbrains.jetpad.base.BaseRegistration;
 import jetbrains.jetpad.base.Registration;
 import jetbrains.jetpad.cell.Cell;
 import jetbrains.jetpad.cell.toUtil.CounterSpec;
@@ -250,9 +251,9 @@ abstract class BaseCellMapper<SourceT extends Cell> extends Mapper<SourceT, Elem
           }
         };
         timer.scheduleRepeating(50);
-        myPopupUpdateReg = new Registration() {
+        myPopupUpdateReg = new BaseRegistration() {
           @Override
-          public void remove() {
+          protected void doRemove() {
             timer.cancel();
           }
         };

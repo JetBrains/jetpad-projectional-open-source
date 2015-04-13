@@ -17,6 +17,7 @@ package jetbrains.jetpad.projectional.view.toGwt;
 
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.user.client.DOM;
+import jetbrains.jetpad.base.BaseRegistration;
 import jetbrains.jetpad.base.Registration;
 import jetbrains.jetpad.mapper.Synchronizers;
 import jetbrains.jetpad.model.property.WritableProperty;
@@ -29,9 +30,9 @@ public class SvgViewMapper extends BaseViewMapper<SvgView, Element> {
   private static Registration map(SvgSvgElement root, OMSVGSVGElement element) {
     final SvgRootDocumentMapper mapper = new SvgRootDocumentMapper(root, element);
     mapper.attachRoot();
-    return new Registration() {
+    return new BaseRegistration() {
       @Override
-      public void remove() {
+      protected void doRemove() {
         mapper.detachRoot();
       }
     };

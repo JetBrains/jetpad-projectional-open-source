@@ -18,6 +18,7 @@ package jetbrains.jetpad.projectional.view;
 import com.google.common.base.Function;
 import com.google.common.base.Objects;
 import com.google.common.base.Strings;
+import jetbrains.jetpad.base.BaseRegistration;
 import jetbrains.jetpad.base.Registration;
 import jetbrains.jetpad.base.animation.Animation;
 import jetbrains.jetpad.base.animation.Animations;
@@ -227,9 +228,9 @@ public abstract class View implements NavComposite<View>, HasFocusability, HasVi
     myTraits.add(0, trait);
     fire.run();
 
-    return new Registration() {
+    return new BaseRegistration() {
       @Override
-      public void remove() {
+      protected void doRemove() {
         Runnable fire = createFiringRunnable(trait);
         myTraits.remove(trait);
         fire.run();
@@ -356,9 +357,9 @@ public abstract class View implements NavComposite<View>, HasFocusability, HasVi
       myListeners = new Listeners<>();
     }
     final Registration reg = myListeners.add(l);
-    return new Registration() {
+    return new BaseRegistration() {
       @Override
-      public void remove() {
+      protected void doRemove() {
         reg.remove();
         if (myListeners.isEmpty()) {
           myListeners = null;
@@ -526,9 +527,9 @@ public abstract class View implements NavComposite<View>, HasFocusability, HasVi
           }
         });
         changeToRootDeltaListenersCount(+1);
-        return new Registration() {
+        return new BaseRegistration() {
           @Override
-          public void remove() {
+          protected void doRemove() {
             changeToRootDeltaListenersCount(-1);
             reg.remove();
           }
