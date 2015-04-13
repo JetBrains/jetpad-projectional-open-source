@@ -652,9 +652,9 @@ public class CellContainerToDomMapper extends Mapper<CellContainer, Element> {
   private Registration eventRegistration(final int event, Object o, Function f) {
     final GQuery q = $(o);
     q.bind(event, f);
-    return new Registration() {
+    return new BaseRegistration() {
       @Override
-      public void remove() {
+      protected void doRemove() {
         q.unbind(event);
       }
     };

@@ -15,6 +15,7 @@
  */
 package jetbrains.jetpad.projectional.svg;
 
+import jetbrains.jetpad.base.BaseRegistration;
 import jetbrains.jetpad.base.Registration;
 import jetbrains.jetpad.event.Event;
 import jetbrains.jetpad.model.event.EventHandler;
@@ -146,9 +147,9 @@ public abstract class SvgElement extends SvgNode {
       myListeners = new Listeners<>();
     }
     final Registration reg = myListeners.add(l);
-    return new Registration() {
+    return new BaseRegistration() {
       @Override
-      public void remove() {
+      protected void doRemove() {
         reg.remove();
         if (myListeners.isEmpty()) {
           myListeners = null;

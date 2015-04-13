@@ -15,15 +15,16 @@
  */
 package jetbrains.mps.diagram.dataflow.mapper;
 
-import jetbrains.jetpad.event.MouseEvent;
-import jetbrains.jetpad.model.event.EventHandler;
+import jetbrains.jetpad.base.BaseRegistration;
 import jetbrains.jetpad.base.Registration;
-import jetbrains.jetpad.model.property.Property;
-import jetbrains.jetpad.model.property.PropertyChangeEvent;
-import jetbrains.jetpad.model.property.ValueProperty;
 import jetbrains.jetpad.cell.TextCell;
 import jetbrains.jetpad.cell.text.TextEditing;
 import jetbrains.jetpad.cell.view.CellView;
+import jetbrains.jetpad.event.MouseEvent;
+import jetbrains.jetpad.model.event.EventHandler;
+import jetbrains.jetpad.model.property.Property;
+import jetbrains.jetpad.model.property.PropertyChangeEvent;
+import jetbrains.jetpad.model.property.ValueProperty;
 import jetbrains.jetpad.projectional.view.View;
 import jetbrains.jetpad.projectional.view.ViewEventHandler;
 import jetbrains.jetpad.projectional.view.ViewEvents;
@@ -63,9 +64,9 @@ class TextCellController {
       }
     });
 
-    return new Registration() {
+    return new BaseRegistration() {
       @Override
-      public void remove() {
+      protected void doRemove() {
         removeEditing();
         mouseReg.remove();
         focusReg.remove();

@@ -81,9 +81,9 @@ class SvgEventPeer {
     final Set<SvgEventSpec> oldHandlersSet = myEventHandlers.keySet();
 
     final Registration addReg = myEventHandlers.get(spec).add(handler);
-    Registration disposeReg = new Registration() {
+    Registration disposeReg = new BaseRegistration() {
       @Override
-      public void remove() {
+      protected void doRemove() {
         addReg.remove();
         if (myEventHandlers.get(spec).isEmpty()) {
           myEventHandlers.remove(spec);
