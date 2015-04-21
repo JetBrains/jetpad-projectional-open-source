@@ -16,13 +16,12 @@
 package jetbrains.jetpad.hybrid;
 
 import com.google.common.base.Objects;
-import jetbrains.jetpad.base.BaseRegistration;
+import jetbrains.jetpad.base.Registration;
 import jetbrains.jetpad.hybrid.parser.prettyprint.PrettyPrinter;
 import jetbrains.jetpad.model.collections.CollectionItemEvent;
 import jetbrains.jetpad.model.collections.list.ObservableArrayList;
 import jetbrains.jetpad.model.collections.list.ObservableList;
 import jetbrains.jetpad.model.event.EventHandler;
-import jetbrains.jetpad.base.Registration;
 import jetbrains.jetpad.model.property.Property;
 import jetbrains.jetpad.model.property.PropertyChangeEvent;
 import jetbrains.jetpad.model.property.ReadableProperty;
@@ -44,7 +43,7 @@ class TokenListEditor<SourceT> {
   private boolean mySyncing;
   private List<Token> myPrintedTokens;
   private boolean myRestoringState;
-  private Registration myChangeReg = BaseRegistration.empty();
+  private Registration myChangeReg = Registration.empty();
 
   final ObservableList<Token> tokens = new ObservableArrayList<>();
   final Property<SourceT> value = new ValueProperty<>();
@@ -118,7 +117,7 @@ class TokenListEditor<SourceT> {
       myParseNode = null;
       myPrintedTokens = new ArrayList<>();
       myChangeReg.remove();
-      myChangeReg = BaseRegistration.empty();
+      myChangeReg = Registration.empty();
     } else {
       List<Token> toParse = new ArrayList<>();
       for (Token t : tokens) {

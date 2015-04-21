@@ -227,7 +227,7 @@ public class CompletionSupport {
         return super.get(cell, spec);
       }
     }));
-    reg.add(new BaseRegistration() {
+    reg.add(new Registration() {
       @Override
       protected void doRemove() {
         beforeAnimation.run();
@@ -283,7 +283,7 @@ public class CompletionSupport {
     targetPopup.set(popup);
     final Runnable state = container.saveState();
     textCell.focus();
-    showCompletion(textCell, items, new BaseRegistration() {
+    showCompletion(textCell, items, new Registration() {
       @Override
       protected void doRemove() {
         popup.removeFromParent();

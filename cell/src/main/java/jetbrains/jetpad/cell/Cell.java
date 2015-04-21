@@ -17,7 +17,6 @@ package jetbrains.jetpad.cell;
 
 import com.google.common.base.Function;
 import com.google.common.base.Objects;
-import jetbrains.jetpad.base.BaseRegistration;
 import jetbrains.jetpad.base.Registration;
 import jetbrains.jetpad.base.animation.Animation;
 import jetbrains.jetpad.base.animation.Animations;
@@ -278,7 +277,7 @@ public abstract class Cell implements NavComposite<Cell>, HasVisibility, HasFocu
     System.arraycopy(myCellTraits, 0, newTraits, 1, myCellTraits.length);
     myCellTraits = newTraits;
     r.run();
-    return new BaseRegistration() {
+    return new Registration() {
       @Override
       protected void doRemove() {
         Runnable r = createFiringRunnable(trait);
@@ -436,7 +435,7 @@ public abstract class Cell implements NavComposite<Cell>, HasVisibility, HasFocu
   public <ValueT> Registration set(final CellPropertySpec<ValueT> prop, ValueT value) {
     final ValueT old = get(prop);
 
-    if (Objects.equal(value, old)) return BaseRegistration.empty();
+    if (Objects.equal(value, old)) return Registration.empty();
 
     final PropertyChangeEvent<ValueT> event = new PropertyChangeEvent<>(old, value);
 
@@ -456,7 +455,7 @@ public abstract class Cell implements NavComposite<Cell>, HasVisibility, HasFocu
 
     firePropertyChange(prop, event);
 
-    return new BaseRegistration() {
+    return new Registration() {
       @Override
       protected void doRemove() {
         set(prop, old);

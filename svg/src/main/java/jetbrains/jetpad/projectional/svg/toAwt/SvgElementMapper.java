@@ -15,7 +15,6 @@
  */
 package jetbrains.jetpad.projectional.svg.toAwt;
 
-import jetbrains.jetpad.base.BaseRegistration;
 import jetbrains.jetpad.base.Registration;
 import jetbrains.jetpad.event.MouseEvent;
 import jetbrains.jetpad.mapper.Synchronizer;
@@ -128,7 +127,7 @@ class SvgElementMapper<SourceT extends SvgElement, TargetT extends SVGOMElement>
       }
     };
     getTarget().addEventListener(eventType, listener, false);
-    myHandlerRegs.put(spec, new BaseRegistration() {
+    myHandlerRegs.put(spec, new Registration() {
       @Override
       protected void doRemove() {
         getTarget().removeEventListener(eventType, listener, false);

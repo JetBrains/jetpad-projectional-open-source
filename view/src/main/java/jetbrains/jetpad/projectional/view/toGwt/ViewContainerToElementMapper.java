@@ -28,9 +28,8 @@ import com.google.gwt.query.client.GQuery;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Window;
-import jetbrains.jetpad.base.BaseRegistration;
-import jetbrains.jetpad.base.Handler;
 import jetbrains.jetpad.base.Registration;
+import jetbrains.jetpad.base.Handler;
 import jetbrains.jetpad.base.Value;
 import jetbrains.jetpad.base.animation.Animation;
 import jetbrains.jetpad.base.edt.EventDispatchThread;
@@ -482,7 +481,7 @@ public class ViewContainerToElementMapper extends Mapper<ViewContainer, Element>
   private Registration eventRegistration(final int event, Object e, Function f) {
     final GQuery q = $(e);
     q.bind(event, f);
-    return new BaseRegistration() {
+    return new Registration() {
       @Override
       protected void doRemove() {
         q.unbind(event);

@@ -15,7 +15,7 @@
  */
 package jetbrains.jetpad.cell.completion;
 
-import jetbrains.jetpad.base.BaseRegistration;
+import jetbrains.jetpad.base.Registration;
 import jetbrains.jetpad.base.Handler;
 import jetbrains.jetpad.cell.*;
 import jetbrains.jetpad.cell.trait.CellTrait;
@@ -43,7 +43,7 @@ class CompletionMenu {
 
     mapper.getTarget().hasShadow().set(true);
 
-    reg.add(new BaseRegistration() {
+    reg.add(new Registration() {
       @Override
       protected void doRemove() {
         mapper.detachRoot();

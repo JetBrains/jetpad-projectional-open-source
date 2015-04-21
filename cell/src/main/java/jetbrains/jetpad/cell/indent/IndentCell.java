@@ -15,7 +15,6 @@
  */
 package jetbrains.jetpad.cell.indent;
 
-import jetbrains.jetpad.base.BaseRegistration;
 import jetbrains.jetpad.base.Registration;
 import jetbrains.jetpad.cell.Cell;
 import jetbrains.jetpad.cell.CellPropertySpec;
@@ -146,7 +145,7 @@ public class IndentCell extends Cell {
       myListeners = new Listeners<>();
     }
     final Registration reg = myListeners.add(l);
-    return new BaseRegistration() {
+    return new Registration() {
       @Override
       protected void doRemove() {
         reg.remove();

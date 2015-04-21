@@ -15,7 +15,6 @@
  */
 package jetbrains.mps.diagram.dataflow.mapper;
 
-import jetbrains.jetpad.base.BaseRegistration;
 import jetbrains.jetpad.base.Registration;
 import jetbrains.jetpad.cell.TextCell;
 import jetbrains.jetpad.cell.text.TextEditing;
@@ -64,7 +63,7 @@ class TextCellController {
       }
     });
 
-    return new BaseRegistration() {
+    return new Registration() {
       @Override
       protected void doRemove() {
         removeEditing();

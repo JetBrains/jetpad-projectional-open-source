@@ -29,9 +29,8 @@ import com.google.gwt.query.client.GQuery;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Window;
-import jetbrains.jetpad.base.BaseRegistration;
-import jetbrains.jetpad.base.Handler;
 import jetbrains.jetpad.base.Registration;
+import jetbrains.jetpad.base.Handler;
 import jetbrains.jetpad.base.Value;
 import jetbrains.jetpad.base.animation.Animation;
 import jetbrains.jetpad.base.edt.EventDispatchThread;
@@ -80,7 +79,7 @@ public class CellContainerToDomMapper extends Mapper<CellContainer, Element> {
     ReadableProperty<Element> prop = elementFor(cell);
     if (prop.get() != null) {
       r.run();
-      return BaseRegistration.empty();
+      return Registration.empty();
     } else {
       final CompositeRegistration reg = new CompositeRegistration();
       final Value<Boolean> removed = new Value<>(false);
@@ -95,7 +94,7 @@ public class CellContainerToDomMapper extends Mapper<CellContainer, Element> {
         }
       }));
 
-      return new BaseRegistration() {
+      return new Registration() {
         @Override
         protected void doRemove() {
           if (removed.get()) return;
@@ -652,7 +651,7 @@ public class CellContainerToDomMapper extends Mapper<CellContainer, Element> {
   private Registration eventRegistration(final int event, Object o, Function f) {
     final GQuery q = $(o);
     q.bind(event, f);
-    return new BaseRegistration() {
+    return new Registration() {
       @Override
       protected void doRemove() {
         q.unbind(event);

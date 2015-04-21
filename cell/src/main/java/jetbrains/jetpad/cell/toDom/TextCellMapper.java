@@ -18,7 +18,6 @@ package jetbrains.jetpad.cell.toDom;
 import com.google.common.base.Strings;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Timer;
-import jetbrains.jetpad.base.BaseRegistration;
 import jetbrains.jetpad.base.Registration;
 import jetbrains.jetpad.cell.TextCell;
 import jetbrains.jetpad.model.event.CompositeRegistration;
@@ -107,7 +106,7 @@ class TextCellMapper extends BaseCellMapper<TextCell> {
               }
             }
           }),
-          new BaseRegistration() {
+          new Registration() {
             @Override
             protected void doRemove() {
               timer.cancel();
