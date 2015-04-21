@@ -17,7 +17,7 @@ package jetbrains.jetpad.cell.text;
 
 import com.google.common.base.Strings;
 import com.google.common.base.Supplier;
-import jetbrains.jetpad.base.Registration;
+import jetbrains.jetpad.base.BaseRegistration;
 import jetbrains.jetpad.base.Runnables;
 import jetbrains.jetpad.cell.Cell;
 import jetbrains.jetpad.cell.TextCell;
@@ -75,7 +75,7 @@ public class TextEditingTrait extends TextNavigationTrait {
           public boolean isMenu() {
             return true;
           }
-        }), Registration.EMPTY, Runnables.EMPTY, restoreState);
+        }), BaseRegistration.empty(), Runnables.EMPTY, restoreState);
       }
 
       @Override

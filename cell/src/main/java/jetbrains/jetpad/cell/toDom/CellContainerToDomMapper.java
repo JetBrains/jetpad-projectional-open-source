@@ -80,7 +80,7 @@ public class CellContainerToDomMapper extends Mapper<CellContainer, Element> {
     ReadableProperty<Element> prop = elementFor(cell);
     if (prop.get() != null) {
       r.run();
-      return Registration.EMPTY;
+      return BaseRegistration.empty();
     } else {
       final CompositeRegistration reg = new CompositeRegistration();
       final Value<Boolean> removed = new Value<>(false);

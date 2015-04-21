@@ -436,7 +436,7 @@ public abstract class Cell implements NavComposite<Cell>, HasVisibility, HasFocu
   public <ValueT> Registration set(final CellPropertySpec<ValueT> prop, ValueT value) {
     final ValueT old = get(prop);
 
-    if (Objects.equal(value, old)) return Registration.EMPTY;
+    if (Objects.equal(value, old)) return BaseRegistration.empty();
 
     final PropertyChangeEvent<ValueT> event = new PropertyChangeEvent<>(old, value);
 

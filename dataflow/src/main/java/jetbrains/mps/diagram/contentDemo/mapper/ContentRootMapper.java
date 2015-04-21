@@ -16,6 +16,7 @@
 package jetbrains.mps.diagram.contentDemo.mapper;
 
 import com.google.common.base.Supplier;
+import jetbrains.jetpad.base.BaseRegistration;
 import jetbrains.jetpad.base.Handler;
 import jetbrains.jetpad.base.Registration;
 import jetbrains.jetpad.cell.TextCell;
@@ -111,7 +112,7 @@ public class ContentRootMapper extends Mapper<Diagram, ViewContainer> {
         for (Runnable r: myViewAdders) {
           r.run();
         }
-        return Registration.EMPTY;
+        return BaseRegistration.empty();
       }
     }));
   }

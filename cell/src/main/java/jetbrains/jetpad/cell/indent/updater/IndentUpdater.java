@@ -15,6 +15,7 @@
  */
 package jetbrains.jetpad.cell.indent.updater;
 
+import jetbrains.jetpad.base.BaseRegistration;
 import jetbrains.jetpad.base.Registration;
 import jetbrains.jetpad.cell.Cell;
 import jetbrains.jetpad.cell.indent.IndentCell;
@@ -370,7 +371,7 @@ public class IndentUpdater<TargetT> {
         }
       });
     } else {
-      return Registration.EMPTY;
+      return BaseRegistration.empty();
     }
   }
 

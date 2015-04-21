@@ -15,6 +15,7 @@
  */
 package jetbrains.jetpad.cell.position;
 
+import jetbrains.jetpad.base.BaseRegistration;
 import jetbrains.jetpad.model.event.EventHandler;
 import jetbrains.jetpad.base.Registration;
 import jetbrains.jetpad.model.property.Property;
@@ -49,7 +50,7 @@ public class DefaultPositionHandler implements PositionHandler {
 
       @Override
       public Registration addHandler(EventHandler<? super PropertyChangeEvent<Integer>> handler) {
-        return Registration.EMPTY;
+        return BaseRegistration.empty();
       }
 
       @Override

@@ -38,7 +38,7 @@ public class SvgViewMapper extends BaseViewMapper<SvgView, Element> {
     };
   }
 
-  private Registration myReg = Registration.EMPTY;
+  private Registration myReg = BaseRegistration.empty();
 
   public SvgViewMapper(ViewToDomContext ctx, SvgView source) {
     super(ctx, source, DOM.createDiv());
