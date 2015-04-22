@@ -65,7 +65,7 @@ public abstract class DiagramNodeView extends GroupView {
 
       @Override
       public void onItemRemoved(CollectionItemEvent<? extends View> event) {
-        myReg.dispose();
+        myReg.remove();
       }
     });
 

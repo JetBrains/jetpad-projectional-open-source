@@ -70,7 +70,7 @@ class SvgElementMapper<SourceT extends SvgElement, TargetT extends OMSVGElement>
 
       @Override
       public void detach() {
-        myReg.dispose();
+        myReg.remove();
       }
     });
 

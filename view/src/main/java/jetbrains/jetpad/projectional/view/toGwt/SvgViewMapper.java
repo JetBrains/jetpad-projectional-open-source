@@ -31,7 +31,7 @@ public class SvgViewMapper extends BaseViewMapper<SvgView, Element> {
     mapper.attachRoot();
     return new Registration() {
       @Override
-      protected void doDispose() {
+      protected void doRemove() {
         mapper.detachRoot();
       }
     };
@@ -55,7 +55,7 @@ public class SvgViewMapper extends BaseViewMapper<SvgView, Element> {
         getTarget().removeAllChildren();
         getTarget().appendChild(element.getElement());
 
-        myReg.dispose();
+        myReg.remove();
         myReg = map(value, element);
       }
     }));
@@ -65,6 +65,6 @@ public class SvgViewMapper extends BaseViewMapper<SvgView, Element> {
   protected void onDetach() {
     super.onDetach();
 
-    myReg.dispose();
+    myReg.remove();
   }
 }

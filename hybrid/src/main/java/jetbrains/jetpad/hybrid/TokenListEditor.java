@@ -116,7 +116,7 @@ class TokenListEditor<SourceT> {
       myValid.set(true);
       myParseNode = null;
       myPrintedTokens = new ArrayList<>();
-      myChangeReg.dispose();
+      myChangeReg.remove();
       myChangeReg = Registration.EMPTY;
     } else {
       List<Token> toParse = new ArrayList<>();
@@ -158,7 +158,7 @@ class TokenListEditor<SourceT> {
     myParseNode = ctx.result();
     myPrintedTokens = ctx.tokens();
 
-    myChangeReg.dispose();
+    myChangeReg.remove();
     myChangeReg = ctx.changeSource().addHandler(new EventHandler<Object>() {
       @Override
       public void onEvent(Object event) {

@@ -351,7 +351,7 @@ public class ViewContainerComponent extends JComponent implements Scrollable {
   public void container(ViewContainer container) {
     if (myContainer != null) {
       myContainer.setPeer(new NullViewContainerPeer());
-      myContainerReg.dispose();
+      myContainerReg.remove();
       myTimer.stop();
       myContainerReg = null;
     }
@@ -939,7 +939,7 @@ public class ViewContainerComponent extends JComponent implements Scrollable {
     @Override
     public void dispose() {
       clear();
-      myHandlerReg.dispose();
+      myHandlerReg.remove();
       myUserAgent = null;
     }
 

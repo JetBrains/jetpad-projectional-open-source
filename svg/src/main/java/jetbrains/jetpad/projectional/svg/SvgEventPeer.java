@@ -54,8 +54,8 @@ class SvgEventPeer {
         final Registration addReg = myListeners.add(handler);
         return new Registration() {
           @Override
-          protected void doDispose() {
-            addReg.dispose();
+          protected void doRemove() {
+            addReg.remove();
             if (myListeners.isEmpty()) {
               myListeners = null;
             }
@@ -82,8 +82,8 @@ class SvgEventPeer {
     final Registration addReg = myEventHandlers.get(spec).add(handler);
     Registration disposeReg = new Registration() {
       @Override
-      protected void doDispose() {
-        addReg.dispose();
+      protected void doRemove() {
+        addReg.remove();
         if (myEventHandlers.get(spec).isEmpty()) {
           myEventHandlers.remove(spec);
         }

@@ -213,7 +213,7 @@ public class PolyLineConnection implements Connection {
 
     private void unwatchBounds() {
       if (myBoundsReg != null) {
-        myBoundsReg.dispose();
+        myBoundsReg.remove();
         myBoundsReg = null;
       }
     }

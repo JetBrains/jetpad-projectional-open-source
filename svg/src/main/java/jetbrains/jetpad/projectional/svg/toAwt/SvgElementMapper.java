@@ -70,7 +70,7 @@ class SvgElementMapper<SourceT extends SvgElement, TargetT extends SVGOMElement>
 
       @Override
       public void detach() {
-        myReg.dispose();
+        myReg.remove();
       }
     });
 
@@ -83,7 +83,7 @@ class SvgElementMapper<SourceT extends SvgElement, TargetT extends SVGOMElement>
 
         for (SvgEventSpec spec : SvgEventSpec.values()) {
           if (!value.contains(spec) && myHandlerRegs.containsKey(spec)) {
-            myHandlerRegs.remove(spec).dispose();
+            myHandlerRegs.remove(spec).remove();
           }
           if (!value.contains(spec) || myHandlerRegs.containsKey(spec)) continue;
 
@@ -129,7 +129,7 @@ class SvgElementMapper<SourceT extends SvgElement, TargetT extends SVGOMElement>
     getTarget().addEventListener(eventType, listener, false);
     myHandlerRegs.put(spec, new Registration() {
       @Override
-      protected void doDispose() {
+      protected void doRemove() {
         getTarget().removeEventListener(eventType, listener, false);
       }
     });

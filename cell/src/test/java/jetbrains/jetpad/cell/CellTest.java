@@ -246,7 +246,7 @@ public class CellTest {
     EventHandler<PropertyChangeEvent<String>> listener = mock(EventHandler.class);
     cell.getProp(TestTrait.NAME).addHandler(listener);
 
-    reg.dispose();
+    reg.remove();
 
     verify(listener).onEvent(new PropertyChangeEvent<>("xxx", null));
   }

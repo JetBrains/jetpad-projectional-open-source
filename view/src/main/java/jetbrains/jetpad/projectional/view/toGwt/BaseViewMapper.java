@@ -67,7 +67,7 @@ class BaseViewMapper<ViewT extends View, ElementT extends Element> extends Mappe
         @Override
         public void onEvent(Object event) {
           whenValid(r);
-          reg.get().dispose();
+          reg.get().remove();
         }
       }));
     } else {

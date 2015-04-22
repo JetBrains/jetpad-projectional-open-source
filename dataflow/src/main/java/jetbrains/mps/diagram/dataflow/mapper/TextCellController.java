@@ -65,10 +65,10 @@ class TextCellController {
 
     return new Registration() {
       @Override
-      protected void doDispose() {
+      protected void doRemove() {
         removeEditing();
-        mouseReg.dispose();
-        focusReg.dispose();
+        mouseReg.remove();
+        focusReg.remove();
       }
     };
   }
@@ -85,7 +85,7 @@ class TextCellController {
 
   private void removeEditing() {
     if (myEditingRegistration != null) {
-      myEditingRegistration.dispose();
+      myEditingRegistration.remove();
     }
     myEditingRegistration = null;
     myEditing.set(false);

@@ -50,7 +50,7 @@ class TextCellMapper extends BaseCellMapper<TextCell> {
     super.onDetach();
 
     if (myFocusRegistration != null) {
-      myFocusRegistration.dispose();
+      myFocusRegistration.remove();
       myFocusRegistration = null;
     }
   }
@@ -108,7 +108,7 @@ class TextCellMapper extends BaseCellMapper<TextCell> {
           }),
           new Registration() {
             @Override
-            protected void doDispose() {
+            protected void doRemove() {
               timer.cancel();
             }
           }
@@ -116,7 +116,7 @@ class TextCellMapper extends BaseCellMapper<TextCell> {
       }
     } else {
       if (myFocusRegistration != null) {
-        myFocusRegistration.dispose();
+        myFocusRegistration.remove();
         myFocusRegistration = null;
       }
     }

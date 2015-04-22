@@ -751,7 +751,7 @@ public class HybridSynchronizer<SourceT> implements Synchronizer {
 
   @Override
   public void detach() {
-    myRegistration.dispose();
+    myRegistration.remove();
     myRegistration = null;
   }
 

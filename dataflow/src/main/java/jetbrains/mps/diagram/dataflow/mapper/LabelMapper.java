@@ -79,7 +79,7 @@ class LabelMapper extends Mapper<Connector, LabelView> {
         myEditingSynchronizer.detach();
         myInvalidateSynchronizer.detach();
 
-        myReg.dispose();
+        myReg.remove();
       }
     });
   }

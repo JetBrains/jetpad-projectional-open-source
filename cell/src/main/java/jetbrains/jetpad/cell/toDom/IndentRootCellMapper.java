@@ -101,7 +101,7 @@ class IndentRootCellMapper extends BaseCellMapper<IndentCell> {
             public void remove() {
               CounterUtil.updateOnRemove(getSource(), cell, mapper);
               myCellMappers.remove(mapper);
-              visibilityReg.dispose();
+              visibilityReg.remove();
             }
           };
         }
@@ -268,7 +268,7 @@ class IndentRootCellMapper extends BaseCellMapper<IndentCell> {
       myIndentUpdater.childRemoved(c);
     }
     myPositionUpdater.cancel();
-    myRegistration.dispose();
+    myRegistration.remove();
     super.onDetach();
   }
 }

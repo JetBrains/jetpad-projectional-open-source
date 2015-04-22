@@ -147,8 +147,8 @@ public class IndentCell extends Cell {
     final Registration reg = myListeners.add(l);
     return new Registration() {
       @Override
-      protected void doDispose() {
-        reg.dispose();
+      protected void doRemove() {
+        reg.remove();
         if (myListeners.isEmpty()) {
           myListeners = null;
         }

@@ -229,7 +229,7 @@ public abstract class View implements NavComposite<View>, HasFocusability, HasVi
 
     return new Registration() {
       @Override
-      protected void doDispose() {
+      protected void doRemove() {
         Runnable fire = createFiringRunnable(trait);
         myTraits.remove(trait);
         fire.run();
@@ -358,8 +358,8 @@ public abstract class View implements NavComposite<View>, HasFocusability, HasVi
     final Registration reg = myListeners.add(l);
     return new Registration() {
       @Override
-      protected void doDispose() {
-        reg.dispose();
+      protected void doRemove() {
+        reg.remove();
         if (myListeners.isEmpty()) {
           myListeners = null;
         }
@@ -528,9 +528,9 @@ public abstract class View implements NavComposite<View>, HasFocusability, HasVi
         changeToRootDeltaListenersCount(+1);
         return new Registration() {
           @Override
-          protected void doDispose() {
+          protected void doRemove() {
             changeToRootDeltaListenersCount(-1);
-            reg.dispose();
+            reg.remove();
           }
         };
       }

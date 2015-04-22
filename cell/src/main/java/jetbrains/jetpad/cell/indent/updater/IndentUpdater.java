@@ -85,7 +85,7 @@ public class IndentUpdater<TargetT> {
     List<Cell> children = child.children();
 
     if (real) {
-      myChildRegistrations.remove(child).dispose();
+      myChildRegistrations.remove(child).remove();
     }
 
     if (!isCell(child)) {

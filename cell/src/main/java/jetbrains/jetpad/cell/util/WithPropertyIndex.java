@@ -104,6 +104,6 @@ public abstract class WithPropertyIndex {
 
   public void dispose() {
     myWithProperty.clear();
-    myReg.dispose();
+    myReg.remove();
   }
 }

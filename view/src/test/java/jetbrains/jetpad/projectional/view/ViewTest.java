@@ -119,7 +119,7 @@ public class ViewTest {
     v.getProp(NAME).addHandler(nameChangeListener());
 
     Registration reg = v.addTrait(X_NAME_TRAIT);
-    reg.dispose();
+    reg.remove();
 
     assertNull(v.get(NAME));
 
@@ -132,7 +132,7 @@ public class ViewTest {
     v.getProp(NAME).addHandler(nameChangeListener());
     v.getProp(ID).addHandler(idChangeListener());
 
-    v.addTrait(ID_TRAIT).dispose();
+    v.addTrait(ID_TRAIT).remove();
 
     assertNameFired("x", null);
     assertIdFired("id", null);
@@ -242,7 +242,7 @@ public class ViewTest {
     view.move(new Vector(10, 10));
     view.move(new Vector(0, 0));
 
-    reg.dispose();
+    reg.remove();
     view.move(new Vector(100, 100));
 
     assertEquals(Arrays.asList(new Vector(10, 10)), origins);
@@ -259,7 +259,7 @@ public class ViewTest {
 
     parent.move(new Vector(10, 10));
 
-    reg.dispose();
+    reg.remove();
     parent.move(new Vector(100, 20));
 
     assertEquals(Arrays.asList(new Vector(10, 10)), origins);
