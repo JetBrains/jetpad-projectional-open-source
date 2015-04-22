@@ -112,6 +112,7 @@ class ValidTextEditingTrait extends TextEditingTrait {
           List<CompletionItem> matches = completion.matches(prefix);
           if (matches.size() == 1) {
             matches.get(0).complete(prefix).run();
+            assertValid(container.focusedCell.get());
             container.keyTyped(new KeyEvent(Key.UNKNOWN, suffix.charAt(0), Collections.<ModifierKey>emptySet()));
           }
         }
@@ -169,5 +170,11 @@ class ValidTextEditingTrait extends TextEditingTrait {
 
   private Predicate<String> getValidator(TextCell textCell) {
     return textCell.get(VALIDATOR);
+  }
+
+  private void assertValid(Cell cell) {
+    if (cell != null && cell instanceof TextCell && !getValidator((TextCell) cell).apply(((TextCell) cell).text().get())) {
+      throw new IllegalStateException("Completion should lead to a valid result, otherwise, we might have a stackoverflow error");
+    }
   }
 }
