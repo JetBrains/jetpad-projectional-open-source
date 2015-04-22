@@ -144,7 +144,7 @@ public class CompletionSupport {
     final Handler<CompletionItem> completer = new Handler<CompletionItem>() {
       @Override
       public void handle(CompletionItem item) {
-        reg.remove();
+        reg.dispose();
         restoreState.run();
         item.complete(prefixText.get()).run();
       }
@@ -159,7 +159,7 @@ public class CompletionSupport {
         if (propery == Cell.FOCUSED) {
           PropertyChangeEvent<Boolean> e = (PropertyChangeEvent<Boolean>) event;
           if (!e.getNewValue()) {
-            reg.remove();
+            reg.dispose();
           }
         }
 
@@ -171,7 +171,7 @@ public class CompletionSupport {
         CompletionItem selectedItem = menuModel.selectedItem.get();
 
         if (event.is(Key.ESCAPE)) {
-          reg.remove();
+          reg.dispose();
           restoreState.run();
           event.consume();
           return;
@@ -218,7 +218,7 @@ public class CompletionSupport {
           return new Runnable() {
             @Override
             public void run() {
-              reg.remove();
+              reg.dispose();
               restoreState.run();
             }
           };
@@ -229,14 +229,14 @@ public class CompletionSupport {
     }));
     reg.add(new Registration() {
       @Override
-      protected void doRemove() {
+      protected void doDispose() {
         beforeAnimation.run();
         completionCell.hideSlide(300).whenDone(new Runnable() {
           @Override
           public void run() {
             completionCell.removeFromParent();
-            removeOnClose.remove();
-            disposeMenuMapper.remove();
+            removeOnClose.dispose();
+            disposeMenuMapper.dispose();
           }
         });
       }
@@ -285,9 +285,9 @@ public class CompletionSupport {
     textCell.focus();
     showCompletion(textCell, items, new Registration() {
       @Override
-      protected void doRemove() {
+      protected void doDispose() {
         popup.removeFromParent();
-        textEditingReg.remove();
+        textEditingReg.dispose();
       }
     }, new Runnable() {
       @Override
@@ -416,7 +416,7 @@ public class CompletionSupport {
         if (dismissed.get()) return;
         dismissed.set(true);
         popup.removeFromParent();
-        traitReg.remove();
+        traitReg.dispose();
         if (!completed.get() && !focusLoss) {
           restoreState.run();
         }

@@ -53,7 +53,7 @@ public class CellView extends HorizontalView {
       @Override
       public void onEvent(PropertyChangeEvent<Boolean> event) {
         if (event.getNewValue()) {
-          myMappingRegistration.remove();
+          myMappingRegistration.dispose();
           myMappingRegistration = null;
         } else {
           myMappingRegistration = CellToView.map(container, CellView.this, CellView.this, myPopupView);

@@ -336,7 +336,7 @@ public class ViewContainerToElementMapper extends Mapper<ViewContainer, Element>
 
       @Override
       public void detach() {
-        myReg.remove();
+        myReg.dispose();
       }
 
       @Override
@@ -483,7 +483,7 @@ public class ViewContainerToElementMapper extends Mapper<ViewContainer, Element>
     q.bind(event, f);
     return new Registration() {
       @Override
-      protected void doRemove() {
+      protected void doDispose() {
         q.unbind(event);
       }
     };

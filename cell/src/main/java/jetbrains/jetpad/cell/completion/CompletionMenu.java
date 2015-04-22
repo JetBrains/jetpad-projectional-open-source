@@ -45,7 +45,7 @@ class CompletionMenu {
 
     reg.add(new Registration() {
       @Override
-      protected void doRemove() {
+      protected void doDispose() {
         mapper.detachRoot();
       }
     });

@@ -79,7 +79,7 @@ class MultiPointViewMapper extends BaseViewMapper<MultiPointView, Element> {
 
       @Override
       public void detach() {
-        myReg.remove();
+        myReg.dispose();
       }
 
       private void updatePoints() {

@@ -43,7 +43,7 @@ class TokenListEditor<SourceT> {
   private boolean mySyncing;
   private List<Token> myPrintedTokens;
   private boolean myRestoringState;
-  private Registration myChangeReg = Registration.empty();
+  private Registration myChangeReg = Registration.EMPTY;
 
   final ObservableList<Token> tokens = new ObservableArrayList<>();
   final Property<SourceT> value = new ValueProperty<>();
@@ -116,8 +116,8 @@ class TokenListEditor<SourceT> {
       myValid.set(true);
       myParseNode = null;
       myPrintedTokens = new ArrayList<>();
-      myChangeReg.remove();
-      myChangeReg = Registration.empty();
+      myChangeReg.dispose();
+      myChangeReg = Registration.EMPTY;
     } else {
       List<Token> toParse = new ArrayList<>();
       for (Token t : tokens) {
@@ -158,7 +158,7 @@ class TokenListEditor<SourceT> {
     myParseNode = ctx.result();
     myPrintedTokens = ctx.tokens();
 
-    myChangeReg.remove();
+    myChangeReg.dispose();
     myChangeReg = ctx.changeSource().addHandler(new EventHandler<Object>() {
       @Override
       public void onEvent(Object event) {

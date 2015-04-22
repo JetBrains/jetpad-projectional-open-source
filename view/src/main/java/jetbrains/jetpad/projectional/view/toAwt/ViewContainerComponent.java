@@ -78,7 +78,7 @@ public class ViewContainerComponent extends JComponent implements Scrollable {
   static final Color SELECTION_COLOR = Color.DARK_BLUE;
 
   private ViewContainer myContainer;
-  private Registration myContainerReg = Registration.empty();
+  private Registration myContainerReg = Registration.EMPTY;
 
   private Set<View> myMovedViews = new LinkedHashSet<>();
   private Set<jetbrains.jetpad.geometry.Rectangle> myDirtyAreas = new LinkedHashSet<>();
@@ -351,7 +351,7 @@ public class ViewContainerComponent extends JComponent implements Scrollable {
   public void container(ViewContainer container) {
     if (myContainer != null) {
       myContainer.setPeer(new NullViewContainerPeer());
-      myContainerReg.remove();
+      myContainerReg.dispose();
       myTimer.stop();
       myContainerReg = null;
     }
@@ -939,7 +939,7 @@ public class ViewContainerComponent extends JComponent implements Scrollable {
     @Override
     public void dispose() {
       clear();
-      myHandlerReg.remove();
+      myHandlerReg.dispose();
       myUserAgent = null;
     }
 

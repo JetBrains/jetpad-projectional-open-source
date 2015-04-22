@@ -31,13 +31,13 @@ public class SvgViewMapper extends BaseViewMapper<SvgView, Element> {
     mapper.attachRoot();
     return new Registration() {
       @Override
-      protected void doRemove() {
+      protected void doDispose() {
         mapper.detachRoot();
       }
     };
   }
 
-  private Registration myReg = Registration.empty();
+  private Registration myReg = Registration.EMPTY;
 
   public SvgViewMapper(ViewToDomContext ctx, SvgView source) {
     super(ctx, source, DOM.createDiv());
@@ -55,7 +55,7 @@ public class SvgViewMapper extends BaseViewMapper<SvgView, Element> {
         getTarget().removeAllChildren();
         getTarget().appendChild(element.getElement());
 
-        myReg.remove();
+        myReg.dispose();
         myReg = map(value, element);
       }
     }));
@@ -65,6 +65,6 @@ public class SvgViewMapper extends BaseViewMapper<SvgView, Element> {
   protected void onDetach() {
     super.onDetach();
 
-    myReg.remove();
+    myReg.dispose();
   }
 }

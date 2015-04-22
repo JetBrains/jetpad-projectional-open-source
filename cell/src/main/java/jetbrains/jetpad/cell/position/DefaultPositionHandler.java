@@ -49,7 +49,7 @@ public class DefaultPositionHandler implements PositionHandler {
 
       @Override
       public Registration addHandler(EventHandler<? super PropertyChangeEvent<Integer>> handler) {
-        return Registration.empty();
+        return Registration.EMPTY;
       }
 
       @Override

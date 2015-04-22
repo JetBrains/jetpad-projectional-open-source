@@ -85,7 +85,7 @@ public class IndentUpdater<TargetT> {
     List<Cell> children = child.children();
 
     if (real) {
-      myChildRegistrations.remove(child).remove();
+      myChildRegistrations.remove(child).dispose();
     }
 
     if (!isCell(child)) {
@@ -370,7 +370,7 @@ public class IndentUpdater<TargetT> {
         }
       });
     } else {
-      return Registration.empty();
+      return Registration.EMPTY;
     }
   }
 

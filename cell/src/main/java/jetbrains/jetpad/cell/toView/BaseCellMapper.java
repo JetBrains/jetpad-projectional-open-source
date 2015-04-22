@@ -84,7 +84,7 @@ class BaseCellMapper<SourceT extends Cell, TargetT extends View> extends Mapper<
     getTarget().children().clear();
 
     if (myPopupUpdateReg != null) {
-      myPopupUpdateReg.remove();
+      myPopupUpdateReg.dispose();
       myPopupUpdateReg = null;
     }
 
@@ -159,7 +159,7 @@ class BaseCellMapper<SourceT extends Cell, TargetT extends View> extends Mapper<
 
       if (myPopupMappers.isEmpty()) {
         myPopupMappers = null;
-        myPopupUpdateReg.remove();
+        myPopupUpdateReg.dispose();
         myPopupUpdateReg = null;
       }
     }

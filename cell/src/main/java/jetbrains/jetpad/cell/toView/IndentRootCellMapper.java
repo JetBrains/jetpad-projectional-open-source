@@ -189,7 +189,7 @@ class IndentRootCellMapper extends BaseCellMapper<IndentCell, VerticalView> {
       myIndentUpdater.childRemoved(c);
     }
 
-    myRegistration.remove();
+    myRegistration.dispose();
 
     super.onDetach();
   }

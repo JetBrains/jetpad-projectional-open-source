@@ -63,7 +63,7 @@ public abstract class CompletionSupplier {
       }
     });
 
-    reg.remove();
+    reg.dispose();
     if (!loaded.get()) {
       return false;
     } else {

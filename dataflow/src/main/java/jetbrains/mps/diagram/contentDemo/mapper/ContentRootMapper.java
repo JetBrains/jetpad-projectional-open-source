@@ -111,7 +111,7 @@ public class ContentRootMapper extends Mapper<Diagram, ViewContainer> {
         for (Runnable r: myViewAdders) {
           r.run();
         }
-        return Registration.empty();
+        return Registration.EMPTY;
       }
     }));
   }

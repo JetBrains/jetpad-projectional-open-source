@@ -79,7 +79,7 @@ public class CellContainerToDomMapper extends Mapper<CellContainer, Element> {
     ReadableProperty<Element> prop = elementFor(cell);
     if (prop.get() != null) {
       r.run();
-      return Registration.empty();
+      return Registration.EMPTY;
     } else {
       final CompositeRegistration reg = new CompositeRegistration();
       final Value<Boolean> removed = new Value<>(false);
@@ -88,7 +88,7 @@ public class CellContainerToDomMapper extends Mapper<CellContainer, Element> {
         public void onEvent(PropertyChangeEvent<Element> event) {
           if (event.getNewValue() != null) {
             r.run();
-            reg.remove();
+            reg.dispose();
             removed.set(true);
           }
         }
@@ -96,9 +96,9 @@ public class CellContainerToDomMapper extends Mapper<CellContainer, Element> {
 
       return new Registration() {
         @Override
-        protected void doRemove() {
+        protected void doDispose() {
           if (removed.get()) return;
-          reg.remove();
+          reg.dispose();
           removed.set(true);
         }
       };
@@ -653,7 +653,7 @@ public class CellContainerToDomMapper extends Mapper<CellContainer, Element> {
     q.bind(event, f);
     return new Registration() {
       @Override
-      protected void doRemove() {
+      protected void doDispose() {
         q.unbind(event);
       }
     };

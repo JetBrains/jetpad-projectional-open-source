@@ -68,7 +68,7 @@ public class DiagramView extends GroupView {
 
   @Override
   protected void onDetach() {
-    myConnectionAttachReg.remove();
+    myConnectionAttachReg.dispose();
 
     for (Connection c : connections) {
       c.detach();

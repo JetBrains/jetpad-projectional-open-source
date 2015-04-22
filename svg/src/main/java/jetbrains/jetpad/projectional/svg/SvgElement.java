@@ -148,8 +148,8 @@ public abstract class SvgElement extends SvgNode {
     final Registration reg = myListeners.add(l);
     return new Registration() {
       @Override
-      protected void doRemove() {
-        reg.remove();
+      protected void doDispose() {
+        reg.dispose();
         if (myListeners.isEmpty()) {
           myListeners = null;
         }

@@ -279,7 +279,7 @@ public abstract class Cell implements NavComposite<Cell>, HasVisibility, HasFocu
     r.run();
     return new Registration() {
       @Override
-      protected void doRemove() {
+      protected void doDispose() {
         Runnable r = createFiringRunnable(trait);
         int index = Arrays.asList(myCellTraits).indexOf(trait);
         CellTrait[] newTraits = new CellTrait[myCellTraits.length - 1];
@@ -435,7 +435,7 @@ public abstract class Cell implements NavComposite<Cell>, HasVisibility, HasFocu
   public <ValueT> Registration set(final CellPropertySpec<ValueT> prop, ValueT value) {
     final ValueT old = get(prop);
 
-    if (Objects.equal(value, old)) return Registration.empty();
+    if (Objects.equal(value, old)) return Registration.EMPTY;
 
     final PropertyChangeEvent<ValueT> event = new PropertyChangeEvent<>(old, value);
 
@@ -457,7 +457,7 @@ public abstract class Cell implements NavComposite<Cell>, HasVisibility, HasFocu
 
     return new Registration() {
       @Override
-      protected void doRemove() {
+      protected void doDispose() {
         set(prop, old);
       }
     };

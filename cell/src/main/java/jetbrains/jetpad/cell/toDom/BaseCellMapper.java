@@ -126,7 +126,7 @@ abstract class BaseCellMapper<SourceT extends Cell> extends Mapper<SourceT, Elem
     }
 
     if (myPopupUpdateReg != null) {
-      myPopupUpdateReg.remove();
+      myPopupUpdateReg.dispose();
       myPopupUpdateReg = null;
     }
 
@@ -235,7 +235,7 @@ abstract class BaseCellMapper<SourceT extends Cell> extends Mapper<SourceT, Elem
 
       if (myPopupMappers.isEmpty()) {
         myPopupMappers = null;
-        myPopupUpdateReg.remove();
+        myPopupUpdateReg.dispose();
         myPopupUpdateReg = null;
       }
     }
@@ -252,7 +252,7 @@ abstract class BaseCellMapper<SourceT extends Cell> extends Mapper<SourceT, Elem
         timer.scheduleRepeating(50);
         myPopupUpdateReg = new Registration() {
           @Override
-          protected void doRemove() {
+          protected void doDispose() {
             timer.cancel();
           }
         };
