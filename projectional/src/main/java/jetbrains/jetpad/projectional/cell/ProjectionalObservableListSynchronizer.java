@@ -231,10 +231,6 @@ class ProjectionalObservableListSynchronizer<ContextT, SourceItemT> extends Base
   }
 
 
-  private void scrollToSelection() {
-    getTarget().cellContainer().get().focusedCell.get().scrollTo();
-  }
-
   private CompletionSupplier getCurrentChildCompletion() {
     return createCompletion(new Role<SourceItemT>() {
       @Override

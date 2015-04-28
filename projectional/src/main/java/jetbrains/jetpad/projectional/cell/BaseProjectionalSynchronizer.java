@@ -58,6 +58,7 @@ abstract class BaseProjectionalSynchronizer<SourceT, ContextT, SourceItemT> impl
   private Function<SourceItemT, SourceItemT> myCloner;
   private Runnable myOnLastItemDeleted;
   private List<Cell> myTargetList;
+  private List<Registration> myRegistrations;
   private Character mySeparatorChar;
 
   BaseProjectionalSynchronizer(
@@ -69,6 +70,7 @@ abstract class BaseProjectionalSynchronizer<SourceT, ContextT, SourceItemT> impl
     myMapper = mapper;
     myTarget = target;
     myTargetList = targetList;
+    myRegistrations = new ArrayList<>(0);
     myTargetCellList = new TargetCellList();
     myRoleSynchronizer = createSubSynchronizer(myMapper, source, myTargetCellList, factory);
 
@@ -406,6 +408,11 @@ abstract class BaseProjectionalSynchronizer<SourceT, ContextT, SourceItemT> impl
     }
   }
 
+  protected void scrollToSelection() {
+    getTarget().cellContainer().get().focusedCell.get().scrollTo();
+  }
+
+
   private class TargetCellList extends AbstractList<Cell> {
     private boolean myHasPlaceholder;
 
@@ -414,7 +421,7 @@ abstract class BaseProjectionalSynchronizer<SourceT, ContextT, SourceItemT> impl
 
     void initList() {
       myHasPlaceholder = true;
-      getList().add(createPlaceholder());
+      myTargetList.add(createPlaceholder());
     }
 
     private Cell createPlaceholder() {
@@ -464,11 +471,7 @@ abstract class BaseProjectionalSynchronizer<SourceT, ContextT, SourceItemT> impl
 
     private TextCell getPlaceHolder() {
       if (!myHasPlaceholder) return null;
-      return (TextCell) getList().get(0).children().get(0);
-    }
-
-    private List<Cell> getList() {
-      return myTargetList;
+      return (TextCell) myTargetList.get(0).children().get(0);
     }
 
     @Override
@@ -476,31 +479,31 @@ abstract class BaseProjectionalSynchronizer<SourceT, ContextT, SourceItemT> impl
       if (myHasPlaceholder) {
         throw new IndexOutOfBoundsException();
       }
-      return getList().get(index);
+      return myTargetList.get(index);
     }
 
     @Override
     public int size() {
       if (myHasPlaceholder) return 0;
-      return getList().size();
+      return myTargetList.size();
     }
 
     @Override
     public void add(int index, Cell element) {
       if (myHasPlaceholder) {
-        getList().remove(0);
+        myTargetList.remove(0);
         myHasPlaceholder = false;
       }
-      getList().add(index, element);
-
-      registerChild(getSubMappers().get(index).getSource(), element);
+      myTargetList.add(index, element);
+      myRegistrations.add(index, registerChild(getSubMappers().get(index).getSource(), element));
     }
 
     @Override
     public Cell remove(int index) {
-      Cell result = getList().remove(index);
-      if (getList().isEmpty()) {
-        getList().add(createPlaceholder());
+      Cell result = myTargetList.remove(index);
+      myRegistrations.remove(index).remove();
+      if (myTargetList.isEmpty()) {
+        myTargetList.add(createPlaceholder());
         myHasPlaceholder = true;
       }
       return result;
