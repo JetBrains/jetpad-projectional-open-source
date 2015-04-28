@@ -62,21 +62,8 @@ class ProjectionalObservableListSynchronizer<ContextT, SourceItemT> extends Base
   }
 
   @Override
-  protected Registration registerChild(final SourceItemT child, final Cell childCell) {
+  protected Registration doRegisterChild(final SourceItemT child, final Cell childCell) {
     return new CompositeRegistration(
-      CellTraits.captureTo(childCell, new CellTrait() {
-        @Override
-        public void onKeyPressed(Cell cell, KeyEvent event) {
-          if (!getSelectedItems().isEmpty() && isDeleteEvent(event)) {
-            clear(getSelectedItems());
-            scrollToSelection();
-            event.consume();
-          }
-
-          super.onKeyPressed(cell, event);
-        }
-      }),
-
       childCell.addTrait(new DerivedCellTrait() {
         @Override
         protected CellTrait getBase(Cell cell) {

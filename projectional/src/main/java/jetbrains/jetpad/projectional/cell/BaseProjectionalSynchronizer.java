@@ -28,6 +28,7 @@ import jetbrains.jetpad.cell.position.Positions;
 import jetbrains.jetpad.cell.text.TextEditing;
 import jetbrains.jetpad.cell.trait.CellTrait;
 import jetbrains.jetpad.cell.trait.CellTraitPropertySpec;
+import jetbrains.jetpad.cell.trait.CellTraits;
 import jetbrains.jetpad.cell.trait.DerivedCellTrait;
 import jetbrains.jetpad.cell.util.CellFactory;
 import jetbrains.jetpad.completion.CompletionSupplier;
@@ -37,6 +38,7 @@ import jetbrains.jetpad.model.collections.CollectionAdapter;
 import jetbrains.jetpad.model.collections.CollectionItemEvent;
 import jetbrains.jetpad.model.collections.list.ObservableArrayList;
 import jetbrains.jetpad.model.collections.list.ObservableList;
+import jetbrains.jetpad.model.event.CompositeRegistration;
 import jetbrains.jetpad.projectional.generic.EmptyRoleCompletion;
 import jetbrains.jetpad.projectional.generic.Role;
 import jetbrains.jetpad.projectional.generic.RoleCompletion;
@@ -97,7 +99,7 @@ abstract class BaseProjectionalSynchronizer<SourceT, ContextT, SourceItemT> impl
    */
   protected abstract RoleSynchronizer<SourceItemT, Cell> createSubSynchronizer(Mapper<?, ?> mapper, SourceT source, List<Cell> target, MapperFactory<SourceItemT, Cell> factory);
 
-  protected abstract Registration registerChild(SourceItemT child, Cell childCell);
+  protected abstract Registration doRegisterChild(SourceItemT child, Cell childCell);
 
   protected abstract void clear(List<SourceItemT> items);
 
@@ -105,6 +107,24 @@ abstract class BaseProjectionalSynchronizer<SourceT, ContextT, SourceItemT> impl
 
   protected Runnable insertItem(SourceItemT item) {
     return insertItems(Arrays.asList(item));
+  }
+
+  private Registration registerChild(SourceItemT child, Cell childCell) {
+    return new CompositeRegistration(
+      CellTraits.captureTo(childCell, new CellTrait() {
+        @Override
+        public void onKeyPressed(Cell cell, KeyEvent event) {
+          if (!getSelectedItems().isEmpty() && isDeleteEvent(event)) {
+            clear(getSelectedItems());
+            scrollToSelection();
+            event.consume();
+          }
+
+          super.onKeyPressed(cell, event);
+        }
+      }),
+      doRegisterChild(child, childCell)
+    );
   }
 
   protected boolean isMultiItemPasteSupported() {

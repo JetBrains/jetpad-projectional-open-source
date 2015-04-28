@@ -64,7 +64,7 @@ class ProjectionalPropertySynchronizer<ContextT, SourceItemT extends ContextT> e
   }
 
   @Override
-  protected Registration registerChild(SourceItemT child, Cell childCell) {
+  protected Registration doRegisterChild(SourceItemT child, Cell childCell) {
     return childCell.addTrait(new DerivedCellTrait() {
       @Override
       protected CellTrait getBase(Cell cell) {
