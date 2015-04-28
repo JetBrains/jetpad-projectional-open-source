@@ -821,6 +821,17 @@ public class ProjectionalListSynchronizerTest extends EditingTestCase {
     assertTrue(container.children.get(0) instanceof NonEmptyChild);
   }
 
+  @Test
+  public void deleteDeleteEatingChild() {
+    container.children.add(new DeleteEatingChild());
+    selectChild(0);
+
+    press(KeyStrokeSpecs.SELECT_AFTER);
+    press(Key.DELETE);
+
+    assertTrue(container.children.isEmpty());
+  }
+
   private Child get(int index) {
     return container.children.get(index);
   }
@@ -917,6 +928,10 @@ public class ProjectionalListSynchronizerTest extends EditingTestCase {
 
         if (source instanceof DecoratedChild) {
           return new DecoratedChildMapper((DecoratedChild) source);
+        }
+
+        if (source instanceof DeleteEatingChild) {
+          return new DeleteEatingChildMapper((DeleteEatingChild) source);
         }
 
         return null;
@@ -1019,6 +1034,9 @@ public class ProjectionalListSynchronizerTest extends EditingTestCase {
   private class DecoratedChild extends Child {
     final Property<Boolean> before = new ValueProperty<>(false);
     final Property<Boolean> after = new ValueProperty<>(false);
+  }
+
+  private class DeleteEatingChild extends Child {
   }
 
   private class ContainerMapper extends Mapper<Container, ContainerCell> {
@@ -1176,6 +1194,27 @@ public class ProjectionalListSynchronizerTest extends EditingTestCase {
 
       conf.add(Synchronizers.forPropsOneWay(getSource().before, getTarget().before.visible()));
       conf.add(Synchronizers.forPropsOneWay(getSource().after, getTarget().after.visible()));
+    }
+  }
+
+
+  private class DeleteEatingChildMapper extends Mapper<DeleteEatingChild, TextCell> {
+    public DeleteEatingChildMapper(DeleteEatingChild source) {
+      super(source, CellFactory.label("aaaa"));
+
+      getTarget().focusable().set(true);
+
+      getTarget().addTrait(new CellTrait() {
+        @Override
+        public void onKeyPressed(Cell cell, KeyEvent event) {
+          if (event.is(Key.DELETE)) {
+            event.consume();
+            return;
+          }
+
+          super.onKeyPressed(cell, event);
+        }
+      });
     }
   }
 }
