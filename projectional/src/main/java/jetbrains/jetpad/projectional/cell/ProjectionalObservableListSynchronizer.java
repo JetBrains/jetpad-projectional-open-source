@@ -79,8 +79,7 @@ class ProjectionalObservableListSynchronizer<ContextT, SourceItemT> extends Base
         if (event.isConsumed()) return;
 
         try {
-          boolean isMultiSelection = getSelectedItems().size() > 1;
-          if (!isMultiSelection) {
+          if (getSelectedItems().isEmpty()) {
             keyPressedInChild(event);
           } else {
             if (isDeleteEvent(event)) {
