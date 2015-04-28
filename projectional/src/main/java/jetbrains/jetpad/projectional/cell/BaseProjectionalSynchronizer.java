@@ -50,7 +50,7 @@ abstract class BaseProjectionalSynchronizer<SourceT, ContextT, SourceItemT> impl
   private Mapper<? extends ContextT, ? extends Cell> myMapper;
   private Cell myTarget;
   private String myPlaceholderText;
-  private TargetViewList myTargetCellList;
+  private TargetCellList myTargetCellList;
   private Supplier<SourceItemT> myItemFactory;
   private RoleCompletion<? super ContextT, SourceItemT> myCompletion = new EmptyRoleCompletion<>();
   private DeleteHandler myDeleteHandler = DeleteHandler.EMPTY;
@@ -69,7 +69,7 @@ abstract class BaseProjectionalSynchronizer<SourceT, ContextT, SourceItemT> impl
     myMapper = mapper;
     myTarget = target;
     myTargetList = targetList;
-    myTargetCellList = new TargetViewList();
+    myTargetCellList = new TargetCellList();
     myRoleSynchronizer = createSubSynchronizer(myMapper, source, myTargetCellList, factory);
 
     mySelectionSupport = new SelectionSupport<>(new SourceList(), myTarget, myTargetList);
@@ -406,10 +406,10 @@ abstract class BaseProjectionalSynchronizer<SourceT, ContextT, SourceItemT> impl
     }
   }
 
-  private class TargetViewList extends AbstractList<Cell> {
+  private class TargetCellList extends AbstractList<Cell> {
     private boolean myHasPlaceholder;
 
-    private TargetViewList() {
+    private TargetCellList() {
     }
 
     void initList() {
