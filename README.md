@@ -23,6 +23,7 @@ its artifacts, if you want to use or participate in the development of the frame
 You can try the following online demo:
 * http://jb-proj-demo.appspot.com/ - projectional editing, hybrid editing, diagrams
 * http://mbeddr-dataflow.appspot.com/ - data flow editor demo
+* http://youtrack-workflow.appspot.com/ - prototype of editor for workflow language for youtrack bug tracker
 
 Modules:
 * cell - cells
