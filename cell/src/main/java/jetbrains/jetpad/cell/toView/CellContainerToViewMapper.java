@@ -291,6 +291,12 @@ public class CellContainerToViewMapper extends Mapper<CellContainer, View> {
     final CellContainer cellContainer = getSource();
 
     return new ViewTraitBuilder()
+      .on(ViewEvents.MOUSE_CLICKED, new ViewEventHandler<MouseEvent>() {
+        @Override
+        public void handle(View view, MouseEvent e) {
+          cellContainer.mouseClicked(e);
+        }
+      })
       .on(ViewEvents.MOUSE_PRESSED, new ViewEventHandler<MouseEvent>() {
         @Override
         public void handle(View view, MouseEvent e) {

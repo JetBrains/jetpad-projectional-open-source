@@ -103,7 +103,6 @@ public class ViewContainerComponent extends JComponent implements Scrollable {
         handleMouseEvent(e, new Handler<jetbrains.jetpad.event.MouseEvent>() {
           @Override
           public void handle(jetbrains.jetpad.event.MouseEvent e) {
-            requestFocus();
             myContainer.mouseClicked(e);
           }
         });
