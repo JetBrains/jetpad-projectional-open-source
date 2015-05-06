@@ -43,6 +43,11 @@ public abstract class DerivedCellTrait extends CellTrait {
   }
 
   @Override
+  public void onMouseClicked(Cell cell, MouseEvent event) {
+    getBase(cell).onMouseClicked(cell, event);
+  }
+
+  @Override
   public void onMousePressed(Cell cell, MouseEvent event) {
     getBase(cell).onMousePressed(cell, event);
   }

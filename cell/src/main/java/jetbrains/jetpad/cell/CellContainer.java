@@ -156,6 +156,10 @@ public class CellContainer {
     dispatch(e, CellEventSpec.KEY_TYPED);
   }
 
+  public void mouseClicked(MouseEvent e) {
+    mouseEventHappened(e, CellEventSpec.MOUSE_CLICKED);
+  }
+
   public void mousePressed(MouseEvent e) {
     mouseEventHappened(e, CellEventSpec.MOUSE_PRESSED);
   }

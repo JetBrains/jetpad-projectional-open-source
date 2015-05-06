@@ -42,6 +42,9 @@ public abstract class CellTrait {
   public void onFocusLost(Cell cell, FocusEvent event) {
   }
 
+  public void onMouseClicked(Cell cell, MouseEvent event) {
+  }
+
   public void onMousePressed(Cell cell, MouseEvent event) {
   }
 

@@ -24,6 +24,7 @@ public class CellEventSpec<EventT extends Event> {
   public static final CellEventSpec<KeyEvent> KEY_RELEASED = new CellEventSpec<>("keyReleased");
   public static final CellEventSpec<KeyEvent> KEY_TYPED = new CellEventSpec<>("keyTyped");
 
+  public static final CellEventSpec<MouseEvent> MOUSE_CLICKED = new CellEventSpec<>("mouseClicked");
   public static final CellEventSpec<MouseEvent> MOUSE_PRESSED = new CellEventSpec<>("mousePressed");
   public static final CellEventSpec<MouseEvent> MOUSE_RELEASED = new CellEventSpec<>("mouseReleased");
   public static final CellEventSpec<MouseEvent> MOUSE_MOVED = new CellEventSpec<>("mouseReleased");
@@ -52,6 +53,8 @@ public class CellEventSpec<EventT extends Event> {
       ct.onFocusGained(c, (FocusEvent) e);
     } else if (this == CellEventSpec.FOCUS_LOST) {
       ct.onFocusLost(c, (FocusEvent) e);
+    } else if (this == CellEventSpec.MOUSE_CLICKED) {
+      ct.onMouseClicked(c, (MouseEvent) e);
     } else if (this == CellEventSpec.MOUSE_PRESSED) {
       ct.onMousePressed(c, (MouseEvent) e);
     } else if (this == CellEventSpec.MOUSE_RELEASED) {
