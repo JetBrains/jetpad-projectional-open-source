@@ -94,6 +94,10 @@ public class ViewContainer {
     myPeer.boundsChanged(view, change);
   }
 
+  public void mouseClicked(MouseEvent e) {
+    dispatchMouseEvent(e, ViewEvents.MOUSE_CLICKED);
+  }
+
   public void mousePressed(MouseEvent e) {
     dispatchMouseEvent(e, ViewEvents.MOUSE_PRESSED);
   }

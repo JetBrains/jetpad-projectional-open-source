@@ -21,6 +21,7 @@ import jetbrains.jetpad.event.MouseEvent;
 import jetbrains.jetpad.event.PasteEvent;
 
 public class ViewEvents {
+  public final static ViewEventSpec<MouseEvent> MOUSE_CLICKED = new ViewEventSpec<>("mouseClicked");
   public final static ViewEventSpec<MouseEvent> MOUSE_PRESSED = new ViewEventSpec<>("mousePressed");
   public final static ViewEventSpec<MouseEvent> MOUSE_RELEASED = new ViewEventSpec<>("mouseReleased");
   public final static ViewEventSpec<MouseEvent> MOUSE_DRAGGED = new ViewEventSpec<>("mouseDragged");

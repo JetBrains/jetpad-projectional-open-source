@@ -60,7 +60,7 @@ public class DemoModel {
     svgRoot.children().add(text);
     svgRoot.children().add(path);
 
-    ellipse.addEventHandler(SvgEventSpec.MOUSE_PRESSED, new SvgEventHandler<MouseEvent>() {
+    ellipse.addEventHandler(SvgEventSpec.MOUSE_CLICKED, new SvgEventHandler<MouseEvent>() {
       @Override
       public void handle(SvgNode node, MouseEvent e) {
         DemoModel.addCircle(svgRoot, e.getX(), e.getY());
