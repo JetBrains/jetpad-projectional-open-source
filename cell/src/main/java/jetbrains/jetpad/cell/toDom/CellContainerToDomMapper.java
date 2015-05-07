@@ -455,6 +455,16 @@ public class CellContainerToDomMapper extends Mapper<CellContainer, Element> {
     final Value<Boolean> pressed = new Value<>(false);
     final Value<Boolean> pressedOutside = new Value<>(false);
 
+    reg.add(eventRegistration(Event.ONCLICK, target, new Function() {
+      @Override
+      public boolean f(Event e) {
+        MouseEvent event = toMouseEvent(e);
+        if (isDomCellEvent(event)) return true;
+        getSource().mouseClicked(event);
+        return !event.isConsumed();
+      }
+    }));
+
     reg.add(eventRegistration(Event.ONMOUSEDOWN, target, new Function() {
       @Override
       public boolean f(Event e) {
