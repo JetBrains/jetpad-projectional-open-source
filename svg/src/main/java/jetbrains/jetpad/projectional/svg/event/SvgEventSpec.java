@@ -16,6 +16,5 @@
 package jetbrains.jetpad.projectional.svg.event;
 
 public enum SvgEventSpec {
-  // MOUSE_CLICKED events don't work in batik (awt)
   MOUSE_CLICKED, MOUSE_PRESSED, MOUSE_RELEASED, MOUSE_OVER, MOUSE_MOVE, MOUSE_OUT
 }
