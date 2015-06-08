@@ -24,6 +24,7 @@ import jetbrains.jetpad.base.animation.Animations;
 import jetbrains.jetpad.event.Event;
 import jetbrains.jetpad.geometry.Rectangle;
 import jetbrains.jetpad.geometry.Vector;
+import jetbrains.jetpad.model.collections.CollectionAdapter;
 import jetbrains.jetpad.model.collections.CollectionItemEvent;
 import jetbrains.jetpad.model.collections.CollectionListener;
 import jetbrains.jetpad.model.collections.list.ObservableArrayList;
@@ -809,55 +810,63 @@ public abstract class View implements NavComposite<View>, HasFocusability, HasVi
   }
 
   private class ChildList extends ObservableArrayList<View> {
-    @Override
-    public void add(final int index, final View item) {
-      invalidate();
+    public ChildList() {
+      addListener(new CollectionAdapter<View>() {
+        @Override
+        public void onItemAdded(CollectionItemEvent<? extends View> event) {
+          //todo event can be reused
+          final CollectionItemEvent<View> eventCopy = new CollectionItemEvent<>(event.getItem(), event.getIndex(), true);
+          fire(new ListenerCaller<ViewListener>() {
+            @Override
+            public void call(ViewListener l) {
+              l.onChildAdded(eventCopy);
+            }
+          });
+        }
 
+        @Override
+        public void onItemRemoved(CollectionItemEvent<? extends View> event) {
+          //todo event can be reused
+          final CollectionItemEvent<View> eventCopy = new CollectionItemEvent<>(event.getItem(), event.getIndex(), false);
+          fire(new ListenerCaller<ViewListener>() {
+            @Override
+            public void call(ViewListener l) {
+              l.onChildRemoved(eventCopy);
+            }
+          });
+          invalidate();
+        }
+      });
+    }
+
+    @Override
+    protected void beforeItemAdded(int index, View item) {
+      invalidate();
       item.myParent = View.this;
       if (isAttached()) {
         item.attach(myContainer);
       }
-
       item.fire(new ListenerCaller<ViewListener>() {
         @Override
         public void call(ViewListener l) {
           l.onParentChanged(new PropertyChangeEvent<>(null, View.this));
         }
       });
-      super.add(index, item);
-      fire(new ListenerCaller<ViewListener>() {
-        @Override
-        public void call(ViewListener l) {
-          l.onChildAdded(new CollectionItemEvent<>(item, index, true));
-        }
-      });
     }
 
     @Override
-    public View remove(final int index) {
-      final View item = get(index);
-
+    protected void beforeItemRemoved(int index, View item) {
       if (isAttached()) {
         item.detach();
       }
       final View oldParent = item.myParent;
       item.myParent = null;
-
       item.fire(new ListenerCaller<ViewListener>() {
         @Override
         public void call(ViewListener l) {
           l.onParentChanged(new PropertyChangeEvent<>(oldParent, null));
         }
       });
-      View result = super.remove(index);
-      fire(new ListenerCaller<ViewListener>() {
-        @Override
-        public void call(ViewListener l) {
-          l.onChildRemoved(new CollectionItemEvent<>(item, index, false));
-        }
-      });
-      invalidate();
-      return result;
     }
   }
 

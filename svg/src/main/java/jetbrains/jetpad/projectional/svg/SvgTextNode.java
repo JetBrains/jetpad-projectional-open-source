@@ -23,12 +23,12 @@ import jetbrains.jetpad.model.property.ValueProperty;
 public class SvgTextNode extends SvgNode {
   private static final ObservableList<SvgNode> NO_CHILDREN_LIST = new ObservableArrayList<SvgNode>() {
     @Override
-    public void add(int index, SvgNode item) {
+    protected void checkAdd(int index, SvgNode item) {
       throw new UnsupportedOperationException("Cannot add children to SvgTextNode");
     }
 
     @Override
-    public SvgNode remove(int index) {
+    protected void checkRemove(int index, SvgNode item) {
       throw new UnsupportedOperationException("Cannot remove children from SvgTextNode");
     }
   };
