@@ -72,19 +72,20 @@ public abstract class SvgNode extends HasParent<SvgNode, SvgNode> {
     }
 
     @Override
-    protected void beforeItemAdded(int index, SvgNode node) {
+    public void add(final int index, final SvgNode node) {
       if (isAttached()) {
         node.attach(container());
       }
-      super.beforeItemAdded(index, node);
+      super.add(index, node);
     }
 
     @Override
-    protected void beforeItemRemoved(int index, SvgNode node) {
+    public SvgNode remove(final int index) {
+      final SvgNode node = get(index);
       if (isAttached()) {
         node.detach();
       }
-      super.beforeItemRemoved(index, node);
+      return super.remove(index);
     }
   }
 }

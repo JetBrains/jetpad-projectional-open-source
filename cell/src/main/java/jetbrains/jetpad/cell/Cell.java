@@ -29,7 +29,6 @@ import jetbrains.jetpad.event.Event;
 import jetbrains.jetpad.event.KeyEvent;
 import jetbrains.jetpad.geometry.Rectangle;
 import jetbrains.jetpad.geometry.Vector;
-import jetbrains.jetpad.model.collections.CollectionAdapter;
 import jetbrains.jetpad.model.collections.CollectionItemEvent;
 import jetbrains.jetpad.model.collections.CollectionListener;
 import jetbrains.jetpad.model.collections.list.ObservableArrayList;
@@ -728,64 +727,18 @@ public abstract class Cell implements NavComposite<Cell>, HasVisibility, HasFocu
   }
 
   private class ChildList extends ObservableArrayList<Cell> {
-    public ChildList() {
-      addListener(new CollectionAdapter<Cell>() {
-        @Override
-        public void onItemAdded(CollectionItemEvent<? extends Cell> event) {
-          //todo event can be reused
-          final CollectionItemEvent<Cell> eventCopy = new CollectionItemEvent<>(event.getItem(), event.getIndex(), true);
-          if (isAttached()) {
-            eventCopy.getItem().attach(myContainer);
-          }
-          onChildAdded(eventCopy);
-          if (myContainer != null) {
-            myContainer.cellChildAdded(Cell.this, eventCopy);
-          }
-          if (myListeners != null) {
-            myListeners.fire(new ListenerCaller<CellListener>() {
-              @Override
-              public void call(CellListener l) {
-                l.onChildAdded(eventCopy);
-              }
-            });
-          }
-        }
-
-        @Override
-        public void onItemRemoved(CollectionItemEvent<? extends Cell> event) {
-          //todo event can be reused
-          final CollectionItemEvent<Cell> eventCopy = new CollectionItemEvent<>(event.getItem(), event.getIndex(), false);
-          if (isAttached()) {
-            eventCopy.getItem().detach();
-          }
-          onChildRemoved(eventCopy);
-          if (myContainer != null) {
-            myContainer.cellChildRemoved(Cell.this, eventCopy);
-          }
-          if (myListeners != null) {
-            myListeners.fire(new ListenerCaller<CellListener>() {
-              @Override
-              public void call(CellListener l) {
-                l.onChildRemoved(eventCopy);
-              }
-            });
-          }
-        }
-      });
-    }
-
     @Override
-    protected void checkAdd(int index, Cell item) {
-      super.checkAdd(index, item);
+    public void add(final int index, final Cell item) {
       if (item.getParent() != null) {
         throw new IllegalStateException();
       }
-    }
 
-    @Override
-    protected void beforeItemAdded(int index, Cell item) {
-      onBeforeChildAdded(new CollectionItemEvent<>(item, index, true));
+      final CollectionItemEvent<Cell> event = new CollectionItemEvent<>(item, index, true);
+
+      onBeforeChildAdded(event);
+
       item.changeParent(Cell.this);
+
       Cell prev = index == 0 ? null : get(index - 1);
       Cell next = index == size() ? null : get(index);
       if (prev != null) {
@@ -796,15 +749,42 @@ public abstract class Cell implements NavComposite<Cell>, HasVisibility, HasFocu
       }
       item.myNext = next;
       item.myPrev = prev;
+
+      super.add(index, item);
+
+      if (isAttached()) {
+        item.attach(myContainer);
+      }
+
+      onChildAdded(event);
+
+      if (myContainer != null) {
+        myContainer.cellChildAdded(Cell.this, event);
+      }
+
+      if (myListeners != null) {
+        myListeners.fire(new ListenerCaller<CellListener>() {
+          @Override
+          public void call(CellListener l) {
+            l.onChildAdded(event);
+          }
+        });
+      }
     }
 
     @Override
-    protected void beforeItemRemoved(int index, Cell item) {
+    public Cell remove(final int index) {
+      final Cell item = get(index);
+      final CollectionItemEvent<Cell> event = new CollectionItemEvent<>(item, index, false);
+
       if (isAttached() && myContainer.focusedCell.get() != null && Composites.isDescendant(item, myContainer.focusedCell.get())) {
         myContainer.focusedCell.set(null);
       }
-      onBeforeChildRemoved(new CollectionItemEvent<>(item, index, false));
+
+      onBeforeChildRemoved(event);
+
       item.changeParent(null);
+
       Cell next = item.myNext;
       Cell prev = item.myPrev;
       if (next != null) {
@@ -815,6 +795,29 @@ public abstract class Cell implements NavComposite<Cell>, HasVisibility, HasFocu
       }
       item.myNext = null;
       item.myPrev = null;
+
+      Cell result = super.remove(index);
+
+      if (isAttached()) {
+        item.detach();
+      }
+
+      onChildRemoved(event);
+
+      if (myContainer != null) {
+        myContainer.cellChildRemoved(Cell.this, event);
+      }
+
+      if (myListeners != null) {
+        myListeners.fire(new ListenerCaller<CellListener>() {
+          @Override
+          public void call(CellListener l) {
+            l.onChildRemoved(event);
+          }
+        });
+      }
+
+      return result;
     }
   }
 
