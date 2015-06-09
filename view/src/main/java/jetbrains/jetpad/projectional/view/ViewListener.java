@@ -42,8 +42,8 @@ interface ViewListener {
    */
   void onToRootDeltaChanged(PropertyChangeEvent<Vector> change);
 
-  void onChildAdded(CollectionItemEvent<View> event);
-  void onChildRemoved(CollectionItemEvent<View> event);
+  void onChildAdded(CollectionItemEvent<? extends View> event);
+  void onChildRemoved(CollectionItemEvent<? extends View> event);
 
   void onParentChanged(PropertyChangeEvent<View> event);
 }

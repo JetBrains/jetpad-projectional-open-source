@@ -813,25 +813,21 @@ public abstract class View implements NavComposite<View>, HasFocusability, HasVi
     public ChildList() {
       addListener(new CollectionAdapter<View>() {
         @Override
-        public void onItemAdded(CollectionItemEvent<? extends View> event) {
-          //todo event can be reused
-          final CollectionItemEvent<View> eventCopy = new CollectionItemEvent<View>(event.getItem(), event.getIndex(), true);
+        public void onItemAdded(final CollectionItemEvent<? extends View> event) {
           fire(new ListenerCaller<ViewListener>() {
             @Override
             public void call(ViewListener l) {
-              l.onChildAdded(eventCopy);
+              l.onChildAdded(event);
             }
           });
         }
 
         @Override
-        public void onItemRemoved(CollectionItemEvent<? extends View> event) {
-          //todo event can be reused
-          final CollectionItemEvent<View> eventCopy = new CollectionItemEvent<View>(event.getItem(), event.getIndex(), false);
+        public void onItemRemoved(final CollectionItemEvent<? extends View> event) {
           fire(new ListenerCaller<ViewListener>() {
             @Override
             public void call(ViewListener l) {
-              l.onChildRemoved(eventCopy);
+              l.onChildRemoved(event);
             }
           });
           invalidate();
@@ -921,12 +917,12 @@ public abstract class View implements NavComposite<View>, HasFocusability, HasVi
     public Registration addListener(final CollectionListener<View> l) {
       return View.this.addListener(new ViewAdapter() {
         @Override
-        public void onChildAdded(CollectionItemEvent<View> event) {
+        public void onChildAdded(CollectionItemEvent<? extends View> event) {
           l.onItemAdded(event);
         }
 
         @Override
-        public void onChildRemoved(CollectionItemEvent<View> event) {
+        public void onChildRemoved(CollectionItemEvent<? extends View> event) {
           l.onItemRemoved(event);
         }
       });

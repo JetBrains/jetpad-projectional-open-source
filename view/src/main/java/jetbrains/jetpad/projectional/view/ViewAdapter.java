@@ -54,11 +54,11 @@ class ViewAdapter implements ViewListener {
   }
 
   @Override
-  public void onChildAdded(CollectionItemEvent<View> event) {
+  public void onChildAdded(CollectionItemEvent<? extends View> event) {
   }
 
   @Override
-  public void onChildRemoved(CollectionItemEvent<View> event) {
+  public void onChildRemoved(CollectionItemEvent<? extends View> event) {
   }
 
   @Override
