@@ -20,8 +20,8 @@ import jetbrains.jetpad.model.property.PropertyChangeEvent;
 
 public interface CellListener {
   void onPropertyChanged(CellPropertySpec<?> prop, PropertyChangeEvent<?> event);
-  void onChildAdded(CollectionItemEvent<Cell> event);
-  void onChildRemoved(CollectionItemEvent<Cell> event);
+  void onChildAdded(CollectionItemEvent<? extends Cell> event);
+  void onChildRemoved(CollectionItemEvent<? extends Cell> event);
   void onParentChanged(PropertyChangeEvent<Cell> event);
 
   void onAttach(CellContainer container);

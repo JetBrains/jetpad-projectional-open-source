@@ -32,10 +32,10 @@ public class CellContainerAdapter implements CellContainerListener {
   }
 
   @Override
-  public void onChildAdded(Cell parent, CollectionItemEvent<Cell> change) {
+  public void onChildAdded(Cell parent, CollectionItemEvent<? extends Cell> change) {
   }
 
   @Override
-  public void onChildRemoved(Cell parent, CollectionItemEvent<Cell> change) {
+  public void onChildRemoved(Cell parent, CollectionItemEvent<? extends Cell> change) {
   }
 }

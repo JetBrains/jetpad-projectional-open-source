@@ -24,11 +24,11 @@ public class CellAdapter implements CellListener {
   }
 
   @Override
-  public void onChildAdded(CollectionItemEvent<Cell> event) {
+  public void onChildAdded(CollectionItemEvent<? extends Cell> event) {
   }
 
   @Override
-  public void onChildRemoved(CollectionItemEvent<Cell> event) {
+  public void onChildRemoved(CollectionItemEvent<? extends Cell> event) {
   }
 
   @Override

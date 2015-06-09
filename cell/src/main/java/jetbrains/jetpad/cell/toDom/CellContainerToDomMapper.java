@@ -282,7 +282,7 @@ public class CellContainerToDomMapper extends Mapper<CellContainer, Element> {
           }
 
           @Override
-          public void onChildAdded(Cell parent, CollectionItemEvent<Cell> change) {
+          public void onChildAdded(Cell parent, CollectionItemEvent<? extends Cell> change) {
             BaseCellMapper<?> mapper = (BaseCellMapper<?>) rootMapper().getDescendantMapper(parent);
             if (mapper == null) return;
             mapper.childAdded(change);
@@ -291,7 +291,7 @@ public class CellContainerToDomMapper extends Mapper<CellContainer, Element> {
           }
 
           @Override
-          public void onChildRemoved(Cell parent, CollectionItemEvent<Cell> change) {
+          public void onChildRemoved(Cell parent, CollectionItemEvent<? extends Cell> change) {
             BaseCellMapper<?> mapper = (BaseCellMapper<?>) rootMapper().getDescendantMapper(parent);
             if (mapper == null) return;
             mapper.childRemoved(change);

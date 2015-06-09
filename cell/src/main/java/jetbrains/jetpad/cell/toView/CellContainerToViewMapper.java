@@ -421,7 +421,7 @@ public class CellContainerToViewMapper extends Mapper<CellContainer, View> {
       }
 
       @Override
-      public void onChildAdded(Cell parent, CollectionItemEvent<Cell> change) {
+      public void onChildAdded(Cell parent, CollectionItemEvent<? extends Cell> change) {
         BaseCellMapper<?, ?> parentMapper = (BaseCellMapper<?, ?>) rootMapper().getDescendantMapper(parent);
         if (parentMapper == null) return;
 
@@ -431,7 +431,7 @@ public class CellContainerToViewMapper extends Mapper<CellContainer, View> {
       }
 
       @Override
-      public void onChildRemoved(Cell parent, CollectionItemEvent<Cell> change) {
+      public void onChildRemoved(Cell parent, CollectionItemEvent<? extends Cell> change) {
         BaseCellMapper<?, ?> parentMapper = (BaseCellMapper<?, ?>) rootMapper().getDescendantMapper(parent);
         if (parentMapper == null) return;
 

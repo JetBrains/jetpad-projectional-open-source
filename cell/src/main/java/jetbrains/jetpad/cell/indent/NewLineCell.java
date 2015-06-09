@@ -21,7 +21,7 @@ import jetbrains.jetpad.model.collections.CollectionItemEvent;
 public class NewLineCell extends IndentCell {
 
   @Override
-  protected void onChildAdded(CollectionItemEvent<Cell> event) {
+  protected void onChildAdded(CollectionItemEvent<? extends Cell> event) {
     throw new IllegalStateException("You shouldn't add anything to new line cells");
   }
 }

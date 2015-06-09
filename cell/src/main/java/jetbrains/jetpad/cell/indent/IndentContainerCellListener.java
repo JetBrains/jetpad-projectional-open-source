@@ -21,7 +21,7 @@ import jetbrains.jetpad.cell.Cell;
 import jetbrains.jetpad.cell.CellPropertySpec;
 
 public interface IndentContainerCellListener {
-  void childAdded(CollectionItemEvent<Cell> event);
-  void childRemoved(CollectionItemEvent<Cell> event);
+  void childAdded(CollectionItemEvent<? extends Cell> event);
+  void childRemoved(CollectionItemEvent<? extends Cell> event);
   void propertyChanged(Cell cell, CellPropertySpec<?> prop, PropertyChangeEvent<?> event);
 }

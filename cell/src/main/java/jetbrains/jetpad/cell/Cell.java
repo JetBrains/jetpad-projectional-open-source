@@ -698,13 +698,13 @@ public abstract class Cell implements NavComposite<Cell>, HasVisibility, HasFocu
   protected void onBeforeChildAdded(CollectionItemEvent<Cell> event) {
   }
 
-  protected void onChildAdded(CollectionItemEvent<Cell> event) {
+  protected void onChildAdded(CollectionItemEvent<? extends Cell> event) {
   }
 
   protected void onBeforeChildRemoved(CollectionItemEvent<Cell> event) {
   }
 
-  protected void onChildRemoved(CollectionItemEvent<Cell> event) {
+  protected void onChildRemoved(CollectionItemEvent<? extends Cell> event) {
   }
 
   public <ValueT> Registration set(final CellTraitPropertySpec<ValueT> spec, final ValueT value) {
@@ -731,42 +731,38 @@ public abstract class Cell implements NavComposite<Cell>, HasVisibility, HasFocu
     public ChildList() {
       addListener(new CollectionAdapter<Cell>() {
         @Override
-        public void onItemAdded(CollectionItemEvent<? extends Cell> event) {
-          //todo event can be reused
-          final CollectionItemEvent<Cell> eventCopy = new CollectionItemEvent<Cell>(event.getItem(), event.getIndex(), true);
+        public void onItemAdded(final CollectionItemEvent<? extends Cell> event) {
           if (isAttached()) {
-            eventCopy.getItem().attach(myContainer);
+            ((Cell) event.getItem()).attach(myContainer);
           }
-          onChildAdded(eventCopy);
+          onChildAdded(event);
           if (myContainer != null) {
-            myContainer.cellChildAdded(Cell.this, eventCopy);
+            myContainer.cellChildAdded(Cell.this, event);
           }
           if (myListeners != null) {
             myListeners.fire(new ListenerCaller<CellListener>() {
               @Override
               public void call(CellListener l) {
-                l.onChildAdded(eventCopy);
+                l.onChildAdded(event);
               }
             });
           }
         }
 
         @Override
-        public void onItemRemoved(CollectionItemEvent<? extends Cell> event) {
-          //todo event can be reused
-          final CollectionItemEvent<Cell> eventCopy = new CollectionItemEvent<Cell>(event.getItem(), event.getIndex(), false);
+        public void onItemRemoved(final CollectionItemEvent<? extends Cell> event) {
           if (isAttached()) {
-            eventCopy.getItem().detach();
+            ((Cell) event.getItem()).detach();
           }
-          onChildRemoved(eventCopy);
+          onChildRemoved(event);
           if (myContainer != null) {
-            myContainer.cellChildRemoved(Cell.this, eventCopy);
+            myContainer.cellChildRemoved(Cell.this, event);
           }
           if (myListeners != null) {
             myListeners.fire(new ListenerCaller<CellListener>() {
               @Override
               public void call(CellListener l) {
-                l.onChildRemoved(eventCopy);
+                l.onChildRemoved(event);
               }
             });
           }
@@ -869,12 +865,12 @@ public abstract class Cell implements NavComposite<Cell>, HasVisibility, HasFocu
     public Registration addListener(final CollectionListener<Cell> l) {
       return Cell.this.addListener(new CellAdapter() {
         @Override
-        public void onChildAdded(CollectionItemEvent<Cell> event) {
+        public void onChildAdded(CollectionItemEvent<? extends Cell> event) {
           l.onItemAdded(event);
         }
 
         @Override
-        public void onChildRemoved(CollectionItemEvent<Cell> event) {
+        public void onChildRemoved(CollectionItemEvent<? extends Cell> event) {
           l.onItemRemoved(event);
         }
       });

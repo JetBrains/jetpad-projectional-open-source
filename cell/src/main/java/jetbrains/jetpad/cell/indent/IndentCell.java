@@ -77,7 +77,7 @@ public class IndentCell extends Cell {
   }
 
   @Override
-  protected void onChildAdded(CollectionItemEvent<Cell> event) {
+  protected void onChildAdded(CollectionItemEvent<? extends Cell> event) {
     super.onChildAdded(event);
 
     IndentCell container = indentContainer();
@@ -96,7 +96,7 @@ public class IndentCell extends Cell {
     container.handleChildRemove(event);
   }
 
-  void handleChildAdd(final CollectionItemEvent<Cell> event) {
+  void handleChildAdd(final CollectionItemEvent<? extends Cell> event) {
     checkRootIndent();
 
     if (myListeners == null) return;

@@ -16,7 +16,6 @@
 package jetbrains.jetpad.cell;
 
 import com.google.common.base.Objects;
-import jetbrains.jetpad.base.JsDebug;
 import jetbrains.jetpad.base.Registration;
 import jetbrains.jetpad.base.edt.EventDispatchThread;
 import jetbrains.jetpad.cell.event.CellEventSpec;
@@ -26,7 +25,6 @@ import jetbrains.jetpad.event.*;
 import jetbrains.jetpad.geometry.Rectangle;
 import jetbrains.jetpad.geometry.Vector;
 import jetbrains.jetpad.model.collections.CollectionItemEvent;
-import jetbrains.jetpad.model.event.EventHandler;
 import jetbrains.jetpad.model.event.ListenerCaller;
 import jetbrains.jetpad.model.event.Listeners;
 import jetbrains.jetpad.model.property.Property;
@@ -347,7 +345,7 @@ public class CellContainer {
     });
   }
 
-  void cellChildAdded(final Cell cell, final CollectionItemEvent<Cell> change) {
+  void cellChildAdded(final Cell cell, final CollectionItemEvent<? extends Cell> change) {
     myListeners.fire(new ListenerCaller<CellContainerListener>() {
       @Override
       public void call(CellContainerListener l) {
@@ -356,7 +354,7 @@ public class CellContainer {
     });
   }
 
-  void cellChildRemoved(final Cell cell, final CollectionItemEvent<Cell> change) {
+  void cellChildRemoved(final Cell cell, final CollectionItemEvent<? extends Cell> change) {
     myListeners.fire(new ListenerCaller<CellContainerListener>() {
       @Override
       public void call(CellContainerListener l) {
