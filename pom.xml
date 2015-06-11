@@ -42,6 +42,21 @@
   </modules>
 
   <build>
+    <resources>
+      <resource>
+        <directory>src/main/java</directory>
+        <includes>
+          <include>**/*.java</include>
+          <include>**/*.gwt.xml</include>
+          <include>**/*.ui.xml</include>
+          <include>**/*.css</include>
+        </includes>
+      </resource>
+      <resource>
+        <directory>src/main/resources</directory>
+      </resource>
+    </resources>
+
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -56,25 +71,6 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
-      </plugin>
-
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>gwt-maven-plugin</artifactId>
-        <configuration>
-          <htmlunit>FF3</htmlunit>
-          <mode>htmlunit</mode>
-          <extraJvmArgs>-Xmx1024M -Xss1024k -Drun.gwt.tests=true</extraJvmArgs>
-          <testTimeOut>180</testTimeOut>
-        </configuration>
-        <executions>
-          <execution>
-            <goals>
-              <goal>compile</goal>
-              <goal>resources</goal>
-            </goals>
-          </execution>
-        </executions>
       </plugin>
 
       <plugin>

@@ -41,6 +41,10 @@
       <artifactId>gwt-user</artifactId>
     </dependency>
     <dependency>
+      <groupId>com.google.guava</groupId>
+      <artifactId>guava-gwt</artifactId>
+    </dependency>
+    <dependency>
       <groupId>org.apache.xmlgraphics</groupId>
       <artifactId>batik-swing</artifactId>
       <version>1.7</version>
