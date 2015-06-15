@@ -173,7 +173,7 @@ public class CellContainerToViewMapper extends Mapper<CellContainer, View> {
             IndentCell indentCell = (IndentCell) cell;
             return Cells.indentBounds(indentCell);
           } else {
-            throw new IllegalStateException();
+            throw new IllegalStateException("Can't find a mapper for " + cell);
           }
         }
         return descendantMapper.getTarget().bounds().get();

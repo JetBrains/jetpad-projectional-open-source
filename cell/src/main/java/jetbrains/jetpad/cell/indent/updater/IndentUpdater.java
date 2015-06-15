@@ -325,7 +325,9 @@ public class IndentUpdater<TargetT> {
       if (current == null) {
         throw new IllegalStateException("Can't find a root indent container for " + source);
       }
-      if (!current.get(Cell.VISIBLE) && current != myJustBecameInvisible) return false;
+      if (!current.get(Cell.VISIBLE) && current != myJustBecameInvisible) {
+        return false;
+      }
       current = current.getParent();
     }
     return true;
