@@ -73,10 +73,10 @@ public class Scrolling {
       if ("scroll".equals(overflow) || "auto".equals(overflow)) {
         int scrollTop = parent.getScrollTop();
         int parentTop = parent.getAbsoluteTop();
-        int parentHeight = parent.getOffsetHeight();
+        int parentHeight = parent.getClientHeight();
         int scrollLeft = parent.getScrollLeft();
         int parentLeft = parent.getAbsoluteLeft();
-        int parentWidth = parent.getOffsetWidth();
+        int parentWidth = parent.getClientWidth();
 
         int deltaX = getScrollAdjustment(new Interval(parentLeft, parentLeft + parentWidth), new Interval(left, left + width), scrollLeft);
         if (deltaX != 0) {
@@ -112,10 +112,6 @@ public class Scrolling {
     }
     return 0;
   }
-
-  private static native void log(String text) /*-{
-    $wnd.console.log(text);
-  }-*/;
 
   private static native int getScrollX() /*-{
     return $wnd.pageXOffset;
