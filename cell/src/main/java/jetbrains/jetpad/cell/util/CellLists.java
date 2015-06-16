@@ -69,36 +69,4 @@ public class CellLists {
       }
     };
   }
-
-  public static List<Cell> animated(final List<Cell> baseList, final Function<Cell, Animation> add, final Function<Cell, Animation> remove) {
-    return new AnimatedList<Cell>(baseList) {
-      @Override
-      public Animation addAnimation(Cell e) {
-        return add.apply(e);
-      }
-
-      @Override
-      public Animation removeAnimation(Cell e) {
-        return remove.apply(e);
-      }
-    };
-  }
-
-  public static List<Cell> animated(List<Cell> baseList) {
-    return animated(baseList, new Function<Cell, Animation>() {
-      @Override
-      public Animation apply(Cell input) {
-        return input.fadeIn(300);
-      }
-    }, new Function<Cell, Animation>() {
-      @Override
-      public Animation apply(Cell input) {
-        return input.fadeOut(300);
-      }
-    });
-  }
-
-  public static List<Cell> animated(Cell cell) {
-    return animated(cell.children());
-  }
 }

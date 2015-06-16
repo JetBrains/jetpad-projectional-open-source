@@ -768,47 +768,6 @@ public abstract class View implements NavComposite<View>, HasFocusability, HasVi
     return result;
   }
 
-  public Animation fadeIn(final int duration) {
-    return animate(new Function<ViewContainerPeer, Animation>() {
-      @Override
-      public Animation apply(ViewContainerPeer input) {
-        return input.fadeIn(View.this, duration);
-      }
-    });
-  }
-
-  public Animation fadeOut(final int duration) {
-    return animate(new Function<ViewContainerPeer, Animation>() {
-      @Override
-      public Animation apply(ViewContainerPeer input) {
-        return input.fadeOut(View.this, duration);
-      }
-    });
-  }
-
-  public Animation hideSlide(final int duration) {
-    return animate(new Function<ViewContainerPeer, Animation>() {
-      @Override
-      public Animation apply(ViewContainerPeer input) {
-        return input.hideSlide(View.this, duration);
-      }
-    });
-  }
-
-  public Animation showSlide(final int duration) {
-    return animate(new Function<ViewContainerPeer, Animation>() {
-      @Override
-      public Animation apply(ViewContainerPeer input) {
-        return input.showSlide(View.this, duration);
-      }
-    });
-  }
-
-  private Animation animate(Function<ViewContainerPeer, Animation> provider) {
-    if (container() == null) return Animations.finishedAnimation();
-    return provider.apply(container().peer());
-  }
-
   private class ChildList extends ObservableArrayList<View> {
     public ChildList() {
       addListener(new CollectionAdapter<View>() {

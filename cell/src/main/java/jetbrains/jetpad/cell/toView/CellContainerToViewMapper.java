@@ -233,52 +233,6 @@ public class CellContainerToViewMapper extends Mapper<CellContainer, View> {
         if (mapper == null) return null;
         return (View) mapper.getTarget();
       }
-
-      @Override
-      public Animation fadeIn(Cell cell, final int duration) {
-        return animate(cell, new Function<View, Animation>() {
-          @Override
-          public Animation apply(View view) {
-            return view.fadeIn(duration);
-          }
-        });
-      }
-
-      @Override
-      public Animation fadeOut(Cell cell, final int duration) {
-        return animate(cell, new Function<View, Animation>() {
-          @Override
-          public Animation apply(View view) {
-            return view.fadeOut(duration);
-          }
-        });
-      }
-
-      @Override
-      public Animation showSlide(Cell cell, final int duration) {
-        return animate(cell, new Function<View, Animation>() {
-          @Override
-          public Animation apply(View view) {
-            return view.showSlide(duration);
-          }
-        });
-      }
-
-      @Override
-      public Animation hideSlide(Cell cell, final int duration) {
-        return animate(cell, new Function<View, Animation>() {
-          @Override
-          public Animation apply(View view) {
-            return view.hideSlide(duration);
-          }
-        });
-      }
-
-      private Animation animate(Cell cell, Function<View, Animation> provider) {
-        View view = getViewFor(cell);
-        if (view == null) return Animations.finishedAnimation();
-        return provider.apply(view);
-      }
     };
   }
 

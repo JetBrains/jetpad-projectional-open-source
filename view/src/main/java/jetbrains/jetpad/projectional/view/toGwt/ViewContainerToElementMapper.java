@@ -402,26 +402,6 @@ public class ViewContainerToElementMapper extends Mapper<ViewContainer, Element>
       public EventDispatchThread getEdt() {
         return JsEventDispatchThread.INSTANCE;
       }
-
-      @Override
-      public Animation fadeIn(View view, int duration) {
-        return DomAnimations.fadeIn((Element) getMappedTo(view), duration);
-      }
-
-      @Override
-      public Animation fadeOut(View view, int duration) {
-        return DomAnimations.fadeOut((Element) getMappedTo(view), duration);
-      }
-
-      @Override
-      public Animation showSlide(View view, int duration) {
-        return DomAnimations.showSlide((Element) getMappedTo(view), duration);
-      }
-
-      @Override
-      public Animation hideSlide(View view, int duration) {
-        return DomAnimations.hideSlide((Element) getMappedTo(view), duration);
-      }
     });
   }
 

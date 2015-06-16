@@ -424,26 +424,6 @@ public class CellContainerToDomMapper extends Mapper<CellContainer, Element> {
       public EventDispatchThread getEdt() {
         return JsEventDispatchThread.INSTANCE;
       }
-
-      @Override
-      public Animation fadeIn(final Cell cell, final int duration) {
-        return DomAnimations.fadeIn(getMapper(cell).getTarget(), duration);
-      }
-
-      @Override
-      public Animation fadeOut(final Cell cell, final int duration) {
-        return DomAnimations.fadeOut(getMapper(cell).getTarget(), duration);
-      }
-
-      @Override
-      public Animation showSlide(Cell cell, int duration) {
-        return DomAnimations.showSlide(getMapper(cell).getTarget(), duration);
-      }
-
-      @Override
-      public Animation hideSlide(Cell cell, int duration) {
-        return DomAnimations.hideSlide(getMapper(cell).getTarget(), duration);
-      }
     };
   }
 

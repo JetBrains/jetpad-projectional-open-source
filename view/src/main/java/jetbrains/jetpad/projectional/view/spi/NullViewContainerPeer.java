@@ -88,24 +88,4 @@ public class NullViewContainerPeer implements ViewContainerPeer {
   public EventDispatchThread getEdt() {
     return new NullEventDispatchThread();
   }
-
-  @Override
-  public Animation fadeIn(View view, int duration) {
-    return Animations.finishedAnimation();
-  }
-
-  @Override
-  public Animation fadeOut(View view, int duration) {
-    return Animations.finishedAnimation();
-  }
-
-  @Override
-  public Animation showSlide(View view, int duration) {
-    return Animations.finishedAnimation();
-  }
-
-  @Override
-  public Animation hideSlide(View view, int duration) {
-    return Animations.finishedAnimation();
-  }
 }

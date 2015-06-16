@@ -70,26 +70,6 @@ public interface CellContainerPeer {
     public EventDispatchThread getEdt() {
       return new NullEventDispatchThread();
     }
-
-    @Override
-    public Animation fadeIn(Cell cell, int duration) {
-      return Animations.finishedAnimation();
-    }
-
-    @Override
-    public Animation fadeOut(Cell cell, int duration) {
-      return Animations.finishedAnimation();
-    }
-
-    @Override
-    public Animation showSlide(Cell cell, int duration) {
-      return Animations.finishedAnimation();
-    }
-
-    @Override
-    public Animation hideSlide(Cell cell, int duration) {
-      return Animations.finishedAnimation();
-    }
   };
 
 
@@ -105,9 +85,4 @@ public interface CellContainerPeer {
   void requestFocus();
 
   EventDispatchThread getEdt();
-
-  Animation fadeIn(Cell cell, int duration);
-  Animation fadeOut(Cell cell, int duration);
-  Animation showSlide(Cell cell, int duration);
-  Animation hideSlide(Cell cell, int duration);
 }

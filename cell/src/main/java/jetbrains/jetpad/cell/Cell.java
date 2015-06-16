@@ -178,47 +178,6 @@ public abstract class Cell implements NavComposite<Cell>, HasVisibility, HasFocu
     return getProp(HAS_WARNING);
   }
 
-  public Animation fadeIn(final int duration) {
-    return animate(new Function<CellContainerPeer, Animation>() {
-      @Override
-      public Animation apply(CellContainerPeer peer) {
-        return peer.fadeIn(Cell.this, duration);
-      }
-    });
-  }
-
-  public Animation fadeOut(final int duration) {
-    return animate(new Function<CellContainerPeer, Animation>() {
-      @Override
-      public Animation apply(CellContainerPeer peer) {
-        return peer.fadeOut(Cell.this, duration);
-      }
-    });
-  }
-
-  public Animation showSlide(final int duration) {
-    return animate(new Function<CellContainerPeer, Animation>() {
-      @Override
-      public Animation apply(CellContainerPeer peer) {
-        return peer.showSlide(Cell.this, duration);
-      }
-    });
-  }
-
-  public Animation hideSlide(final int duration) {
-    return animate(new Function<CellContainerPeer, Animation>() {
-      @Override
-      public Animation apply(CellContainerPeer peer) {
-        return peer.hideSlide(Cell.this, duration);
-      }
-    });
-  }
-
-  private Animation animate(Function<CellContainerPeer, Animation> provider) {
-    if (cellContainer().get() == null) return Animations.finishedAnimation();
-    return provider.apply(getPeer());
-  }
-
   public <EventT extends Event> void dispatch(EventT e, CellEventSpec<EventT> spec) {
     dispatchStep(e, spec);
     if (e.isConsumed()) return;
