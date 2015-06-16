@@ -29,6 +29,7 @@ import com.google.gwt.query.client.GQuery;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Window;
+import jetbrains.jetpad.base.JsDebug;
 import jetbrains.jetpad.base.Registration;
 import jetbrains.jetpad.base.Handler;
 import jetbrains.jetpad.base.Value;
@@ -234,6 +235,7 @@ public class CellContainerToDomMapper extends Mapper<CellContainer, Element> {
         style.setTop(currentTop - rootTop + deltaTop, Style.Unit.PX);
         style.setHeight(currentElement.getClientHeight(), Style.Unit.PX);
         if (e == myLineHighlight2) {
+          style.setWidth(0, Style.Unit.PX);
           style.setWidth(getTarget().getScrollWidth(), Style.Unit.PX);
         }
       }
