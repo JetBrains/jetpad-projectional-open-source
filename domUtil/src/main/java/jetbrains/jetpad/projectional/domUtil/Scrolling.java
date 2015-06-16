@@ -24,10 +24,8 @@ import static com.google.gwt.query.client.GQuery.$;
 
 public class Scrolling {
   public static void scrollTo(Rectangle rect, Element element) {
-    Rectangle elBounds = new Rectangle(0, 0, element.getScrollWidth(), element.getScrollHeight());
-    if (!elBounds.contains(rect)) {
-      throw new IllegalArgumentException(elBounds + " should contain " + rect);
-    }
+    rect = rect.intersect(new Rectangle(0, 0, element.getScrollWidth(), element.getScrollHeight()));
+
     adjustScrollers(rect, element);
     Rectangle visibleArea = new Rectangle(getScrollX(), getScrollY(), getScrollWidth(), getScrollHeight());
     Rectangle elementBounds = getBounds(element);

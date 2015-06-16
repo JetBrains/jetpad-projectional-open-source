@@ -374,11 +374,26 @@ public class CellContainerToDomMapper extends Mapper<CellContainer, Element> {
           }
         } else {
           Element target = getElement(cell);
-          int x = target.getAbsoluteLeft();
-          int y = target.getAbsoluteTop();
-          int width = target.getScrollWidth();
-          int height = target.getScrollHeight();
-          return new Rectangle(x, y, width, height);
+          Rectangle result;
+          if (cell instanceof ScrollCell) {
+            result = new Rectangle(
+              target.getAbsoluteLeft(),
+              target.getAbsoluteRight(),
+              target.getOffsetWidth(),
+              target.getOffsetHeight()
+            );
+          } else {
+            result = new Rectangle(
+              target.getAbsoluteLeft(),
+              target.getAbsoluteTop(),
+              target.getScrollWidth(),
+              target.getScrollHeight());
+          }
+
+          JsDebug.log("Get bounds of " + cell);
+          JsDebug.log("result = " + result);
+
+          return result;
         }
       }
 
