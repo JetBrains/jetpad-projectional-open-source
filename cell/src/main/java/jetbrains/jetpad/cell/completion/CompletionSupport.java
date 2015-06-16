@@ -257,7 +257,17 @@ public class CompletionSupport {
     });
 
     textCell.bottomPopup().set(completionCell);
-    completionCell.showSlide(150);
+    completionCell.scrollTo();
+
+    //todo this is a hack.
+    //todo for unknow reason, when we do showSlide without schedule, corresponding dom element
+    //todo disappears, and this leads to clipped completion menu in case of cell to the right
+    textCell.cellContainer().get().getEdt().schedule(1, new Runnable() {
+      @Override
+      public void run() {
+        completionCell.showSlide(150);
+      }
+    });
   }
 
   private static TextCell showPopup(
