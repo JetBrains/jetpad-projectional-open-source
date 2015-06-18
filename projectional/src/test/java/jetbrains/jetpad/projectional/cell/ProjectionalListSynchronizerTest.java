@@ -130,6 +130,16 @@ public class ProjectionalListSynchronizerTest extends EditingTestCase {
   }
 
   @Test
+  public void insertWithActiveSelection() {
+    container.children.add(new ComplexChild());
+
+    selectChild(0);
+    enter();
+    assertEquals(2, container.children.size());
+    assertFocused(1);
+  }
+
+  @Test
   public void insertBefore() {
     container.children.add(new EmptyChild());
     selectChild(0);

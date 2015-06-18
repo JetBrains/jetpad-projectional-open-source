@@ -76,7 +76,7 @@ class ProjectionalObservableListSynchronizer<ContextT, SourceItemT> extends Base
         @Override
         public void onKeyPressedLowPriority(Cell cell, KeyEvent event) {
           try {
-            if (getSelectedItems().isEmpty()) {
+            if (getSelectedItems().size() <= 1) {
               keyPressedInChild(event);
             }
           } finally {
