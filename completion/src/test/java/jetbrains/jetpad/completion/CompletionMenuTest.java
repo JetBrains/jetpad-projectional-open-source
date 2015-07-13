@@ -22,6 +22,7 @@ import org.junit.Test;
 import java.util.Arrays;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertSame;
 
 public class CompletionMenuTest {
   private CompletionMenuModel model = new CompletionMenuModel();
@@ -57,6 +58,18 @@ public class CompletionMenuTest {
     assertSelected("aaa");
   }
 
+  @Test
+  public void sortPriority() {
+    model.items.clear();
+    CompletionItem i1 = createItem("a", 0);
+    CompletionItem i2 = createItem("a", 1);
+
+    model.items.addAll(Arrays.asList(i1, i2));
+
+
+    assertSame(i2, model.visibleItems.get(0));
+    assertSame(i1, model.visibleItems.get(1));
+  }
 
   @Test
   public void additionalItemLoading() {
@@ -78,10 +91,19 @@ public class CompletionMenuTest {
   }
 
   private CompletionItem createItem(String text) {
+    return createItem(text, 0);
+  }
+
+  private CompletionItem createItem(String text, final int priority) {
     return new SimpleCompletionItem(text) {
       @Override
       public Runnable complete(String text) {
         return Runnables.EMPTY;
+      }
+
+      @Override
+      public int getSortPriority() {
+        return priority;
       }
     };
   }

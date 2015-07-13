@@ -41,5 +41,11 @@ public interface CompletionItem {
    */
   boolean isLowMatchPriority();
 
+  /**
+   * Use this priority to move items higher in completion menu. Default priority should be 0. The higher
+   * the priority, the higher in completion menu the item will be.
+   */
+  int getSortPriority();
+
   Runnable complete(String text);
 }

@@ -78,6 +78,12 @@ public class CompletionMenuModel {
         @Override
         public int compare(CompletionItem c1, CompletionItem c2) {
           String text = "";
+
+          int delta = c2.getSortPriority() - c1.getSortPriority();
+          if (delta != 0) {
+            return delta;
+          }
+
           String t1 = c1.visibleText(text);
           String t2 = c2.visibleText(text);
           if (c1.isMatch(text) && !c2.isMatch(text)) {

@@ -48,6 +48,11 @@ public class WrapperCompletionItem implements CompletionItem {
   }
 
   @Override
+  public int getSortPriority() {
+    return myItem.getSortPriority();
+  }
+
+  @Override
   public Runnable complete(String text) {
     return myItem.complete(text);
   }

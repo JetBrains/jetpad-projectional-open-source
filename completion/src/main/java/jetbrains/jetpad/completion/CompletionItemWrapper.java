@@ -51,4 +51,9 @@ public class CompletionItemWrapper implements CompletionItem {
   public boolean isLowMatchPriority() {
     return myWrappedItem.isLowMatchPriority();
   }
+
+  @Override
+  public int getSortPriority() {
+    return myWrappedItem.getSortPriority();
+  }
 }
