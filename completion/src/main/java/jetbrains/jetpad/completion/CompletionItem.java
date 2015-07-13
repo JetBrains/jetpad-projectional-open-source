@@ -35,11 +35,11 @@ public interface CompletionItem {
   boolean isMatch(String text);
 
   /**
-   * Low priority means that if we have two strictly matching items one with low priority and another without it, then the higher
+   * Low match priority means that if we have two strictly matching items one with low priority and another without it, then the higher
    * priority item beats the lower priority item. We need this in order to support variable references and keyword variables. If
    * there's a keyword expression, it beats variable reference.
    */
-  boolean isLowPriority();
+  boolean isLowMatchPriority();
 
   Runnable complete(String text);
 }

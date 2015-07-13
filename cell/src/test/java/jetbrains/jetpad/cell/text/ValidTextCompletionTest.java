@@ -73,7 +73,7 @@ public class ValidTextCompletionTest extends CompletionTestCase {
                 }
 
                 @Override
-                public boolean isLowPriority() {
+                public boolean isLowMatchPriority() {
                   return true;
                 }
 

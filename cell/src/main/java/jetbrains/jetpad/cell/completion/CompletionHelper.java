@@ -96,7 +96,7 @@ public class CompletionHelper {
     List<CompletionItem> lowPriority = new ArrayList<>();
     List<CompletionItem> result = new ArrayList<>();
     for (CompletionItem item : items) {
-      if (item.isLowPriority()) {
+      if (item.isLowMatchPriority()) {
         lowPriority.add(item);
       } else {
         result.add(item);

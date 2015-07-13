@@ -85,7 +85,7 @@ public class TokenCompletionItems {
       }
 
       @Override
-      public boolean isLowPriority() {
+      public boolean isLowMatchPriority() {
         return true;
       }
     };

@@ -17,7 +17,7 @@ package jetbrains.jetpad.completion;
 
 public abstract class BaseCompletionItem implements CompletionItem {
   @Override
-  public boolean isLowPriority() {
+  public boolean isLowMatchPriority() {
     return false;
   }
 

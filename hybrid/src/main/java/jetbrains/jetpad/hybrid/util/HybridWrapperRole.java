@@ -60,7 +60,7 @@ public class HybridWrapperRole<ContainerT, WrapperT, TargetT> implements RoleCom
         }).get(cp)) {
           result.add(new WrapperCompletionItem(ci) {
             @Override
-            public boolean isLowPriority() {
+            public boolean isLowMatchPriority() {
               return true;
             }
           });
