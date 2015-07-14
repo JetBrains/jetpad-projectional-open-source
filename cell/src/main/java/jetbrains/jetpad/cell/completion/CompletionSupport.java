@@ -304,7 +304,7 @@ public class CompletionSupport {
 
     final List<CompletionItem> wrappedItems = new ArrayList<>();
     for (CompletionItem i : items) {
-      wrappedItems.add(new CompletionItemWrapper(i) {
+      wrappedItems.add(new WrapperCompletionItem(i) {
         @Override
         public Runnable complete(String text) {
           completed.set(true);
