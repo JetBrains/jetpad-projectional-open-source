@@ -78,7 +78,7 @@ public class ProjectionalPropertySynchronizerTest extends EditingTestCase {
 
   @Test
   public void ctrlDeleteItem() {
-    Child1 child = new Child1();
+    AutoDeleteChild child = new AutoDeleteChild();
     container.child.set(child);
     focusChild(child);
 
@@ -99,10 +99,32 @@ public class ProjectionalPropertySynchronizerTest extends EditingTestCase {
   }
 
   @Test
+  public void deleteInEmpty() {
+    EmptyChild child = new EmptyChild();
+    container.child.set(child);
+    focusChild(child, 0);
+
+    press(Key.DELETE);
+
+    assertNull(container.child.get());
+  }
+
+  @Test
   public void backspaceInTheMiddle() {
     Child3 child = new Child3();
     container.child.set(child);
     focusChild(child, 1);
+
+    press(Key.BACKSPACE);
+
+    assertNull(container.child.get());
+  }
+
+  @Test
+  public void backspaceInEmpty() {
+    EmptyChild child = new EmptyChild();
+    container.child.set(child);
+    focusChild(child, 0);
 
     press(Key.BACKSPACE);
 
@@ -132,7 +154,7 @@ public class ProjectionalPropertySynchronizerTest extends EditingTestCase {
   }
 
   private void copyWorks(Runnable beforeCopyAction) {
-    Child1 child = new Child1();
+    AutoDeleteChild child = new AutoDeleteChild();
     container.child.set(child);
     focusChild(child);
 
@@ -169,7 +191,7 @@ public class ProjectionalPropertySynchronizerTest extends EditingTestCase {
 
   @Test
   public void cut() {
-    Child1 child = new Child1();
+    AutoDeleteChild child = new AutoDeleteChild();
     container.child.set(child);
     focusChild(child);
 
@@ -181,7 +203,7 @@ public class ProjectionalPropertySynchronizerTest extends EditingTestCase {
 
   @Test
   public void emptyAutoDeletionIfSetup() {
-    Child1 child = new Child1();
+    AutoDeleteChild child = new AutoDeleteChild();
     container.child.set(child);
     Cell childCell = focusChild(child);
     CellActions.toEnd(childCell).run();
@@ -260,13 +282,16 @@ public class ProjectionalPropertySynchronizerTest extends EditingTestCase {
   private abstract class Child {
   }
 
-  private class Child1 extends Child {
+  private class AutoDeleteChild extends Child {
   }
 
   private class Child2 extends Child {
   }
 
   private class Child3 extends Child {
+  }
+
+  private class EmptyChild extends Child {
   }
 
   private class ContainerMapper extends Mapper<Container, VerticalCell> {
@@ -281,7 +306,7 @@ public class ProjectionalPropertySynchronizerTest extends EditingTestCase {
       ProjectionalRoleSynchronizer<Object, Child> sync = ProjectionalSynchronizers.<Object, Child>forSingleRole(this, getSource().child, getTarget(), new MapperFactory<Child, Cell>() {
         @Override
         public Mapper<? extends Child, ? extends Cell> createMapper(Child source) {
-          if (source instanceof Child1) {
+          if (source instanceof AutoDeleteChild) {
             return new ChildMapper(source, "c1", true, true);
           }
 
@@ -293,13 +318,17 @@ public class ProjectionalPropertySynchronizerTest extends EditingTestCase {
             return new ChildMapper(source, "c3", false, false);
           }
 
+          if (source instanceof EmptyChild) {
+            return new ChildMapper(source, "", false, false);
+          }
+
           return null;
         }
       });
       sync.setItemFactory(new Supplier<Child>() {
         @Override
         public Child get() {
-          return new Child1();
+          return new AutoDeleteChild();
         }
       });
       sync.setCompletion(new RoleCompletion<Object, Child>() {
@@ -310,7 +339,7 @@ public class ProjectionalPropertySynchronizerTest extends EditingTestCase {
             new SimpleCompletionItem("c1") {
               @Override
               public Runnable complete(String text) {
-                return target.set(new Child1());
+                return target.set(new AutoDeleteChild());
               }
             },
             new SimpleCompletionItem("c2") {

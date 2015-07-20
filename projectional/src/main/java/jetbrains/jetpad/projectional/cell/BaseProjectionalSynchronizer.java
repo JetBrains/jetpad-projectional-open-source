@@ -391,9 +391,17 @@ abstract class BaseProjectionalSynchronizer<SourceT, ContextT, SourceItemT> impl
   protected boolean isDeleteEvent(KeyEvent event, Cell cell) {
     if (event.is(KeyStrokeSpecs.DELETE_CURRENT)) return true;
 
-    if (event.is(Key.BACKSPACE) && !Positions.isHomePosition(cell)) return true;
+    boolean home = Positions.isHomePosition(cell);
+    boolean end = Positions.isEndPosition(cell);
 
-    if (event.is(Key.DELETE) && !Positions.isEndPosition(cell)) return true;
+
+    if (event.is(Key.BACKSPACE) && (!home || end)) {
+      return true;
+    }
+
+    if (event.is(Key.DELETE) && (!end || home)) {
+      return true;
+    }
 
     return false;
   }
