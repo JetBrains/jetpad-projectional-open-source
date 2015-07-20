@@ -31,6 +31,7 @@ import jetbrains.jetpad.cell.trait.CellTraitPropertySpec;
 import jetbrains.jetpad.cell.trait.CellTraits;
 import jetbrains.jetpad.cell.trait.DerivedCellTrait;
 import jetbrains.jetpad.cell.util.CellFactory;
+import jetbrains.jetpad.cell.util.Cells;
 import jetbrains.jetpad.completion.CompletionSupplier;
 import jetbrains.jetpad.event.*;
 import jetbrains.jetpad.mapper.*;

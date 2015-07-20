@@ -62,10 +62,10 @@ public abstract class CollectionEditor<ItemT, ViewT> {
     return isEmpty(myViews.get(index));
   }
 
-  public void handleKey(ViewT view, KeyEvent event) {
-    int index = myViews.indexOf(view);
-    boolean isHome = isHome(view);
-    boolean isEnd = isEnd(view);
+  public void handleKey(ViewT cell, KeyEvent event) {
+    int index = myViews.indexOf(cell);
+    boolean isHome = isHome(cell);
+    boolean isEnd = isEnd(cell);
 
     if (myCanCreateNew) {
       if (event.is(KeyStrokeSpecs.INSERT_AFTER) && isHome) {
