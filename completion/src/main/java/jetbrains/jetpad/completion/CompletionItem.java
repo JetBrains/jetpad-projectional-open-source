@@ -20,7 +20,7 @@ public interface CompletionItem {
   String visibleText(String text);
 
   /**
-   * Returns if there exist a match whose non trivial prefix is text
+   * Returns true if there exist a match whose proper prefix is text
    */
   boolean isStrictMatchPrefix(String text);
 
