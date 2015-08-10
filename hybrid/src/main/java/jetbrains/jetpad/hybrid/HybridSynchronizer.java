@@ -755,10 +755,6 @@ public class HybridSynchronizer<SourceT> implements Synchronizer {
     myRegistration = null;
   }
 
-  public HybridEditorSpec<SourceT> getSpec() {
-    return mySpec;
-  }
-
   private static class HybridCellState implements CellState {
     private final List<Token> tokens;
 
