@@ -33,6 +33,18 @@ import java.util.Arrays;
 import java.util.List;
 
 public class ExprHybridEditorSpec implements HybridEditorSpec<Expr> {
+  private final Token tokenPlus;
+  private final Token tokenMul;
+
+  public ExprHybridEditorSpec() {
+    this(Tokens.PLUS, Tokens.MUL);
+  }
+
+  public ExprHybridEditorSpec(Token tokenPlus, Token tokenMul) {
+    this.tokenPlus = tokenPlus;
+    this.tokenMul = tokenMul;
+  }
+
   @Override
   public Parser<Expr> getParser() {
     return new Parser<Expr>() {
@@ -50,7 +62,7 @@ public class ExprHybridEditorSpec implements HybridEditorSpec<Expr> {
       private Expr parsePlus(ParsingContext ctx) {
         Expr result = parseMul(ctx);
         if (result == null) return result;
-        while (ctx.current() == Tokens.PLUS) {
+        while (ctx.current() == tokenPlus) {
           ParsingContext.State startState = ctx.saveState();
           ctx.advance();
 
@@ -72,7 +84,7 @@ public class ExprHybridEditorSpec implements HybridEditorSpec<Expr> {
       private Expr parseMul(ParsingContext ctx) {
         Expr result = parsePostfix(ctx);
         if (result == null) return result;
-        while (ctx.current() == Tokens.MUL) {
+        while (ctx.current() == tokenMul) {
           ParsingContext.State startState = ctx.saveState();
           ctx.advance();
 
@@ -194,9 +206,9 @@ public class ExprHybridEditorSpec implements HybridEditorSpec<Expr> {
           BinExpr expr = (BinExpr) value;
           ctx.append(expr.left);
           if (expr instanceof PlusExpr) {
-            ctx.append(Tokens.PLUS);
+            ctx.append(tokenPlus);
           } else if (expr instanceof MulExpr) {
-            ctx.append(Tokens.MUL);
+            ctx.append(tokenPlus);
           }
           ctx.append(expr.right);
           return;
