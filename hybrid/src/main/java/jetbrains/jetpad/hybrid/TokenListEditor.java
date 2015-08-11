@@ -72,7 +72,6 @@ class TokenListEditor<SourceT> {
             update();
           }
         });
-        updateToPrintedTokens();
       }
     });
   }
