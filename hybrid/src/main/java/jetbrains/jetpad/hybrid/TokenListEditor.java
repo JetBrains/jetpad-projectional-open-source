@@ -39,7 +39,7 @@ import java.util.List;
 class TokenListEditor<SourceT> {
   private Property<Boolean> myValid = new ValueProperty<>(true);
   private ParseNode myParseNode;
-  private HybridEditorSpec<SourceT> mySpec;
+  private Property<HybridEditorSpec<SourceT>> mySpec;
   private boolean mySyncing;
   private List<Token> myPrintedTokens;
   private boolean myRestoringState;
@@ -50,6 +50,10 @@ class TokenListEditor<SourceT> {
   final ReadableProperty<Boolean> valid = myValid;
 
   TokenListEditor(HybridEditorSpec<SourceT> spec) {
+    this(new ValueProperty<>(spec));
+  }
+
+  TokenListEditor(Property<HybridEditorSpec<SourceT>> spec) {
     mySpec = spec;
 
     tokens.addHandler(new EventHandler<CollectionItemEvent<? extends Token>>() {
@@ -72,6 +76,18 @@ class TokenListEditor<SourceT> {
             update();
           }
         });
+      }
+    });
+    spec.addHandler(new EventHandler<PropertyChangeEvent<HybridEditorSpec<SourceT>>>() {
+      @Override
+      public void onEvent(PropertyChangeEvent<HybridEditorSpec<SourceT>> event) {
+        sync(new Runnable() {
+          @Override
+          public void run() {
+            reparse();
+          }
+        });
+        updateToPrintedTokens();
       }
     });
   }
@@ -127,7 +143,7 @@ class TokenListEditor<SourceT> {
         }
       }
 
-      SourceT result = mySpec.getParser().parse(new ParsingContext(toParse));
+      SourceT result = mySpec.get().getParser().parse(new ParsingContext(toParse));
       if (result != null) {
         value.set(result);
         myValid.set(true);
@@ -151,7 +167,7 @@ class TokenListEditor<SourceT> {
   }
 
   private PrettyPrinterContext<? super SourceT> reprint() {
-    PrettyPrinter<? super SourceT> printer = mySpec.getPrettyPrinter();
+    PrettyPrinter<? super SourceT> printer = mySpec.get().getPrettyPrinter();
     PrettyPrinterContext<? super SourceT> ctx = new PrettyPrinterContext<>(printer);
     ctx.print(value.get());
     myParseNode = ctx.result();
