@@ -6,7 +6,7 @@ import jetbrains.jetpad.cell.Cell;
 import jetbrains.jetpad.completion.*;
 import jetbrains.jetpad.hybrid.BaseCompleter;
 import jetbrains.jetpad.hybrid.CompletionContext;
-import jetbrains.jetpad.hybrid.HybridPositionSpec;
+import jetbrains.jetpad.hybrid.HybridEditorSpec;
 import jetbrains.jetpad.hybrid.HybridSynchronizer;
 import jetbrains.jetpad.hybrid.parser.Token;
 import jetbrains.jetpad.mapper.Mapper;
@@ -21,12 +21,12 @@ import java.util.List;
 import static jetbrains.jetpad.hybrid.SelectionPosition.LAST;
 
 public class HybridWrapperRole<ContainerT, WrapperT, TargetT> implements RoleCompletion<ContainerT, WrapperT> {
-  private HybridPositionSpec<TargetT> mySpec;
+  private HybridEditorSpec<TargetT> mySpec;
   private Supplier<WrapperT> myFactory;
   private Function<Mapper<?, ?>, HybridSynchronizer<TargetT>> mySyncProvider;
 
 
-  public HybridWrapperRole(HybridPositionSpec<TargetT> spec, Supplier<WrapperT> targetFactory, Function<Mapper<?, ?>, HybridSynchronizer<TargetT>> syncProvider) {
+  public HybridWrapperRole(HybridEditorSpec<TargetT> spec, Supplier<WrapperT> targetFactory, Function<Mapper<?, ?>, HybridSynchronizer<TargetT>> syncProvider) {
     mySpec = spec;
     myFactory = targetFactory;
     mySyncProvider = syncProvider;

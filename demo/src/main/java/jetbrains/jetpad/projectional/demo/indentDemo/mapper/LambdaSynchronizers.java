@@ -20,21 +20,18 @@ import jetbrains.jetpad.hybrid.HybridSynchronizer;
 import jetbrains.jetpad.mapper.Mapper;
 import jetbrains.jetpad.mapper.MapperFactory;
 import jetbrains.jetpad.mapper.Synchronizer;
-import jetbrains.jetpad.mapper.Synchronizers;
-import jetbrains.jetpad.model.property.Properties;
 import jetbrains.jetpad.model.property.Property;
-import jetbrains.jetpad.projectional.demo.indentDemo.hybrid.LambdaHybridPositionSpec;
+import jetbrains.jetpad.projectional.demo.indentDemo.hybrid.LambdaHybridEditorSpec;
 import jetbrains.jetpad.projectional.demo.indentDemo.model.Expr;
 import jetbrains.jetpad.projectional.demo.indentDemo.model.LambdaExpr;
 import jetbrains.jetpad.projectional.demo.indentDemo.model.LambdaNode;
-import jetbrains.jetpad.values.Color;
 
 class LambdaSynchronizers {
   static Synchronizer exprSynchronizer(
       Mapper<? extends LambdaNode, ? extends Cell> mapper,
       Property<Expr> exprProp,
       Cell targetCell) {
-    HybridSynchronizer<Expr> result = new HybridSynchronizer<>(mapper, exprProp, targetCell, new LambdaHybridPositionSpec());
+    HybridSynchronizer<Expr> result = new HybridSynchronizer<>(mapper, exprProp, targetCell, new LambdaHybridEditorSpec());
 
     result.setMapperFactory(new MapperFactory<Object, Cell>() {
       @Override

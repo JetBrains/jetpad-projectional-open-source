@@ -74,7 +74,7 @@ public class HybridSynchronizer<SourceT> implements Synchronizer {
 
   private Mapper<?, ?> myContextMapper;
   private Property<SourceT> myProperty;
-  private HybridPositionSpec<SourceT> mySpec;
+  private HybridEditorSpec<SourceT> mySpec;
   private TokenListEditor<SourceT> myTokenListEditor;
   private Registration myRegistration;
   private Cell myTarget;
@@ -88,7 +88,7 @@ public class HybridSynchronizer<SourceT> implements Synchronizer {
   private String myPlaceHolderText = "empty";
   private boolean myHideTokensInMenu = false;
 
-  public HybridSynchronizer(Mapper<?, ?> contextMapper, Property<SourceT> prop, final Cell target, HybridPositionSpec<SourceT> spec) {
+  public HybridSynchronizer(Mapper<?, ?> contextMapper, Property<SourceT> prop, final Cell target, HybridEditorSpec<SourceT> spec) {
     myContextMapper = contextMapper;
     myProperty = prop;
     mySpec = spec;
@@ -652,7 +652,7 @@ public class HybridSynchronizer<SourceT> implements Synchronizer {
     return Collections.unmodifiableList(myTargetList);
   }
 
-  HybridPositionSpec<SourceT> positionSpec() {
+  HybridEditorSpec<SourceT> positionSpec() {
     return mySpec;
   }
 
@@ -761,7 +761,7 @@ public class HybridSynchronizer<SourceT> implements Synchronizer {
     return myRegistration != null;
   }
 
-  public HybridPositionSpec<SourceT> getSpec() {
+  public HybridEditorSpec<SourceT> getSpec() {
     return mySpec;
   }
 }

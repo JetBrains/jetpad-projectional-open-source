@@ -29,7 +29,7 @@ import jetbrains.jetpad.hybrid.testapp.model.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ExprHybridPositionSpec implements HybridPositionSpec<Expr> {
+public class ExprHybridEditorSpec implements HybridEditorSpec<Expr> {
   @Override
   public Parser<Expr> getParser() {
     return new Parser<Expr>() {
