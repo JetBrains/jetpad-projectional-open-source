@@ -23,6 +23,7 @@ import jetbrains.jetpad.cell.util.Cells;
 import jetbrains.jetpad.mapper.Mapper;
 import jetbrains.jetpad.projectional.view.View;
 import jetbrains.jetpad.projectional.view.ViewContainer;
+import jetbrains.jetpad.test.BaseTestCase;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -30,7 +31,7 @@ import java.util.Arrays;
 
 import static org.junit.Assert.*;
 
-public class IndentPropertiesTest {
+public class IndentPropertiesTest extends BaseTestCase {
   private ViewContainer viewContainer = new ViewContainer();
   private CellContainer cellContainer = new CellContainer();
   private IndentCell indentCell = new IndentCell();

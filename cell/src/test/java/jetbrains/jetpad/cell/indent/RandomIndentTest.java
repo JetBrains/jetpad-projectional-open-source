@@ -6,12 +6,13 @@ import jetbrains.jetpad.cell.TextCell;
 import jetbrains.jetpad.cell.toView.CellContainerToViewMapper;
 import jetbrains.jetpad.model.collections.list.ObservableList;
 import jetbrains.jetpad.projectional.view.ViewContainer;
+import jetbrains.jetpad.test.BaseTestCase;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Random;
 
-public class RandomIndentTest {
+public class RandomIndentTest extends BaseTestCase {
   private Random random = new Random(2390);
 
   private ViewContainer viewContainer = new ViewContainer();

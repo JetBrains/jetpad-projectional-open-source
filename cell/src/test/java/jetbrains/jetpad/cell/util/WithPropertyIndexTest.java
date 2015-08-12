@@ -19,6 +19,7 @@ import jetbrains.jetpad.cell.Cell;
 import jetbrains.jetpad.cell.CellContainer;
 import jetbrains.jetpad.cell.CellPropertySpec;
 import jetbrains.jetpad.cell.TextCell;
+import jetbrains.jetpad.test.BaseTestCase;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -29,7 +30,7 @@ import static jetbrains.jetpad.cell.util.CellFactory.horizontal;
 import static jetbrains.jetpad.cell.util.CellFactory.label;
 import static org.junit.Assert.assertEquals;
 
-public class WithPropertyIndexTest {
+public class WithPropertyIndexTest extends BaseTestCase {
   private CellContainer container;
   private TextCell c = label("c");
   private TextCell b = label("b");

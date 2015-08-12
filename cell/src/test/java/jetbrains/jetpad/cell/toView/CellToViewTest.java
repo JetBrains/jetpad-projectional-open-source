@@ -21,12 +21,13 @@ import jetbrains.jetpad.event.MouseEvent;
 import jetbrains.jetpad.cell.Cell;
 import jetbrains.jetpad.cell.TextCell;
 import jetbrains.jetpad.projectional.view.ViewContainer;
+import jetbrains.jetpad.test.BaseTestCase;
 import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.assertFalse;
 
-public class CellToViewTest {
+public class CellToViewTest extends BaseTestCase {
   private ViewContainer targetViewContainer = new ViewContainer();
   private CellView cellView = new CellView();
 

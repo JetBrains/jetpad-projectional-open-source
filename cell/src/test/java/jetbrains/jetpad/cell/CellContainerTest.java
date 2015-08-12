@@ -20,6 +20,7 @@ import jetbrains.jetpad.cell.trait.CellTrait;
 import jetbrains.jetpad.event.MouseEvent;
 import jetbrains.jetpad.geometry.Vector;
 import jetbrains.jetpad.projectional.view.ViewContainer;
+import jetbrains.jetpad.test.BaseTestCase;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -28,7 +29,7 @@ import java.util.Arrays;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-public class CellContainerTest {
+public class CellContainerTest extends BaseTestCase {
   CellContainer container = new CellContainer();
   ViewContainer viewContainer = new ViewContainer();
   TestCell cell1 = new TestCell();

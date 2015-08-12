@@ -25,6 +25,7 @@ import jetbrains.jetpad.model.composite.Composites;
 import jetbrains.jetpad.projectional.view.TextView;
 import jetbrains.jetpad.projectional.view.View;
 import jetbrains.jetpad.projectional.view.ViewContainer;
+import jetbrains.jetpad.test.BaseTestCase;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -33,7 +34,7 @@ import java.util.Arrays;
 import static jetbrains.jetpad.cell.util.CellFactory.*;
 import static org.junit.Assert.assertEquals;
 
-public class IndentUpdaterTest {
+public class IndentUpdaterTest extends BaseTestCase {
   private ViewContainer viewContainer = new ViewContainer();
   private CellContainer cellContainer = new CellContainer();
   private IndentCell indentCell = new IndentCell();

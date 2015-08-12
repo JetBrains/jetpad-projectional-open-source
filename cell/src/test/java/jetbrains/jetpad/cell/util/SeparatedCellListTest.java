@@ -17,6 +17,7 @@ package jetbrains.jetpad.cell.util;
 
 import jetbrains.jetpad.cell.Cell;
 import jetbrains.jetpad.cell.TextCell;
+import jetbrains.jetpad.test.BaseTestCase;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -24,7 +25,7 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
-public class SeparatedCellListTest {
+public class SeparatedCellListTest extends BaseTestCase {
   private List<Cell> targetList = new ArrayList<>();
   private List<Cell> separatedList = new MySeparatedCellList(targetList);
 

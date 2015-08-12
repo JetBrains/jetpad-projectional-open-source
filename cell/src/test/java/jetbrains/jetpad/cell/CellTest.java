@@ -23,6 +23,7 @@ import jetbrains.jetpad.model.event.EventHandler;
 import jetbrains.jetpad.base.Registration;
 import jetbrains.jetpad.model.property.Property;
 import jetbrains.jetpad.model.property.PropertyChangeEvent;
+import jetbrains.jetpad.test.BaseTestCase;
 import org.junit.Test;
 
 import java.util.Arrays;
@@ -31,7 +32,7 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
-public class CellTest {
+public class CellTest extends BaseTestCase {
   CellContainer container = new CellContainer();
 
   @Test

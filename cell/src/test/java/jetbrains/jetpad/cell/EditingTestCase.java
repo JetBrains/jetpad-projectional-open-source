@@ -20,13 +20,14 @@ import jetbrains.jetpad.event.*;
 import jetbrains.jetpad.geometry.Vector;
 import jetbrains.jetpad.cell.event.CompletionEvent;
 import jetbrains.jetpad.projectional.view.ViewContainer;
+import jetbrains.jetpad.test.BaseTestCase;
 import org.junit.Before;
 
 import java.util.Collections;
 
 import static org.junit.Assert.*;
 
-public abstract class EditingTestCase {
+public abstract class EditingTestCase extends BaseTestCase {
   protected final CellContainer myCellContainer = new CellContainer();
 
   private ViewContainer myViewContainer = new ViewContainer();

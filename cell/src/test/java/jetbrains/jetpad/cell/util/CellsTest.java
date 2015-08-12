@@ -24,11 +24,12 @@ import jetbrains.jetpad.cell.trait.CellTrait;
 import jetbrains.jetpad.cell.trait.CellTraitPropertySpec;
 import jetbrains.jetpad.model.property.Property;
 import jetbrains.jetpad.model.property.ValueProperty;
+import jetbrains.jetpad.test.BaseTestCase;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
 
-public class CellsTest {
+public class CellsTest extends BaseTestCase {
   HorizontalCell container = new HorizontalCell();
   Cell c1 = new TextCell();
   Cell c2 = new TextCell();

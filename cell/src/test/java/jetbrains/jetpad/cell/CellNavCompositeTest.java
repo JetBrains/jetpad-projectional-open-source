@@ -16,13 +16,14 @@
 package jetbrains.jetpad.cell;
 
 import jetbrains.jetpad.model.composite.Composites;
+import jetbrains.jetpad.test.BaseTestCase;
 import org.junit.Test;
 
 import java.util.Arrays;
 
 import static org.junit.Assert.assertSame;
 
-public class CellNavCompositeTest {
+public class CellNavCompositeTest extends BaseTestCase {
   private Cell container = new HorizontalCell();
   private Cell c1 = new TextCell();
   private Cell c2 = new TextCell();
