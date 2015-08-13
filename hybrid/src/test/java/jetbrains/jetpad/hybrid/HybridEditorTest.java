@@ -22,6 +22,7 @@ import jetbrains.jetpad.cell.HorizontalCell;
 import jetbrains.jetpad.cell.TextCell;
 import jetbrains.jetpad.cell.action.CellActions;
 import jetbrains.jetpad.cell.completion.Completion;
+import jetbrains.jetpad.cell.util.CellState;
 import jetbrains.jetpad.completion.CompletionController;
 import jetbrains.jetpad.cell.position.Positions;
 import jetbrains.jetpad.cell.util.CellStateHandler;
@@ -773,7 +774,7 @@ public class HybridEditorTest extends EditingTestCase {
     CellStateHandler handler = myTargetCell.get(CellStateHandler.PROPERTY);
 
     setTokens(Tokens.ID, Tokens.ID, Tokens.ID);
-    Object state = handler.saveState(myTargetCell);
+    CellState state = handler.saveState(myTargetCell);
 
     select(1, true);
     type(" id");
@@ -790,7 +791,7 @@ public class HybridEditorTest extends EditingTestCase {
     ValueExpr valExpr = new ValueExpr();
     setTokens(new ValueToken(valExpr, new ValueExprCloner()), Tokens.ID);
 
-    Object state = handler.saveState(myTargetCell);
+    CellState state = handler.saveState(myTargetCell);
     valExpr.val.set("z");
 
     handler.restoreState(myTargetCell, state);

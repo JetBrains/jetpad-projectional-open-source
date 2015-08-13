@@ -28,6 +28,8 @@ import jetbrains.jetpad.cell.completion.Side;
 import jetbrains.jetpad.cell.trait.CellTrait;
 import jetbrains.jetpad.cell.trait.CellTraitPropertySpec;
 import jetbrains.jetpad.cell.trait.DerivedCellTrait;
+import jetbrains.jetpad.cell.util.CellState;
+import jetbrains.jetpad.cell.util.CellStateDifference;
 import jetbrains.jetpad.cell.util.CellStateHandler;
 import jetbrains.jetpad.completion.CompletionParameters;
 import jetbrains.jetpad.values.Color;
@@ -44,8 +46,7 @@ public class TextEditing {
 
   public static final CellTraitPropertySpec<Boolean> EAGER_COMPLETION = new CellTraitPropertySpec<>("eagerCompletion", false);
 
-  private static final TextCellStateHandler TEXT_CELL_STATE_HANDLER = new TextCellStateHandler(false);
-  private static final TextCellStateHandler EDITABLE_TEXT_CELL_STATE_HANDLER = new TextCellStateHandler(true);
+  private static final TextCellStateHandler TEXT_CELL_STATE_HANDLER = new TextCellStateHandler(false, null);
 
   public static CellTrait textNavigation(final boolean firstAllowed, final boolean lastAllowed) {
     return new DerivedCellTrait() {
@@ -159,7 +160,7 @@ public class TextEditing {
         }
 
         if (spec == CellStateHandler.PROPERTY) {
-          return EDITABLE_TEXT_CELL_STATE_HANDLER;
+          return new TextCellStateHandler(true, validator);
         }
 
         return super.get(cell, spec);
@@ -194,9 +195,11 @@ public class TextEditing {
 
   private static class TextCellStateHandler implements CellStateHandler<TextCell, TextCellState> {
     private boolean mySaveText;
+    private Predicate<String> myValidator;
 
-    private TextCellStateHandler(boolean saveText) {
+    private TextCellStateHandler(boolean saveText, Predicate<String> validator) {
       mySaveText = saveText;
+      myValidator = validator;
     }
 
     @Override
@@ -205,28 +208,38 @@ public class TextEditing {
     }
 
     @Override
+    public boolean synced(TextCell cell) {
+      if (myValidator == null) {
+        return true;
+      }
+      return myValidator.apply(cell.text().get());
+    }
+
+    @Override
     public TextCellState saveState(TextCell cell) {
       TextCellState result = new TextCellState();
       if (mySaveText) {
-        result.text = cell.text().get();
+        String text = cell.text().get();
+        result.myText = text;
+        result.myValid = myValidator.apply(text);
       }
-      result.caretPosition = cell.caretPosition().get();
+      result.myCaretPosition = cell.caretPosition().get();
       return result;
     }
 
     @Override
     public void restoreState(TextCell cell, TextCellState state) {
       if (mySaveText) {
-        cell.text().set(state.text);
+        cell.text().set(state.myText);
       }
-      cell.caretPosition().set(state.caretPosition);
+      cell.caretPosition().set(state.myCaretPosition);
     }
   }
 
-  private static class TextCellState {
-    int caretPosition;
-    String text;
-
+  private static class TextCellState implements CellState {
+    private int myCaretPosition;
+    private String myText;
+    private boolean myValid = true;
 
     @Override
     public boolean equals(Object o) {
@@ -234,12 +247,36 @@ public class TextEditing {
 
       TextCellState otherState = (TextCellState) o;
 
-      return Objects.equal(text, otherState.text) && caretPosition == otherState.caretPosition;
+      return Objects.equal(myText, otherState.myText) && myCaretPosition == otherState.myCaretPosition &&
+          myValid == otherState.myValid;
     }
 
     @Override
     public int hashCode() {
-      return caretPosition * 31  + (text == null ? 0 : text.hashCode());
+      int result = myCaretPosition;
+      result = 31 * result + (myText != null ? myText.hashCode() : 0);
+      result = 31 * result + (myValid ? 1 : 0);
+      return result;
+    }
+
+    @Override
+    public CellStateDifference compareTo(CellState state) {
+      if (!(state instanceof TextCellState)) {
+        return myValid ? CellStateDifference.NAVIGATION : CellStateDifference.EDIT;
+      }
+      TextCellState textState = (TextCellState) state;
+      if (!Objects.equal(myText, textState.myText)) {
+        return CellStateDifference.EDIT;
+      }
+      if (myCaretPosition != textState.myCaretPosition) {
+        return CellStateDifference.NAVIGATION;
+      }
+      return CellStateDifference.EQUAL;
+    }
+
+    @Override
+    public String toString() {
+      return "text = '" + myText + "' caret pos = " + myCaretPosition + " valid = " + myValid;
     }
   }
 }

@@ -30,10 +30,7 @@ import jetbrains.jetpad.cell.text.TextEditing;
 import jetbrains.jetpad.cell.trait.CellTrait;
 import jetbrains.jetpad.cell.trait.CellTraitPropertySpec;
 import jetbrains.jetpad.cell.trait.DerivedCellTrait;
-import jetbrains.jetpad.cell.util.CellFactory;
-import jetbrains.jetpad.cell.util.CellLists;
-import jetbrains.jetpad.cell.util.CellStateHandler;
-import jetbrains.jetpad.cell.util.SeparatedCellList;
+import jetbrains.jetpad.cell.util.*;
 import jetbrains.jetpad.event.*;
 import jetbrains.jetpad.hybrid.parser.Token;
 import jetbrains.jetpad.hybrid.parser.ValueToken;
@@ -333,15 +330,20 @@ public class HybridSynchronizer<SourceT> implements Synchronizer {
     };
   }
 
-  private CellStateHandler<Cell, List<Token>> getCellStateHandler() {
-    return new CellStateHandler<Cell, List<Token>>() {
+  private CellStateHandler<Cell, HybridCellState> getCellStateHandler() {
+    return new CellStateHandler<Cell, HybridCellState>() {
       @Override
       public boolean isFocusOnly() {
         return valid().get();
       }
 
       @Override
-      public List<Token> saveState(Cell cell) {
+      public boolean synced(Cell cell) {
+        return valid().get();
+      }
+
+      @Override
+      public HybridCellState saveState(Cell cell) {
         if (valid().get()) {
           return null;
         }
@@ -354,12 +356,13 @@ public class HybridSynchronizer<SourceT> implements Synchronizer {
             result.add(t);
           }
         }
-        return result;
+        return new HybridCellState(result);
       }
 
       @Override
-      public void restoreState(Cell cell, List<Token> state) {
-        tokenListEditor().restoreState(state);
+      public void restoreState(Cell cell, HybridCellState state) {
+        List<Token> tokens = state == null ? null : state.tokens;
+        tokenListEditor().restoreState(tokens);
       }
     };
   }
@@ -757,11 +760,26 @@ public class HybridSynchronizer<SourceT> implements Synchronizer {
     myRegistration = null;
   }
 
-  private boolean isAttached() {
-    return myRegistration != null;
-  }
-
   public HybridEditorSpec<SourceT> getSpec() {
     return mySpec;
+  }
+
+  private static class HybridCellState implements CellState {
+    private final List<Token> tokens;
+
+    public HybridCellState(List<Token> tokens) {
+      this.tokens = tokens;
+    }
+
+    @Override
+    public CellStateDifference compareTo(CellState state) {
+      if (!(state instanceof HybridCellState)) {
+        return tokens == null ? CellStateDifference.NAVIGATION : CellStateDifference.EDIT;
+      }
+      if (!Objects.equals(tokens, ((HybridCellState) state).tokens)) {
+        return CellStateDifference.EDIT;
+      }
+      return CellStateDifference.EQUAL;
+    }
   }
 }

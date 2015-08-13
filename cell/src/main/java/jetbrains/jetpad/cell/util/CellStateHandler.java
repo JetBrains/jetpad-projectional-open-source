@@ -18,11 +18,11 @@ package jetbrains.jetpad.cell.util;
 import jetbrains.jetpad.cell.Cell;
 import jetbrains.jetpad.cell.trait.CellTraitPropertySpec;
 
-public interface CellStateHandler<CellT extends Cell, T> {
+public interface CellStateHandler<CellT extends Cell, StateT extends CellState> {
   public static final CellTraitPropertySpec<CellStateHandler<?, ?>> PROPERTY = new CellTraitPropertySpec<>("cellStateHandler");
 
   boolean isFocusOnly();
-
-  T saveState(CellT cell);
-  void restoreState(CellT cell, T state);
+  boolean synced(CellT cell);
+  StateT saveState(CellT cell);
+  void restoreState(CellT cell, StateT state);
 }
