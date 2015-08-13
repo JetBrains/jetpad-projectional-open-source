@@ -180,6 +180,7 @@ class TokenCompletion {
         }
         if (cp.isMenu()) {
           result.addAll(positionSpec().getAdditionalCompletion(ctx, completer).get(cp));
+          ctx.getPrefix();
         }
         return result;
       }

@@ -162,7 +162,7 @@ public class TextEditingTrait extends TextNavigationTrait {
       CompletionHelper completion = new CompletionHelper(textCell.get(Completion.COMPLETION), new BaseCompletionParameters() {
         @Override
         public boolean isMenu() {
-          return true;
+          return false;
         }
       });
       String prefixText = textCell.prefixText().get();
