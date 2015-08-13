@@ -203,11 +203,6 @@ public class TextEditing {
     }
 
     @Override
-    public boolean isFocusOnly() {
-      return !mySaveText;
-    }
-
-    @Override
     public boolean synced(TextCell cell) {
       if (myValidator == null) {
         return true;

@@ -333,11 +333,6 @@ public class HybridSynchronizer<SourceT> implements Synchronizer {
   private CellStateHandler<Cell, HybridCellState> getCellStateHandler() {
     return new CellStateHandler<Cell, HybridCellState>() {
       @Override
-      public boolean isFocusOnly() {
-        return valid().get();
-      }
-
-      @Override
       public boolean synced(Cell cell) {
         return valid().get();
       }
