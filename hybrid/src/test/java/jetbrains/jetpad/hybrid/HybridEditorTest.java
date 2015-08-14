@@ -883,6 +883,21 @@ public class HybridEditorTest extends EditingTestCase {
     assertNull(sync.getPair((TextTokenCell) tokenCell(0)));
   }
 
+  @Test
+  public void additionalAsyncCompletion() {
+    setTokens();
+    select(0, true);
+
+    complete();
+    type("async");
+    enter();
+
+    assertSelected(0);
+
+    Token token = sync.tokens().get(0);
+    assertTrue(token instanceof ValueToken && ((ValueToken) token).value() instanceof AsyncValueExpr);
+  }
+
   private ValueToken createComplexToken() {
     return new ValueToken(new ComplexValueExpr(), new ComplexValueCloner());
   }

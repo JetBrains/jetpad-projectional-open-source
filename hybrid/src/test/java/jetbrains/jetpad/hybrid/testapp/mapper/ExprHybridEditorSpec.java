@@ -16,6 +16,8 @@
 package jetbrains.jetpad.hybrid.testapp.mapper;
 
 import com.google.common.base.Function;
+import jetbrains.jetpad.base.Async;
+import jetbrains.jetpad.base.Asyncs;
 import jetbrains.jetpad.completion.CompletionItem;
 import jetbrains.jetpad.completion.CompletionParameters;
 import jetbrains.jetpad.completion.CompletionSupplier;
@@ -27,6 +29,7 @@ import jetbrains.jetpad.hybrid.parser.prettyprint.PrettyPrinterContext;
 import jetbrains.jetpad.hybrid.testapp.model.*;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class ExprHybridEditorSpec implements HybridEditorSpec<Expr> {
@@ -294,8 +297,20 @@ public class ExprHybridEditorSpec implements HybridEditorSpec<Expr> {
   }
 
   @Override
-  public CompletionSupplier getAdditionalCompletion(CompletionContext ctx, Completer complerer) {
-    return CompletionSupplier.EMPTY;
+  public CompletionSupplier getAdditionalCompletion(CompletionContext ctx, final Completer complerer) {
+    return new CompletionSupplier() {
+      @Override
+      public Async<List<CompletionItem>> getAsync(CompletionParameters cp) {
+        return Asyncs.<List<CompletionItem>>constant(Arrays.<CompletionItem>asList(
+          new SimpleCompletionItem("asyncValue") {
+            @Override
+            public Runnable complete(String text) {
+              return complerer.complete(new ValueToken(new AsyncValueExpr(), new ValueExprCloner()));
+            }
+          }
+        ));
+      }
+    };
   }
 
   private static class ValueExprCloner implements ValueToken.ValueCloner<Expr> {
@@ -313,6 +328,10 @@ public class ExprHybridEditorSpec implements HybridEditorSpec<Expr> {
 
       if (val instanceof PosValueExpr) {
         return new PosValueExpr();
+      }
+
+      if (val instanceof AsyncValueExpr) {
+        return new AsyncValueExpr();
       }
 
       throw new IllegalArgumentException(val.toString());

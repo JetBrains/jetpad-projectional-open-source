@@ -38,6 +38,9 @@ public class ExprContainerMapper extends Mapper<ExprContainer, HorizontalCell> {
         if (source instanceof ValueExpr) {
           return new ValueExprMapper((ValueExpr) source);
         }
+        if (source instanceof AsyncValueExpr) {
+          return new AsyncValueExprMapper((AsyncValueExpr) source);
+        }
         if (source instanceof ComplexValueExpr) {
           return new ComplexValueExprMapper((ComplexValueExpr) source);
         }
