@@ -767,7 +767,7 @@ public class HybridSynchronizer<SourceT> implements Synchronizer {
     }
 
     @Override
-    public CellStateDifference compareTo(CellState state) {
+    public CellStateDifference getDifference(CellState state) {
       if (!(state instanceof HybridCellState)) {
         return tokens == null ? CellStateDifference.NAVIGATION : CellStateDifference.EDIT;
       }

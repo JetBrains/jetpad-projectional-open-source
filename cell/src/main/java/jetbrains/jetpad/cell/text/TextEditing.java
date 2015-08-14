@@ -255,7 +255,7 @@ public class TextEditing {
     }
 
     @Override
-    public CellStateDifference compareTo(CellState state) {
+    public CellStateDifference getDifference(CellState state) {
       if (!(state instanceof TextCellState)) {
         return myValid ? CellStateDifference.NAVIGATION : CellStateDifference.EDIT;
       }
