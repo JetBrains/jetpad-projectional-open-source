@@ -17,6 +17,8 @@ package jetbrains.jetpad.hybrid;
 
 import com.google.common.base.Function;
 import com.google.common.base.Objects;
+import jetbrains.jetpad.base.Async;
+import jetbrains.jetpad.base.Asyncs;
 import jetbrains.jetpad.base.Runnables;
 import jetbrains.jetpad.base.Value;
 import jetbrains.jetpad.cell.Cell;
@@ -183,6 +185,14 @@ class TokenCompletion {
           ctx.getPrefix();
         }
         return result;
+      }
+
+      @Override
+      public Async<List<CompletionItem>> getAsync(CompletionParameters cp) {
+        if (cp.isMenu()) {
+          return positionSpec().getAdditionalCompletion(ctx, completer).getAsync(cp);
+        }
+        return Asyncs.<List<CompletionItem>>constant(new ArrayList<CompletionItem>());
       }
     };
   }
