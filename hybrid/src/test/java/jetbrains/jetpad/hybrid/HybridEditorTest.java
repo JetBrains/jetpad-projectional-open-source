@@ -421,6 +421,22 @@ public class HybridEditorTest extends EditingTestCase {
 
 
   @Test
+  public void endRTWithAsyncCompletion() {
+    setTokens(Tokens.DOT);
+    select(0, false);
+
+    complete();
+    type("async");
+    enter();
+
+    assertFalse(isCompletionActive());
+
+    Token token = sync.tokens().get(1);
+    assertTrue(token instanceof ValueToken && ((ValueToken) token).value() instanceof AsyncValueExpr);
+  }
+
+
+  @Test
   public void valueTokenParse() {
     type("value");
 
