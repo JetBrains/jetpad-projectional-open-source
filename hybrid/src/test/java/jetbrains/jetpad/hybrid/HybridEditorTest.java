@@ -408,7 +408,7 @@ public class HybridEditorTest extends EditingTestCase {
   }
 
   @Test
-  public void endRtWithNoActivedMenu() {
+  public void endRtWithNoActivatedMenu() {
     setTokens(Tokens.DOT);
     select(0, false);
 
