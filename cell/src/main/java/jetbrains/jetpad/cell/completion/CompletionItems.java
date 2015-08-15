@@ -25,41 +25,19 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class CompletionHelper {
-  public static CompletionHelper completionFor(Cell cell, CompletionParameters cp) {
-    return completionFor(cell, cp, Completion.COMPLETION);
-  }
+public class CompletionItems {
+  private List<CompletionItem> myItems = new ArrayList<>();
 
-  public static CompletionHelper rightTransformFor(Cell cell, CompletionParameters cp) {
-    return completionFor(cell, cp, Completion.RIGHT_TRANSFORM);
-  }
-
-  public static CompletionHelper leftTransformFor(Cell cell, CompletionParameters cp) {
-    return completionFor(cell, cp, Completion.LEFT_TRANSFORM);
-  }
-
-  public static CompletionHelper completionFor(Cell cell, CompletionParameters cp, CellTraitPropertySpec<CompletionSupplier> prop) {
-    return new CompletionHelper(cell.get(prop), cp);
-  }
-
-  private CompletionSupplier mySupplier;
-  private CompletionParameters myParameters;
-  private List<CompletionItem> myCachedItems;
-
-  public CompletionHelper(CompletionSupplier supplier, CompletionParameters params) {
-    mySupplier = supplier;
-    myParameters = params;
+  public CompletionItems(List<CompletionItem> items) {
+    myItems.addAll(items);
   }
 
   public boolean isEmpty() {
-    return mySupplier.get(myParameters).isEmpty();
+    return myItems.isEmpty();
   }
 
   public List<CompletionItem> getItems() {
-    if (myCachedItems == null) {
-      myCachedItems = Collections.unmodifiableList(mySupplier.get(myParameters));
-    }
-    return myCachedItems;
+    return Collections.unmodifiableList(myItems);
   }
 
   public List<CompletionItem> prefixedBy(String prefix) {

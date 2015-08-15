@@ -204,7 +204,7 @@ class TextNavigationTrait extends CellTrait {
   public void onComplete(Cell cell, CompletionEvent event) {
     final TextCell textCell = (TextCell) cell;
 
-    CompletionHelper completion = CompletionHelper.completionFor(cell, CompletionParameters.EMPTY, Completion.COMPLETION);
+    CompletionItems completion = Completion.completionFor(cell, CompletionParameters.EMPTY, Completion.COMPLETION);
     if (completion.isEmpty()) {
       if (textCell.rightPopup().get() == null && textCell.isEnd() &&
         showSideCompletion(textCell, Completion.RIGHT_TRANSFORM, textCell.rightPopup())) {
@@ -223,7 +223,7 @@ class TextNavigationTrait extends CellTrait {
   }
 
   private boolean showSideCompletion(final TextCell textCell, CellTraitPropertySpec<CompletionSupplier> key, Property<Cell> popupProp) {
-    CompletionHelper completion = CompletionHelper.completionFor(textCell, CompletionParameters.EMPTY, key);
+    CompletionItems completion = Completion.completionFor(textCell, CompletionParameters.EMPTY, key);
     if (!completion.isEmpty()) {
       final TextCell popup = CompletionSupport.showSideTransformPopup(textCell, popupProp, completion.getItems());
       final CompletionController controller = popup.get(Completion.COMPLETION_CONTROLLER);
@@ -240,7 +240,7 @@ class TextNavigationTrait extends CellTrait {
 
 
   private boolean showCompletion(Cell cell, String text, CellTraitPropertySpec<CompletionSupplier> key, Property<Cell> popup) {
-    CompletionHelper completion = CompletionHelper.completionFor(cell, CompletionParameters.EMPTY, key);
+    CompletionItems completion = Completion.completionFor(cell, CompletionParameters.EMPTY, key);
     if (completion.hasMatches(text)) {
       if (completion.hasSingleMatch(text, cell.get(TextEditing.EAGER_COMPLETION))) {
         completion.completeFirstMatch(text);

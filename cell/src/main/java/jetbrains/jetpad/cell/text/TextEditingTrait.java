@@ -22,7 +22,7 @@ import jetbrains.jetpad.base.Runnables;
 import jetbrains.jetpad.cell.Cell;
 import jetbrains.jetpad.cell.TextCell;
 import jetbrains.jetpad.cell.completion.Completion;
-import jetbrains.jetpad.cell.completion.CompletionHelper;
+import jetbrains.jetpad.cell.completion.CompletionItems;
 import jetbrains.jetpad.cell.completion.CompletionSupport;
 import jetbrains.jetpad.cell.event.CompletionEvent;
 import jetbrains.jetpad.cell.trait.CellTraitPropertySpec;
@@ -30,6 +30,7 @@ import jetbrains.jetpad.cell.util.Cells;
 import jetbrains.jetpad.completion.BaseCompletionParameters;
 import jetbrains.jetpad.completion.CompletionController;
 import jetbrains.jetpad.completion.CompletionItem;
+import jetbrains.jetpad.completion.CompletionParameters;
 import jetbrains.jetpad.event.*;
 
 import java.util.List;
@@ -96,7 +97,7 @@ public class TextEditingTrait extends TextNavigationTrait {
       @Override
       public boolean hasAmbiguousMatches() {
         String text = cell.prefixText().get();
-        CompletionHelper helper = CompletionHelper.completionFor(cell, new BaseCompletionParameters() {
+        CompletionItems helper = Completion.completionFor(cell, new BaseCompletionParameters() {
           @Override
           public boolean isMenu() {
             return true;
@@ -159,18 +160,13 @@ public class TextEditingTrait extends TextNavigationTrait {
     CompletionController handler = getCompletionController(textCell);
 
     if (textCell.bottomPopup().get() == null) {
-      CompletionHelper completion = new CompletionHelper(textCell.get(Completion.COMPLETION), new BaseCompletionParameters() {
-        @Override
-        public boolean isMenu() {
-          return false;
-        }
-      });
+      CompletionItems completion = new CompletionItems(textCell.get(Completion.COMPLETION).get(CompletionParameters.EMPTY));
       String prefixText = textCell.prefixText().get();
       if (textCell.isEnd()) {
         List<CompletionItem> matches = completion.matches(prefixText);
         List<CompletionItem> strictlyPrefixed = completion.strictlyPrefixedBy(prefixText);
         if (matches.size() == 1 && strictlyPrefixed.isEmpty()) {
-          CompletionHelper rightTransform = CompletionHelper.rightTransformFor(textCell, new BaseCompletionParameters() {
+          CompletionItems rightTransform = Completion.rightTransformFor(textCell, new BaseCompletionParameters() {
             @Override
             public boolean isEndRightTransform() {
               return true;

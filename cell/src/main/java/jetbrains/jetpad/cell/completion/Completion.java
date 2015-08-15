@@ -57,4 +57,20 @@ public class Completion {
   public static boolean isCompletionEmpty(Cell cell, CompletionParameters params) {
     return cell.get(Completion.COMPLETION).isEmpty(params) && cell.get(Completion.COMPLETION).isAsyncEmpty(params);
   }
+
+  public static CompletionItems completionFor(Cell cell, CompletionParameters cp) {
+    return completionFor(cell, cp, COMPLETION);
+  }
+
+  public static CompletionItems rightTransformFor(Cell cell, CompletionParameters cp) {
+    return completionFor(cell, cp, RIGHT_TRANSFORM);
+  }
+
+  public static CompletionItems leftTransformFor(Cell cell, CompletionParameters cp) {
+    return completionFor(cell, cp, LEFT_TRANSFORM);
+  }
+
+  public static CompletionItems completionFor(Cell cell, CompletionParameters cp, CellTraitPropertySpec<CompletionSupplier> prop) {
+    return new CompletionItems(cell.get(prop).get(cp));
+  }
 }

@@ -20,7 +20,7 @@ import jetbrains.jetpad.base.Runnables;
 import jetbrains.jetpad.cell.Cell;
 import jetbrains.jetpad.cell.TextCell;
 import jetbrains.jetpad.cell.action.CellActions;
-import jetbrains.jetpad.cell.completion.CompletionHelper;
+import jetbrains.jetpad.cell.completion.CompletionItems;
 import jetbrains.jetpad.cell.util.CellLists;
 import jetbrains.jetpad.completion.CompletionItem;
 import jetbrains.jetpad.hybrid.parser.ErrorToken;
@@ -194,7 +194,7 @@ class TokenOperations<SourceT> {
       };
     }
 
-    CompletionHelper completion = mySync.tokenCompletion().completion(completer);
+    CompletionItems completion = mySync.tokenCompletion().completion(completer);
     List<CompletionItem> matches = completion.matches(newTokenText);
     if (matches.size() == 1) {
       matches.get(0).complete(newTokenText);
@@ -233,7 +233,7 @@ class TokenOperations<SourceT> {
       }
     }
 
-    CompletionHelper completion = tc.completion(new Function<Token, Runnable>() {
+    CompletionItems completion = tc.completion(new Function<Token, Runnable>() {
       @Override
       public Runnable apply(Token token) {
         return Runnables.EMPTY;

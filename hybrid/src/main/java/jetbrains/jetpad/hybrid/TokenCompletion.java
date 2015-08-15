@@ -24,7 +24,7 @@ import jetbrains.jetpad.base.Value;
 import jetbrains.jetpad.cell.Cell;
 import jetbrains.jetpad.cell.TextCell;
 import jetbrains.jetpad.cell.completion.Completion;
-import jetbrains.jetpad.cell.completion.CompletionHelper;
+import jetbrains.jetpad.cell.completion.CompletionItems;
 import jetbrains.jetpad.completion.CompletionController;
 import jetbrains.jetpad.completion.CompletionItem;
 import jetbrains.jetpad.completion.CompletionParameters;
@@ -59,8 +59,8 @@ class TokenCompletion {
     return mySync.tokenOperations();
   }
 
-  CompletionHelper completion(Function<Token, Runnable> handler) {
-    return new CompletionHelper(positionSpec().getTokenCompletion(handler), CompletionParameters.EMPTY);
+  CompletionItems completion(Function<Token, Runnable> handler) {
+    return new CompletionItems(positionSpec().getTokenCompletion(handler).get(CompletionParameters.EMPTY));
   }
 
   CompletionSupplier placeholderCompletion() {
@@ -110,7 +110,7 @@ class TokenCompletion {
 
         tokenListEditor().updateToPrintedTokens();
 
-        final Cell targetCell =  mySync.tokenCells().get(index + selectionIndex);
+        final Cell targetCell = mySync.tokenCells().get(index + selectionIndex);
         if (!(targetCell instanceof TextCell) || !Objects.equal(((TextCell) targetCell).text().get(), oldText)) {
           position = LAST;
         }
@@ -199,7 +199,7 @@ class TokenCompletion {
 
   Token completeToken(String text) {
     final Value<Token> result = new Value<>();
-    CompletionHelper completion = completion(new Function<Token, Runnable>() {
+    CompletionItems completion = completion(new Function<Token, Runnable>() {
       @Override
       public Runnable apply(Token token) {
         result.set(token);
