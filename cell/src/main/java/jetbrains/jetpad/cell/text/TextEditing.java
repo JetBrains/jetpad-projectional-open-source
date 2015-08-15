@@ -184,8 +184,7 @@ public class TextEditing {
         return new Function<String, Runnable>() {
           @Override
           public Runnable apply(String sideText) {
-            CompletionItems sideCompletion = Completion.completionFor(cell, CompletionParameters.EMPTY, side.getKey());
-            TextCell popupCell = CompletionSupport.showSideTransformPopup(cell, side.getPopup(cell), sideCompletion.getItems());
+            TextCell popupCell = CompletionSupport.showSideTransformPopup(cell, side.getPopup(cell), cell.get(side.getKey()), false);
             popupCell.text().set(sideText);
             return CellActions.toEnd(popupCell);
           }

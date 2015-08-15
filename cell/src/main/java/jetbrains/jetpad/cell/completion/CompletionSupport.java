@@ -296,7 +296,22 @@ public class CompletionSupport {
   public static TextCell showSideTransformPopup(
       final Cell cell,
       final Property<Cell> targetPopup,
-      List<CompletionItem> items) {
+      CompletionSupplier supplier,
+      final boolean endRT) {
+
+
+    List<CompletionItem> items = supplier.get(new CompletionParameters() {
+      @Override
+      public boolean isEndRightTransform() {
+        return endRT;
+      }
+
+      @Override
+      public boolean isMenu() {
+        return true;
+      }
+    });
+
     final CellContainer container = cell.cellContainer().get();
     final Value<Boolean> completed = new Value<>(false);
     final Value<Boolean> dismissed = new Value<>(false);

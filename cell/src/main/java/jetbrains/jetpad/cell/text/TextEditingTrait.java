@@ -179,7 +179,7 @@ public class TextEditingTrait extends TextNavigationTrait {
           });
           if (!rightTransform.isEmpty() && textCell.get(TextEditing.RT_ON_END)) {
             if (textCell.rightPopup().get() == null) {
-              TextCell popup = CompletionSupport.showSideTransformPopup(textCell, textCell.rightPopup(), rightTransform.getItems());
+              TextCell popup = CompletionSupport.showSideTransformPopup(textCell, textCell.rightPopup(), textCell.get(Completion.RIGHT_TRANSFORM), true);
               popup.get(Completion.COMPLETION_CONTROLLER).activate(new Runnable() {
                 @Override
                 public void run() {
