@@ -153,8 +153,6 @@ class TokenCompletion {
             tokenListEditor().updateToPrintedTokens();
             Runnable result = tokenOperations().selectOnCreation(index + delta + selectionIndex, LAST);
             if (cp.isEndRightTransform() && !cp.isMenu()) {
-
-              cp.isMenu();
               result = Runnables.seq(result, activateCompletion(index + delta + selectionIndex));
             }
             return result;
