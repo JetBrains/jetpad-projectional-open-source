@@ -51,7 +51,7 @@ public abstract class CompletionSupplier {
     return Asyncs.constant(Collections.<CompletionItem>emptyList());
   }
 
-  public boolean isAsyncEmpty(CompletionParameters cp) {
+  public final boolean isAsyncEmpty(CompletionParameters cp) {
     Async<List<CompletionItem>> async = getAsync(cp);
     final Value<Boolean> loaded = new Value<>(false);
     final List<CompletionItem> items = new ArrayList<>();
@@ -71,7 +71,7 @@ public abstract class CompletionSupplier {
     }
   }
 
-  public boolean isEmpty(CompletionParameters cp) {
+  public final boolean isEmpty(CompletionParameters cp) {
     return get(cp).isEmpty();
   }
 

@@ -15,8 +15,10 @@
  */
 package jetbrains.jetpad.cell.completion;
 
+import com.google.common.base.Function;
 import com.google.common.base.Strings;
 import com.google.common.base.Supplier;
+import com.google.common.collect.Lists;
 import jetbrains.jetpad.base.*;
 import jetbrains.jetpad.cell.*;
 import jetbrains.jetpad.cell.event.CompletionEvent;
@@ -35,6 +37,7 @@ import jetbrains.jetpad.model.property.PropertyBinding;
 import jetbrains.jetpad.model.property.PropertyChangeEvent;
 import jetbrains.jetpad.model.property.ReadableProperty;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -296,37 +299,26 @@ public class CompletionSupport {
   public static TextCell showSideTransformPopup(
       final Cell cell,
       final Property<Cell> targetPopup,
-      CompletionSupplier supplier,
+      final CompletionSupplier supplier,
       final boolean endRT) {
-
-
-    List<CompletionItem> items = supplier.get(new CompletionParameters() {
-      @Override
-      public boolean isEndRightTransform() {
-        return endRT;
-      }
-
-      @Override
-      public boolean isMenu() {
-        return true;
-      }
-    });
 
     final CellContainer container = cell.cellContainer().get();
     final Value<Boolean> completed = new Value<>(false);
     final Value<Boolean> dismissed = new Value<>(false);
     final Runnable restoreState = container.saveState();
 
-    final List<CompletionItem> wrappedItems = new ArrayList<>();
-    for (CompletionItem i : items) {
-      wrappedItems.add(new WrapperCompletionItem(i) {
-        @Override
-        public Runnable complete(String text) {
-          completed.set(true);
-          return super.complete(text);
-        }
-      });
-    }
+    final Function<CompletionItem, CompletionItem> wrap = new Function<CompletionItem, CompletionItem>() {
+      @Override
+      public CompletionItem apply(CompletionItem input) {
+        return new WrapperCompletionItem(input) {
+          @Override
+          public Runnable complete(String text) {
+            completed.set(true);
+            return super.complete(text);
+          }
+        };
+      }
+    };
 
     final HorizontalCell popup = new HorizontalCell();
     final TextCell textCell = new TextCell() {
@@ -336,7 +328,6 @@ public class CompletionSupport {
       }
     };
     final Value<Handler<Boolean>> dismiss = new Value<>();
-    final CompletionItems completion = new CompletionItems(wrappedItems);
     textCell.focusable().set(true);
     final Registration traitReg = textCell.addTrait(new TextEditingTrait() {
       @Override
@@ -345,7 +336,17 @@ public class CompletionSupport {
           return new CompletionSupplier() {
             @Override
             public List<CompletionItem> get(CompletionParameters cp) {
-              return wrappedItems;
+              return Lists.transform(supplier.get(wrap(cp)), wrap);
+            }
+
+            @Override
+            public Async<List<CompletionItem>> getAsync(CompletionParameters cp) {
+              return Asyncs.map(supplier.getAsync(wrap(cp)), new Function<List<CompletionItem>, List<CompletionItem>>() {
+                @Override
+                public List<CompletionItem> apply(List<CompletionItem> input) {
+                  return Lists.transform(input, wrap);
+                }
+              });
             }
           };
         }
@@ -383,6 +384,9 @@ public class CompletionSupport {
         if (!textCell.isEnd()) return false;
 
         String text = textCell.text().get();
+
+        final CompletionItems completion = new CompletionItems(supplier.get(wrap(CompletionParameters.EMPTY)));
+
         if (completion.hasSingleMatch(text, cell.get(TextEditing.EAGER_COMPLETION))) {
           completion.matches(text).get(0).complete(text).run();
           return true;
@@ -403,6 +407,21 @@ public class CompletionSupport {
       public void onFocusLost(Cell cell, FocusEvent event) {
         super.onFocusLost(cell, event);
         dismiss.get().handle(true);
+      }
+
+
+      private CompletionParameters wrap(final CompletionParameters otherParams) {
+        return new BaseCompletionParameters() {
+          @Override
+          public boolean isEndRightTransform() {
+            return endRT;
+          }
+
+          @Override
+          public boolean isMenu() {
+            return otherParams.isMenu();
+          }
+        };
       }
     });
 
