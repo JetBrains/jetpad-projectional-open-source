@@ -16,6 +16,8 @@
 package jetbrains.jetpad.completion;
 
 public class BaseCompletionParameters implements CompletionParameters {
+  Throwable createAt = new Throwable();
+
   @Override
   public boolean isEndRightTransform() {
     return false;

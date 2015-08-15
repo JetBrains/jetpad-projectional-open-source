@@ -110,7 +110,7 @@ class TokenCompletion {
 
         tokenListEditor().updateToPrintedTokens();
 
-        final Cell targetCell = mySync.tokenCells().get(index + selectionIndex);
+        final Cell targetCell =  mySync.tokenCells().get(index + selectionIndex);
         if (!(targetCell instanceof TextCell) || !Objects.equal(((TextCell) targetCell).text().get(), oldText)) {
           position = LAST;
         }
@@ -139,10 +139,11 @@ class TokenCompletion {
   CompletionSupplier sideTransform(Cell tokenCell, final int delta) {
     final int index = mySync.tokenCells().indexOf(tokenCell);
 
+
     return new CompletionSupplier() {
-      @Override
-      public List<CompletionItem> get(final CompletionParameters cp) {
-        BaseCompleter completer = new BaseCompleter() {
+
+      private Completer createCompleter(final CompletionParameters cp) {
+        return new BaseCompleter() {
           @Override
           public Runnable complete(int selectionIndex, Token... tokens) {
             int i = index + delta;
@@ -151,18 +152,35 @@ class TokenCompletion {
             }
             tokenListEditor().updateToPrintedTokens();
             Runnable result = tokenOperations().selectOnCreation(index + delta + selectionIndex, LAST);
-            if (cp.isEndRightTransform()) {
+            if (cp.isEndRightTransform() && !cp.isMenu()) {
+
+              cp.isMenu();
               result = Runnables.seq(result, activateCompletion(index + delta + selectionIndex));
             }
             return result;
           }
         };
+      }
 
+      private TokenCompletionContext createContext(CompletionParameters cp) {
         if (cp.isEndRightTransform()) {
-          return tokenCompletion(new TokenCompletionContext(index + 1), completer).get(cp);
+          return new TokenCompletionContext(index + 1);
         }
 
-        return tokenCompletion(new TokenCompletionContext(index + delta), completer).get(cp);
+        return new TokenCompletionContext(index + delta);
+      }
+
+      @Override
+      public List<CompletionItem> get(final CompletionParameters cp) {
+        return tokenCompletion(createContext(cp), createCompleter(cp)).get(cp);
+      }
+
+      @Override
+      public Async<List<CompletionItem>> getAsync(CompletionParameters cp) {
+        if (cp.isMenu()) {
+          return positionSpec().getAdditionalCompletion(createContext(cp), createCompleter(cp)).getAsync(cp);
+        }
+        return Asyncs.<List<CompletionItem>>constant(new ArrayList<CompletionItem>());
       }
     };
   }

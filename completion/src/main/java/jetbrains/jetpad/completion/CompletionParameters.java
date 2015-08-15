@@ -16,7 +16,7 @@
 package jetbrains.jetpad.completion;
 
 public interface CompletionParameters {
-  public static final CompletionParameters EMPTY = new BaseCompletionParameters();
+  static final CompletionParameters EMPTY = new BaseCompletionParameters();
 
   boolean isEndRightTransform();
   boolean isMenu();

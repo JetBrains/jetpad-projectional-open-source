@@ -27,10 +27,7 @@ import jetbrains.jetpad.cell.completion.CompletionSupport;
 import jetbrains.jetpad.cell.event.CompletionEvent;
 import jetbrains.jetpad.cell.trait.CellTraitPropertySpec;
 import jetbrains.jetpad.cell.util.Cells;
-import jetbrains.jetpad.completion.BaseCompletionParameters;
-import jetbrains.jetpad.completion.CompletionController;
-import jetbrains.jetpad.completion.CompletionItem;
-import jetbrains.jetpad.completion.CompletionParameters;
+import jetbrains.jetpad.completion.*;
 import jetbrains.jetpad.event.*;
 
 import java.util.List;
@@ -166,7 +163,7 @@ public class TextEditingTrait extends TextNavigationTrait {
         List<CompletionItem> matches = completion.matches(prefixText);
         List<CompletionItem> strictlyPrefixed = completion.strictlyPrefixedBy(prefixText);
         if (matches.size() == 1 && strictlyPrefixed.isEmpty()) {
-          CompletionItems rightTransform = Completion.rightTransformFor(textCell, new BaseCompletionParameters() {
+          BaseCompletionParameters cp = new BaseCompletionParameters() {
             @Override
             public boolean isEndRightTransform() {
               return true;
@@ -176,8 +173,9 @@ public class TextEditingTrait extends TextNavigationTrait {
             public boolean isMenu() {
               return true;
             }
-          });
-          if (!rightTransform.isEmpty() && textCell.get(TextEditing.RT_ON_END)) {
+          };
+          CompletionSupplier supplier = textCell.get(Completion.RIGHT_TRANSFORM);
+          if ((!supplier.isEmpty(cp) || !supplier.isAsyncEmpty(cp)) && textCell.get(TextEditing.RT_ON_END)) {
             if (textCell.rightPopup().get() == null) {
               TextCell popup = CompletionSupport.showSideTransformPopup(textCell, textCell.rightPopup(), textCell.get(Completion.RIGHT_TRANSFORM), true);
               popup.get(Completion.COMPLETION_CONTROLLER).activate(new Runnable() {
@@ -234,8 +232,7 @@ public class TextEditingTrait extends TextNavigationTrait {
     clearSelection(textCell);
 
     String text = "" + event.getKeyChar();
-    pasteText(textCell, text);
-    textCell.scrollToCaret();
+    pasteText(textCell, text);    textCell.scrollToCaret();
     onAfterType(textCell);
     event.consume();
   }
