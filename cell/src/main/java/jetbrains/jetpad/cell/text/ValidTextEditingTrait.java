@@ -92,29 +92,25 @@ class ValidTextEditingTrait extends TextEditingTrait {
 
     //simple validation
     CompletionItems completion = Completion.completionFor(textCell, CompletionParameters.EMPTY);
-    if (eagerCompletion && completion.hasSingleMatch(text, true)) {
+    if (completion.hasSingleMatch(text, eagerCompletion)) {
       completion.completeFirstMatch(text);
       return true;
     }
 
     CellContainer container = textCell.cellContainer().get();
-    if (textCell.isEnd()) {
+    if (textCell.isEnd() && !completion.hasMatches(text)) {
+      //right transform
       String prefix = text.substring(0, text.length() - 1);
       String suffix = text.substring(text.length() - 1).trim();
 
-      if (completion.hasSingleMatch(text, eagerCompletion)) {
-        completion.completeFirstMatch(text);
-      } else if (!completion.hasMatches(text)) {
-        //right transform
-        if (getValidator(textCell).apply(prefix)) {
-          handleSideTransform(textCell, prefix, suffix, Side.RIGHT);
-        } else {
-          List<CompletionItem> matches = completion.matches(prefix);
-          if (matches.size() == 1) {
-            matches.get(0).complete(prefix).run();
-            assertValid(container.focusedCell.get());
-            container.keyTyped(new KeyEvent(Key.UNKNOWN, suffix.charAt(0), Collections.<ModifierKey>emptySet()));
-          }
+      if (getValidator(textCell).apply(prefix)) {
+        handleSideTransform(textCell, prefix, suffix, Side.RIGHT);
+      } else {
+        List<CompletionItem> matches = completion.matches(prefix);
+        if (matches.size() == 1) {
+          matches.get(0).complete(prefix).run();
+          assertValid(container.focusedCell.get());
+          container.keyTyped(new KeyEvent(Key.UNKNOWN, suffix.charAt(0), Collections.<ModifierKey>emptySet()));
         }
       }
     } else if (textCell.caretPosition().get() == 1 && textCell.bottomPopup().get() == null) {
