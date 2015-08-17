@@ -37,6 +37,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import static jetbrains.jetpad.base.Runnables.seq;
 import static jetbrains.jetpad.hybrid.SelectionPosition.FIRST;
 import static jetbrains.jetpad.hybrid.SelectionPosition.LAST;
 
@@ -63,14 +64,22 @@ class TokenCompletion {
     return new CompletionItems(positionSpec().getTokenCompletion(handler).get(CompletionParameters.EMPTY));
   }
 
-  CompletionSupplier placeholderCompletion() {
+  CompletionSupplier placeholderCompletion(final Cell placeholder) {
     return tokenCompletion(new PlaceholderCompletionContext(), new BaseCompleter() {
       @Override
       public Runnable complete(int selectionIndex, Token... tokens) {
+        CompletionController controller = placeholder.get(Completion.COMPLETION_CONTROLLER);
+        boolean wasActive = controller.isActive();
+
         tokenListEditor().tokens.addAll(Arrays.asList(tokens));
         tokenListEditor().updateToPrintedTokens();
 
-        return tokenOperations().selectOnCreation(selectionIndex, LAST);
+        Runnable result = tokenOperations().selectOnCreation(selectionIndex, LAST);
+        if (wasActive) {
+          result = seq(result, activateCompletion(selectionIndex));
+        }
+
+        return result;
       }
     });
   }
@@ -129,7 +138,7 @@ class TokenCompletion {
         }
 
         if (wasCompletionActive) {
-          result = Runnables.seq(result, activateCompletion(index + selectionIndex));
+          result = seq(result, activateCompletion(index + selectionIndex));
         }
         return result;
       }
@@ -153,7 +162,7 @@ class TokenCompletion {
             tokenListEditor().updateToPrintedTokens();
             Runnable result = tokenOperations().selectOnCreation(index + delta + selectionIndex, LAST);
             if (cp.isEndRightTransform() && !cp.isMenu()) {
-              result = Runnables.seq(result, activateCompletion(index + delta + selectionIndex));
+              result = seq(result, activateCompletion(index + delta + selectionIndex));
             }
             return result;
           }

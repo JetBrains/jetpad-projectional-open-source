@@ -529,7 +529,7 @@ public class HybridSynchronizer<SourceT> implements Synchronizer {
       public Object get(Cell cell, CellTraitPropertySpec<?> spec) {
         if (spec == TextEditing.EAGER_COMPLETION) return true;
 
-        if (spec == Completion.COMPLETION) return tokenCompletion().placeholderCompletion();
+        if (spec == Completion.COMPLETION) return tokenCompletion().placeholderCompletion(cell);
 
         return super.get(cell, spec);
       }

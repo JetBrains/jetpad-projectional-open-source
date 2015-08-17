@@ -914,6 +914,17 @@ public class HybridEditorTest extends EditingTestCase {
     assertTrue(token instanceof ValueToken && ((ValueToken) token).value() instanceof AsyncValueExpr);
   }
 
+  @Test
+  public void typingWithCompletionMenuInPlaceholder() {
+    setTokens();
+    select(0, true);
+
+    complete();
+    type("+");
+
+    assertTrue(isCompletionActive());
+  }
+
   private ValueToken createComplexToken() {
     return new ValueToken(new ComplexValueExpr(), new ComplexValueCloner());
   }
