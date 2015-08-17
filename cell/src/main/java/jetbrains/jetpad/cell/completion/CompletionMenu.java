@@ -94,11 +94,6 @@ class CompletionMenu {
       conf.add(Synchronizers.forPropsOneWay(getSource().loading, Properties.ifProp(myEmptyCell.textColor(), Color.GREEN, Color.RED)));
       conf.add(Synchronizers.forPropsOneWay(Properties.isEmpty(getSource().visibleItems), myEmptyCell.visible()));
     }
-
-    @Override
-    protected void onDetach() {
-      super.onDetach();
-    }
   }
 
   private static class CompletionItemMapper extends Mapper<CompletionItem, HorizontalCell> {
