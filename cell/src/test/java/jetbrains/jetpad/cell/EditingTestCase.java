@@ -15,163 +15,143 @@
  */
 package jetbrains.jetpad.cell;
 
-import jetbrains.jetpad.cell.toView.CellToView;
 import jetbrains.jetpad.event.*;
 import jetbrains.jetpad.geometry.Vector;
-import jetbrains.jetpad.cell.event.CompletionEvent;
-import jetbrains.jetpad.projectional.view.ViewContainer;
 import jetbrains.jetpad.test.BaseTestCase;
-import org.junit.Before;
-
-import java.util.Collections;
 
 import static org.junit.Assert.*;
 
 public abstract class EditingTestCase extends BaseTestCase {
   protected final CellContainer myCellContainer = new CellContainer();
 
-  private ViewContainer myViewContainer = new ViewContainer();
-
-  @Before
-  public void initLViewContainer() {
-    CellToView.map(myCellContainer, myViewContainer);
-  }
+  private EditableCellContainer myEditableCellContainer = new EditableCellContainer(myCellContainer);
 
   protected void layout() {
-    myViewContainer.root().validate();
+    myEditableCellContainer.layout();
   }
 
   protected void type(String s) {
-    for (int i = 0; i < s.length(); i++) {
-      type(s.charAt(i));
-    }
+    myEditableCellContainer.type(s);
   }
 
   protected KeyEvent type(char c) {
-    KeyEvent event = new KeyEvent(null, c, Collections.<ModifierKey>emptySet());
-    myViewContainer.keyTyped(event);
-    return event;
+    return myEditableCellContainer.type(c);
   }
 
   protected KeyEvent press(Key key, ModifierKey... modifiers) {
-    return press(new KeyStroke(key, modifiers));
+    return myEditableCellContainer.press(key, modifiers);
   }
 
   protected KeyEvent press(KeyStrokeSpec spec) {
-    if (spec.getKeyStrokes().isEmpty()) {
-      throw new IllegalArgumentException();
-    }
-    return press(spec.getKeyStrokes().iterator().next());
+    return myEditableCellContainer.press(spec);
   }
 
   protected KeyEvent press(KeyStroke ks) {
-    KeyEvent event = new KeyEvent(ks.getKey(), (char) 0, ks.getModifiers());
-    myViewContainer.keyPressed(event);
-    return event;
+    return myEditableCellContainer.press(ks);
   }
 
   protected void paste(String text) {
-    myCellContainer.paste(text);
+    myEditableCellContainer.paste(text);
   }
 
   protected final void complete() {
-    myCellContainer.complete(new CompletionEvent(false));
+    myEditableCellContainer.complete();
   }
 
   protected final void enter() {
-    press(Key.ENTER);
+    myEditableCellContainer.enter();
   }
 
   protected final void shiftEnter() {
-    press(Key.ENTER, ModifierKey.SHIFT);
+    myEditableCellContainer.shiftEnter();
   }
 
   protected final void escape() {
-    press(Key.ESCAPE);
+    myEditableCellContainer.escape();
   }
 
   protected final void up() {
-    press(Key.UP);
+    myEditableCellContainer.up();
   }
 
   protected final void altUp() {
-    press(Key.UP, ModifierKey.ALT);
+    myEditableCellContainer.altUp();
   }
 
   protected final void down() {
-    press(Key.DOWN);
+    myEditableCellContainer.down();
   }
 
   protected final void altDown() {
-    press(Key.DOWN, ModifierKey.ALT);
+    myEditableCellContainer.altDown();
   }
 
   protected final void left() {
-    press(Key.LEFT);
+    myEditableCellContainer.left();
   }
 
   protected final void right() {
-    press(Key.RIGHT);
+    myEditableCellContainer.right();
   }
 
   protected final void altLeft() {
-    press(Key.LEFT, ModifierKey.ALT);
+    myEditableCellContainer.altLeft();
   }
 
   protected final void altRight() {
-    press(Key.RIGHT, ModifierKey.ALT);
+    myEditableCellContainer.altRight();
   }
 
   protected final void home() {
-    press(Key.HOME);
+    myEditableCellContainer.home();
   }
 
   protected final void macHome() {
-    press(Key.LEFT, ModifierKey.META);
+    myEditableCellContainer.macHome();
   }
 
   protected final void end() {
-    press(Key.END);
+    myEditableCellContainer.end();
   }
 
   protected final void macEnd() {
-    press(Key.RIGHT, ModifierKey.META);
+    myEditableCellContainer.macEnd();
   }
 
   protected final void tab() {
-    press(Key.TAB);
+    myEditableCellContainer.tab();
   }
 
   protected final void shiftTab() {
-    press(Key.TAB, ModifierKey.SHIFT);
+    myEditableCellContainer.shiftTab();
   }
 
   protected final void backspace() {
-    press(Key.BACKSPACE);
+    myEditableCellContainer.backspace();
   }
 
   protected final void del() {
-    press(Key.DELETE);
+    myEditableCellContainer.del();
   }
 
   protected final void insert() {
-    press(Key.INSERT);
+    myEditableCellContainer.insert();
   }
 
   protected final void mousePress(int x, int y) {
-    myViewContainer.mousePressed(new MouseEvent(x, y));
+    myEditableCellContainer.mousePress(x, y);
   }
 
   protected final void mouseDrag(int x, int y) {
-    myViewContainer.mouseDragged(new MouseEvent(x, y));
+    myEditableCellContainer.mouseDrag(x, y);
   }
 
   protected final void mousePress(Vector v) {
-    mousePress(v.x, v.y);
+    myEditableCellContainer.mousePress(v);
   }
 
   protected final void mouseDrag(Vector v) {
-    mouseDrag(v.x, v.y);
+    myEditableCellContainer.mouseDrag(v);
   }
 
   protected void assertFocused(Cell cell) {
