@@ -111,15 +111,11 @@ public class TextEditing {
     return new DerivedCellTrait() {
       @Override
       protected CellTrait getBase(Cell cell) {
-        return validTextEditing(validator);
+        return validTextEditing(validator, validColor);
       }
 
       @Override
       public Object get(Cell cell, CellTraitPropertySpec<?> spec) {
-        if (spec == ValidTextEditingTrait.VALID_TEXT_COLOR) {
-          return validColor;
-        }
-
         if (spec == TextNavigationTrait.SELECTION_AVAILABLE) {
           return selectionAvailable;
         }
