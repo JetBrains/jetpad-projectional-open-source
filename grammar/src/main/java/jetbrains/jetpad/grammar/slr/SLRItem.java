@@ -83,7 +83,7 @@ class SLRItem implements LRItem<SLRItem> {
   @Override
   public String toString() {
     String dot = "\u2022";
-    String epsilon = "\0395";
+    String epsilon = "\u03B5";
     String arrow = "\u2192";
 
     StringBuilder result = new StringBuilder();
