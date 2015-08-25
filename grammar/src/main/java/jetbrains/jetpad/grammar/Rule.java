@@ -77,7 +77,7 @@ public class Rule {
   @Override
   public String toString() {
     String arrow = "\u2192";
-    String epsilon = "\u0395" ;
+    String epsilon = "\u03B5" ;
 
     StringBuilder result = new StringBuilder();
     result.append(myHead).append(" ").append(arrow);
