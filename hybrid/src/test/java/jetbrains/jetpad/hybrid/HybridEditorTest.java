@@ -27,6 +27,7 @@ import jetbrains.jetpad.completion.CompletionController;
 import jetbrains.jetpad.cell.position.Positions;
 import jetbrains.jetpad.cell.util.CellStateHandler;
 import jetbrains.jetpad.event.*;
+import jetbrains.jetpad.hybrid.testapp.mapper.ExprHybridEditorSpec;
 import jetbrains.jetpad.model.composite.Composites;
 import jetbrains.jetpad.projectional.util.RootController;
 import jetbrains.jetpad.hybrid.parser.*;
@@ -923,6 +924,15 @@ public class HybridEditorTest extends EditingTestCase {
     type("+");
 
     assertTrue(isCompletionActive());
+  }
+
+  @Test
+  public void dynamicSpec(){
+    setTokens(Tokens.ID, Tokens.PLUS, Tokens.ID);
+    assertTrue(container.expr.get() instanceof PlusExpr);
+
+    sync.mySpec.set(new ExprHybridEditorSpec(Tokens.MUL, Tokens.PLUS));
+    assertTrue(container.expr.get() instanceof MulExpr);
   }
 
   private ValueToken createComplexToken() {

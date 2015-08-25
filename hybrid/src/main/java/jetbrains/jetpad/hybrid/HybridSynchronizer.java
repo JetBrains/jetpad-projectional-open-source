@@ -48,10 +48,7 @@ import jetbrains.jetpad.model.collections.list.UnmodifiableObservableList;
 import jetbrains.jetpad.model.composite.Composites;
 import jetbrains.jetpad.model.event.CompositeRegistration;
 import jetbrains.jetpad.model.event.EventHandler;
-import jetbrains.jetpad.model.property.Property;
-import jetbrains.jetpad.model.property.PropertyBinding;
-import jetbrains.jetpad.model.property.PropertyChangeEvent;
-import jetbrains.jetpad.model.property.ReadableProperty;
+import jetbrains.jetpad.model.property.*;
 import jetbrains.jetpad.model.util.ListMap;
 import jetbrains.jetpad.projectional.cell.SelectionSupport;
 
@@ -71,7 +68,6 @@ public class HybridSynchronizer<SourceT> implements Synchronizer {
 
   private Mapper<?, ?> myContextMapper;
   private Property<SourceT> myProperty;
-  private HybridEditorSpec<SourceT> mySpec;
   private TokenListEditor<SourceT> myTokenListEditor;
   private Registration myRegistration;
   private Cell myTarget;
@@ -85,7 +81,13 @@ public class HybridSynchronizer<SourceT> implements Synchronizer {
   private String myPlaceHolderText = "empty";
   private boolean myHideTokensInMenu = false;
 
+  public Property<HybridEditorSpec<SourceT>> mySpec;
+
   public HybridSynchronizer(Mapper<?, ?> contextMapper, Property<SourceT> prop, final Cell target, HybridEditorSpec<SourceT> spec) {
+    this(contextMapper, prop, target, new ValueProperty<>(spec));
+  }
+
+  public HybridSynchronizer(Mapper<?, ?> contextMapper, Property<SourceT> prop, final Cell target, Property<HybridEditorSpec<SourceT>> spec) {
     myContextMapper = contextMapper;
     myProperty = prop;
     mySpec = spec;
@@ -651,7 +653,7 @@ public class HybridSynchronizer<SourceT> implements Synchronizer {
   }
 
   HybridEditorSpec<SourceT> positionSpec() {
-    return mySpec;
+    return mySpec.get();
   }
 
   public Cell placeholder() {
@@ -683,7 +685,7 @@ public class HybridSynchronizer<SourceT> implements Synchronizer {
   }
 
   TextTokenCell getPair(TextTokenCell cell) {
-    PairSpec pairSpec = mySpec.getPairSpec();
+    PairSpec pairSpec = mySpec.get().getPairSpec();
     List<Token> tokens = myTokenListEditor.tokens;
     Token token = cell.getToken();
 
@@ -753,10 +755,6 @@ public class HybridSynchronizer<SourceT> implements Synchronizer {
   public void detach() {
     myRegistration.remove();
     myRegistration = null;
-  }
-
-  public HybridEditorSpec<SourceT> getSpec() {
-    return mySpec;
   }
 
   private static class HybridCellState implements CellState {
