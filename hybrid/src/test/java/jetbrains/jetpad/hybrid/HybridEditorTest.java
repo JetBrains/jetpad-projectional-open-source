@@ -509,6 +509,17 @@ public class HybridEditorTest extends EditingTestCase {
   }
 
   @Test
+  public void tokenUpdateAfterReparseAndSplit() {
+    setTokens(new IdentifierToken("id*"), new IdentifierToken("x"), Tokens.LP, Tokens.RP);
+
+    select(0, false);
+    left();
+    type(" ");
+
+    assertTokens(Tokens.ID, Tokens.MUL, new IdentifierToken("x"), Tokens.LP_CALL, Tokens.RP);
+  }
+
+  @Test
   public void selectUpFromBottomInCorrectOrder() {
     setTokens(Tokens.ID, Tokens.DOT, Tokens.ID);
     select(2, false);
