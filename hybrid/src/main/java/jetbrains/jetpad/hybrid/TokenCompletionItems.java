@@ -16,6 +16,7 @@
 package jetbrains.jetpad.hybrid;
 
 import com.google.common.base.Function;
+import com.google.common.base.Predicate;
 import jetbrains.jetpad.base.Validators;
 import jetbrains.jetpad.completion.BaseCompletionItem;
 import jetbrains.jetpad.completion.CompletionItem;
@@ -26,6 +27,7 @@ import jetbrains.jetpad.hybrid.parser.IntValueToken;
 import jetbrains.jetpad.hybrid.parser.Token;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class TokenCompletionItems {
@@ -49,6 +51,24 @@ public class TokenCompletionItems {
     };
   }
 
+  public List<CompletionItem> forToken(final Token token, String... matchingTexts) {
+    List<CompletionItem> result = new ArrayList<>(Collections.singleton(forToken(token)));
+    for (final String match : matchingTexts) {
+      result.add(new SimpleCompletionItem(match, "[" + token.text() + "] " + match) {
+        @Override
+        public Runnable complete(String text) {
+          return myTokenHandler.apply(token);
+        }
+
+        @Override
+        public String toString() {
+          return match + "->Token[" + token + "]";
+        }
+      });
+    }
+    return result;
+  }
+
   public List<CompletionItem> forTokens(Token ...tokens) {
     List<CompletionItem> result = new ArrayList<>();
     for (Token t : tokens) {
@@ -62,6 +82,10 @@ public class TokenCompletionItems {
   }
 
   public CompletionItem forId() {
+    return forId(Validators.identifier());
+  }
+
+  public CompletionItem forId(final Predicate<String> idPredicate) {
     return new BaseCompletionItem() {
       @Override
       public String visibleText(String text) {
@@ -76,7 +100,7 @@ public class TokenCompletionItems {
 
       @Override
       public boolean isMatch(String text) {
-        return Validators.identifier().apply(text);
+        return idPredicate.apply(text);
       }
 
       @Override
