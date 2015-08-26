@@ -208,7 +208,7 @@ public class ExprHybridEditorSpec implements HybridEditorSpec<Expr> {
           if (expr instanceof PlusExpr) {
             ctx.append(tokenPlus);
           } else if (expr instanceof MulExpr) {
-            ctx.append(tokenPlus);
+            ctx.append(tokenMul);
           }
           ctx.append(expr.right);
           return;
