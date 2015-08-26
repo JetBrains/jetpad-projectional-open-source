@@ -652,7 +652,7 @@ public class HybridSynchronizer<SourceT> implements Synchronizer {
     return Collections.unmodifiableList(myTargetList);
   }
 
-  HybridEditorSpec<SourceT> positionSpec() {
+  HybridEditorSpec<SourceT> editorSpec() {
     return mySpec.get();
   }
 

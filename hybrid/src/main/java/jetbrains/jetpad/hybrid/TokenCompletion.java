@@ -48,8 +48,8 @@ class TokenCompletion {
     mySync = sync;
   }
 
-  private HybridEditorSpec<?> positionSpec() {
-    return mySync.positionSpec();
+  private HybridEditorSpec<?> editorSpec() {
+    return mySync.editorSpec();
   }
 
   private TokenListEditor<?> tokenListEditor() {
@@ -61,7 +61,7 @@ class TokenCompletion {
   }
 
   CompletionItems completion(Function<Token, Runnable> handler) {
-    return new CompletionItems(positionSpec().getTokenCompletion(handler).get(CompletionParameters.EMPTY));
+    return new CompletionItems(editorSpec().getTokenCompletion(handler).get(CompletionParameters.EMPTY));
   }
 
   CompletionSupplier placeholderCompletion(final Cell placeholder) {
@@ -185,7 +185,7 @@ class TokenCompletion {
       @Override
       public Async<List<CompletionItem>> getAsync(CompletionParameters cp) {
         if (cp.isMenu()) {
-          return positionSpec().getAdditionalCompletion(createContext(cp), createCompleter(cp)).getAsync(cp);
+          return editorSpec().getAdditionalCompletion(createContext(cp), createCompleter(cp)).getAsync(cp);
         }
         return Asyncs.<List<CompletionItem>>constant(new ArrayList<CompletionItem>());
       }
@@ -198,7 +198,7 @@ class TokenCompletion {
       public List<CompletionItem> get(CompletionParameters cp) {
         List<CompletionItem> result = new ArrayList<>();
         if (!(cp.isMenu() && mySync.isHideTokensInMenu())) {
-          result.addAll(positionSpec().getTokenCompletion(new Function<Token, Runnable>() {
+          result.addAll(editorSpec().getTokenCompletion(new Function<Token, Runnable>() {
             @Override
             public Runnable apply(Token input) {
               return completer.complete(input);
@@ -206,7 +206,7 @@ class TokenCompletion {
           }).get(cp));
         }
         if (cp.isMenu()) {
-          result.addAll(positionSpec().getAdditionalCompletion(ctx, completer).get(cp));
+          result.addAll(editorSpec().getAdditionalCompletion(ctx, completer).get(cp));
           ctx.getPrefix();
         }
         return result;
@@ -215,7 +215,7 @@ class TokenCompletion {
       @Override
       public Async<List<CompletionItem>> getAsync(CompletionParameters cp) {
         if (cp.isMenu()) {
-          return positionSpec().getAdditionalCompletion(ctx, completer).getAsync(cp);
+          return editorSpec().getAdditionalCompletion(ctx, completer).getAsync(cp);
         }
         return Asyncs.<List<CompletionItem>>constant(new ArrayList<CompletionItem>());
       }
