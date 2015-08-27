@@ -122,6 +122,13 @@ class TokenOperations<SourceT> {
     }
   }
 
+  Runnable replaceToken(Cell contextCell, Token token) {
+    final int index = tokenViews().indexOf(contextCell);
+    tokens().remove(index);
+    tokens().add(index, token);
+    return select(index, FIRST);
+  }
+
   boolean canMerge(Cell contextCell, int delta) {
     final int index = tokenViews().indexOf(contextCell);
 

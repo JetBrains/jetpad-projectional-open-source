@@ -946,6 +946,16 @@ public class HybridEditorTest extends EditingTestCase {
     assertTrue(container.expr.get() instanceof MulExpr);
   }
 
+  @Test
+  public void emptyTokenCausesError() {
+    setTokens(new IdentifierToken("a"), Tokens.PLUS, new IdentifierToken("b"));
+
+    select(0, false);
+    backspace();
+
+    assertTrue(sync.target().hasError().get());
+  }
+
   private ValueToken createComplexToken() {
     return new ValueToken(new ComplexValueExpr(), new ComplexValueCloner());
   }
