@@ -342,7 +342,7 @@ public class HybridSynchronizer<SourceT> implements Synchronizer {
       @Override
       public HybridCellState saveState(Cell cell) {
         if (valid().get()) {
-          return null;
+          return new HybridCellState(null);
         }
 
         List<Token> result = new ArrayList<>();
@@ -358,8 +358,7 @@ public class HybridSynchronizer<SourceT> implements Synchronizer {
 
       @Override
       public void restoreState(Cell cell, HybridCellState state) {
-        List<Token> tokens = state == null ? null : state.tokens;
-        tokenListEditor().restoreState(tokens);
+        tokenListEditor().restoreState(state.tokens);
       }
     };
   }
@@ -773,6 +772,21 @@ public class HybridSynchronizer<SourceT> implements Synchronizer {
         return CellStateDifference.EDIT;
       }
       return CellStateDifference.EQUAL;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+      if (this == o) return true;
+      if (o == null || getClass() != o.getClass()) return false;
+
+      HybridCellState that = (HybridCellState) o;
+
+      return !(tokens != null ? !tokens.equals(that.tokens) : that.tokens != null);
+    }
+
+    @Override
+    public int hashCode() {
+      return tokens != null ? tokens.hashCode() : 0;
     }
   }
 }
