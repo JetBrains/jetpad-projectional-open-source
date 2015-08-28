@@ -93,16 +93,20 @@ public abstract class CompletionTestCase extends EditingTestCase {
   }
 
   protected class SetTextToCompletionItem extends SimpleCompletionItem {
-    private String myText;
+    protected String myCompletion;
 
     public SetTextToCompletionItem(String text) {
-      super(text);
-      myText = text;
+      this(text, text);
+    }
+
+    public SetTextToCompletionItem(String match, String completion) {
+      super(match);
+      myCompletion = completion;
     }
 
     @Override
     public Runnable complete(String text) {
-      mySetTo = myText;
+      mySetTo = myCompletion;
       return Runnables.EMPTY;
     }
   }
