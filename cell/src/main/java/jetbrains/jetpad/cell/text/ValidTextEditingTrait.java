@@ -101,10 +101,10 @@ class ValidTextEditingTrait extends TextEditingTrait {
     if (textCell.isEnd() && !completion.hasMatches(text)) {
       //right transform
       String prefix = text.substring(0, text.length() - 1);
-      String suffix = text.substring(text.length() - 1).trim();
+      String suffix = text.substring(text.length() - 1);
 
       if (getValidator(textCell).apply(prefix)) {
-        handleSideTransform(textCell, prefix, suffix, Side.RIGHT);
+        handleSideTransform(textCell, prefix, suffix.trim(), Side.RIGHT);
       } else {
         List<CompletionItem> matches = completion.matches(prefix);
         if (matches.size() == 1) {

@@ -56,7 +56,7 @@ public class ValidTextCompletionTest extends CompletionTestCase {
             new Predicate<String>() {
               @Override
               public boolean apply(String input) {
-                return "".equals(input) || "u".equals(input);
+                return "".equals(input) || "u".equals(input) || "qaz".equals(input);
               }
             });
       }
@@ -84,6 +84,18 @@ public class ValidTextCompletionTest extends CompletionTestCase {
                 }
               }
 
+              class ActuallySetTextToCompletionItem extends SetTextToCompletionItem {
+                public ActuallySetTextToCompletionItem(String match, String completion) {
+                  super(match, completion);
+                }
+
+                @Override
+                public Runnable complete(String text) {
+                  ValidTextCompletionTest.this.text.text().set(myCompletion);
+                  return super.complete(text);
+                }
+              }
+
               List<CompletionItem> result = new ArrayList<>();
               result.addAll(createCompletion("a", "c", "ae", "zz", "d", "u", "q").get(cp));
               result.add(new LowPriorityCompletionItem("d"));
@@ -92,6 +104,8 @@ public class ValidTextCompletionTest extends CompletionTestCase {
               result.add(new LowPriorityCompletionItem("v"));
               result.add(new LowPriorityCompletionItem("va"));
               result.add(new SetTextToCompletionItem("var"));
+              result.add(new SetTextToCompletionItem("foobar"));
+              result.add(new ActuallySetTextToCompletionItem("foo", "qaz"));
               return result;
             }
           };
@@ -300,6 +314,13 @@ public class ValidTextCompletionTest extends CompletionTestCase {
     assertFocused(focused);
   }
 
+  @Test
+  public void completeOnSpaceOnEnd() {
+    // Tests that the following line does not throw
+    type("foo ");
+
+    assertCompleted("qaz");
+  }
 
   @Test
   public void lowPriorityIsntCompletedIf() {
