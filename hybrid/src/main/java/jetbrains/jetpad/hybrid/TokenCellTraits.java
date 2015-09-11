@@ -19,7 +19,6 @@ import com.google.common.base.Function;
 import jetbrains.jetpad.cell.Cell;
 import jetbrains.jetpad.cell.CellContainer;
 import jetbrains.jetpad.cell.completion.Completion;
-import jetbrains.jetpad.cell.position.PositionHandler;
 import jetbrains.jetpad.cell.position.Positions;
 import jetbrains.jetpad.cell.text.TextEditing;
 import jetbrains.jetpad.cell.trait.CellTrait;
@@ -31,6 +30,7 @@ import jetbrains.jetpad.event.Event;
 import jetbrains.jetpad.event.Key;
 import jetbrains.jetpad.event.KeyEvent;
 import jetbrains.jetpad.event.KeyStrokeSpecs;
+import jetbrains.jetpad.hybrid.parser.ErrorToken;
 import jetbrains.jetpad.hybrid.parser.Token;
 
 import java.util.List;
@@ -160,9 +160,12 @@ class TokenCellTraits {
             (prev != null && (prev.noSpaceToRight() || current.noSpaceToLeft()) ||
             (next != null && (next.noSpaceToLeft()) || current.noSpaceToRight()))) {
           tokenOperations(cell).deleteToken(cell, 0).run();
-          event.consume();
-          return;
+        } else {
+          tokenOperations(cell).replaceToken(cell, new ErrorToken("")).run();
         }
+
+        event.consume();
+        return;
       }
 
       super.onCellTraitEvent(cell, spec, event);
