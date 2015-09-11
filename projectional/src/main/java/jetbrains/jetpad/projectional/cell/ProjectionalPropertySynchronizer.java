@@ -38,7 +38,7 @@ import jetbrains.jetpad.projectional.generic.Role;
 
 import java.util.List;
 
-class ProjectionalPropertySynchronizer<ContextT, SourceItemT extends ContextT> extends BaseProjectionalSynchronizer<Property<SourceItemT>, ContextT, SourceItemT> {
+class ProjectionalPropertySynchronizer<ContextT, SourceItemT> extends BaseProjectionalSynchronizer<Property<SourceItemT>, ContextT, SourceItemT> {
   private Property<SourceItemT> mySource;
 
   ProjectionalPropertySynchronizer(

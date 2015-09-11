@@ -56,7 +56,7 @@ public class ProjectionalSynchronizers {
     return new ProjectionalObservableListSynchronizer<>(mapper, source, target, targetList, factory);
   }
 
-  public static <ContextT, SourceT extends ContextT> ProjectionalRoleSynchronizer<ContextT, SourceT> forSingleRole(
+  public static <ContextT, SourceT> ProjectionalRoleSynchronizer<ContextT, SourceT> forSingleRole(
       Mapper<? extends ContextT, ? extends Cell> mapper,
       Property<SourceT> source, Cell target, MapperFactory<SourceT, Cell> factory) {
     return new ProjectionalPropertySynchronizer<>(mapper, source, target, factory);
