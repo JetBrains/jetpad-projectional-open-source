@@ -26,12 +26,6 @@ public abstract class SimpleCompletionItem extends BaseCompletionItem {
   }
 
   protected SimpleCompletionItem(@Nonnull String matchingText, @Nonnull String visibleText) {
-    if (matchingText == null) {
-      throw new NullPointerException();
-    }
-    if (visibleText == null) {
-      throw new NullPointerException();
-    }
     myMatchingText = matchingText;
     myVisibleText = visibleText;
   }
