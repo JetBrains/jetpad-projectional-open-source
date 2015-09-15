@@ -9,6 +9,13 @@
   <version>1.1-SNAPSHOT</version>
   <packaging>war</packaging>
 
+  <licenses>
+    <license>
+      <name>Apache License, Version 2.0</name>
+      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+    </license>
+  </licenses>
+
   <parent>
     <artifactId>projectional-container</artifactId>
     <groupId>jetbrains.jetpad</groupId>
