@@ -295,11 +295,16 @@ public class ExprHybridEditorSpec implements HybridEditorSpec<Expr> {
             return tokenHandler.apply(new ValueToken(new ComplexValueExpr(), new ValueExprCloner()));
           }
         });
-
         result.add(new SimpleCompletionItem("posValue") {
           @Override
           public Runnable complete(String text) {
             return tokenHandler.apply(new ValueToken(new PosValueExpr(), new ValueExprCloner()));
+          }
+        });
+        result.add(new SimpleCompletionItem("!", "id") {
+          @Override
+          public Runnable complete(String text) {
+            return tokenHandler.apply(Tokens.INCREMENT);
           }
         });
 

@@ -248,8 +248,8 @@ class TextNavigationTrait extends CellTrait {
         TextCell popupCell = CompletionSupport.showSideTransformPopup(cell, popup, cell.get(key), false);
         popupCell.text().set(text);
         popupCell.caretPosition().set(popupCell.text().get().length());
-        return true;
       }
+      return true;
     }
     return false;
   }

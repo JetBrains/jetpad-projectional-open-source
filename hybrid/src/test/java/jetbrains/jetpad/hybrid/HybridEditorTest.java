@@ -458,6 +458,18 @@ public class HybridEditorTest extends EditingTestCase {
   }
 
   @Test
+  public void valueTokenLeftPrefix() {
+    setTokens(new ValueToken(new ComplexValueExpr(), new ComplexValueCloner()));
+    select(0, false);
+
+    type("!");
+
+    assertTrue(sync.tokens().size() == 2);
+    assertTrue(sync.tokens().get(0) instanceof ValueToken);
+    assertTrue(sync.tokens().get(1).equals(Tokens.INCREMENT));
+  }
+
+  @Test
   public void valueTokenTransform() {
     type("value+value");
 
