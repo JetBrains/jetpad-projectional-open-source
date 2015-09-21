@@ -61,7 +61,7 @@ public class ExprHybridEditorSpec implements HybridEditorSpec<Expr> {
 
       private Expr parsePlus(ParsingContext ctx) {
         Expr result = parseMul(ctx);
-        if (result == null) return result;
+        if (result == null) return null;
         while (ctx.current() == tokenPlus) {
           ParsingContext.State startState = ctx.saveState();
           ctx.advance();
@@ -83,7 +83,7 @@ public class ExprHybridEditorSpec implements HybridEditorSpec<Expr> {
 
       private Expr parseMul(ParsingContext ctx) {
         Expr result = parsePostfix(ctx);
-        if (result == null) return result;
+        if (result == null) return null;
         while (ctx.current() == tokenMul) {
           ParsingContext.State startState = ctx.saveState();
           ctx.advance();
@@ -106,12 +106,20 @@ public class ExprHybridEditorSpec implements HybridEditorSpec<Expr> {
 
       private Expr parsePostfix(ParsingContext ctx) {
         Expr result = parsePrimary(ctx);
-        if (result == null) return result;
-        while (ctx.current() == Tokens.INCREMENT) {
+        if (result == null) return null;
+        while (true) {
+          if (ctx.current() == Tokens.INCREMENT) {
+            PostfixIncrementExpr inc = new PostfixIncrementExpr();
+            inc.expr.set(result);
+            result = inc;
+          } else if (ctx.current() == Tokens.FACTORIAL) {
+            FactorialExpr fact = new FactorialExpr();
+            fact.expr.set(result);
+            result = fact;
+          } else {
+            break;
+          }
           ctx.advance();
-          PostfixIncrementExpr inc = new PostfixIncrementExpr();
-          inc.expr.set(result);
-          result = inc;
         }
         return result;
       }
@@ -229,6 +237,13 @@ public class ExprHybridEditorSpec implements HybridEditorSpec<Expr> {
           return;
         }
 
+        if (value instanceof FactorialExpr) {
+          FactorialExpr fact = (FactorialExpr) value;
+          ctx.append(fact.expr);
+          ctx.append(Tokens.FACTORIAL);
+          return;
+        }
+
         if (value instanceof CallExpr) {
           CallExpr callExpr = (CallExpr) value;
           ctx.appendId(callExpr.name);
@@ -281,7 +296,7 @@ public class ExprHybridEditorSpec implements HybridEditorSpec<Expr> {
       public List<CompletionItem> get(CompletionParameters cp) {
         List<CompletionItem> result = new ArrayList<>();
         TokenCompletionItems items = new TokenCompletionItems(tokenHandler);
-        result.addAll(items.forTokens(Tokens.ID, Tokens.INCREMENT, Tokens.PLUS, Tokens.MUL, Tokens.LP, Tokens.RP, Tokens.DOT));
+        result.addAll(items.forTokens(Tokens.ID, Tokens.INCREMENT, Tokens.FACTORIAL, Tokens.PLUS, Tokens.MUL, Tokens.LP, Tokens.RP, Tokens.DOT));
         result.add(items.forNumber());
         result.add(new SimpleCompletionItem("value") {
           @Override
@@ -299,12 +314,6 @@ public class ExprHybridEditorSpec implements HybridEditorSpec<Expr> {
           @Override
           public Runnable complete(String text) {
             return tokenHandler.apply(new ValueToken(new PosValueExpr(), new ValueExprCloner()));
-          }
-        });
-        result.add(new SimpleCompletionItem("!", "id") {
-          @Override
-          public Runnable complete(String text) {
-            return tokenHandler.apply(Tokens.INCREMENT);
           }
         });
 
