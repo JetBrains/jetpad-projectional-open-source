@@ -308,11 +308,13 @@ public class IndentUpdater<TargetT> {
   }
 
   private Cell firstLeaf(Cell item) {
-    if (isCell(item) || item.children().isEmpty()) return item;
+    if (isCell(item)) return item;
     for (Cell child : item.children()) {
-      if (isVisible(child) && !isEmptyIndent(child)) return firstLeaf(child);
+      if (isVisible(child) && !isEmptyIndent(child)) {
+        return firstLeaf(child);
+      }
     }
-    throw new IllegalStateException();
+    return item;
   }
 
   Cell root() {
@@ -357,6 +359,7 @@ public class IndentUpdater<TargetT> {
     if (!(source instanceof IndentCell)) return false;
 
     for (Cell c : source.children()) {
+      if (!isVisible(c)) continue;
       if (!isEmptyIndent(c)) return false;
     }
 

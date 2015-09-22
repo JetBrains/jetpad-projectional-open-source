@@ -35,7 +35,7 @@ public class RandomIndentTest extends BaseTestCase {
   }
 
   public void doTest() {
-    for (int i = 0; i < 100000; i++) {
+    for (int i = 0; i < 1000; i++) {
       step();
     }
   }
@@ -48,7 +48,7 @@ public class RandomIndentTest extends BaseTestCase {
     final ObservableList<Cell> children = target.children();
 
     if (opKind == 0) {
-      if (target instanceof IndentCell && !(target instanceof IndentCell)) {
+      if (target instanceof IndentCell && !(target instanceof NewLineCell)) {
         int kind = random.nextInt(3);
         Cell newCell;
         if (kind == 0) {
