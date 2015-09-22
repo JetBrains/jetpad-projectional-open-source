@@ -165,6 +165,11 @@ public class IndentUpdater<TargetT> {
         if (!isCell(part)) continue;
         CellWrapper<TargetT> wrapper = myWrappers.get(part);
         TargetT item = wrapper.item();
+
+        if (myIndentUpdaterTarget.parent(item) == null) {
+          throw new IllegalStateException();
+        }
+
         removeFromParent(item);
         children(newLine).add(item);
       }
