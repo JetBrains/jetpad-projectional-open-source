@@ -466,7 +466,7 @@ public class HybridEditorTest extends EditingTestCase {
 
     assertTrue(sync.tokens().size() == 2);
     assertTrue(sync.tokens().get(0) instanceof ValueToken);
-    assertTrue(sync.tokens().get(1).equals(Tokens.INCREMENT));
+    assertTrue(sync.tokens().get(1).equals(Tokens.FACTORIAL));
   }
 
   @Test

@@ -21,7 +21,8 @@ import jetbrains.jetpad.hybrid.parser.Token;
 public class Tokens {
   public static final Token ID = new SimpleToken("id");
   public static final Token PLUS = new SimpleToken("+");
-  public static final Token INCREMENT = new SimpleToken("++");
+  public static final Token INCREMENT = new SimpleToken("++", true, false);
+  public static final Token FACTORIAL = new SimpleToken("!", true, false);
   public static final Token MUL = new SimpleToken("*");
   public static final Token LP = new SimpleToken("(", false, true);
   public static final Token LP_CALL = new SimpleToken("(", true, true);
