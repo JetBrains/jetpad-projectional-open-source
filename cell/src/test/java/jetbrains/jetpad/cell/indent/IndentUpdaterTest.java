@@ -235,6 +235,18 @@ public class IndentUpdaterTest extends BaseTestCase {
   }
 
   @Test
+  public void doubleVisibilityChange() {
+    Cell ta = text("a");
+
+    children.addAll(Arrays.asList(ta, text("b")));
+
+    ta.visible().set(false);
+    ta.visible().set(true);
+
+    assertTarget("[['a', 'b']]");
+  }
+
+  @Test
   public void newLineVisibilityChange() {
     NewLineCell nl = newLine();
     nl.visible().set(false);
