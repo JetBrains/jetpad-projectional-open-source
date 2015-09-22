@@ -35,6 +35,8 @@ public class RandomIndentTest extends BaseTestCase {
   }
 
   public void doTest() {
+    //todo need a larger test size. i didn't increase it because on 4200 something there's an exception
+    //todo fix it.
     for (int i = 0; i < 1000; i++) {
       step();
     }
