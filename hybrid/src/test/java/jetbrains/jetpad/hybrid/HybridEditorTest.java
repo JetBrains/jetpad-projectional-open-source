@@ -405,7 +405,7 @@ public class HybridEditorTest extends EditingTestCase {
     down();
     enter();
 
-    assertTokens(Tokens.ID, Tokens.DOT, Tokens.PLUS);
+    assertTokens(Tokens.ID, Tokens.DOT, Tokens.MUL);
   }
 
   @Test

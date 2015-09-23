@@ -187,13 +187,25 @@ public class IndentUpdater<TargetT> {
     Position prevNewLinePos = prevNewLine(removeAt.prev());
 
     if (isCell(child)) {
+      TargetT line;
+      int index;
       if (prevNewLinePos == null) {
         Position first = new Position(this, firstLeaf(myRoot));
-        children(children(myTarget).get(0)).remove(first.deltaTo(removeAt));
+        line = children(myTarget).get(0);
+        index = first.deltaTo(removeAt);
       } else {
-        TargetT line = myNewLineToLine.get(prevNewLinePos.get());
-        children(line).remove(prevNewLinePos.deltaTo(removeAt) - 1 + (indent(child) > 0 ? 1 : 0));
+        line = myNewLineToLine.get(prevNewLinePos.get());
+        index = prevNewLinePos.deltaTo(removeAt) - 1 + (indent(prevNewLinePos.get()) > 0 ? 1 : 0);
       }
+
+      TargetT toRemove = children(line).get(index);
+
+      CellWrapper<TargetT> wrapper = myWrappers.get(child);
+      if (wrapper.item() != toRemove) {
+        throw new IllegalStateException();
+      }
+
+      children(line).remove(index);
       myWrappers.remove(child).remove();
     } else if (child instanceof NewLineCell) {
       TargetT lineCell = myNewLineToLine.remove(child);
