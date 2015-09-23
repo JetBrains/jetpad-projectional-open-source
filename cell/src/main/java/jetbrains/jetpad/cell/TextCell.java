@@ -110,8 +110,10 @@ public class TextCell extends Cell {
     };
   }
 
+
+
   @Override
   public String toString() {
-    return "TextCell('" + text().get() + "')";
+    return "TextCell('" + text().get() + "')@" + Integer.toHexString(hashCode());
   }
 }
