@@ -356,6 +356,14 @@ public class IndentUpdaterTest extends BaseTestCase {
     assertTarget("[['a', 'b']]");
   }
 
+  @Test
+  public void illegalStateIfNewLineInDifferentPlace() {
+    children.addAll(Arrays.asList(indent(true, newLine()), text("b")));
+    children.remove(1);
+
+    assertTarget("[[], ['  ']]");
+  }
+
   private Cell composite(String text) {
     Cell result = new HorizontalCell();
     result.children().addAll(Arrays.asList(text("composite"), text(text)));
