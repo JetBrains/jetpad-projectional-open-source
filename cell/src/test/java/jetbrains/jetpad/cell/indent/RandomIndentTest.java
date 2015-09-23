@@ -18,6 +18,7 @@ public class RandomIndentTest extends BaseTestCase {
   private ViewContainer viewContainer = new ViewContainer();
   private CellContainer cellContainer = new CellContainer();
   private CellContainerToViewMapper rootMapper;
+  private int myLetterCount;
 
   private IndentCell root = new IndentCell();
 
@@ -56,7 +57,7 @@ public class RandomIndentTest extends BaseTestCase {
         if (kind == 0) {
           newCell = new IndentCell(random.nextBoolean());
         } else if (kind == 1) {
-          newCell = new TextCell("aaa");
+          newCell = new TextCell("" + (char) ('a' + myLetterCount++));
         } else {
           newCell = new NewLineCell();
         }
