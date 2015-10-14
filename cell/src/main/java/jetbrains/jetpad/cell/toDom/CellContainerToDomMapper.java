@@ -374,7 +374,6 @@ public class CellContainerToDomMapper extends Mapper<CellContainer, Element> {
           }
         } else {
           Element target = getElement(cell);
-          Rectangle result;
           if (cell instanceof ScrollCell) {
             return new Rectangle(
               target.getAbsoluteLeft(),
