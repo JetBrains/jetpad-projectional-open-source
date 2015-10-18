@@ -28,7 +28,7 @@ public class Counters implements HasCounters {
       if (myCounters == null) {
         myCounters = new ListMap<>();
       }
-      myCounters.put(spec, delta);
+      myCounters.put(spec, newVal);
     } else {
       if (myCounters != null) {
         myCounters.remove(spec);
