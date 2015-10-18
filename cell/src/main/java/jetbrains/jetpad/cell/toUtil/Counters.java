@@ -20,6 +20,10 @@ public class Counters implements HasCounters {
     int oldVal = getCounter(spec);
     int newVal = oldVal + delta;
 
+    if (newVal < 0) {
+      throw new IllegalStateException("Counter " + spec + " decreased to the value less than zero.");
+    }
+
     if (newVal != 0) {
       if (myCounters == null) {
         myCounters = new ListMap<>();
