@@ -16,6 +16,7 @@
 package jetbrains.jetpad.grammar;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class GrammarSugar {
@@ -84,9 +85,13 @@ public class GrammarSugar {
   }
 
   public static NonTerminal separated(Symbol item, Symbol separator) {
+    return separated(item, separator, false);
+  }
+
+  public static NonTerminal separated(Symbol item, Symbol separator, boolean atLeastOne) {
     Grammar g = item.getGrammar();
-    NonTerminal separated = g.newNonTerminal(g.uniqueName("separated_"));
-    NonTerminal sepSeq = g.newNonTerminal(g.uniqueName("separatedSeq_"));
+
+    NonTerminal sepSeq = g.newNonTerminal(g.uniqueName("separated1_"));
     g.newRule(sepSeq, item, star(seq(separator, item))).setHandler(new RuleHandler() {
       @Override
       public Object handle(RuleContext ctx) {
@@ -100,17 +105,63 @@ public class GrammarSugar {
         return result;
       }
     });
-    g.newRule(separated, optional(sepSeq)).setHandler(new RuleHandler() {
+
+    if (atLeastOne) {
+      return sepSeq;
+    } else {
+      NonTerminal separated = g.newNonTerminal(g.uniqueName("separated_"));
+      g.newRule(separated, optional(sepSeq)).setHandler(new RuleHandler() {
+        @Override
+        public Object handle(RuleContext ctx) {
+          List list = (List) ctx.get(0);
+          if (list.isEmpty()) {
+            return PersistentList.nil();
+          } else {
+            return list.get(0);
+          }
+        }
+      });
+      return separated;
+    }
+  }
+
+  public static NonTerminal terminated(Symbol item, Symbol separator) {
+    return terminated(item, separator, false);
+  }
+
+  public static NonTerminal terminated(Symbol item, Symbol separator, boolean trailingOptional) {
+    Grammar g = item.getGrammar();
+    NonTerminal sepSeq = g.newNonTerminal(g.uniqueName("separatedEndSeq_"));
+    NonTerminal sepEnd = g.newNonTerminal(g.uniqueName("separatedEnd_"));
+    g.newRule(sepSeq, item).setHandler(new RuleHandler() {
       @Override
       public Object handle(RuleContext ctx) {
-        List list = (List) ctx.get(0);
-        if (list.isEmpty()) {
-          return PersistentList.nil();
-        } else {
-          return list.get(0);
-        }
+        return PersistentList.cons(ctx.get(0), PersistentList.nil());
       }
     });
-    return separated;
+    g.newRule(sepSeq, sepSeq, separator, item).setHandler(new RuleHandler() {
+      @Override
+      public Object handle(RuleContext ctx) {
+        Object last = ctx.get(2);
+        PersistentList list = (PersistentList) ctx.get(0);
+        return PersistentList.cons(last, list);
+      }
+    });
+    if (trailingOptional) {
+      g.newRule(sepEnd, sepSeq, optional(separator)).setHandler(new RuleHandler() {
+        @Override
+        public Object handle(RuleContext ctx) {
+          return Arrays.asList(PersistentList.reversed((PersistentList) ctx.get(0)), ctx.get(1));
+        }
+      });
+    } else {
+      g.newRule(sepEnd, sepSeq, separator).setHandler(new RuleHandler() {
+        @Override
+        public Object handle(RuleContext ctx) {
+          return PersistentList.reversed((PersistentList) ctx.get(0));
+        }
+      });
+    }
+    return sepEnd;
   }
 }

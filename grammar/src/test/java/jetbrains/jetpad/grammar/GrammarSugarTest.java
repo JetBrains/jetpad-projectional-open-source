@@ -89,8 +89,61 @@ public class GrammarSugarTest {
     LRParser parser = new LRParser(new SLRTableGenerator(g).generateTable());
 
     assertFalse(parser.parse(comma));
+    assertFalse(parser.parse(id, comma));
+    assertFalse(parser.parse(id, comma, id, comma));
     assertEquals("[]", "" + parser.parse(asTokens()));
     assertEquals("[id]", "" + parser.parse(asTokens(id)));
     assertEquals("[id, id]", "" + parser.parse(asTokens(id, comma, id)));
+  }
+
+  @Test
+  public void separated1Part() {
+    Grammar g = new Grammar();
+    Terminal id = g.newTerminal("id");
+    Terminal comma = g.newTerminal(",");
+    g.newRule(g.getStart(), separated(id, comma, true));
+
+    LRParser parser = new LRParser(new SLRTableGenerator(g).generateTable());
+
+    assertFalse(parser.parse(new Terminal[0]));
+    assertFalse(parser.parse(comma));
+    assertFalse(parser.parse(id, comma));
+    assertFalse(parser.parse(id, comma, id, comma));
+    assertEquals("[id]", "" + parser.parse(asTokens(id)));
+    assertEquals("[id, id]", "" + parser.parse(asTokens(id, comma, id)));
+  }
+
+  @Test
+  public void terminatedPart() {
+    Grammar g = new Grammar();
+    Terminal id = g.newTerminal("id");
+    Terminal comma = g.newTerminal(",");
+    g.newRule(g.getStart(), terminated(id, comma));
+
+    LRParser parser = new LRParser(new SLRTableGenerator(g).generateTable());
+
+    assertFalse(parser.parse(new Terminal[0]));
+    assertFalse(parser.parse(comma));
+    assertFalse(parser.parse(id));
+    assertFalse(parser.parse(id, comma, id));
+    assertEquals("[id]", "" + parser.parse(asTokens(id, comma)));
+    assertEquals("[id, id]", "" + parser.parse(asTokens(id, comma, id, comma)));
+  }
+
+  @Test
+  public void terminatedTrailingOptionalPart() {
+    Grammar g = new Grammar();
+    Terminal id = g.newTerminal("id");
+    Terminal comma = g.newTerminal(",");
+    g.newRule(g.getStart(), terminated(id, comma, true));
+
+    LRParser parser = new LRParser(new SLRTableGenerator(g).generateTable());
+
+    assertFalse(parser.parse(new Terminal[0]));
+    assertFalse(parser.parse(comma));
+    assertEquals("[[id], []]", "" + parser.parse(asTokens(id)));
+    assertEquals("[[id, id], []]", "" + parser.parse(asTokens(id, comma, id)));
+    assertEquals("[[id], [,]]", "" + parser.parse(asTokens(id, comma)));
+    assertEquals("[[id, id], [,]]", "" + parser.parse(asTokens(id, comma, id, comma)));
   }
 }
