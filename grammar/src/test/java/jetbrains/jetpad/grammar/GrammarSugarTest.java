@@ -93,4 +93,19 @@ public class GrammarSugarTest {
     assertEquals("[id]", "" + parser.parse(asTokens(id)));
     assertEquals("[id, id]", "" + parser.parse(asTokens(id, comma, id)));
   }
+
+  @Test
+  public void separated1Part() {
+    Grammar g = new Grammar();
+    Terminal id = g.newTerminal("id");
+    Terminal comma = g.newTerminal(",");
+    g.newRule(g.getStart(), separated1(id, comma));
+
+    LRParser parser = new LRParser(new SLRTableGenerator(g).generateTable());
+
+    assertFalse(parser.parse(new Terminal[0]));
+    assertFalse(parser.parse(comma));
+    assertEquals("[id]", "" + parser.parse(asTokens(id)));
+    assertEquals("[id, id]", "" + parser.parse(asTokens(id, comma, id)));
+  }
 }
