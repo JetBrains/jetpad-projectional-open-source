@@ -26,7 +26,7 @@ import jetbrains.jetpad.model.transform.Transformers;
 import java.util.Comparator;
 
 public class CompletionMenuModel {
-  private static final int CHUNK_SIZE = 30;
+  private static final int CHUNK_SIZE = 60;
   private static final int DISTANCE_FROM_END_TO_LOAD = 10;
 
   public final Property<String> text = new ValueProperty<>();
