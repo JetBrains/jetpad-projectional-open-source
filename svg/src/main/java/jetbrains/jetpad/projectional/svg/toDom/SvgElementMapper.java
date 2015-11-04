@@ -148,6 +148,17 @@ class SvgElementMapper<SourceT extends SvgElement, TargetT extends OMSVGElement>
     }));
   }
 
+  @Override
+  protected void onDetach() {
+    super.onDetach();
+    if (myHandlerRegs != null) {
+      for (HandlerRegistration registration : myHandlerRegs.values()) {
+        registration.removeHandler();
+      }
+      myHandlerRegs.clear();
+    }
+  }
+
   private MouseEvent createMouseEvent(com.google.gwt.event.dom.client.MouseEvent<?> evt) {
     evt.stopPropagation();
     DoubleVector coords = myPeer.inverseScreenTransform(getSource(), new DoubleVector(evt.getClientX(), evt.getClientY()));
