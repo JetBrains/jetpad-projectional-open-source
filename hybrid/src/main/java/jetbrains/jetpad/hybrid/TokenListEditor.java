@@ -227,4 +227,8 @@ class TokenListEditor<SourceT> {
     }
   }
 
+  void dispose() {
+    myChangeReg.remove();
+    myChangeReg = Registration.EMPTY;
+  }
 }

@@ -752,6 +752,7 @@ public class HybridSynchronizer<SourceT> implements Synchronizer {
 
   @Override
   public void detach() {
+    myTokenListEditor.dispose();
     myRegistration.remove();
     myRegistration = null;
   }
