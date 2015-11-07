@@ -94,6 +94,7 @@ public class ProjectionalPropertySynchronizerTest extends EditingTestCase {
     focusChild(child, 1);
 
     press(Key.DELETE);
+    press(Key.DELETE);
 
     assertNull(container.child.get());
   }
@@ -116,8 +117,21 @@ public class ProjectionalPropertySynchronizerTest extends EditingTestCase {
     focusChild(child, 1);
 
     press(Key.BACKSPACE);
+    press(Key.BACKSPACE);
 
     assertNull(container.child.get());
+  }
+
+  @Test
+  public void cancelDeleteWithEscape() {
+    Child3 child = new Child3();
+    container.child.set(child);
+    focusChild(child, 1);
+
+    backspace();
+    escape();
+
+    assertNotNull(container.child.get());
   }
 
   @Test

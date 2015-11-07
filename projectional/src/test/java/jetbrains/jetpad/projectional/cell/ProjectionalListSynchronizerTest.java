@@ -249,8 +249,20 @@ public class ProjectionalListSynchronizerTest extends EditingTestCase {
     selectChild(0);
 
     backspace();
+    backspace();
 
     assertTrue(container.children.isEmpty());
+  }
+
+  @Test
+  public void cancelDeleteSelectionWithEsc() {
+    container.children.add(new NonEmptyChild());
+    selectChild(0);
+
+    backspace();
+    escape();
+
+    assertEquals(1, container.children.size());
   }
 
   @Test
@@ -272,9 +284,11 @@ public class ProjectionalListSynchronizerTest extends EditingTestCase {
     getChild(1).get(PositionHandler.PROPERTY).end();
 
     del();
+    del();
 
     assertFocusedEnd(0);
   }
+
 
   @Test
   public void tailItemDeleteManyItems() {

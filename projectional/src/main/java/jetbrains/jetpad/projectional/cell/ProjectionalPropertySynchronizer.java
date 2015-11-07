@@ -141,6 +141,13 @@ class ProjectionalPropertySynchronizer<ContextT, SourceItemT> extends BaseProjec
   }
 
   private void handleItemKeyPress(KeyEvent event, Cell cell) {
+    if (isSimpleDeleteEvent(event, cell, true) && getForDeletion().get() == null) {
+      getForDeletion().set(mySource.get());
+      event.consume();
+      return;
+    }
+
+
     if (isDeleteEvent(event, cell)) {
       deleteItem();
       event.consume();

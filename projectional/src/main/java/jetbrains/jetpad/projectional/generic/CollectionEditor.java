@@ -19,17 +19,20 @@ import jetbrains.jetpad.event.Key;
 import jetbrains.jetpad.event.KeyEvent;
 import jetbrains.jetpad.event.KeyStrokeSpecs;
 import jetbrains.jetpad.event.ModifierKey;
+import jetbrains.jetpad.model.property.Property;
 
 import java.util.List;
 
 public abstract class CollectionEditor<ItemT, ViewT> {
   private List<ItemT> myItems;
   private List<ViewT> myViews;
+  private Property<ItemT> myForDeletion;
   private boolean myCanCreateNew;
 
-  protected CollectionEditor(List<ItemT> items, List<ViewT> views, boolean canCreateNew) {
+  protected CollectionEditor(List<ItemT> items, List<ViewT> views, Property<ItemT> forDeletion, boolean canCreateNew) {
     myItems = items;
     myViews = views;
+    myForDeletion = forDeletion;
     myCanCreateNew = canCreateNew;
   }
 
@@ -118,6 +121,12 @@ public abstract class CollectionEditor<ItemT, ViewT> {
       return;
     }
 
+    if (isSimpleDeleteEvent(event) && myForDeletion.get() != myItems.get(index) && !isEmpty(index)) {
+      myForDeletion.set(myItems.get(index));
+      event.consume();
+      return;
+    }
+
     if (isDeleteEvent(event)) {
       myItems.remove(index);
       selectAfterClear(index);
@@ -138,8 +147,16 @@ public abstract class CollectionEditor<ItemT, ViewT> {
     }
   }
 
+  private boolean isEmpy(int index) {
+    return isFirst(index) && isLast(index);
+  }
+
   protected boolean isDeleteEvent(KeyEvent event) {
-    return isAnyPositionDeleteEvent(event) || event.is(Key.BACKSPACE) || event.is(Key.DELETE);
+    return isAnyPositionDeleteEvent(event) || isSimpleDeleteEvent(event);
+  }
+
+  protected boolean isSimpleDeleteEvent(KeyEvent event) {
+    return event.is(Key.BACKSPACE) || event.is(Key.DELETE);
   }
 
   private boolean isAnyPositionDeleteEvent(KeyEvent event) {

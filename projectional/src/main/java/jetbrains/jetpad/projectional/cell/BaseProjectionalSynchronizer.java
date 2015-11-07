@@ -23,6 +23,7 @@ import jetbrains.jetpad.base.Validators;
 import jetbrains.jetpad.cell.Cell;
 import jetbrains.jetpad.cell.TextCell;
 import jetbrains.jetpad.cell.completion.Completion;
+import jetbrains.jetpad.cell.event.FocusEvent;
 import jetbrains.jetpad.cell.indent.IndentCell;
 import jetbrains.jetpad.cell.position.Positions;
 import jetbrains.jetpad.cell.text.TextEditing;
@@ -40,9 +41,14 @@ import jetbrains.jetpad.model.collections.CollectionItemEvent;
 import jetbrains.jetpad.model.collections.list.ObservableArrayList;
 import jetbrains.jetpad.model.collections.list.ObservableList;
 import jetbrains.jetpad.model.event.CompositeRegistration;
+import jetbrains.jetpad.model.event.EventHandler;
+import jetbrains.jetpad.model.property.Property;
+import jetbrains.jetpad.model.property.PropertyChangeEvent;
+import jetbrains.jetpad.model.property.ValueProperty;
 import jetbrains.jetpad.projectional.generic.EmptyRoleCompletion;
 import jetbrains.jetpad.projectional.generic.Role;
 import jetbrains.jetpad.projectional.generic.RoleCompletion;
+import jetbrains.jetpad.values.Color;
 
 import java.util.*;
 
@@ -63,6 +69,8 @@ abstract class BaseProjectionalSynchronizer<SourceT, ContextT, SourceItemT> impl
   private List<Cell> myTargetList;
   private List<Registration> myRegistrations;
   private Character mySeparatorChar;
+
+  private Property<SourceItemT> myForDeletion = new ValueProperty<>();
 
   BaseProjectionalSynchronizer(
       Mapper<? extends ContextT, ? extends Cell> mapper,
@@ -91,6 +99,31 @@ abstract class BaseProjectionalSynchronizer<SourceT, ContextT, SourceItemT> impl
         int itemIndex = BaseProjectionalSynchronizer.this.indexOf(event.getItem());
         if (itemIndex == -1) return;
         getChildCells().get(itemIndex).selected().set(false);
+      }
+    });
+
+    myForDeletion.addHandler(new EventHandler<PropertyChangeEvent<SourceItemT>>() {
+      Cell myTargetCell;
+
+
+      @Override
+      public void onEvent(PropertyChangeEvent<SourceItemT> event) {
+        if (myTargetCell != null) {
+          myTargetCell.background().set(null);
+          myTargetCell.bottomPopup().set(null);
+        }
+
+        if (event.getNewValue() != null) {
+          int index = indexOf(event.getNewValue());
+          Cell cell = myTargetList.get(index);
+          cell.background().set(Color.LIGHT_PINK);
+
+          TextCell frontPopup = new TextCell("Press Del or Backspace to delete. Esc to cancel.");
+          frontPopup.background().set(Color.LIGHT_BLUE);
+//          cell.bottomPopup().set(frontPopup);
+
+          myTargetCell = cell;
+        }
       }
     });
   }
@@ -360,6 +393,42 @@ abstract class BaseProjectionalSynchronizer<SourceT, ContextT, SourceItemT> impl
           insertItem(content.get(myItemKind)).run();
         }
       }
+
+      @Override
+      public void onFocusGained(Cell cell, FocusEvent event) {
+        super.onFocusGained(cell, event);
+        myForDeletion.set(null);
+      }
+
+      @Override
+      public void onFocusLost(Cell cell, FocusEvent event) {
+        super.onFocusLost(cell, event);
+        myForDeletion.set(null);
+      }
+
+      @Override
+      public void onKeyPressed(Cell cell, KeyEvent event) {
+        super.onKeyPressed(cell, event);
+        myForDeletion.set(null);
+      }
+
+      @Override
+      public void onKeyTyped(Cell cell, KeyEvent event) {
+        super.onKeyTyped(cell, event);
+        myForDeletion.set(null);
+      }
+
+      @Override
+      public void onMouseClicked(Cell cell, MouseEvent event) {
+        super.onMouseClicked(cell, event);
+        myForDeletion.set(null);
+      }
+
+      @Override
+      public void onMousePressed(Cell cell, MouseEvent event) {
+        super.onMousePressed(cell, event);
+        myForDeletion.set(null);
+      }
     });
   }
 
@@ -388,12 +457,13 @@ abstract class BaseProjectionalSynchronizer<SourceT, ContextT, SourceItemT> impl
     mySelectionSupport.select(from, to);
   }
 
-  protected boolean isDeleteEvent(KeyEvent event, Cell cell) {
-    if (event.is(KeyStrokeSpecs.DELETE_CURRENT)) return true;
-
+  protected boolean isSimpleDeleteEvent(KeyEvent event, Cell cell, boolean ignoreEmpty) {
     boolean home = Positions.isHomePosition(cell);
     boolean end = Positions.isEndPosition(cell);
 
+    if (ignoreEmpty && home && end) {
+      return false;
+    }
 
     if (event.is(Key.BACKSPACE) && (!home || end)) {
       return true;
@@ -404,6 +474,11 @@ abstract class BaseProjectionalSynchronizer<SourceT, ContextT, SourceItemT> impl
     }
 
     return false;
+  }
+
+  protected boolean isDeleteEvent(KeyEvent event, Cell cell) {
+    if (event.is(KeyStrokeSpecs.DELETE_CURRENT)) return true;
+    return isSimpleDeleteEvent(event, cell, false);
   }
 
   protected boolean isDeleteEvent(KeyEvent event) {
@@ -441,6 +516,9 @@ abstract class BaseProjectionalSynchronizer<SourceT, ContextT, SourceItemT> impl
     getTarget().cellContainer().get().focusedCell.get().scrollTo();
   }
 
+  protected Property<SourceItemT> getForDeletion() {
+    return myForDeletion;
+  }
 
   private class TargetCellList extends AbstractList<Cell> {
     private boolean myHasPlaceholder;

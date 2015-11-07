@@ -139,7 +139,7 @@ class ProjectionalObservableListSynchronizer<ContextT, SourceItemT> extends Base
   }
 
   private void keyPressedInChild(KeyEvent event) {
-    new CollectionEditor<SourceItemT, Cell>(mySource, getChildCells(), canCreateNewItem()) {
+    new CollectionEditor<SourceItemT, Cell>(mySource, getChildCells(), getForDeletion(), canCreateNewItem()) {
       @Override
       protected SourceItemT newItem() {
         return ProjectionalObservableListSynchronizer.this.newItem();
