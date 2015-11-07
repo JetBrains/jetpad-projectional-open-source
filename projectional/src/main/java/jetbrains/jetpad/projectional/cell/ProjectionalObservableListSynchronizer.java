@@ -35,7 +35,6 @@ import jetbrains.jetpad.mapper.Synchronizers;
 import jetbrains.jetpad.model.collections.list.ObservableList;
 import jetbrains.jetpad.model.composite.Composites;
 import jetbrains.jetpad.model.event.CompositeRegistration;
-import jetbrains.jetpad.projectional.generic.CollectionEditor;
 import jetbrains.jetpad.projectional.generic.Role;
 
 import java.util.ArrayList;
@@ -139,7 +138,7 @@ class ProjectionalObservableListSynchronizer<ContextT, SourceItemT> extends Base
   }
 
   private void keyPressedInChild(KeyEvent event) {
-    new CollectionEditor<SourceItemT, Cell>(mySource, getChildCells(), canCreateNewItem()) {
+    new CollectionEditor<SourceItemT>(mySource, getChildCells(), canCreateNewItem()) {
       @Override
       protected SourceItemT newItem() {
         return ProjectionalObservableListSynchronizer.this.newItem();

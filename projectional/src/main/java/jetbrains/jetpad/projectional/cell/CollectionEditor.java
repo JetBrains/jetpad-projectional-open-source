@@ -13,8 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package jetbrains.jetpad.projectional.generic;
+package jetbrains.jetpad.projectional.cell;
 
+import jetbrains.jetpad.cell.Cell;
 import jetbrains.jetpad.event.Key;
 import jetbrains.jetpad.event.KeyEvent;
 import jetbrains.jetpad.event.KeyStrokeSpecs;
@@ -22,22 +23,22 @@ import jetbrains.jetpad.event.ModifierKey;
 
 import java.util.List;
 
-public abstract class CollectionEditor<ItemT, ViewT> {
+public abstract class CollectionEditor<ItemT> {
   private List<ItemT> myItems;
-  private List<ViewT> myViews;
+  private List<Cell> myViews;
   private boolean myCanCreateNew;
 
-  protected CollectionEditor(List<ItemT> items, List<ViewT> views, boolean canCreateNew) {
+  protected CollectionEditor(List<ItemT> items, List<Cell> cells, boolean canCreateNew) {
     myItems = items;
-    myViews = views;
+    myViews = cells;
     myCanCreateNew = canCreateNew;
   }
 
   protected abstract ItemT newItem();
 
-  protected abstract boolean isEmpty(ViewT item);
-  protected abstract boolean isHome(ViewT item);
-  protected abstract boolean isEnd(ViewT item);
+  protected abstract boolean isEmpty(Cell item);
+  protected abstract boolean isHome(Cell item);
+  protected abstract boolean isEnd(Cell item);
 
   protected abstract void selectOnCreation(int index);
   protected abstract void selectHome(int index);
@@ -62,7 +63,7 @@ public abstract class CollectionEditor<ItemT, ViewT> {
     return isEmpty(myViews.get(index));
   }
 
-  public void handleKey(ViewT cell, KeyEvent event) {
+  public void handleKey(Cell cell, KeyEvent event) {
     int index = myViews.indexOf(cell);
     boolean isHome = isHome(cell);
     boolean isEnd = isEnd(cell);
