@@ -220,7 +220,7 @@ public class CellContainerToDomMapper extends Mapper<CellContainer, Element> {
   }
 
   private void refreshLineHighlight() {
-    if (myLineHihglightUpToDate) return;
+    if (myLineHihglightUpToDate || !isAttached()) return;
     Cell current = getSource().focusedCell.get();
     for (Element e : Arrays.asList(myLineHighlight1, myLineHighlight2)) {
       Style style = e.getStyle();
