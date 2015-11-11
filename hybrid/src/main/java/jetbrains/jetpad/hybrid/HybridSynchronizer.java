@@ -364,7 +364,7 @@ public class HybridSynchronizer<SourceT> implements Synchronizer {
   }
 
   private CollectionListener<Token> createTokensListener() {
-    return new CollectionListener<Token>() {
+    return new CollectionAdapter<Token>() {
       @Override
       public void onItemAdded(CollectionItemEvent<? extends Token> event) {
         if (myPlaceholder != null) {

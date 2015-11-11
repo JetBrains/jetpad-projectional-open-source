@@ -15,11 +15,11 @@
  */
 package jetbrains.jetpad.projectional.diagram.view;
 
+import jetbrains.jetpad.base.Registration;
+import jetbrains.jetpad.model.collections.CollectionAdapter;
 import jetbrains.jetpad.model.collections.CollectionItemEvent;
-import jetbrains.jetpad.model.collections.CollectionListener;
 import jetbrains.jetpad.model.collections.list.ObservableArrayList;
 import jetbrains.jetpad.model.collections.list.ObservableList;
-import jetbrains.jetpad.base.Registration;
 import jetbrains.jetpad.projectional.view.GroupView;
 
 public class DiagramView extends GroupView {
@@ -53,7 +53,7 @@ public class DiagramView extends GroupView {
       c.attach();
     }
 
-    myConnectionAttachReg = connections.addListener(new CollectionListener<Connection>() {
+    myConnectionAttachReg = connections.addListener(new CollectionAdapter<Connection>() {
       @Override
       public void onItemAdded(CollectionItemEvent<? extends Connection> event) {
         event.getItem().attach();
