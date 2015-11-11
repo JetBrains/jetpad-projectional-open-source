@@ -54,8 +54,8 @@ public abstract class DiagramNodeView extends GroupView {
         if (contentView.children().size() > 1) {
           throw new IllegalStateException();
         }
-        contentView.getProp(DiagramViewSpecs.CONTENT_RECT_HANDLER).set(event.getItem().getProp(DiagramViewSpecs.CONTENT_RECT_HANDLER).get());
-        myReg = event.getItem().getProp(DiagramViewSpecs.CONTENT_RECT_HANDLER).addHandler(new EventHandler<PropertyChangeEvent<Handler<Rectangle>>>() {
+        contentView.getProp(DiagramViewSpecs.CONTENT_RECT_HANDLER).set(event.getNewItem().getProp(DiagramViewSpecs.CONTENT_RECT_HANDLER).get());
+        myReg = event.getNewItem().getProp(DiagramViewSpecs.CONTENT_RECT_HANDLER).addHandler(new EventHandler<PropertyChangeEvent<Handler<Rectangle>>>() {
           @Override
           public void onEvent(PropertyChangeEvent<Handler<Rectangle>> event) {
             contentView.getProp(DiagramViewSpecs.CONTENT_RECT_HANDLER).set(event.getNewValue());
@@ -72,23 +72,23 @@ public abstract class DiagramNodeView extends GroupView {
     inputs.children().addListener(new CollectionAdapter<View>() {
       @Override
       public void onItemAdded(CollectionItemEvent<? extends View> event) {
-        event.getItem().getProp(DiagramViewSpecs.CONNECTOR_DIR).set(myPortsDirection.opposite());
+        event.getNewItem().getProp(DiagramViewSpecs.CONNECTOR_DIR).set(myPortsDirection.opposite());
       }
 
       @Override
       public void onItemRemoved(CollectionItemEvent<? extends View> event) {
-        event.getItem().getProp(DiagramViewSpecs.CONNECTOR_DIR).set(null);
+        event.getOldItem().getProp(DiagramViewSpecs.CONNECTOR_DIR).set(null);
       }
     });
     outputs.children().addListener(new CollectionAdapter<View>() {
       @Override
       public void onItemAdded(CollectionItemEvent<? extends View> event) {
-        event.getItem().getProp(DiagramViewSpecs.CONNECTOR_DIR).set(myPortsDirection);
+        event.getNewItem().getProp(DiagramViewSpecs.CONNECTOR_DIR).set(myPortsDirection);
       }
 
       @Override
       public void onItemRemoved(CollectionItemEvent<? extends View> event) {
-        event.getItem().getProp(DiagramViewSpecs.CONNECTOR_DIR).set(null);
+        event.getOldItem().getProp(DiagramViewSpecs.CONNECTOR_DIR).set(null);
       }
     });
   }

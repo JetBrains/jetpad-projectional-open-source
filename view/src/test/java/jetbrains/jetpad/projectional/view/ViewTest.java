@@ -316,7 +316,7 @@ public class ViewTest {
     View child = newFocusableView();
     view.children().add(child);
 
-    verify(listener).onItemAdded(new CollectionItemEvent<>(child, 0, true));
+    verify(listener).onItemAdded(new CollectionItemEvent<>(null, child, 0, CollectionItemEvent.EventType.ADD));
   }
 
   @Test
@@ -330,7 +330,7 @@ public class ViewTest {
     view.children().addListener(listener);
     view.children().remove(child);
 
-    verify(listener).onItemRemoved(new CollectionItemEvent<>(child, 0, false));
+    verify(listener).onItemRemoved(new CollectionItemEvent<>(child, null, 0, CollectionItemEvent.EventType.REMOVE));
   }
 
   @Test
@@ -347,7 +347,7 @@ public class ViewTest {
   }
 
   @Test
-  public void parentPropertyChangeOnRemvoe() {
+  public void parentPropertyChangeOnRemove() {
     EventHandler<PropertyChangeEvent<View>> handler = mock(EventHandler.class);
 
     View child = newFocusableView();

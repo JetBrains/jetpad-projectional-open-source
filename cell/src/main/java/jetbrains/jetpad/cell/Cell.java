@@ -15,11 +15,8 @@
  */
 package jetbrains.jetpad.cell;
 
-import com.google.common.base.Function;
 import com.google.common.base.Objects;
 import jetbrains.jetpad.base.Registration;
-import jetbrains.jetpad.base.animation.Animation;
-import jetbrains.jetpad.base.animation.Animations;
 import jetbrains.jetpad.cell.event.CellEventSpec;
 import jetbrains.jetpad.cell.event.EventPriority;
 import jetbrains.jetpad.cell.trait.CellTrait;
@@ -692,7 +689,7 @@ public abstract class Cell implements NavComposite<Cell>, HasVisibility, HasFocu
         @Override
         public void onItemAdded(final CollectionItemEvent<? extends Cell> event) {
           if (isAttached()) {
-            ((Cell) event.getItem()).attach(myContainer);
+            ((Cell) event.getNewItem()).attach(myContainer);
           }
           onChildAdded(event);
           if (myContainer != null) {
@@ -711,7 +708,7 @@ public abstract class Cell implements NavComposite<Cell>, HasVisibility, HasFocu
         @Override
         public void onItemRemoved(final CollectionItemEvent<? extends Cell> event) {
           if (isAttached()) {
-            ((Cell) event.getItem()).detach();
+            ((Cell) event.getOldItem()).detach();
           }
           onChildRemoved(event);
           if (myContainer != null) {
@@ -739,7 +736,7 @@ public abstract class Cell implements NavComposite<Cell>, HasVisibility, HasFocu
 
     @Override
     protected void beforeItemAdded(int index, Cell item) {
-      onBeforeChildAdded(new CollectionItemEvent<>(item, index, true));
+      onBeforeChildAdded(new CollectionItemEvent<>(null, item, index, CollectionItemEvent.EventType.ADD));
       item.changeParent(Cell.this);
       Cell prev = index == 0 ? null : get(index - 1);
       Cell next = index == size() ? null : get(index);
@@ -758,7 +755,7 @@ public abstract class Cell implements NavComposite<Cell>, HasVisibility, HasFocu
       if (isAttached() && myContainer.focusedCell.get() != null && Composites.isDescendant(item, myContainer.focusedCell.get())) {
         myContainer.focusedCell.set(null);
       }
-      onBeforeChildRemoved(new CollectionItemEvent<>(item, index, false));
+      onBeforeChildRemoved(new CollectionItemEvent<>(item, null, index, CollectionItemEvent.EventType.REMOVE));
       item.changeParent(null);
       Cell next = item.myNext;
       Cell prev = item.myPrev;
@@ -840,6 +837,11 @@ public abstract class Cell implements NavComposite<Cell>, HasVisibility, HasFocu
       return addListener(new CollectionListener<Cell>() {
         @Override
         public void onItemAdded(CollectionItemEvent<? extends Cell> event) {
+          handler.onEvent(event);
+        }
+
+        @Override
+        public void onItemSet(CollectionItemEvent<? extends Cell> event) {
           handler.onEvent(event);
         }
 

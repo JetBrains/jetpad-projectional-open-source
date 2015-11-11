@@ -15,11 +15,8 @@
  */
 package jetbrains.jetpad.cell.toView;
 
-import com.google.common.base.Function;
 import com.google.common.base.Supplier;
 import jetbrains.jetpad.base.Registration;
-import jetbrains.jetpad.base.animation.Animation;
-import jetbrains.jetpad.base.animation.Animations;
 import jetbrains.jetpad.base.edt.EventDispatchThread;
 import jetbrains.jetpad.cell.*;
 import jetbrains.jetpad.cell.indent.IndentCell;
@@ -379,9 +376,9 @@ public class CellContainerToViewMapper extends Mapper<CellContainer, View> {
         BaseCellMapper<?, ?> parentMapper = (BaseCellMapper<?, ?>) rootMapper().getDescendantMapper(parent);
         if (parentMapper == null) return;
 
-        parentMapper.childAdded(change.getIndex(), change.getItem());
+        parentMapper.childAdded(change.getIndex(), change.getNewItem());
 
-        updateCachesOnAdd(change.getItem());
+        updateCachesOnAdd(change.getNewItem());
       }
 
       @Override
@@ -389,9 +386,9 @@ public class CellContainerToViewMapper extends Mapper<CellContainer, View> {
         BaseCellMapper<?, ?> parentMapper = (BaseCellMapper<?, ?>) rootMapper().getDescendantMapper(parent);
         if (parentMapper == null) return;
 
-        parentMapper.childRemoved(change.getIndex(), change.getItem());
+        parentMapper.childRemoved(change.getIndex(), change.getOldItem());
 
-        updateCachesOnRemove(change.getItem());
+        updateCachesOnRemove(change.getOldItem());
       }
 
       private void updateCachesOnAdd(Cell cell) {

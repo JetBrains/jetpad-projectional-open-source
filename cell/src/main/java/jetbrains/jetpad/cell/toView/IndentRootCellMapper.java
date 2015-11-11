@@ -127,13 +127,13 @@ class IndentRootCellMapper extends BaseCellMapper<IndentCell, VerticalView> {
     myRegistration = getSource().addListener(new IndentContainerCellListener() {
       @Override
       public void childAdded(CollectionItemEvent<? extends Cell> event) {
-        Cell cell = event.getItem();
+        Cell cell = event.getNewItem();
         myIndentUpdater.childAdded(cell);
       }
 
       @Override
       public void childRemoved(CollectionItemEvent<? extends Cell> event) {
-        Cell cell = event.getItem();
+        Cell cell = event.getOldItem();
         myIndentUpdater.childRemoved(cell);
       }
 
