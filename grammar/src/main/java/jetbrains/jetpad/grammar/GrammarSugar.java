@@ -86,7 +86,23 @@ public class GrammarSugar {
   public static NonTerminal separated(Symbol item, Symbol separator) {
     Grammar g = item.getGrammar();
     NonTerminal separated = g.newNonTerminal(g.uniqueName("separated_"));
-    NonTerminal sepSeq = g.newNonTerminal(g.uniqueName("separatedSeq_"));
+    g.newRule(separated, optional(separated1(item, separator))).setHandler(new RuleHandler() {
+      @Override
+      public Object handle(RuleContext ctx) {
+        List list = (List) ctx.get(0);
+        if (list.isEmpty()) {
+          return PersistentList.nil();
+        } else {
+          return list.get(0);
+        }
+      }
+    });
+    return separated;
+  }
+
+  public static NonTerminal separated1(Symbol item, Symbol separator) {
+    Grammar g = item.getGrammar();
+    NonTerminal sepSeq = g.newNonTerminal(g.uniqueName("separated1_"));
     g.newRule(sepSeq, item, star(seq(separator, item))).setHandler(new RuleHandler() {
       @Override
       public Object handle(RuleContext ctx) {
@@ -100,17 +116,6 @@ public class GrammarSugar {
         return result;
       }
     });
-    g.newRule(separated, optional(sepSeq)).setHandler(new RuleHandler() {
-      @Override
-      public Object handle(RuleContext ctx) {
-        List list = (List) ctx.get(0);
-        if (list.isEmpty()) {
-          return PersistentList.nil();
-        } else {
-          return list.get(0);
-        }
-      }
-    });
-    return separated;
+    return sepSeq;
   }
 }
