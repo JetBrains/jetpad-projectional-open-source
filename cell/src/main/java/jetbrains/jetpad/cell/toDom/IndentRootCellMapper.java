@@ -84,13 +84,6 @@ class IndentRootCellMapper extends BaseCellMapper<IndentCell> {
 
           myCellMappers.add(mapper);
 
-          final Registration visibilityReg = cell.visible().addHandler(new EventHandler<PropertyChangeEvent<Boolean>>() {
-            @Override
-            public void onEvent(PropertyChangeEvent<Boolean> event) {
-              myIndentUpdater.visibilityChanged(cell, event);
-            }
-          });
-
           return new CellWrapper<Node>() {
             @Override
             public Node item() {
@@ -101,7 +94,6 @@ class IndentRootCellMapper extends BaseCellMapper<IndentCell> {
             public void remove() {
               CounterUtil.updateOnRemove(getSource(), cell, mapper);
               myCellMappers.remove(mapper);
-              visibilityReg.remove();
             }
           };
         }
