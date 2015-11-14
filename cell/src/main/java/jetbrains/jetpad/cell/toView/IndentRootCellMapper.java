@@ -74,6 +74,8 @@ class IndentRootCellMapper extends BaseCellMapper<IndentCell, VerticalView> {
           myCellMappers.add(mapper);
 
           return new CellWrapper<View>() {
+            boolean myRemoved = false;
+
             @Override
             public View item() {
               return mapper.getTarget();
@@ -81,8 +83,14 @@ class IndentRootCellMapper extends BaseCellMapper<IndentCell, VerticalView> {
 
             @Override
             public void remove() {
+              if (myRemoved) {
+                throw new IllegalStateException();
+              }
+
               CounterUtil.updateOnRemove(getSource(), cell, mapper);
               myCellMappers.remove(mapper);
+
+              myRemoved = true;
             }
           };
         }
