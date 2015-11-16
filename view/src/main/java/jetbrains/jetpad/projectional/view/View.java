@@ -806,6 +806,12 @@ public abstract class View implements NavComposite<View>, HasFocusability, HasVi
     }
 
     @Override
+    protected void beforeItemSet(int index, View oldItem, View newItem) {
+      beforeItemRemoved(index, oldItem);
+      beforeItemAdded(index, newItem);
+    }
+
+    @Override
     protected void beforeItemRemoved(int index, View item) {
       if (isAttached()) {
         item.detach();

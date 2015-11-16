@@ -28,6 +28,13 @@ abstract class SubList<ItemT> extends ObservableArrayList<ItemT> {
   }
 
   @Override
+  protected void afterItemSet(int index, ItemT oldItem, ItemT newItem, boolean success) {
+    super.afterItemSet(index, oldItem, newItem, success);
+    getBaseList().remove(oldItem);
+    getBaseList().add(newItem);
+  }
+
+  @Override
   protected void afterItemRemoved(int index, ItemT item, boolean success) {
     super.afterItemRemoved(index, item, success);
     getBaseList().remove(item);

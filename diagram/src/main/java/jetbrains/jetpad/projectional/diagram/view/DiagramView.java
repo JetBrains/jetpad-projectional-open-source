@@ -85,6 +85,13 @@ public class DiagramView extends GroupView {
     }
 
     @Override
+    protected void afterItemSet(int index, Connection oldItem, Connection newItem, boolean success) {
+      super.afterItemSet(index, oldItem, newItem, success);
+      myConnectionView.children().remove(oldItem.view());
+      myConnectionView.children().add(newItem.view());
+    }
+
+    @Override
     protected void afterItemRemoved(int index, Connection item, boolean success) {
       super.afterItemRemoved(index, item, success);
       myConnectionView.children().remove(item.view());

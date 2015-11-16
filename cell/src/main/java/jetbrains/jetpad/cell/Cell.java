@@ -737,36 +737,59 @@ public abstract class Cell implements NavComposite<Cell>, HasVisibility, HasFocu
     @Override
     protected void beforeItemAdded(int index, Cell item) {
       onBeforeChildAdded(new CollectionItemEvent<>(null, item, index, CollectionItemEvent.EventType.ADD));
-      item.changeParent(Cell.this);
-      Cell prev = index == 0 ? null : get(index - 1);
-      Cell next = index == size() ? null : get(index);
-      if (prev != null) {
-        prev.myNext = item;
-      }
-      if (next != null) {
-        next.myPrev = item;
-      }
-      item.myNext = next;
-      item.myPrev = prev;
+      attachItem(item, index - 1, index);
+    }
+
+    @Override
+    protected void checkSet(int index, Cell oldItem, Cell newItem) {
+      checkAdd(index, newItem);
+      checkRemove(index, oldItem);
+    }
+
+    @Override
+    protected void beforeItemSet(int index, Cell oldItem, Cell newItem) {
+      onBeforeChildRemoved(new CollectionItemEvent<>(oldItem, null, index, CollectionItemEvent.EventType.REMOVE));
+      detachItem(oldItem);
+      onBeforeChildAdded(new CollectionItemEvent<>(null, newItem, index, CollectionItemEvent.EventType.ADD));
+      attachItem(newItem, index - 1, index + 1);
     }
 
     @Override
     protected void beforeItemRemoved(int index, Cell item) {
+      onBeforeChildRemoved(new CollectionItemEvent<>(item, null, index, CollectionItemEvent.EventType.REMOVE));
+      detachItem(item);
+    }
+
+    private void attachItem(Cell item, int prevIndex, int nextIndex) {
+      item.changeParent(Cell.this);
+
+      if (prevIndex >= 0 && prevIndex < size()) {
+        Cell prev = get(prevIndex);
+        prev.myNext = item;
+        item.myPrev = prev;
+      }
+      if (nextIndex >= 0 && nextIndex < size()) {
+        Cell next = get(nextIndex);
+        next.myPrev = item;
+        item.myNext = next;
+      }
+    }
+
+    private void detachItem(Cell item) {
       if (isAttached() && myContainer.focusedCell.get() != null && Composites.isDescendant(item, myContainer.focusedCell.get())) {
         myContainer.focusedCell.set(null);
       }
-      onBeforeChildRemoved(new CollectionItemEvent<>(item, null, index, CollectionItemEvent.EventType.REMOVE));
       item.changeParent(null);
-      Cell next = item.myNext;
-      Cell prev = item.myPrev;
-      if (next != null) {
-        next.myPrev = prev;
-      }
+      final Cell prev = item.myPrev;
+      final Cell next = item.myNext;
       if (prev != null) {
         prev.myNext = next;
       }
-      item.myNext = null;
+      if (next != null) {
+        next.myPrev = prev;
+      }
       item.myPrev = null;
+      item.myNext = null;
     }
   }
 
