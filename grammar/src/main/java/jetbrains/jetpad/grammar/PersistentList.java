@@ -16,7 +16,6 @@
 package jetbrains.jetpad.grammar;
 
 import java.util.AbstractList;
-import java.util.List;
 
 class PersistentList<ValueT> extends AbstractList<ValueT> {
   static <ValueT> PersistentList<ValueT> nil() {
@@ -31,6 +30,15 @@ class PersistentList<ValueT> extends AbstractList<ValueT> {
     result.myHead = head;
     result.myTail = tail;
     result.mySize = tail.size() + 1;
+    return result;
+  }
+
+  static <ValueT> PersistentList<ValueT> reversed(PersistentList<ValueT> list) {
+    PersistentList<ValueT> result = PersistentList.nil();
+    while (!list.myNil) {
+      result = PersistentList.cons(list.myHead, result);
+      list = list.myTail;
+    }
     return result;
   }
 
