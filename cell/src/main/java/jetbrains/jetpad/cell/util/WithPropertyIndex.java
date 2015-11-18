@@ -63,12 +63,12 @@ public abstract class WithPropertyIndex {
 
       @Override
       public void onChildAdded(Cell parent, CollectionItemEvent<? extends Cell> change) {
-        onAdd(change.getItem());
+        onAdd(change.getNewItem());
       }
 
       @Override
       public void onChildRemoved(Cell parent, CollectionItemEvent<? extends Cell> change) {
-        onRemove(change.getItem());
+        onRemove(change.getOldItem());
       }
     });
     onAdd(cellContainer.root);

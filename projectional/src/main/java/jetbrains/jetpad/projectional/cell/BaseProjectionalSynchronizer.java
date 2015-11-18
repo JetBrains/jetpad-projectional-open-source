@@ -32,7 +32,6 @@ import jetbrains.jetpad.cell.trait.CellTraitPropertySpec;
 import jetbrains.jetpad.cell.trait.CellTraits;
 import jetbrains.jetpad.cell.trait.DerivedCellTrait;
 import jetbrains.jetpad.cell.util.CellFactory;
-import jetbrains.jetpad.cell.util.Cells;
 import jetbrains.jetpad.completion.CompletionSupplier;
 import jetbrains.jetpad.event.*;
 import jetbrains.jetpad.mapper.*;
@@ -91,12 +90,12 @@ abstract class BaseProjectionalSynchronizer<SourceT, ContextT, SourceItemT> impl
     mySelectedItems.addListener(new CollectionAdapter<SourceItemT>() {
       @Override
       public void onItemAdded(CollectionItemEvent<? extends SourceItemT> event) {
-        getChildCells().get(BaseProjectionalSynchronizer.this.indexOf(event.getItem())).selected().set(true);
+        getChildCells().get(BaseProjectionalSynchronizer.this.indexOf(event.getNewItem())).selected().set(true);
       }
 
       @Override
       public void onItemRemoved(CollectionItemEvent<? extends SourceItemT> event) {
-        int itemIndex = BaseProjectionalSynchronizer.this.indexOf(event.getItem());
+        int itemIndex = BaseProjectionalSynchronizer.this.indexOf(event.getOldItem());
         if (itemIndex == -1) return;
         getChildCells().get(itemIndex).selected().set(false);
       }

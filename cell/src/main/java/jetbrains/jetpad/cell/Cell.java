@@ -15,11 +15,8 @@
  */
 package jetbrains.jetpad.cell;
 
-import com.google.common.base.Function;
 import com.google.common.base.Objects;
 import jetbrains.jetpad.base.Registration;
-import jetbrains.jetpad.base.animation.Animation;
-import jetbrains.jetpad.base.animation.Animations;
 import jetbrains.jetpad.cell.event.CellEventSpec;
 import jetbrains.jetpad.cell.event.EventPriority;
 import jetbrains.jetpad.cell.trait.CellTrait;
@@ -692,7 +689,7 @@ public abstract class Cell implements NavComposite<Cell>, HasVisibility, HasFocu
         @Override
         public void onItemAdded(final CollectionItemEvent<? extends Cell> event) {
           if (isAttached()) {
-            ((Cell) event.getItem()).attach(myContainer);
+            ((Cell) event.getNewItem()).attach(myContainer);
           }
           onChildAdded(event);
           if (myContainer != null) {
@@ -711,7 +708,7 @@ public abstract class Cell implements NavComposite<Cell>, HasVisibility, HasFocu
         @Override
         public void onItemRemoved(final CollectionItemEvent<? extends Cell> event) {
           if (isAttached()) {
-            ((Cell) event.getItem()).detach();
+            ((Cell) event.getOldItem()).detach();
           }
           onChildRemoved(event);
           if (myContainer != null) {
@@ -739,37 +736,60 @@ public abstract class Cell implements NavComposite<Cell>, HasVisibility, HasFocu
 
     @Override
     protected void beforeItemAdded(int index, Cell item) {
-      onBeforeChildAdded(new CollectionItemEvent<>(item, index, true));
-      item.changeParent(Cell.this);
-      Cell prev = index == 0 ? null : get(index - 1);
-      Cell next = index == size() ? null : get(index);
-      if (prev != null) {
-        prev.myNext = item;
-      }
-      if (next != null) {
-        next.myPrev = item;
-      }
-      item.myNext = next;
-      item.myPrev = prev;
+      onBeforeChildAdded(new CollectionItemEvent<>(null, item, index, CollectionItemEvent.EventType.ADD));
+      attachItem(item, index - 1, index);
+    }
+
+    @Override
+    protected void checkSet(int index, Cell oldItem, Cell newItem) {
+      checkAdd(index, newItem);
+      checkRemove(index, oldItem);
+    }
+
+    @Override
+    protected void beforeItemSet(int index, Cell oldItem, Cell newItem) {
+      onBeforeChildRemoved(new CollectionItemEvent<>(oldItem, null, index, CollectionItemEvent.EventType.REMOVE));
+      detachItem(oldItem);
+      onBeforeChildAdded(new CollectionItemEvent<>(null, newItem, index, CollectionItemEvent.EventType.ADD));
+      attachItem(newItem, index - 1, index + 1);
     }
 
     @Override
     protected void beforeItemRemoved(int index, Cell item) {
+      onBeforeChildRemoved(new CollectionItemEvent<>(item, null, index, CollectionItemEvent.EventType.REMOVE));
+      detachItem(item);
+    }
+
+    private void attachItem(Cell item, int prevIndex, int nextIndex) {
+      item.changeParent(Cell.this);
+
+      if (prevIndex >= 0 && prevIndex < size()) {
+        Cell prev = get(prevIndex);
+        prev.myNext = item;
+        item.myPrev = prev;
+      }
+      if (nextIndex >= 0 && nextIndex < size()) {
+        Cell next = get(nextIndex);
+        next.myPrev = item;
+        item.myNext = next;
+      }
+    }
+
+    private void detachItem(Cell item) {
       if (isAttached() && myContainer.focusedCell.get() != null && Composites.isDescendant(item, myContainer.focusedCell.get())) {
         myContainer.focusedCell.set(null);
       }
-      onBeforeChildRemoved(new CollectionItemEvent<>(item, index, false));
       item.changeParent(null);
-      Cell next = item.myNext;
-      Cell prev = item.myPrev;
-      if (next != null) {
-        next.myPrev = prev;
-      }
+      final Cell prev = item.myPrev;
+      final Cell next = item.myNext;
       if (prev != null) {
         prev.myNext = next;
       }
-      item.myNext = null;
+      if (next != null) {
+        next.myPrev = prev;
+      }
       item.myPrev = null;
+      item.myNext = null;
     }
   }
 
@@ -840,6 +860,11 @@ public abstract class Cell implements NavComposite<Cell>, HasVisibility, HasFocu
       return addListener(new CollectionListener<Cell>() {
         @Override
         public void onItemAdded(CollectionItemEvent<? extends Cell> event) {
+          handler.onEvent(event);
+        }
+
+        @Override
+        public void onItemSet(CollectionItemEvent<? extends Cell> event) {
           handler.onEvent(event);
         }
 

@@ -80,6 +80,15 @@ public abstract class SvgNode extends HasParent<SvgNode, SvgNode> {
     }
 
     @Override
+    protected void beforeItemSet(int index, SvgNode oldItem, SvgNode newItem) {
+      if (isAttached()) {
+        oldItem.detach();
+        newItem.attach(container());
+      }
+      super.beforeItemSet(index, oldItem, newItem);
+    }
+
+    @Override
     protected void beforeItemRemoved(int index, SvgNode node) {
       if (isAttached()) {
         node.detach();

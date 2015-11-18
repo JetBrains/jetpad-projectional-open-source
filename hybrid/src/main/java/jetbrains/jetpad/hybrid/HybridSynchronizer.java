@@ -141,9 +141,9 @@ public class HybridSynchronizer<SourceT> implements Synchronizer {
     selection.addListener(new CollectionAdapter<Cell>() {
       @Override
       public void onItemAdded(CollectionItemEvent<? extends Cell> event) {
-        event.getItem().selected().set(true);
+        event.getNewItem().selected().set(true);
 
-        int index = myTargetList.indexOf(event.getItem());
+        int index = myTargetList.indexOf(event.getNewItem());
         if (selection.size() > 1) {
           if (event.getIndex() == 0) {
             myTarget.children().get(index * 2 + 1).selected().set(true);
@@ -155,9 +155,9 @@ public class HybridSynchronizer<SourceT> implements Synchronizer {
 
       @Override
       public void onItemRemoved(CollectionItemEvent<? extends Cell> event) {
-        event.getItem().selected().set(false);
+        event.getOldItem().selected().set(false);
 
-        int index = myTargetList.indexOf(event.getItem());
+        int index = myTargetList.indexOf(event.getOldItem());
         if (index == -1) {
           throw new IllegalStateException();
         }
@@ -364,14 +364,14 @@ public class HybridSynchronizer<SourceT> implements Synchronizer {
   }
 
   private CollectionListener<Token> createTokensListener() {
-    return new CollectionListener<Token>() {
+    return new CollectionAdapter<Token>() {
       @Override
       public void onItemAdded(CollectionItemEvent<? extends Token> event) {
         if (myPlaceholder != null) {
           removePlaceholder();
         }
 
-        final Token token = event.getItem();
+        final Token token = event.getNewItem();
         Cell tokenCell = createTokenCell(token);
 
         int index = event.getIndex();
@@ -746,7 +746,7 @@ public class HybridSynchronizer<SourceT> implements Synchronizer {
     ObservableList<Token> tokens = myTokenListEditor.tokens;
     for (int i = 0; i < tokens.size(); i++) {
       Token t = tokens.get(i);
-      tokensListener.onItemAdded(new CollectionItemEvent<>(t, i, true));
+      tokensListener.onItemAdded(new CollectionItemEvent<>(null, t, i, CollectionItemEvent.EventType.ADD));
     }
   }
 

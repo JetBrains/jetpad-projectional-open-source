@@ -15,11 +15,11 @@
  */
 package jetbrains.jetpad.projectional.diagram.view;
 
+import jetbrains.jetpad.base.Registration;
+import jetbrains.jetpad.model.collections.CollectionAdapter;
 import jetbrains.jetpad.model.collections.CollectionItemEvent;
-import jetbrains.jetpad.model.collections.CollectionListener;
 import jetbrains.jetpad.model.collections.list.ObservableArrayList;
 import jetbrains.jetpad.model.collections.list.ObservableList;
-import jetbrains.jetpad.base.Registration;
 import jetbrains.jetpad.projectional.view.GroupView;
 
 public class DiagramView extends GroupView {
@@ -53,15 +53,15 @@ public class DiagramView extends GroupView {
       c.attach();
     }
 
-    myConnectionAttachReg = connections.addListener(new CollectionListener<Connection>() {
+    myConnectionAttachReg = connections.addListener(new CollectionAdapter<Connection>() {
       @Override
       public void onItemAdded(CollectionItemEvent<? extends Connection> event) {
-        event.getItem().attach();
+        event.getNewItem().attach();
       }
 
       @Override
       public void onItemRemoved(CollectionItemEvent<? extends Connection> event) {
-        event.getItem().detach();
+        event.getOldItem().detach();
       }
     });
   }
@@ -82,6 +82,13 @@ public class DiagramView extends GroupView {
     protected void afterItemAdded(int index, Connection item, boolean success) {
       super.afterItemAdded(index, item, success);
       myConnectionView.children().add(item.view());
+    }
+
+    @Override
+    protected void afterItemSet(int index, Connection oldItem, Connection newItem, boolean success) {
+      super.afterItemSet(index, oldItem, newItem, success);
+      myConnectionView.children().remove(oldItem.view());
+      myConnectionView.children().add(newItem.view());
     }
 
     @Override

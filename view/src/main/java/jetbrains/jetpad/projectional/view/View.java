@@ -15,12 +15,9 @@
  */
 package jetbrains.jetpad.projectional.view;
 
-import com.google.common.base.Function;
 import com.google.common.base.Objects;
 import com.google.common.base.Strings;
 import jetbrains.jetpad.base.Registration;
-import jetbrains.jetpad.base.animation.Animation;
-import jetbrains.jetpad.base.animation.Animations;
 import jetbrains.jetpad.event.Event;
 import jetbrains.jetpad.geometry.Rectangle;
 import jetbrains.jetpad.geometry.Vector;
@@ -33,7 +30,6 @@ import jetbrains.jetpad.model.composite.*;
 import jetbrains.jetpad.model.event.*;
 import jetbrains.jetpad.model.property.*;
 import jetbrains.jetpad.model.util.ListMap;
-import jetbrains.jetpad.projectional.view.spi.ViewContainerPeer;
 import jetbrains.jetpad.values.Color;
 
 import java.util.*;
@@ -810,6 +806,12 @@ public abstract class View implements NavComposite<View>, HasFocusability, HasVi
     }
 
     @Override
+    protected void beforeItemSet(int index, View oldItem, View newItem) {
+      beforeItemRemoved(index, oldItem);
+      beforeItemAdded(index, newItem);
+    }
+
+    @Override
     protected void beforeItemRemoved(int index, View item) {
       if (isAttached()) {
         item.detach();
@@ -892,6 +894,11 @@ public abstract class View implements NavComposite<View>, HasFocusability, HasVi
       return addListener(new CollectionListener<View>() {
         @Override
         public void onItemAdded(CollectionItemEvent<? extends View> event) {
+          handler.onEvent(event);
+        }
+
+        @Override
+        public void onItemSet(CollectionItemEvent<? extends View> event) {
           handler.onEvent(event);
         }
 
