@@ -42,6 +42,10 @@
   top:0px;
 }
 
+.vertical {
+  font-size: 0px;
+}
+
 .horizontal {
   display: inline-block;
   white-space: nowrap;
