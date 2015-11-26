@@ -145,7 +145,7 @@ public class DomTextEditor {
   public void setText(String text) {
     if (Objects.equal(text, myText)) return;
     myText = text;
-    update();
+    updateText();
 
     if (mySelectionVisible) {
       updateSelectionBoundsAndText();
