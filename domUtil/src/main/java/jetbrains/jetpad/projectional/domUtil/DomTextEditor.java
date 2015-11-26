@@ -253,10 +253,10 @@ public class DomTextEditor {
 
   private void update() {
     updateColor();
+    updateFont();
     updateBold();
     updateItalic();
     updateText();
-    updateFont();
     updateLineHeight();
   }
 
