@@ -115,7 +115,7 @@ public class DomTextEditor {
   public void setFontFamily(FontFamily family) {
     if (Objects.equal(myFontFamily, family)) return;
     myFontFamily = family;
-    updateFontFamily();
+    updateFont();
   }
 
   public int getFontSize() {
@@ -125,7 +125,7 @@ public class DomTextEditor {
   public void setFontSize(int size) {
     if (myFontSize == size) return;
     myFontSize = size;
-    updateFontSize();
+    updateFont();
   }
 
   public Color getTextColor() {
@@ -145,7 +145,7 @@ public class DomTextEditor {
   public void setText(String text) {
     if (Objects.equal(text, myText)) return;
     myText = text;
-    updateText();
+    update();
 
     if (mySelectionVisible) {
       updateSelectionBoundsAndText();
@@ -253,11 +253,10 @@ public class DomTextEditor {
 
   private void update() {
     updateColor();
-    updateFontFamily();
-    updateFontSize();
     updateBold();
     updateItalic();
     updateText();
+    updateFont();
     updateLineHeight();
   }
 
@@ -294,12 +293,8 @@ public class DomTextEditor {
     }
   }
 
-  private void updateFontFamily() {
-    myRoot.getStyle().setProperty("font-family", TextMetricsCalculator.getFontName(myFontFamily));
-  }
-
-  private void updateFontSize() {
-    myRoot.getStyle().setProperty("font-size", myFontSize + "px");
+  private void updateFont() {
+    myRoot.getStyle().setProperty("font", myFontSize + "px " + TextMetricsCalculator.getFontName(myFontFamily));
   }
 
   private void updateLineHeight() {
