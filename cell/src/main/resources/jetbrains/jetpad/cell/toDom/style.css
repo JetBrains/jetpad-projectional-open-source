@@ -58,6 +58,7 @@
 .horizontal > div {
   display: inline-block;
   vertical-align : top;
+  font-size: 0px;
 }
 
 .vertical > div {
