@@ -140,7 +140,7 @@ abstract class BaseCellMapper<SourceT extends Cell> extends Mapper<SourceT, Elem
   void childRemoved(int index, Cell child) {
     if (!isAutoChildManagement()) return;
     myChildMappers.remove(index);
-    myChildMappers.remove(index);
+    myChildTargets.remove(index);
   }
 
   @Override
