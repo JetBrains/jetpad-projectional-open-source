@@ -20,6 +20,7 @@ import com.google.common.base.Supplier;
 import jetbrains.jetpad.base.*;
 import jetbrains.jetpad.cell.*;
 import jetbrains.jetpad.cell.action.CellActions;
+import jetbrains.jetpad.cell.indent.IndentCell;
 import jetbrains.jetpad.cell.position.PositionHandler;
 import jetbrains.jetpad.cell.text.TextEditing;
 import jetbrains.jetpad.cell.trait.CellTrait;
@@ -263,6 +264,20 @@ public class ProjectionalListSynchronizerTest extends EditingTestCase {
     escape();
 
     assertEquals(1, container.children.size());
+  }
+
+  @Test
+  public void deleteSelectionInsideIndent() {
+    CompositeChild cc = new CompositeChild();
+    cc.children.add(new IndentChild());
+    container.children.add(cc);
+
+    CellActions.toFirstFocusable(getChild(0)).run();
+
+    backspace();
+    backspace();
+
+    assertEquals(0, cc.children.size());
   }
 
   @Test
@@ -969,6 +984,10 @@ public class ProjectionalListSynchronizerTest extends EditingTestCase {
           return new DeleteEatingChildMapper((DeleteEatingChild) source);
         }
 
+        if (source instanceof IndentChild) {
+          return new IndentChildMapper((IndentChild) source);
+        }
+
         return null;
       }
     };
@@ -1074,6 +1093,9 @@ public class ProjectionalListSynchronizerTest extends EditingTestCase {
   private class DeleteEatingChild extends Child {
   }
 
+  private class IndentChild extends Child {
+  }
+
   private class ContainerMapper extends Mapper<Container, ContainerCell> {
     private ProjectionalRoleSynchronizer<Object, Child> mySynchronizer;
 
@@ -1162,7 +1184,7 @@ public class ProjectionalListSynchronizerTest extends EditingTestCase {
     private CompositeChildMapper(CompositeChild source) {
       super(source, new HorizontalCell());
       getTarget().children().add(createInvisible());
-      getTarget().children().add(new HorizontalCell());
+      getTarget().children().add(new IndentCell());
       getTarget().children().add(createInvisible());
       getTarget().visible().set(true);
     }
@@ -1232,7 +1254,6 @@ public class ProjectionalListSynchronizerTest extends EditingTestCase {
     }
   }
 
-
   private class DeleteEatingChildMapper extends Mapper<DeleteEatingChild, TextCell> {
     public DeleteEatingChildMapper(DeleteEatingChild source) {
       super(source, CellFactory.label("aaaa"));
@@ -1250,6 +1271,16 @@ public class ProjectionalListSynchronizerTest extends EditingTestCase {
           super.onKeyPressed(cell, event);
         }
       });
+    }
+  }
+
+  private class IndentChildMapper extends Mapper<IndentChild, IndentCell> {
+    public IndentChildMapper(IndentChild source) {
+      super(source, CellFactory.indent());
+      Cell l = CellFactory.label(">>");
+      getTarget().children().add(l);
+
+      l.focusable().set(true);
     }
   }
 }
