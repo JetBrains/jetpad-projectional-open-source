@@ -24,9 +24,6 @@ import jetbrains.jetpad.completion.CompletionController;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-
 public class NonTextCellCompletionTest extends CompletionTestCase {
   private HorizontalCell target = new HorizontalCell();
   CompletionController handler;
@@ -90,7 +87,7 @@ public class NonTextCellCompletionTest extends CompletionTestCase {
 
     myCellContainer.focusedCell.set(null);
 
-    assertNull(target.frontPopup().get());
+    assertNoFrontPopup(target);
   }
 
   @Test
@@ -102,7 +99,7 @@ public class NonTextCellCompletionTest extends CompletionTestCase {
 
     focusTarget.focus();
 
-    assertNull(target.frontPopup().get());
+    assertNoFrontPopup(target);
   }
 
   @Test
@@ -114,7 +111,7 @@ public class NonTextCellCompletionTest extends CompletionTestCase {
 
     complete();
 
-    assertNotNull(target.frontPopup().get());
+    assertHasFrontPopup(target);
   }
 
   @Test
@@ -128,6 +125,6 @@ public class NonTextCellCompletionTest extends CompletionTestCase {
 
     complete();
 
-    assertNull(target.frontPopup().get());
+    assertNoFrontPopup(target);
   }
 }

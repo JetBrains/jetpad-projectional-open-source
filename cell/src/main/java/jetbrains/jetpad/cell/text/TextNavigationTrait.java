@@ -15,17 +15,21 @@
  */
 package jetbrains.jetpad.cell.text;
 
+import jetbrains.jetpad.cell.Cell;
+import jetbrains.jetpad.cell.CellPropertySpec;
+import jetbrains.jetpad.cell.TextCell;
+import jetbrains.jetpad.cell.completion.Completion;
+import jetbrains.jetpad.cell.completion.CompletionItems;
+import jetbrains.jetpad.cell.completion.CompletionSupport;
+import jetbrains.jetpad.cell.event.CompletionEvent;
 import jetbrains.jetpad.cell.trait.CellTrait;
+import jetbrains.jetpad.cell.trait.CellTraitPropertySpec;
 import jetbrains.jetpad.completion.CompletionController;
 import jetbrains.jetpad.completion.CompletionParameters;
 import jetbrains.jetpad.completion.CompletionSupplier;
 import jetbrains.jetpad.event.*;
 import jetbrains.jetpad.model.property.Property;
 import jetbrains.jetpad.model.property.PropertyChangeEvent;
-import jetbrains.jetpad.cell.*;
-import jetbrains.jetpad.cell.completion.*;
-import jetbrains.jetpad.cell.event.CompletionEvent;
-import jetbrains.jetpad.cell.trait.CellTraitPropertySpec;
 
 class TextNavigationTrait extends CellTrait {
   static final CellTraitPropertySpec<Boolean> SELECTION_AVAILABLE = new CellTraitPropertySpec<>("selectionAvailable", true);
@@ -206,13 +210,13 @@ class TextNavigationTrait extends CellTrait {
 
     CompletionItems completion = Completion.completionFor(cell, CompletionParameters.EMPTY, Completion.COMPLETION);
     if (completion.isEmpty()) {
-      if (textCell.rightPopup().get() == null && textCell.isEnd() &&
+      if (textCell.get(Cell.RIGHT_POPUP) == null && textCell.isEnd() &&
         showSideCompletion(textCell, Completion.RIGHT_TRANSFORM, textCell.rightPopup())) {
         event.consume();
         return;
       }
 
-      if (textCell.leftPopup().get() == null && textCell.isHome() &&
+      if (textCell.get(Cell.LEFT_POPUP) == null && textCell.isHome() &&
         showSideCompletion(textCell, Completion.LEFT_TRANSFORM, textCell.leftPopup())) {
         event.consume();
         return;

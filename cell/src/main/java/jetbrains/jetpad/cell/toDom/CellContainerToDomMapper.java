@@ -29,11 +29,9 @@ import com.google.gwt.query.client.GQuery;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Window;
-import jetbrains.jetpad.base.JsDebug;
 import jetbrains.jetpad.base.Registration;
 import jetbrains.jetpad.base.Handler;
 import jetbrains.jetpad.base.Value;
-import jetbrains.jetpad.base.animation.Animation;
 import jetbrains.jetpad.base.edt.EventDispatchThread;
 import jetbrains.jetpad.base.edt.JsEventDispatchThread;
 import jetbrains.jetpad.cell.*;
@@ -50,7 +48,6 @@ import jetbrains.jetpad.mapper.Mapper;
 import jetbrains.jetpad.mapper.MapperFactory;
 import jetbrains.jetpad.mapper.MappingContext;
 import jetbrains.jetpad.mapper.Synchronizers;
-import jetbrains.jetpad.mapper.gwt.DomAnimations;
 import jetbrains.jetpad.model.collections.CollectionItemEvent;
 import jetbrains.jetpad.model.composite.Composites;
 import jetbrains.jetpad.model.event.CompositeRegistration;
@@ -139,7 +136,7 @@ public class CellContainerToDomMapper extends Mapper<CellContainer, Element> {
   private Element myLineHighlight1;
   private Element myLineHighlight2;
   private Element myContent;
-  private boolean myLineHihglightUpToDate;
+  private boolean myLineHighlightUpToDate;
 
   public CellContainerToDomMapper(CellContainer source, Element target, boolean eventsDisabled) {
     super(source, target);
@@ -148,11 +145,11 @@ public class CellContainerToDomMapper extends Mapper<CellContainer, Element> {
     ensureIndentInjected();
 
     myLineHighlight1 = DOM.createDiv();
-    myLineHighlight1.addClassName(CSS.lineHighight());
+    myLineHighlight1.addClassName(CSS.lineHighlight());
     myLineHighlight1.getStyle().setWidth(100, Style.Unit.PCT);
 
     myLineHighlight2 = DOM.createDiv();
-    myLineHighlight2.addClassName(CSS.lineHighight());
+    myLineHighlight2.addClassName(CSS.lineHighlight());
 
     myContent = DOM.createDiv();
     myContent.addClassName(CSS.content());
@@ -209,7 +206,7 @@ public class CellContainerToDomMapper extends Mapper<CellContainer, Element> {
   }
 
   private void invalidateLineHighlight() {
-    myLineHihglightUpToDate = false;
+    myLineHighlightUpToDate = false;
 
     Scheduler.get().scheduleDeferred(new Scheduler.ScheduledCommand() {
       @Override
@@ -220,7 +217,7 @@ public class CellContainerToDomMapper extends Mapper<CellContainer, Element> {
   }
 
   private void refreshLineHighlight() {
-    if (myLineHihglightUpToDate || !isAttached()) return;
+    if (myLineHighlightUpToDate || !isAttached()) return;
     Cell current = getSource().focusedCell.get();
     for (Element e : Arrays.asList(myLineHighlight1, myLineHighlight2)) {
       Style style = e.getStyle();
@@ -240,14 +237,14 @@ public class CellContainerToDomMapper extends Mapper<CellContainer, Element> {
         }
       }
     }
-    myLineHihglightUpToDate = true;
+    myLineHighlightUpToDate = true;
   }
 
   @Override
   protected void registerSynchronizers(SynchronizersConfiguration conf) {
     super.registerSynchronizers(conf);
 
-    conf.add(Synchronizers.<Cell, Element>forSingleRole(this, Properties.<Cell>constant(getSource().root), new WritableProperty<Element>() {
+    conf.add(Synchronizers.forSingleRole(this, Properties.<Cell>constant(getSource().root), new WritableProperty<Element>() {
       @Override
       public void set(Element value) {
         if (value != null) {
@@ -273,7 +270,7 @@ public class CellContainerToDomMapper extends Mapper<CellContainer, Element> {
             if (mapper != null) {
               if (Cell.isPopupProp(prop)) {
                 if (mapper.isAutoPopupManagement()) {
-                  mapper.updatePopup((PropertyChangeEvent<Cell>) event);
+                  mapper.onEvent((PropertyChangeEvent<Cell>) event);
                 }
               } else {
                 mapper.refreshProperties();

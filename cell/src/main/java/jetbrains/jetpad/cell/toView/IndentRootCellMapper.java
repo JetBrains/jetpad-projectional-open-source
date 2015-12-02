@@ -202,13 +202,12 @@ class IndentRootCellMapper extends BaseCellMapper<IndentCell, VerticalView> {
     super.onDetach();
   }
 
-  private void updateIndentCellPopup(Cell targetCell ,PropertyChangeEvent<Cell> event) {
+  private void updateIndentCellPopup(Cell targetCell, PropertyChangeEvent<Cell> event) {
     if (event.getOldValue() != null) {
       BaseCellMapper<?, ?> popupMapper = (BaseCellMapper<?, ?>) getDescendantMapper(event.getOldValue());
-      Composites.<View>removeFromParent(popupMapper.getTarget());
+      Composites.removeFromParent(popupMapper.getTarget());
       myCellMappers.remove(popupMapper);
     }
-
     if (event.getNewValue() != null) {
       BaseCellMapper<?, ?> popupMapper = createMapper(event.getNewValue());
       myCellMappers.add(popupMapper);

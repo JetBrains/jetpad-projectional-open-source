@@ -37,14 +37,12 @@ import jetbrains.jetpad.model.property.PropertyBinding;
 import jetbrains.jetpad.model.property.PropertyChangeEvent;
 import jetbrains.jetpad.model.property.ReadableProperty;
 
-import javax.annotation.Nullable;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 public class CompletionSupport {
   public static final CellTraitPropertySpec<Runnable> HIDE_COMPLETION = new CellTraitPropertySpec<>("hideCompletion");
-  public static final CellTraitPropertySpec<Supplier<String>> INITIAL_TEXT_PROVIDER = new CellTraitPropertySpec<Supplier<String>>("initialTextProvider");
+  public static final CellTraitPropertySpec<Supplier<String>> INITIAL_TEXT_PROVIDER = new CellTraitPropertySpec<>("initialTextProvider");
 
   public static CellTrait trait() {
     return new CellTrait() {
@@ -53,28 +51,18 @@ public class CompletionSupport {
         if (spec == Completion.COMPLETION_CONTROLLER) {
           return getCompletionHandler(cell);
         }
-
         return super.get(cell, spec);
       }
 
       private CompletionController getCompletionHandler(final Cell cell) {
-        return new CompletionController() {
-          @Override
-          public boolean isActive() {
-            return cell.frontPopup().get() != null;
-          }
-
+        return new BaseCompletionController(cell) {
           @Override
           public boolean canActivate() {
             return !Completion.isCompletionEmpty(cell, CompletionParameters.EMPTY);
           }
 
           @Override
-          public void activate(final Runnable restoreState) {
-            if (isActive()) {
-              throw new IllegalStateException();
-            }
-
+          protected void doActivate(Runnable restoreState) {
             showPopup(cell, cell.frontPopup(), Completion.allCompletion(cell, new BaseCompletionParameters() {
               @Override
               public boolean isMenu() {
@@ -84,15 +72,7 @@ public class CompletionSupport {
           }
 
           @Override
-          public void activate() {
-            activate(Runnables.EMPTY);
-          }
-
-          @Override
-          public void deactivate() {
-            if (!isActive()) {
-              throw new IllegalStateException();
-            }
+          protected void doDeactivate() {
             cell.focus();
           }
 
@@ -132,7 +112,9 @@ public class CompletionSupport {
     };
   }
 
-  public static void showCompletion(final TextCell textCell, Async<List<CompletionItem>> items, final Registration removeOnClose, final Runnable beforeAnimation, final Runnable restoreState) {
+  public static void showCompletion(final TextCell textCell, Async<List<CompletionItem>> items,
+                                    final Registration removeOnClose, final Runnable beforeAnimation,
+                                    final Runnable restoreState) {
     if (!textCell.focused().get()) {
       throw new IllegalArgumentException();
     }
@@ -153,20 +135,18 @@ public class CompletionSupport {
       }
     };
 
-
     final CompositeRegistration disposeMenuMapper = new CompositeRegistration();
     final Cell completionCell = CompletionMenu.createCell(menuModel, completer, disposeMenuMapper);
     reg.add(textCell.addTrait(new CellTrait() {
       @Override
-      public void onPropertyChanged(Cell cell, CellPropertySpec<?> propery, PropertyChangeEvent<?> event) {
-        if (propery == Cell.FOCUSED) {
+      public void onPropertyChanged(Cell cell, CellPropertySpec<?> property, PropertyChangeEvent<?> event) {
+        if (property == Cell.FOCUSED) {
           PropertyChangeEvent<Boolean> e = (PropertyChangeEvent<Boolean>) event;
           if (!e.getNewValue()) {
             reg.remove();
           }
         }
-
-        super.onPropertyChanged(cell, propery, event);
+        super.onPropertyChanged(cell, property, event);
       }
 
       @Override

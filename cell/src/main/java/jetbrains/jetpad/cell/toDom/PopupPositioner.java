@@ -18,18 +18,20 @@ package jetbrains.jetpad.cell.toDom;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.user.client.Window;
+import jetbrains.jetpad.cell.decorations.PopupPositionUpdater;
 import jetbrains.jetpad.geometry.Rectangle;
 import jetbrains.jetpad.geometry.Vector;
 import jetbrains.jetpad.projectional.domUtil.DomUtil;
 
-class PopupPositioner {
+class PopupPositioner extends PopupPositionUpdater<Element> {
   private CellToDomContext myContext;
 
   PopupPositioner(CellToDomContext context) {
     myContext = context;
   }
 
-  void positionBottom(Rectangle target, Element popup) {
+  @Override
+  protected void updateBottom(Rectangle target, Element popup) {
     boolean hasScrollers = DomUtil.hasScrollers(myContext.rootElement);
     Rectangle visiblePart;
     if (hasScrollers) {
@@ -44,34 +46,24 @@ class PopupPositioner {
     boolean top = visiblePart.contains(childBounds.sub(new Vector(0, childBounds.dimension.y)));
 
     if (bottom || !top) {
-      setPosition(
-        popup,
-        target.origin.x,
-        target.origin.y + target.dimension.y);
+      setPosition(popup, target.origin.x, target.origin.y + target.dimension.y);
     } else {
-      setPosition(
-        popup,
-        target.origin.x,
-        target.origin.y - childBounds.dimension.y
-      );
+      setPosition(popup, target.origin.x, target.origin.y - childBounds.dimension.y);
     }
   }
 
-  void positionFront(Rectangle target, Element popup) {
-    setPosition(
-      popup,
-      target.origin.x,
-      target.origin.y);
+  @Override
+  protected void updateFront(Rectangle target, Element popup) {
+    setPosition(popup, target.origin.x, target.origin.y);
   }
 
-  void positionLeft(Rectangle target, Element popup) {
-    setPosition(
-      popup,
-      target.origin.x - popup.getClientWidth(),
-      target.origin.y);
+  @Override
+  protected void updateLeft(Rectangle target, Element popup) {
+    setPosition(popup, target.origin.x - popup.getClientWidth(), target.origin.y);
   }
 
-  public void positionRight(Rectangle target, Element popup) {
+  @Override
+  protected void updateRight(Rectangle target, Element popup) {
     setPosition(popup, target.origin.x + target.dimension.x, target.origin.y);
   }
 

@@ -21,6 +21,7 @@ import jetbrains.jetpad.base.Registration;
 import jetbrains.jetpad.base.Runnables;
 import jetbrains.jetpad.cell.Cell;
 import jetbrains.jetpad.cell.TextCell;
+import jetbrains.jetpad.cell.completion.BaseCompletionController;
 import jetbrains.jetpad.cell.completion.Completion;
 import jetbrains.jetpad.cell.completion.CompletionItems;
 import jetbrains.jetpad.cell.completion.CompletionSupport;
@@ -41,17 +42,11 @@ public class TextEditingTrait extends TextNavigationTrait {
     if (spec == Completion.COMPLETION_CONTROLLER) {
       return getCompletionController((TextCell) cell);
     }
-
     return super.get(cell, spec);
   }
 
   private CompletionController getCompletionController(final TextCell cell) {
-    return new CompletionController() {
-      @Override
-      public boolean isActive() {
-        return cell.bottomPopup().get() != null;
-      }
-
+    return new BaseCompletionController(cell) {
       @Override
       public boolean canActivate() {
         BaseCompletionParameters params = new BaseCompletionParameters() {
@@ -64,10 +59,7 @@ public class TextEditingTrait extends TextNavigationTrait {
       }
 
       @Override
-      public void activate(Runnable restoreState) {
-        if (isActive()) {
-          throw new IllegalStateException();
-        }
+      protected void doActivate(Runnable restoreState) {
         CompletionSupport.showCompletion(cell, Completion.allCompletion(cell, new BaseCompletionParameters() {
           @Override
           public boolean isMenu() {
@@ -77,19 +69,9 @@ public class TextEditingTrait extends TextNavigationTrait {
       }
 
       @Override
-      public void activate() {
-        activate(Runnables.EMPTY);
-      }
-
-      @Override
-      public void deactivate() {
-        if (!isActive()) {
-          throw new IllegalStateException();
-        }
-
+      protected void doDeactivate() {
         cell.get(CompletionSupport.HIDE_COMPLETION).run();
       }
-
 
       @Override
       public boolean hasAmbiguousMatches() {
@@ -156,7 +138,7 @@ public class TextEditingTrait extends TextNavigationTrait {
     String currentText = currentText(textCell);
     CompletionController handler = getCompletionController(textCell);
 
-    if (textCell.bottomPopup().get() == null) {
+    if (!handler.isActive()) {
       CompletionItems completion = new CompletionItems(textCell.get(Completion.COMPLETION).get(CompletionParameters.EMPTY));
       String prefixText = textCell.prefixText().get();
       if (textCell.isEnd()) {
@@ -176,14 +158,14 @@ public class TextEditingTrait extends TextNavigationTrait {
           };
           CompletionSupplier supplier = textCell.get(Completion.RIGHT_TRANSFORM);
           if ((!supplier.isEmpty(cp) || !supplier.isAsyncEmpty(cp)) && textCell.get(TextEditing.RT_ON_END)) {
-            if (textCell.rightPopup().get() == null) {
+            if (textCell.get(Cell.RIGHT_POPUP) == null) {
               TextCell popup = CompletionSupport.showSideTransformPopup(textCell, textCell.rightPopup(), textCell.get(Completion.RIGHT_TRANSFORM), true);
               popup.get(Completion.COMPLETION_CONTROLLER).activate(new Runnable() {
                 @Override
                 public void run() {
                   textCell.focus();
                 }
-              } );
+              });
             }
             event.consume();
             return;
