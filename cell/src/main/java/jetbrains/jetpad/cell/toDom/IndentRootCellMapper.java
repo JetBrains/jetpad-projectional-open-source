@@ -32,18 +32,14 @@ import jetbrains.jetpad.cell.indent.updater.IndentUpdater;
 import jetbrains.jetpad.cell.indent.updater.IndentUpdaterTarget;
 import jetbrains.jetpad.cell.toUtil.AncestorUtil;
 import jetbrains.jetpad.cell.toUtil.CounterUtil;
-import jetbrains.jetpad.geometry.Rectangle;
-import jetbrains.jetpad.mapper.Mapper;
 import jetbrains.jetpad.mapper.MappingContext;
 import jetbrains.jetpad.model.collections.CollectionItemEvent;
 import jetbrains.jetpad.model.composite.Composites;
-import jetbrains.jetpad.model.event.EventHandler;
 import jetbrains.jetpad.model.property.PropertyChangeEvent;
 import jetbrains.jetpad.projectional.domUtil.DomTextEditor;
 
-import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 class IndentRootCellMapper extends BaseCellMapper<IndentCell> {
@@ -51,7 +47,7 @@ class IndentRootCellMapper extends BaseCellMapper<IndentCell> {
   private IndentUpdater<Node> myIndentUpdater;
   private Registration myRegistration;
   private Timer myPositionUpdater;
-  private Map<Mapper<?, ?>, Runnable> myPositionUpdaters = new HashMap<>();
+  private Set<Cell> myChildrenWithPopups;
 
   IndentRootCellMapper(IndentCell source, CellToDomContext ctx) {
     super(source, ctx, DOM.createDiv());
@@ -155,7 +151,7 @@ class IndentRootCellMapper extends BaseCellMapper<IndentCell> {
       }
 
       @Override
-      public void propertyChanged(Cell cell, final CellPropertySpec<?> prop, final PropertyChangeEvent<?> event) {
+      public void propertyChanged(final Cell cell, final CellPropertySpec<?> prop, final PropertyChangeEvent<?> event) {
         if (CounterUtil.isCounterProp(prop)) {
           iterateLeaves(cell, new Handler<Cell>() {
             @Override
@@ -164,58 +160,13 @@ class IndentRootCellMapper extends BaseCellMapper<IndentCell> {
               if (mapper == null) {
                 throw new IllegalStateException();
               }
-
               if (CounterUtil.update(mapper, prop, event)) {
                 mapper.refreshProperties();
               }
             }
           });
         } else if (Cell.isPopupProp(prop)) {
-          PropertyChangeEvent<Cell> popupChangeEvent = (PropertyChangeEvent<Cell>) event;
-          if (popupChangeEvent.getOldValue() != null) {
-            BaseCellMapper<?> popupMapper = (BaseCellMapper<?>) getDescendantMapper(popupChangeEvent.getOldValue());
-            myCellMappers.remove(popupMapper);
-            popupMapper.getTarget().removeFromParent();
-
-            myPositionUpdaters.remove(popupMapper);
-            if (myPositionUpdaters.isEmpty()) {
-              myPositionUpdater.cancel();
-            }
-          }
-
-          if (popupChangeEvent.getNewValue() != null) {
-            BaseCellMapper<?> popupMapper = createMapper(popupChangeEvent.getNewValue());
-            myCellMappers.add(popupMapper);
-
-            final PopupPositioner positioner = new PopupPositioner(getContext());
-            final Rectangle bounds = cell.getBounds();
-
-            final Element popupElement = popupMapper.getTarget();
-            popupElement.getStyle().setPosition(Style.Position.ABSOLUTE);
-            getContext().rootElement.appendChild(popupElement);
-
-            Runnable updater = new Runnable() {
-              @Override
-              public void run() {
-                if (prop == Cell.BOTTOM_POPUP) {
-                  positioner.positionBottom(bounds, popupElement);
-                } else if (prop == Cell.FRONT_POPUP) {
-                  positioner.positionFront(bounds, popupElement);
-                } else if (prop == Cell.LEFT_POPUP) {
-                  positioner.positionLeft(bounds, popupElement);
-                } else if (prop == Cell.RIGHT_POPUP) {
-                  positioner.positionRight(bounds, popupElement);
-                }
-              }
-            };
-
-            updater.run();
-
-            if (myPositionUpdaters.isEmpty()) {
-              myPositionUpdater.scheduleRepeating(50);
-            }
-            myPositionUpdaters.put(popupMapper, updater);
-          }
+          updateIndentCellPopup(cell, (PropertyChangeEvent<Cell>) event);
         } else if (prop == Cell.VISIBLE) {
           myIndentUpdater.visibilityChanged(cell, (PropertyChangeEvent<Boolean>) event);
         } else if (prop == Cell.BACKGROUND) {
@@ -227,6 +178,32 @@ class IndentRootCellMapper extends BaseCellMapper<IndentCell> {
               itemMapper.refreshProperties();
             }
           });
+        }
+      }
+
+      private void updateIndentCellPopup(Cell cell, PropertyChangeEvent<Cell> event) {
+        if (event.getOldValue() != null) {
+          BaseCellMapper<?> popupMapper = (BaseCellMapper<?>) getDescendantMapper(event.getOldValue());
+          myCellMappers.remove(popupMapper);
+          popupMapper.getTarget().removeFromParent();
+          myChildrenWithPopups.remove(popupMapper.getSource());
+          if (myChildrenWithPopups.isEmpty()) {
+            myPositionUpdater.cancel();
+            myChildrenWithPopups = null;
+          }
+        }
+        if (event.getNewValue() != null) {
+          BaseCellMapper<?> popupMapper = createMapper(event.getNewValue());
+          myCellMappers.add(popupMapper);
+          final Element popupElement = popupMapper.getTarget();
+          popupElement.getStyle().setPosition(Style.Position.ABSOLUTE);
+          getContext().rootElement.appendChild(popupElement);
+          updatePopupPositions(cell);
+          if (myChildrenWithPopups == null) {
+            myChildrenWithPopups = new HashSet<>();
+            myPositionUpdater.scheduleRepeating(50);
+          }
+          myChildrenWithPopups.add(popupMapper.getSource());
         }
       }
 
@@ -245,8 +222,8 @@ class IndentRootCellMapper extends BaseCellMapper<IndentCell> {
     myPositionUpdater = new Timer() {
       @Override
       public void run() {
-        for (Runnable r : myPositionUpdaters.values()) {
-          r.run();
+        for (Cell childWithPopup : myChildrenWithPopups) {
+          updatePopupPositions(childWithPopup);
         }
       }
     };

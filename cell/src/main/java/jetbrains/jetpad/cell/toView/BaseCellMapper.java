@@ -17,6 +17,7 @@ package jetbrains.jetpad.cell.toView;
 
 import jetbrains.jetpad.base.Registration;
 import jetbrains.jetpad.cell.Cell;
+import jetbrains.jetpad.cell.decorations.Popups;
 import jetbrains.jetpad.cell.toUtil.CounterSpec;
 import jetbrains.jetpad.cell.toUtil.Counters;
 import jetbrains.jetpad.cell.toUtil.HasCounters;
@@ -30,7 +31,10 @@ import jetbrains.jetpad.model.property.PropertyChangeEvent;
 import jetbrains.jetpad.projectional.view.View;
 import jetbrains.jetpad.values.Color;
 
-class BaseCellMapper<SourceT extends Cell, TargetT extends View> extends Mapper<SourceT, TargetT> implements HasCounters {
+class BaseCellMapper<SourceT extends Cell, TargetT extends View>
+    extends Mapper<SourceT, TargetT>
+    implements HasCounters, EventHandler<PropertyChangeEvent<Cell>> {
+
   private CellToViewContext myContext;
 
   private ObservableList<BaseCellMapper<?, ?>> myChildMappers;
@@ -71,10 +75,7 @@ class BaseCellMapper<SourceT extends Cell, TargetT extends View> extends Mapper<
     }
 
     if (isAutoPopupManagement()) {
-      updatePopup(new PropertyChangeEvent<>(null, getSource().frontPopup().get()));
-      updatePopup(new PropertyChangeEvent<>(null, getSource().bottomPopup().get()));
-      updatePopup(new PropertyChangeEvent<>(null, getSource().leftPopup().get()));
-      updatePopup(new PropertyChangeEvent<>(null, getSource().rightPopup().get()));
+      Popups.updatePopups(getSource(), this);
     }
   }
 
@@ -93,11 +94,13 @@ class BaseCellMapper<SourceT extends Cell, TargetT extends View> extends Mapper<
     super.onDetach();
   }
 
+  @Override
   public int getCounter(CounterSpec spec) {
     if (myCounters == null) return 0;
     return myCounters.getCounter(spec);
   }
 
+  @Override
   public void changeCounter(CounterSpec spec, int delta) {
     if (myCounters == null) {
       myCounters = new Counters();
@@ -124,7 +127,8 @@ class BaseCellMapper<SourceT extends Cell, TargetT extends View> extends Mapper<
     boolean paired = getSource().pairHighlighted().get();
     boolean focusHighlighted = getSource().focusHighlighted().get() || getCounter(Counters.HIGHLIGHT_COUNT) > 0;
 
-    Color background = cell.background().get() != null ? cell.background().get() : myAncestorBackground;
+    Color bg = cell.get(Cell.BACKGROUND);
+    Color background = bg == null ? myAncestorBackground : bg;
     if (selected) {
       background = CellContainerToViewMapper.SELECTION_COLOR;
     } else if (focusHighlighted) {
@@ -140,14 +144,15 @@ class BaseCellMapper<SourceT extends Cell, TargetT extends View> extends Mapper<
     } else if (cell.hasWarning().get() || getCounter(Counters.WARNING_COUNT) > 0) {
       borderColor = Color.YELLOW;
     } else {
-      borderColor = cell.borderColor().get();
+      borderColor = cell.get(Cell.BORDER_COLOR);
     }
     view.border().set(borderColor);
     view.visible().set(cell.visible().get());
-    view.hasShadow().set(cell.hasShadow().get());
+    view.hasShadow().set(cell.get(Cell.HAS_SHADOW));
   }
 
-  void updatePopup(PropertyChangeEvent<Cell> event) {
+  @Override
+  public final void onEvent(PropertyChangeEvent<Cell> event) {
     if (event.getOldValue() != null) {
       for (BaseCellMapper<?, ?> pm : myPopupMappers) {
         if (pm.getSource() == event.getOldValue()) {
@@ -156,14 +161,12 @@ class BaseCellMapper<SourceT extends Cell, TargetT extends View> extends Mapper<
           break;
         }
       }
-
       if (myPopupMappers.isEmpty()) {
         myPopupMappers = null;
         myPopupUpdateReg.remove();
         myPopupUpdateReg = null;
       }
     }
-
     if (event.getNewValue() != null) {
       if (myPopupMappers == null) {
         myPopupMappers = createChildSet();
@@ -174,31 +177,15 @@ class BaseCellMapper<SourceT extends Cell, TargetT extends View> extends Mapper<
           }
         });
       }
-
       BaseCellMapper<?, ?> pm = createMapper(event.getNewValue());
       myPopupMappers.add(pm);
       myContext.popupView().children().add(pm.getTarget());
-
       updatePopupPositions(getSource());
     }
   }
 
   protected void updatePopupPositions(Cell target) {
-    Cell bottomPopup = target.bottomPopup().get();
-    Cell frontPopup = target.frontPopup().get();
-    Cell leftPopup = target.leftPopup().get();
-    Cell rightPopup = target.rightPopup().get();
-
-    refreshPopupPosition(target, bottomPopup, PopupPositionUpdaters.bottomUpdater());
-    refreshPopupPosition(target, frontPopup, PopupPositionUpdaters.frontUpdater());
-    refreshPopupPosition(target, leftPopup, PopupPositionUpdaters.leftUpdater());
-    refreshPopupPosition(target, rightPopup, PopupPositionUpdaters.rightUpdater());
-  }
-
-  protected void refreshPopupPosition(Cell target, Cell popup, PopupPositionUpdater updater) {
-    if (popup == null) return;
-    BaseCellMapper<?, ?> popupMapper = (BaseCellMapper<?, ?>) getDescendantMapper(popup);
-    updater.update(target.getBounds(), getTarget().container().visibleRect(), popupMapper.getTarget());
+    Popups.updatePopupsPositions(target, new PopupPositioner(getTarget()), this);
   }
 
   boolean isAutoChildManagement() {
@@ -225,5 +212,4 @@ class BaseCellMapper<SourceT extends Cell, TargetT extends View> extends Mapper<
   protected BaseCellMapper<?, ?> createMapper(Cell cell) {
     return CellMappers.create(cell, myContext);
   }
-
 }

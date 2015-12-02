@@ -244,7 +244,7 @@ public class CellContainerToDomMapper extends Mapper<CellContainer, Element> {
   protected void registerSynchronizers(SynchronizersConfiguration conf) {
     super.registerSynchronizers(conf);
 
-    conf.add(Synchronizers.<Cell, Element>forSingleRole(this, Properties.<Cell>constant(getSource().root), new WritableProperty<Element>() {
+    conf.add(Synchronizers.forSingleRole(this, Properties.<Cell>constant(getSource().root), new WritableProperty<Element>() {
       @Override
       public void set(Element value) {
         if (value != null) {
@@ -270,7 +270,7 @@ public class CellContainerToDomMapper extends Mapper<CellContainer, Element> {
             if (mapper != null) {
               if (Cell.isPopupProp(prop)) {
                 if (mapper.isAutoPopupManagement()) {
-                  mapper.updatePopup((PropertyChangeEvent<Cell>) event);
+                  mapper.onEvent((PropertyChangeEvent<Cell>) event);
                 }
               } else {
                 mapper.refreshProperties();

@@ -23,15 +23,16 @@ import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Timer;
 import jetbrains.jetpad.base.Registration;
 import jetbrains.jetpad.cell.Cell;
+import jetbrains.jetpad.cell.decorations.Popups;
 import jetbrains.jetpad.cell.toUtil.CounterSpec;
 import jetbrains.jetpad.cell.toUtil.Counters;
 import jetbrains.jetpad.cell.toUtil.HasCounters;
-import jetbrains.jetpad.geometry.Rectangle;
 import jetbrains.jetpad.mapper.Mapper;
 import jetbrains.jetpad.mapper.MappingContext;
 import jetbrains.jetpad.model.collections.CollectionItemEvent;
 import jetbrains.jetpad.model.collections.set.ObservableSet;
 import jetbrains.jetpad.model.composite.Composites;
+import jetbrains.jetpad.model.event.EventHandler;
 import jetbrains.jetpad.model.property.PropertyChangeEvent;
 import jetbrains.jetpad.values.Color;
 
@@ -42,7 +43,10 @@ import java.util.List;
 import static jetbrains.jetpad.cell.toDom.CellContainerToDomMapper.CSS;
 import static jetbrains.jetpad.cell.toDom.CellContainerToDomMapper.ELEMENT;
 
-abstract class BaseCellMapper<SourceT extends Cell> extends Mapper<SourceT, Element> implements HasCounters {
+abstract class BaseCellMapper<SourceT extends Cell>
+    extends Mapper<SourceT, Element>
+    implements HasCounters, EventHandler<PropertyChangeEvent<Cell>> {
+
   private ObservableSet<Mapper<? extends Cell, ? extends Element>> myPopupMappers;
   private Registration myPopupUpdateReg;
 
@@ -74,9 +78,7 @@ abstract class BaseCellMapper<SourceT extends Cell> extends Mapper<SourceT, Elem
   @Override
   protected void registerSynchronizers(SynchronizersConfiguration conf) {
     super.registerSynchronizers(conf);
-
     myTarget = divWrappedElementChildren(getTarget());
-
     if (isAutoChildManagement()) {
       myChildrenMappers = createChildList();
       for (Cell child : getSource().children()) {
@@ -85,7 +87,6 @@ abstract class BaseCellMapper<SourceT extends Cell> extends Mapper<SourceT, Elem
         myTarget.add(mapper.getTarget());
       }
     }
-
     refreshProperties();
   }
 
@@ -93,51 +94,36 @@ abstract class BaseCellMapper<SourceT extends Cell> extends Mapper<SourceT, Elem
   protected void onAttach(MappingContext ctx) {
     super.onAttach(ctx);
     myWasPopup = Composites.<Cell>isNonCompositeChild(getSource());
-
     if (isAutoPopupManagement()) {
-      if (getSource().bottomPopup().get() != null) {
-        updatePopup(new PropertyChangeEvent<>(null, getSource().bottomPopup().get()));
-      } else if (getSource().frontPopup().get() != null) {
-        updatePopup(new PropertyChangeEvent<>(null, getSource().frontPopup().get()));
-      } else if (getSource().leftPopup().get() != null) {
-        updatePopup(new PropertyChangeEvent<>(null, getSource().leftPopup().get()));
-      } else if (getSource().rightPopup().get() != null) {
-        updatePopup(new PropertyChangeEvent<>(null, getSource().rightPopup().get()));
-      }
+      Popups.updatePopups(getSource(), this);
     }
-
     getSource().getProp(ELEMENT).set(getTarget());
-
     getTarget().addClassName(CSS.cell());
-
     myContext.register(this);
   }
 
   @Override
   protected void onDetach() {
     myContext.unregister(this);
-
     getSource().getProp(ELEMENT).set(null);
-
     getTarget().removeClassName(CSS.cell());
-
     if (myWasPopup) {
       getTarget().removeFromParent();
     }
-
     if (myPopupUpdateReg != null) {
       myPopupUpdateReg.remove();
       myPopupUpdateReg = null;
     }
-
     super.onDetach();
   }
 
+  @Override
   public int getCounter(CounterSpec spec) {
     if (myCounters == null) return 0;
     return myCounters.getCounter(spec);
   }
 
+  @Override
   public void changeCounter(CounterSpec spec, int delta) {
     if (myCounters == null) {
       myCounters = new Counters();
@@ -184,7 +170,8 @@ abstract class BaseCellMapper<SourceT extends Cell> extends Mapper<SourceT, Elem
       getTarget().addClassName(CSS.selected());
     }
 
-    Color background = getSource().background().get() != null ? getSource().background().get() : myAncestorBackground;
+    Color bg = getSource().get(Cell.BACKGROUND);
+    Color background = bg == null ? myAncestorBackground : bg;
     List<String> backgrounds = new ArrayList<>();
     if (isLeaf() && focusHighlighted) {
       backgrounds.add(CSS.currentHighlightColor());
@@ -205,25 +192,26 @@ abstract class BaseCellMapper<SourceT extends Cell> extends Mapper<SourceT, Elem
       style.setProperty("background", Joiner.on(",").join(backgrounds));
     }
 
-    Color borderColor = getSource().borderColor().get();
+    Color borderColor = getSource().get(Cell.BORDER_COLOR);
     style.setBorderStyle(borderColor == null ? Style.BorderStyle.NONE : Style.BorderStyle.SOLID);
     style.setBorderWidth(borderColor == null ? 0 : 1, Style.Unit.PX);
     style.setBorderColor(borderColor == null ? null : borderColor.toCssColor());
 
-    if (!getSource().visible().get()) {
-      getTarget().addClassName(CSS.hidden());
-    } else {
+    if (getSource().get(Cell.VISIBLE)) {
       getTarget().removeClassName(CSS.hidden());
+    } else {
+      getTarget().addClassName(CSS.hidden());
     }
 
-    if (getSource().hasShadow().get()) {
+    if (getSource().get(Cell.HAS_SHADOW)) {
       getTarget().addClassName(CSS.hasShadow());
     } else {
       getTarget().removeClassName(CSS.hasShadow());
     }
   }
 
-  void updatePopup(PropertyChangeEvent<Cell> event) {
+  @Override
+  public final void onEvent(PropertyChangeEvent<Cell> event) {
     if (event.getOldValue() != null) {
       for (Mapper<? extends Cell, ? extends Element> pm : myPopupMappers) {
         if (pm.getSource() == event.getOldValue()) {
@@ -232,7 +220,6 @@ abstract class BaseCellMapper<SourceT extends Cell> extends Mapper<SourceT, Elem
           break;
         }
       }
-
       if (myPopupMappers.isEmpty()) {
         myPopupMappers = null;
         myPopupUpdateReg.remove();
@@ -246,7 +233,7 @@ abstract class BaseCellMapper<SourceT extends Cell> extends Mapper<SourceT, Elem
         final Timer timer = new Timer() {
           @Override
           public void run() {
-            updatePopupPositions();
+            updatePopupPositions(getSource());
           }
         };
         timer.scheduleRepeating(50);
@@ -257,46 +244,18 @@ abstract class BaseCellMapper<SourceT extends Cell> extends Mapper<SourceT, Elem
           }
         };
       }
-
       BaseCellMapper<?> pm = createMapper(event.getNewValue());
       Element target = pm.getTarget();
       myPopupMappers.add(pm);
-
       myContext.rootElement.appendChild(target);
       target.getStyle().setPosition(Style.Position.ABSOLUTE);
       target.getStyle().setZIndex(100);
-
-      updatePopupPositions();
+      updatePopupPositions(getSource());
     }
   }
 
-  private void updatePopupPositions() {
-    Rectangle bounds = targetBounds();
-    Cell bottomPopup = getSource().bottomPopup().get();
-    Cell frontPopup = getSource().frontPopup().get();
-    Cell leftPopup = getSource().leftPopup().get();
-    Cell rightPopup = getSource().rightPopup().get();
-    PopupPositioner positioner = new PopupPositioner(myContext);
-
-    if (bottomPopup != null) {
-      positioner.positionBottom(bounds, ((BaseCellMapper<?>) getDescendantMapper(bottomPopup)).getTarget());
-    }
-    if (frontPopup != null) {
-      positioner.positionFront(bounds, ((BaseCellMapper<?>) getDescendantMapper(frontPopup)).getTarget());
-    }
-    if (leftPopup != null) {
-      positioner.positionLeft(bounds, ((BaseCellMapper<?>) getDescendantMapper(leftPopup)).getTarget());
-    }
-    if (rightPopup != null) {
-      positioner.positionRight(bounds, ((BaseCellMapper<?>) getDescendantMapper(rightPopup)).getTarget());
-    }
-  }
-
-  private Rectangle targetBounds() {
-    return new Rectangle(
-      getTarget().getAbsoluteLeft(), getTarget().getAbsoluteTop(),
-      getTarget().getClientWidth(), getTarget().getClientHeight()
-    );
+  protected void updatePopupPositions(Cell cell) {
+    Popups.updatePopupsPositions(cell, new PopupPositioner(myContext), this);
   }
 
   List<Node> divWrappedElementChildren(final Element e) {
