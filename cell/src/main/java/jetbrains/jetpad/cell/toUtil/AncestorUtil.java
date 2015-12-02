@@ -8,11 +8,11 @@ public class AncestorUtil {
     Cell current = leaf;
     do {
       current = current.getParent();
-      if (current.background().get() != null) {
-        return current.background().get();
+      Color bg = current.get(Cell.BACKGROUND);
+      if (bg != null) {
+        return bg;
       }
     } while (current != container);
     return null;
   }
-
 }

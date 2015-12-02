@@ -49,7 +49,7 @@ public class TextEditingTrait extends TextNavigationTrait {
     return new CompletionController() {
       @Override
       public boolean isActive() {
-        return cell.bottomPopup().get() != null;
+        return cell.get(Cell.BOTTOM_POPUP) != null;
       }
 
       @Override
@@ -156,7 +156,7 @@ public class TextEditingTrait extends TextNavigationTrait {
     String currentText = currentText(textCell);
     CompletionController handler = getCompletionController(textCell);
 
-    if (textCell.bottomPopup().get() == null) {
+    if (!handler.isActive()) {
       CompletionItems completion = new CompletionItems(textCell.get(Completion.COMPLETION).get(CompletionParameters.EMPTY));
       String prefixText = textCell.prefixText().get();
       if (textCell.isEnd()) {
@@ -176,7 +176,7 @@ public class TextEditingTrait extends TextNavigationTrait {
           };
           CompletionSupplier supplier = textCell.get(Completion.RIGHT_TRANSFORM);
           if ((!supplier.isEmpty(cp) || !supplier.isAsyncEmpty(cp)) && textCell.get(TextEditing.RT_ON_END)) {
-            if (textCell.rightPopup().get() == null) {
+            if (textCell.get(Cell.RIGHT_POPUP) == null) {
               TextCell popup = CompletionSupport.showSideTransformPopup(textCell, textCell.rightPopup(), textCell.get(Completion.RIGHT_TRANSFORM), true);
               popup.get(Completion.COMPLETION_CONTROLLER).activate(new Runnable() {
                 @Override

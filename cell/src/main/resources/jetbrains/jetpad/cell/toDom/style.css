@@ -35,7 +35,7 @@
 .cell {
 }
 
-.lineHighight {
+.lineHighlight {
   background: lineHighlightColor;
   position: absolute;
   left: 0px;
