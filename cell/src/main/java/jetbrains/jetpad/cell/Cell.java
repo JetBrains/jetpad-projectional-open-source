@@ -46,21 +46,22 @@ import java.util.*;
 
 public abstract class Cell implements NavComposite<Cell>, HasVisibility, HasFocusability, HasBounds {
 
-  public static final CellPropertySpec<Boolean> FOCUSED = new CellPropertySpec<>("focused", false);
-
   public static final CellPropertySpec<Cell> BOTTOM_POPUP = new CellPropertySpec<>("bottomPopup");
   public static final CellPropertySpec<Cell> FRONT_POPUP = new CellPropertySpec<>("frontPopup");
   public static final CellPropertySpec<Cell> LEFT_POPUP = new CellPropertySpec<>("leftPopup");
   public static final CellPropertySpec<Cell> RIGHT_POPUP = new CellPropertySpec<>("rightPopup");
 
-  private static final List<CellPropertySpec<Cell>> POPUP_SPECS = Arrays.asList(LEFT_POPUP, RIGHT_POPUP, BOTTOM_POPUP, FRONT_POPUP);
+  public static final List<CellPropertySpec<Cell>> POPUP_SPECS =
+      Collections.unmodifiableList(Arrays.asList(LEFT_POPUP, RIGHT_POPUP, BOTTOM_POPUP, FRONT_POPUP));
 
+  public static final CellPropertySpec<Boolean> FOCUSED = new CellPropertySpec<>("focused", false);
   public static final CellPropertySpec<Boolean> VISIBLE = new CellPropertySpec<>("visible", true);
   public static final CellPropertySpec<Boolean> POPUP = new CellPropertySpec<>("popup", false);
   public static final CellPropertySpec<Boolean> SELECTED = new CellPropertySpec<>("selected", false);
   public static final CellPropertySpec<Boolean> FOCUS_HIGHLIGHTED = new CellPropertySpec<>("focusHighlighted", false);
   public static final CellPropertySpec<Boolean> PAIR_HIGHLIGHTED = new CellPropertySpec<>("pairHighlighted", false);
   public static final CellPropertySpec<Boolean> FOCUSABLE = new CellPropertySpec<>("focusable", false);
+
   public static final CellPropertySpec<Color> BACKGROUND = new CellPropertySpec<>("background");
   public static final CellPropertySpec<Color> BORDER_COLOR = new CellPropertySpec<>("borderColor");
   public static final CellPropertySpec<Boolean> HAS_SHADOW = new CellPropertySpec<>("hasShadow", false);
@@ -503,16 +504,19 @@ public abstract class Cell implements NavComposite<Cell>, HasVisibility, HasFocu
     return new MyProperty();
   }
 
-  public List<Cell> popups() {
+  List<Cell> popups() {
     if (myProperties == null) return Collections.emptyList();
-    List<Cell> result = new ArrayList<>();
+    List<Cell> result = null;
     for (CellPropertySpec<Cell> ps : POPUP_SPECS) {
       Cell cell = (Cell) myProperties.get(ps);
       if (cell != null) {
+        if (result == null) {
+          result = new ArrayList<>();
+        }
         result.add(cell);
       }
     }
-    return result;
+    return result == null ? Collections.<Cell>emptyList() : result;
   }
 
   public boolean isAttached() {
@@ -587,9 +591,9 @@ public abstract class Cell implements NavComposite<Cell>, HasVisibility, HasFocu
       return;
     }
 
-    for (Property<Cell> popup : Arrays.asList(myParent.leftPopup(), myParent.rightPopup(), myParent.bottomPopup(), myParent.frontPopup())) {
-      if (popup.get() == this) {
-        popup.set(null);
+    for (CellPropertySpec<Cell> popupSpec : POPUP_SPECS) {
+      if (myParent.get(popupSpec) == this) {
+        myParent.set(popupSpec, null);
         return;
       }
     }
@@ -603,15 +607,14 @@ public abstract class Cell implements NavComposite<Cell>, HasVisibility, HasFocu
       Cell oldValue = cellChangeEvent.getOldValue();
       Cell value = cellChangeEvent.getNewValue();
 
-      CellContainer cellContainer = myContainer;
-      if (cellContainer != null) {
+      if (myContainer != null) {
         if (oldValue != null) {
-          cellContainer.popupRemoved(oldValue);
+          myContainer.popupRemoved(oldValue);
           oldValue.set(POPUP, false);
           oldValue.changeParent(null);
         }
         if (value != null) {
-          cellContainer.popupAdded(value);
+          myContainer.popupAdded(value);
           value.set(POPUP, true);
           value.changeParent(Cell.this);
         }

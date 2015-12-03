@@ -15,59 +15,16 @@
  */
 package jetbrains.jetpad.cell.toView;
 
-import jetbrains.jetpad.model.property.Property;
-import jetbrains.jetpad.model.property.ValueProperty;
+import jetbrains.jetpad.cell.mappers.CellMapperContext;
 import jetbrains.jetpad.projectional.view.View;
 
-import java.util.HashMap;
-import java.util.Map;
-
-class CellToViewContext {
-  private View myRootView;
-  private View myTargetView;
-  private View myPopupView;
-  private Property<Boolean> myContainerFocused = new ValueProperty<>(false);
-  private Map<View, BaseCellMapper<?, ?>> myMappers = new HashMap<>();
+class CellToViewContext extends CellMapperContext<View> {
+  final View targetView;
+  final View popupView;
 
   CellToViewContext(View rootView, View targetView, View popupView) {
-    myRootView = rootView;
-    myTargetView = targetView;
-    myPopupView = popupView;
-  }
-
-  View rootView() {
-    return myRootView;
-  }
-
-  View targetView() {
-    return myTargetView;
-  }
-
-  View popupView() {
-    return myPopupView;
-  }
-
-  Property<Boolean> containerFocused() {
-    return myContainerFocused;
-  }
-
-  void register(BaseCellMapper<?, ?> mapper) {
-    if (myMappers.containsKey(mapper.getTarget())) {
-      throw new IllegalStateException();
-    }
-
-    myMappers.put(mapper.getTarget(), mapper);
-  }
-
-  void unregister(BaseCellMapper<?, ?> mapper) {
-    BaseCellMapper<?, ?> m = myMappers.remove(mapper.getTarget());
-
-    if (m != mapper) {
-      throw new IllegalStateException();
-    }
-  }
-
-  BaseCellMapper<?, ?> getMapper(View view) {
-    return myMappers.get(view);
+    super(rootView);
+    this.targetView = targetView;
+    this.popupView = popupView;
   }
 }

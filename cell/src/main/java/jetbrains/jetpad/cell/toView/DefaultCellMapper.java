@@ -23,7 +23,8 @@ class DefaultCellMapper extends BaseCellMapper<Cell, TextView> {
   DefaultCellMapper(Cell source, CellToViewContext ctx) {
     super(source, new TextView(), ctx);
 
-    getTarget().textColor().set(Color.RED);
-    getTarget().text().set("Can't create a mapper for " + source.getClass().getName());
+    TextView target = getTypedTarget();
+    target.textColor().set(Color.RED);
+    target.text().set("Can't create a mapper for " + source.getClass().getName());
   }
 }

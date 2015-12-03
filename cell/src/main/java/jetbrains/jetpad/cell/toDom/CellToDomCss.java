@@ -29,7 +29,7 @@ public interface CellToDomCss extends CssResource {
   String domCell();
   String hasShadow();
 
-  String lineHighight();
+  String lineHighlight();
   String content();
 
   String decorations();

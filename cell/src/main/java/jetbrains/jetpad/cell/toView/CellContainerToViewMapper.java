@@ -21,6 +21,7 @@ import jetbrains.jetpad.base.edt.EventDispatchThread;
 import jetbrains.jetpad.cell.*;
 import jetbrains.jetpad.cell.indent.IndentCell;
 import jetbrains.jetpad.cell.indent.NewLineCell;
+import jetbrains.jetpad.cell.mappers.CellMapper;
 import jetbrains.jetpad.cell.util.Cells;
 import jetbrains.jetpad.event.*;
 import jetbrains.jetpad.geometry.Rectangle;
@@ -78,7 +79,7 @@ public class CellContainerToViewMapper extends Mapper<CellContainer, View> {
     super.registerSynchronizers(conf);
 
     conf.add(Synchronizers.forPropsOneWay(Properties.TRUE, myTargetView.focusable()));
-    conf.add(Synchronizers.<Cell, View>forSingleRole(this, Properties.<Cell>constant(getSource().root),
+    conf.add(Synchronizers.forSingleRole(this, Properties.<Cell>constant(getSource().root),
       new WritableProperty<View>() {
         @Override
         public void set(View value) {
@@ -99,7 +100,7 @@ public class CellContainerToViewMapper extends Mapper<CellContainer, View> {
       @Override
       public Registration get() {
         ViewTrait redispatchTrait = createRedistpatchTrait();
-        myContext.containerFocused().set(myTargetView.focused().get());
+        myContext.focused.set(myTargetView.focused().get());
         return new CompositeRegistration(
           getSource().addListener(createCellContainerListener()),
           getSource().focusedCell.addHandler(new EventHandler<PropertyChangeEvent<Cell>>() {
@@ -113,13 +114,13 @@ public class CellContainerToViewMapper extends Mapper<CellContainer, View> {
           myTargetView.focused().addHandler(new EventHandler<PropertyChangeEvent<Boolean>>() {
             @Override
             public void onEvent(PropertyChangeEvent<Boolean> event) {
-              myContext.containerFocused().set(event.getNewValue());
+              myContext.focused.set(event.getNewValue());
               for (TextCell cell : myWithCaret) {
-                BaseCellMapper<?, ?> mapper = (BaseCellMapper<?, ?>) rootMapper().getDescendantMapper(cell);
+                CellMapper<?, ?> mapper = (CellMapper<?, ?>) rootMapper().getDescendantMapper(cell);
                 mapper.refreshProperties();
               }
               for (Cell cell : myHighlighted) {
-                BaseCellMapper<?, ?> mapper = (BaseCellMapper<?, ?>) rootMapper().getDescendantMapper(cell);
+                CellMapper<?, ?> mapper = (CellMapper<?, ?>) rootMapper().getDescendantMapper(cell);
                 mapper.refreshProperties();
               }
             }
@@ -161,7 +162,7 @@ public class CellContainerToViewMapper extends Mapper<CellContainer, View> {
 
       private Rectangle calculateBounds(Cell cell) {
         getTarget().container().root().validate();
-        BaseCellMapper<?, ?> descendantMapper = (BaseCellMapper<?, ?>) rootMapper.getDescendantMapper(cell);
+        CellMapper<?, ? extends View> descendantMapper = (CellMapper<?, ? extends View>) rootMapper.getDescendantMapper(cell);
 
         if (descendantMapper == null) {
           if (cell instanceof NewLineCell) {
@@ -178,7 +179,7 @@ public class CellContainerToViewMapper extends Mapper<CellContainer, View> {
 
       @Override
       public void scrollTo(Rectangle rect, Cell cell) {
-        BaseCellMapper<?, ?> mapper = (BaseCellMapper<?, ?>) rootMapper.getDescendantMapper(cell);
+        CellMapper<?, ? extends View> mapper = (CellMapper<?, ? extends View>) rootMapper.getDescendantMapper(cell);
         if (mapper == null) return;
         mapper.getTarget().scrollTo(rect);
       }
@@ -193,13 +194,12 @@ public class CellContainerToViewMapper extends Mapper<CellContainer, View> {
       }
 
       private Cell findCellFor(View v) {
-        BaseCellMapper<?, ?> result = myContext.getMapper(v);
+        CellMapper<?, ?> result = myContext.findMapper(v);
         if (result != null) return result.getSource();
         View parent = v.getParent();
         if (parent == null) return null;
         return findCellFor(parent);
       }
-
 
       @Override
       public Rectangle visibleRect() {
@@ -334,14 +334,13 @@ public class CellContainerToViewMapper extends Mapper<CellContainer, View> {
     return new CellContainerAdapter() {
       @Override
       public void onCellPropertyChanged(Cell cell, CellPropertySpec<?> prop, PropertyChangeEvent<?> event) {
-        BaseCellMapper<?, ?> target = (BaseCellMapper<?, ?>) rootMapper().getDescendantMapper(cell);
+        CellMapper<?, ?> target = (CellMapper<?, ?>) rootMapper().getDescendantMapper(cell);
         if (target == null) return;
 
         if (Cell.isPopupProp(prop)) {
           if (target.isAutoPopupManagement()) {
             target.updatePopup((PropertyChangeEvent<Cell>) event);
           }
-
           PropertyChangeEvent<Cell> changeEvent = (PropertyChangeEvent<Cell>) event;
           if (changeEvent.getOldValue() != null) {
             updateCachesOnRemove(changeEvent.getOldValue());
@@ -373,7 +372,7 @@ public class CellContainerToViewMapper extends Mapper<CellContainer, View> {
 
       @Override
       public void onChildAdded(Cell parent, CollectionItemEvent<? extends Cell> change) {
-        BaseCellMapper<?, ?> parentMapper = (BaseCellMapper<?, ?>) rootMapper().getDescendantMapper(parent);
+        CellMapper<?, ?> parentMapper = (CellMapper<?, ?>) rootMapper().getDescendantMapper(parent);
         if (parentMapper == null) return;
 
         parentMapper.childAdded(change.getIndex(), change.getNewItem());
@@ -383,7 +382,7 @@ public class CellContainerToViewMapper extends Mapper<CellContainer, View> {
 
       @Override
       public void onChildRemoved(Cell parent, CollectionItemEvent<? extends Cell> change) {
-        BaseCellMapper<?, ?> parentMapper = (BaseCellMapper<?, ?>) rootMapper().getDescendantMapper(parent);
+        CellMapper<?, ?> parentMapper = (CellMapper<?, ?>) rootMapper().getDescendantMapper(parent);
         if (parentMapper == null) return;
 
         parentMapper.childRemoved(change.getIndex(), change.getOldItem());

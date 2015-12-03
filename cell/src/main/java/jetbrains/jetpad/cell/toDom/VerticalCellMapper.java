@@ -25,13 +25,9 @@ class VerticalCellMapper extends BaseCellMapper<VerticalCell> {
   }
 
   @Override
-  protected void refreshProperties() {
+  public void refreshProperties() {
     super.refreshProperties();
 
-    if (getSource().indented().get()) {
-      getTarget().addClassName(CellContainerToDomMapper.CSS.indented());
-    } else {
-      getTarget().removeClassName(CellContainerToDomMapper.CSS.indented());
-    }
+    updateCssStyle(CellContainerToDomMapper.CSS.indented(), getSource().get(VerticalCell.INDENTED));
   }
 }

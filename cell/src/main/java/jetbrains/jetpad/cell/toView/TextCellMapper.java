@@ -24,20 +24,20 @@ class TextCellMapper extends BaseCellMapper<TextCell, TextView> {
   }
 
   @Override
-  boolean isLeaf() {
+  protected boolean isLeaf() {
     return true;
   }
 
   @Override
-  void refreshProperties() {
+  public void refreshProperties() {
     super.refreshProperties();
 
     TextCell cell = getSource();
-    TextView view = getTarget();
+    TextView view = getTypedTarget();
 
     view.text().set(cell.text().get());
     view.caretPosition().set(cell.caretPosition().get());
-    view.caretVisible().set(cell.caretVisible().get() && cell.focused().get() && cellToViewContext().containerFocused().get());
+    view.caretVisible().set(cell.caretVisible().get() && cell.focused().get() && getContext().focused.get());
     view.textColor().set(cell.textColor().get());
     view.bold().set(cell.bold().get());
     view.selectionVisible().set(cell.selectionVisible().get() && cell.focused().get());

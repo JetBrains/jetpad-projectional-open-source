@@ -24,11 +24,11 @@ class ScrollCellMapper extends BaseCellMapper<ScrollCell, ScrollView> {
   }
 
   @Override
-  void refreshProperties() {
+  public void refreshProperties() {
     super.refreshProperties();
 
     ScrollCell source = getSource();
-    ScrollView target = getTarget();
+    ScrollView target = getTypedTarget();
 
     target.scroll().set(source.scroll().get());
     target.maxDimension().set(source.maxDimension().get());

@@ -15,10 +15,10 @@
  */
 package jetbrains.jetpad.cell.toDom;
 
-import com.google.common.base.Strings;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Timer;
 import jetbrains.jetpad.base.Registration;
+import jetbrains.jetpad.cell.Cell;
 import jetbrains.jetpad.cell.TextCell;
 import jetbrains.jetpad.model.event.CompositeRegistration;
 import jetbrains.jetpad.model.event.EventHandler;
@@ -64,20 +64,16 @@ class TextCellMapper extends BaseCellMapper<TextCell> {
   }
 
   @Override
-  protected boolean isEmpty() {
-    return Strings.isNullOrEmpty(getSource().text().get());
-  }
-
-  @Override
-  boolean isLeaf() {
+  protected boolean isLeaf() {
     return true;
   }
 
   @Override
-  protected void refreshProperties() {
+  public void refreshProperties() {
     super.refreshProperties();
 
-    if (getSource().focused().get()) {
+    Boolean focused = getSource().get(Cell.FOCUSED);
+    if (focused) {
       if (myFocusRegistration == null) {
         final Timer timer = new Timer() {
           @Override
@@ -125,16 +121,15 @@ class TextCellMapper extends BaseCellMapper<TextCell> {
 
     myTextEditor.setText(getSource().text().get());
     myTextEditor.setCaretPosition(getSource().caretPosition().get());
-    myTextEditor.setCaretVisible(getSource().caretVisible().get() && getSource().focused().get());
+    myTextEditor.setCaretVisible(getSource().caretVisible().get() && focused);
     myTextEditor.setTextColor(getSource().textColor().get());
     myTextEditor.setBold(getSource().bold().get());
 
-    myTextEditor.setSelectionVisible(getSource().selectionVisible().get() && getSource().focused().get());
+    myTextEditor.setSelectionVisible(getSource().selectionVisible().get() && focused);
     myTextEditor.setSelectionStart(getSource().selectionStart().get());
   }
 
   private void updateCaretVisibility() {
     myTextEditor.setCaretVisible(myContainerFocused && myCaretVisible && getSource().caretVisible().get());
   }
-
 }

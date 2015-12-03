@@ -73,7 +73,7 @@ public class IndentPropertiesTest extends BaseTestCase {
   }
 
   @Test
-  public void addChildToHighlightePlace() {
+  public void addChildToHighlightedPlace() {
     c1.focusHighlighted().set(true);
 
     TextCell l13 = new TextCell("l13");
@@ -127,5 +127,4 @@ public class IndentPropertiesTest extends BaseTestCase {
       assertNull(getView(c).background().get());
     }
   }
-
 }
