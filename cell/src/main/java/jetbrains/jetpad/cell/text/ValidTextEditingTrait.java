@@ -20,6 +20,7 @@ import jetbrains.jetpad.cell.Cell;
 import jetbrains.jetpad.cell.CellContainer;
 import jetbrains.jetpad.cell.CellPropertySpec;
 import jetbrains.jetpad.cell.TextCell;
+import jetbrains.jetpad.cell.completion.BaseCompletionController;
 import jetbrains.jetpad.cell.completion.Completion;
 import jetbrains.jetpad.cell.completion.CompletionItems;
 import jetbrains.jetpad.cell.completion.Side;
@@ -115,7 +116,7 @@ class ValidTextEditingTrait extends TextEditingTrait {
           container.keyTyped(new KeyEvent(Key.UNKNOWN, suffix.charAt(0), Collections.<ModifierKey>emptySet()));
         }
       }
-    } else if (textCell.caretPosition().get() == 1 && textCell.get(Cell.BOTTOM_POPUP) == null) {
+    } else if (textCell.caretPosition().get() == 1 && !BaseCompletionController.isCompletionActive(textCell)) {
       //left transform
       String prefix = text.substring(0, 1).trim();
       String suffix = text.substring(1);

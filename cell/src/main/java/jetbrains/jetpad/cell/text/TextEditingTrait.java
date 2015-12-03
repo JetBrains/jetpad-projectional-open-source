@@ -21,6 +21,7 @@ import jetbrains.jetpad.base.Registration;
 import jetbrains.jetpad.base.Runnables;
 import jetbrains.jetpad.cell.Cell;
 import jetbrains.jetpad.cell.TextCell;
+import jetbrains.jetpad.cell.completion.BaseCompletionController;
 import jetbrains.jetpad.cell.completion.Completion;
 import jetbrains.jetpad.cell.completion.CompletionItems;
 import jetbrains.jetpad.cell.completion.CompletionSupport;
@@ -46,12 +47,7 @@ public class TextEditingTrait extends TextNavigationTrait {
   }
 
   private CompletionController getCompletionController(final TextCell cell) {
-    return new CompletionController() {
-      @Override
-      public boolean isActive() {
-        return cell.get(Cell.BOTTOM_POPUP) != null;
-      }
-
+    return new BaseCompletionController(cell) {
       @Override
       public boolean canActivate() {
         BaseCompletionParameters params = new BaseCompletionParameters() {
@@ -64,10 +60,7 @@ public class TextEditingTrait extends TextNavigationTrait {
       }
 
       @Override
-      public void activate(Runnable restoreState) {
-        if (isActive()) {
-          throw new IllegalStateException();
-        }
+      protected void doActivate(Runnable restoreState) {
         CompletionSupport.showCompletion(cell, Completion.allCompletion(cell, new BaseCompletionParameters() {
           @Override
           public boolean isMenu() {
@@ -77,19 +70,9 @@ public class TextEditingTrait extends TextNavigationTrait {
       }
 
       @Override
-      public void activate() {
-        activate(Runnables.EMPTY);
-      }
-
-      @Override
-      public void deactivate() {
-        if (!isActive()) {
-          throw new IllegalStateException();
-        }
-
+      protected void doDeactivate() {
         cell.get(CompletionSupport.HIDE_COMPLETION).run();
       }
-
 
       @Override
       public boolean hasAmbiguousMatches() {
@@ -183,7 +166,7 @@ public class TextEditingTrait extends TextNavigationTrait {
                 public void run() {
                   textCell.focus();
                 }
-              } );
+              });
             }
             event.consume();
             return;
