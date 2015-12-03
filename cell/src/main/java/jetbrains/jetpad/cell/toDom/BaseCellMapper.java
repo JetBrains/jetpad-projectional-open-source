@@ -61,13 +61,13 @@ abstract class BaseCellMapper<SourceT extends Cell> extends CellMapper<SourceT, 
 
   @Override
   protected void onAttach(MappingContext ctx) {
-    super.onAttach(ctx);
     if (isAutoChildManagement()) {
       myTarget = divWrappedElementChildren(getTarget());
     }
     myWasPopup = Composites.<Cell>isNonCompositeChild(getSource());
     getSource().getProp(ELEMENT).set(getTarget());
     getTarget().addClassName(CSS.cell());
+    super.onAttach(ctx);
   }
 
   @Override
