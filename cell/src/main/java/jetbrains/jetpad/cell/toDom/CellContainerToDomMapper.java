@@ -38,6 +38,7 @@ import jetbrains.jetpad.cell.*;
 import jetbrains.jetpad.cell.dom.DomCell;
 import jetbrains.jetpad.cell.indent.IndentCell;
 import jetbrains.jetpad.cell.indent.NewLineCell;
+import jetbrains.jetpad.cell.mappers.CellMapper;
 import jetbrains.jetpad.cell.util.Cells;
 import jetbrains.jetpad.event.*;
 import jetbrains.jetpad.event.dom.ClipboardSupport;
@@ -244,7 +245,7 @@ public class CellContainerToDomMapper extends Mapper<CellContainer, Element> {
   protected void registerSynchronizers(SynchronizersConfiguration conf) {
     super.registerSynchronizers(conf);
 
-    conf.add(Synchronizers.<Cell, Element>forSingleRole(this, Properties.<Cell>constant(getSource().root), new WritableProperty<Element>() {
+    conf.add(Synchronizers.forSingleRole(this, Properties.<Cell>constant(getSource().root), new WritableProperty<Element>() {
       @Override
       public void set(Element value) {
         if (value != null) {
@@ -284,8 +285,7 @@ public class CellContainerToDomMapper extends Mapper<CellContainer, Element> {
           public void onChildAdded(Cell parent, CollectionItemEvent<? extends Cell> change) {
             BaseCellMapper<?> mapper = (BaseCellMapper<?>) rootMapper().getDescendantMapper(parent);
             if (mapper == null) return;
-            mapper.childAdded(change);
-
+            mapper.childAdded(change.getIndex(), change.getNewItem());
             invalidateLineHighlight();
           }
 
@@ -293,8 +293,7 @@ public class CellContainerToDomMapper extends Mapper<CellContainer, Element> {
           public void onChildRemoved(Cell parent, CollectionItemEvent<? extends Cell> change) {
             BaseCellMapper<?> mapper = (BaseCellMapper<?>) rootMapper().getDescendantMapper(parent);
             if (mapper == null) return;
-            mapper.childRemoved(change);
-
+            mapper.childRemoved(change.getIndex(), change.getNewItem());
             invalidateLineHighlight();
           }
         });
@@ -316,7 +315,7 @@ public class CellContainerToDomMapper extends Mapper<CellContainer, Element> {
   }
 
   private Cell findCellFor(Element e) {
-    BaseCellMapper<?> result = myCellToDomContext.findMapper(e);
+    CellMapper<? extends Cell, Element> result = myCellToDomContext.findMapper(e);
     if (result != null) return result.getSource();
     Element parent = e.getParentElement();
     if (parent == null) return null;

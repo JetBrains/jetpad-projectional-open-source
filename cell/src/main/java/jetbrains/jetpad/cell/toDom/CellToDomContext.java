@@ -16,41 +16,15 @@
 package jetbrains.jetpad.cell.toDom;
 
 import com.google.gwt.dom.client.Element;
-import jetbrains.jetpad.model.property.Property;
-import jetbrains.jetpad.model.property.ValueProperty;
+import jetbrains.jetpad.cell.mappers.CellMapperContext;
 
-import java.util.HashMap;
-import java.util.Map;
-
-class CellToDomContext {
-  final Property<Boolean> focused = new ValueProperty<>(false);
-  final Element rootElement;
-  final Element focusElement;
+class CellToDomContext extends CellMapperContext<Element> {
   final boolean eventsDisabled;
-  private final Map<Element, BaseCellMapper<?>> myMappers = new HashMap<>();
+  final Element focusElement;
 
   CellToDomContext(Element rootElement, boolean eventsDisabled) {
-    this.rootElement = rootElement;
-    this.focusElement = rootElement;
+    super(rootElement);
+    focusElement = rootElement;
     this.eventsDisabled = eventsDisabled;
-  }
-
-  void register(BaseCellMapper<?> mapper) {
-    if (myMappers.get(mapper.getTarget()) != null) {
-      throw new IllegalStateException();
-    }
-
-    myMappers.put(mapper.getTarget(), mapper);
-  }
-
-  void unregister(BaseCellMapper<?> mapper) {
-    BaseCellMapper<?> result = myMappers.remove(mapper.getTarget());
-    if (result != mapper) {
-      throw new IllegalStateException();
-    }
-  }
-
-  BaseCellMapper<?> findMapper(Element e) {
-    return myMappers.get(e);
   }
 }

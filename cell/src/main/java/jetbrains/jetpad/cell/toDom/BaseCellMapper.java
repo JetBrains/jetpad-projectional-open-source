@@ -15,7 +15,6 @@
  */
 package jetbrains.jetpad.cell.toDom;
 
-import com.google.common.base.Joiner;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Node;
 import com.google.gwt.dom.client.Style;
@@ -23,280 +22,150 @@ import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Timer;
 import jetbrains.jetpad.base.Registration;
 import jetbrains.jetpad.cell.Cell;
-import jetbrains.jetpad.cell.toUtil.CounterSpec;
-import jetbrains.jetpad.cell.toUtil.Counters;
-import jetbrains.jetpad.cell.toUtil.HasCounters;
-import jetbrains.jetpad.geometry.Rectangle;
-import jetbrains.jetpad.mapper.Mapper;
+import jetbrains.jetpad.cell.mappers.CellMapper;
+import jetbrains.jetpad.cell.mappers.PopupPositionUpdater;
 import jetbrains.jetpad.mapper.MappingContext;
-import jetbrains.jetpad.model.collections.CollectionItemEvent;
-import jetbrains.jetpad.model.collections.set.ObservableSet;
 import jetbrains.jetpad.model.composite.Composites;
-import jetbrains.jetpad.model.property.PropertyChangeEvent;
 import jetbrains.jetpad.values.Color;
 
 import java.util.AbstractList;
-import java.util.ArrayList;
 import java.util.List;
 
 import static jetbrains.jetpad.cell.toDom.CellContainerToDomMapper.CSS;
 import static jetbrains.jetpad.cell.toDom.CellContainerToDomMapper.ELEMENT;
 
-abstract class BaseCellMapper<SourceT extends Cell> extends Mapper<SourceT, Element> implements HasCounters {
-  private ObservableSet<Mapper<? extends Cell, ? extends Element>> myPopupMappers;
-  private Registration myPopupUpdateReg;
+abstract class BaseCellMapper<SourceT extends Cell> extends CellMapper<SourceT, Element> {
+  private static final String BACKGROUND = "background";
+  private static final String UNDERLINE_SUFFIX = " bottom repeat-x";
 
-  private List<Mapper<? extends Cell, ? extends Element>> myChildrenMappers;
-  private List<Node> myTarget;
+  private List<Node> myTarget = null;
   private boolean myWasPopup;
-  private CellToDomContext myContext;
-
-  private Counters myCounters;
-  private Color myAncestorBackground;
 
   BaseCellMapper(SourceT source, CellToDomContext ctx, Element target) {
-    super(source, target);
-    myContext = ctx;
-  }
-
-  protected CellToDomContext getContext() {
-    return myContext;
-  }
-
-  protected boolean isAutoChildManagement() {
-    return true;
-  }
-
-  protected boolean isAutoPopupManagement() {
-    return true;
+    super(source, target, ctx);
   }
 
   @Override
-  protected void registerSynchronizers(SynchronizersConfiguration conf) {
-    super.registerSynchronizers(conf);
+  protected CellToDomContext getContext() {
+    return (CellToDomContext) super.getContext();
+  }
 
-    myTarget = divWrappedElementChildren(getTarget());
+  @Override
+  protected CellMapper<? extends Cell, ? extends Element> createMapper(Cell source) {
+    return CellMappers.createMapper(source, getContext());
+  }
 
-    if (isAutoChildManagement()) {
-      myChildrenMappers = createChildList();
-      for (Cell child : getSource().children()) {
-        Mapper<? extends Cell, ? extends Element> mapper = createMapper(child);
-        myChildrenMappers.add(mapper);
-        myTarget.add(mapper.getTarget());
-      }
-    }
-
-    refreshProperties();
+  protected PopupPositionUpdater<Element> popupPositionUpdater() {
+    return new PopupPositioner(getContext());
   }
 
   @Override
   protected void onAttach(MappingContext ctx) {
     super.onAttach(ctx);
-    myWasPopup = Composites.<Cell>isNonCompositeChild(getSource());
-
-    if (isAutoPopupManagement()) {
-      if (getSource().bottomPopup().get() != null) {
-        updatePopup(new PropertyChangeEvent<>(null, getSource().bottomPopup().get()));
-      } else if (getSource().frontPopup().get() != null) {
-        updatePopup(new PropertyChangeEvent<>(null, getSource().frontPopup().get()));
-      } else if (getSource().leftPopup().get() != null) {
-        updatePopup(new PropertyChangeEvent<>(null, getSource().leftPopup().get()));
-      } else if (getSource().rightPopup().get() != null) {
-        updatePopup(new PropertyChangeEvent<>(null, getSource().rightPopup().get()));
-      }
+    if (isAutoChildManagement()) {
+      myTarget = divWrappedElementChildren(getTarget());
     }
-
+    myWasPopup = Composites.<Cell>isNonCompositeChild(getSource());
     getSource().getProp(ELEMENT).set(getTarget());
-
     getTarget().addClassName(CSS.cell());
-
-    myContext.register(this);
   }
 
   @Override
   protected void onDetach() {
-    myContext.unregister(this);
-
     getSource().getProp(ELEMENT).set(null);
-
     getTarget().removeClassName(CSS.cell());
-
     if (myWasPopup) {
       getTarget().removeFromParent();
     }
-
-    if (myPopupUpdateReg != null) {
-      myPopupUpdateReg.remove();
-      myPopupUpdateReg = null;
-    }
-
     super.onDetach();
   }
 
-  public int getCounter(CounterSpec spec) {
-    if (myCounters == null) return 0;
-    return myCounters.getCounter(spec);
+  @Override
+  protected void doAddChild(int index, Element child) {
+    myTarget.add(index, child);
   }
 
-  public void changeCounter(CounterSpec spec, int delta) {
-    if (myCounters == null) {
-      myCounters = new Counters();
-    }
-    myCounters.changeCounter(spec, delta);
-    if (myCounters.isEmpty()) {
-      myCounters = null;
-    }
+  @Override
+  protected void doRemoveChild(int index) {
+    myTarget.remove(index);
   }
 
-  public void setAncestorBackground(Color color) {
-    myAncestorBackground = color;
+  @Override
+  protected void attachPopup(Element popup) {
+    getContext().rootElement.appendChild(popup);
+    popup.getStyle().setPosition(Style.Position.ABSOLUTE);
+    popup.getStyle().setZIndex(100);
   }
 
-  boolean isEmpty() {
-    return false;
+  @Override
+  protected void detachPopup(Element popup) {
+    popup.removeFromParent();
   }
 
-  boolean isLeaf() {
-    return false;
-  }
-
-  protected void refreshProperties() {
-    Style style = getTarget().getStyle();
-
-    boolean selected = getSource().selected().get() || getCounter(Counters.SELECT_COUNT) > 0;
-    boolean paired = getSource().pairHighlighted().get();
-    boolean focusHighlighted = getSource().focusHighlighted().get() || getCounter(Counters.HIGHLIGHT_COUNT) > 0;
-
-    getTarget().removeClassName(CSS.selected());
-    getTarget().removeClassName(CSS.paired());
-
-    if (focusHighlighted) {
-      if (!isLeaf()) {
-        getTarget().addClassName(CSS.selected());
+  @Override
+  protected Registration enablePopupUpdates() {
+    final Timer timer = new Timer() {
+      @Override
+      public void run() {
+        updatePopupPositions(getSource());
       }
-    }
+    };
+    timer.scheduleRepeating(50);
+    return new Registration() {
+      @Override
+      protected void doRemove() {
+        timer.cancel();
+      }
+    };
+  }
 
-    if (paired) {
-      getTarget().addClassName(CSS.paired());
-    }
+  @Override
+  protected void applyStyle(boolean selected, boolean focusHighlighted, boolean hasError, boolean hasWarning, Color background) {
+    updateCssStyle(CSS.selected(), (focusHighlighted && !isLeaf()) || selected);
+    updateCssStyle(CSS.paired(), getSource().get(Cell.PAIR_HIGHLIGHTED));
 
-    if (selected) {
-      getTarget().addClassName(CSS.selected());
-    }
-
-    Color background = getSource().background().get() != null ? getSource().background().get() : myAncestorBackground;
-    List<String> backgrounds = new ArrayList<>();
+    String backgroundColor = null;
     if (isLeaf() && focusHighlighted) {
-      backgrounds.add(CSS.currentHighlightColor());
+      backgroundColor = CSS.currentHighlightColor();
     } else if (background != null) {
-      backgrounds.add(background.toCssColor());
+      backgroundColor = background.toCssColor();
     }
+    String underline = hasError ? CSS.redUnderline() : (hasWarning ? CSS.yellowUnderline() : null);
+    applyBackground(backgroundColor, underline);
 
-    String underlineSuffix = " bottom repeat-x";
-    if (getSource().hasError().get() || getCounter(Counters.ERROR_COUNT) > 0) {
-      backgrounds.add(0, CSS.redUnderline() + underlineSuffix);
-    } else if (getSource().hasWarning().get() || getCounter(Counters.WARNING_COUNT) > 0) {
-      backgrounds.add(0, CSS.yellowUnderline() + underlineSuffix);
-    }
-
-    if (backgrounds.isEmpty()) {
-      style.clearProperty("background");
-    } else {
-      style.setProperty("background", Joiner.on(",").join(backgrounds));
-    }
-
-    Color borderColor = getSource().borderColor().get();
+    Style style = getTarget().getStyle();
+    Color borderColor = getSource().get(Cell.BORDER_COLOR);
     style.setBorderStyle(borderColor == null ? Style.BorderStyle.NONE : Style.BorderStyle.SOLID);
     style.setBorderWidth(borderColor == null ? 0 : 1, Style.Unit.PX);
     style.setBorderColor(borderColor == null ? null : borderColor.toCssColor());
 
-    if (!getSource().visible().get()) {
-      getTarget().addClassName(CSS.hidden());
+    updateCssStyle(CSS.hidden(), !getSource().get(Cell.VISIBLE));
+    updateCssStyle(CSS.hasShadow(), getSource().get(Cell.HAS_SHADOW));
+  }
+
+  protected final void updateCssStyle(String cssStyle, boolean apply) {
+    if (apply) {
+      getTarget().addClassName(cssStyle);
     } else {
-      getTarget().removeClassName(CSS.hidden());
+      getTarget().removeClassName(cssStyle);
     }
+  }
 
-    if (getSource().hasShadow().get()) {
-      getTarget().addClassName(CSS.hasShadow());
+  private void applyBackground(String color, String underline) {
+    Style style = getTarget().getStyle();
+    if (color == null) {
+      if (underline == null) {
+        style.clearProperty(BACKGROUND);
+      } else {
+        style.setProperty(BACKGROUND, underline + UNDERLINE_SUFFIX);
+      }
     } else {
-      getTarget().removeClassName(CSS.hasShadow());
-    }
-  }
-
-  void updatePopup(PropertyChangeEvent<Cell> event) {
-    if (event.getOldValue() != null) {
-      for (Mapper<? extends Cell, ? extends Element> pm : myPopupMappers) {
-        if (pm.getSource() == event.getOldValue()) {
-          myPopupMappers.remove(pm);
-          pm.getTarget().removeFromParent();
-          break;
-        }
-      }
-
-      if (myPopupMappers.isEmpty()) {
-        myPopupMappers = null;
-        myPopupUpdateReg.remove();
-        myPopupUpdateReg = null;
+      if (underline == null) {
+        style.setProperty(BACKGROUND, color);
+      } else {
+        style.setProperty(BACKGROUND, underline + UNDERLINE_SUFFIX + "," + color);
       }
     }
-
-    if (event.getNewValue() != null) {
-      if (myPopupMappers == null) {
-        myPopupMappers = createChildSet();
-        final Timer timer = new Timer() {
-          @Override
-          public void run() {
-            updatePopupPositions();
-          }
-        };
-        timer.scheduleRepeating(50);
-        myPopupUpdateReg = new Registration() {
-          @Override
-          protected void doRemove() {
-            timer.cancel();
-          }
-        };
-      }
-
-      BaseCellMapper<?> pm = createMapper(event.getNewValue());
-      Element target = pm.getTarget();
-      myPopupMappers.add(pm);
-
-      myContext.rootElement.appendChild(target);
-      target.getStyle().setPosition(Style.Position.ABSOLUTE);
-      target.getStyle().setZIndex(100);
-
-      updatePopupPositions();
-    }
-  }
-
-  private void updatePopupPositions() {
-    Rectangle bounds = targetBounds();
-    Cell bottomPopup = getSource().bottomPopup().get();
-    Cell frontPopup = getSource().frontPopup().get();
-    Cell leftPopup = getSource().leftPopup().get();
-    Cell rightPopup = getSource().rightPopup().get();
-    PopupPositioner positioner = new PopupPositioner(myContext);
-
-    if (bottomPopup != null) {
-      positioner.positionBottom(bounds, ((BaseCellMapper<?>) getDescendantMapper(bottomPopup)).getTarget());
-    }
-    if (frontPopup != null) {
-      positioner.positionFront(bounds, ((BaseCellMapper<?>) getDescendantMapper(frontPopup)).getTarget());
-    }
-    if (leftPopup != null) {
-      positioner.positionLeft(bounds, ((BaseCellMapper<?>) getDescendantMapper(leftPopup)).getTarget());
-    }
-    if (rightPopup != null) {
-      positioner.positionRight(bounds, ((BaseCellMapper<?>) getDescendantMapper(rightPopup)).getTarget());
-    }
-  }
-
-  private Rectangle targetBounds() {
-    return new Rectangle(
-      getTarget().getAbsoluteLeft(), getTarget().getAbsoluteTop(),
-      getTarget().getClientWidth(), getTarget().getClientHeight()
-    );
   }
 
   List<Node> divWrappedElementChildren(final Element e) {
@@ -349,22 +218,5 @@ abstract class BaseCellMapper<SourceT extends Cell> extends Mapper<SourceT, Elem
         return e.getChildCount();
       }
     };
-  }
-
-  void childAdded(CollectionItemEvent<? extends Cell> event) {
-    if (!isAutoChildManagement()) return;
-    Mapper<? extends Cell, ? extends Element> mapper = createMapper(event.getNewItem());
-    myChildrenMappers.add(event.getIndex(), mapper);
-    myTarget.add(event.getIndex(), mapper.getTarget());
-  }
-
-  void childRemoved(CollectionItemEvent<? extends Cell> event) {
-    if (!isAutoChildManagement()) return;
-    myChildrenMappers.remove(event.getIndex());
-    myTarget.remove(event.getIndex());
-  }
-
-  BaseCellMapper<?> createMapper(Cell source) {
-    return CellMappers.createMapper(source, myContext);
   }
 }

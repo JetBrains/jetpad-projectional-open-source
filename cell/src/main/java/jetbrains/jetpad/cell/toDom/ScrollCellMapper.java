@@ -26,8 +26,9 @@ class ScrollCellMapper extends BaseCellMapper<ScrollCell> {
   }
 
   @Override
-  protected void refreshProperties() {
+  public void refreshProperties() {
     super.refreshProperties();
+
     Style style = getTarget().getStyle();
     Vector maxDim = getSource().maxDimension().get();
     style.setProperty("maxWidth", maxDim.x + "px");

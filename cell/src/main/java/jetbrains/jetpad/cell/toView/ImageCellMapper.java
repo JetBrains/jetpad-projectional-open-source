@@ -27,6 +27,6 @@ class ImageCellMapper extends BaseCellMapper<ImageCell, ImageView> {
   @Override
   protected void registerSynchronizers(SynchronizersConfiguration conf) {
     super.registerSynchronizers(conf);
-    conf.add(Synchronizers.forPropsOneWay(getSource().image, getTarget().image));
+    conf.add(Synchronizers.forPropsOneWay(getSource().image, getTypedTarget().image));
   }
 }
