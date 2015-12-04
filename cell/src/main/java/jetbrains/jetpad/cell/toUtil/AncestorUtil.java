@@ -8,9 +8,9 @@ public class AncestorUtil {
     Cell current = leaf;
     do {
       current = current.getParent();
-      Color bg = current.get(Cell.BACKGROUND);
-      if (bg != null) {
-        return bg;
+      Color background = current.get(Cell.BACKGROUND);
+      if (background != null) {
+        return background;
       }
     } while (current != container);
     return null;
