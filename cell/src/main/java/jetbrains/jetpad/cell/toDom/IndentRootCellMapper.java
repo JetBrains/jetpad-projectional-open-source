@@ -21,7 +21,6 @@ import com.google.gwt.dom.client.Node;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Timer;
-import jetbrains.jetpad.base.Handler;
 import jetbrains.jetpad.base.Registration;
 import jetbrains.jetpad.cell.Cell;
 import jetbrains.jetpad.cell.CellPropertySpec;
@@ -33,9 +32,9 @@ import jetbrains.jetpad.cell.indent.updater.IndentUpdaterTarget;
 import jetbrains.jetpad.cell.mappers.CellMapper;
 import jetbrains.jetpad.cell.toUtil.AncestorUtil;
 import jetbrains.jetpad.cell.toUtil.CounterUtil;
+import jetbrains.jetpad.cell.indent.IndentUtil;
 import jetbrains.jetpad.mapper.MappingContext;
 import jetbrains.jetpad.model.collections.CollectionItemEvent;
-import jetbrains.jetpad.model.composite.Composites;
 import jetbrains.jetpad.model.property.PropertyChangeEvent;
 import jetbrains.jetpad.projectional.domUtil.DomTextEditor;
 
@@ -154,31 +153,13 @@ class IndentRootCellMapper extends BaseCellMapper<IndentCell> {
       @Override
       public void propertyChanged(final Cell cell, final CellPropertySpec<?> prop, final PropertyChangeEvent<?> event) {
         if (CounterUtil.isCounterProp(prop)) {
-          iterateLeaves(cell, new Handler<Cell>() {
-            @Override
-            public void handle(Cell item) {
-              BaseCellMapper<?> mapper = (BaseCellMapper<?>) getDescendantMapper(item);
-              if (mapper == null) {
-                throw new IllegalStateException();
-              }
-              if (CounterUtil.update(mapper, prop, event)) {
-                mapper.refreshProperties();
-              }
-            }
-          });
+          IndentUtil.updateCounters(cell, prop, event, IndentRootCellMapper.this);
         } else if (Cell.isPopupProp(prop)) {
           updateIndentCellPopup(cell, (PropertyChangeEvent<Cell>) event);
         } else if (prop == Cell.VISIBLE) {
           myIndentUpdater.visibilityChanged(cell, (PropertyChangeEvent<Boolean>) event);
         } else if (prop == Cell.BACKGROUND) {
-          iterateLeaves(cell, new Handler<Cell>() {
-            @Override
-            public void handle(Cell item) {
-              BaseCellMapper itemMapper = (BaseCellMapper) getDescendantMapper(item);
-              itemMapper.setAncestorBackground(AncestorUtil.getAncestorBackground(getSource(), item));
-              itemMapper.refreshProperties();
-            }
-          });
+          IndentUtil.updateBackground(cell, IndentRootCellMapper.this);
         }
       }
 
@@ -205,17 +186,6 @@ class IndentRootCellMapper extends BaseCellMapper<IndentCell> {
             myPositionUpdater.scheduleRepeating(50);
           }
           myChildrenWithPopups.add(popupMapper.getSource());
-        }
-      }
-
-      private void iterateLeaves(Cell cell, Handler<Cell> handler) {
-        for (Cell child : cell.children()) {
-          if (!Composites.isVisible(child)) continue;
-          if (child instanceof IndentCell) {
-            iterateLeaves(child, handler);
-          } else {
-            handler.handle(child);
-          }
         }
       }
     });
