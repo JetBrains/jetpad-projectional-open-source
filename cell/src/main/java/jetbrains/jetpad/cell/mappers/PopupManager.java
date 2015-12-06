@@ -15,13 +15,30 @@
  */
 package jetbrains.jetpad.cell.mappers;
 
+import jetbrains.jetpad.base.Disposable;
 import jetbrains.jetpad.cell.Cell;
-import jetbrains.jetpad.cell.toUtil.HasCounters;
 import jetbrains.jetpad.model.event.EventHandler;
 import jetbrains.jetpad.model.property.PropertyChangeEvent;
-import jetbrains.jetpad.values.Color;
 
-public interface CellMapper extends HasCounters, EventHandler<PropertyChangeEvent<Cell>> {
-  void setAncestorBackground(Color background);
-  void refreshProperties();
+public interface PopupManager extends EventHandler<PropertyChangeEvent<Cell>>, Disposable {
+  void attach(Cell cell);
+  void updatePopupPositions();
+
+  PopupManager EMPTY = new PopupManager() {
+    @Override
+    public void attach(Cell cell) {
+    }
+
+    @Override
+    public void updatePopupPositions() {
+    }
+
+    @Override
+    public void onEvent(PropertyChangeEvent<Cell> event) {
+    }
+
+    @Override
+    public void dispose() {
+    }
+  };
 }

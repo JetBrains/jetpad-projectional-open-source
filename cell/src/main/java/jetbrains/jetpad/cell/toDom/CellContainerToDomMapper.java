@@ -29,8 +29,8 @@ import com.google.gwt.query.client.GQuery;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Window;
-import jetbrains.jetpad.base.Registration;
 import jetbrains.jetpad.base.Handler;
+import jetbrains.jetpad.base.Registration;
 import jetbrains.jetpad.base.Value;
 import jetbrains.jetpad.base.edt.EventDispatchThread;
 import jetbrains.jetpad.base.edt.JsEventDispatchThread;
@@ -38,7 +38,6 @@ import jetbrains.jetpad.cell.*;
 import jetbrains.jetpad.cell.dom.DomCell;
 import jetbrains.jetpad.cell.indent.IndentCell;
 import jetbrains.jetpad.cell.indent.NewLineCell;
-import jetbrains.jetpad.cell.mappers.CellMapper;
 import jetbrains.jetpad.cell.util.Cells;
 import jetbrains.jetpad.event.*;
 import jetbrains.jetpad.event.dom.ClipboardSupport;
@@ -270,9 +269,7 @@ public class CellContainerToDomMapper extends Mapper<CellContainer, Element> {
             BaseCellMapper<?> mapper = (BaseCellMapper<?>) rootMapper().getDescendantMapper(cell);
             if (mapper != null) {
               if (Cell.isPopupProp(prop)) {
-                if (mapper.isAutoPopupManagement()) {
-                  mapper.updatePopup((PropertyChangeEvent<Cell>) event);
-                }
+                mapper.onEvent((PropertyChangeEvent<Cell>) event);
               } else {
                 mapper.refreshProperties();
               }
@@ -315,7 +312,7 @@ public class CellContainerToDomMapper extends Mapper<CellContainer, Element> {
   }
 
   private Cell findCellFor(Element e) {
-    CellMapper<? extends Cell, Element> result = myCellToDomContext.findMapper(e);
+    Mapper<? extends Cell, ? extends Element> result = myCellToDomContext.findMapper(e);
     if (result != null) return result.getSource();
     Element parent = e.getParentElement();
     if (parent == null) return null;

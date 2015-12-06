@@ -16,6 +16,7 @@
 package jetbrains.jetpad.cell.toDom;
 
 import com.google.gwt.dom.client.Element;
+import jetbrains.jetpad.cell.Cell;
 import jetbrains.jetpad.cell.mappers.CellMapperContext;
 
 class CellToDomContext extends CellMapperContext<Element> {
@@ -26,5 +27,10 @@ class CellToDomContext extends CellMapperContext<Element> {
     super(rootElement);
     focusElement = rootElement;
     this.eventsDisabled = eventsDisabled;
+  }
+
+  @Override
+  public BaseCellMapper<? extends Cell> apply(Cell cell) {
+    return CellMappers.createMapper(cell, this);
   }
 }

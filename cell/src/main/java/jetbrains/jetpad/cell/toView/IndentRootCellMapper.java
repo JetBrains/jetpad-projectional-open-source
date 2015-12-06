@@ -21,13 +21,15 @@ import jetbrains.jetpad.cell.Cell;
 import jetbrains.jetpad.cell.CellPropertySpec;
 import jetbrains.jetpad.cell.indent.IndentCell;
 import jetbrains.jetpad.cell.indent.IndentContainerCellListener;
+import jetbrains.jetpad.cell.indent.IndentUtil;
 import jetbrains.jetpad.cell.indent.updater.CellWrapper;
 import jetbrains.jetpad.cell.indent.updater.IndentUpdater;
 import jetbrains.jetpad.cell.indent.updater.IndentUpdaterTarget;
-import jetbrains.jetpad.cell.mappers.CellMapper;
+import jetbrains.jetpad.cell.mappers.BasePopupManager;
+import jetbrains.jetpad.cell.mappers.PopupPositionUpdater;
 import jetbrains.jetpad.cell.toUtil.AncestorUtil;
 import jetbrains.jetpad.cell.toUtil.CounterUtil;
-import jetbrains.jetpad.cell.indent.IndentUtil;
+import jetbrains.jetpad.mapper.Mapper;
 import jetbrains.jetpad.mapper.MappingContext;
 import jetbrains.jetpad.model.collections.CollectionItemEvent;
 import jetbrains.jetpad.model.collections.set.ObservableSet;
@@ -38,11 +40,13 @@ import jetbrains.jetpad.projectional.view.TextView;
 import jetbrains.jetpad.projectional.view.VerticalView;
 import jetbrains.jetpad.projectional.view.View;
 
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 
 class IndentRootCellMapper extends BaseCellMapper<IndentCell, VerticalView> {
   private IndentUpdater<View> myIndentUpdater;
-  private ObservableSet<CellMapper<?, ?>> myCellMappers;
+  private ObservableSet<BaseCellMapper<?, ?>> myCellMappers;
   private Registration myRegistration;
 
   IndentRootCellMapper(IndentCell source, CellToViewContext ctx) {
@@ -66,7 +70,7 @@ class IndentRootCellMapper extends BaseCellMapper<IndentCell, VerticalView> {
 
         @Override
         public CellWrapper<View> wrap(final Cell cell) {
-          final CellMapper<? extends Cell, ? extends View> mapper = createMapper(cell);
+          final BaseCellMapper<? extends Cell, ? extends View> mapper = getContext().apply(cell);
 
           CounterUtil.updateOnAdd(getSource(), cell, mapper);
 
@@ -120,7 +124,7 @@ class IndentRootCellMapper extends BaseCellMapper<IndentCell, VerticalView> {
   }
 
   @Override
-  public boolean isAutoPopupManagement() {
+  protected boolean isAutoPopupManagement() {
     return false;
   }
 
@@ -153,7 +157,7 @@ class IndentRootCellMapper extends BaseCellMapper<IndentCell, VerticalView> {
         } else if (prop == Cell.VISIBLE) {
           myIndentUpdater.visibilityChanged(cell, (PropertyChangeEvent<Boolean>) event);
         } else if (Cell.isPopupProp(prop)) {
-          updateIndentCellPopup(cell, (PropertyChangeEvent<Cell>) event);
+          IndentRootCellMapper.this.onEvent((PropertyChangeEvent<Cell>) event);
         } else if (prop == Cell.BACKGROUND) {
           IndentUtil.updateBackground(cell, IndentRootCellMapper.this);
         }
@@ -174,18 +178,37 @@ class IndentRootCellMapper extends BaseCellMapper<IndentCell, VerticalView> {
     super.onDetach();
   }
 
-  private void updateIndentCellPopup(Cell targetCell, PropertyChangeEvent<Cell> event) {
-    if (event.getOldValue() != null) {
-      BaseCellMapper<?, ?> popupMapper = (BaseCellMapper<?, ?>) getDescendantMapper(event.getOldValue());
-      Composites.removeFromParent(popupMapper.getTarget());
-      myCellMappers.remove(popupMapper);
-    }
+  @Override
+  protected BasePopupManager<View> createPopupManager() {
+    return new BasePopupManager<View>() {
+      @Override
+      protected Registration setPopupUpdate() {
+        return Registration.EMPTY;
+      }
 
-    if (event.getNewValue() != null) {
-      CellMapper<? extends Cell, ? extends View> popupMapper = createMapper(event.getNewValue());
-      myCellMappers.add(popupMapper);
-      getContext().popupView.children().add(popupMapper.getTarget());
-      updatePopupPositions(targetCell);
-    }
+      @Override
+      protected Mapper<? extends Cell, ? extends View> attachPopup(Cell popup) {
+        BaseCellMapper<? extends Cell, ? extends View> popupMapper = getContext().apply(popup);
+        myCellMappers.add(popupMapper);
+        getContext().popupView.children().add(popupMapper.getTarget());
+        return popupMapper;
+      }
+
+      @Override
+      protected void detachPopup(Mapper<? extends Cell, ? extends View> popupMapper) {
+        Composites.removeFromParent(popupMapper.getTarget());
+        myCellMappers.remove((BaseCellMapper) popupMapper);
+      }
+
+      @Override
+      protected Collection<Mapper<? extends Cell, ? extends View>> createContainer() {
+        return new HashSet<>();
+      }
+
+      @Override
+      protected PopupPositionUpdater<View> getPositionUpdater(Mapper<? extends Cell, ? extends View> popupMapper) {
+        return new PopupPositioner((View) popupMapper.getParent().getTarget());
+      }
+    };
   }
 }

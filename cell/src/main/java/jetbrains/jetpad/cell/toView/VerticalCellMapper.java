@@ -27,6 +27,6 @@ class VerticalCellMapper extends BaseCellMapper<VerticalCell, VerticalView> {
   public void refreshProperties() {
     super.refreshProperties();
 
-    getTypedTarget().indent().set(getSource().indented().get());
+    getTarget().indent().set(getSource().indented().get());
   }
 }

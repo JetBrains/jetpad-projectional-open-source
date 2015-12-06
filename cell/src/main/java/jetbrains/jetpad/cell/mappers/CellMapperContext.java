@@ -15,38 +15,40 @@
  */
 package jetbrains.jetpad.cell.mappers;
 
+import com.google.common.base.Function;
 import jetbrains.jetpad.cell.Cell;
+import jetbrains.jetpad.mapper.Mapper;
 import jetbrains.jetpad.model.property.Property;
 import jetbrains.jetpad.model.property.ValueProperty;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class CellMapperContext<TargetT> {
+public abstract class CellMapperContext<TargetT> implements Function<Cell, Mapper<? extends Cell, ? extends TargetT>> {
   public final TargetT rootElement;
   public final Property<Boolean> focused = new ValueProperty<>(false);
 
-  private final Map<TargetT, CellMapper<? extends Cell, TargetT>> myMappers = new HashMap<>();
+  private final Map<TargetT, Mapper<? extends Cell, ? extends TargetT>> myMappers = new HashMap<>();
 
   protected CellMapperContext(TargetT rootElement) {
     this.rootElement = rootElement;
   }
 
-  void register(CellMapper<? extends Cell, TargetT> mapper) {
+  public void register(Mapper<? extends Cell, ? extends TargetT> mapper) {
     if (myMappers.get(mapper.getTarget()) != null) {
       throw new IllegalStateException();
     }
     myMappers.put(mapper.getTarget(), mapper);
   }
 
-  void unregister(CellMapper<? extends Cell, TargetT> mapper) {
-    CellMapper<?, TargetT> result = myMappers.remove(mapper.getTarget());
+  public void unregister(Mapper<? extends Cell, ? extends TargetT> mapper) {
+    Mapper<? extends Cell, ? extends TargetT> result = myMappers.remove(mapper.getTarget());
     if (result != mapper) {
       throw new IllegalStateException();
     }
   }
 
-  public CellMapper<? extends Cell, TargetT> findMapper(TargetT e) {
+  public Mapper<? extends Cell, ? extends TargetT> findMapper(TargetT e) {
     return myMappers.get(e);
   }
 }

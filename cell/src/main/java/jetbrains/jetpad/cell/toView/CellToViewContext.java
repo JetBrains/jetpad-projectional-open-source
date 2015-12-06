@@ -15,6 +15,7 @@
  */
 package jetbrains.jetpad.cell.toView;
 
+import jetbrains.jetpad.cell.Cell;
 import jetbrains.jetpad.cell.mappers.CellMapperContext;
 import jetbrains.jetpad.projectional.view.View;
 
@@ -26,5 +27,10 @@ class CellToViewContext extends CellMapperContext<View> {
     super(rootView);
     this.targetView = targetView;
     this.popupView = popupView;
+  }
+
+  @Override
+  public BaseCellMapper<? extends Cell, ? extends View> apply(Cell cell) {
+    return CellMappers.create(cell, this);
   }
 }

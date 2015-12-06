@@ -20,34 +20,33 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Node;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.Timer;
 import jetbrains.jetpad.base.Registration;
 import jetbrains.jetpad.cell.Cell;
 import jetbrains.jetpad.cell.CellPropertySpec;
 import jetbrains.jetpad.cell.indent.IndentCell;
 import jetbrains.jetpad.cell.indent.IndentContainerCellListener;
+import jetbrains.jetpad.cell.indent.IndentUtil;
 import jetbrains.jetpad.cell.indent.updater.CellWrapper;
 import jetbrains.jetpad.cell.indent.updater.IndentUpdater;
 import jetbrains.jetpad.cell.indent.updater.IndentUpdaterTarget;
-import jetbrains.jetpad.cell.mappers.CellMapper;
+import jetbrains.jetpad.cell.mappers.BasePopupManager;
 import jetbrains.jetpad.cell.toUtil.AncestorUtil;
 import jetbrains.jetpad.cell.toUtil.CounterUtil;
-import jetbrains.jetpad.cell.indent.IndentUtil;
+import jetbrains.jetpad.mapper.Mapper;
 import jetbrains.jetpad.mapper.MappingContext;
 import jetbrains.jetpad.model.collections.CollectionItemEvent;
 import jetbrains.jetpad.model.property.PropertyChangeEvent;
 import jetbrains.jetpad.projectional.domUtil.DomTextEditor;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 class IndentRootCellMapper extends BaseCellMapper<IndentCell> {
-  private Set<CellMapper<? extends Cell, ? extends Element>> myCellMappers;
+  private Set<BaseCellMapper<?>> myCellMappers;
   private IndentUpdater<Node> myIndentUpdater;
   private Registration myRegistration;
-  private Timer myPositionUpdater;
-  private Set<Cell> myChildrenWithPopups;
 
   IndentRootCellMapper(IndentCell source, CellToDomContext ctx) {
     super(source, ctx, DOM.createDiv());
@@ -74,7 +73,7 @@ class IndentRootCellMapper extends BaseCellMapper<IndentCell> {
 
         @Override
         public CellWrapper<Node> wrap(final Cell cell) {
-          final CellMapper<? extends Cell, ? extends Element> mapper = createMapper(cell);
+          final BaseCellMapper<? extends Cell> mapper = getContext().apply(cell);
           CounterUtil.updateOnAdd(getSource(), cell, mapper);
           mapper.setAncestorBackground(AncestorUtil.getAncestorBackground(getSource(), cell));
 
@@ -126,7 +125,7 @@ class IndentRootCellMapper extends BaseCellMapper<IndentCell> {
   }
 
   @Override
-  public boolean isAutoPopupManagement() {
+  protected boolean isAutoPopupManagement() {
     return false;
   }
 
@@ -155,49 +154,14 @@ class IndentRootCellMapper extends BaseCellMapper<IndentCell> {
         if (CounterUtil.isCounterProp(prop)) {
           IndentUtil.updateCounters(cell, prop, event, IndentRootCellMapper.this);
         } else if (Cell.isPopupProp(prop)) {
-          updateIndentCellPopup(cell, (PropertyChangeEvent<Cell>) event);
+          IndentRootCellMapper.this.onEvent((PropertyChangeEvent<Cell>) event);
         } else if (prop == Cell.VISIBLE) {
           myIndentUpdater.visibilityChanged(cell, (PropertyChangeEvent<Boolean>) event);
         } else if (prop == Cell.BACKGROUND) {
           IndentUtil.updateBackground(cell, IndentRootCellMapper.this);
         }
       }
-
-      private void updateIndentCellPopup(Cell cell, PropertyChangeEvent<Cell> event) {
-        if (event.getOldValue() != null) {
-          BaseCellMapper<?> popupMapper = (BaseCellMapper<?>) getDescendantMapper(event.getOldValue());
-          myCellMappers.remove(popupMapper);
-          popupMapper.getTarget().removeFromParent();
-          myChildrenWithPopups.remove(popupMapper.getSource());
-          if (myChildrenWithPopups.isEmpty()) {
-            myPositionUpdater.cancel();
-            myChildrenWithPopups = null;
-          }
-        }
-        if (event.getNewValue() != null) {
-          CellMapper<? extends Cell, ? extends Element> popupMapper = createMapper(event.getNewValue());
-          myCellMappers.add(popupMapper);
-          final Element popupElement = popupMapper.getTarget();
-          popupElement.getStyle().setPosition(Style.Position.ABSOLUTE);
-          getContext().rootElement.appendChild(popupElement);
-          updatePopupPositions(cell);
-          if (myChildrenWithPopups == null) {
-            myChildrenWithPopups = new HashSet<>();
-            myPositionUpdater.scheduleRepeating(50);
-          }
-          myChildrenWithPopups.add(popupMapper.getSource());
-        }
-      }
     });
-
-    myPositionUpdater = new Timer() {
-      @Override
-      public void run() {
-        for (Cell childWithPopup : myChildrenWithPopups) {
-          updatePopupPositions(childWithPopup);
-        }
-      }
-    };
   }
 
   @Override
@@ -207,8 +171,33 @@ class IndentRootCellMapper extends BaseCellMapper<IndentCell> {
       Cell c = children.get(i);
       myIndentUpdater.childRemoved(c);
     }
-    myPositionUpdater.cancel();
     myRegistration.remove();
     super.onDetach();
+  }
+
+  @Override
+  protected BasePopupManager<Element> createPopupManager() {
+    return new DomPopupManager(getContext()) {
+      @Override
+      protected Mapper<? extends Cell, ? extends Element> attachPopup(Cell popup) {
+        BaseCellMapper<?> mapper = getContext().apply(popup);
+        myCellMappers.add(mapper);
+        Element popupElement = mapper.getTarget();
+        popupElement.getStyle().setPosition(Style.Position.ABSOLUTE);
+        getContext().rootElement.appendChild(popupElement);
+        return mapper;
+      }
+
+      @Override
+      protected void detachPopup(Mapper<? extends Cell, ? extends Element> popupMapper) {
+        myCellMappers.remove((BaseCellMapper<?>) popupMapper);
+        popupMapper.getTarget().removeFromParent();
+      }
+
+      @Override
+      protected Collection<Mapper<? extends Cell, ? extends Element>> createContainer() {
+        return new HashSet<>();
+      }
+    };
   }
 }
