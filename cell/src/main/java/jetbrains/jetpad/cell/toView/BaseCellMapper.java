@@ -17,76 +17,134 @@ package jetbrains.jetpad.cell.toView;
 
 import jetbrains.jetpad.base.Registration;
 import jetbrains.jetpad.cell.Cell;
+import jetbrains.jetpad.cell.mappers.BasePopupManager;
 import jetbrains.jetpad.cell.mappers.CellMapper;
+import jetbrains.jetpad.cell.mappers.PopupManager;
 import jetbrains.jetpad.cell.mappers.PopupPositionUpdater;
+import jetbrains.jetpad.cell.toUtil.CounterSpec;
+import jetbrains.jetpad.cell.toUtil.Counters;
 import jetbrains.jetpad.geometry.Rectangle;
+import jetbrains.jetpad.mapper.Mapper;
+import jetbrains.jetpad.mapper.MappingContext;
+import jetbrains.jetpad.model.collections.list.ObservableList;
 import jetbrains.jetpad.model.event.EventHandler;
 import jetbrains.jetpad.model.property.PropertyChangeEvent;
 import jetbrains.jetpad.projectional.view.View;
 import jetbrains.jetpad.values.Color;
 
-class BaseCellMapper<SourceT extends Cell, TargetT extends View> extends CellMapper<SourceT, View> {
+import java.util.Collection;
+import java.util.List;
+
+class BaseCellMapper<SourceT extends Cell, TargetT extends View> extends Mapper<SourceT, TargetT> implements CellMapper {
+  private CellToViewContext myContext;
+  private Counters myCounters;
+  private PopupManager myPopupManager;
+  private List<Mapper<?, ?>> myChildMappers = null;
+  private Color myAncestorBackground;
 
   BaseCellMapper(SourceT source, TargetT target, CellToViewContext ctx) {
-    super(source, target, ctx);
+    super(source, target);
+    if (ctx == null) {
+      throw new IllegalArgumentException();
+    }
+    myContext = ctx;
   }
 
-  TargetT getTypedTarget() {
-    return (TargetT) getTarget();
-  }
-
-  @Override
   protected CellToViewContext getContext() {
-    return (CellToViewContext) super.getContext();
+    return myContext;
   }
 
   @Override
-  protected CellMapper<? extends Cell, ? extends View> createMapper(Cell cell) {
-    return CellMappers.create(cell, getContext());
-  }
+  protected void onAttach(MappingContext ctx) {
+    super.onAttach(ctx);
 
-  protected void doAddChild(int index, View child) {
-    getTarget().children().add(index, child);
-  }
+    myContext.register(this);
 
-  @Override
-  protected void doRemoveChild(int index) {
-    getTarget().children().remove(index);
-  }
-
-  @Override
-  protected void attachPopup(View popup) {
-    getContext().popupView.children().add(popup);
-  }
-
-  @Override
-  protected void detachPopup(View popup) {
-    getContext().popupView.children().remove(popup);
-  }
-
-  @Override
-  protected PopupPositionUpdater<View> popupPositionUpdater() {
-    return new PopupPositioner(getTarget());
-  }
-
-  @Override
-  protected Registration enablePopupUpdates() {
-    return getTarget().bounds().addHandler(new EventHandler<PropertyChangeEvent<Rectangle>>() {
-      @Override
-      public void onEvent(PropertyChangeEvent<Rectangle> event) {
-        updatePopupPositions(getSource());
+    if (isAutoChildManagement()) {
+      myChildMappers = createChildList();
+      ObservableList<Cell> children = getSource().children();
+      for (int i = 0; i < children.size(); i++) {
+        childAdded(i, children.get(i));
       }
-    });
+    }
+
+    myPopupManager = isAutoPopupManagement() ? createPopupManager() : PopupManager.EMPTY;
+    myPopupManager.attach(getSource());
+
+    refreshProperties();
   }
 
   @Override
   protected void onDetach() {
     getTarget().children().clear();
+    myPopupManager.dispose();
+    myContext.unregister(this);
     super.onDetach();
   }
 
+  protected boolean isLeaf() {
+    return false;
+  }
+
+  protected boolean isAutoChildManagement() {
+    return true;
+  }
+
+  protected boolean isAutoPopupManagement() {
+    return true;
+  }
+
   @Override
-  protected void applyStyle(boolean selected, boolean focusHighlighted, boolean hasError, boolean hasWarning, Color background) {
+  public final int getCounter(CounterSpec spec) {
+    if (myCounters == null) return 0;
+    return myCounters.getCounter(spec);
+  }
+
+  @Override
+  public final void changeCounter(CounterSpec spec, int delta) {
+    if (myCounters == null) {
+      myCounters = new Counters();
+    }
+    myCounters.changeCounter(spec, delta);
+    if (myCounters.isEmpty()) {
+      myCounters = null;
+    }
+  }
+
+  void childAdded(int index, Cell child) {
+    if (!isAutoChildManagement()) return;
+    BaseCellMapper<? extends Cell, ? extends View> mapper = myContext.apply(child);
+    myChildMappers.add(index, mapper);
+    getTarget().children().add(index, mapper.getTarget());
+  }
+
+  void childRemoved(int index, Cell child) {
+    if (!isAutoChildManagement()) return;
+    myChildMappers.remove(index);
+    getTarget().children().remove(index);
+  }
+
+  @Override
+  public final void onEvent(PropertyChangeEvent<Cell> event) {
+    myPopupManager.onEvent(event);
+  }
+
+  @Override
+  public void setAncestorBackground(Color background) {
+    myAncestorBackground = background;
+  }
+
+  @Override
+  public void refreshProperties() {
+    boolean selected = getSource().get(Cell.SELECTED) || getCounter(Counters.SELECT_COUNT) > 0;
+    boolean focusHighlighted = getSource().get(Cell.FOCUS_HIGHLIGHTED) || getCounter(Counters.HIGHLIGHT_COUNT) > 0;
+    boolean hasError = getSource().get(Cell.HAS_ERROR) || getCounter(Counters.ERROR_COUNT) > 0;
+    boolean hasWarning = getSource().get(Cell.HAS_WARNING) || getCounter(Counters.WARNING_COUNT) > 0;
+    Color background = getSource().get(Cell.BACKGROUND);
+    applyStyle(selected, focusHighlighted, hasError, hasWarning, (background == null ? myAncestorBackground : background));
+  }
+
+  private void applyStyle(boolean selected, boolean focusHighlighted, boolean hasError, boolean hasWarning, Color background) {
     if (selected) {
       background = CellContainerToViewMapper.SELECTION_COLOR;
     } else if (focusHighlighted) {
@@ -101,5 +159,41 @@ class BaseCellMapper<SourceT extends Cell, TargetT extends View> extends CellMap
 
     getTarget().visible().set(getSource().get(Cell.VISIBLE));
     getTarget().hasShadow().set(getSource().get(Cell.HAS_SHADOW));
+  }
+
+  protected BasePopupManager<View> createPopupManager() {
+    return new BasePopupManager<View>() {
+      @Override
+      protected Mapper<? extends Cell, ? extends View> attachPopup(Cell popup) {
+        Mapper<? extends Cell, ? extends View> mapper = myContext.apply(popup);
+        getContext().popupView.children().add(mapper.getTarget());
+        return mapper;
+      }
+
+      @Override
+      protected void detachPopup(Mapper<? extends Cell, ? extends View> popupMapper) {
+        getContext().popupView.children().remove(popupMapper.getTarget());
+      }
+
+      @Override
+      protected Collection<Mapper<? extends Cell, ? extends View>> createContainer() {
+        return createChildSet();
+      }
+
+      @Override
+      protected Registration setPopupUpdate() {
+        return getTarget().bounds().addHandler(new EventHandler<PropertyChangeEvent<Rectangle>>() {
+          @Override
+          public void onEvent(PropertyChangeEvent<Rectangle> event) {
+            updatePopupPositions();
+          }
+        });
+      }
+
+      @Override
+      protected PopupPositionUpdater<View> getPositionUpdater(Mapper<? extends Cell, ? extends View> popupMapper) {
+        return new PopupPositioner(getTarget());
+      }
+    };
   }
 }

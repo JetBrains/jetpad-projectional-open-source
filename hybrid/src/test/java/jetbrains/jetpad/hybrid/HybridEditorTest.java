@@ -848,7 +848,7 @@ public class HybridEditorTest extends EditingTestCase {
     press(Key.DOWN, ModifierKey.SHIFT);
     press(Key.DOWN, ModifierKey.SHIFT);
 
-    junit.framework.Assert.assertEquals(Range.closed(0, 2), sync.selection());
+    assertEquals(Range.closed(0, 2), sync.selection());
   }
 
   @Test

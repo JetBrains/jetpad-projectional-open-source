@@ -33,7 +33,7 @@ class TextCellMapper extends BaseCellMapper<TextCell, TextView> {
     super.refreshProperties();
 
     TextCell cell = getSource();
-    TextView view = getTypedTarget();
+    TextView view = getTarget();
 
     view.text().set(cell.text().get());
     view.caretPosition().set(cell.caretPosition().get());
