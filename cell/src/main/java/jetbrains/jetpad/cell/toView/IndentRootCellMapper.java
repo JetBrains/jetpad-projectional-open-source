@@ -196,7 +196,7 @@ class IndentRootCellMapper extends BaseCellMapper<IndentCell, VerticalView> {
 
       @Override
       protected void detachPopup(Mapper<? extends Cell, ? extends View> popupMapper) {
-        Composites.removeFromParent(popupMapper.getTarget());
+        Composites.<View>removeFromParent(popupMapper.getTarget());
         myCellMappers.remove((BaseCellMapper) popupMapper);
       }
 
