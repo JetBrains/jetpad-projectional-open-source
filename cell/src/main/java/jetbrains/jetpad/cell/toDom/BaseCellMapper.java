@@ -20,14 +20,15 @@ import com.google.gwt.dom.client.Node;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.user.client.DOM;
 import jetbrains.jetpad.cell.Cell;
-import jetbrains.jetpad.cell.mappers.CellMapper;
 import jetbrains.jetpad.cell.mappers.PopupManager;
 import jetbrains.jetpad.cell.toUtil.CounterSpec;
 import jetbrains.jetpad.cell.toUtil.Counters;
+import jetbrains.jetpad.cell.toUtil.HasCounters;
 import jetbrains.jetpad.mapper.Mapper;
 import jetbrains.jetpad.mapper.MappingContext;
 import jetbrains.jetpad.model.collections.list.ObservableList;
 import jetbrains.jetpad.model.composite.Composites;
+import jetbrains.jetpad.model.event.EventHandler;
 import jetbrains.jetpad.model.property.PropertyChangeEvent;
 import jetbrains.jetpad.values.Color;
 
@@ -38,7 +39,7 @@ import java.util.List;
 import static jetbrains.jetpad.cell.toDom.CellContainerToDomMapper.CSS;
 import static jetbrains.jetpad.cell.toDom.CellContainerToDomMapper.ELEMENT;
 
-abstract class BaseCellMapper<SourceT extends Cell> extends Mapper<SourceT, Element> implements CellMapper {
+abstract class BaseCellMapper<SourceT extends Cell> extends Mapper<SourceT, Element> implements HasCounters, EventHandler<PropertyChangeEvent<Cell>> {
   private static final String BACKGROUND = "background";
   private static final String UNDERLINE_SUFFIX = " bottom repeat-x";
 
@@ -148,13 +149,11 @@ abstract class BaseCellMapper<SourceT extends Cell> extends Mapper<SourceT, Elem
     myPopupManager.onEvent(event);
   }
 
-  @Override
-  public void setAncestorBackground(Color background) {
+  void setAncestorBackground(Color background) {
     myAncestorBackground = background;
   }
 
-  @Override
-  public void refreshProperties() {
+  void refreshProperties() {
     boolean selected = getSource().get(Cell.SELECTED) || getCounter(Counters.SELECT_COUNT) > 0;
     boolean focusHighlighted = getSource().get(Cell.FOCUS_HIGHLIGHTED) || getCounter(Counters.HIGHLIGHT_COUNT) > 0;
     boolean hasError = getSource().get(Cell.HAS_ERROR) || getCounter(Counters.ERROR_COUNT) > 0;

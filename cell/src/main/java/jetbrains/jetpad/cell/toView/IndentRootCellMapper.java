@@ -16,6 +16,7 @@
 package jetbrains.jetpad.cell.toView;
 
 import com.google.common.base.Strings;
+import jetbrains.jetpad.base.Handler;
 import jetbrains.jetpad.base.Registration;
 import jetbrains.jetpad.cell.Cell;
 import jetbrains.jetpad.cell.CellPropertySpec;
@@ -55,61 +56,61 @@ class IndentRootCellMapper extends BaseCellMapper<IndentCell, VerticalView> {
     myCellMappers = createChildSet();
 
     myIndentUpdater = new IndentUpdater<View>(getSource(), getTarget(),
-      new IndentUpdaterTarget<View>() {
-        @Override
-        public View newLine() {
-          return new HorizontalView();
-        }
+        new IndentUpdaterTarget<View>() {
+          @Override
+          public View newLine() {
+            return new HorizontalView();
+          }
 
-        @Override
-        public View newIndent(int size) {
-          TextView result = new TextView();
-          result.text().set(Strings.repeat("  ", size));
-          return result;
-        }
+          @Override
+          public View newIndent(int size) {
+            TextView result = new TextView();
+            result.text().set(Strings.repeat("  ", size));
+            return result;
+          }
 
-        @Override
-        public CellWrapper<View> wrap(final Cell cell) {
-          final BaseCellMapper<? extends Cell, ? extends View> mapper = getContext().apply(cell);
+          @Override
+          public CellWrapper<View> wrap(final Cell cell) {
+            final BaseCellMapper<? extends Cell, ? extends View> mapper = getContext().apply(cell);
 
-          CounterUtil.updateOnAdd(getSource(), cell, mapper);
+            CounterUtil.updateOnAdd(getSource(), cell, mapper);
 
-          mapper.setAncestorBackground(AncestorUtil.getAncestorBackground(getSource(), cell));
+            mapper.setAncestorBackground(AncestorUtil.getAncestorBackground(getSource(), cell));
 
-          myCellMappers.add(mapper);
+            myCellMappers.add(mapper);
 
-          return new CellWrapper<View>() {
-            boolean myRemoved = false;
+            return new CellWrapper<View>() {
+              boolean myRemoved = false;
 
-            @Override
-            public View item() {
-              return mapper.getTarget();
-            }
-
-            @Override
-            public void remove() {
-              if (myRemoved) {
-                throw new IllegalStateException();
+              @Override
+              public View item() {
+                return mapper.getTarget();
               }
 
-              CounterUtil.updateOnRemove(getSource(), cell, mapper);
-              myCellMappers.remove(mapper);
+              @Override
+              public void remove() {
+                if (myRemoved) {
+                  throw new IllegalStateException();
+                }
 
-              myRemoved = true;
-            }
-          };
-        }
+                CounterUtil.updateOnRemove(getSource(), cell, mapper);
+                myCellMappers.remove(mapper);
 
-        @Override
-        public List<View> children(View item) {
-          return item.children();
-        }
+                myRemoved = true;
+              }
+            };
+          }
 
-        @Override
-        public View parent(View item) {
-          return item.getParent();
+          @Override
+          public List<View> children(View item) {
+            return item.children();
+          }
+
+          @Override
+          public View parent(View item) {
+            return item.getParent();
+          }
         }
-      }
     ) {
       @Override
       protected void onVisibilityChanged(Cell cell, PropertyChangeEvent<Boolean> event) {
@@ -153,14 +154,40 @@ class IndentRootCellMapper extends BaseCellMapper<IndentCell, VerticalView> {
       @Override
       public void propertyChanged(Cell cell, final CellPropertySpec<?> prop, final PropertyChangeEvent<?> event) {
         if (CounterUtil.isCounterProp(prop)) {
-          IndentUtil.updateCounters(cell, prop, event, IndentRootCellMapper.this);
+          updateCounters(cell, prop, event);
         } else if (prop == Cell.VISIBLE) {
           myIndentUpdater.visibilityChanged(cell, (PropertyChangeEvent<Boolean>) event);
         } else if (Cell.isPopupProp(prop)) {
           IndentRootCellMapper.this.onEvent((PropertyChangeEvent<Cell>) event);
         } else if (prop == Cell.BACKGROUND) {
-          IndentUtil.updateBackground(cell, IndentRootCellMapper.this);
+          updateBackground(cell);
         }
+      }
+
+      private void updateCounters(Cell cell, final CellPropertySpec<?> prop, final PropertyChangeEvent<?> event) {
+        IndentUtil.iterateLeaves(cell, new Handler<Cell>() {
+          @Override
+          public void handle(Cell item) {
+            BaseCellMapper<?, ?> mapper = (BaseCellMapper<?, ?>) getDescendantMapper(item);
+            if (mapper == null) {
+              throw new IllegalStateException();
+            }
+            if (CounterUtil.update(mapper, prop, event)) {
+              mapper.refreshProperties();
+            }
+          }
+        });
+      }
+
+      private void updateBackground(Cell cell) {
+        IndentUtil.iterateLeaves(cell, new Handler<Cell>() {
+          @Override
+          public void handle(Cell item) {
+            BaseCellMapper<?, ?> mapper = (BaseCellMapper<?, ?>) getDescendantMapper(item);
+            mapper.setAncestorBackground(AncestorUtil.getAncestorBackground(getSource(), item));
+            mapper.refreshProperties();
+          }
+        });
       }
     });
   }

@@ -17,44 +17,10 @@ package jetbrains.jetpad.cell.indent;
 
 import jetbrains.jetpad.base.Handler;
 import jetbrains.jetpad.cell.Cell;
-import jetbrains.jetpad.cell.CellPropertySpec;
-import jetbrains.jetpad.cell.mappers.CellMapper;
-import jetbrains.jetpad.cell.toUtil.AncestorUtil;
-import jetbrains.jetpad.cell.toUtil.CounterUtil;
-import jetbrains.jetpad.mapper.Mapper;
 import jetbrains.jetpad.model.composite.Composites;
-import jetbrains.jetpad.model.property.PropertyChangeEvent;
 
 public class IndentUtil {
-
-  public static void updateCounters(Cell cell, final CellPropertySpec<?> prop, final PropertyChangeEvent<?> event,
-                                    final Mapper<IndentCell, ?> parent) {
-    iterateLeaves(cell, new Handler<Cell>() {
-      @Override
-      public void handle(Cell item) {
-        CellMapper mapper = (CellMapper) parent.getDescendantMapper(item);
-        if (mapper == null) {
-          throw new IllegalStateException();
-        }
-        if (CounterUtil.update(mapper, prop, event)) {
-          mapper.refreshProperties();
-        }
-      }
-    });
-  }
-
-  public static void updateBackground(Cell cell, final Mapper<IndentCell, ?> parent) {
-    iterateLeaves(cell, new Handler<Cell>() {
-      @Override
-      public void handle(Cell item) {
-        CellMapper mapper = (CellMapper) parent.getDescendantMapper(item);
-        mapper.setAncestorBackground(AncestorUtil.getAncestorBackground(parent.getSource(), item));
-        mapper.refreshProperties();
-      }
-    });
-  }
-
-  private static void iterateLeaves(Cell cell, Handler<Cell> handler) {
+  public static void iterateLeaves(Cell cell, Handler<Cell> handler) {
     for (Cell child : cell.children()) {
       if (!Composites.isVisible(child)) continue;
       if (child instanceof IndentCell) {
