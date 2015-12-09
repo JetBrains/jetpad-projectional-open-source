@@ -18,7 +18,6 @@ package jetbrains.jetpad.cell.toDom;
 import com.google.common.base.Strings;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Node;
-import com.google.gwt.dom.client.Style;
 import com.google.gwt.user.client.DOM;
 import jetbrains.jetpad.base.Handler;
 import jetbrains.jetpad.base.Registration;
@@ -207,18 +206,15 @@ class IndentRootCellMapper extends BaseCellMapper<IndentCell> {
     return new DomPopupManager(getContext()) {
       @Override
       protected Mapper<? extends Cell, ? extends Element> attachPopup(Cell popup) {
-        BaseCellMapper<?> mapper = getContext().apply(popup);
+        BaseCellMapper<?> mapper = (BaseCellMapper<?>) super.attachPopup(popup);
         myCellMappers.add(mapper);
-        Element popupElement = mapper.getTarget();
-        popupElement.getStyle().setPosition(Style.Position.ABSOLUTE);
-        getContext().rootElement.appendChild(popupElement);
         return mapper;
       }
 
       @Override
       protected void detachPopup(Mapper<? extends Cell, ? extends Element> popupMapper) {
         myCellMappers.remove((BaseCellMapper<?>) popupMapper);
-        popupMapper.getTarget().removeFromParent();
+        super.detachPopup(popupMapper);
       }
 
       @Override

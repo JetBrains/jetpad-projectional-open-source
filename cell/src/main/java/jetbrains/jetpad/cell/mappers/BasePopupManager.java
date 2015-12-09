@@ -81,7 +81,9 @@ public abstract class BasePopupManager<TargetT> implements PopupManager {
   @Override
   public void updatePopupPositions() {
     for (Mapper<? extends Cell, ? extends TargetT> popupMapper : myPopupMappers) {
+      if (!popupMapper.getSource().get(Cell.VISIBLE)) continue;
       Cell parent = popupMapper.getSource().getParent();
+      if (parent == null) continue;
       CellPropertySpec<Cell> spec = getSpec(parent, popupMapper.getSource());
       getPositionUpdater(popupMapper).update(spec, popupMapper.getTarget(), parent.getBounds());
     }

@@ -125,7 +125,7 @@
 }
 
 .hasShadow {
-  box-shadow: 5px 5px 10px black;
+  box-shadow: 2px 2px 10px black;
 }
 
 .hasError {
@@ -139,4 +139,33 @@
 .decorations {
   width: 100%;
   height: 100%;
+}
+
+.popup {
+  border-radius: 2px;
+}
+
+.tooltip {
+  padding: 0 4px 20px 4px;
+}
+
+.tooltip::before {
+  display: inherit;
+  content: "";
+  position: absolute;
+  left: 4px;
+  width: 8px;
+  height: 8px;
+  border-right: none;
+  border-bottom: none;
+}
+
+.tooltipBottom::before {
+  top: -4px;
+  transform: rotate(45deg);
+}
+
+.tooltipTop::before {
+  bottom: -4px;
+  transform: rotate(-135deg);
 }

@@ -25,6 +25,7 @@ import jetbrains.jetpad.values.FontFamily;
 
 public class DomTextEditor {
   public static final int DEFAULT_FONT_SIZE = 15;
+  private static final int HEIGHT_EXTRA_PX = 3;
 
   private static final int ourCharWidth;
   private static final int ourLineHeight;
@@ -49,7 +50,7 @@ public class DomTextEditor {
   private boolean myBold;
   private boolean myItalic;
   private FontFamily myFontFamily = FontFamily.MONOSPACED;
-  private int myFontSize = 15;
+  private int myFontSize = DEFAULT_FONT_SIZE;
 
   private Element myTextContainer;
   private Element myCaretDiv;
@@ -320,11 +321,7 @@ public class DomTextEditor {
   }
 
   private int getLineHeight() {
-    if (isDefaultFont()) {
-      return ourLineHeight;
-    } else {
-      return TextMetricsCalculator.calculateAprox(getFont(), "x").dimension().y;
-    }
+    return (isDefaultFont() ? ourLineHeight : TextMetricsCalculator.calculateAprox(getFont(), "x").dimension().y) + HEIGHT_EXTRA_PX;
   }
 
   public int getCaretPositionAt(int caretOffset) {

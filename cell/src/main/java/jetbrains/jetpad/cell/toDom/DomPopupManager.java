@@ -16,6 +16,7 @@
 package jetbrains.jetpad.cell.toDom;
 
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.Style;
 import com.google.gwt.user.client.Timer;
 import jetbrains.jetpad.base.Registration;
 import jetbrains.jetpad.cell.Cell;
@@ -23,12 +24,42 @@ import jetbrains.jetpad.cell.mappers.BasePopupManager;
 import jetbrains.jetpad.cell.mappers.PopupPositionUpdater;
 import jetbrains.jetpad.mapper.Mapper;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import static jetbrains.jetpad.cell.toDom.CellContainerToDomMapper.CSS;
+
 abstract class DomPopupManager extends BasePopupManager<Element> {
   private static final int POPUPS_REFRESH_MILLIS = 50;
   private CellToDomContext myContext;
+  private Map<Element, Registration> myRegistrations = null;
 
   DomPopupManager(CellToDomContext context) {
     myContext = context;
+  }
+
+  @Override
+  protected Mapper<? extends Cell, ? extends Element> attachPopup(Cell popup) {
+    BaseCellMapper<?> mapper = myContext.apply(popup);
+    Element element = mapper.getTarget();
+    myContext.rootElement.appendChild(element);
+    element.addClassName(CSS.popup());
+    element.getStyle().setPosition(Style.Position.ABSOLUTE);
+    element.getStyle().setZIndex(100);
+    if (myRegistrations == null) {
+      myRegistrations = new HashMap<>();
+    }
+    myRegistrations.put(element, Tooltip.applyDecoration(mapper));
+    return mapper;
+  }
+
+  @Override
+  protected void detachPopup(Mapper<? extends Cell, ? extends Element> popupMapper) {
+    popupMapper.getTarget().removeFromParent();
+    myRegistrations.remove(popupMapper.getTarget()).remove();
+    if (myRegistrations.isEmpty()) {
+      myRegistrations = null;
+    }
   }
 
   @Override

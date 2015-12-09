@@ -268,21 +268,6 @@ abstract class BaseCellMapper<SourceT extends Cell> extends Mapper<SourceT, Elem
       protected Collection<Mapper<? extends Cell, ? extends Element>> createContainer() {
         return createChildSet();
       }
-
-      @Override
-      protected Mapper<? extends Cell, ? extends Element> attachPopup(Cell popup) {
-        BaseCellMapper<?> mapper = myContext.apply(popup);
-        Element element = mapper.getTarget();
-        getContext().rootElement.appendChild(element);
-        element.getStyle().setPosition(Style.Position.ABSOLUTE);
-        element.getStyle().setZIndex(100);
-        return mapper;
-      }
-
-      @Override
-      protected void detachPopup(Mapper<? extends Cell, ? extends Element> popupMapper) {
-        popupMapper.getTarget().removeFromParent();
-      }
     };
   }
 }

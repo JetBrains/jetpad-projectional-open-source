@@ -24,6 +24,8 @@ import jetbrains.jetpad.geometry.Vector;
 import jetbrains.jetpad.projectional.domUtil.DomUtil;
 
 class PopupPositioner extends PopupPositionUpdater<Element> {
+  private static final int SPACING = 5;
+
   private CellToDomContext myContext;
 
   PopupPositioner(CellToDomContext context) {
@@ -46,9 +48,11 @@ class PopupPositioner extends PopupPositionUpdater<Element> {
     boolean top = visiblePart.contains(childBounds.sub(new Vector(0, childBounds.dimension.y)));
 
     if (bottom || !top) {
-      setPosition(popup, target.origin.x, target.origin.y + target.dimension.y);
+      Tooltip.bottom(popup);
+      setPosition(popup, target.origin.x, target.origin.y + target.dimension.y + SPACING);
     } else {
-      setPosition(popup, target.origin.x, target.origin.y - childBounds.dimension.y);
+      Tooltip.top(popup);
+      setPosition(popup, target.origin.x, target.origin.y - childBounds.dimension.y - SPACING);
     }
   }
 
