@@ -24,6 +24,9 @@ import jetbrains.jetpad.event.MouseEvent;
 import jetbrains.jetpad.model.property.PropertyChangeEvent;
 import jetbrains.jetpad.values.Color;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class ErrorMarkers {
   public static final CellPropertySpec<Cell> ERROR_POPUP_POSITION = Cell.BOTTOM_POPUP;
 
@@ -36,6 +39,7 @@ public class ErrorMarkers {
   private static CellTrait errorPopupTrait() {
     return new CellTrait() {
       private boolean myEditing = false;
+      private Map<Cell, Registration> myVisibilityRegistrations = null;
 
       @Override
       public void onPropertyChanged(Cell cell, CellPropertySpec<?> prop, PropertyChangeEvent<?> event) {
@@ -85,7 +89,10 @@ public class ErrorMarkers {
       public void onMouseEntered(Cell cell, MouseEvent event) {
         Cell popup = getErrorPopup(cell);
         if (popup != null) {
-          popup.visible().set(true);
+          if (myVisibilityRegistrations == null) {
+            myVisibilityRegistrations = new HashMap<>();
+          }
+          myVisibilityRegistrations.put(popup, new LowPriorityPopupSupport(popup));
         }
       }
 
@@ -93,7 +100,10 @@ public class ErrorMarkers {
       public void onMouseLeft(Cell cell, MouseEvent event) {
         Cell popup = getErrorPopup(cell);
         if (popup != null) {
-          popup.visible().set(false);
+          myVisibilityRegistrations.remove(popup).remove();
+          if (myVisibilityRegistrations.isEmpty()) {
+            myVisibilityRegistrations = null;
+          }
         }
       }
 
