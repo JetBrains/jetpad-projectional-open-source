@@ -31,7 +31,8 @@ class LowPriorityPopupSupport extends Registration implements EventHandler<Colle
   private Cell myLowPriorityPopup;
 
   private int myCount = 0;
-  private Map<Cell, Registration> myRegistrations = new HashMap<>();
+  private Map<Cell, Registration> myChildRegistrations = new HashMap<>();
+  private Map<Cell, Registration> myPopupRegistrations = new HashMap<>();
   private EventHandler<PropertyChangeEvent<Cell>> myPopupHandler;
   private EventHandler<PropertyChangeEvent<Boolean>> myPopupVisibleHandler;
 
@@ -57,7 +58,7 @@ class LowPriorityPopupSupport extends Registration implements EventHandler<Colle
   }
 
   private void subscribe(Cell cell, boolean isRoot) {
-    myRegistrations.put(cell, doSubscribe(cell, !isRoot));
+    myChildRegistrations.put(cell, doSubscribe(cell, !isRoot));
   }
 
   private Registration doSubscribe(final Cell cell, boolean checkPopups) {
@@ -96,20 +97,24 @@ class LowPriorityPopupSupport extends Registration implements EventHandler<Colle
         subscribe(event.getNewItem(), false);
         break;
       case REMOVE:
-        myRegistrations.remove(event.getOldItem()).remove();
+        myChildRegistrations.remove(event.getOldItem()).remove();
         break;
       case SET:
-        myRegistrations.remove(event.getOldItem()).remove();
+        myChildRegistrations.remove(event.getOldItem()).remove();
         subscribe(event.getNewItem(), false);
     }
   }
 
   @Override
   protected void doRemove() {
-    for (Registration registration : myRegistrations.values()) {
+    for (Registration registration : myChildRegistrations.values()) {
       registration.remove();
     }
-    myRegistrations = null;
+    if (!myPopupRegistrations.isEmpty()) {
+      throw new IllegalStateException();
+    }
+    myChildRegistrations = null;
+    myPopupRegistrations = null;
     myLowPriorityPopup.visible().set(false);
   }
 
@@ -129,14 +134,14 @@ class LowPriorityPopupSupport extends Registration implements EventHandler<Colle
   }
 
   private void subscribeChildPopup(Cell popup) {
-    myRegistrations.put(popup, popup.visible().addHandler(myPopupVisibleHandler));
+    myPopupRegistrations.put(popup, popup.visible().addHandler(myPopupVisibleHandler));
     if (popup.visible().get()) {
       myCount++;
     }
   }
 
   private void unsubscribeChildPopup(Cell popup) {
-    myRegistrations.remove(popup).remove();
+    myPopupRegistrations.remove(popup).remove();
     if (popup.visible().get()) {
       myCount--;
     }

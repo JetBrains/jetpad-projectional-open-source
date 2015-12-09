@@ -69,6 +69,59 @@ public class ErrorMarkersTest extends EditingTestCase {
   }
 
   @Test
+  public void errorSetWithMouseOver() {
+    myCellContainer.mouseEntered(new MouseEvent(cell.getBounds().center()));
+
+    cell.hasError().set(true);
+    assertErrorPopupVisible(cell, true);
+
+    myCellContainer.mouseLeft(new MouseEvent(new Vector(0, 0)));
+    assertErrorPopupVisible(cell, false);
+  }
+
+  @Test
+  public void errorSetAndRemovedWithMouseOver() {
+    myCellContainer.mouseEntered(new MouseEvent(cell.getBounds().center()));
+    cell.hasError().set(true);
+    assertErrorPopupVisible(cell, true);
+
+    cell.hasError().set(false);
+    assertFalse(cell.get(ErrorMarkers.ERROR_POPUP_ACTIVE));
+    assertNull(cell.get(ErrorMarkers.ERROR_POPUP_POSITION));
+
+    myCellContainer.mouseLeft(new MouseEvent(new Vector(0, 0)));
+    assertFalse(cell.get(ErrorMarkers.ERROR_POPUP_ACTIVE));
+    assertNull(cell.get(ErrorMarkers.ERROR_POPUP_POSITION));
+  }
+
+  @Test
+  public void mouseLeftWhenErrorPopupHidden() {
+    myCellContainer.mouseEntered(new MouseEvent(cell.getBounds().center()));
+    cell.hasError().set(true);
+    assertErrorPopupVisible(cell, true);
+
+    TextCell child = new TextCell("child");
+    cell.children().add(child);
+    child.bottomPopup().set(new TextCell());
+    assertErrorPopupVisible(cell, false);
+
+    myCellContainer.mouseLeft(new MouseEvent(new Vector(0, 0)));
+    assertErrorPopupVisible(cell, false);
+
+    myCellContainer.mouseEntered(new MouseEvent(cell.getBounds().center()));
+    assertErrorPopupVisible(cell, false);
+
+    child.bottomPopup().set(null);
+    assertErrorPopupVisible(cell, true);
+  }
+
+  @Test
+  public void setOtherPopup() {
+    cell.set(ErrorMarkers.ERROR_POPUP_POSITION, new TextCell());
+    assertFalse(cell.get(ErrorMarkers.ERROR_POPUP_ACTIVE));
+  }
+
+  @Test
   public void parentErrorHintReplacedByChilds() {
     TextCell child = new TextCell("child");
     cell.children().add(child);
@@ -84,6 +137,9 @@ public class ErrorMarkersTest extends EditingTestCase {
     cell.children().remove(0);
 
     assertErrorPopupVisible(cell, true);
+
+    myCellContainer.mouseLeft(new MouseEvent(new Vector(0, 0)));
+    assertErrorPopupVisible(cell, false);
   }
 
   @Test
@@ -126,7 +182,7 @@ public class ErrorMarkersTest extends EditingTestCase {
   }
 
   @Test
-  public void childPopupReplaced() {
+  public void childPopupReplacement() {
     showErrorPopup(cell);
 
     TextCell child = new TextCell("child");

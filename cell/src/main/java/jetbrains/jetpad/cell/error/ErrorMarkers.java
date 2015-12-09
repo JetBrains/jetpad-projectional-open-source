@@ -39,28 +39,26 @@ public class ErrorMarkers {
   private static CellTrait errorPopupTrait() {
     return new CellTrait() {
       private boolean myEditing = false;
-      private Map<Cell, Registration> myVisibilityRegistrations = null;
+      private boolean myMouseOver = false;
+      private Map<Cell, Registration> myRegistrations = null;
 
       @Override
       public void onPropertyChanged(Cell cell, CellPropertySpec<?> prop, PropertyChangeEvent<?> event) {
         if (prop == Cell.HAS_ERROR) {
-          if (((PropertyChangeEvent<Boolean>) event).getNewValue()) {
-            if (cell.get(ERROR_POPUP_POSITION) == null) {
-              setErrorPopup(cell);
-            }
-          } else {
-            if (cell.get(ERROR_POPUP_POSITION) != null && cell.get(ERROR_POPUP_ACTIVE)) {
-              cell.set(ERROR_POPUP_ACTIVE, false);
-              updatePopup(cell, null);
-            }
+          PropertyChangeEvent<Boolean> change = (PropertyChangeEvent<Boolean>) event;
+          if (change.getOldValue() && cell.get(ERROR_POPUP_ACTIVE)) {
+            removeErrorPopup(cell, cell.get(ERROR_POPUP_POSITION));
+          }
+          if (change.getNewValue() && cell.get(ERROR_POPUP_POSITION) == null) {
+            setErrorPopup(cell);
           }
         } else if (prop == ERROR_POPUP_POSITION && !myEditing) {
-          if (((PropertyChangeEvent<Cell>) event).getNewValue() == null) {
-            if (cell.get(Cell.HAS_ERROR)) {
-              setErrorPopup(cell);
-            }
-          } else {
-            cell.set(ERROR_POPUP_ACTIVE, false);
+          PropertyChangeEvent<Cell> change = (PropertyChangeEvent<Cell>) event;
+          if (change.getOldValue() != null && cell.get(ERROR_POPUP_ACTIVE)) {
+            removeErrorPopup(cell, change.getOldValue());
+          }
+          if (change.getNewValue() == null && cell.get(Cell.HAS_ERROR)) {
+            setErrorPopup(cell);
           }
         }
       }
@@ -74,6 +72,19 @@ public class ErrorMarkers {
         popup.set(Cell.BORDER_COLOR, Color.GRAY);
         cell.set(ERROR_POPUP_ACTIVE, true);
         updatePopup(cell, popup);
+        if (myMouseOver) {
+          show(popup);
+        }
+      }
+
+      private void removeErrorPopup(Cell cell, Cell errorPopup) {
+        cell.set(ERROR_POPUP_ACTIVE, false);
+        if (cell.get(ERROR_POPUP_POSITION) == errorPopup) {
+          updatePopup(cell, null);
+        }
+        if (myRegistrations != null && myRegistrations.containsKey(errorPopup)) {
+          hide(errorPopup);
+        }
       }
 
       private void updatePopup(Cell cell, Cell popup) {
@@ -87,28 +98,38 @@ public class ErrorMarkers {
 
       @Override
       public void onMouseEntered(Cell cell, MouseEvent event) {
+        myMouseOver = true;
         Cell popup = getErrorPopup(cell);
         if (popup != null) {
-          if (myVisibilityRegistrations == null) {
-            myVisibilityRegistrations = new HashMap<>();
-          }
-          myVisibilityRegistrations.put(popup, new LowPriorityPopupSupport(popup));
+          show(popup);
         }
       }
 
       @Override
       public void onMouseLeft(Cell cell, MouseEvent event) {
+        myMouseOver = false;
         Cell popup = getErrorPopup(cell);
         if (popup != null) {
-          myVisibilityRegistrations.remove(popup).remove();
-          if (myVisibilityRegistrations.isEmpty()) {
-            myVisibilityRegistrations = null;
-          }
+          hide(popup);
         }
       }
 
       private Cell getErrorPopup(Cell cell) {
         return cell.get(ERROR_POPUP_ACTIVE) ? cell.get(ERROR_POPUP_POSITION) : null;
+      }
+
+      private void show(Cell popup) {
+        if (myRegistrations == null) {
+          myRegistrations = new HashMap<>();
+        }
+        myRegistrations.put(popup, new LowPriorityPopupSupport(popup));
+      }
+
+      private void hide(Cell popup) {
+        myRegistrations.remove(popup).remove();
+        if (myRegistrations.isEmpty()) {
+          myRegistrations = null;
+        }
       }
     };
   }
