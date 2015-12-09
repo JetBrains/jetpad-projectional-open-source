@@ -43,7 +43,7 @@ class Tooltip {
     final StyleElement styleElement = StyleInjector.injectStylesheet("." + id
         + "::before { border-top: " + border + "; border-left: " + border + "; " +
         "background: linear-gradient(135deg, " + background + " 0%, " + background
-        + " 50%, rgba(0,0,0,0) 51%, rgba(0,0,0,0) 100%) }");
+        + " 70%, rgba(0,0,0,0) 71%, rgba(0,0,0,0) 100%) }");
     StyleInjector.flush();
     return new Registration() {
       @Override

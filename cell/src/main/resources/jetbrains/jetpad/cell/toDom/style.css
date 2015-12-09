@@ -161,11 +161,11 @@
 }
 
 .tooltipBottom::before {
-  top: -4px;
+  top: -5px;
   transform: rotate(45deg);
 }
 
 .tooltipTop::before {
-  bottom: -4px;
+  bottom: -5px;
   transform: rotate(-135deg);
 }
