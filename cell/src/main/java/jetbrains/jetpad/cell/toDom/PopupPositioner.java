@@ -40,14 +40,16 @@ class PopupPositioner extends PopupPositionUpdater<Element> {
       visiblePart = new Rectangle(Window.getScrollLeft(), Window.getScrollTop(), Window.getClientWidth(), Window.getClientHeight());
     }
 
-    Rectangle childBounds = new Rectangle(target.origin, new Vector(popup.getClientWidth(), popup.getAbsoluteBottom() - popup.getAbsoluteTop()));
+    Rectangle childBounds = new Rectangle(target.origin, new Vector(popup.getClientWidth(), Tooltip.height(popup)));
 
     boolean bottom = visiblePart.contains(childBounds.add(new Vector(0, target.dimension.y)));
     boolean top = visiblePart.contains(childBounds.sub(new Vector(0, childBounds.dimension.y)));
 
     if (bottom || !top) {
+      Tooltip.bottom(popup);
       setPosition(popup, target.origin.x, target.origin.y + target.dimension.y);
     } else {
+      Tooltip.top(popup);
       setPosition(popup, target.origin.x, target.origin.y - childBounds.dimension.y);
     }
   }
