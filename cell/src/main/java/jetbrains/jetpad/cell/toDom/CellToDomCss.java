@@ -41,4 +41,9 @@ public interface CellToDomCss extends CssResource {
   String redUnderline();
   String yellowUnderline();
 
+  String popup();
+
+  String tooltip();
+  String tooltipBottom();
+  String tooltipTop();
 }
