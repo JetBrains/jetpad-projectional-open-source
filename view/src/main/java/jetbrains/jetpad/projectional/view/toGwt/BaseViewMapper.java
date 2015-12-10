@@ -181,7 +181,7 @@ class BaseViewMapper<ViewT extends View, ElementT extends Element> extends Mappe
       @Override
       public void set(Boolean value) {
         if (value) {
-          getTarget().getStyle().setProperty("boxShadow", "5px 5px 10px black");
+          getTarget().getStyle().setProperty("boxShadow", "2px 2px 4px black");
         } else {
           getTarget().getStyle().setProperty("boxShadow", null);
         }

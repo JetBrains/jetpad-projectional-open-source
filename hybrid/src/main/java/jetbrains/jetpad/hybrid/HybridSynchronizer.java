@@ -25,6 +25,7 @@ import jetbrains.jetpad.cell.TextCell;
 import jetbrains.jetpad.cell.action.CellActions;
 import jetbrains.jetpad.cell.completion.Completion;
 import jetbrains.jetpad.cell.completion.CompletionSupport;
+import jetbrains.jetpad.cell.error.ErrorMarkers;
 import jetbrains.jetpad.cell.position.Positions;
 import jetbrains.jetpad.cell.text.TextEditing;
 import jetbrains.jetpad.cell.trait.CellTrait;
@@ -107,6 +108,7 @@ public class HybridSynchronizer<SourceT> implements Synchronizer {
       }
     };
     myTarget.addTrait(createTargetTrait());
+    ErrorMarkers.install(myTarget);
 
     addPlaceholder();
 

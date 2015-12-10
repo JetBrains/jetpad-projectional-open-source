@@ -18,11 +18,11 @@ package jetbrains.jetpad.cell.toView;
 import jetbrains.jetpad.base.Registration;
 import jetbrains.jetpad.cell.Cell;
 import jetbrains.jetpad.cell.mappers.BasePopupManager;
-import jetbrains.jetpad.cell.mappers.CellMapper;
 import jetbrains.jetpad.cell.mappers.PopupManager;
 import jetbrains.jetpad.cell.mappers.PopupPositionUpdater;
 import jetbrains.jetpad.cell.toUtil.CounterSpec;
 import jetbrains.jetpad.cell.toUtil.Counters;
+import jetbrains.jetpad.cell.toUtil.HasCounters;
 import jetbrains.jetpad.geometry.Rectangle;
 import jetbrains.jetpad.mapper.Mapper;
 import jetbrains.jetpad.mapper.MappingContext;
@@ -35,7 +35,7 @@ import jetbrains.jetpad.values.Color;
 import java.util.Collection;
 import java.util.List;
 
-class BaseCellMapper<SourceT extends Cell, TargetT extends View> extends Mapper<SourceT, TargetT> implements CellMapper {
+class BaseCellMapper<SourceT extends Cell, TargetT extends View> extends Mapper<SourceT, TargetT> implements HasCounters, EventHandler<PropertyChangeEvent<Cell>> {
   private CellToViewContext myContext;
   private Counters myCounters;
   private PopupManager myPopupManager;
@@ -129,13 +129,11 @@ class BaseCellMapper<SourceT extends Cell, TargetT extends View> extends Mapper<
     myPopupManager.onEvent(event);
   }
 
-  @Override
-  public void setAncestorBackground(Color background) {
+  void setAncestorBackground(Color background) {
     myAncestorBackground = background;
   }
 
-  @Override
-  public void refreshProperties() {
+  void refreshProperties() {
     boolean selected = getSource().get(Cell.SELECTED) || getCounter(Counters.SELECT_COUNT) > 0;
     boolean focusHighlighted = getSource().get(Cell.FOCUS_HIGHLIGHTED) || getCounter(Counters.HIGHLIGHT_COUNT) > 0;
     boolean hasError = getSource().get(Cell.HAS_ERROR) || getCounter(Counters.ERROR_COUNT) > 0;

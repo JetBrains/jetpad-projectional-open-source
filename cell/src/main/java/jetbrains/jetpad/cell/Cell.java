@@ -54,9 +54,11 @@ public abstract class Cell implements NavComposite<Cell>, HasVisibility, HasFocu
   public static final List<CellPropertySpec<Cell>> POPUP_SPECS =
       Collections.unmodifiableList(Arrays.asList(LEFT_POPUP, RIGHT_POPUP, BOTTOM_POPUP, FRONT_POPUP));
 
+  public static final CellPropertySpec<Boolean> POPUP = new CellPropertySpec<>("popup", false);
+  public static final CellPropertySpec<Boolean> HAS_POPUP_DECORATION = new CellPropertySpec<>("popupDecoration", false);
+
   public static final CellPropertySpec<Boolean> FOCUSED = new CellPropertySpec<>("focused", false);
   public static final CellPropertySpec<Boolean> VISIBLE = new CellPropertySpec<>("visible", true);
-  public static final CellPropertySpec<Boolean> POPUP = new CellPropertySpec<>("popup", false);
   public static final CellPropertySpec<Boolean> SELECTED = new CellPropertySpec<>("selected", false);
   public static final CellPropertySpec<Boolean> FOCUS_HIGHLIGHTED = new CellPropertySpec<>("focusHighlighted", false);
   public static final CellPropertySpec<Boolean> PAIR_HIGHLIGHTED = new CellPropertySpec<>("pairHighlighted", false);
@@ -176,6 +178,14 @@ public abstract class Cell implements NavComposite<Cell>, HasVisibility, HasFocu
     return getProp(HAS_WARNING);
   }
 
+  public Property<Boolean> hasPopupDecoration() {
+    return getProp(HAS_POPUP_DECORATION);
+  }
+
+  public boolean isPopup() {
+    return get(POPUP);
+  }
+
   public <EventT extends Event> void dispatch(EventT e, CellEventSpec<EventT> spec) {
     dispatchStep(e, spec);
     if (e.isConsumed()) return;
@@ -277,10 +287,6 @@ public abstract class Cell implements NavComposite<Cell>, HasVisibility, HasFocu
   @Override
   public final Cell getParent() {
     return myParent;
-  }
-
-  public boolean isPopup() {
-    return get(POPUP);
   }
 
   public final ReadableProperty<Cell> parent() {
