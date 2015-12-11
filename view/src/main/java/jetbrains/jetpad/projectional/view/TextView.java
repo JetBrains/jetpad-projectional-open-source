@@ -32,8 +32,8 @@ public class TextView extends View {
 
   public static final ViewPropertySpec<Boolean> BOLD = new ViewPropertySpec<>("bold", ViewPropertyKind.REPAINT, false);
   public static final ViewPropertySpec<Boolean> ITALIC = new ViewPropertySpec<>("italic", ViewPropertyKind.REPAINT, false);
-  public static final ViewPropertySpec<FontFamily> FONT_FAMILY = new ViewPropertySpec<>("fontFamily", ViewPropertyKind.RELAYOUT_AND_REPAINT, DEFAULT_FONT.getFamily());
-  public static final ViewPropertySpec<Integer> FONT_SIZE = new ViewPropertySpec<>("fontSize", ViewPropertyKind.RELAYOUT_AND_REPAINT, DEFAULT_FONT.getSize());
+  public static final ViewPropertySpec<FontFamily> FONT_FAMILY = new ViewPropertySpec<>("fontFamily", ViewPropertyKind.RELAYOUT_AND_REPAINT, DEFAULT_FONT.family);
+  public static final ViewPropertySpec<Integer> FONT_SIZE = new ViewPropertySpec<>("fontSize", ViewPropertyKind.RELAYOUT_AND_REPAINT, DEFAULT_FONT.size);
 
   public static final ViewPropertySpec<Boolean> CARET_VISIBLE = new ViewPropertySpec<>("caretVisible", ViewPropertyKind.REPAINT, false);
   public static final ViewPropertySpec<Integer> CARET_POSITION = new ViewPropertySpec<>("caretPositiong", ViewPropertyKind.REPAINT, 0);

@@ -15,11 +15,9 @@
  */
 package jetbrains.jetpad.projectional.view.toAwt;
 
-import jetbrains.jetpad.base.Registration;
 import jetbrains.jetpad.base.Disposable;
 import jetbrains.jetpad.base.Handler;
-import jetbrains.jetpad.base.animation.Animation;
-import jetbrains.jetpad.base.animation.Animations;
+import jetbrains.jetpad.base.Registration;
 import jetbrains.jetpad.base.base64.Base64Coder;
 import jetbrains.jetpad.base.edt.AwtEventDispatchThread;
 import jetbrains.jetpad.base.edt.EventDispatchThread;
@@ -723,13 +721,13 @@ public class ViewContainerComponent extends JComponent implements Scrollable {
 
   private FontMetrics getFontMetrics(Font font) {
     int style = java.awt.Font.PLAIN;
-    if (font.isBold()) {
+    if (font.bold) {
       style |= java.awt.Font.BOLD;
     }
-    if (font.isItalic()) {
+    if (font.italic) {
       style |= java.awt.Font.ITALIC;
     }
-    return Toolkit.getDefaultToolkit().getFontMetrics(new java.awt.Font(toFontName(font.getFamily()), style, font.getSize()));
+    return Toolkit.getDefaultToolkit().getFontMetrics(new java.awt.Font(toFontName(font.family), style, font.size));
   }
 
   @Override
