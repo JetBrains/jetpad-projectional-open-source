@@ -41,7 +41,7 @@ public class TextMetricsCalculator {
     Context2d ctx = canvas.getContext2d();
     ctx.setFont(getFontString(font));
     final int width = (int) ctx.measureText(normalize(text)).getWidth();
-    int height = adjustHeight(font.getSize());
+    int height = adjustHeight(font.size);
     final Vector dimension = new Vector(width, height);
     return new TextMetrics() {
       @Override
@@ -51,7 +51,7 @@ public class TextMetricsCalculator {
 
       @Override
       public int baseLine() {
-        return (2 * font.getSize()) / 3 ;
+        return (2 * font.size) / 3 ;
       }
     };
   }
@@ -65,7 +65,7 @@ public class TextMetricsCalculator {
     ctx.setFont(getFontString(font));
     final int width = (int) ctx.measureText(normalize(text)).getWidth();
 
-    int height = adjustHeight(font.getSize());
+    int height = adjustHeight(font.size);
     final Vector dimension = new Vector(width, height);
 
     final int baseLine = fontBaseLine(font);
@@ -95,7 +95,7 @@ public class TextMetricsCalculator {
     int capsHeight = measureFontRange(font, allCharsString().toUpperCase()).height();
     int descent = allCharsHeight - capsHeight;
     int ascent = allCharsHeight - descent;
-    int lineSpace = font.getSize() - allCharsHeight;
+    int lineSpace = font.size - allCharsHeight;
     return lineSpace / 2 + ascent;
   }
 
@@ -128,15 +128,15 @@ public class TextMetricsCalculator {
     ctx.setFillStyle("rgb(255, 0, 0)");
 
     int width = (int) ctx.measureText(text).getWidth();
-    canvas.setHeight(font.getSize() * 2 + "px");
+    canvas.setHeight(font.size * 2 + "px");
     canvas.setWidth(width + "px");
 
-    ctx.fillText(text, 0, font.getSize());
-    ImageData data = ctx.getImageData(0, 0, width, font.getSize() * 2);
-    int[] counts = new int[font.getSize() * 2];
+    ctx.fillText(text, 0, font.size);
+    ImageData data = ctx.getImageData(0, 0, width, font.size * 2);
+    int[] counts = new int[font.size * 2];
 
     for (int x = 0; x < width; x++) {
-      for (int y = 0; y < font.getSize() * 2; y++) {
+      for (int y = 0; y < font.size * 2; y++) {
         int red = data.getRedAt(x, y);
         if (red > 0) {
           counts[y]++;
@@ -151,13 +151,13 @@ public class TextMetricsCalculator {
 
   private static String getFontString(Font font) {
     StringBuilder result = new StringBuilder();
-    if (font.isBold()) {
+    if (font.bold) {
       result.append(" bold");
     }
-    if (font.isItalic()) {
+    if (font.italic) {
       result.append(" italic");
     }
-    result.append(font.getSize()).append("px ").append(getFontName(font.getFamily()));
+    result.append(font.size).append("px ").append(getFontName(font.family));
     return result.toString();
   }
 
