@@ -24,21 +24,9 @@ import jetbrains.jetpad.values.Font;
 import jetbrains.jetpad.values.FontFamily;
 
 public class DomTextEditor {
-  public static final int DEFAULT_FONT_SIZE = 15;
+  public static final Font DEFAULT_FONT = new Font(FontFamily.MONOSPACED, 15);
 
-  private static final int ourCharWidth;
-  private static final int ourLineHeight;
-
-  static {
-    TextMetrics bounds = TextMetricsCalculator.calculate(new Font(FontFamily.MONOSPACED, DEFAULT_FONT_SIZE), "x");
-    ourCharWidth = bounds.dimension().x;
-    ourLineHeight = bounds.dimension().y;
-  }
-
-  private static String normalize(String text) {
-    //replace space with &nbsp;
-    return text.replaceAll(" ", "\u00a0");
-  }
+  private static final TextMetrics ourDefaultFontMetrics = TextMetricsCalculator.calculate(DEFAULT_FONT);
 
   private int myCaretPosition;
   private int mySelectionStart;
@@ -46,10 +34,9 @@ public class DomTextEditor {
   private String myText;
   private boolean myCaretVisible;
   private Color myTextColor;
-  private boolean myBold;
-  private boolean myItalic;
-  private FontFamily myFontFamily = FontFamily.MONOSPACED;
-  private int myFontSize = 15;
+
+  private Font myFont = DEFAULT_FONT;
+  private TextMetrics myFontMetrics = ourDefaultFontMetrics;
 
   private Element myTextContainer;
   private Element myCaretDiv;
@@ -88,44 +75,40 @@ public class DomTextEditor {
     updateCaretAndSelection();
   }
 
-  public boolean isBold() {
-    return myBold;
+  public Font getFont() {
+    return myFont;
   }
 
   public void setBold(boolean bold) {
-    if (myBold == bold) return;
-    myBold = bold;
+    if (myFont.isBold() == bold) return;
+    myFont = new Font(myFont.getFamily(), myFont.getSize(), bold, myFont.isItalic());
+    fontChanged();
     updateBold();
   }
 
-  public boolean isItalic() {
-    return myItalic;
-  }
-
   public void setItalic(boolean italic) {
-    if (myItalic == italic) return;
-    myItalic = italic;
+    if (myFont.isItalic() == italic) return;
+    myFont = new Font(myFont.getFamily(), myFont.getSize(), myFont.isBold(), italic);
+    fontChanged();
     updateItalic();
   }
 
-  public FontFamily getFontFamily() {
-    return myFontFamily;
-  }
-
   public void setFontFamily(FontFamily family) {
-    if (Objects.equal(myFontFamily, family)) return;
-    myFontFamily = family;
+    if (Objects.equal(myFont.getFamily(), family)) return;
+    myFont = new Font(family, myFont.getSize(), myFont.isBold(), myFont.isItalic());
+    fontChanged();
     updateFontFamily();
   }
 
-  public int getFontSize() {
-    return myFontSize;
+  public void setFontSize(int size) {
+    if (myFont.getSize() == size) return;
+    myFont = new Font(myFont.getFamily(), size, myFont.isBold(), myFont.isItalic());
+    fontChanged();
+    updateFontSize();
   }
 
-  public void setFontSize(int size) {
-    if (myFontSize == size) return;
-    myFontSize = size;
-    updateFontSize();
+  private void fontChanged() {
+    myFontMetrics = DEFAULT_FONT.equals(myFont) ? ourDefaultFontMetrics : TextMetricsCalculator.calculate(myFont);
   }
 
   public Color getTextColor() {
@@ -198,26 +181,15 @@ public class DomTextEditor {
   }
 
   private void updateCaretVisibility() {
-    Style caretStyle = myCaretDiv.getStyle();
-    if (myCaretVisible) {
-      caretStyle.setVisibility(Style.Visibility.VISIBLE);
-    } else {
-      caretStyle.setVisibility(Style.Visibility.HIDDEN);
-    }
+    myCaretDiv.getStyle().setVisibility(myCaretVisible ? Style.Visibility.VISIBLE : Style.Visibility.HIDDEN);
   }
 
   private void updateSelectionVisibility() {
-    Style selectionStyle = mySelectionDiv.getStyle();
-    if (mySelectionVisible) {
-      selectionStyle.setVisibility(Style.Visibility.VISIBLE);
-    } else {
-      selectionStyle.setVisibility(Style.Visibility.HIDDEN);
-    }
+    mySelectionDiv.getStyle().setVisibility(mySelectionVisible ? Style.Visibility.VISIBLE : Style.Visibility.HIDDEN);
   }
 
   private void updateCaretPosition() {
-    Style caretStyle = myCaretDiv.getStyle();
-    caretStyle.setLeft(getCaretOffset(myCaretPosition), Style.Unit.PX);
+    myCaretDiv.getStyle().setLeft(getCaretOffset(myCaretPosition), Style.Unit.PX);
   }
 
   private void updateCaretAndSelection() {
@@ -248,7 +220,7 @@ public class DomTextEditor {
     selectionStyle.setLeft(getCaretOffset(left), Style.Unit.PX);
     selectionStyle.setWidth(getCaretOffset(right) - getCaretOffset(left), Style.Unit.PX);
 
-    mySelectionDiv.setInnerText(normalize(text));
+    mySelectionDiv.setInnerText(TextMetricsCalculator.normalize(text));
   }
 
   private void update() {
@@ -261,26 +233,16 @@ public class DomTextEditor {
     updateLineHeight();
   }
 
-
   private void updateColor() {
-    String cssColor = myTextColor != null ? myTextColor.toCssColor() : null;
-    myRoot.getStyle().setColor(cssColor);
+    myRoot.getStyle().setColor(myTextColor == null ? null : myTextColor.toCssColor());
   }
 
   private void updateBold() {
-    if (myBold) {
-      myRoot.getStyle().setFontWeight(Style.FontWeight.BOLD);
-    } else {
-      myRoot.getStyle().setFontWeight(Style.FontWeight.NORMAL);
-    }
+    myRoot.getStyle().setFontWeight(myFont.isBold() ? Style.FontWeight.BOLD : Style.FontWeight.NORMAL);
   }
 
   private void updateItalic() {
-    if (myItalic) {
-      myRoot.getStyle().setFontStyle(Style.FontStyle.ITALIC);
-    } else {
-      myRoot.getStyle().setFontStyle(Style.FontStyle.NORMAL);
-    }
+    myRoot.getStyle().setFontStyle(myFont.isItalic() ? Style.FontStyle.ITALIC : Style.FontStyle.NORMAL);
   }
 
   private void updateText() {
@@ -290,41 +252,37 @@ public class DomTextEditor {
       myTextContainer.getStyle().setWidth(1, Style.Unit.PX);
     } else {
       myTextContainer.getStyle().clearWidth();
-      myTextContainer.setInnerText(normalize(value));
+      myTextContainer.setInnerText(TextMetricsCalculator.normalize(value));
     }
   }
 
   private void updateFontFamily() {
-    myRoot.getStyle().setProperty("fontFamily", TextMetricsCalculator.getFontName(myFontFamily));
+    myRoot.getStyle().setProperty("fontFamily", TextMetricsCalculator.getFontName(myFont.getFamily()));
   }
 
   private void updateFontSize() {
-    myRoot.getStyle().setFontSize(myFontSize, Style.Unit.PX);
+    myRoot.getStyle().setFontSize(myFont.getSize(), Style.Unit.PX);
   }
 
   private void updateLineHeight() {
-    myRoot.getStyle().setHeight(getLineHeight(), Style.Unit.PX);
-  }
-
-  private Font getFont() {
-    return new Font(myFontFamily, myFontSize, myBold, myItalic);
+    myRoot.getStyle().setLineHeight(getLineHeight(), Style.Unit.PX);
   }
 
   public int getCaretOffset(int caretOffset) {
     if (caretOffset == 0) return 0;
-    if (isDefaultFont()) {
-      return caretOffset * ourCharWidth;
+    if (FontFamily.MONOSPACED == myFont.getFamily()) {
+      return caretOffset * getCharWidth();
     } else {
-      return TextMetricsCalculator.calculateAprox(getFont(), myText.substring(0, caretOffset)).dimension().x;
+      return TextMetricsCalculator.calculateWidth(myFont, myText.substring(0, caretOffset));
     }
   }
 
   private int getLineHeight() {
-    if (isDefaultFont()) {
-      return ourLineHeight;
-    } else {
-      return TextMetricsCalculator.calculateAprox(getFont(), "x").dimension().y;
-    }
+    return myFontMetrics.dimension().y;
+  }
+
+  private int getCharWidth() {
+    return myFontMetrics.dimension().x;
   }
 
   public int getCaretPositionAt(int caretOffset) {
@@ -332,28 +290,21 @@ public class DomTextEditor {
     if (caretOffset <= 0) return 0;
     if (textValue == null) return 0;
 
-    if (isDefaultFont()) {
-      int pos = caretOffset / ourCharWidth;
-      int tail = caretOffset - pos * ourCharWidth;
-
-      if (tail > ourCharWidth / 2) {
+    if (FontFamily.MONOSPACED == myFont.getFamily()) {
+      int pos = caretOffset / getCharWidth();
+      int tail = caretOffset - pos * getCharWidth();
+      if (tail > getCharWidth() / 2) {
         pos += 1;
       }
-
       int len = textValue.length();
-      if (pos > len) return len;
+      return pos > len ? len : pos;
 
-      return pos;
     } else {
       for (int i = 0; i <= myText.length(); i++) {
-        int len = TextMetricsCalculator.calculateAprox(getFont(), myText.substring(0, i)).dimension().x;
+        int len = TextMetricsCalculator.calculateWidth(myFont, myText.substring(0, i));
         if (len >= caretOffset) return i;
       }
       return myText.length();
     }
-  }
-
-  private boolean isDefaultFont() {
-    return myFontFamily.equals(FontFamily.MONOSPACED) && myFontSize == DEFAULT_FONT_SIZE;
   }
 }

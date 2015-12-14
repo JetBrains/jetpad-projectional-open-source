@@ -15,11 +15,9 @@
  */
 package jetbrains.jetpad.projectional.view.toAwt;
 
-import jetbrains.jetpad.base.Registration;
 import jetbrains.jetpad.base.Disposable;
 import jetbrains.jetpad.base.Handler;
-import jetbrains.jetpad.base.animation.Animation;
-import jetbrains.jetpad.base.animation.Animations;
+import jetbrains.jetpad.base.Registration;
 import jetbrains.jetpad.base.base64.Base64Coder;
 import jetbrains.jetpad.base.edt.AwtEventDispatchThread;
 import jetbrains.jetpad.base.edt.EventDispatchThread;
@@ -70,9 +68,10 @@ public class ViewContainerComponent extends JComponent implements Scrollable {
   private static String toFontName(FontFamily fontFamily) {
     if (fontFamily == FontFamily.MONOSPACED) {
       return MONOSPACED_FONT;
-    } else {
-      return fontFamily.toString();
+    } else if (fontFamily == FontFamily.SERIF) {
+      return java.awt.Font.SERIF;
     }
+    return fontFamily.toString();
   }
 
   static final Color SELECTION_COLOR = Color.DARK_BLUE;

@@ -23,6 +23,7 @@ import jetbrains.jetpad.cell.trait.CellTrait;
 import jetbrains.jetpad.event.MouseEvent;
 import jetbrains.jetpad.model.property.PropertyChangeEvent;
 import jetbrains.jetpad.values.Color;
+import jetbrains.jetpad.values.FontFamily;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -64,12 +65,14 @@ public class ErrorMarkers {
       }
 
       private void setErrorPopup(Cell cell) {
-        TextCell popup = new TextCell("parsing error");
+        TextCell popup = new TextCell(" parsing error ");
         popup.visible().set(false);
         popup.set(Cell.HAS_POPUP_DECORATION, true);
         popup.set(Cell.HAS_SHADOW, true);
         popup.set(Cell.BACKGROUND, Color.LIGHT_PINK);
         popup.set(Cell.BORDER_COLOR, Color.GRAY);
+        popup.set(TextCell.FONT_FAMILY, FontFamily.SERIF);
+
         cell.set(ERROR_POPUP_ACTIVE, true);
         updatePopup(cell, popup);
         if (myMouseOver) {
