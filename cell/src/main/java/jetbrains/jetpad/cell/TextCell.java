@@ -21,12 +21,15 @@ import jetbrains.jetpad.model.property.DerivedProperty;
 import jetbrains.jetpad.model.property.Property;
 import jetbrains.jetpad.model.property.ReadableProperty;
 import jetbrains.jetpad.values.Color;
+import jetbrains.jetpad.values.FontFamily;
 
 public class TextCell extends Cell {
   public static final CellPropertySpec<String> TEXT = new CellPropertySpec<>("text", "");
   public static final CellPropertySpec<Color> TEXT_COLOR = new CellPropertySpec<>("textColor", Color.BLACK);
   public static final CellPropertySpec<Boolean> CARET_VISIBLE = new CellPropertySpec<>("caretVisible", false);
   public static final CellPropertySpec<Integer> CARET_POSITION = new CellPropertySpec<>("caretPosition", 0);
+
+  public static final CellPropertySpec<FontFamily> FONT_FAMILY = new CellPropertySpec<>("fontFamily", FontFamily.MONOSPACED);
   public static final CellPropertySpec<Boolean> BOLD = new CellPropertySpec<>("bold", false);
 
   public static final CellPropertySpec<Boolean> SELECTION_VISIBLE = new CellPropertySpec<>("selectionVisible", false);
@@ -53,6 +56,10 @@ public class TextCell extends Cell {
 
   public Property<Boolean> bold() {
     return getProp(BOLD);
+  }
+
+  public Property<FontFamily> fontFamily() {
+    return getProp(FONT_FAMILY);
   }
 
   public Property<Integer> caretPosition() {

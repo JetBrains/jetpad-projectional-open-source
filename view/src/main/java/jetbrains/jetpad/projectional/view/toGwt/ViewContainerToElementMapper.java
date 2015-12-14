@@ -31,7 +31,6 @@ import com.google.gwt.user.client.Window;
 import jetbrains.jetpad.base.Registration;
 import jetbrains.jetpad.base.Handler;
 import jetbrains.jetpad.base.Value;
-import jetbrains.jetpad.base.animation.Animation;
 import jetbrains.jetpad.base.edt.EventDispatchThread;
 import jetbrains.jetpad.base.edt.JsEventDispatchThread;
 import jetbrains.jetpad.event.*;
@@ -43,7 +42,6 @@ import jetbrains.jetpad.mapper.Mapper;
 import jetbrains.jetpad.mapper.MapperFactory;
 import jetbrains.jetpad.mapper.MappingContext;
 import jetbrains.jetpad.mapper.Synchronizers;
-import jetbrains.jetpad.mapper.gwt.DomAnimations;
 import jetbrains.jetpad.mapper.gwt.GwtSynchronizers;
 import jetbrains.jetpad.model.event.CompositeRegistration;
 import jetbrains.jetpad.model.event.EventHandler;
@@ -59,6 +57,7 @@ import jetbrains.jetpad.projectional.view.dom.DomView;
 import jetbrains.jetpad.projectional.view.spi.NullViewContainerPeer;
 import jetbrains.jetpad.projectional.view.spi.ViewContainerPeer;
 import jetbrains.jetpad.values.Font;
+import jetbrains.jetpad.values.FontFamily;
 
 import java.util.Collections;
 
@@ -309,7 +308,7 @@ public class ViewContainerToElementMapper extends Mapper<ViewContainer, Element>
     myRootMapper.set(myCtx.getFactory().createMapper(getSource().root()));
     myRootDiv.appendChild(myRootMapper.get().getTarget());
 
-    TextMetrics metrics = TextMetricsCalculator.calculate(TextView.DEFAULT_FONT, "x");
+    TextMetrics metrics = TextMetricsCalculator.calculate(TextView.DEFAULT_FONT);
     final int baseLine = metrics.baseLine();
     final int fontWidth = metrics.dimension().x;
     final int fontHeight = metrics.dimension().y;
@@ -364,7 +363,7 @@ public class ViewContainerToElementMapper extends Mapper<ViewContainer, Element>
         if (font.equals(TextView.DEFAULT_FONT)) {
           return fontHeight;
         } else {
-          return TextMetricsCalculator.calculateAprox(font, "x").dimension().y;
+          return TextMetricsCalculator.calculateApprox(font).dimension().y;
         }
       }
 
@@ -373,16 +372,16 @@ public class ViewContainerToElementMapper extends Mapper<ViewContainer, Element>
         if (font.equals(TextView.DEFAULT_FONT)) {
           return baseLine;
         } else {
-          return TextMetricsCalculator.calculateAprox(font, "x").baseLine();
+          return TextMetricsCalculator.calculateApprox(font).baseLine();
         }
       }
 
       @Override
       public int textWidth(Font font, String text) {
-        if (font.equals(TextView.DEFAULT_FONT)) {
+        if (TextView.DEFAULT_FONT.getFamily() == FontFamily.MONOSPACED && font.equals(TextView.DEFAULT_FONT)) {
           return text.length() * fontWidth;
         } else {
-          return TextMetricsCalculator.calculateAprox(font, text).dimension().x;
+          return TextMetricsCalculator.calculateApprox(font, text).dimension().x;
         }
       }
 
@@ -432,12 +431,8 @@ public class ViewContainerToElementMapper extends Mapper<ViewContainer, Element>
 
   private boolean isDomViewEvent(MouseEvent e) {
     View targetView = getSource().root().viewAt(e.getLocation());
-    if (targetView instanceof DomView) {
-      return true;
-    }
-    return false;
+    return targetView instanceof DomView;
   }
-
 
   private MouseEvent toMouseEvent(Event e) {
     int cx = e.getClientX();
