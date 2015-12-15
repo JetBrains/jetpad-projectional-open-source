@@ -22,7 +22,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.*;
 
-public class ErrorPopupTextCompletionTest extends TextEditorCompletionHandlerTest {
+public class  ErrorPopupTextCompletionTest extends TextEditorCompletionHandlerTest {
   @Before
   @Override
   public void init() {

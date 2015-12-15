@@ -63,13 +63,13 @@ public class CompletionSupport {
           }
 
           @Override
-          protected void doActivate(Runnable restoreState) {
+          protected void doActivate(Runnable deactivate, Runnable restoreFocus) {
             showPopup(cell, cell.frontPopup(), Completion.allCompletion(cell, new BaseCompletionParameters() {
               @Override
               public boolean isMenu() {
                 return true;
               }
-            }), restoreState);
+            }), deactivate, restoreFocus);
           }
 
           @Override
@@ -115,7 +115,7 @@ public class CompletionSupport {
 
   public static void showCompletion(final TextCell textCell, Async<List<CompletionItem>> items,
                                     final Registration removeOnClose, final Runnable beforeAnimation,
-                                    final Runnable restoreState) {
+                                    final Runnable restoreCompletionState, final Runnable restoreState) {
     if (!textCell.focused().get()) {
       throw new IllegalArgumentException();
     }
@@ -207,10 +207,10 @@ public class CompletionSupport {
             }
           };
         }
-
         return super.get(cell, spec);
       }
     }));
+
     reg.add(new Registration() {
       @Override
       protected void doRemove() {
@@ -218,6 +218,7 @@ public class CompletionSupport {
         completionCell.removeFromParent();
         removeOnClose.remove();
         disposeMenuMapper.remove();
+        restoreCompletionState.run();
       }
     });
 
@@ -243,7 +244,8 @@ public class CompletionSupport {
       Cell cell,
       Property<Cell> targetPopup,
       Async<List<CompletionItem>> items,
-      Runnable onDeactivate) {
+      Runnable deactivate,
+      Runnable restoreFocus) {
     CellContainer container = cell.cellContainer().get();
     final HorizontalCell popup = new HorizontalCell();
     final TextCell textCell = new TextCell();
@@ -273,7 +275,7 @@ public class CompletionSupport {
       public void run() {
         textCell.text().set("");
       }
-    }, Runnables.seq(state, onDeactivate));
+    }, deactivate, Runnables.seq(state, restoreFocus));
     return textCell;
   }
 
