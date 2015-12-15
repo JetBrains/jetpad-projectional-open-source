@@ -43,18 +43,20 @@ public abstract class BaseCompletionController implements CompletionController {
     activate(Runnables.EMPTY);
   }
 
+  // NB: note the actual purpose of Runnable passed to this method!
   @Override
-  public final void activate(Runnable restoreState) {
+  public final void activate(Runnable restoreFocus) {
     if (isActive()) {
       throw new IllegalStateException();
     }
     myCell.set(ACTIVE, true);
-    doActivate(Runnables.seq(new Runnable() {
+    Runnable deactivate = new Runnable() {
       @Override
       public void run() {
         myCell.set(ACTIVE, false);
       }
-    }, restoreState));
+    };
+    doActivate(deactivate, restoreFocus);
   }
 
   @Override
@@ -66,6 +68,6 @@ public abstract class BaseCompletionController implements CompletionController {
     doDeactivate();
   }
 
-  protected abstract void doActivate(Runnable restoreState);
+  protected abstract void doActivate(Runnable deactivate, Runnable restoreFocus);
   protected abstract void doDeactivate();
 }

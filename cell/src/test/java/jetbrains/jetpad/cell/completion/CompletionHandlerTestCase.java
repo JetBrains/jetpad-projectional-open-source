@@ -19,9 +19,7 @@ import jetbrains.jetpad.cell.Cell;
 import jetbrains.jetpad.completion.CompletionController;
 import org.junit.Test;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public abstract class CompletionHandlerTestCase extends CompletionTestCase {
   protected abstract Cell getView();
@@ -52,10 +50,11 @@ public abstract class CompletionHandlerTestCase extends CompletionTestCase {
 
   @Test
   public void completionCanBeDeactivatedWithCompletionHandler() {
+    assertSame(myCellContainer.focusedCell.get(), getView());
     complete();
 
     getController().deactivate();
     assertFalse(getController().isActive());
+    assertSame(myCellContainer.focusedCell.get(), getView());
   }
-
 }
