@@ -19,6 +19,7 @@ import com.google.common.base.Predicate;
 import jetbrains.jetpad.base.Runnables;
 import jetbrains.jetpad.cell.Cell;
 import jetbrains.jetpad.cell.TextCell;
+import jetbrains.jetpad.cell.completion.BaseCompletionController;
 import jetbrains.jetpad.cell.completion.Completion;
 import jetbrains.jetpad.cell.completion.CompletionTestCase;
 import jetbrains.jetpad.cell.trait.CellTrait;
@@ -209,25 +210,33 @@ public class ValidTextCompletionTest extends CompletionTestCase {
   @Test
   public void escapeDismissesCompletion() {
     complete();
-    assertHasBottomPopup(text);
+    assertCompletionActive();
     escape();
-    assertNoBottomPopup(text);
+    assertCompletionInactive();
   }
 
   @Test
   public void focusLossDismissesCompletion() {
     complete();
-    assertHasBottomPopup(text);
+    assertCompletionActive();
     myCellContainer.focusedCell.set(null);
-    assertNoBottomPopup(text);
+    assertCompletionInactive();
+  }
+
+  @Test
+  public void focusLostThenGainedKeepsValidCompletionState() {
+    focusLossDismissesCompletion();
+    text.focus();
+    complete();
+    assertCompletionActive();
   }
 
   @Test
   public void itemRemoveLeadsToCompletionDismiss() {
     complete();
-    assertHasBottomPopup(text);
+    assertCompletionActive();
     text.removeFromParent();
-    assertNoBottomPopup(text);
+    assertCompletionInactive();
   }
 
   @Test
@@ -303,7 +312,7 @@ public class ValidTextCompletionTest extends CompletionTestCase {
   }
 
   @Test
-  public void cancelationOfRtOnEnd() {
+  public void cancellationOfRtOnEnd() {
     type("xx");
 
     Cell focused = myCellContainer.focusedCell.get();
@@ -328,5 +337,15 @@ public class ValidTextCompletionTest extends CompletionTestCase {
 
     assertFalse(lowPriorityCompleted);
     assertCompleted("var");
+  }
+
+  private void assertCompletionActive() {
+    assertHasBottomPopup(text);
+    assertTrue(BaseCompletionController.isCompletionActive(text));
+  }
+
+  private void assertCompletionInactive() {
+    assertNoBottomPopup(text);
+    assertFalse(BaseCompletionController.isCompletionActive(text));
   }
 }
