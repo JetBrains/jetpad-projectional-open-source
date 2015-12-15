@@ -60,13 +60,13 @@ public class TextEditingTrait extends TextNavigationTrait {
       }
 
       @Override
-      protected void doActivate(Runnable restoreState) {
+      protected void doActivate(Runnable deactivate, Runnable restoreFocus) {
         CompletionSupport.showCompletion(cell, Completion.allCompletion(cell, new BaseCompletionParameters() {
           @Override
           public boolean isMenu() {
             return true;
           }
-        }), Registration.EMPTY, Runnables.EMPTY, restoreState);
+        }), Registration.EMPTY, Runnables.EMPTY, deactivate, restoreFocus);
       }
 
       @Override
@@ -215,7 +215,8 @@ public class TextEditingTrait extends TextNavigationTrait {
     clearSelection(textCell);
 
     String text = "" + event.getKeyChar();
-    pasteText(textCell, text);    textCell.scrollToCaret();
+    pasteText(textCell, text);
+    textCell.scrollToCaret();
     onAfterType(textCell);
     event.consume();
   }

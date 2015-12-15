@@ -20,14 +20,14 @@ import jetbrains.jetpad.cell.HorizontalCell;
 import jetbrains.jetpad.cell.TextCell;
 import jetbrains.jetpad.cell.text.TextEditing;
 import jetbrains.jetpad.cell.util.CellFactory;
-import jetbrains.jetpad.completion.CompletionController;
 import org.junit.Before;
 import org.junit.Test;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 public class NonTextCellCompletionTest extends CompletionTestCase {
   private HorizontalCell target = new HorizontalCell();
-  CompletionController handler;
-
 
   @Before
   public void init() {
@@ -38,8 +38,6 @@ public class NonTextCellCompletionTest extends CompletionTestCase {
     myCellContainer.root.children().add(target);
 
     target.focus();
-
-    handler = target.get(Completion.COMPLETION_CONTROLLER);
   }
 
   @Test
@@ -61,7 +59,6 @@ public class NonTextCellCompletionTest extends CompletionTestCase {
     assertCompleted("xxxx");
   }
 
-
   @Test
   public void completionDismissWithEscape() {
     complete();
@@ -80,14 +77,21 @@ public class NonTextCellCompletionTest extends CompletionTestCase {
     assertFocused(target);
   }
 
-
   @Test
   public void completionDismissedOnFocusLost() {
     complete();
 
     myCellContainer.focusedCell.set(null);
 
-    assertNoFrontPopup(target);
+    assertCompletionInactive();
+  }
+
+  @Test
+  public void showCompletionAfterFocusLost() {
+    completionDismissedOnFocusLost();
+    target.focus();
+    complete();
+    assertCompletionActive();
   }
 
   @Test
@@ -99,7 +103,7 @@ public class NonTextCellCompletionTest extends CompletionTestCase {
 
     focusTarget.focus();
 
-    assertNoFrontPopup(target);
+    assertCompletionInactive();
   }
 
   @Test
@@ -111,7 +115,7 @@ public class NonTextCellCompletionTest extends CompletionTestCase {
 
     complete();
 
-    assertHasFrontPopup(target);
+    assertCompletionActive();
   }
 
   @Test
@@ -125,6 +129,16 @@ public class NonTextCellCompletionTest extends CompletionTestCase {
 
     complete();
 
+    assertCompletionInactive();
+  }
+
+  private void assertCompletionActive() {
+    assertHasFrontPopup(target);
+    assertTrue(BaseCompletionController.isCompletionActive(target));
+  }
+
+  private void assertCompletionInactive() {
     assertNoFrontPopup(target);
+    assertFalse(BaseCompletionController.isCompletionActive(target));
   }
 }
