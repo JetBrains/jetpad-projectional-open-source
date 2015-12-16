@@ -103,10 +103,10 @@ public class HybridSynchronizer<SourceT> implements Synchronizer {
         if (left.get(CellLists.NO_SPACE_TO_RIGHT) || right.get(CellLists.NO_SPACE_TO_LEFT)) {
           return new TextCell("");
         }
-
         return new TextCell(" ");
       }
     };
+
     myTarget.addTrait(createTargetTrait());
     ErrorMarkers.install(myTarget);
 
@@ -193,7 +193,6 @@ public class HybridSynchronizer<SourceT> implements Synchronizer {
         if (spec == CellStateHandler.PROPERTY) {
           return getCellStateHandler();
         }
-
         return super.get(cell, spec);
       }
 

@@ -17,6 +17,7 @@ package jetbrains.jetpad.cell.toView;
 
 import jetbrains.jetpad.base.Registration;
 import jetbrains.jetpad.cell.Cell;
+import jetbrains.jetpad.cell.error.ErrorMarkers;
 import jetbrains.jetpad.cell.mappers.BasePopupManager;
 import jetbrains.jetpad.cell.mappers.PopupManager;
 import jetbrains.jetpad.cell.mappers.PopupPositionUpdater;
@@ -152,7 +153,7 @@ class BaseCellMapper<SourceT extends Cell, TargetT extends View> extends Mapper<
     }
     getTarget().background().set(background);
 
-    Color borderColor = hasError ? Color.PINK : (hasWarning ? Color.YELLOW : getSource().get(Cell.BORDER_COLOR));
+    Color borderColor = hasError ? Color.PINK : (hasWarning ? ErrorMarkers.WARNING_COLOR : getSource().get(Cell.BORDER_COLOR));
     getTarget().border().set(borderColor);
 
     getTarget().visible().set(getSource().get(Cell.VISIBLE));
