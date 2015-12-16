@@ -21,6 +21,7 @@ import jetbrains.jetpad.cell.CellPropertySpec;
 import jetbrains.jetpad.cell.TextCell;
 import jetbrains.jetpad.cell.trait.CellTrait;
 import jetbrains.jetpad.event.MouseEvent;
+import jetbrains.jetpad.model.event.CompositeRegistration;
 import jetbrains.jetpad.model.property.PropertyChangeEvent;
 import jetbrains.jetpad.values.Color;
 import jetbrains.jetpad.values.FontFamily;
@@ -33,8 +34,12 @@ public class ErrorMarkers {
 
   static final CellPropertySpec<Boolean> ERROR_POPUP_ACTIVE = new CellPropertySpec<>("isErrorPopupActive", false);
 
+  public static final Color WARNING_COLOR = new Color(244, 232, 171);
+
   public static Registration install(Cell cell) {
-    return cell.addTrait(errorPopupTrait());
+    return new CompositeRegistration(
+        cell.addTrait(errorPopupTrait()),
+        cell.addTrait(warningTrait(cell)));
   }
 
   private static CellTrait errorPopupTrait() {
@@ -133,6 +138,33 @@ public class ErrorMarkers {
         if (myRegistrations.isEmpty()) {
           myRegistrations = null;
         }
+      }
+    };
+  }
+
+  private static CellTrait warningTrait(Cell source) {
+    final Boolean hasWarning = source.get(Cell.HAS_WARNING);
+    if (hasWarning) {
+      source.background().set(WARNING_COLOR);
+    }
+
+    return new CellTrait() {
+      private boolean myWarning = hasWarning;
+
+      @Override
+      public void onPropertyChanged(Cell cell, CellPropertySpec<?> prop, PropertyChangeEvent<?> event) {
+        if (prop == Cell.HAS_WARNING) {
+          myWarning = ((PropertyChangeEvent<Boolean>) event).getNewValue();
+        }
+        super.onPropertyChanged(cell, prop, event);
+      }
+
+      @Override
+      protected void provideProperties(Cell cell, PropertyCollector collector) {
+        if (myWarning) {
+          collector.add(Cell.BACKGROUND, WARNING_COLOR);
+        }
+        super.provideProperties(cell, collector);
       }
     };
   }
