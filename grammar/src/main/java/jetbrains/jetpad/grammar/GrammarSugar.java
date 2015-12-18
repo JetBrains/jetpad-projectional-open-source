@@ -20,6 +20,13 @@ import java.util.Arrays;
 import java.util.List;
 
 public class GrammarSugar {
+
+  private static final StarUpdateRulesConfiguration EMPTY_STAR_UPDATE_RULES_CONFIGURATION = new StarUpdateRulesConfiguration() {
+    @Override
+    public void updateRules(Rule rule1, Rule rule2) {
+    }
+  };
+
   public static NonTerminal seq(Symbol... symbols) {
     if (symbols.length == 0) {
       throw new IllegalArgumentException();
@@ -53,16 +60,20 @@ public class GrammarSugar {
   }
 
   public static NonTerminal star(Symbol symbol) {
+    return star(symbol, EMPTY_STAR_UPDATE_RULES_CONFIGURATION);
+  }
+
+  public static NonTerminal star(Symbol symbol, StarUpdateRulesConfiguration starUpdateRulesConfiguration) {
     Grammar g = symbol.getGrammar();
 
     NonTerminal star = g.newNonTerminal(g.uniqueName("star_"));
-    g.newRule(star).setHandler(new RuleHandler() {
+    Rule rule1 = g.newRule(star).setHandler(new RuleHandler() {
       @Override
       public Object handle(RuleContext ctx) {
         return PersistentList.nil();
       }
     });
-    g.newRule(star, symbol, star).setHandler(new RuleHandler() {
+    Rule rule2 = g.newRule(star, symbol, star).setHandler(new RuleHandler() {
       @Override
       public Object handle(RuleContext ctx) {
         Object first = ctx.get(0);
@@ -70,6 +81,8 @@ public class GrammarSugar {
         return PersistentList.cons(first, list);
       }
     });
+
+    starUpdateRulesConfiguration.updateRules(rule1, rule2);
 
     return star;
   }
@@ -163,5 +176,15 @@ public class GrammarSugar {
       });
     }
     return sepEnd;
+  }
+
+  interface StarUpdateRulesConfiguration {
+
+    /**
+     * @param rule1 "newRule(star)"
+     * @param rule2 "newRule(star, symbol, star)"
+     */
+    void updateRules(Rule rule1, Rule rule2);
+
   }
 }
