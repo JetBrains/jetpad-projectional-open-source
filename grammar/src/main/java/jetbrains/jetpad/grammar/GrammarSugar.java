@@ -20,13 +20,6 @@ import java.util.Arrays;
 import java.util.List;
 
 public class GrammarSugar {
-
-  private static final StarUpdateRulesConfiguration EMPTY_STAR_UPDATE_RULES_CONFIGURATION = new StarUpdateRulesConfiguration() {
-    @Override
-    public void updateRules(Rule rule1, Rule rule2) {
-    }
-  };
-
   public static NonTerminal seq(Symbol... symbols) {
     if (symbols.length == 0) {
       throw new IllegalArgumentException();
@@ -60,20 +53,24 @@ public class GrammarSugar {
   }
 
   public static NonTerminal star(Symbol symbol) {
-    return star(symbol, EMPTY_STAR_UPDATE_RULES_CONFIGURATION);
+    return star(symbol, new StarRulesUpdater() {
+      @Override
+      public void updateRules(Rule emptyCase, Rule stepCase) {
+      }
+    });
   }
 
-  public static NonTerminal star(Symbol symbol, StarUpdateRulesConfiguration starUpdateRulesConfiguration) {
+  public static NonTerminal star(Symbol symbol, StarRulesUpdater updater) {
     Grammar g = symbol.getGrammar();
 
     NonTerminal star = g.newNonTerminal(g.uniqueName("star_"));
-    Rule rule1 = g.newRule(star).setHandler(new RuleHandler() {
+    Rule emptyCase = g.newRule(star).setHandler(new RuleHandler() {
       @Override
       public Object handle(RuleContext ctx) {
         return PersistentList.nil();
       }
     });
-    Rule rule2 = g.newRule(star, symbol, star).setHandler(new RuleHandler() {
+    Rule stepCase = g.newRule(star, symbol, star).setHandler(new RuleHandler() {
       @Override
       public Object handle(RuleContext ctx) {
         Object first = ctx.get(0);
@@ -82,7 +79,7 @@ public class GrammarSugar {
       }
     });
 
-    starUpdateRulesConfiguration.updateRules(rule1, rule2);
+    updater.updateRules(emptyCase, stepCase);
 
     return star;
   }
@@ -178,13 +175,7 @@ public class GrammarSugar {
     return sepEnd;
   }
 
-  interface StarUpdateRulesConfiguration {
-
-    /**
-     * @param rule1 "newRule(star)"
-     * @param rule2 "newRule(star, symbol, star)"
-     */
-    void updateRules(Rule rule1, Rule rule2);
-
+  interface StarRulesUpdater {
+    void updateRules(Rule emptyCase, Rule stepCase);
   }
 }
