@@ -175,7 +175,7 @@ public class GrammarSugar {
     return sepEnd;
   }
 
-  interface StarRulesUpdater {
+  public interface StarRulesUpdater {
     void updateRules(Rule emptyCase, Rule stepCase);
   }
 }
