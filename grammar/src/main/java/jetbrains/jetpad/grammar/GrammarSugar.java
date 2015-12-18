@@ -85,11 +85,22 @@ public class GrammarSugar {
   }
 
   public static NonTerminal oneOf(Symbol first, Symbol... symbols) {
+    OneOfRuleUpdater updater = new OneOfRuleUpdater() {
+      @Override
+      public void updateRule(Rule rule) {
+      }
+    };
+    return oneOf(updater, first, symbols);
+  }
+
+  public static NonTerminal oneOf(OneOfRuleUpdater updater, Symbol first, Symbol... symbols) {
     Grammar g = first.getGrammar();
     NonTerminal oneOf = g.newNonTerminal(g.uniqueName("oneOf_"));
-    g.newRule(oneOf, first);
+    Rule rule = g.newRule(oneOf, first);
+    updater.updateRule(rule);
     for (Symbol s : symbols) {
-      g.newRule(oneOf, s);
+      rule = g.newRule(oneOf, s);
+      updater.updateRule(rule);
     }
     return oneOf;
   }
@@ -177,5 +188,9 @@ public class GrammarSugar {
 
   public interface StarRulesUpdater {
     void updateRules(Rule emptyCase, Rule stepCase);
+  }
+
+  public interface OneOfRuleUpdater {
+    void updateRule(Rule rule);
   }
 }
