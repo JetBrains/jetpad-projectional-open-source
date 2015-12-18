@@ -105,6 +105,7 @@ public class ExprHybridEditorSpec implements HybridEditorSpec<Expression> {
           PostfixDecrementExpression posfixExpr = (PostfixDecrementExpression) value;
           ctx.append(posfixExpr.expression);
           ctx.append(Tokens.DECREMENT_RIGHT);
+          return;
         }
 
         if (value instanceof PostifxIncrementExpression) {
