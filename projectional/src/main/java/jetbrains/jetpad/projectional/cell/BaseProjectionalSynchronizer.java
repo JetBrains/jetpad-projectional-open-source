@@ -527,7 +527,7 @@ abstract class BaseProjectionalSynchronizer<SourceT, ContextT, SourceItemT> impl
 
     void initList() {
       myHasPlaceholder = true;
-      myTargetList.add(createPlaceholder());
+      myTargetList.add(0, createPlaceholder());
     }
 
     private Cell createPlaceholder() {
