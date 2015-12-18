@@ -77,6 +77,9 @@ abstract class BaseProjectionalSynchronizer<SourceT, ContextT, SourceItemT> impl
       Cell target,
       List<Cell> targetList,
       MapperFactory<SourceItemT, Cell> factory) {
+    if (!(target.children().isEmpty())) {
+      throw new IllegalStateException("target cell for projectional synchonizer should be initially empty");
+    }
     myMapper = mapper;
     myTarget = target;
     myTargetList = targetList;
