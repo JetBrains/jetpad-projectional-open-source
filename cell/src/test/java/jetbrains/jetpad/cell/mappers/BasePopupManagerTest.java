@@ -61,7 +61,7 @@ public class BasePopupManagerTest extends EditingTestCase {
     attachWithPopup();
     cell.bottomPopup().get().visible().set(false);
     manager.updatePopupPositions();
-    assertEquals(1, manager.updatesCount);
+    assertEquals(2, manager.updatesCount);
   }
 
   @Test
@@ -125,9 +125,6 @@ public class BasePopupManagerTest extends EditingTestCase {
     @Override
     protected PopupPositionUpdater<Object> getPositionUpdater(Mapper<? extends Cell, ?> popupMapper) {
       Cell popup = popupMapper.getSource();
-      if (!popup.visible().get()) {
-        throw new RuntimeException();
-      }
       if (!popup.isAttached()) {
         throw new RuntimeException();
       }

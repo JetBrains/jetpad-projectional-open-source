@@ -68,9 +68,6 @@ public abstract class Cell implements NavComposite<Cell>, HasVisibility, HasFocu
   public static final CellPropertySpec<Color> BORDER_COLOR = new CellPropertySpec<>("borderColor");
   public static final CellPropertySpec<Boolean> HAS_SHADOW = new CellPropertySpec<>("hasShadow", false);
 
-  public static final CellPropertySpec<Boolean> HAS_ERROR = new CellPropertySpec<>("hasError", false);
-  public static final CellPropertySpec<Boolean> HAS_WARNING = new CellPropertySpec<>("hasWarning", false);
-
 
   public static boolean isPopupProp(CellPropertySpec<?> prop) {
     return POPUP_SPECS.contains(prop);
@@ -168,14 +165,6 @@ public abstract class Cell implements NavComposite<Cell>, HasVisibility, HasFocu
 
   public Property<Boolean> hasShadow() {
     return getProp(HAS_SHADOW);
-  }
-
-  public Property<Boolean> hasError() {
-    return getProp(HAS_ERROR);
-  }
-
-  public Property<Boolean> hasWarning() {
-    return getProp(HAS_WARNING);
   }
 
   public Property<Boolean> hasPopupDecoration() {
@@ -612,18 +601,19 @@ public abstract class Cell implements NavComposite<Cell>, HasVisibility, HasFocu
       PropertyChangeEvent<Cell> cellChangeEvent = (PropertyChangeEvent<Cell>) event;
       Cell oldValue = cellChangeEvent.getOldValue();
       Cell value = cellChangeEvent.getNewValue();
-
-      if (myContainer != null) {
-        if (oldValue != null) {
+      if (oldValue != null) {
+        if (myContainer != null) {
           myContainer.popupRemoved(oldValue);
-          oldValue.set(POPUP, false);
-          oldValue.changeParent(null);
         }
-        if (value != null) {
+        oldValue.set(POPUP, false);
+        oldValue.changeParent(null);
+      }
+      if (value != null) {
+        if (myContainer != null) {
           myContainer.popupAdded(value);
-          value.set(POPUP, true);
-          value.changeParent(Cell.this);
         }
+        value.set(POPUP, true);
+        value.changeParent(Cell.this);
       }
     }
   }
