@@ -950,11 +950,11 @@ public class HybridEditorTest extends EditingTestCase {
   }
 
   @Test
-  public void dynamicSpec(){
+  public void dynamicSpec() {
     setTokens(Tokens.ID, Tokens.PLUS, Tokens.ID);
     assertTrue(container.expr.get() instanceof PlusExpr);
 
-    sync.mySpec.set(new ExprHybridEditorSpec(Tokens.MUL, Tokens.PLUS));
+    mapper.hybridSyncSpec.set(new ExprHybridEditorSpec(Tokens.MUL, Tokens.PLUS));
     assertTrue(container.expr.get() instanceof MulExpr);
   }
 

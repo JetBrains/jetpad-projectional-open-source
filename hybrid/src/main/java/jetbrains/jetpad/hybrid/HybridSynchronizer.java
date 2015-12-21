@@ -82,7 +82,7 @@ public class HybridSynchronizer<SourceT> implements Synchronizer {
   private String myPlaceHolderText = "empty";
   private boolean myHideTokensInMenu = false;
 
-  public Property<HybridEditorSpec<SourceT>> mySpec;
+  private Property<HybridEditorSpec<SourceT>> mySpec;
 
   public HybridSynchronizer(Mapper<?, ?> contextMapper, Property<SourceT> prop, final Cell target, HybridEditorSpec<SourceT> spec) {
     this(contextMapper, prop, target, new ValueProperty<>(spec));
