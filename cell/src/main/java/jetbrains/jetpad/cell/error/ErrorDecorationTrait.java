@@ -37,10 +37,6 @@ class ErrorDecorationTrait extends CellTrait {
   private static final List<CellPropertySpec<String>> ERROR_PROPS_PRIORITY =
       Arrays.asList(ErrorController.BROKEN, ErrorController.ERROR, ErrorController.WARNING);
 
-  private static Color popupBackground(CellPropertySpec<String> prop) {
-    return prop == ErrorController.ERROR ? Color.LIGHT_PINK : Color.VERY_LIGHT_YELLOW;
-  }
-
   private boolean myEditingPopup = false;
   private Map<Cell, Registration> myRegistrations = null;
   private ErrorStyleController myErrorStyler;
@@ -63,7 +59,7 @@ class ErrorDecorationTrait extends CellTrait {
       if (change.getNewValue() == null) {
         CellPropertySpec<String> error = getFirstNotNullProp(cell);
         if (error != null) {
-          setPopup(cell, cell.get(error), popupBackground(error));
+          setPopup(cell, cell.get(error));
         }
       }
     }
@@ -96,7 +92,7 @@ class ErrorDecorationTrait extends CellTrait {
       if (next == null) {
         removeErrorPopup(cell, popup);
       } else {
-        update(popup, cell.get(next), popupBackground(next));
+        update(popup, cell.get(next));
       }
       return;
     }
@@ -106,10 +102,10 @@ class ErrorDecorationTrait extends CellTrait {
         TextCell popup = (TextCell) cell.get(POPUP_POSITION);
         CellPropertySpec<String> withHighestPriority = getFirstNotNullProp(cell);
         if (priority(prop, withHighestPriority)) {
-          update(popup, change.getNewValue(), popupBackground(prop));
+          update(popup, change.getNewValue());
         }
       } else if (cell.get(POPUP_POSITION) == null) {
-        setPopup(cell, cell.get(prop), popupBackground(prop));
+        setPopup(cell, cell.get(prop));
       }
       return;
     }
@@ -118,7 +114,7 @@ class ErrorDecorationTrait extends CellTrait {
       TextCell popup = (TextCell) cell.get(POPUP_POSITION);
       CellPropertySpec<String> withHighestPriority = getFirstNotNullProp(cell);
       if (prop == withHighestPriority) {
-        update(popup, change.getNewValue(), popupBackground(prop));
+        update(popup, change.getNewValue());
       }
     }
   }
@@ -127,9 +123,8 @@ class ErrorDecorationTrait extends CellTrait {
     return ERROR_PROPS_PRIORITY.indexOf(p1) <= ERROR_PROPS_PRIORITY.indexOf(p2);
   }
 
-  private void update(TextCell popup, String message, Color background) {
+  private void update(TextCell popup, String message) {
     popup.text().set(" " + message + " ");
-    popup.set(Cell.BACKGROUND, background);
   }
 
   private CellPropertySpec<String> getNextNotNullProp(Cell cell, CellPropertySpec<String> prop) {
@@ -148,15 +143,15 @@ class ErrorDecorationTrait extends CellTrait {
     throw new IllegalStateException();
   }
 
-  private void setPopup(Cell cell, String message, Color background) {
+  private void setPopup(Cell cell, String message) {
     TextCell popup = new TextCell();
     popup.visible().set(false);
     popup.set(Cell.HAS_POPUP_DECORATION, true);
     popup.set(Cell.HAS_SHADOW, true);
-    popup.set(Cell.BACKGROUND, background);
+    popup.set(Cell.BACKGROUND, Color.VERY_LIGHT_YELLOW);
     popup.set(Cell.BORDER_COLOR, Color.GRAY);
     popup.set(TextCell.FONT_FAMILY, FontFamily.SERIF);
-    update(popup, message, background);
+    update(popup, message);
 
     cell.set(POPUP_ACTIVE, true);
     updateCellPopup(cell, popup);
