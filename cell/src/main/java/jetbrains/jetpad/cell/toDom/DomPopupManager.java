@@ -20,8 +20,8 @@ import com.google.gwt.dom.client.Style;
 import com.google.gwt.user.client.Timer;
 import jetbrains.jetpad.base.Registration;
 import jetbrains.jetpad.cell.Cell;
-import jetbrains.jetpad.cell.mappers.BasePopupManager;
-import jetbrains.jetpad.cell.mappers.PopupPositionUpdater;
+import jetbrains.jetpad.cell.mappersUtil.BasePopupManager;
+import jetbrains.jetpad.cell.mappersUtil.PopupPositionUpdater;
 import jetbrains.jetpad.mapper.Mapper;
 
 import java.util.HashMap;

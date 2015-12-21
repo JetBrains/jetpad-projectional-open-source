@@ -13,10 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package jetbrains.jetpad.cell.toUtil;
+package jetbrains.jetpad.cell.mappersUtil;
 
+import jetbrains.jetpad.cell.mappersUtil.Counters;
 import jetbrains.jetpad.test.BaseTestCase;
-import org.junit.Assert;
 import org.junit.Test;
 
 import static org.junit.Assert.*;

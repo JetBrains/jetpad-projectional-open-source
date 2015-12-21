@@ -16,7 +16,7 @@
 package jetbrains.jetpad.cell.toView;
 
 import jetbrains.jetpad.cell.Cell;
-import jetbrains.jetpad.cell.mappers.CellMapperContext;
+import jetbrains.jetpad.cell.mappersUtil.CellMapperContext;
 import jetbrains.jetpad.projectional.view.View;
 
 class CellToViewContext extends CellMapperContext<View> {

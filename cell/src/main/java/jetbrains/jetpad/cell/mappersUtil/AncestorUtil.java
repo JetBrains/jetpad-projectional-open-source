@@ -13,25 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package jetbrains.jetpad.cell.toUtil;
+package jetbrains.jetpad.cell.mappersUtil;
 
-public class CounterSpec {
-  private String myName;
+import jetbrains.jetpad.cell.Cell;
+import jetbrains.jetpad.values.Color;
 
-  public CounterSpec(String name) {
-    myName = name;
-  }
-
-  @Override
-  public int hashCode() {
-    return myName.hashCode();
-  }
-
-  @Override
-  public boolean equals(Object obj) {
-    if (!(obj instanceof CounterSpec)) {
-      return false;
-    }
-    return myName.equals(((CounterSpec) obj).myName);
+public class AncestorUtil {
+  public static Color getAncestorBackground(Cell container, Cell leaf) {
+    Cell current = leaf;
+    do {
+      current = current.getParent();
+      Color background = current.get(Cell.BACKGROUND);
+      if (background != null) {
+        return background;
+      }
+    } while (current != container);
+    return null;
   }
 }

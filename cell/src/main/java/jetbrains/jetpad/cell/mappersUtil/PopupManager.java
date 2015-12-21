@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package jetbrains.jetpad.cell.mappers;
+package jetbrains.jetpad.cell.mappersUtil;
 
 import jetbrains.jetpad.base.Disposable;
 import jetbrains.jetpad.cell.Cell;
