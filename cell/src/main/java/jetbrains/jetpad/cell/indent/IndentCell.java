@@ -41,7 +41,7 @@ public class IndentCell extends Cell {
   }
 
   public boolean isRootIndent() {
-    if (cellContainer() == null) return false;
+    if (!isAttached()) return false;
     Cell parent = getParent();
     if (parent instanceof IndentCell) return false;
     return true;

@@ -197,7 +197,7 @@ public class CellNavigationController {
       }
     }
 
-    Rectangle visibleRect = focusedCell().get().cellContainer().get().visibleRect();
+    Rectangle visibleRect = focusedCell().get().getContainer().visibleRect();
 
     Cell next = null;
     boolean restoreOffset = false;

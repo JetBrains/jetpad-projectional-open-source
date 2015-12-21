@@ -270,7 +270,7 @@ abstract class BaseProjectionalSynchronizer<SourceT, ContextT, SourceItemT> impl
   }
 
   private SourceItemT currentItem() {
-    Cell focused = myTarget.cellContainer().get().focusedCell.get();
+    Cell focused = myTarget.getContainer().focusedCell.get();
     if (focused == null) return null;
     if (focused.getParent() == myTarget && !myTargetCellList.myHasPlaceholder) {
       int index = myTargetList.indexOf(focused);
@@ -515,7 +515,7 @@ abstract class BaseProjectionalSynchronizer<SourceT, ContextT, SourceItemT> impl
   }
 
   protected void scrollToSelection() {
-    getTarget().cellContainer().get().focusedCell.get().scrollTo();
+    getTarget().getContainer().focusedCell.get().scrollTo();
   }
 
   protected Property<SourceItemT> getForDeletion() {
