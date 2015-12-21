@@ -151,15 +151,28 @@ public class GrammarSugar {
   }
 
   public static NonTerminal terminated(Symbol item, Symbol separator, boolean trailingOptional) {
+    return terminated(item, separator, trailingOptional, false);
+  }
+
+  public static NonTerminal terminated(Symbol item, Symbol separator, boolean trailingOptional, boolean emptyStart) {
     Grammar g = item.getGrammar();
     NonTerminal sepSeq = g.newNonTerminal(g.uniqueName("separatedEndSeq_"));
     NonTerminal sepEnd = g.newNonTerminal(g.uniqueName("separatedEnd_"));
-    g.newRule(sepSeq, item).setHandler(new RuleHandler() {
-      @Override
-      public Object handle(RuleContext ctx) {
-        return PersistentList.cons(ctx.get(0), PersistentList.nil());
-      }
-    });
+    if (emptyStart) {
+      g.newRule(sepSeq).setHandler(new RuleHandler() {
+        @Override
+        public Object handle(RuleContext ctx) {
+          return PersistentList.nil();
+        }
+      });
+    } else {
+      g.newRule(sepSeq, item).setHandler(new RuleHandler() {
+        @Override
+        public Object handle(RuleContext ctx) {
+          return PersistentList.cons(ctx.get(0), PersistentList.nil());
+        }
+      });
+    }
     g.newRule(sepSeq, sepSeq, separator, item).setHandler(new RuleHandler() {
       @Override
       public Object handle(RuleContext ctx) {
