@@ -20,6 +20,7 @@ import com.google.gwt.dom.client.Node;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.user.client.DOM;
 import jetbrains.jetpad.cell.Cell;
+import jetbrains.jetpad.cell.error.ErrorController;
 import jetbrains.jetpad.cell.mappers.PopupManager;
 import jetbrains.jetpad.cell.toUtil.CounterSpec;
 import jetbrains.jetpad.cell.toUtil.Counters;
@@ -156,13 +157,11 @@ abstract class BaseCellMapper<SourceT extends Cell> extends Mapper<SourceT, Elem
   void refreshProperties() {
     boolean selected = getSource().get(Cell.SELECTED) || getCounter(Counters.SELECT_COUNT) > 0;
     boolean focusHighlighted = getSource().get(Cell.FOCUS_HIGHLIGHTED) || getCounter(Counters.HIGHLIGHT_COUNT) > 0;
-    boolean hasError = getSource().get(Cell.HAS_ERROR) || getCounter(Counters.ERROR_COUNT) > 0;
-    boolean hasWarning = getSource().get(Cell.HAS_WARNING) || getCounter(Counters.WARNING_COUNT) > 0;
     Color background = getSource().get(Cell.BACKGROUND);
-    applyStyle(selected, focusHighlighted, hasError, hasWarning, (background == null ? myAncestorBackground : background));
+    applyStyle(selected, focusHighlighted, (background == null ? myAncestorBackground : background));
   }
 
-  private void applyStyle(boolean selected, boolean focusHighlighted, boolean hasError, boolean hasWarning, Color background) {
+  private void applyStyle(boolean selected, boolean focusHighlighted, Color background) {
     updateCssStyle(CSS.selected(), (focusHighlighted && !isLeaf()) || selected);
     updateCssStyle(CSS.paired(), getSource().get(Cell.PAIR_HIGHLIGHTED));
 
@@ -172,7 +171,7 @@ abstract class BaseCellMapper<SourceT extends Cell> extends Mapper<SourceT, Elem
     } else if (background != null) {
       backgroundColor = background.toCssColor();
     }
-    String underline = hasError ? CSS.redUnderline() : (hasWarning ? CSS.yellowUnderline() : null);
+    String underline = ErrorController.hasError(getSource()) ? CSS.redUnderline() : null;
     applyBackground(backgroundColor, underline);
 
     Style style = getTarget().getStyle();
@@ -205,7 +204,7 @@ abstract class BaseCellMapper<SourceT extends Cell> extends Mapper<SourceT, Elem
       if (underline == null) {
         style.setProperty(BACKGROUND, color);
       } else {
-        style.setProperty(BACKGROUND, underline + UNDERLINE_SUFFIX + "," + color);
+        style.setProperty(BACKGROUND, underline + UNDERLINE_SUFFIX + " " + color);
       }
     }
   }

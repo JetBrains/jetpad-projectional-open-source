@@ -68,9 +68,6 @@ public abstract class Cell implements NavComposite<Cell>, HasVisibility, HasFocu
   public static final CellPropertySpec<Color> BORDER_COLOR = new CellPropertySpec<>("borderColor");
   public static final CellPropertySpec<Boolean> HAS_SHADOW = new CellPropertySpec<>("hasShadow", false);
 
-  public static final CellPropertySpec<Boolean> HAS_ERROR = new CellPropertySpec<>("hasError", false);
-  public static final CellPropertySpec<Boolean> HAS_WARNING = new CellPropertySpec<>("hasWarning", false);
-
 
   public static boolean isPopupProp(CellPropertySpec<?> prop) {
     return POPUP_SPECS.contains(prop);
@@ -168,14 +165,6 @@ public abstract class Cell implements NavComposite<Cell>, HasVisibility, HasFocu
 
   public Property<Boolean> hasShadow() {
     return getProp(HAS_SHADOW);
-  }
-
-  public Property<Boolean> hasError() {
-    return getProp(HAS_ERROR);
-  }
-
-  public Property<Boolean> hasWarning() {
-    return getProp(HAS_WARNING);
   }
 
   public Property<Boolean> hasPopupDecoration() {

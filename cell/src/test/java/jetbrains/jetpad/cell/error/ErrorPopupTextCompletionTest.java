@@ -15,35 +15,56 @@
  */
 package jetbrains.jetpad.cell.error;
 
-import jetbrains.jetpad.cell.Cell;
+import com.google.common.base.Predicates;
+import jetbrains.jetpad.base.Registration;
+import jetbrains.jetpad.cell.TextCell;
+import jetbrains.jetpad.cell.text.TextEditing;
 import jetbrains.jetpad.cell.text.TextEditorCompletionHandlerTest;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
 
 public class  ErrorPopupTextCompletionTest extends TextEditorCompletionHandlerTest {
+  private Registration myRegistration;
+
   @Before
   @Override
   public void init() {
+    myRegistration = ErrorController.install(myCellContainer);
     super.init();
-    ErrorMarkers.install(getView());
+  }
+
+  @After
+  public void cleanup() {
+    myRegistration.remove();
   }
 
   @Test
   public void errorPopupReplacedWithCompletion() {
-    getView().hasError().set(true);
-    assertTrue(getView().get(ErrorMarkers.ERROR_POPUP_ACTIVE));
+    ErrorController.setError(getView(), "");
+    assertTrue(getView().get(ErrorDecorationTrait.POPUP_ACTIVE));
 
     complete();
-    assertNotNull(getView().get(Cell.BOTTOM_POPUP));
-    assertFalse(getView().get(ErrorMarkers.ERROR_POPUP_ACTIVE));
+    assertNotNull(getView().get(ErrorDecorationTrait.POPUP_POSITION));
+    assertFalse(getView().get(ErrorDecorationTrait.POPUP_ACTIVE));
     assertTrue(getController().isActive());
 
     escape();
     assertFalse(getController().isActive());
 
-    assertTrue(getView().get(ErrorMarkers.ERROR_POPUP_ACTIVE));
-    assertNotNull(getView().get(ErrorMarkers.ERROR_POPUP_POSITION));
+    assertTrue(getView().get(ErrorDecorationTrait.POPUP_ACTIVE));
+    assertNotNull(getView().get(ErrorDecorationTrait.POPUP_POSITION));
+  }
+
+  @Test
+  public void completeBrokenCell() {
+    getView().addTrait(TextEditing.validTextEditing(Predicates.<String>alwaysFalse()));
+    complete();
+    type("a");
+    assertTrue(ErrorController.isBroken(getView()));
+    enter();
+    assertEquals("a", ((TextCell) getView()).text().get());
   }
 }
