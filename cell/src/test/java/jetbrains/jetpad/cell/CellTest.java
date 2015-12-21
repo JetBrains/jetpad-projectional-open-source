@@ -39,11 +39,11 @@ public class CellTest extends BaseTestCase {
   public void attachToViewContainer() {
     TextCell v = new TextCell();
 
-    assertNull(v.cellContainer().get());
+    assertNull(v.getContainer());
 
     container.root.children().add(v);
 
-    assertSame(container, v.cellContainer().get());
+    assertSame(container, v.getContainer());
   }
 
   @Test

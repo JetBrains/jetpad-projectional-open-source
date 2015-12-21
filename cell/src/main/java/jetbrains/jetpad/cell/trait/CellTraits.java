@@ -11,7 +11,7 @@ public class CellTraits {
   public static Registration captureTo(Cell root, final CellTrait targetTrait) {
     final Value<Registration> targetReg = new Value<>(Registration.EMPTY);
 
-    final CellContainer container = root.cellContainer().get();
+    final CellContainer container = root.getContainer();
     if (container != null && container.focusedCell.get() != null && Composites.isDescendant(root, container.focusedCell.get())) {
       targetReg.set(container.focusedCell.get().addTrait(targetTrait));
     }

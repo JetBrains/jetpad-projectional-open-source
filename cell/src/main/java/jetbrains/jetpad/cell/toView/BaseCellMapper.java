@@ -17,12 +17,12 @@ package jetbrains.jetpad.cell.toView;
 
 import jetbrains.jetpad.base.Registration;
 import jetbrains.jetpad.cell.Cell;
-import jetbrains.jetpad.cell.mappers.BasePopupManager;
-import jetbrains.jetpad.cell.mappers.PopupManager;
-import jetbrains.jetpad.cell.mappers.PopupPositionUpdater;
-import jetbrains.jetpad.cell.toUtil.CounterSpec;
-import jetbrains.jetpad.cell.toUtil.Counters;
-import jetbrains.jetpad.cell.toUtil.HasCounters;
+import jetbrains.jetpad.cell.mappersUtil.BasePopupManager;
+import jetbrains.jetpad.cell.mappersUtil.PopupManager;
+import jetbrains.jetpad.cell.mappersUtil.PopupPositionUpdater;
+import jetbrains.jetpad.cell.mappersUtil.CounterSpec;
+import jetbrains.jetpad.cell.mappersUtil.Counters;
+import jetbrains.jetpad.cell.mappersUtil.HasCounters;
 import jetbrains.jetpad.geometry.Rectangle;
 import jetbrains.jetpad.mapper.Mapper;
 import jetbrains.jetpad.mapper.MappingContext;

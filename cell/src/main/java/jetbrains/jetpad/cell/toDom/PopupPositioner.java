@@ -18,7 +18,7 @@ package jetbrains.jetpad.cell.toDom;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.user.client.Window;
-import jetbrains.jetpad.cell.mappers.PopupPositionUpdater;
+import jetbrains.jetpad.cell.mappersUtil.PopupPositionUpdater;
 import jetbrains.jetpad.geometry.Rectangle;
 import jetbrains.jetpad.geometry.Vector;
 import jetbrains.jetpad.projectional.domUtil.DomUtil;

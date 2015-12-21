@@ -98,7 +98,7 @@ class TokenCellTraits {
 
       HybridSynchronizer<?> sync = hybridSync(cell);
       if (sync.hasSelection()) {
-        CellContainer container = cell.cellContainer().get();
+        CellContainer container = cell.getContainer();
         sync.clearSelection();
         container.keyTyped(event.copy());
         event.consume();

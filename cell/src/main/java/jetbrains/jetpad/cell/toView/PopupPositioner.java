@@ -15,7 +15,7 @@
  */
 package jetbrains.jetpad.cell.toView;
 
-import jetbrains.jetpad.cell.mappers.PopupPositionUpdater;
+import jetbrains.jetpad.cell.mappersUtil.PopupPositionUpdater;
 import jetbrains.jetpad.geometry.Rectangle;
 import jetbrains.jetpad.geometry.Vector;
 import jetbrains.jetpad.projectional.view.View;

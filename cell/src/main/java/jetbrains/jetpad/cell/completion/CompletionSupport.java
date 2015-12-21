@@ -98,7 +98,7 @@ public class CompletionSupport {
       }
 
       private boolean canComplete(Cell cell) {
-        Cell current = cell.cellContainer().get().focusedCell.get();
+        Cell current = cell.getContainer().focusedCell.get();
         while (current != cell) {
           Cell parent = current.getParent();
           if (parent == null) {
@@ -246,7 +246,7 @@ public class CompletionSupport {
       Async<List<CompletionItem>> items,
       Runnable deactivate,
       Runnable restoreFocus) {
-    CellContainer container = cell.cellContainer().get();
+    CellContainer container = cell.getContainer();
     final HorizontalCell popup = new HorizontalCell();
     final TextCell textCell = new TextCell();
 
@@ -285,7 +285,7 @@ public class CompletionSupport {
       final CompletionSupplier supplier,
       final boolean endRT) {
 
-    final CellContainer container = cell.cellContainer().get();
+    final CellContainer container = cell.getContainer();
     final Value<Boolean> completed = new Value<>(false);
     final Value<Boolean> dismissed = new Value<>(false);
     final Runnable restoreState = container.saveState();

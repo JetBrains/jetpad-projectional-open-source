@@ -13,9 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package jetbrains.jetpad.cell.toUtil;
+package jetbrains.jetpad.cell.mappersUtil;
 
-public interface HasCounters {
-  int getCounter(CounterSpec spec);
-  void changeCounter(CounterSpec spec, int delta);
+public class CounterSpec {
+  private String myName;
+
+  public CounterSpec(String name) {
+    myName = name;
+  }
+
+  @Override
+  public int hashCode() {
+    return myName.hashCode();
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (!(obj instanceof CounterSpec)) {
+      return false;
+    }
+    return myName.equals(((CounterSpec) obj).myName);
+  }
 }

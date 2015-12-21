@@ -59,7 +59,7 @@ class TextCellController {
           removeEditing();
         }
         myTextCell.caretVisible().set(false);
-        myTextCell.cellContainer().get().focusedCell.set(null);
+        myTextCell.getContainer().focusedCell.set(null);
       }
     });
 

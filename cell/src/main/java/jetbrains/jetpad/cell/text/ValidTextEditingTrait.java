@@ -100,7 +100,7 @@ class ValidTextEditingTrait extends TextEditingTrait {
       return true;
     }
 
-    CellContainer container = textCell.cellContainer().get();
+    CellContainer container = textCell.getContainer();
     if (textCell.isEnd() && !completion.hasMatches(text)) {
       //right transform
       String prefix = text.substring(0, text.length() - 1);
@@ -156,7 +156,7 @@ class ValidTextEditingTrait extends TextEditingTrait {
     if (text.isEmpty()) return;
 
     int caret = textCell.caretPosition().get();
-    CellContainer cellContainer = textCell.cellContainer().get();
+    CellContainer cellContainer = textCell.getContainer();
     CompletionItems completion = Completion.completionFor(textCell, CompletionParameters.EMPTY);
     if (completion.hasSingleMatch(text, textCell.get(TextEditing.EAGER_COMPLETION))) {
       completion.completeFirstMatch(text);

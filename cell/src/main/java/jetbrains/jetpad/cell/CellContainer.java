@@ -66,7 +66,7 @@ public class CellContainer {
             if (!value.canFocus()) {
               throw new IllegalStateException("cannot set focus: " + value);
             }
-            if (value.cellContainer().get() != CellContainer.this) {
+            if (value.getContainer() != CellContainer.this) {
               throw new IllegalArgumentException();
             }
           }

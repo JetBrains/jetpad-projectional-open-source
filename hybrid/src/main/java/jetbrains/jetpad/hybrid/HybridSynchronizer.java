@@ -82,7 +82,7 @@ public class HybridSynchronizer<SourceT> implements Synchronizer {
   private String myPlaceHolderText = "empty";
   private boolean myHideTokensInMenu = false;
 
-  public Property<HybridEditorSpec<SourceT>> mySpec;
+  private Property<HybridEditorSpec<SourceT>> mySpec;
 
   public HybridSynchronizer(Mapper<?, ?> contextMapper, Property<SourceT> prop, final Cell target, HybridEditorSpec<SourceT> spec) {
     this(contextMapper, prop, target, new ValueProperty<>(spec));
@@ -199,9 +199,9 @@ public class HybridSynchronizer<SourceT> implements Synchronizer {
 
       @Override
       public void onKeyPressed(Cell cell, KeyEvent event) {
-        Cell focusedCell = cell.cellContainer().get().focusedCell.get();
+        Cell focusedCell = cell.getContainer().focusedCell.get();
         if (myTargetList.contains(focusedCell)) {
-          Cell currentCell = cell.cellContainer().get().focusedCell.get();
+          Cell currentCell = cell.getContainer().focusedCell.get();
           if (!hasSelection()) {
             if (event.is(KeyStrokeSpecs.SELECT_UP) && currentCell != null) {
               mySelectionSupport.select(currentCell, currentCell);
@@ -595,7 +595,7 @@ public class HybridSynchronizer<SourceT> implements Synchronizer {
   }
 
   public int focusedIndex() {
-    Cell focusedCell = myTarget.cellContainer().get().focusedCell.get();
+    Cell focusedCell = myTarget.getContainer().focusedCell.get();
     if (focusedCell == null) return -1;
     for (int i = 0; i < myTargetList.size(); i++) {
       if (Composites.isDescendant(myTargetList.get(i), focusedCell)) return i;

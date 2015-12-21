@@ -17,7 +17,7 @@ package jetbrains.jetpad.cell.toDom;
 
 import com.google.gwt.dom.client.Element;
 import jetbrains.jetpad.cell.Cell;
-import jetbrains.jetpad.cell.mappers.CellMapperContext;
+import jetbrains.jetpad.cell.mappersUtil.CellMapperContext;
 
 class CellToDomContext extends CellMapperContext<Element> {
   final boolean eventsDisabled;

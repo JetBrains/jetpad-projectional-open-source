@@ -13,21 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package jetbrains.jetpad.cell.toUtil;
+package jetbrains.jetpad.cell.mappersUtil;
 
-import jetbrains.jetpad.cell.Cell;
-import jetbrains.jetpad.values.Color;
-
-public class AncestorUtil {
-  public static Color getAncestorBackground(Cell container, Cell leaf) {
-    Cell current = leaf;
-    do {
-      current = current.getParent();
-      Color background = current.get(Cell.BACKGROUND);
-      if (background != null) {
-        return background;
-      }
-    } while (current != container);
-    return null;
-  }
+public interface HasCounters {
+  int getCounter(CounterSpec spec);
+  void changeCounter(CounterSpec spec, int delta);
 }
