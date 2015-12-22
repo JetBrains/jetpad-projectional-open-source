@@ -29,107 +29,119 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ErrorMarkers {
-  public static final CellPropertySpec<Cell> ERROR_POPUP_POSITION = Cell.BOTTOM_POPUP;
-
-  static final CellPropertySpec<Boolean> ERROR_POPUP_ACTIVE = new CellPropertySpec<>("isErrorPopupActive", false);
+  static final CellPropertySpec<Cell> POPUP_POSITION = Cell.BOTTOM_POPUP;
+  static final CellPropertySpec<Boolean> POPUP_ACTIVE = new CellPropertySpec<>("isMessagePopupActive", false);
 
   public static Registration install(Cell cell) {
-    return cell.addTrait(errorPopupTrait());
+    return cell.addTrait(popupTrait());
   }
 
-  private static CellTrait errorPopupTrait() {
+  private static CellTrait popupTrait() {
     return new CellTrait() {
-      private boolean myEditing = false;
-      private boolean myMouseOver = false;
+      private boolean myEditingPopup = false;
       private Map<Cell, Registration> myRegistrations = null;
 
       @Override
       public void onPropertyChanged(Cell cell, CellPropertySpec<?> prop, PropertyChangeEvent<?> event) {
         if (prop == Cell.HAS_ERROR) {
           PropertyChangeEvent<Boolean> change = (PropertyChangeEvent<Boolean>) event;
-          if (change.getOldValue() && cell.get(ERROR_POPUP_ACTIVE)) {
-            removeErrorPopup(cell, cell.get(ERROR_POPUP_POSITION));
+          if (change.getOldValue() && cell.get(POPUP_ACTIVE)) {
+            removePopup(cell, cell.get(POPUP_POSITION));
           }
-          if (change.getNewValue() && cell.get(ERROR_POPUP_POSITION) == null) {
-            setErrorPopup(cell);
+          if (change.getNewValue() && cell.get(POPUP_POSITION) == null) {
+            setPopup(cell);
           }
-        } else if (prop == ERROR_POPUP_POSITION && !myEditing) {
+        } else if (prop == POPUP_POSITION && !myEditingPopup) {
           PropertyChangeEvent<Cell> change = (PropertyChangeEvent<Cell>) event;
-          if (change.getOldValue() != null && cell.get(ERROR_POPUP_ACTIVE)) {
-            removeErrorPopup(cell, change.getOldValue());
+          if (change.getOldValue() != null && cell.get(POPUP_ACTIVE)) {
+            removePopup(cell, change.getOldValue());
           }
           if (change.getNewValue() == null && cell.get(Cell.HAS_ERROR)) {
-            setErrorPopup(cell);
+            setPopup(cell);
           }
         }
+        super.onPropertyChanged(cell, prop, event);
       }
 
-      private void setErrorPopup(Cell cell) {
-        TextCell popup = new TextCell(" parsing error ");
+      private void setPopup(Cell cell) {
+        TextCell popup = new TextCell();
         popup.visible().set(false);
         popup.set(Cell.HAS_POPUP_DECORATION, true);
         popup.set(Cell.HAS_SHADOW, true);
-        popup.set(Cell.BACKGROUND, Color.LIGHT_PINK);
+        popup.set(Cell.BACKGROUND, Color.VERY_LIGHT_YELLOW);
         popup.set(Cell.BORDER_COLOR, Color.GRAY);
         popup.set(TextCell.FONT_FAMILY, FontFamily.SERIF);
+        popup.set(TextCell.TEXT, " parsing error ");
 
-        cell.set(ERROR_POPUP_ACTIVE, true);
-        updatePopup(cell, popup);
-        if (myMouseOver) {
-          show(popup);
+        cell.set(POPUP_ACTIVE, true);
+        updatePopupValue(cell, popup);
+      }
+
+      private void removePopup(Cell cell, Cell popup) {
+        cell.set(POPUP_ACTIVE, false);
+        if (cell.get(POPUP_POSITION) == popup) {
+          updatePopupValue(cell, null);
+        }
+        if (myRegistrations != null && myRegistrations.containsKey(popup)) {
+          hide(popup);
         }
       }
 
-      private void removeErrorPopup(Cell cell, Cell errorPopup) {
-        cell.set(ERROR_POPUP_ACTIVE, false);
-        if (cell.get(ERROR_POPUP_POSITION) == errorPopup) {
-          updatePopup(cell, null);
-        }
-        if (myRegistrations != null && myRegistrations.containsKey(errorPopup)) {
-          hide(errorPopup);
-        }
-      }
-
-      private void updatePopup(Cell cell, Cell popup) {
-        myEditing = true;
+      private void updatePopupValue(Cell cell, Cell newPopup) {
+        myEditingPopup = true;
         try {
-          cell.set(ERROR_POPUP_POSITION, popup);
+          cell.set(POPUP_POSITION, newPopup);
         } finally {
-          myEditing = false;
+          myEditingPopup = false;
         }
       }
 
       @Override
       public void onMouseEntered(Cell cell, MouseEvent event) {
-        myMouseOver = true;
-        Cell popup = getErrorPopup(cell);
+        Cell popup = getMessagePopup(cell);
         if (popup != null) {
           show(popup);
+          event.consume();
         }
       }
 
       @Override
       public void onMouseLeft(Cell cell, MouseEvent event) {
-        myMouseOver = false;
-        Cell popup = getErrorPopup(cell);
+        Cell popup = getMessagePopup(cell);
         if (popup != null) {
           hide(popup);
+          event.consume();
         }
       }
 
-      private Cell getErrorPopup(Cell cell) {
-        return cell.get(ERROR_POPUP_ACTIVE) ? cell.get(ERROR_POPUP_POSITION) : null;
+      @Override
+      public void onMouseMoved(Cell cell, MouseEvent event) {
+        Cell popup = getMessagePopup(cell);
+        if (popup != null && (myRegistrations == null || !myRegistrations.containsKey(popup))) {
+          show(popup);
+          event.consume();
+        }
+      }
+
+      private Cell getMessagePopup(Cell cell) {
+        return cell.get(POPUP_ACTIVE) ? cell.get(POPUP_POSITION) : null;
       }
 
       private void show(Cell popup) {
         if (myRegistrations == null) {
           myRegistrations = new HashMap<>();
         }
-        myRegistrations.put(popup, new LowPriorityPopupSupport(popup));
+        if (!myRegistrations.containsKey(popup)) {
+          myRegistrations.put(popup, new LowPriorityPopupSupport(popup));
+        }
       }
 
       private void hide(Cell popup) {
-        myRegistrations.remove(popup).remove();
+        if (myRegistrations == null) return;
+        Registration registration = myRegistrations.remove(popup);
+        if (registration != null) {
+          registration.remove();
+        }
         if (myRegistrations.isEmpty()) {
           myRegistrations = null;
         }

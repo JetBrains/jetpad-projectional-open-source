@@ -54,11 +54,11 @@ class LowPriorityPopupSupport extends Registration implements EventHandler<Colle
     };
 
     subscribe(lowPriorityPopup.getParent(), true);
-    myLowPriorityPopup.visible().set(myCount == 0);
   }
 
   private void subscribe(Cell cell, boolean isRoot) {
     myChildRegistrations.put(cell, doSubscribe(cell, !isRoot));
+    myLowPriorityPopup.visible().set(myCount == 0);
   }
 
   private Registration doSubscribe(final Cell cell, boolean checkPopups) {
@@ -98,6 +98,7 @@ class LowPriorityPopupSupport extends Registration implements EventHandler<Colle
         break;
       case REMOVE:
         myChildRegistrations.remove(event.getOldItem()).remove();
+        myLowPriorityPopup.visible().set(myCount == 0);
         break;
       case SET:
         myChildRegistrations.remove(event.getOldItem()).remove();

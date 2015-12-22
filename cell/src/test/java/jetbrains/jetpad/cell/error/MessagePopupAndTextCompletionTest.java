@@ -22,7 +22,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.*;
 
-public class  ErrorPopupTextCompletionTest extends TextEditorCompletionHandlerTest {
+public class MessagePopupAndTextCompletionTest extends TextEditorCompletionHandlerTest {
   @Before
   @Override
   public void init() {
@@ -33,17 +33,17 @@ public class  ErrorPopupTextCompletionTest extends TextEditorCompletionHandlerTe
   @Test
   public void errorPopupReplacedWithCompletion() {
     getView().hasError().set(true);
-    assertTrue(getView().get(ErrorMarkers.ERROR_POPUP_ACTIVE));
+    assertTrue(getView().get(ErrorMarkers.POPUP_ACTIVE));
 
     complete();
     assertNotNull(getView().get(Cell.BOTTOM_POPUP));
-    assertFalse(getView().get(ErrorMarkers.ERROR_POPUP_ACTIVE));
+    assertFalse(getView().get(ErrorMarkers.POPUP_ACTIVE));
     assertTrue(getController().isActive());
 
     escape();
     assertFalse(getController().isActive());
 
-    assertTrue(getView().get(ErrorMarkers.ERROR_POPUP_ACTIVE));
-    assertNotNull(getView().get(ErrorMarkers.ERROR_POPUP_POSITION));
+    assertTrue(getView().get(ErrorMarkers.POPUP_ACTIVE));
+    assertNotNull(getView().get(ErrorMarkers.POPUP_POSITION));
   }
 }
