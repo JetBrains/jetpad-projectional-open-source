@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package jetbrains.jetpad.cell.error;
+package jetbrains.jetpad.cell.message;
 
 import jetbrains.jetpad.cell.Cell;
 import jetbrains.jetpad.cell.text.TextEditorCompletionHandlerTest;
