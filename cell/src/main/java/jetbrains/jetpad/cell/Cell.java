@@ -616,18 +616,19 @@ public abstract class Cell implements NavComposite<Cell>, HasVisibility, HasFocu
       PropertyChangeEvent<Cell> cellChangeEvent = (PropertyChangeEvent<Cell>) event;
       Cell oldValue = cellChangeEvent.getOldValue();
       Cell value = cellChangeEvent.getNewValue();
-
-      if (myContainer != null) {
-        if (oldValue != null) {
+      if (oldValue != null) {
+        if (myContainer != null) {
           myContainer.popupRemoved(oldValue);
-          oldValue.set(POPUP, false);
-          oldValue.changeParent(null);
         }
-        if (value != null) {
+        oldValue.set(POPUP, false);
+        oldValue.changeParent(null);
+      }
+      if (value != null) {
+        if (myContainer != null) {
           myContainer.popupAdded(value);
-          value.set(POPUP, true);
-          value.changeParent(Cell.this);
         }
+        value.set(POPUP, true);
+        value.changeParent(Cell.this);
       }
     }
   }
