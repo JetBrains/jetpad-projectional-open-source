@@ -17,22 +17,12 @@ package jetbrains.jetpad.cell.message;
 
 import jetbrains.jetpad.base.Value;
 import jetbrains.jetpad.cell.*;
-import jetbrains.jetpad.event.MouseEvent;
 import jetbrains.jetpad.model.property.PropertyChangeEvent;
-import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
 
-public class MessagePopupsTest extends EditingTestCase {
-  private TextCell cell;
-
-  @Before
-  public void init() {
-    cell = new TextCell("abc");
-    ErrorMarkers.install(cell);
-    myCellContainer.root.children().add(cell);
-  }
+public class MessagePopupsTest extends MessageControllerTestCase {
 
   @Test
   public void setErrorPopup() {
@@ -40,31 +30,45 @@ public class MessagePopupsTest extends EditingTestCase {
     cell.addListener(new CellAdapter() {
       @Override
       public void onPropertyChanged(CellPropertySpec<?> prop, PropertyChangeEvent<?> event) {
-        if (Cell.isPopupProp(prop) && cell.get(ErrorMarkers.POPUP_ACTIVE)) {
+        if (Cell.isPopupProp(prop) && cell.get(DecorationTrait.POPUP_ACTIVE)) {
           errorPopupChanged.set(true);
         }
       }
     });
     setError(cell);
-    assertTrue(cell.get(ErrorMarkers.POPUP_ACTIVE));
-    assertNotNull(cell.get(ErrorMarkers.POPUP_POSITION));
+    assertTrue(cell.get(DecorationTrait.POPUP_ACTIVE));
+    assertNotNull(cell.get(DecorationTrait.POPUP_POSITION));
     assertTrue(errorPopupChanged.get());
+  }
+
+  @Test
+  public void setBroken() {
+    MessageController.setBroken(cell, "");
+    mouseEntered(cell);
+    assertDecorationPopupVisible(cell, true);
+  }
+
+  @Test
+  public void setWarning() {
+    MessageController.setWarning(cell, "");
+    mouseEntered(cell);
+    assertDecorationPopupVisible(cell, true);
   }
 
   @Test
   public void removeErrorPopup() {
     setError(cell);
     removeError(cell);
-    assertFalse(cell.get(ErrorMarkers.POPUP_ACTIVE));
-    assertNull(cell.get(ErrorMarkers.POPUP_POSITION));
+    assertFalse(cell.get(DecorationTrait.POPUP_ACTIVE));
+    assertNull(cell.get(DecorationTrait.POPUP_POSITION));
   }
 
   @Test
   public void mouseEvents() {
-    showErrorPopup(cell);
+    showErrorPopup();
 
     mouseLeft();
-    assertErrorPopupVisible(cell, false);
+    assertDecorationPopupVisible(cell, false);
   }
 
   @Test
@@ -72,59 +76,59 @@ public class MessagePopupsTest extends EditingTestCase {
     mouseEntered(cell);
 
     setError(cell);
-    assertErrorPopupVisible(cell, false);
+    assertDecorationPopupVisible(cell, false);
     mouseMoved();
-    assertErrorPopupVisible(cell, true);
+    assertDecorationPopupVisible(cell, true);
 
     mouseLeft();
-    assertErrorPopupVisible(cell, false);
+    assertDecorationPopupVisible(cell, false);
   }
 
   @Test
   public void errorSetAndRemovedWithMouseOver() {
     mouseEntered(cell);
     setError(cell);
-    assertErrorPopupVisible(cell, false);
+    assertDecorationPopupVisible(cell, false);
     mouseMoved();
-    assertErrorPopupVisible(cell, true);
+    assertDecorationPopupVisible(cell, true);
 
     removeError(cell);
-    assertFalse(cell.get(ErrorMarkers.POPUP_ACTIVE));
-    assertNull(cell.get(ErrorMarkers.POPUP_POSITION));
+    assertFalse(cell.get(DecorationTrait.POPUP_ACTIVE));
+    assertNull(cell.get(DecorationTrait.POPUP_POSITION));
 
     mouseLeft();
-    assertFalse(cell.get(ErrorMarkers.POPUP_ACTIVE));
-    assertNull(cell.get(ErrorMarkers.POPUP_POSITION));
+    assertFalse(cell.get(DecorationTrait.POPUP_ACTIVE));
+    assertNull(cell.get(DecorationTrait.POPUP_POSITION));
   }
 
   @Test
   public void mouseLeftWhenErrorPopupHidden() {
     mouseEntered(cell);
     setError(cell);
-    assertErrorPopupVisible(cell, false);
+    assertDecorationPopupVisible(cell, false);
     mouseMoved();
-    assertErrorPopupVisible(cell, true);
+    assertDecorationPopupVisible(cell, true);
 
 
     TextCell child = new TextCell("child");
     cell.children().add(child);
     child.bottomPopup().set(new TextCell());
-    assertErrorPopupVisible(cell, false);
+    assertDecorationPopupVisible(cell, false);
 
     mouseLeft();
-    assertErrorPopupVisible(cell, false);
+    assertDecorationPopupVisible(cell, false);
 
     mouseEntered(cell);
-    assertErrorPopupVisible(cell, false);
+    assertDecorationPopupVisible(cell, false);
 
     child.bottomPopup().set(null);
-    assertErrorPopupVisible(cell, true);
+    assertDecorationPopupVisible(cell, true);
   }
 
   @Test
   public void setOtherPopup() {
-    cell.set(ErrorMarkers.POPUP_POSITION, new TextCell());
-    assertFalse(cell.get(ErrorMarkers.POPUP_ACTIVE));
+    cell.set(DecorationTrait.POPUP_POSITION, new TextCell());
+    assertFalse(cell.get(DecorationTrait.POPUP_ACTIVE));
   }
 
   @Test
@@ -132,22 +136,22 @@ public class MessagePopupsTest extends EditingTestCase {
     TextCell child = new TextCell("child");
     cell.children().add(child);
 
-    showErrorPopup(cell);
+    showErrorPopup();
 
     child.frontPopup().set(new TextCell());
-    assertErrorPopupVisible(cell, false);
+    assertDecorationPopupVisible(cell, false);
 
     child.bottomPopup().set(new TextCell());
-    assertErrorPopupVisible(cell, false);
+    assertDecorationPopupVisible(cell, false);
 
     cell.children().remove(0);
-    assertErrorPopupVisible(cell, true);
+    assertDecorationPopupVisible(cell, true);
 
     mouseMoved();
-    assertErrorPopupVisible(cell, true);
+    assertDecorationPopupVisible(cell, true);
 
     mouseLeft();
-    assertErrorPopupVisible(cell, false);
+    assertDecorationPopupVisible(cell, false);
   }
 
   @Test
@@ -155,66 +159,66 @@ public class MessagePopupsTest extends EditingTestCase {
     TextCell child = new TextCell("child");
     cell.children().add(child);
 
-    showErrorPopup(cell);
+    showErrorPopup();
 
     TextCell popup = new TextCell();
     child.frontPopup().set(popup);
-    assertErrorPopupVisible(cell, false);
+    assertDecorationPopupVisible(cell, false);
 
     popup.visible().set(false);
-    assertErrorPopupVisible(cell, true);
+    assertDecorationPopupVisible(cell, true);
 
     popup.visible().set(true);
-    assertErrorPopupVisible(cell, false);
+    assertDecorationPopupVisible(cell, false);
 
     child.frontPopup().set(null);
-    assertErrorPopupVisible(cell, true);
+    assertDecorationPopupVisible(cell, true);
 
     popup.visible().set(true);
     popup.visible().set(false);
-    assertErrorPopupVisible(cell, true);
+    assertDecorationPopupVisible(cell, true);
   }
 
   @Test
   public void removeChildWithPopups() {
-    showErrorPopup(cell);
+    showErrorPopup();
     TextCell child = new TextCell("child");
     child.frontPopup().set(new TextCell("front"));
     cell.children().add(child);
-    assertErrorPopupVisible(cell, false);
+    assertDecorationPopupVisible(cell, false);
 
     child.bottomPopup().set(new TextCell("bottom"));
     cell.children().remove(0);
 
-    assertErrorPopupVisible(cell, true);
+    assertDecorationPopupVisible(cell, true);
   }
 
   @Test
   public void childPopupReplacement() {
-    showErrorPopup(cell);
+    showErrorPopup();
 
     TextCell child = new TextCell("child");
     cell.children().add(child);
-    assertErrorPopupVisible(cell, true);
+    assertDecorationPopupVisible(cell, true);
 
     child.frontPopup().set(new TextCell("1"));
-    assertErrorPopupVisible(cell, false);
+    assertDecorationPopupVisible(cell, false);
 
     child.frontPopup().set(new TextCell("2"));
-    assertErrorPopupVisible(cell, false);
+    assertDecorationPopupVisible(cell, false);
   }
 
   @Test
   public void changeErrorStateWhileOtherPopupShown() {
     HorizontalCell popup = new HorizontalCell();
-    cell.set(ErrorMarkers.POPUP_POSITION, popup);
+    cell.set(DecorationTrait.POPUP_POSITION, popup);
 
     setError(cell);
-    assertSame(popup, cell.get(ErrorMarkers.POPUP_POSITION));
-    assertFalse(cell.get(ErrorMarkers.POPUP_ACTIVE));
+    assertSame(popup, cell.get(DecorationTrait.POPUP_POSITION));
+    assertFalse(cell.get(DecorationTrait.POPUP_ACTIVE));
 
-    cell.set(ErrorMarkers.POPUP_POSITION, null);
-    assertErrorPopupVisible(cell, false);
+    cell.set(DecorationTrait.POPUP_POSITION, null);
+    assertDecorationPopupVisible(cell, false);
   }
 
   @Test
@@ -225,12 +229,12 @@ public class MessagePopupsTest extends EditingTestCase {
     child.frontPopup().set(popup);
 
     setError(cell);
-    assertErrorPopupVisible(cell, false);
+    assertDecorationPopupVisible(cell, false);
     mouseEntered(cell);
-    assertErrorPopupVisible(cell, false);
+    assertDecorationPopupVisible(cell, false);
 
     child.frontPopup().set(null);
-    assertErrorPopupVisible(cell, true);
+    assertDecorationPopupVisible(cell, true);
   }
 
   @Test
@@ -240,56 +244,53 @@ public class MessagePopupsTest extends EditingTestCase {
     TextCell child3 = new TextCell("child3");
     TextCell popup = new TextCell("popup");
 
-    showErrorPopup(cell);
+    showErrorPopup();
     cell.children().add(child1);
-    assertErrorPopupVisible(cell, true);
+    assertDecorationPopupVisible(cell, true);
 
     child1.children().add(child2);
-    assertErrorPopupVisible(cell, true);
+    assertDecorationPopupVisible(cell, true);
 
     child2.children().add(child3);
-    assertErrorPopupVisible(cell, true);
+    assertDecorationPopupVisible(cell, true);
 
     child3.bottomPopup().set(popup);
-    assertErrorPopupVisible(cell, false);
+    assertDecorationPopupVisible(cell, false);
 
     child3.bottomPopup().set(null);
-    assertErrorPopupVisible(cell, true);
+    assertDecorationPopupVisible(cell, true);
 
     cell.children().remove(0);
-    assertErrorPopupVisible(cell, true);
+    assertDecorationPopupVisible(cell, true);
   }
 
-  private void setError(Cell c) {
-    c.set(Cell.HAS_ERROR, true);
-  }
+  @Test
+  public void deepChildWithErrorPopup() {
+    TextCell child1 = new TextCell("child1");
+    TextCell child2 = new TextCell("child2");
+    TextCell child3 = new TextCell("child3");
 
-  private void removeError(Cell c) {
-    c.set(Cell.HAS_ERROR, false);
-  }
+    showErrorPopup();
+    cell.children().add(child1);
+    assertDecorationPopupVisible(cell, true);
 
-  private void mouseEntered(Cell c) {
-    myCellContainer.mouseEntered(new MouseEvent(c.getBounds().center()));
-  }
+    child1.children().add(child2);
+    assertDecorationPopupVisible(cell, true);
 
-  private void mouseMoved() {
-    myCellContainer.mouseMoved(new MouseEvent(0, 0));
-  }
+    child2.children().add(child3);
+    assertDecorationPopupVisible(cell, true);
 
-  private void mouseLeft() {
-    myCellContainer.mouseLeft(new MouseEvent(0, 0));
-  }
+    setError(child3);
+    mouseMoved();
 
-  private void showErrorPopup(Cell c) {
-    setError(c);
-    mouseEntered(c);
-    assertErrorPopupVisible(c, true);
-  }
+    assertDecorationPopupVisible(child3, true);
+    assertDecorationPopupVisible(cell, false);
 
-  private void assertErrorPopupVisible(Cell c, boolean visible) {
-    assertTrue(cell.get(ErrorMarkers.POPUP_ACTIVE));
-    Cell popup = c.get(ErrorMarkers.POPUP_POSITION);
-    assertNotNull(popup);
-    assertEquals(visible, popup.get(Cell.VISIBLE));
+    removeError(child3);
+    mouseMoved();
+    assertDecorationPopupVisible(cell, true);
+
+    cell.children().remove(0);
+    assertDecorationPopupVisible(cell, true);
   }
 }

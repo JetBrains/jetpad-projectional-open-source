@@ -19,20 +19,19 @@ import com.google.common.base.Function;
 import com.google.common.base.Objects;
 import com.google.common.base.Predicate;
 import com.google.common.base.Supplier;
+import jetbrains.jetpad.base.Registration;
 import jetbrains.jetpad.cell.Cell;
 import jetbrains.jetpad.cell.TextCell;
 import jetbrains.jetpad.cell.action.CellActions;
-import jetbrains.jetpad.cell.completion.Completion;
-import jetbrains.jetpad.cell.completion.CompletionItems;
 import jetbrains.jetpad.cell.completion.CompletionSupport;
 import jetbrains.jetpad.cell.completion.Side;
+import jetbrains.jetpad.cell.message.CellWithMessageStyler;
 import jetbrains.jetpad.cell.trait.CellTrait;
 import jetbrains.jetpad.cell.trait.CellTraitPropertySpec;
 import jetbrains.jetpad.cell.trait.DerivedCellTrait;
 import jetbrains.jetpad.cell.util.CellState;
 import jetbrains.jetpad.cell.util.CellStateDifference;
 import jetbrains.jetpad.cell.util.CellStateHandler;
-import jetbrains.jetpad.completion.CompletionParameters;
 import jetbrains.jetpad.values.Color;
 
 public class TextEditing {
@@ -189,6 +188,24 @@ public class TextEditing {
     };
   }
 
+  public static Function<Cell, CellWithMessageStyler> errorStyler() {
+    final CellWithMessageStyler textStyler = new CellWithMessageStyler() {
+      @Override
+      protected Registration doApplyBroken(Cell cell) {
+        return cell.set(TextCell.TEXT_COLOR, Color.RED);
+      }
+    };
+    return new Function<Cell, CellWithMessageStyler>() {
+      @Override
+      public CellWithMessageStyler apply(Cell cell) {
+        if (cell instanceof TextCell) {
+          return textStyler;
+        }
+        return null;
+      }
+    };
+  }
+
   private static class TextCellStateHandler implements CellStateHandler<TextCell, TextCellState> {
     private boolean mySaveText;
     private Predicate<String> myValidator;
@@ -200,10 +217,7 @@ public class TextEditing {
 
     @Override
     public boolean synced(TextCell cell) {
-      if (myValidator == null) {
-        return true;
-      }
-      return myValidator.apply(cell.text().get());
+      return myValidator == null || myValidator.apply(cell.text().get());
     }
 
     @Override

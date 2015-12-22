@@ -13,21 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package jetbrains.jetpad.projectional.util;
+package jetbrains.jetpad.cell.message;
 
 import jetbrains.jetpad.base.Registration;
-import jetbrains.jetpad.cell.CellContainer;
-import jetbrains.jetpad.cell.message.MessageController;
-import jetbrains.jetpad.cell.text.TextEditing;
+import jetbrains.jetpad.cell.Cell;
+import jetbrains.jetpad.values.Color;
 
-import java.util.Collections;
+public class CellWithMessageStyler {
+  public static final Color WARNING_COLOR = new Color(244, 232, 171);
 
-public class RootController {
-  public static Registration install(CellContainer container) {
-    return CellNavigationController.install(container);
+  protected Registration doApplyBroken(Cell cell) {
+    return cell.set(Cell.BACKGROUND, Color.LIGHT_PINK);
   }
 
-  public static Registration supportMessages(CellContainer container) {
-    return MessageController.install(container, null, Collections.singletonList(TextEditing.errorStyler()));
+  protected Registration doApplyError(Cell cell) {
+    return cell.set(Cell.BORDER_COLOR, Color.PINK);
+  }
+
+  protected Registration doApplyWarning(Cell cell) {
+    return cell.set(Cell.BACKGROUND, WARNING_COLOR);
   }
 }

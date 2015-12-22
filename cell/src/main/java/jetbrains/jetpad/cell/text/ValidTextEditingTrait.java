@@ -24,6 +24,7 @@ import jetbrains.jetpad.cell.completion.BaseCompletionController;
 import jetbrains.jetpad.cell.completion.Completion;
 import jetbrains.jetpad.cell.completion.CompletionItems;
 import jetbrains.jetpad.cell.completion.Side;
+import jetbrains.jetpad.cell.message.MessageController;
 import jetbrains.jetpad.cell.trait.CellTraitPropertySpec;
 import jetbrains.jetpad.completion.CompletionItem;
 import jetbrains.jetpad.completion.CompletionParameters;
@@ -41,6 +42,12 @@ class ValidTextEditingTrait extends TextEditingTrait {
   static final CellTraitPropertySpec<Color> VALID_TEXT_COLOR = new CellTraitPropertySpec<>("validTextColor", Color.BLACK);
 
   ValidTextEditingTrait() {
+  }
+
+  @Override
+  protected void provideProperties(Cell cell, PropertyCollector collector) {
+    collector.add(TextCell.TEXT_COLOR, cell.get(VALID_TEXT_COLOR));
+    super.provideProperties(cell, collector);
   }
 
   @Override
@@ -72,15 +79,10 @@ class ValidTextEditingTrait extends TextEditingTrait {
   public void onPropertyChanged(Cell cell, CellPropertySpec<?> prop, PropertyChangeEvent<?> e) {
     if (prop == TextCell.TEXT) {
       TextCell textCell = (TextCell) cell;
-      textCell.textColor().set(isValid(textCell) ? textCell.get(VALID_TEXT_COLOR) : Color.RED);
+      MessageController.setBroken(textCell, isValid(textCell) ? null : "Cannot resolve '" + textCell.text().get() + '\'');
     }
 
     super.onPropertyChanged(cell, prop, e);
-  }
-
-  private boolean isValid(TextCell textCell) {
-    Predicate<String> validator = textCell.get(VALIDATOR);
-    return validator.apply(textCell.text().get());
   }
 
   @Override
@@ -88,7 +90,7 @@ class ValidTextEditingTrait extends TextEditingTrait {
     if (super.onAfterType(textCell)) return true;
 
     Boolean eagerCompletion = textCell.get(TextEditing.EAGER_COMPLETION);
-    if (getValidator(textCell).apply(textCell.text().get()) && !eagerCompletion) return false;
+    if (isValid(textCell) && !eagerCompletion) return false;
 
     String text = textCell.text().get();
     if (text == null || text.isEmpty()) return false;
@@ -150,7 +152,7 @@ class ValidTextEditingTrait extends TextEditingTrait {
 
     if (!textCell.get(TextEditing.EAGER_COMPLETION)) return;
 
-    if (getValidator(textCell).apply(textCell.text().get())) return;
+    if (isValid(textCell)) return;
     String text = textCell.text().get();
 
     if (text.isEmpty()) return;
@@ -171,8 +173,12 @@ class ValidTextEditingTrait extends TextEditingTrait {
     return textCell.get(VALIDATOR);
   }
 
+  private boolean isValid(TextCell textCell) {
+    return textCell.get(VALIDATOR).apply(textCell.text().get());
+  }
+
   private void assertValid(Cell cell) {
-    if (cell != null && cell instanceof TextCell && !getValidator((TextCell) cell).apply(((TextCell) cell).text().get())) {
+    if (cell != null && cell instanceof TextCell && !isValid((TextCell) cell)) {
       throw new IllegalStateException("Completion should lead to a valid result, otherwise, we might have a stackoverflow error");
     }
   }

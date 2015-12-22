@@ -20,6 +20,6 @@ import jetbrains.jetpad.projectional.util.awt.AwtCellDemo;
 
 public class ExpressionDemoMain {
   public static void main(String[] args) {
-    AwtCellDemo.show(ExprDemo.createDemo());
+    AwtCellDemo.show(ExprDemo.createDemo(false));
   }
 }

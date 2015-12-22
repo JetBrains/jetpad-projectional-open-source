@@ -31,9 +31,9 @@ public class ProjectionalMain implements EntryPoint {
   @Override
   public void onModuleLoad() {
     new CellContainerToDomMapper(ConceptDemo.create(), $("#conceptDemo").get(0)).attachRoot();
-    new CellContainerToDomMapper(ExprDemo.createDemo(), $("#exprDemo").get(0)).attachRoot();
+    new CellContainerToDomMapper(ExprDemo.createDemo(true), $("#exprDemo").get(0)).attachRoot();
     new CellContainerToDomMapper(IndentDemo.create(), $("#indentDemo").get(0)).attachRoot();
-    new CellContainerToDomMapper(HybridExprDemo.createDemo(), $("#hybridExprDemo").get(0)).attachRoot();
+    new CellContainerToDomMapper(HybridExprDemo.createDemo(true), $("#hybridExprDemo").get(0)).attachRoot();
     ViewToDom.map(DiagramDemo.createContainer(), $("#diagramDemo").get(0));
     ViewToDom.map(DiagramExprDemo.createContainer(), $("#diagramExprDemo").get(0));
   }

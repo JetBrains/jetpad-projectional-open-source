@@ -13,21 +13,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package jetbrains.jetpad.projectional.util;
+package jetbrains.jetpad.projectional.demo;
 
 import jetbrains.jetpad.base.Registration;
+import jetbrains.jetpad.cell.Cell;
 import jetbrains.jetpad.cell.CellContainer;
 import jetbrains.jetpad.cell.message.MessageController;
+import jetbrains.jetpad.cell.message.CellWithMessageStyler;
 import jetbrains.jetpad.cell.text.TextEditing;
+import jetbrains.jetpad.projectional.util.RootController;
 
 import java.util.Collections;
 
-public class RootController {
-  public static Registration install(CellContainer container) {
-    return CellNavigationController.install(container);
-  }
+public class MessageControllerSetup {
 
-  public static Registration supportMessages(CellContainer container) {
-    return MessageController.install(container, null, Collections.singletonList(TextEditing.errorStyler()));
+  public static Registration supportMessages(CellContainer container, boolean isDom) {
+    if (!isDom) {
+      return RootController.supportMessages(container);
+    }
+    CellWithMessageStyler defaultStyler = new CellWithMessageStyler() {
+      @Override
+      protected Registration doApplyError(Cell cell) {
+        return Registration.EMPTY;
+      }
+    };
+    return MessageController.install(container, defaultStyler, Collections.singletonList(TextEditing.errorStyler()));
   }
 }

@@ -25,7 +25,7 @@ import jetbrains.jetpad.cell.TextCell;
 import jetbrains.jetpad.cell.action.CellActions;
 import jetbrains.jetpad.cell.completion.Completion;
 import jetbrains.jetpad.cell.completion.CompletionSupport;
-import jetbrains.jetpad.cell.message.ErrorMarkers;
+import jetbrains.jetpad.cell.message.MessageController;
 import jetbrains.jetpad.cell.position.Positions;
 import jetbrains.jetpad.cell.text.TextEditing;
 import jetbrains.jetpad.cell.trait.CellTrait;
@@ -84,11 +84,11 @@ public class HybridSynchronizer<SourceT> implements Synchronizer {
 
   private Property<HybridEditorSpec<SourceT>> mySpec;
 
-  public HybridSynchronizer(Mapper<?, ?> contextMapper, Property<SourceT> prop, final Cell target, HybridEditorSpec<SourceT> spec) {
+  public HybridSynchronizer(Mapper<?, ?> contextMapper, Property<SourceT> prop, Cell target, HybridEditorSpec<SourceT> spec) {
     this(contextMapper, prop, target, new ValueProperty<>(spec));
   }
 
-  public HybridSynchronizer(Mapper<?, ?> contextMapper, Property<SourceT> prop, final Cell target, Property<HybridEditorSpec<SourceT>> spec) {
+  public HybridSynchronizer(Mapper<?, ?> contextMapper, Property<SourceT> prop, Cell target, Property<HybridEditorSpec<SourceT>> spec) {
     myContextMapper = contextMapper;
     myProperty = prop;
     mySpec = spec;
@@ -107,8 +107,8 @@ public class HybridSynchronizer<SourceT> implements Synchronizer {
         return new TextCell(" ");
       }
     };
+
     myTarget.addTrait(createTargetTrait());
-    ErrorMarkers.install(myTarget);
 
     addPlaceholder();
 
@@ -174,13 +174,17 @@ public class HybridSynchronizer<SourceT> implements Synchronizer {
       }
     });
 
-    target.hasError().set(!myTokenListEditor.valid.get());
+    updateTargetError();
     myTokenListEditor.valid.addHandler(new EventHandler<PropertyChangeEvent<Boolean>>() {
       @Override
       public void onEvent(PropertyChangeEvent<Boolean> event) {
-        target.hasError().set(!myTokenListEditor.valid.get());
+        updateTargetError();
       }
     });
+  }
+
+  private void updateTargetError() {
+    MessageController.setError(myTarget, myTokenListEditor.valid.get() ? null : "parsing error");
   }
 
   private CellTrait createTargetTrait() {

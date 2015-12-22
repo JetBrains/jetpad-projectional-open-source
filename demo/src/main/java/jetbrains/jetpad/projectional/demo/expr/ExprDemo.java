@@ -15,24 +15,26 @@
  */
 package jetbrains.jetpad.projectional.demo.expr;
 
+import jetbrains.jetpad.cell.Cell;
+import jetbrains.jetpad.cell.CellContainer;
 import jetbrains.jetpad.mapper.Mapper;
+import jetbrains.jetpad.projectional.demo.MessageControllerSetup;
 import jetbrains.jetpad.projectional.demo.expr.mapper.ExpressionMappers;
 import jetbrains.jetpad.projectional.demo.expr.model.ExpressionContainer;
 import jetbrains.jetpad.projectional.demo.expr.model.MulExpression;
 import jetbrains.jetpad.projectional.demo.expr.model.NumberExpression;
 import jetbrains.jetpad.projectional.demo.expr.model.PlusExpression;
-import jetbrains.jetpad.cell.Cell;
-import jetbrains.jetpad.cell.CellContainer;
 import jetbrains.jetpad.projectional.util.RootController;
 
 public class ExprDemo {
-  public static CellContainer createDemo() {
+  public static CellContainer createDemo(boolean isDom) {
     ExpressionContainer model = createModel();
     Mapper<ExpressionContainer, ? extends Cell> rootMapper = ExpressionMappers.create(model);
     rootMapper.attachRoot();
     CellContainer cellContainer = new CellContainer();
     cellContainer.root.children().add(rootMapper.getTarget());
     RootController.install(cellContainer);
+    MessageControllerSetup.supportMessages(cellContainer, isDom);
     return cellContainer;
   }
 

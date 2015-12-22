@@ -20,6 +20,6 @@ import jetbrains.jetpad.projectional.util.awt.AwtCellDemo;
 
 public class HybridExprDemoMain {
   public static void main(String[] args) {
-    AwtCellDemo.show(HybridExprDemo.createDemo());
+    AwtCellDemo.show(HybridExprDemo.createDemo(false));
   }
 }

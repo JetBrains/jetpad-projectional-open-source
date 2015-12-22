@@ -15,15 +15,19 @@
  */
 package jetbrains.jetpad.projectional.demo.hybridExpr;
 
-import jetbrains.jetpad.mapper.Mapper;
-import jetbrains.jetpad.projectional.demo.hybridExpr.mapper.ExpressionContainerMapper;
-import jetbrains.jetpad.projectional.demo.hybridExpr.model.*;
 import jetbrains.jetpad.cell.Cell;
 import jetbrains.jetpad.cell.CellContainer;
+import jetbrains.jetpad.mapper.Mapper;
+import jetbrains.jetpad.projectional.demo.MessageControllerSetup;
+import jetbrains.jetpad.projectional.demo.hybridExpr.mapper.ExpressionContainerMapper;
+import jetbrains.jetpad.projectional.demo.hybridExpr.model.ExpressionContainer;
+import jetbrains.jetpad.projectional.demo.hybridExpr.model.MulExpression;
+import jetbrains.jetpad.projectional.demo.hybridExpr.model.NumberExpression;
+import jetbrains.jetpad.projectional.demo.hybridExpr.model.PlusExpression;
 import jetbrains.jetpad.projectional.util.RootController;
 
 public class HybridExprDemo {
-  public static CellContainer createDemo() {
+  public static CellContainer createDemo(boolean isDom) {
     ExpressionContainer model = createModel();
     Mapper<?, ? extends Cell> rootMapper = new ExpressionContainerMapper(model);
     rootMapper.attachRoot();
@@ -31,6 +35,8 @@ public class HybridExprDemo {
     CellContainer cellContainer = new CellContainer();
     cellContainer.root.children().add(rootMapper.getTarget());
     RootController.install(cellContainer);
+
+    MessageControllerSetup.supportMessages(cellContainer, isDom);
 
     return cellContainer;
   }
