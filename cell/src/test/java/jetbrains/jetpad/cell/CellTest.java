@@ -262,6 +262,32 @@ public class CellTest extends BaseTestCase {
     assertEquals("abc", cell.get(testProp));
   }
 
+  @Test
+  public void addPopupToNotAttachedCell() {
+    TextCell cell = new TextCell();
+    TextCell popup = new TextCell();
+    cell.frontPopup().set(popup);
+    assertTrue(popup.isPopup());
+    assertSame(cell, popup.getParent());
+
+    cell.frontPopup().set(null);
+    assertFalse(popup.isPopup());
+    assertNull(popup.getParent());
+  }
+
+  @Test
+  public void attachCellWithPopup() {
+    TextCell cell = new TextCell();
+    TextCell popup = new TextCell();
+    cell.frontPopup().set(popup);
+
+    container.root.children().add(cell);
+    assertSame(container, popup.cellContainer().get());
+
+    container.root.children().remove(0);
+    assertNull(popup.cellContainer().get());
+  }
+
   static class TestTrait extends CellTrait {
     static final CellPropertySpec<String> NAME = new CellPropertySpec<>("name");
 
