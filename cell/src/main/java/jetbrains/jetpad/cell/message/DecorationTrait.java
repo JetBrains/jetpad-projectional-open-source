@@ -19,7 +19,11 @@ import jetbrains.jetpad.base.Registration;
 import jetbrains.jetpad.cell.Cell;
 import jetbrains.jetpad.cell.CellPropertySpec;
 import jetbrains.jetpad.cell.TextCell;
+import jetbrains.jetpad.cell.event.FocusEvent;
 import jetbrains.jetpad.cell.trait.CellTrait;
+import jetbrains.jetpad.event.Key;
+import jetbrains.jetpad.event.KeyEvent;
+import jetbrains.jetpad.event.KeyStrokeSpecs;
 import jetbrains.jetpad.event.MouseEvent;
 import jetbrains.jetpad.model.property.PropertyChangeEvent;
 import jetbrains.jetpad.values.Color;
@@ -101,54 +105,80 @@ class DecorationTrait extends CellTrait {
   }
 
   @Override
+  public void onKeyPressed(Cell cell, KeyEvent event) {
+    if (cell.get(Cell.FOCUSED) || !cell.get(Cell.FOCUSABLE)) {
+      if (event.is(KeyStrokeSpecs.HELP)) {
+        if (showPopup(cell)) {
+          event.consume();
+        }
+        return;
+      } else if (event.is(Key.ESCAPE)) {
+        hidePopup(cell);
+        return;
+      }
+    }
+    super.onKeyPressed(cell, event);
+  }
+
+  @Override
+  public void onFocusLost(Cell cell, FocusEvent event) {
+    hidePopup(cell);
+  }
+
+  @Override
   public void onMouseEntered(Cell cell, MouseEvent event) {
-    Cell popup = getMessagePopup(cell);
-    if (popup != null) {
-      show(popup);
+    if (showPopup(cell)) {
       event.consume();
     }
   }
 
   @Override
   public void onMouseLeft(Cell cell, MouseEvent event) {
-    Cell popup = getMessagePopup(cell);
-    if (popup != null) {
-      hide(popup);
-      event.consume();
-    }
+    hidePopup(cell);
   }
 
   @Override
   public void onMouseMoved(Cell cell, MouseEvent event) {
-    Cell popup = getMessagePopup(cell);
-    if (popup != null && (myRegistrations == null || !myRegistrations.containsKey(popup))) {
-      show(popup);
+    if (showPopup(cell)) {
       event.consume();
     }
+  }
+
+  private boolean showPopup(Cell cell) {
+    Cell popup = getMessagePopup(cell);
+    return popup != null && show(popup);
+  }
+
+  private boolean hidePopup(Cell cell) {
+    Cell popup = getMessagePopup(cell);
+    return popup != null && hide(popup);
   }
 
   private Cell getMessagePopup(Cell cell) {
     return cell.get(POPUP_ACTIVE) ? cell.get(POPUP_POSITION) : null;
   }
 
-  private void show(Cell popup) {
+  private boolean show(Cell popup) {
     if (myRegistrations == null) {
       myRegistrations = new HashMap<>();
+    } else if (myRegistrations.containsKey(popup)) {
+      return false;
     }
-    if (!myRegistrations.containsKey(popup)) {
-      myRegistrations.put(popup, new LowPriorityPopupSupport(popup));
-    }
+    myRegistrations.put(popup, new LowPriorityPopupSupport(popup));
+    return true;
   }
 
-  private void hide(Cell popup) {
-    if (myRegistrations == null) return;
+  private boolean hide(Cell popup) {
+    if (myRegistrations == null) return false;
     Registration registration = myRegistrations.remove(popup);
-    if (registration != null) {
-      registration.remove();
-    }
     if (myRegistrations.isEmpty()) {
       myRegistrations = null;
     }
+    if (registration != null) {
+      registration.remove();
+      return true;
+    }
+    return false;
   }
 
   private void updateDecorations(Cell cell, CellPropertySpec<String> prop, PropertyChangeEvent<String> change) {

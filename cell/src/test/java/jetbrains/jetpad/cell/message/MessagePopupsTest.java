@@ -17,6 +17,9 @@ package jetbrains.jetpad.cell.message;
 
 import jetbrains.jetpad.base.Value;
 import jetbrains.jetpad.cell.*;
+import jetbrains.jetpad.event.KeyEvent;
+import jetbrains.jetpad.event.KeyStroke;
+import jetbrains.jetpad.event.KeyStrokeSpecs;
 import jetbrains.jetpad.model.property.PropertyChangeEvent;
 import org.junit.Test;
 
@@ -292,5 +295,67 @@ public class MessagePopupsTest extends MessageControllerTestCase {
 
     cell.children().remove(0);
     assertDecorationPopupVisible(cell, true);
+  }
+
+  @Test
+  public void keyStrokeAndMouse() {
+    TextCell child1 = new TextCell("child1");
+    child1.set(Cell.FOCUSABLE, true);
+    cell.children().add(child1);
+    setError(cell);
+    setError(child1);
+    myCellContainer.focusedCell.set(child1);
+
+    pressHelp();
+    assertDecorationPopupVisible(child1, true);
+    assertDecorationPopupVisible(cell, false);
+
+    mouseEntered(child1);
+    assertDecorationPopupVisible(child1, true);
+    assertDecorationPopupVisible(cell, false);
+
+    mouseLeft();
+
+    assertDecorationPopupVisible(child1, false);
+    assertDecorationPopupVisible(cell, false);
+  }
+
+  @Test
+  public void helpForNotFocusableCell() {
+    TextCell child1 = new TextCell("child1");
+    child1.set(Cell.FOCUSABLE, true);
+    cell.children().add(child1);
+    setError(cell);
+    myCellContainer.focusedCell.set(child1);
+
+    assertFalse(cell.get(Cell.FOCUSABLE));
+
+    pressHelp();
+    assertDecorationPopupVisible(cell, true);
+  }
+
+  @Test
+  public void hideMessagePopupsOnEscape() {
+    TextCell child1 = new TextCell("child1");
+    child1.set(Cell.FOCUSABLE, true);
+    cell.children().add(child1);
+    setError(cell);
+    setError(child1);
+    myCellContainer.focusedCell.set(child1);
+    assertDecorationPopupVisible(child1, false);
+    assertDecorationPopupVisible(cell, false);
+
+    pressHelp();
+    assertDecorationPopupVisible(child1, true);
+    assertDecorationPopupVisible(cell, false);
+
+    escape();
+    assertDecorationPopupVisible(child1, false);
+    assertDecorationPopupVisible(cell, false);
+  }
+
+  private void pressHelp() {
+    KeyStroke keyStroke = KeyStrokeSpecs.HELP.getKeyStrokes().iterator().next();
+    myCellContainer.keyPressed(new KeyEvent(keyStroke.getKey(), (char) 0, keyStroke.getModifiers()));
   }
 }

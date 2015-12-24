@@ -30,6 +30,8 @@ public class KeyStrokeSpecs {
 
   public static final KeyStrokeSpec COMPLETE = composite(new KeyStroke(Key.SPACE, ModifierKey.CONTROL));
 
+  public static final KeyStrokeSpec HELP = composite(new KeyStroke(Key.F1, ModifierKey.CONTROL), new KeyStroke(Key.DIGIT_1, ModifierKey.CONTROL));
+
   public static final KeyStrokeSpec SELECT_ALL = commandOrMeta(Key.A);
   public static final KeyStrokeSpec HOME = composite(new KeyStroke(Key.HOME), new KeyStroke(Key.LEFT, ModifierKey.META));
   public static final KeyStrokeSpec END = composite(new KeyStroke(Key.END), new KeyStroke(Key.RIGHT, ModifierKey.META));
