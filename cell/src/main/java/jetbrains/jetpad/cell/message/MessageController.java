@@ -33,7 +33,7 @@ import java.util.List;
 import java.util.Map;
 
 public final class MessageController {
-  private static final CellTraitPropertySpec<MessageController> TRAIT = new CellTraitPropertySpec<>("errorController");
+  private static final CellTraitPropertySpec<MessageController> TRAIT = new CellTraitPropertySpec<>("messageController");
   static final CellPropertySpec<String> ERROR = new CellPropertySpec<>("error");
   static final CellPropertySpec<String> WARNING = new CellPropertySpec<>("warning");
   static final CellPropertySpec<String> BROKEN = new CellPropertySpec<>("broken");
@@ -101,7 +101,7 @@ public final class MessageController {
 
   private MessageController(CellContainer container) {
     if (container.root.get(TRAIT) != null) {
-      throw new IllegalArgumentException("Error controller is already installed");
+      throw new IllegalArgumentException("Message controller is already installed");
     }
     myContainer = container;
   }
@@ -132,7 +132,7 @@ public final class MessageController {
   }
 
   // for tests
-  int getErrorDecoratedCellsCount() {
+  int getDecoratedCellsCount() {
     return myChildrenListener.myRegistrations.size();
   }
 

@@ -28,7 +28,7 @@ public class MessageControllerTest extends MessageControllerTestCase {
     CellContainer container = new CellContainer();
     container.root.children().add(new HorizontalCell());
     MessageController.install(container);
-    assertEquals(2, MessageController.getController(container).getErrorDecoratedCellsCount());
+    assertEquals(2, MessageController.getController(container).getDecoratedCellsCount());
   }
 
   @Test(expected = IllegalArgumentException.class)
@@ -44,10 +44,10 @@ public class MessageControllerTest extends MessageControllerTestCase {
     myCellContainer.root.children().add(parent);
 
     MessageController controller = MessageController.getController(myCellContainer);
-    assertEquals(4, controller.getErrorDecoratedCellsCount());
+    assertEquals(4, controller.getDecoratedCellsCount());
 
     parent.children().remove(0);
-    assertEquals(3, controller.getErrorDecoratedCellsCount());
+    assertEquals(3, controller.getDecoratedCellsCount());
   }
 
   @Test
@@ -68,12 +68,12 @@ public class MessageControllerTest extends MessageControllerTestCase {
     cell.bottomPopup().set(popup);
 
     MessageController controller = MessageController.getController(myCellContainer);
-    assertEquals(2, controller.getErrorDecoratedCellsCount());
+    assertEquals(2, controller.getDecoratedCellsCount());
 
     MessageController.setError(popup, "a");
     assertFalse(MessageController.hasError(popup));
 
     cell.bottomPopup().set(null);
-    assertEquals(2, controller.getErrorDecoratedCellsCount());
+    assertEquals(2, controller.getDecoratedCellsCount());
   }
 }
