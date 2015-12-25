@@ -15,39 +15,24 @@
  */
 package jetbrains.jetpad.cell.message;
 
-import com.google.common.base.Function;
 import jetbrains.jetpad.base.Disposable;
 import jetbrains.jetpad.base.Registration;
 import jetbrains.jetpad.cell.Cell;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 class StyleApplicator {
-  private MessageStyler myDefaultStyler;
-  private List<Function<Cell, MessageStyler>> myStylerSuppliers;
+  private MessageStyler myStyler;
   private Map<Cell, StyleRegistrations> myRegistrations = null;
 
-  StyleApplicator(MessageStyler defaultStyler, List<Function<Cell, MessageStyler>> customStylers) {
-    myDefaultStyler = defaultStyler == null ? new MessageStyler() : defaultStyler;
-    myStylerSuppliers = (customStylers == null || customStylers.size() == 0) ? null : new ArrayList<>(customStylers);
-  }
-
-  private MessageStyler stylerFor(Cell cell) {
-    if (myStylerSuppliers != null) {
-      for (Function<Cell, MessageStyler> supplier : myStylerSuppliers) {
-        MessageStyler styler = supplier.apply(cell);
-        if (styler != null) return styler;
-      }
-    }
-    return myDefaultStyler;
+  StyleApplicator(MessageStyler styler) {
+    myStyler = styler == null ? new MessageStyler() : styler;
   }
 
   void applyBroken(Cell cell, boolean broken) {
     if (broken) {
-      get(cell).myBroken = stylerFor(cell).doApplyBroken(cell);
+      get(cell).myBroken = myStyler.doApplyBroken(cell);
     } else {
       StyleRegistrations registrations = get(cell);
       registrations.myBroken.remove();
@@ -58,7 +43,7 @@ class StyleApplicator {
 
   void applyError(Cell cell, boolean error) {
     if (error) {
-      get(cell).myError = stylerFor(cell).doApplyError(cell);
+      get(cell).myError = myStyler.doApplyError(cell);
     } else {
       StyleRegistrations registrations = get(cell);
       registrations.myError.remove();
@@ -69,7 +54,7 @@ class StyleApplicator {
 
   void applyWarning(Cell cell, boolean warning) {
     if (warning) {
-      get(cell).myWarning = stylerFor(cell).doApplyWarning(cell);
+      get(cell).myWarning = myStyler.doApplyWarning(cell);
     } else {
       StyleRegistrations registrations = get(cell);
       registrations.myWarning.remove();

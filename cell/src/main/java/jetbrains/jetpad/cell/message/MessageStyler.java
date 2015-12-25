@@ -17,12 +17,16 @@ package jetbrains.jetpad.cell.message;
 
 import jetbrains.jetpad.base.Registration;
 import jetbrains.jetpad.cell.Cell;
+import jetbrains.jetpad.cell.TextCell;
 import jetbrains.jetpad.values.Color;
 
 public class MessageStyler {
-  public static final Color WARNING_COLOR = new Color(244, 232, 171);
+  private static final Color WARNING_COLOR = new Color(244, 232, 171);
 
   protected Registration doApplyBroken(Cell cell) {
+    if (cell instanceof TextCell) {
+      return cell.set(TextCell.TEXT_COLOR, Color.RED);
+    }
     return cell.set(Cell.BACKGROUND, Color.LIGHT_PINK);
   }
 

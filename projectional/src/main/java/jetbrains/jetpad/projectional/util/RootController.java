@@ -17,17 +17,9 @@ package jetbrains.jetpad.projectional.util;
 
 import jetbrains.jetpad.base.Registration;
 import jetbrains.jetpad.cell.CellContainer;
-import jetbrains.jetpad.cell.message.MessageController;
-import jetbrains.jetpad.cell.text.TextEditing;
-
-import java.util.Collections;
 
 public class RootController {
   public static Registration install(CellContainer container) {
     return CellNavigationController.install(container);
-  }
-
-  public static Registration supportMessages(CellContainer container) {
-    return MessageController.install(container, null, Collections.singletonList(TextEditing.errorStyler()));
   }
 }

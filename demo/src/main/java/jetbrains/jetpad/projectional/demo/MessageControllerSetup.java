@@ -20,23 +20,19 @@ import jetbrains.jetpad.cell.Cell;
 import jetbrains.jetpad.cell.CellContainer;
 import jetbrains.jetpad.cell.message.MessageController;
 import jetbrains.jetpad.cell.message.MessageStyler;
-import jetbrains.jetpad.cell.text.TextEditing;
-import jetbrains.jetpad.projectional.util.RootController;
-
-import java.util.Collections;
 
 public class MessageControllerSetup {
 
   public static Registration supportMessages(CellContainer container, boolean isDom) {
     if (!isDom) {
-      return RootController.supportMessages(container);
+      return MessageController.install(container);
     }
-    MessageStyler defaultStyler = new MessageStyler() {
+    MessageStyler styler = new MessageStyler() {
       @Override
       protected Registration doApplyError(Cell cell) {
         return Registration.EMPTY;
       }
     };
-    return MessageController.install(container, defaultStyler, Collections.singletonList(TextEditing.errorStyler()));
+    return MessageController.install(container, styler);
   }
 }

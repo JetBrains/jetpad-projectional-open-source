@@ -19,13 +19,11 @@ import com.google.common.base.Function;
 import com.google.common.base.Objects;
 import com.google.common.base.Predicate;
 import com.google.common.base.Supplier;
-import jetbrains.jetpad.base.Registration;
 import jetbrains.jetpad.cell.Cell;
 import jetbrains.jetpad.cell.TextCell;
 import jetbrains.jetpad.cell.action.CellActions;
 import jetbrains.jetpad.cell.completion.CompletionSupport;
 import jetbrains.jetpad.cell.completion.Side;
-import jetbrains.jetpad.cell.message.MessageStyler;
 import jetbrains.jetpad.cell.trait.CellTrait;
 import jetbrains.jetpad.cell.trait.CellTraitPropertySpec;
 import jetbrains.jetpad.cell.trait.DerivedCellTrait;
@@ -184,24 +182,6 @@ public class TextEditing {
             return CellActions.toEnd(popupCell);
           }
         };
-      }
-    };
-  }
-
-  public static Function<Cell, MessageStyler> errorStyler() {
-    final MessageStyler textStyler = new MessageStyler() {
-      @Override
-      protected Registration doApplyBroken(Cell cell) {
-        return cell.set(TextCell.TEXT_COLOR, Color.RED);
-      }
-    };
-    return new Function<Cell, MessageStyler>() {
-      @Override
-      public MessageStyler apply(Cell cell) {
-        if (cell instanceof TextCell) {
-          return textStyler;
-        }
-        return null;
       }
     };
   }

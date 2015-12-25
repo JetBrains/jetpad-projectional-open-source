@@ -15,7 +15,6 @@
  */
 package jetbrains.jetpad.cell.message;
 
-import com.google.common.base.Function;
 import jetbrains.jetpad.base.Disposable;
 import jetbrains.jetpad.base.Handler;
 import jetbrains.jetpad.base.Registration;
@@ -29,7 +28,6 @@ import jetbrains.jetpad.model.collections.CollectionItemEvent;
 import jetbrains.jetpad.model.event.CompositeRegistration;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public final class MessageController {
@@ -38,16 +36,14 @@ public final class MessageController {
   static final CellPropertySpec<String> WARNING = new CellPropertySpec<>("warning");
   static final CellPropertySpec<String> BROKEN = new CellPropertySpec<>("broken");
 
-  public static Registration install(CellContainer container,
-                                     MessageStyler defaultStyler,
-                                     List<Function<Cell, MessageStyler>> customStylers) {
+  public static Registration install(CellContainer container, MessageStyler styler) {
     MessageController controller = new MessageController(container);
-    MessageTrait trait = new MessageTrait(new StyleApplicator(defaultStyler, customStylers));
+    MessageTrait trait = new MessageTrait(new StyleApplicator(styler));
     return controller.install(trait);
   }
 
   public static Registration install(CellContainer container) {
-    return install(container, null, null);
+    return install(container, null);
   }
 
   public static void setBroken(Cell cell, String message) {
