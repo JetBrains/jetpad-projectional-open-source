@@ -25,7 +25,7 @@ import jetbrains.jetpad.cell.TextCell;
 import jetbrains.jetpad.cell.action.CellActions;
 import jetbrains.jetpad.cell.completion.CompletionSupport;
 import jetbrains.jetpad.cell.completion.Side;
-import jetbrains.jetpad.cell.message.CellWithMessageStyler;
+import jetbrains.jetpad.cell.message.MessageStyler;
 import jetbrains.jetpad.cell.trait.CellTrait;
 import jetbrains.jetpad.cell.trait.CellTraitPropertySpec;
 import jetbrains.jetpad.cell.trait.DerivedCellTrait;
@@ -188,16 +188,16 @@ public class TextEditing {
     };
   }
 
-  public static Function<Cell, CellWithMessageStyler> errorStyler() {
-    final CellWithMessageStyler textStyler = new CellWithMessageStyler() {
+  public static Function<Cell, MessageStyler> errorStyler() {
+    final MessageStyler textStyler = new MessageStyler() {
       @Override
       protected Registration doApplyBroken(Cell cell) {
         return cell.set(TextCell.TEXT_COLOR, Color.RED);
       }
     };
-    return new Function<Cell, CellWithMessageStyler>() {
+    return new Function<Cell, MessageStyler>() {
       @Override
-      public CellWithMessageStyler apply(Cell cell) {
+      public MessageStyler apply(Cell cell) {
         if (cell instanceof TextCell) {
           return textStyler;
         }

@@ -19,7 +19,7 @@ import jetbrains.jetpad.base.Registration;
 import jetbrains.jetpad.cell.Cell;
 import jetbrains.jetpad.cell.CellContainer;
 import jetbrains.jetpad.cell.message.MessageController;
-import jetbrains.jetpad.cell.message.CellWithMessageStyler;
+import jetbrains.jetpad.cell.message.MessageStyler;
 import jetbrains.jetpad.cell.text.TextEditing;
 import jetbrains.jetpad.projectional.util.RootController;
 
@@ -31,7 +31,7 @@ public class MessageControllerSetup {
     if (!isDom) {
       return RootController.supportMessages(container);
     }
-    CellWithMessageStyler defaultStyler = new CellWithMessageStyler() {
+    MessageStyler defaultStyler = new MessageStyler() {
       @Override
       protected Registration doApplyError(Cell cell) {
         return Registration.EMPTY;

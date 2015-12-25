@@ -34,7 +34,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-class DecorationTrait extends CellTrait {
+class MessageTrait extends CellTrait {
   static final CellPropertySpec<Cell> POPUP_POSITION = Cell.BOTTOM_POPUP;
   static final CellPropertySpec<Boolean> POPUP_ACTIVE = new CellPropertySpec<>("isMessagePopupActive", false);
 
@@ -43,10 +43,10 @@ class DecorationTrait extends CellTrait {
 
   private boolean myEditingPopup = false;
   private Map<Cell, Registration> myRegistrations = null;
-  private StyleController myStyler;
+  private StyleApplicator myStyler;
 
-  DecorationTrait(StyleController styleController) {
-    myStyler = styleController;
+  MessageTrait(StyleApplicator styleApplicator) {
+    myStyler = styleApplicator;
   }
 
   @Override

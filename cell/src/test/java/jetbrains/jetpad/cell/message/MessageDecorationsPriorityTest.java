@@ -147,14 +147,14 @@ public class MessageDecorationsPriorityTest extends MessageControllerTestCase {
   @Test
   public void hiddenMessageUpdate() {
     MessageController.set(cell, "0", MessageController.BROKEN);
-    cell.set(DecorationTrait.POPUP_POSITION, new TextCell());
+    cell.set(MessageTrait.POPUP_POSITION, new TextCell());
     mouseEntered(cell);
-    assertFalse(cell.get(DecorationTrait.POPUP_ACTIVE));
+    assertFalse(cell.get(MessageTrait.POPUP_ACTIVE));
 
     MessageController.set(cell, "1", MessageController.BROKEN);
-    assertFalse(cell.get(DecorationTrait.POPUP_ACTIVE));
+    assertFalse(cell.get(MessageTrait.POPUP_ACTIVE));
 
-    cell.set(DecorationTrait.POPUP_POSITION, null);
+    cell.set(MessageTrait.POPUP_POSITION, null);
     assertDecorationPopupVisible(cell, false);
     mouseMoved();
 

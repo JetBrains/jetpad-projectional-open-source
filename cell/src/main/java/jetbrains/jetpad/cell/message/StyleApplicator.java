@@ -20,22 +20,25 @@ import jetbrains.jetpad.base.Disposable;
 import jetbrains.jetpad.base.Registration;
 import jetbrains.jetpad.cell.Cell;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-class StyleController {
-  private CellWithMessageStyler myDefaultStyler;
-  private List<Function<Cell, CellWithMessageStyler>> myStylerSuppliers;
+class StyleApplicator {
+  private MessageStyler myDefaultStyler;
+  private List<Function<Cell, MessageStyler>> myStylerSuppliers;
   private Map<Cell, StyleRegistrations> myRegistrations = null;
 
-  StyleController(CellWithMessageStyler defaultStyler, List<Function<Cell, CellWithMessageStyler>> customStylers) {
-    myDefaultStyler = defaultStyler == null ? new CellWithMessageStyler() : defaultStyler;
+  StyleApplicator(MessageStyler defaultStyler, List<Function<Cell, MessageStyler>> customStylers) {
+    myDefaultStyler = defaultStyler == null ? new MessageStyler() : defaultStyler;
     myStylerSuppliers = (customStylers == null || customStylers.size() == 0) ? null : new ArrayList<>(customStylers);
   }
 
-  private CellWithMessageStyler stylerFor(Cell cell) {
+  private MessageStyler stylerFor(Cell cell) {
     if (myStylerSuppliers != null) {
-      for (Function<Cell, CellWithMessageStyler> supplier : myStylerSuppliers) {
-        CellWithMessageStyler styler = supplier.apply(cell);
+      for (Function<Cell, MessageStyler> supplier : myStylerSuppliers) {
+        MessageStyler styler = supplier.apply(cell);
         if (styler != null) return styler;
       }
     }

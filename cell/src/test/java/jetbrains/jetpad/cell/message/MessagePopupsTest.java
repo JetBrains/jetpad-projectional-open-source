@@ -33,14 +33,14 @@ public class MessagePopupsTest extends MessageControllerTestCase {
     cell.addListener(new CellAdapter() {
       @Override
       public void onPropertyChanged(CellPropertySpec<?> prop, PropertyChangeEvent<?> event) {
-        if (Cell.isPopupProp(prop) && cell.get(DecorationTrait.POPUP_ACTIVE)) {
+        if (Cell.isPopupProp(prop) && cell.get(MessageTrait.POPUP_ACTIVE)) {
           errorPopupChanged.set(true);
         }
       }
     });
     setError(cell);
-    assertTrue(cell.get(DecorationTrait.POPUP_ACTIVE));
-    assertNotNull(cell.get(DecorationTrait.POPUP_POSITION));
+    assertTrue(cell.get(MessageTrait.POPUP_ACTIVE));
+    assertNotNull(cell.get(MessageTrait.POPUP_POSITION));
     assertTrue(errorPopupChanged.get());
   }
 
@@ -62,8 +62,8 @@ public class MessagePopupsTest extends MessageControllerTestCase {
   public void removeErrorPopup() {
     setError(cell);
     removeError(cell);
-    assertFalse(cell.get(DecorationTrait.POPUP_ACTIVE));
-    assertNull(cell.get(DecorationTrait.POPUP_POSITION));
+    assertFalse(cell.get(MessageTrait.POPUP_ACTIVE));
+    assertNull(cell.get(MessageTrait.POPUP_POSITION));
   }
 
   @Test
@@ -96,12 +96,12 @@ public class MessagePopupsTest extends MessageControllerTestCase {
     assertDecorationPopupVisible(cell, true);
 
     removeError(cell);
-    assertFalse(cell.get(DecorationTrait.POPUP_ACTIVE));
-    assertNull(cell.get(DecorationTrait.POPUP_POSITION));
+    assertFalse(cell.get(MessageTrait.POPUP_ACTIVE));
+    assertNull(cell.get(MessageTrait.POPUP_POSITION));
 
     mouseLeft();
-    assertFalse(cell.get(DecorationTrait.POPUP_ACTIVE));
-    assertNull(cell.get(DecorationTrait.POPUP_POSITION));
+    assertFalse(cell.get(MessageTrait.POPUP_ACTIVE));
+    assertNull(cell.get(MessageTrait.POPUP_POSITION));
   }
 
   @Test
@@ -130,8 +130,8 @@ public class MessagePopupsTest extends MessageControllerTestCase {
 
   @Test
   public void setOtherPopup() {
-    cell.set(DecorationTrait.POPUP_POSITION, new TextCell());
-    assertFalse(cell.get(DecorationTrait.POPUP_ACTIVE));
+    cell.set(MessageTrait.POPUP_POSITION, new TextCell());
+    assertFalse(cell.get(MessageTrait.POPUP_ACTIVE));
   }
 
   @Test
@@ -214,13 +214,13 @@ public class MessagePopupsTest extends MessageControllerTestCase {
   @Test
   public void changeErrorStateWhileOtherPopupShown() {
     HorizontalCell popup = new HorizontalCell();
-    cell.set(DecorationTrait.POPUP_POSITION, popup);
+    cell.set(MessageTrait.POPUP_POSITION, popup);
 
     setError(cell);
-    assertSame(popup, cell.get(DecorationTrait.POPUP_POSITION));
-    assertFalse(cell.get(DecorationTrait.POPUP_ACTIVE));
+    assertSame(popup, cell.get(MessageTrait.POPUP_POSITION));
+    assertFalse(cell.get(MessageTrait.POPUP_ACTIVE));
 
-    cell.set(DecorationTrait.POPUP_POSITION, null);
+    cell.set(MessageTrait.POPUP_POSITION, null);
     assertDecorationPopupVisible(cell, false);
   }
 

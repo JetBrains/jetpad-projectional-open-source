@@ -19,7 +19,7 @@ import jetbrains.jetpad.base.Registration;
 import jetbrains.jetpad.cell.Cell;
 import jetbrains.jetpad.values.Color;
 
-public class CellWithMessageStyler {
+public class MessageStyler {
   public static final Color WARNING_COLOR = new Color(244, 232, 171);
 
   protected Registration doApplyBroken(Cell cell) {

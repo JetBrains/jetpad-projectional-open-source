@@ -36,18 +36,18 @@ public class MessagePopupAndTextCompletionTest extends TextEditorCompletionHandl
   @Test
   public void errorPopupReplacedWithCompletion() {
     MessageController.setError(getView(), "");
-    assertTrue(getView().get(DecorationTrait.POPUP_ACTIVE));
+    assertTrue(getView().get(MessageTrait.POPUP_ACTIVE));
 
     complete();
     assertNotNull(getView().get(Cell.BOTTOM_POPUP));
-    assertFalse(getView().get(DecorationTrait.POPUP_ACTIVE));
+    assertFalse(getView().get(MessageTrait.POPUP_ACTIVE));
     assertTrue(getController().isActive());
 
     escape();
     assertFalse(getController().isActive());
 
-    assertTrue(getView().get(DecorationTrait.POPUP_ACTIVE));
-    assertNotNull(getView().get(DecorationTrait.POPUP_POSITION));
+    assertTrue(getView().get(MessageTrait.POPUP_ACTIVE));
+    assertNotNull(getView().get(MessageTrait.POPUP_POSITION));
   }
 
   @Test

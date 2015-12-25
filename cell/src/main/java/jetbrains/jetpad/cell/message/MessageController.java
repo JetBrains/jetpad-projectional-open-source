@@ -39,11 +39,11 @@ public final class MessageController {
   static final CellPropertySpec<String> BROKEN = new CellPropertySpec<>("broken");
 
   public static Registration install(CellContainer container,
-                                     CellWithMessageStyler defaultStyler,
-                                     List<Function<Cell, CellWithMessageStyler>> customStylers) {
+                                     MessageStyler defaultStyler,
+                                     List<Function<Cell, MessageStyler>> customStylers) {
     MessageController controller = new MessageController(container);
-    DecorationTrait decorator = new DecorationTrait(new StyleController(defaultStyler, customStylers));
-    return controller.install(decorator);
+    MessageTrait trait = new MessageTrait(new StyleApplicator(defaultStyler, customStylers));
+    return controller.install(trait);
   }
 
   public static Registration install(CellContainer container) {
@@ -106,7 +106,7 @@ public final class MessageController {
     myContainer = container;
   }
 
-  private CompositeRegistration install(DecorationTrait decorator) {
+  private CompositeRegistration install(MessageTrait trait) {
     CompositeRegistration result = new CompositeRegistration();
 
     result.add(myContainer.root.addTrait(new CellTrait() {
@@ -119,7 +119,7 @@ public final class MessageController {
       }
     }));
 
-    myChildrenListener = new MyChildrenListener(myContainer, decorator);
+    myChildrenListener = new MyChildrenListener(myContainer, trait);
     result.add(myContainer.addListener(myChildrenListener));
     result.add(new Registration() {
       @Override
@@ -137,7 +137,7 @@ public final class MessageController {
   }
 
   private static class MyChildrenListener extends CellContainerAdapter implements Disposable {
-    private DecorationTrait myDecorator;
+    private MessageTrait myTrait;
     private Map<Cell, Registration> myRegistrations;
 
     private Handler<Cell> myAttachHandler = new Handler<Cell>() {
@@ -149,7 +149,7 @@ public final class MessageController {
         if (myRegistrations != null && myRegistrations.containsKey(cell)) {
           throw new IllegalStateException();
         }
-        final Registration decorationReg = cell.addTrait(myDecorator);
+        final Registration decorationReg = cell.addTrait(myTrait);
         if (myRegistrations == null) {
           myRegistrations = new HashMap<>();
         }
@@ -157,7 +157,7 @@ public final class MessageController {
           @Override
           protected void doRemove() {
             decorationReg.remove();
-            myDecorator.detach(cell);
+            myTrait.detach(cell);
           }
         });
       }
@@ -177,8 +177,8 @@ public final class MessageController {
       }
     };
 
-    private MyChildrenListener(CellContainer container, DecorationTrait decorator) {
-      myDecorator = decorator;
+    private MyChildrenListener(CellContainer container, MessageTrait trait) {
+      myTrait = trait;
       visit(container.root, myAttachHandler);
     }
 

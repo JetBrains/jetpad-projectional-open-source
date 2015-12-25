@@ -23,9 +23,7 @@ import jetbrains.jetpad.event.MouseEvent;
 import org.junit.After;
 import org.junit.Before;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public abstract class MessageControllerTestCase extends EditingTestCase {
   protected Cell cell;
@@ -66,8 +64,8 @@ public abstract class MessageControllerTestCase extends EditingTestCase {
   }
 
   protected void assertDecorationPopupVisible(Cell c, boolean visible) {
-    assertTrue(c.get(DecorationTrait.POPUP_ACTIVE));
-    Cell popup = c.get(DecorationTrait.POPUP_POSITION);
+    assertTrue(c.get(MessageTrait.POPUP_ACTIVE));
+    Cell popup = c.get(MessageTrait.POPUP_POSITION);
     assertNotNull(popup);
     assertEquals(visible, popup.get(Cell.VISIBLE));
   }
@@ -81,6 +79,6 @@ public abstract class MessageControllerTestCase extends EditingTestCase {
   }
 
   protected String getPopupMessage() {
-    return ((TextCell) cell.get(DecorationTrait.POPUP_POSITION)).text().get();
+    return ((TextCell) cell.get(MessageTrait.POPUP_POSITION)).text().get();
   }
 }
