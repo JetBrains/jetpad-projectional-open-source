@@ -22,19 +22,23 @@ import jetbrains.jetpad.cell.HorizontalCell;
 import jetbrains.jetpad.cell.TextCell;
 import jetbrains.jetpad.cell.action.CellActions;
 import jetbrains.jetpad.cell.completion.Completion;
-import jetbrains.jetpad.cell.util.CellState;
-import jetbrains.jetpad.completion.CompletionController;
+import jetbrains.jetpad.cell.message.MessageController;
 import jetbrains.jetpad.cell.position.Positions;
+import jetbrains.jetpad.cell.util.CellState;
 import jetbrains.jetpad.cell.util.CellStateHandler;
-import jetbrains.jetpad.event.*;
-import jetbrains.jetpad.hybrid.testapp.mapper.ExprHybridEditorSpec;
-import jetbrains.jetpad.model.composite.Composites;
-import jetbrains.jetpad.projectional.util.RootController;
+import jetbrains.jetpad.completion.CompletionController;
+import jetbrains.jetpad.event.Key;
+import jetbrains.jetpad.event.KeyEvent;
+import jetbrains.jetpad.event.KeyStrokeSpecs;
+import jetbrains.jetpad.event.ModifierKey;
 import jetbrains.jetpad.hybrid.parser.*;
 import jetbrains.jetpad.hybrid.testapp.mapper.ExprContainerMapper;
+import jetbrains.jetpad.hybrid.testapp.mapper.ExprHybridEditorSpec;
 import jetbrains.jetpad.hybrid.testapp.mapper.Tokens;
 import jetbrains.jetpad.hybrid.testapp.model.*;
 import jetbrains.jetpad.mapper.Mapper;
+import jetbrains.jetpad.model.composite.Composites;
+import jetbrains.jetpad.projectional.util.RootController;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -965,7 +969,7 @@ public class HybridEditorTest extends EditingTestCase {
     select(0, false);
     backspace();
 
-    assertTrue(sync.target().hasError().get());
+    assertTrue(MessageController.hasError(sync.target()));
   }
 
   private ValueToken createComplexToken() {

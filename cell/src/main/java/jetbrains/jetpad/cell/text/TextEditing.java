@@ -22,8 +22,6 @@ import com.google.common.base.Supplier;
 import jetbrains.jetpad.cell.Cell;
 import jetbrains.jetpad.cell.TextCell;
 import jetbrains.jetpad.cell.action.CellActions;
-import jetbrains.jetpad.cell.completion.Completion;
-import jetbrains.jetpad.cell.completion.CompletionItems;
 import jetbrains.jetpad.cell.completion.CompletionSupport;
 import jetbrains.jetpad.cell.completion.Side;
 import jetbrains.jetpad.cell.trait.CellTrait;
@@ -32,7 +30,6 @@ import jetbrains.jetpad.cell.trait.DerivedCellTrait;
 import jetbrains.jetpad.cell.util.CellState;
 import jetbrains.jetpad.cell.util.CellStateDifference;
 import jetbrains.jetpad.cell.util.CellStateHandler;
-import jetbrains.jetpad.completion.CompletionParameters;
 import jetbrains.jetpad.values.Color;
 
 public class TextEditing {
@@ -200,10 +197,7 @@ public class TextEditing {
 
     @Override
     public boolean synced(TextCell cell) {
-      if (myValidator == null) {
-        return true;
-      }
-      return myValidator.apply(cell.text().get());
+      return myValidator == null || myValidator.apply(cell.text().get());
     }
 
     @Override

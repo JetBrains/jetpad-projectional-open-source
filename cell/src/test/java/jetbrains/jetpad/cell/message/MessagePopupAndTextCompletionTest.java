@@ -15,7 +15,10 @@
  */
 package jetbrains.jetpad.cell.message;
 
+import com.google.common.base.Predicates;
 import jetbrains.jetpad.cell.Cell;
+import jetbrains.jetpad.cell.TextCell;
+import jetbrains.jetpad.cell.text.TextEditing;
 import jetbrains.jetpad.cell.text.TextEditorCompletionHandlerTest;
 import org.junit.Before;
 import org.junit.Test;
@@ -27,23 +30,33 @@ public class MessagePopupAndTextCompletionTest extends TextEditorCompletionHandl
   @Override
   public void init() {
     super.init();
-    ErrorMarkers.install(getView());
+    MessageController.install(myCellContainer);
   }
 
   @Test
   public void errorPopupReplacedWithCompletion() {
-    getView().hasError().set(true);
-    assertTrue(getView().get(ErrorMarkers.POPUP_ACTIVE));
+    MessageController.setError(getView(), "");
+    assertTrue(getView().get(MessageTrait.POPUP_ACTIVE));
 
     complete();
     assertNotNull(getView().get(Cell.BOTTOM_POPUP));
-    assertFalse(getView().get(ErrorMarkers.POPUP_ACTIVE));
+    assertFalse(getView().get(MessageTrait.POPUP_ACTIVE));
     assertTrue(getController().isActive());
 
     escape();
     assertFalse(getController().isActive());
 
-    assertTrue(getView().get(ErrorMarkers.POPUP_ACTIVE));
-    assertNotNull(getView().get(ErrorMarkers.POPUP_POSITION));
+    assertTrue(getView().get(MessageTrait.POPUP_ACTIVE));
+    assertNotNull(getView().get(MessageTrait.POPUP_POSITION));
+  }
+
+  @Test
+  public void completeBrokenCell() {
+    getView().addTrait(TextEditing.validTextEditing(Predicates.<String>alwaysFalse()));
+    complete();
+    type("a");
+    assertTrue(MessageController.isBroken(getView()));
+    enter();
+    assertEquals("a", ((TextCell) getView()).text().get());
   }
 }

@@ -23,7 +23,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public class CounterUtil {
-  public static final List<CellPropertySpec<Boolean>> PROPS = Arrays.asList(Cell.FOCUS_HIGHLIGHTED, Cell.SELECTED, Cell.HAS_ERROR, Cell.HAS_WARNING);
+  public static final List<CellPropertySpec<Boolean>> PROPS = Arrays.asList(Cell.FOCUS_HIGHLIGHTED, Cell.SELECTED);
 
   public static boolean isCounterProp(CellPropertySpec<?> prop) {
     return PROPS.indexOf(prop) != -1;
@@ -56,10 +56,6 @@ public class CounterUtil {
       spec = Counters.HIGHLIGHT_COUNT;
     } else if (prop == Cell.SELECTED) {
       spec = Counters.SELECT_COUNT;
-    } else if (prop == Cell.HAS_ERROR) {
-      spec = Counters.ERROR_COUNT;
-    } else if (prop == Cell.HAS_WARNING) {
-      spec = Counters.WARNING_COUNT;
     }
     if (spec != null) {
       target.changeCounter(spec, delta);

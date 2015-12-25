@@ -17,12 +17,7 @@ package jetbrains.jetpad.cell.toView;
 
 import jetbrains.jetpad.base.Registration;
 import jetbrains.jetpad.cell.Cell;
-import jetbrains.jetpad.cell.mappersUtil.BasePopupManager;
-import jetbrains.jetpad.cell.mappersUtil.PopupManager;
-import jetbrains.jetpad.cell.mappersUtil.PopupPositionUpdater;
-import jetbrains.jetpad.cell.mappersUtil.CounterSpec;
-import jetbrains.jetpad.cell.mappersUtil.Counters;
-import jetbrains.jetpad.cell.mappersUtil.HasCounters;
+import jetbrains.jetpad.cell.mappersUtil.*;
 import jetbrains.jetpad.geometry.Rectangle;
 import jetbrains.jetpad.mapper.Mapper;
 import jetbrains.jetpad.mapper.MappingContext;
@@ -136,13 +131,11 @@ class BaseCellMapper<SourceT extends Cell, TargetT extends View> extends Mapper<
   void refreshProperties() {
     boolean selected = getSource().get(Cell.SELECTED) || getCounter(Counters.SELECT_COUNT) > 0;
     boolean focusHighlighted = getSource().get(Cell.FOCUS_HIGHLIGHTED) || getCounter(Counters.HIGHLIGHT_COUNT) > 0;
-    boolean hasError = getSource().get(Cell.HAS_ERROR) || getCounter(Counters.ERROR_COUNT) > 0;
-    boolean hasWarning = getSource().get(Cell.HAS_WARNING) || getCounter(Counters.WARNING_COUNT) > 0;
     Color background = getSource().get(Cell.BACKGROUND);
-    applyStyle(selected, focusHighlighted, hasError, hasWarning, (background == null ? myAncestorBackground : background));
+    applyStyle(selected, focusHighlighted, (background == null ? myAncestorBackground : background));
   }
 
-  private void applyStyle(boolean selected, boolean focusHighlighted, boolean hasError, boolean hasWarning, Color background) {
+  private void applyStyle(boolean selected, boolean focusHighlighted, Color background) {
     if (selected) {
       background = CellContainerToViewMapper.SELECTION_COLOR;
     } else if (focusHighlighted) {
@@ -152,8 +145,13 @@ class BaseCellMapper<SourceT extends Cell, TargetT extends View> extends Mapper<
     }
     getTarget().background().set(background);
 
-    Color borderColor = hasError ? Color.PINK : (hasWarning ? Color.YELLOW : getSource().get(Cell.BORDER_COLOR));
-    getTarget().border().set(borderColor);
+    if (getSource().get(Cell.RED_UNDERLINE)) {
+      getTarget().border().set(Color.RED);
+    } else if (getSource().get(Cell.YELLOW_UNDERLINE)) {
+      getTarget().border().set(Color.YELLOW);
+    } else {
+      getTarget().border().set(getSource().get(Cell.BORDER_COLOR));
+    }
 
     getTarget().visible().set(getSource().get(Cell.VISIBLE));
     getTarget().hasShadow().set(getSource().get(Cell.HAS_SHADOW));
