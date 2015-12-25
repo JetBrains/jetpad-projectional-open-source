@@ -17,12 +17,7 @@ package jetbrains.jetpad.cell.toView;
 
 import jetbrains.jetpad.base.Registration;
 import jetbrains.jetpad.cell.Cell;
-import jetbrains.jetpad.cell.mappersUtil.BasePopupManager;
-import jetbrains.jetpad.cell.mappersUtil.PopupManager;
-import jetbrains.jetpad.cell.mappersUtil.PopupPositionUpdater;
-import jetbrains.jetpad.cell.mappersUtil.CounterSpec;
-import jetbrains.jetpad.cell.mappersUtil.Counters;
-import jetbrains.jetpad.cell.mappersUtil.HasCounters;
+import jetbrains.jetpad.cell.mappersUtil.*;
 import jetbrains.jetpad.geometry.Rectangle;
 import jetbrains.jetpad.mapper.Mapper;
 import jetbrains.jetpad.mapper.MappingContext;
@@ -150,7 +145,13 @@ class BaseCellMapper<SourceT extends Cell, TargetT extends View> extends Mapper<
     }
     getTarget().background().set(background);
 
-    getTarget().border().set(getSource().get(Cell.BORDER_COLOR));
+    if (getSource().get(Cell.RED_UNDERLINE)) {
+      getTarget().border().set(Color.RED);
+    } else if (getSource().get(Cell.YELLOW_UNDERLINE)) {
+      getTarget().border().set(Color.YELLOW);
+    } else {
+      getTarget().border().set(getSource().get(Cell.BORDER_COLOR));
+    }
 
     getTarget().visible().set(getSource().get(Cell.VISIBLE));
     getTarget().hasShadow().set(getSource().get(Cell.HAS_SHADOW));

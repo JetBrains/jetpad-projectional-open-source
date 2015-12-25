@@ -21,8 +21,6 @@ import jetbrains.jetpad.cell.TextCell;
 import jetbrains.jetpad.values.Color;
 
 public class MessageStyler {
-  private static final Color WARNING_COLOR = new Color(244, 232, 171);
-
   protected Registration doApplyBroken(Cell cell) {
     if (cell instanceof TextCell) {
       return cell.set(TextCell.TEXT_COLOR, Color.RED);
@@ -31,10 +29,10 @@ public class MessageStyler {
   }
 
   protected Registration doApplyError(Cell cell) {
-    return cell.set(Cell.BORDER_COLOR, Color.PINK);
+    return cell.set(Cell.RED_UNDERLINE, true);
   }
 
   protected Registration doApplyWarning(Cell cell) {
-    return cell.set(Cell.BACKGROUND, WARNING_COLOR);
+    return cell.set(Cell.YELLOW_UNDERLINE, true);
   }
 }

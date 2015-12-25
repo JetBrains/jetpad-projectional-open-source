@@ -24,7 +24,6 @@ import jetbrains.jetpad.cell.mappersUtil.CounterSpec;
 import jetbrains.jetpad.cell.mappersUtil.Counters;
 import jetbrains.jetpad.cell.mappersUtil.HasCounters;
 import jetbrains.jetpad.cell.mappersUtil.PopupManager;
-import jetbrains.jetpad.cell.message.MessageController;
 import jetbrains.jetpad.mapper.Mapper;
 import jetbrains.jetpad.mapper.MappingContext;
 import jetbrains.jetpad.model.collections.list.ObservableList;
@@ -171,7 +170,8 @@ abstract class BaseCellMapper<SourceT extends Cell> extends Mapper<SourceT, Elem
     } else if (background != null) {
       backgroundColor = background.toCssColor();
     }
-    String underline = MessageController.hasError(getSource()) ? CSS.redUnderline() : null;
+    String underline = getSource().get(Cell.RED_UNDERLINE) ? CSS.redUnderline()
+        : (getSource().get(Cell.YELLOW_UNDERLINE) ? CSS.yellowUnderline() : null);
     applyBackground(backgroundColor, underline);
 
     Style style = getTarget().getStyle();
