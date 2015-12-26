@@ -17,7 +17,6 @@ package jetbrains.jetpad.projectional.demo.expr;
 
 import jetbrains.jetpad.cell.Cell;
 import jetbrains.jetpad.cell.CellContainer;
-import jetbrains.jetpad.cell.message.MessageController;
 import jetbrains.jetpad.mapper.Mapper;
 import jetbrains.jetpad.projectional.demo.expr.mapper.ExpressionMappers;
 import jetbrains.jetpad.projectional.demo.expr.model.ExpressionContainer;
@@ -34,7 +33,6 @@ public class ExprDemo {
     CellContainer cellContainer = new CellContainer();
     cellContainer.root.children().add(rootMapper.getTarget());
     RootController.install(cellContainer);
-    MessageController.install(cellContainer);
     return cellContainer;
   }
 
