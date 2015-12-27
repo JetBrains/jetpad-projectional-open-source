@@ -52,15 +52,19 @@ public abstract class BasePopupManager<TargetT> implements PopupManager {
   }
 
   @Override
+  public void onPopupPropertyChanged(Cell popup, CellPropertySpec<?> prop, PropertyChangeEvent<?> change) {
+    if (prop == Cell.VISIBLE && (Boolean) change.getNewValue()) {
+      Mapper<? extends Cell, ? extends TargetT> popupMapper = findPopupMapper(popup);
+      updatePosition(popupMapper, false);
+    }
+  }
+
+  @Override
   public final void onEvent(PropertyChangeEvent<Cell> event) {
     if (event.getOldValue() != null) {
-      for (Mapper<? extends Cell, ? extends TargetT> popupMapper : myPopupMappers) {
-        if (popupMapper.getSource() == event.getOldValue()) {
-          myPopupMappers.remove(popupMapper);
-          detachPopup(popupMapper);
-          break;
-        }
-      }
+      Mapper<? extends Cell, ? extends TargetT> popupMapper = findPopupMapper(event.getOldValue());
+      myPopupMappers.remove(popupMapper);
+      detachPopup(popupMapper);
       if (myPopupMappers.isEmpty()) {
         myPopupMappers = null;
         myUpdateRegistration.remove();
@@ -72,20 +76,35 @@ public abstract class BasePopupManager<TargetT> implements PopupManager {
         myPopupMappers = createContainer();
         myUpdateRegistration = setPopupUpdate();
       }
+      updatePopupPositions();
       Mapper<? extends Cell, ? extends TargetT> popupMapper = attachPopup(event.getNewValue());
       myPopupMappers.add(popupMapper);
-      updatePopupPositions();
+      updatePosition(popupMapper, true);
     }
+  }
+
+  private Mapper<? extends Cell, ? extends TargetT> findPopupMapper(Cell popup) {
+    for (Mapper<? extends Cell, ? extends TargetT> popupMapper : myPopupMappers) {
+      if (popupMapper.getSource() == popup) {
+        return popupMapper;
+      }
+    }
+    throw new IllegalStateException();
   }
 
   @Override
   public final void updatePopupPositions() {
     for (Mapper<? extends Cell, ? extends TargetT> popupMapper : myPopupMappers) {
-      Cell parent = popupMapper.getSource().getParent();
-      if (parent == null) continue;
-      CellPropertySpec<Cell> spec = getSpec(parent, popupMapper.getSource());
-      getPositionUpdater(popupMapper).update(spec, popupMapper.getTarget(), parent.getBounds());
+      updatePosition(popupMapper, false);
     }
+  }
+
+  private void updatePosition(Mapper<? extends Cell, ? extends TargetT> popupMapper, boolean initial) {
+    if (!initial && !popupMapper.getSource().get(Cell.VISIBLE)) return;
+    Cell parent = popupMapper.getSource().getParent();
+    if (parent == null) return;
+    CellPropertySpec<Cell> spec = getSpec(parent, popupMapper.getSource());
+    getPositionUpdater(popupMapper).update(spec, popupMapper.getTarget(), parent.getBounds(), hasOpposite(spec, parent));
   }
 
   private CellPropertySpec<Cell> getSpec(Cell parent, Cell popup) {
@@ -93,5 +112,20 @@ public abstract class BasePopupManager<TargetT> implements PopupManager {
       if (parent.get(spec) == popup) return spec;
     }
     throw new RuntimeException();
+  }
+
+  private boolean hasOpposite(CellPropertySpec<Cell> spec, Cell parent) {
+    CellPropertySpec<Cell> opposite = getOpposite(spec);
+    if (opposite == null) return false;
+    Cell oppositePopup = parent.get(opposite);
+    return oppositePopup != null && oppositePopup.get(Cell.VISIBLE);
+  }
+
+  private CellPropertySpec<Cell> getOpposite(CellPropertySpec<Cell> prop) {
+    if (Cell.BOTTOM_POPUP == prop) return Cell.TOP_POPUP;
+    if (Cell.TOP_POPUP == prop) return Cell.BOTTOM_POPUP;
+    if (Cell.RIGHT_POPUP == prop) return Cell.LEFT_POPUP;
+    if (Cell.LEFT_POPUP == prop) return Cell.RIGHT_POPUP;
+    return null;
   }
 }

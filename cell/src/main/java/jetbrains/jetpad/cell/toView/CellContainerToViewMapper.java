@@ -347,6 +347,9 @@ public class CellContainerToViewMapper extends Mapper<CellContainer, View> {
           }
         } else {
           target.refreshProperties();
+          if (cell.isPopup()) {
+            target.onPopupPropertyChanged(prop, event);
+          }
         }
 
         if (prop == TextCell.CARET_VISIBLE) {

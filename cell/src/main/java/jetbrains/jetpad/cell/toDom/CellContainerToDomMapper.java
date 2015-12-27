@@ -272,6 +272,9 @@ public class CellContainerToDomMapper extends Mapper<CellContainer, Element> {
                 mapper.onEvent((PropertyChangeEvent<Cell>) event);
               } else {
                 mapper.refreshProperties();
+                if (cell.isPopup()) {
+                  mapper.onPopupPropertyChanged(prop, event);
+                }
               }
             }
 

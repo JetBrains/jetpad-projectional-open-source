@@ -20,6 +20,8 @@ import jetbrains.jetpad.cell.Cell;
 import jetbrains.jetpad.cell.EditingTestCase;
 import jetbrains.jetpad.cell.TextCell;
 import jetbrains.jetpad.event.MouseEvent;
+import jetbrains.jetpad.geometry.Rectangle;
+import jetbrains.jetpad.geometry.Vector;
 import org.junit.After;
 import org.junit.Before;
 
@@ -52,7 +54,8 @@ public abstract class MessageControllerTestCase extends EditingTestCase {
   }
 
   protected void mouseEntered(Cell c) {
-    myCellContainer.mouseEntered(new MouseEvent(c.getBounds().center()));
+    Rectangle bounds = c.getBounds();
+    myCellContainer.mouseEntered(new MouseEvent(bounds.origin.add(new Vector(bounds.dimension.x / 2, bounds.dimension.y))));
   }
 
   protected void mouseLeft() {
@@ -60,7 +63,7 @@ public abstract class MessageControllerTestCase extends EditingTestCase {
   }
 
   protected void mouseMoved() {
-    myCellContainer.mouseMoved(new MouseEvent(0, 0));
+    myCellContainer.mouseMoved(new MouseEvent(1, 1));
   }
 
   protected void assertDecorationPopupVisible(Cell c, boolean visible) {

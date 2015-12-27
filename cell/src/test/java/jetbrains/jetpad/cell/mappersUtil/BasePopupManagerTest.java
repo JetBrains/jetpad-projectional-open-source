@@ -61,7 +61,7 @@ public class BasePopupManagerTest extends EditingTestCase {
     attachWithPopup();
     cell.bottomPopup().get().visible().set(false);
     manager.updatePopupPositions();
-    assertEquals(2, manager.updatesCount);
+    assertEquals(1, manager.updatesCount);
   }
 
   @Test
@@ -128,6 +128,9 @@ public class BasePopupManagerTest extends EditingTestCase {
       if (!popup.isAttached()) {
         throw new RuntimeException();
       }
+      if (!popup.get(Cell.VISIBLE)) {
+        throw new RuntimeException();
+      }
       if (popup.getParent() == null) {
         throw new RuntimeException();
       }
@@ -150,7 +153,11 @@ public class BasePopupManagerTest extends EditingTestCase {
     }
 
     @Override
-    protected void updateBottom(Rectangle target, Object popup) {
+    protected void updateTop(Rectangle target, Object popup, boolean hasBottom) {
+    }
+
+    @Override
+    protected void updateBottom(Rectangle target, Object popup, boolean hasTop) {
     }
   }
 }
