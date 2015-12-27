@@ -35,7 +35,7 @@ import java.util.List;
 import java.util.Map;
 
 class MessageTrait extends CellTrait {
-  static final CellPropertySpec<Cell> POPUP_POSITION = Cell.BOTTOM_POPUP;
+  static final CellPropertySpec<Cell> POPUP_POSITION = Cell.TOP_POPUP;
   static final CellPropertySpec<Boolean> POPUP_ACTIVE = new CellPropertySpec<>("isMessagePopupActive", false);
 
   private static final List<CellPropertySpec<String>> ERROR_PROPS_PRIORITY =

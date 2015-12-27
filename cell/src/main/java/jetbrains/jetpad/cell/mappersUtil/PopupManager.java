@@ -17,12 +17,14 @@ package jetbrains.jetpad.cell.mappersUtil;
 
 import jetbrains.jetpad.base.Disposable;
 import jetbrains.jetpad.cell.Cell;
+import jetbrains.jetpad.cell.CellPropertySpec;
 import jetbrains.jetpad.model.event.EventHandler;
 import jetbrains.jetpad.model.property.PropertyChangeEvent;
 
 public interface PopupManager extends EventHandler<PropertyChangeEvent<Cell>>, Disposable {
   void attach(Cell cell);
   void updatePopupPositions();
+  void onPopupPropertyChanged(Cell popup, CellPropertySpec<?> prop, PropertyChangeEvent<?> change);
 
   PopupManager EMPTY = new PopupManager() {
     @Override
@@ -31,6 +33,10 @@ public interface PopupManager extends EventHandler<PropertyChangeEvent<Cell>>, D
 
     @Override
     public void updatePopupPositions() {
+    }
+
+    @Override
+    public void onPopupPropertyChanged(Cell cell, CellPropertySpec<?> prop, PropertyChangeEvent<?> change) {
     }
 
     @Override

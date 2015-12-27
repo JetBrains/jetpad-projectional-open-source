@@ -31,26 +31,54 @@ class PopupPositioner extends PopupPositionUpdater<Element> {
   }
 
   @Override
-  protected void updateBottom(Rectangle target, Element popup) {
-    boolean hasScrollers = DomUtil.hasScrollers(myContext.rootElement);
-    Rectangle visiblePart;
-    if (hasScrollers) {
-      visiblePart = DomUtil.visiblePart(myContext.rootElement);
-    } else {
-      visiblePart = new Rectangle(Window.getScrollLeft(), Window.getScrollTop(), Window.getClientWidth(), Window.getClientHeight());
+  protected void updateBottom(Rectangle target, Element popup, boolean hasTop) {
+    if (hasTop) {
+      positionBottom(popup, target);
+      return;
     }
-
-    Rectangle childBounds = new Rectangle(target.origin, new Vector(popup.getClientWidth(), Tooltip.height(popup)));
-
-    boolean bottom = visiblePart.contains(childBounds.add(new Vector(0, target.dimension.y)));
-    boolean top = visiblePart.contains(childBounds.sub(new Vector(0, childBounds.dimension.y)));
-
+    Rectangle visiblePart = getVisiblePart();
+    Rectangle popupBounds = new Rectangle(target.origin, new Vector(popup.getClientWidth(), Tooltip.height(popup)));
+    boolean bottom = visiblePart.contains(popupBounds.add(new Vector(0, target.dimension.y)));
+    boolean top = visiblePart.contains(popupBounds.sub(new Vector(0, popupBounds.dimension.y)));
     if (bottom || !top) {
-      Tooltip.bottom(popup);
-      setPosition(popup, target.origin.x, target.origin.y + target.dimension.y);
+      positionBottom(popup, target);
     } else {
-      Tooltip.top(popup);
-      setPosition(popup, target.origin.x, target.origin.y - childBounds.dimension.y);
+      positionTop(popup, target, popupBounds);
+    }
+  }
+
+  @Override
+  protected void updateTop(Rectangle target, Element popup, boolean hasBottom) {
+    Rectangle popupBounds = new Rectangle(target.origin, new Vector(popup.getClientWidth(), Tooltip.height(popup)));
+    if (hasBottom) {
+      positionTop(popup, target, popupBounds);
+      return;
+    }
+    Rectangle visiblePart = getVisiblePart();
+    boolean top = visiblePart.contains(popupBounds.sub(new Vector(0, popupBounds.dimension.y)));
+    boolean bottom = visiblePart.contains(popupBounds.add(new Vector(0, target.dimension.y)));
+    if (top || !bottom) {
+      positionTop(popup, target, popupBounds);
+    } else {
+      positionBottom(popup, target);
+    }
+  }
+
+  private void positionTop(Element popup, Rectangle target, Rectangle popupBounds) {
+    Tooltip.top(popup);
+    setPosition(popup, target.origin.x, target.origin.y - popupBounds.dimension.y);
+  }
+
+  private void positionBottom(Element popup, Rectangle target) {
+    Tooltip.bottom(popup);
+    setPosition(popup, target.origin.x, target.origin.y + target.dimension.y);
+  }
+
+  private Rectangle getVisiblePart() {
+    if (DomUtil.hasScrollers(myContext.rootElement)) {
+      return DomUtil.visiblePart(myContext.rootElement);
+    } else {
+      return new Rectangle(Window.getScrollLeft(), Window.getScrollTop(), Window.getClientWidth(), Window.getClientHeight());
     }
   }
 

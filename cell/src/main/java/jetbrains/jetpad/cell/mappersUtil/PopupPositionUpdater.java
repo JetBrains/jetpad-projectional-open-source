@@ -21,20 +21,23 @@ import jetbrains.jetpad.geometry.Rectangle;
 
 public abstract class PopupPositionUpdater<ViewT> {
 
-  public final void update(CellPropertySpec<Cell> kind,  ViewT popup, Rectangle target) {
+  public final void update(CellPropertySpec<Cell> kind,  ViewT popup, Rectangle target, boolean hasOpposite) {
     if (Cell.BOTTOM_POPUP == kind) {
-      updateBottom(target, popup);
+      updateBottom(target, popup, hasOpposite);
     } else if (Cell.FRONT_POPUP == kind) {
       updateFront(target, popup);
     } else if (Cell.RIGHT_POPUP == kind) {
       updateRight(target, popup);
     } else if (Cell.LEFT_POPUP == kind) {
       updateLeft(target, popup);
+    } else if (Cell.TOP_POPUP == kind) {
+      updateTop(target, popup, hasOpposite);
     }
   }
 
   protected abstract void updateLeft(Rectangle target, ViewT popup);
   protected abstract void updateRight(Rectangle target, ViewT popup);
   protected abstract void updateFront(Rectangle target, ViewT popup);
-  protected abstract void updateBottom(Rectangle target, ViewT popup);
+  protected abstract void updateTop(Rectangle target, ViewT popup, boolean hasBottom);
+  protected abstract void updateBottom(Rectangle target, ViewT popup, boolean hasTop);
 }

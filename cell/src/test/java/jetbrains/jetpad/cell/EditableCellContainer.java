@@ -169,4 +169,8 @@ public class EditableCellContainer {
   public final void mouseDrag(Vector v) {
     mouseDrag(v.x, v.y);
   }
+
+  public final void help() {
+    press(Key.F1, ModifierKey.CONTROL);
+  }
 }

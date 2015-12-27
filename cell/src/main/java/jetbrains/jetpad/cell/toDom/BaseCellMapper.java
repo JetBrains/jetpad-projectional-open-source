@@ -20,6 +20,7 @@ import com.google.gwt.dom.client.Node;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.user.client.DOM;
 import jetbrains.jetpad.cell.Cell;
+import jetbrains.jetpad.cell.CellPropertySpec;
 import jetbrains.jetpad.cell.mappersUtil.CounterSpec;
 import jetbrains.jetpad.cell.mappersUtil.Counters;
 import jetbrains.jetpad.cell.mappersUtil.HasCounters;
@@ -147,6 +148,11 @@ abstract class BaseCellMapper<SourceT extends Cell> extends Mapper<SourceT, Elem
   @Override
   public final void onEvent(PropertyChangeEvent<Cell> event) {
     myPopupManager.onEvent(event);
+  }
+
+  void onPopupPropertyChanged(CellPropertySpec<?> prop, PropertyChangeEvent<?> change) {
+    if (getParent() == null) return;
+    ((BaseCellMapper<?>) getParent()).myPopupManager.onPopupPropertyChanged(getSource(), prop, change);
   }
 
   void setAncestorBackground(Color background) {

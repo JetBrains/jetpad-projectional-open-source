@@ -70,6 +70,10 @@ public abstract class EditingTestCase extends BaseTestCase {
     myEditableCellContainer.escape();
   }
 
+  protected final void help() {
+    myEditableCellContainer.help();
+  }
+
   protected final void up() {
     myEditableCellContainer.up();
   }

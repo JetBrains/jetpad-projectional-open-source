@@ -17,9 +17,6 @@ package jetbrains.jetpad.cell.message;
 
 import jetbrains.jetpad.base.Value;
 import jetbrains.jetpad.cell.*;
-import jetbrains.jetpad.event.KeyEvent;
-import jetbrains.jetpad.event.KeyStroke;
-import jetbrains.jetpad.event.KeyStrokeSpecs;
 import jetbrains.jetpad.model.property.PropertyChangeEvent;
 import org.junit.Test;
 
@@ -306,7 +303,7 @@ public class MessagePopupsTest extends MessageControllerTestCase {
     setError(child1);
     myCellContainer.focusedCell.set(child1);
 
-    pressHelp();
+    help();
     assertDecorationPopupVisible(child1, true);
     assertDecorationPopupVisible(cell, false);
 
@@ -330,7 +327,7 @@ public class MessagePopupsTest extends MessageControllerTestCase {
 
     assertFalse(cell.get(Cell.FOCUSABLE));
 
-    pressHelp();
+    help();
     assertDecorationPopupVisible(cell, true);
   }
 
@@ -345,17 +342,12 @@ public class MessagePopupsTest extends MessageControllerTestCase {
     assertDecorationPopupVisible(child1, false);
     assertDecorationPopupVisible(cell, false);
 
-    pressHelp();
+    help();
     assertDecorationPopupVisible(child1, true);
     assertDecorationPopupVisible(cell, false);
 
     escape();
     assertDecorationPopupVisible(child1, false);
     assertDecorationPopupVisible(cell, false);
-  }
-
-  private void pressHelp() {
-    KeyStroke keyStroke = KeyStrokeSpecs.HELP.getKeyStrokes().iterator().next();
-    myCellContainer.keyPressed(new KeyEvent(keyStroke.getKey(), (char) 0, keyStroke.getModifiers()));
   }
 }

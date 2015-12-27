@@ -46,13 +46,14 @@ import java.util.*;
 
 public abstract class Cell implements NavComposite<Cell>, HasVisibility, HasFocusability, HasBounds {
 
+  public static final CellPropertySpec<Cell> TOP_POPUP = new CellPropertySpec<>("topPopup");
   public static final CellPropertySpec<Cell> BOTTOM_POPUP = new CellPropertySpec<>("bottomPopup");
   public static final CellPropertySpec<Cell> FRONT_POPUP = new CellPropertySpec<>("frontPopup");
   public static final CellPropertySpec<Cell> LEFT_POPUP = new CellPropertySpec<>("leftPopup");
   public static final CellPropertySpec<Cell> RIGHT_POPUP = new CellPropertySpec<>("rightPopup");
 
   public static final List<CellPropertySpec<Cell>> POPUP_SPECS =
-      Collections.unmodifiableList(Arrays.asList(LEFT_POPUP, RIGHT_POPUP, BOTTOM_POPUP, FRONT_POPUP));
+      Collections.unmodifiableList(Arrays.asList(LEFT_POPUP, RIGHT_POPUP, TOP_POPUP, BOTTOM_POPUP, FRONT_POPUP));
 
   public static final CellPropertySpec<Boolean> POPUP = new CellPropertySpec<>("popup", false);
   public static final CellPropertySpec<Boolean> HAS_POPUP_DECORATION = new CellPropertySpec<>("popupDecoration", false);
@@ -147,6 +148,10 @@ public abstract class Cell implements NavComposite<Cell>, HasVisibility, HasFocu
 
   public Property<Color> borderColor() {
     return getProp(BORDER_COLOR);
+  }
+
+  public Property<Cell> topPopup() {
+    return getProp(TOP_POPUP);
   }
 
   public Property<Cell> bottomPopup() {

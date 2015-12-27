@@ -17,6 +17,7 @@ package jetbrains.jetpad.cell.toView;
 
 import jetbrains.jetpad.base.Registration;
 import jetbrains.jetpad.cell.Cell;
+import jetbrains.jetpad.cell.CellPropertySpec;
 import jetbrains.jetpad.cell.mappersUtil.*;
 import jetbrains.jetpad.geometry.Rectangle;
 import jetbrains.jetpad.mapper.Mapper;
@@ -122,6 +123,11 @@ class BaseCellMapper<SourceT extends Cell, TargetT extends View> extends Mapper<
   @Override
   public final void onEvent(PropertyChangeEvent<Cell> event) {
     myPopupManager.onEvent(event);
+  }
+
+  void onPopupPropertyChanged(CellPropertySpec<?> prop, PropertyChangeEvent<?> change) {
+    if (getParent() == null) return;
+    ((BaseCellMapper<?, ?>) getParent()).myPopupManager.onPopupPropertyChanged(getSource(), prop, change);
   }
 
   void setAncestorBackground(Color background) {
