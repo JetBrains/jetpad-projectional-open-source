@@ -17,6 +17,7 @@ package jetbrains.jetpad.cell.message;
 
 import jetbrains.jetpad.base.Registration;
 import jetbrains.jetpad.cell.Cell;
+import jetbrains.jetpad.cell.CellContainer;
 import jetbrains.jetpad.cell.EditingTestCase;
 import jetbrains.jetpad.cell.TextCell;
 import jetbrains.jetpad.event.MouseEvent;
@@ -33,7 +34,7 @@ public abstract class MessageControllerTestCase extends EditingTestCase {
 
   @Before
   public void init() {
-    registration = MessageController.install(myCellContainer);
+    registration = installMessageController(myCellContainer);
     cell = doCreateCell();
     myCellContainer.root.children().add(cell);
   }
@@ -45,6 +46,10 @@ public abstract class MessageControllerTestCase extends EditingTestCase {
 
   protected Cell doCreateCell() {
     return new TextCell("abc");
+  }
+
+  protected Registration installMessageController(CellContainer container) {
+    return MessageController.install(container);
   }
 
   protected void showErrorPopup() {

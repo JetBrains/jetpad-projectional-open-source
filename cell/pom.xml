@@ -99,9 +99,10 @@
     </dependency>
 
     <dependency>
-      <groupId>jetbrains.jetpad</groupId>
-      <artifactId>test</artifactId>
+      <groupId>jetbrains.jetpad.util</groupId>
+      <artifactId>base</artifactId>
       <version>1.1-SNAPSHOT</version>
+      <type>test-jar</type>
       <scope>test</scope>
     </dependency>
   </dependencies>
