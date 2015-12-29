@@ -15,7 +15,9 @@
  */
 package jetbrains.jetpad.cell.message;
 
+import com.google.common.base.Supplier;
 import jetbrains.jetpad.base.Registration;
+import jetbrains.jetpad.base.edt.EventDispatchThread;
 import jetbrains.jetpad.cell.Cell;
 import jetbrains.jetpad.cell.CellPropertySpec;
 import jetbrains.jetpad.cell.TextCell;
@@ -38,14 +40,25 @@ class MessageTrait extends CellTrait {
   static final CellPropertySpec<Cell> POPUP_POSITION = Cell.TOP_POPUP;
   static final CellPropertySpec<Boolean> POPUP_ACTIVE = new CellPropertySpec<>("isMessagePopupActive", false);
 
+  static final int POPUPS_SHOW_DELAY_MILLIS = 1000;
+
   private static final List<CellPropertySpec<String>> ERROR_PROPS_PRIORITY =
       Arrays.asList(MessageController.BROKEN, MessageController.ERROR, MessageController.WARNING);
 
+  private Registration myUpdatesReg = null;
+  private long myLastEditingKeyEvent = 0;
+  private boolean myForceHide = false;
+
+  private EventDispatchThread myEdt;
+  private Supplier<Long> myCurrentTimeSupplier;
+
   private boolean myEditingPopup = false;
-  private Map<Cell, Registration> myRegistrations = null;
+  private Map<Cell, LowPriorityPopupSupport> myRegistrations = null;
   private StyleApplicator myStyler;
 
-  MessageTrait(StyleApplicator styleApplicator) {
+  MessageTrait(EventDispatchThread edt, Supplier<Long> currentTimeSupplier, StyleApplicator styleApplicator) {
+    myEdt = edt;
+    myCurrentTimeSupplier = currentTimeSupplier;
     myStyler = styleApplicator;
   }
 
@@ -90,9 +103,7 @@ class MessageTrait extends CellTrait {
     if (cell.get(POPUP_POSITION) == popup) {
       updatePopupValue(cell, null);
     }
-    if (myRegistrations != null && myRegistrations.containsKey(popup)) {
-      hide(popup);
-    }
+    hide(popup);
   }
 
   private void updatePopupValue(Cell cell, Cell newPopup) {
@@ -105,7 +116,40 @@ class MessageTrait extends CellTrait {
   }
 
   @Override
+  public void onKeyTyped(Cell cell, KeyEvent event) {
+    onEditingKeyEvent();
+  }
+
+  private void onEditingKeyEvent() {
+    myLastEditingKeyEvent = myCurrentTimeSupplier.get();
+    if (myForceHide) return;
+    setForceHide(true);
+    myUpdatesReg = myEdt.scheduleRepeating(POPUPS_SHOW_DELAY_MILLIS, new Runnable() {
+      @Override
+      public void run() {
+        if (myCurrentTimeSupplier.get() - myLastEditingKeyEvent < POPUPS_SHOW_DELAY_MILLIS) return;
+        myUpdatesReg.remove();
+        myUpdatesReg = null;
+        setForceHide(false);
+      }
+    });
+  }
+
+  private void setForceHide(boolean forceHide) {
+    if (myForceHide == forceHide) return;
+    myForceHide = forceHide;
+    if (myRegistrations == null) return;
+    for (LowPriorityPopupSupport support : myRegistrations.values()) {
+      support.setForceHide(myForceHide);
+    }
+  }
+
+  @Override
   public void onKeyPressed(Cell cell, KeyEvent event) {
+    if (cell instanceof TextCell && (event.is(Key.BACKSPACE) || event.is(Key.DELETE) || event.is(KeyStrokeSpecs.DELETE_CURRENT))) {
+      onEditingKeyEvent();
+      return;
+    }
     if (cell.get(Cell.FOCUSED) || !cell.get(Cell.FOCUSABLE)) {
       if (event.is(KeyStrokeSpecs.HELP)) {
         if (showPopup(cell)) {
@@ -164,7 +208,7 @@ class MessageTrait extends CellTrait {
     } else if (myRegistrations.containsKey(popup)) {
       return false;
     }
-    myRegistrations.put(popup, new LowPriorityPopupSupport(popup));
+    myRegistrations.put(popup, new LowPriorityPopupSupport(popup, myForceHide));
     return true;
   }
 
