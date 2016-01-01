@@ -47,6 +47,20 @@ public class ValueToken extends BaseToken {
     return "(val " + myValue + ")";
   }
 
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+
+    ValueToken that = (ValueToken) o;
+
+    return myValue.equals(that.myValue);
+  }
+
+  @Override
+  public int hashCode() {
+    return myValue.hashCode();
+  }
 
   public interface ValueCloner<ValueT> {
     ValueT clone(ValueT val);
