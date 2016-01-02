@@ -15,6 +15,7 @@
  */
 package jetbrains.jetpad.cell.message;
 
+import com.google.common.base.Supplier;
 import jetbrains.jetpad.base.Disposable;
 import jetbrains.jetpad.base.Handler;
 import jetbrains.jetpad.base.Registration;
@@ -36,14 +37,24 @@ public final class MessageController {
   static final CellPropertySpec<String> WARNING = new CellPropertySpec<>("warning");
   static final CellPropertySpec<String> BROKEN = new CellPropertySpec<>("broken");
 
-  public static Registration install(CellContainer container, MessageStyler styler) {
-    MessageController controller = new MessageController(container);
-    MessageTrait trait = new MessageTrait(new StyleApplicator(styler));
-    return controller.install(trait);
-  }
-
   public static Registration install(CellContainer container) {
     return install(container, null);
+  }
+
+  public static Registration install(CellContainer container, MessageStyler styler) {
+    return install(container, styler, new Supplier<Long>() {
+      @Override
+      public Long get() {
+        return System.currentTimeMillis();
+      }
+    });
+  }
+
+  // for tests
+  static Registration install(CellContainer container, MessageStyler styler, Supplier<Long> currentTimeSupplier) {
+    MessageController controller = new MessageController(container);
+    MessageTrait trait = new MessageTrait(container.getEdt(), currentTimeSupplier, new StyleApplicator(styler));
+    return controller.install(trait);
   }
 
   public static void setBroken(Cell cell, String message) {
