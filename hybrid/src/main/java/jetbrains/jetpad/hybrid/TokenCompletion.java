@@ -159,7 +159,6 @@ class TokenCompletion {
           public Runnable complete(int selectionIndex, Token... tokens) {
             int i = index + delta;
             ObservableList<Token> editorTokenList = tokenListEditor().tokens;
-            // HybridEditorTest.replaceValueTokens
             if (i < editorTokenList.size() && tokens.length >= 1 && tokens[0] instanceof ValueToken && editorTokenList.get(i) instanceof ValueToken) {
               editorTokenList.remove(i);
             }
