@@ -30,7 +30,9 @@ import jetbrains.jetpad.completion.CompletionItem;
 import jetbrains.jetpad.completion.CompletionParameters;
 import jetbrains.jetpad.completion.CompletionSupplier;
 import jetbrains.jetpad.hybrid.parser.Token;
+import jetbrains.jetpad.hybrid.parser.ValueToken;
 import jetbrains.jetpad.mapper.Mapper;
+import jetbrains.jetpad.model.collections.list.ObservableList;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -156,8 +158,13 @@ class TokenCompletion {
           @Override
           public Runnable complete(int selectionIndex, Token... tokens) {
             int i = index + delta;
+            ObservableList<Token> editorTokenList = tokenListEditor().tokens;
+            // HybridEditorTest.replaceValueTokens
+            if (i < editorTokenList.size() && tokens.length >= 1 && tokens[0] instanceof ValueToken && editorTokenList.get(i) instanceof ValueToken) {
+              editorTokenList.remove(i);
+            }
             for (Token t : tokens) {
-              tokenListEditor().tokens.add(i++, t);
+              editorTokenList.add(i++, t);
             }
             tokenListEditor().updateToPrintedTokens();
             Runnable result = tokenOperations().selectOnCreation(index + delta + selectionIndex, LAST);

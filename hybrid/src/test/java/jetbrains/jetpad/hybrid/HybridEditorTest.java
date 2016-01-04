@@ -505,6 +505,17 @@ public class HybridEditorTest extends EditingTestCase {
   }
 
   @Test
+  public void replaceValueTokens() {
+    type("aaaa");
+
+    select(0, true);
+    complete();
+    type("aaaa");
+
+    assertEquals(1, sync.tokens().size());
+  }
+
+  @Test
   public void valueTokenDelete() {
     setTokens(new ValueToken(new ValueExpr(), new ValueExprCloner()), Tokens.RP);
     select(0, true);
