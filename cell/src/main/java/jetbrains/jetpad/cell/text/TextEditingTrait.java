@@ -200,7 +200,7 @@ public class TextEditingTrait extends TextNavigationTrait {
     int from = Math.min(selStart, caret);
     int to = Math.max(selStart, caret);
 
-    cell.text().set(text.substring(0, from) + text.substring(to));
+    setText(cell, text.substring(0, from) + text.substring(to));
     cell.caretPosition().set(from);
     cell.selectionVisible().set(false);
   }
