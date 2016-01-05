@@ -26,7 +26,11 @@ import jetbrains.jetpad.cell.message.MessageController;
 import jetbrains.jetpad.cell.position.Positions;
 import jetbrains.jetpad.cell.util.CellState;
 import jetbrains.jetpad.cell.util.CellStateHandler;
+import jetbrains.jetpad.completion.BaseCompletionParameters;
 import jetbrains.jetpad.completion.CompletionController;
+import jetbrains.jetpad.completion.CompletionItem;
+import jetbrains.jetpad.completion.CompletionParameters;
+import jetbrains.jetpad.completion.CompletionSupplier;
 import jetbrains.jetpad.event.Key;
 import jetbrains.jetpad.event.KeyEvent;
 import jetbrains.jetpad.event.KeyStrokeSpecs;
@@ -36,6 +40,7 @@ import jetbrains.jetpad.hybrid.testapp.mapper.ExprContainerMapper;
 import jetbrains.jetpad.hybrid.testapp.mapper.ExprHybridEditorSpec;
 import jetbrains.jetpad.hybrid.testapp.mapper.Tokens;
 import jetbrains.jetpad.hybrid.testapp.model.*;
+import jetbrains.jetpad.hybrid.util.HybridWrapperRole;
 import jetbrains.jetpad.mapper.Mapper;
 import jetbrains.jetpad.model.composite.Composites;
 import jetbrains.jetpad.projectional.util.RootController;
@@ -44,6 +49,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Arrays;
+import java.util.List;
 
 import static jetbrains.jetpad.hybrid.SelectionPosition.FIRST;
 import static jetbrains.jetpad.hybrid.SelectionPosition.LAST;
@@ -981,6 +987,29 @@ public class HybridEditorTest extends EditingTestCase {
     backspace();
 
     assertTrue(MessageController.hasError(sync.target()));
+  }
+
+  @Test
+  public void hideTokensInMenu() {
+    sync.setHideTokensInMenu(true);
+    complete();
+    type("aaa");
+
+    assertEquals(0, sync.tokens().size());
+  }
+
+  @Test
+  public void hideTokensInMenuForHybridWrapperRole() {
+    HybridWrapperRole<Object, Expr, Expr> hybridWrapperRole = new HybridWrapperRole<>(mapper.hybridSyncSpec.get(), null, null, true);
+    CompletionSupplier roleCompletion = hybridWrapperRole.createRoleCompletion(mapper, null, null);
+    CompletionParameters completionParameters = new BaseCompletionParameters() {
+      @Override
+      public boolean isMenu() {
+        return true;
+      }
+    };
+    List<CompletionItem> completionItems = roleCompletion.get(completionParameters);
+    assertTrue(completionItems.isEmpty());
   }
 
   private ValueToken createComplexToken() {

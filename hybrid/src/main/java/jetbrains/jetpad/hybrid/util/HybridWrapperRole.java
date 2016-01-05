@@ -24,12 +24,18 @@ public class HybridWrapperRole<ContainerT, WrapperT, TargetT> implements RoleCom
   private HybridEditorSpec<TargetT> mySpec;
   private Supplier<WrapperT> myFactory;
   private Function<Mapper<?, ?>, HybridSynchronizer<TargetT>> mySyncProvider;
+  private boolean myHideTokensInMenu;
 
 
   public HybridWrapperRole(HybridEditorSpec<TargetT> spec, Supplier<WrapperT> targetFactory, Function<Mapper<?, ?>, HybridSynchronizer<TargetT>> syncProvider) {
+    this(spec, targetFactory, syncProvider, false);
+  }
+
+  public HybridWrapperRole(HybridEditorSpec<TargetT> spec, Supplier<WrapperT> targetFactory, Function<Mapper<?, ?>, HybridSynchronizer<TargetT>> syncProvider, boolean hideTokensInMenus) {
     mySpec = spec;
     myFactory = targetFactory;
     mySyncProvider = syncProvider;
+    myHideTokensInMenu = hideTokensInMenus;
   }
 
   @Override
@@ -52,18 +58,20 @@ public class HybridWrapperRole<ContainerT, WrapperT, TargetT> implements RoleCom
           }
         };
 
-        for (CompletionItem ci : mySpec.getTokenCompletion(new Function<Token, Runnable>() {
-          @Override
-          public Runnable apply(Token input) {
-            return completer.complete(input);
-          }
-        }).get(cp)) {
-          result.add(new WrapperCompletionItem(ci) {
+        if (!(cp.isMenu() && myHideTokensInMenu)) {
+          for (CompletionItem ci : mySpec.getTokenCompletion(new Function<Token, Runnable>() {
             @Override
-            public boolean isLowMatchPriority() {
-              return true;
+            public Runnable apply(Token input) {
+              return completer.complete(input);
             }
-          });
+          }).get(cp)) {
+            result.add(new WrapperCompletionItem(ci) {
+              @Override
+              public boolean isLowMatchPriority() {
+                return true;
+              }
+            });
+          }
         }
 
         if (cp.isMenu()) {
