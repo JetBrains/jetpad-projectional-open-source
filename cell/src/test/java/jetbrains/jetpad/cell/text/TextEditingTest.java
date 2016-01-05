@@ -16,7 +16,10 @@
 package jetbrains.jetpad.cell.text;
 
 import jetbrains.jetpad.base.Runnables;
+import jetbrains.jetpad.base.Value;
 import jetbrains.jetpad.cell.trait.CellTrait;
+import jetbrains.jetpad.cell.trait.CellTraitEventSpec;
+import jetbrains.jetpad.cell.util.Cells;
 import jetbrains.jetpad.completion.CompletionItem;
 import jetbrains.jetpad.completion.CompletionParameters;
 import jetbrains.jetpad.completion.CompletionSupplier;
@@ -508,6 +511,31 @@ public class TextEditingTest extends EditingTestCase {
   }
 
   @Test
+  public void becameEmptyFiredForClearSelection() {
+    final Value<Boolean> becameEmptyFired = new Value<>(false);
+    textView.addTrait(new CellTrait() {
+      @Override
+      public void onCellTraitEvent(Cell cell, CellTraitEventSpec<?> spec, Event event) {
+        if (spec == Cells.BECAME_EMPTY) {
+          becameEmptyFired.set(true);
+          event.consume();
+          return;
+        }
+        super.onCellTraitEvent(cell, spec, event);
+      }
+    });
+
+    textView.text().set("TestText");
+    textView.caretPosition().set(8);
+    textView.selectionStart().set(0);
+    textView.selectionVisible().set(true);
+    press(Key.BACKSPACE);
+
+    assertEquals("", textView.text().get());
+    assertTrue(becameEmptyFired.get());
+  }
+
+  @Test
   public void textClearOnEmpty() {
     textView.addTrait(new CellTrait() {
       @Override
@@ -526,7 +554,6 @@ public class TextEditingTest extends EditingTestCase {
     assertFalse(event.isConsumed());
     assertEquals("", textView.text().get());
   }
-
 
   @Test
   public void textPaste() {
