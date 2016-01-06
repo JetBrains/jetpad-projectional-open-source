@@ -36,7 +36,7 @@ class LowPriorityPopupSupport extends Registration implements EventHandler<Colle
   private EventHandler<PropertyChangeEvent<Cell>> myPopupHandler;
   private EventHandler<PropertyChangeEvent<Boolean>> myPopupVisibleHandler;
 
-  LowPriorityPopupSupport(Cell lowPriorityPopup) {
+  LowPriorityPopupSupport(Cell lowPriorityPopup, boolean forceHide) {
     myLowPriorityPopup = lowPriorityPopup;
 
     myPopupVisibleHandler = new EventHandler<PropertyChangeEvent<Boolean>>() {
@@ -54,6 +54,10 @@ class LowPriorityPopupSupport extends Registration implements EventHandler<Colle
     };
 
     subscribe(lowPriorityPopup.getParent(), true);
+
+    if (forceHide) {
+      setForceHide(true);
+    }
   }
 
   private void subscribe(Cell cell, boolean isRoot) {
@@ -146,5 +150,10 @@ class LowPriorityPopupSupport extends Registration implements EventHandler<Colle
     if (popup.visible().get()) {
       myCount--;
     }
+  }
+
+  void setForceHide(boolean forceHide) {
+    myCount += (forceHide ? 1 : -1);
+    myLowPriorityPopup.visible().set(myCount == 0);
   }
 }
