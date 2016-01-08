@@ -118,13 +118,13 @@ class MessageTrait extends CellTrait {
   }
 
   private void onEditingKeyEvent() {
-//    myLastEditingKeyEvent = myEdt.getCurrentTimeMillis();
+    myLastEditingKeyEvent = myEdt.getCurrentTimeMillis();
     if (myForceHide) return;
     setForceHide(true);
     myUpdatesReg = myEdt.scheduleRepeating(POPUPS_SHOW_DELAY_MILLIS, new Runnable() {
       @Override
       public void run() {
-//        if (myEdt.getCurrentTimeMillis() - myLastEditingKeyEvent < POPUPS_SHOW_DELAY_MILLIS) return;
+        if (myEdt.getCurrentTimeMillis() - myLastEditingKeyEvent < POPUPS_SHOW_DELAY_MILLIS) return;
         myUpdatesReg.remove();
         myUpdatesReg = null;
         setForceHide(false);
