@@ -15,13 +15,12 @@
  */
 package jetbrains.jetpad.hybrid.testapp.mapper;
 
-import jetbrains.jetpad.cell.Cell;
 import jetbrains.jetpad.cell.HorizontalCell;
 import jetbrains.jetpad.hybrid.HybridEditorSpec;
 import jetbrains.jetpad.hybrid.HybridSynchronizer;
-import jetbrains.jetpad.hybrid.testapp.model.*;
+import jetbrains.jetpad.hybrid.testapp.model.Expr;
+import jetbrains.jetpad.hybrid.testapp.model.ExprContainer;
 import jetbrains.jetpad.mapper.Mapper;
-import jetbrains.jetpad.mapper.MapperFactory;
 import jetbrains.jetpad.model.property.Property;
 import jetbrains.jetpad.model.property.ValueProperty;
 
@@ -32,25 +31,7 @@ public class ExprContainerMapper extends Mapper<ExprContainer, HorizontalCell> {
   public ExprContainerMapper(ExprContainer source) {
     super(source, new HorizontalCell());
     hybridSync = new HybridSynchronizer<>(this, getSource().expr, getTarget(), hybridSyncSpec);
-
-    hybridSync.setMapperFactory(new MapperFactory<Object, Cell>() {
-      @Override
-      public Mapper<?, ? extends Cell> createMapper(Object source) {
-        if (source instanceof PosValueExpr) {
-          return new PosValueExprMapper((PosValueExpr) source);
-        }
-        if (source instanceof ValueExpr) {
-          return new ValueExprMapper((ValueExpr) source);
-        }
-        if (source instanceof AsyncValueExpr) {
-          return new AsyncValueExprMapper((AsyncValueExpr) source);
-        }
-        if (source instanceof ComplexValueExpr) {
-          return new ComplexValueExprMapper((ComplexValueExpr) source);
-        }
-        return null;
-      }
-    });
+    hybridSync.setMapperFactory(new ExprMapperFactory());
   }
 
   @Override

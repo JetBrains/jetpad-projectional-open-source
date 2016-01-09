@@ -16,6 +16,7 @@
 package jetbrains.jetpad.hybrid;
 
 import com.google.common.collect.Range;
+import jetbrains.jetpad.base.Registration;
 import jetbrains.jetpad.cell.Cell;
 import jetbrains.jetpad.cell.EditingTestCase;
 import jetbrains.jetpad.cell.HorizontalCell;
@@ -44,6 +45,7 @@ import jetbrains.jetpad.hybrid.util.HybridWrapperRole;
 import jetbrains.jetpad.mapper.Mapper;
 import jetbrains.jetpad.model.composite.Composites;
 import jetbrains.jetpad.projectional.util.RootController;
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -57,17 +59,24 @@ import static org.junit.Assert.*;
 
 public class HybridEditorTest extends EditingTestCase {
   private ExprContainer container = new ExprContainer();
+  private Registration registration;
   private ExprContainerMapper mapper = new ExprContainerMapper(container);
   private HybridSynchronizer<Expr> sync;
   private Cell myTargetCell;
 
   @Before
   public void init() {
-    RootController.install(myCellContainer);
+    registration = RootController.install(myCellContainer);
     mapper.attachRoot();
     myCellContainer.root.children().add(myTargetCell = mapper.getTarget());
     CellActions.toFirstFocusable(mapper.getTarget()).run();
     sync = mapper.hybridSync;
+  }
+
+  @After
+  public void dispose() {
+    mapper.detachRoot();
+    registration.remove();
   }
 
   @Test
