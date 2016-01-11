@@ -265,7 +265,9 @@ public class DomTextEditor {
   }
 
   private void updateLineHeight() {
-    myRoot.getStyle().setLineHeight(getLineHeight(), Style.Unit.PX);
+    int height = getLineHeight();
+    myRoot.getStyle().setLineHeight(height, Style.Unit.PX);
+    myRoot.getStyle().setHeight(height, Style.Unit.PX);
   }
 
   public int getCaretOffset(int caretOffset) {
