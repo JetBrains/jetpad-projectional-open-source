@@ -158,7 +158,7 @@ class TokenCellTraits {
 
         if (
             (prev != null && (prev.noSpaceToRight() || current.noSpaceToLeft()) ||
-            (next != null && (next.noSpaceToLeft()) || current.noSpaceToRight()))) {
+            (next != null && (next.noSpaceToLeft()) || current.noSpaceToRight()) || prev == null && next == null)) {
           tokenOperations(cell).deleteToken(cell, 0).run();
         } else {
           tokenOperations(cell).replaceToken(cell, new ErrorToken("")).run();
