@@ -81,7 +81,7 @@ public class HybridEditorTest extends EditingTestCase {
   public void errorState() {
     type("+");
 
-    Assert.assertNull(container.expr.get());
+    assertNull(container.expr.get());
     assertTokens(Tokens.PLUS);
   }
 
@@ -130,7 +130,18 @@ public class HybridEditorTest extends EditingTestCase {
 
     press(Key.DELETE, ModifierKey.CONTROL);
 
-    Assert.assertNull(container.expr.get());
+    assertNull(container.expr.get());
+    assertTrue(sync.placeholder().focused().get());
+  }
+
+  @Test
+  public void backspaceToEmpty() {
+    type("id");
+
+    press(Key.BACKSPACE);
+    press(Key.BACKSPACE);
+
+    assertNull(container.expr.get());
     assertTrue(sync.placeholder().focused().get());
   }
 
