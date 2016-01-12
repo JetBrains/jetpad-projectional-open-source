@@ -25,26 +25,4 @@ public interface PopupManager extends EventHandler<PropertyChangeEvent<Cell>>, D
   void attach(Cell cell);
   void updatePopupPositions();
   void onPopupPropertyChanged(Cell popup, CellPropertySpec<?> prop, PropertyChangeEvent<?> change);
-
-  PopupManager EMPTY = new PopupManager() {
-    @Override
-    public void attach(Cell cell) {
-    }
-
-    @Override
-    public void updatePopupPositions() {
-    }
-
-    @Override
-    public void onPopupPropertyChanged(Cell cell, CellPropertySpec<?> prop, PropertyChangeEvent<?> change) {
-    }
-
-    @Override
-    public void onEvent(PropertyChangeEvent<Cell> event) {
-    }
-
-    @Override
-    public void dispose() {
-    }
-  };
 }

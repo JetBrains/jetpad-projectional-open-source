@@ -52,7 +52,7 @@ public abstract class BasePopupManager<TargetT> implements PopupManager {
   }
 
   @Override
-  public void onPopupPropertyChanged(Cell popup, CellPropertySpec<?> prop, PropertyChangeEvent<?> change) {
+  public final void onPopupPropertyChanged(Cell popup, CellPropertySpec<?> prop, PropertyChangeEvent<?> change) {
     if (prop == Cell.VISIBLE && (Boolean) change.getNewValue()) {
       Mapper<? extends Cell, ? extends TargetT> popupMapper = findPopupMapper(popup);
       updatePosition(popupMapper, false);

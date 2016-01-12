@@ -16,8 +16,11 @@
 package jetbrains.jetpad.cell.completion;
 
 import com.google.common.base.Predicates;
+import com.google.common.base.Supplier;
+import jetbrains.jetpad.cell.Cell;
 import jetbrains.jetpad.cell.HorizontalCell;
 import jetbrains.jetpad.cell.TextCell;
+import jetbrains.jetpad.cell.indent.IndentCell;
 import jetbrains.jetpad.cell.text.TextEditing;
 import jetbrains.jetpad.cell.util.CellFactory;
 import org.junit.Before;
@@ -27,7 +30,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 public class NonTextCellCompletionTest extends CompletionTestCase {
-  private HorizontalCell target = new HorizontalCell();
+  private Cell target = new HorizontalCell();
 
   @Before
   public void init() {
@@ -129,6 +132,37 @@ public class NonTextCellCompletionTest extends CompletionTestCase {
 
     complete();
 
+    assertCompletionInactive();
+  }
+
+  @Test
+  public void initialCompletionText() {
+    target.set(CompletionSupport.INITIAL_TEXT_PROVIDER, new Supplier<String>() {
+      @Override
+      public String get() {
+        return "completion";
+      }
+    });
+    complete();
+    assertCompletionActive();
+  }
+
+  @Test
+  public void indentCompletion() {
+    myCellContainer.root.children().remove(target);
+
+    target = new IndentCell();
+    target.focusable().set(true);
+    target.addTrait(createCompletionTrait("a", "b", "zz"));
+    target.addTrait(CompletionSupport.trait());
+    myCellContainer.root.children().add(target);
+
+    target.focus();
+
+    complete();
+    assertCompletionActive();
+
+    escape();
     assertCompletionInactive();
   }
 

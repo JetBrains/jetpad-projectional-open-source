@@ -269,10 +269,12 @@ public class CellContainerToDomMapper extends Mapper<CellContainer, Element> {
             BaseCellMapper<?> mapper = (BaseCellMapper<?>) rootMapper().getDescendantMapper(cell);
             if (mapper != null) {
               if (Cell.isPopupProp(prop)) {
-                mapper.onEvent((PropertyChangeEvent<Cell>) event);
+                if (mapper.isAutoPopupManagement()) {
+                  mapper.onEvent((PropertyChangeEvent<Cell>) event);
+                }
               } else {
                 mapper.refreshProperties();
-                if (cell.isPopup()) {
+                if (cell.isPopup() && mapper.isAutoPopupManagement()) {
                   mapper.onPopupPropertyChanged(prop, event);
                 }
               }
@@ -339,12 +341,18 @@ public class CellContainerToDomMapper extends Mapper<CellContainer, Element> {
       @Override
       public int getCaretAt(TextCell tv, int x) {
         TextCellMapper textMapper = (TextCellMapper) getMapper(tv);
+        if (textMapper == null) {
+          throw new IllegalStateException("Can't find a mapper for " + tv);
+        }
         return textMapper.getCaretAt(x);
       }
 
       @Override
       public int getCaretOffset(TextCell tv, int caret) {
         TextCellMapper textMapper = (TextCellMapper) getMapper(tv);
+        if (textMapper == null) {
+          throw new IllegalStateException("Can't find a mapper for " + tv);
+        }
         return textMapper.getCaretOffset(caret);
       }
 
@@ -354,7 +362,6 @@ public class CellContainerToDomMapper extends Mapper<CellContainer, Element> {
         if (result == null) {
           result = new Rectangle(Vector.ZERO, Vector.ZERO);
         }
-
         return result;
       }
 
@@ -366,7 +373,7 @@ public class CellContainerToDomMapper extends Mapper<CellContainer, Element> {
           }  else if (cell instanceof IndentCell) {
             return Cells.indentBounds((IndentCell) cell);
           } else {
-            throw new IllegalStateException();
+            throw new IllegalStateException("Can't find a mapper for " + cell);
           }
         } else {
           Element target = getElement(cell);
@@ -387,7 +394,6 @@ public class CellContainerToDomMapper extends Mapper<CellContainer, Element> {
         }
       }
 
-
       @Override
       public void scrollTo(Rectangle rect, Cell cell) {
         Scrolling.scrollTo(rect, getElement(cell));
@@ -404,7 +410,6 @@ public class CellContainerToDomMapper extends Mapper<CellContainer, Element> {
         }
         return null;
       }
-
 
       private native Element elementAt(int x, int y) /*-{
         return $doc.elementFromPoint(x, y);

@@ -18,27 +18,45 @@ package jetbrains.jetpad.cell.text;
 import jetbrains.jetpad.cell.Cell;
 import jetbrains.jetpad.cell.TextCell;
 import jetbrains.jetpad.cell.completion.CompletionHandlerTestCase;
+import jetbrains.jetpad.cell.indent.IndentCell;
 import org.junit.Before;
+import org.junit.Test;
 
 public class TextEditorCompletionHandlerTest extends CompletionHandlerTestCase {
-  private TextCell text = new TextCell();
+  private TextCell text;
 
   @Before
   public void init() {
-    myCellContainer.root.children().add(text);
-
-    text.text().set("");
+    text = new TextCell("");
     text.focusable().set(true);
-
     text.addTrait(TextEditing.textEditing());
-
     text.addTrait(createCompletionTrait("a", "b", "c"));
-
+    myCellContainer.root.children().add(text);
     text.focus();
   }
 
   @Override
   protected Cell getView() {
     return text;
+  }
+
+  @Test
+  public void indentContainer() {
+    TextCell text = new TextCell("");
+    text.focusable().set(true);
+    text.addTrait(TextEditing.textEditing());
+    text.addTrait(createCompletionTrait("a", "b", "c"));
+
+    IndentCell indent = new IndentCell();
+    indent.children().add(text);
+    myCellContainer.root.children().add(indent);
+    text.focus();
+
+    type("d");
+    complete();
+    assertHasBottomPopup(text);
+
+    escape();
+    assertNoBottomPopup(text);
   }
 }
