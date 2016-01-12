@@ -246,13 +246,14 @@ public class DomTextEditor {
   }
 
   private void updateText() {
-    String value = myText;
-    if (value == null || value.isEmpty()) {
+    if (myText == null || myText.isEmpty()) {
       myTextContainer.setInnerText(" ");
       myTextContainer.getStyle().setWidth(1, Style.Unit.PX);
+      myRoot.getStyle().setHeight(getLineHeight(), Style.Unit.PX);
     } else {
+      myRoot.getStyle().clearHeight();
       myTextContainer.getStyle().clearWidth();
-      myTextContainer.setInnerText(TextMetricsCalculator.normalize(value));
+      myTextContainer.setInnerText(TextMetricsCalculator.normalize(myText));
     }
   }
 
@@ -265,9 +266,7 @@ public class DomTextEditor {
   }
 
   private void updateLineHeight() {
-    int height = getLineHeight();
-    myRoot.getStyle().setLineHeight(height, Style.Unit.PX);
-    myRoot.getStyle().setHeight(height, Style.Unit.PX);
+    myRoot.getStyle().setLineHeight(getLineHeight(), Style.Unit.PX);
   }
 
   public int getCaretOffset(int caretOffset) {
