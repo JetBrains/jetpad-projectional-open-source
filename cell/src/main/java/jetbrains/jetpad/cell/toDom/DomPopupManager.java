@@ -41,6 +41,9 @@ abstract class DomPopupManager extends BasePopupManager<Element> {
   @Override
   protected Mapper<? extends Cell, ? extends Element> attachPopup(Cell popup) {
     BaseCellMapper<?> mapper = myContext.apply(popup);
+    if (mapper == null) {
+      throw new IllegalStateException("Can't create a mapper for " + popup);
+    }
     Element element = mapper.getTarget();
     myContext.rootElement.appendChild(element);
     element.addClassName(CSS.popup());

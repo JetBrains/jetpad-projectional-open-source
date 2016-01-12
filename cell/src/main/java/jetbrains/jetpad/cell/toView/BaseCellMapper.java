@@ -64,7 +64,7 @@ class BaseCellMapper<SourceT extends Cell, TargetT extends View> extends Mapper<
       }
     }
 
-    myPopupManager = isAutoPopupManagement() ? createPopupManager() : PopupManager.EMPTY;
+    myPopupManager = createPopupManager();
     myPopupManager.attach(getSource());
 
     refreshProperties();
@@ -163,11 +163,14 @@ class BaseCellMapper<SourceT extends Cell, TargetT extends View> extends Mapper<
     getTarget().hasShadow().set(getSource().get(Cell.HAS_SHADOW));
   }
 
-  protected BasePopupManager<View> createPopupManager() {
+  protected PopupManager createPopupManager() {
     return new BasePopupManager<View>() {
       @Override
       protected Mapper<? extends Cell, ? extends View> attachPopup(Cell popup) {
         Mapper<? extends Cell, ? extends View> mapper = myContext.apply(popup);
+        if (mapper == null) {
+          throw new IllegalStateException("Can't create a mapper for " + popup);
+        }
         getContext().popupView.children().add(mapper.getTarget());
         return mapper;
       }

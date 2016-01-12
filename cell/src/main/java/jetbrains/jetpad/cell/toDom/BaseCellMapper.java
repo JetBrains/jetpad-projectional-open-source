@@ -85,7 +85,7 @@ abstract class BaseCellMapper<SourceT extends Cell> extends Mapper<SourceT, Elem
       }
     }
 
-    myPopupManager = isAutoPopupManagement() ? createPopupManager() : PopupManager.EMPTY;
+    myPopupManager = createPopupManager();
     myPopupManager.attach(getSource());
 
     refreshProperties();

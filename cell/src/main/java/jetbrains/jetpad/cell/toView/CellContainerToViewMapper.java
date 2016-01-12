@@ -143,20 +143,16 @@ public class CellContainerToViewMapper extends Mapper<CellContainer, View> {
       @Override
       public int getCaretOffset(TextCell tv, int caret) {
         Mapper<? super TextCell, ?> mapper = rootMapper.getDescendantMapper(tv);
-
         if (mapper == null) {
-          throw new UnsupportedOperationException();
+          throw new IllegalStateException("Can't find a mapper for " + tv);
         }
-
-        TextView textView = (TextView) mapper.getTarget();
-        return textView.getCaretOffset(caret);
+        return ((TextView) mapper.getTarget()).getCaretOffset(caret);
       }
 
       @Override
       public Rectangle getBounds(Cell cell) {
         Rectangle bounds = calculateBounds(cell);
-        if (bounds == null) return new Rectangle(Vector.ZERO, Vector.ZERO);
-        return bounds;
+        return bounds == null ? new Rectangle(Vector.ZERO, Vector.ZERO) : bounds;
       }
 
       private Rectangle calculateBounds(Cell cell) {
@@ -219,7 +215,7 @@ public class CellContainerToViewMapper extends Mapper<CellContainer, View> {
       @Override
       public EventDispatchThread getEdt() {
         if (myTargetView.container() == null) {
-          throw new IllegalStateException("Target View Isn't Attached");
+          throw new IllegalStateException("Target view isn't attached " + myTargetView);
         }
         return myTargetView.container().getEdt();
       }
@@ -338,7 +334,9 @@ public class CellContainerToViewMapper extends Mapper<CellContainer, View> {
 
         if (Cell.isPopupProp(prop)) {
           PropertyChangeEvent<Cell> changeEvent = (PropertyChangeEvent<Cell>) event;
-          target.onEvent(changeEvent);
+          if (target.isAutoPopupManagement()) {
+            target.onEvent(changeEvent);
+          }
           if (changeEvent.getOldValue() != null) {
             updateCachesOnRemove(changeEvent.getOldValue());
           }
@@ -347,7 +345,7 @@ public class CellContainerToViewMapper extends Mapper<CellContainer, View> {
           }
         } else {
           target.refreshProperties();
-          if (cell.isPopup()) {
+          if (cell.isPopup() && target.isAutoPopupManagement()) {
             target.onPopupPropertyChanged(prop, event);
           }
         }

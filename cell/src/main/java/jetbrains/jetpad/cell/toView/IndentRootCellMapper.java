@@ -26,10 +26,7 @@ import jetbrains.jetpad.cell.indent.IndentUtil;
 import jetbrains.jetpad.cell.indent.updater.CellWrapper;
 import jetbrains.jetpad.cell.indent.updater.IndentUpdater;
 import jetbrains.jetpad.cell.indent.updater.IndentUpdaterTarget;
-import jetbrains.jetpad.cell.mappersUtil.BasePopupManager;
-import jetbrains.jetpad.cell.mappersUtil.PopupPositionUpdater;
-import jetbrains.jetpad.cell.mappersUtil.AncestorUtil;
-import jetbrains.jetpad.cell.mappersUtil.CounterUtil;
+import jetbrains.jetpad.cell.mappersUtil.*;
 import jetbrains.jetpad.mapper.Mapper;
 import jetbrains.jetpad.mapper.MappingContext;
 import jetbrains.jetpad.model.collections.CollectionItemEvent;
@@ -206,7 +203,7 @@ class IndentRootCellMapper extends BaseCellMapper<IndentCell, VerticalView> {
   }
 
   @Override
-  protected BasePopupManager<View> createPopupManager() {
+  protected PopupManager createPopupManager() {
     return new BasePopupManager<View>() {
       @Override
       protected Registration setPopupUpdate() {
