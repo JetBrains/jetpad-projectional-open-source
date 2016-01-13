@@ -43,6 +43,7 @@ import java.util.List;
 public class CompletionSupport {
   public static final CellTraitPropertySpec<Runnable> HIDE_COMPLETION = new CellTraitPropertySpec<>("hideCompletion");
   public static final CellTraitPropertySpec<Supplier<String>> INITIAL_TEXT_PROVIDER = new CellTraitPropertySpec<>("initialTextProvider");
+  public static final CellTraitPropertySpec<TextCell> EDITOR = new CellTraitPropertySpec<>("completionEditor");
 
   public static CellTrait trait() {
     return new CellTrait() {
@@ -64,7 +65,7 @@ public class CompletionSupport {
 
           @Override
           protected void doActivate(Runnable deactivate, Runnable restoreFocus) {
-            showPopup(cell, cell.frontPopup(), Completion.allCompletion(cell, new BaseCompletionParameters() {
+            showPopup(cell, Completion.allCompletion(cell, new BaseCompletionParameters() {
               @Override
               public boolean isMenu() {
                 return true;
@@ -240,43 +241,53 @@ public class CompletionSupport {
     completionCell.scrollTo();
   }
 
-  private static TextCell showPopup(
+  private static void showPopup(
       Cell cell,
-      Property<Cell> targetPopup,
       Async<List<CompletionItem>> items,
       Runnable deactivate,
       Runnable restoreFocus) {
+
     CellContainer container = cell.getContainer();
-    final HorizontalCell popup = new HorizontalCell();
-    final TextCell textCell = new TextCell();
+    TextCell editor = cell.get(EDITOR);
+    Registration removeOnClose = Registration.EMPTY;
+    Runnable beforeAnimation = Runnables.EMPTY;
 
-    textCell.focusable().set(true);
-    final Registration textEditingReg = textCell.addTrait(new TextEditingTrait());
+    if (editor == null) {
+      final TextCell textCell = new TextCell();
+      textCell.focusable().set(true);
+      final Registration textEditingReg = textCell.addTrait(new TextEditingTrait());
 
-    Supplier<String> initialProvider = cell.get(INITIAL_TEXT_PROVIDER);
-    if (initialProvider != null) {
-      String initialText = initialProvider.get();
-      textCell.text().set(initialText);
-      textCell.caretPosition().set(initialText.length());
+      Supplier<String> initialProvider = cell.get(INITIAL_TEXT_PROVIDER);
+      if (initialProvider != null) {
+        String initialText = initialProvider.get();
+        textCell.text().set(initialText);
+        textCell.caretPosition().set(initialText.length());
+      }
+
+      final HorizontalCell popup = new HorizontalCell();
+      popup.children().add(textCell);
+      cell.frontPopup().set(popup);
+
+      removeOnClose = new Registration() {
+        @Override
+        protected void doRemove() {
+          popup.removeFromParent();
+          textEditingReg.remove();
+        }
+      };
+
+      beforeAnimation = new Runnable() {
+        @Override
+        public void run() {
+          textCell.text().set("");
+        }
+      };
+
+      editor = textCell;
     }
-
-    popup.children().add(textCell);
-    targetPopup.set(popup);
-    final Runnable state = container.saveState();
-    textCell.focus();
-    showCompletion(textCell, items, new Registration() {
-      @Override
-      protected void doRemove() {
-        popup.removeFromParent();
-        textEditingReg.remove();
-      }
-    }, new Runnable() {
-      @Override
-      public void run() {
-        textCell.text().set("");
-      }
-    }, deactivate, Runnables.seq(state, restoreFocus));
-    return textCell;
+    Runnable state = container.saveState();
+    editor.focus();
+    showCompletion(editor, items, removeOnClose, beforeAnimation, deactivate, Runnables.seq(state, restoreFocus));
   }
 
   public static TextCell showSideTransformPopup(
