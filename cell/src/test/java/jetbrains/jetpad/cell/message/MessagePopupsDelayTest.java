@@ -16,16 +16,12 @@
 package jetbrains.jetpad.cell.message;
 
 import jetbrains.jetpad.base.Registration;
-import jetbrains.jetpad.base.edt.EventDispatchThread;
 import jetbrains.jetpad.base.edt.TestEventDispatchThread;
 import jetbrains.jetpad.cell.*;
 import jetbrains.jetpad.cell.text.TextEditing;
 import jetbrains.jetpad.event.KeyStroke;
 import jetbrains.jetpad.event.KeyStrokeSpec;
 import jetbrains.jetpad.event.KeyStrokeSpecs;
-import jetbrains.jetpad.geometry.Rectangle;
-import jetbrains.jetpad.geometry.Vector;
-import jetbrains.jetpad.model.property.ReadableProperty;
 import org.junit.Test;
 
 public class MessagePopupsDelayTest extends MessageControllerTestCase {
@@ -136,54 +132,7 @@ public class MessagePopupsDelayTest extends MessageControllerTestCase {
 
   @Override
   public void init() {
-    final CellContainerPeer peer = getCellContainerPeer();
-    myCellContainer.setCellContainerPeer(new CellContainerPeer() {
-      @Override
-      public int getCaretAt(TextCell tv, int x) {
-        return peer.getCaretAt(tv, x);
-      }
-
-      @Override
-      public int getCaretOffset(TextCell tv, int caret) {
-        return peer.getCaretOffset(tv, caret);
-      }
-
-      @Override
-      public Rectangle getBounds(Cell cell) {
-        return peer.getBounds(cell);
-      }
-
-      @Override
-      public void scrollTo(Rectangle rect, Cell cell) {
-        peer.scrollTo(rect, cell);
-      }
-
-      @Override
-      public Cell findCell(Cell root, Vector loc) {
-        return peer.findCell(root, loc);
-      }
-
-      @Override
-      public ReadableProperty<Boolean> focused() {
-        return peer.focused();
-      }
-
-      @Override
-      public Rectangle visibleRect() {
-        return peer.visibleRect();
-      }
-
-      @Override
-      public void requestFocus() {
-        peer.requestFocus();
-      }
-
-      @Override
-      public EventDispatchThread getEdt() {
-        return edt;
-      }
-    });
-
+    CellContainerEdtUtil.resetEdt(myCellContainer, edt);
     super.init();
   }
 }

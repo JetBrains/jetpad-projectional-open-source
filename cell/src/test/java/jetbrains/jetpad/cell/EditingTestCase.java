@@ -187,8 +187,4 @@ public abstract class EditingTestCase extends BaseTestCase {
       assertTrue(e.isConsumed());
     }
   }
-
-  protected CellContainerPeer getCellContainerPeer() {
-    return myCellContainer.getCellContainerPeer();
-  }
 }
