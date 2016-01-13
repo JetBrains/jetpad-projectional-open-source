@@ -43,7 +43,6 @@ import java.util.List;
 public class CompletionSupport {
   public static final CellTraitPropertySpec<Runnable> HIDE_COMPLETION = new CellTraitPropertySpec<>("hideCompletion");
   public static final CellTraitPropertySpec<Supplier<String>> INITIAL_TEXT_PROVIDER = new CellTraitPropertySpec<>("initialTextProvider");
-  private static final CellTraitPropertySpec<TextCell> EDITOR = new CellTraitPropertySpec<>("completionEditor");
 
   public static CellTrait trait() {
     return new CellTrait() {
@@ -248,46 +247,38 @@ public class CompletionSupport {
       Runnable restoreFocus) {
 
     CellContainer container = cell.getContainer();
-    TextCell editor = cell.get(EDITOR);
-    Registration removeOnClose = Registration.EMPTY;
-    Runnable beforeAnimation = Runnables.EMPTY;
+    final TextCell textCell = new TextCell();
+    textCell.focusable().set(true);
+    final Registration textEditingReg = textCell.addTrait(new TextEditingTrait());
 
-    if (editor == null) {
-      final TextCell textCell = new TextCell();
-      textCell.focusable().set(true);
-      final Registration textEditingReg = textCell.addTrait(new TextEditingTrait());
-
-      Supplier<String> initialProvider = cell.get(INITIAL_TEXT_PROVIDER);
-      if (initialProvider != null) {
-        String initialText = initialProvider.get();
-        textCell.text().set(initialText);
-        textCell.caretPosition().set(initialText.length());
-      }
-
-      final HorizontalCell popup = new HorizontalCell();
-      popup.children().add(textCell);
-      cell.frontPopup().set(popup);
-
-      removeOnClose = new Registration() {
-        @Override
-        protected void doRemove() {
-          popup.removeFromParent();
-          textEditingReg.remove();
-        }
-      };
-
-      beforeAnimation = new Runnable() {
-        @Override
-        public void run() {
-          textCell.text().set("");
-        }
-      };
-
-      editor = textCell;
+    Supplier<String> initialProvider = cell.get(INITIAL_TEXT_PROVIDER);
+    if (initialProvider != null) {
+      String initialText = initialProvider.get();
+      textCell.text().set(initialText);
+      textCell.caretPosition().set(initialText.length());
     }
+
+    final HorizontalCell popup = new HorizontalCell();
+    popup.children().add(textCell);
+    cell.frontPopup().set(popup);
+
+    Registration removeOnClose = new Registration() {
+      @Override
+      protected void doRemove() {
+        popup.removeFromParent();
+        textEditingReg.remove();
+      }
+    };
+
+    Runnable beforeAnimation = new Runnable() {
+      @Override
+      public void run() {
+        textCell.text().set("");
+      }
+    };
     Runnable state = container.saveState();
-    editor.focus();
-    showCompletion(editor, items, removeOnClose, beforeAnimation, deactivate, Runnables.seq(state, restoreFocus));
+    textCell.focus();
+    showCompletion(textCell, items, removeOnClose, beforeAnimation, deactivate, Runnables.seq(state, restoreFocus));
   }
 
   public static TextCell showSideTransformPopup(
