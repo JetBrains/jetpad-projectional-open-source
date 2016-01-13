@@ -101,13 +101,19 @@ public class TextCell extends Cell {
     scrollTo(new Rectangle(offset - delta, 0, 2 * delta, bounds.dimension.y).intersect(new Rectangle(Vector.ZERO, bounds.dimension)));
   }
 
+  public String getPrefixText() {
+    String textValue = get(TEXT);
+    if (textValue == null) {
+      textValue = "";
+    }
+    return textValue.substring(0, get(CARET_POSITION));
+  }
+
   public ReadableProperty<String> prefixText() {
     return new DerivedProperty<String>(text(), caretPosition()) {
       @Override
       public String doGet() {
-        int caret = caretPosition().get();
-        String textValue = text().get() != null ? text().get() : "";
-        return textValue.substring(0, caret);
+        return getPrefixText();
       }
 
       @Override
@@ -116,8 +122,6 @@ public class TextCell extends Cell {
       }
     };
   }
-
-
 
   @Override
   public String toString() {

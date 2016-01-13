@@ -15,8 +15,6 @@
  */
 package jetbrains.jetpad.cell;
 
-import jetbrains.jetpad.base.animation.Animation;
-import jetbrains.jetpad.base.animation.Animations;
 import jetbrains.jetpad.base.edt.EventDispatchThread;
 import jetbrains.jetpad.base.edt.NullEventDispatchThread;
 import jetbrains.jetpad.cell.util.Cells;
@@ -45,7 +43,6 @@ public interface CellContainerPeer {
     @Override
     public void scrollTo(Rectangle rect, Cell cell) {
     }
-
 
     @Override
     public Cell findCell(Cell root, Vector loc) {

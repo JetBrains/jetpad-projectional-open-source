@@ -144,7 +144,7 @@ public class MessagePopupsTest extends MessageControllerTestCase {
     child.bottomPopup().set(new TextCell());
     assertDecorationPopupVisible(cell, false);
 
-    cell.children().remove(0);
+    cell.children().remove(child);
     assertDecorationPopupVisible(cell, true);
 
     mouseMoved();
@@ -188,7 +188,7 @@ public class MessagePopupsTest extends MessageControllerTestCase {
     assertDecorationPopupVisible(cell, false);
 
     child.bottomPopup().set(new TextCell("bottom"));
-    cell.children().remove(0);
+    cell.children().remove(child);
 
     assertDecorationPopupVisible(cell, true);
   }
@@ -260,7 +260,7 @@ public class MessagePopupsTest extends MessageControllerTestCase {
     child3.bottomPopup().set(null);
     assertDecorationPopupVisible(cell, true);
 
-    cell.children().remove(0);
+    cell.children().remove(child1);
     assertDecorationPopupVisible(cell, true);
   }
 
@@ -281,8 +281,7 @@ public class MessagePopupsTest extends MessageControllerTestCase {
     assertDecorationPopupVisible(cell, true);
 
     setError(child3);
-    mouseMoved();
-
+    mouseEntered(child3);
     assertDecorationPopupVisible(child3, true);
     assertDecorationPopupVisible(cell, false);
 
@@ -290,7 +289,7 @@ public class MessagePopupsTest extends MessageControllerTestCase {
     mouseMoved();
     assertDecorationPopupVisible(cell, true);
 
-    cell.children().remove(0);
+    cell.children().remove(child1);
     assertDecorationPopupVisible(cell, true);
   }
 
