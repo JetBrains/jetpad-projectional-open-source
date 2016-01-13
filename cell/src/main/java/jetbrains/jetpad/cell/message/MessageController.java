@@ -42,7 +42,7 @@ public final class MessageController {
 
   public static Registration install(CellContainer container, MessageStyler styler) {
     MessageController controller = new MessageController(container);
-    MessageTrait trait = new MessageTrait(container.getEdt(), new StyleApplicator(styler));
+    MessageTrait trait = new MessageTrait(container, new StyleApplicator(styler));
     return controller.install(trait);
   }
 
