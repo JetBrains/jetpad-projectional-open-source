@@ -16,8 +16,8 @@
 package jetbrains.jetpad.cell.message;
 
 import jetbrains.jetpad.base.Registration;
-import jetbrains.jetpad.base.edt.EventDispatchThread;
 import jetbrains.jetpad.cell.Cell;
+import jetbrains.jetpad.cell.CellContainer;
 import jetbrains.jetpad.cell.CellPropertySpec;
 import jetbrains.jetpad.cell.TextCell;
 import jetbrains.jetpad.cell.event.FocusEvent;
@@ -48,14 +48,15 @@ class MessageTrait extends CellTrait {
   private long myLastEditingKeyEvent = 0;
   private boolean myForceHide = false;
 
-  private EventDispatchThread myEdt;
+  // this field is required only as EDT supplier, but the appropriate EDT may be set after MessageController is installed
+  private CellContainer myContainer;
 
   private boolean myEditingPopup = false;
   private Map<Cell, LowPriorityPopupSupport> myRegistrations = null;
   private StyleApplicator myStyler;
 
-  MessageTrait(EventDispatchThread edt, StyleApplicator styleApplicator) {
-    myEdt = edt;
+  MessageTrait(CellContainer container, StyleApplicator styleApplicator) {
+    myContainer = container;
     myStyler = styleApplicator;
   }
 
@@ -118,13 +119,13 @@ class MessageTrait extends CellTrait {
   }
 
   private void onEditingKeyEvent() {
-    myLastEditingKeyEvent = myEdt.getCurrentTimeMillis();
+    myLastEditingKeyEvent = myContainer.getEdt().getCurrentTimeMillis();
     if (myForceHide) return;
     setForceHide(true);
-    myUpdatesReg = myEdt.scheduleRepeating(POPUPS_SHOW_DELAY_MILLIS, new Runnable() {
+    myUpdatesReg = myContainer.getEdt().scheduleRepeating(POPUPS_SHOW_DELAY_MILLIS, new Runnable() {
       @Override
       public void run() {
-        if (myEdt.getCurrentTimeMillis() - myLastEditingKeyEvent < POPUPS_SHOW_DELAY_MILLIS) return;
+        if (myContainer.getEdt().getCurrentTimeMillis() - myLastEditingKeyEvent < POPUPS_SHOW_DELAY_MILLIS) return;
         myUpdatesReg.remove();
         myUpdatesReg = null;
         setForceHide(false);
