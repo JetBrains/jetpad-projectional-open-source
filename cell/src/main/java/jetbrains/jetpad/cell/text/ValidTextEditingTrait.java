@@ -55,7 +55,7 @@ class ValidTextEditingTrait extends TextEditingTrait {
     TextCell textCell = (TextCell) cell;
     if (event.is(Key.ENTER) && !isEmpty(textCell) && !isValid(textCell)) {
       CompletionItems completionItems = new CompletionItems(textCell.get(Completion.COMPLETION).get(CompletionParameters.EMPTY));
-      String prefixText = textCell.prefixText().get();
+      String prefixText = textCell.getPrefixText();
       if (completionItems.hasSingleMatch(prefixText, true)) {
         completionItems.completeFirstMatch(prefixText);
         event.consume();

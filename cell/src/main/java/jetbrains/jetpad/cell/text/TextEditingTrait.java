@@ -76,14 +76,13 @@ public class TextEditingTrait extends TextNavigationTrait {
 
       @Override
       public boolean hasAmbiguousMatches() {
-        String text = cell.prefixText().get();
         CompletionItems helper = Completion.completionFor(cell, new BaseCompletionParameters() {
           @Override
           public boolean isMenu() {
             return true;
           }
         });
-        return !helper.hasSingleMatch(text, false);
+        return !helper.hasSingleMatch(cell.getPrefixText(), false);
       }
     };
   }
@@ -110,7 +109,7 @@ public class TextEditingTrait extends TextNavigationTrait {
     }
 
     if (event.is(Key.BACKSPACE) && caret > 0) {
-      textCell.caretPosition().set(textCell.caretPosition().get() - 1);
+      textCell.caretPosition().set(caret - 1);
       setText(textCell, currentText.substring(0, caret - 1) + currentText.substring(caret));
       onAfterDelete(textCell);
       event.consume();
@@ -141,7 +140,7 @@ public class TextEditingTrait extends TextNavigationTrait {
 
     if (!handler.isActive()) {
       CompletionItems completion = new CompletionItems(textCell.get(Completion.COMPLETION).get(CompletionParameters.EMPTY));
-      String prefixText = textCell.prefixText().get();
+      String prefixText = textCell.getPrefixText();
       if (textCell.isEnd()) {
         List<CompletionItem> matches = completion.matches(prefixText);
         List<CompletionItem> strictlyPrefixed = completion.strictlyPrefixedBy(prefixText);
