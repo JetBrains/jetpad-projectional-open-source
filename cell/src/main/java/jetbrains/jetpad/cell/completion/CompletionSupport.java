@@ -43,7 +43,7 @@ import java.util.List;
 public class CompletionSupport {
   public static final CellTraitPropertySpec<Runnable> HIDE_COMPLETION = new CellTraitPropertySpec<>("hideCompletion");
   public static final CellTraitPropertySpec<Supplier<String>> INITIAL_TEXT_PROVIDER = new CellTraitPropertySpec<>("initialTextProvider");
-  public static final CellTraitPropertySpec<TextCell> EDITOR = new CellTraitPropertySpec<>("completionEditor");
+  private static final CellTraitPropertySpec<TextCell> EDITOR = new CellTraitPropertySpec<>("completionEditor");
 
   public static CellTrait trait() {
     return new CellTrait() {
