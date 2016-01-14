@@ -17,10 +17,10 @@ package jetbrains.jetpad.cell.text;
 
 import jetbrains.jetpad.cell.Cell;
 
-public abstract class TextEditorCell implements TextEditor {
+public abstract class CellTextEditor implements TextEditor {
   private Cell myCell;
 
-  public TextEditorCell(Cell cell) {
+  public CellTextEditor(Cell cell) {
     myCell = cell;
   }
 

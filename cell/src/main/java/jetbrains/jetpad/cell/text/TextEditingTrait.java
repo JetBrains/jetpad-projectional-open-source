@@ -46,7 +46,7 @@ public class TextEditingTrait extends TextNavigationTrait {
     return super.get(cell, spec);
   }
 
-  private CompletionController getCompletionController(final TextEditorCell cell) {
+  private CompletionController getCompletionController(final CellTextEditor cell) {
     return new BaseCompletionController(cell.getCell()) {
       @Override
       public boolean canActivate() {
@@ -89,7 +89,7 @@ public class TextEditingTrait extends TextNavigationTrait {
 
   @Override
   public void onKeyPressed(Cell cell, KeyEvent event) {
-    TextEditorCell editor = TextEditing.textEditor(cell);
+    CellTextEditor editor = TextEditing.textEditor(cell);
     String currentText = TextEditing.text(editor);
     int caret = editor.caretPosition().get();
     int textLen = currentText.length();
@@ -126,7 +126,7 @@ public class TextEditingTrait extends TextNavigationTrait {
 
   @Override
   public void onComplete(final Cell cell, CompletionEvent event) {
-    TextEditorCell editor = TextEditing.textEditor(cell);
+    CellTextEditor editor = TextEditing.textEditor(cell);
     String currentText = TextEditing.text(editor);
     CompletionController handler = getCompletionController(editor);
 
@@ -180,7 +180,7 @@ public class TextEditingTrait extends TextNavigationTrait {
     super.onComplete(cell, event);
   }
 
-  private void clearSelection(TextEditorCell editor) {
+  private void clearSelection(CellTextEditor editor) {
     if (!editor.selectionVisible().get()) return;
     String text = editor.text().get();
     if (text == null) return;
@@ -196,13 +196,13 @@ public class TextEditingTrait extends TextNavigationTrait {
     editor.selectionVisible().set(false);
   }
 
-  protected boolean canCompleteWithCtrlSpace(TextEditorCell editor) {
+  protected boolean canCompleteWithCtrlSpace(CellTextEditor editor) {
     return true;
   }
 
   @Override
   public void onKeyTyped(Cell cell, KeyEvent event) {
-    TextEditorCell editor = TextEditing.textEditor(cell);
+    CellTextEditor editor = TextEditing.textEditor(cell);
     clearSelection(editor);
 
     String text = "" + event.getKeyChar();
@@ -226,7 +226,7 @@ public class TextEditingTrait extends TextNavigationTrait {
       }
     }
 
-    TextEditorCell editor = TextEditing.textEditor(cell);
+    CellTextEditor editor = TextEditing.textEditor(cell);
     clearSelection(editor);
     pasteText(editor, newText.toString());
     event.consume();
@@ -240,7 +240,7 @@ public class TextEditingTrait extends TextNavigationTrait {
 
   @Override
   public void onCopy(Cell cell, CopyCutEvent event) {
-    TextEditorCell editor = TextEditing.textEditor(cell);
+    CellTextEditor editor = TextEditing.textEditor(cell);
     if (!editor.selectionVisible().get()) return;
 
     int selStart = editor.selectionStart().get();
@@ -253,7 +253,7 @@ public class TextEditingTrait extends TextNavigationTrait {
     event.consume(new TextClipboardContent(selection));
   }
 
-  private void pasteText(TextEditorCell editor, String text) {
+  private void pasteText(CellTextEditor editor, String text) {
     String currentText = editor.text().get();
     int caret = editor.caretPosition().get();
     if (currentText != null) {
@@ -264,7 +264,7 @@ public class TextEditingTrait extends TextNavigationTrait {
     editor.caretPosition().set(caret + text.length());
   }
 
-  protected void setText(TextEditorCell editor, String text) {
+  protected void setText(CellTextEditor editor, String text) {
     if (Strings.isNullOrEmpty(text)) {
       editor.getCell().dispatch(new Event(), Cells.BECAME_EMPTY);
     }
@@ -272,7 +272,7 @@ public class TextEditingTrait extends TextNavigationTrait {
     editor.text().set(text);
   }
 
-  protected boolean onAfterType(TextEditorCell editor) {
+  protected boolean onAfterType(CellTextEditor editor) {
     Supplier<Boolean> afterType = editor.getCell().get(TextEditing.AFTER_TYPE);
     if (afterType != null) {
       return afterType.get();
@@ -280,6 +280,6 @@ public class TextEditingTrait extends TextNavigationTrait {
     return false;
   }
 
-  protected void onAfterDelete(TextEditorCell editor) {
+  protected void onAfterDelete(CellTextEditor editor) {
   }
 }

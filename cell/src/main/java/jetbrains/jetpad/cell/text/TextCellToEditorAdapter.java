@@ -18,7 +18,7 @@ package jetbrains.jetpad.cell.text;
 import jetbrains.jetpad.cell.TextCell;
 import jetbrains.jetpad.model.property.Property;
 
-class TextCellToEditorAdapter extends TextEditorCell {
+class TextCellToEditorAdapter extends CellTextEditor {
   TextCellToEditorAdapter(TextCell source) {
    super(source);
   }

@@ -52,7 +52,7 @@ class ValidTextEditingTrait extends TextEditingTrait {
 
   @Override
   public void onKeyPressed(Cell cell, KeyEvent event) {
-    TextEditorCell editor = TextEditing.textEditor(cell);
+    CellTextEditor editor = TextEditing.textEditor(cell);
     if (event.is(Key.ENTER) && !TextEditing.isEmpty(editor) && !isValid(editor)) {
       CompletionItems completionItems = new CompletionItems(cell.get(Completion.COMPLETION).get(CompletionParameters.EMPTY));
       String prefixText = TextEditing.getPrefixText(editor);
@@ -67,14 +67,14 @@ class ValidTextEditingTrait extends TextEditingTrait {
   }
 
   @Override
-  protected boolean canCompleteWithCtrlSpace(TextEditorCell cell) {
+  protected boolean canCompleteWithCtrlSpace(CellTextEditor cell) {
     return !isValid(cell);
   }
 
   @Override
   public void onPropertyChanged(Cell cell, CellPropertySpec<?> prop, PropertyChangeEvent<?> e) {
     if (prop == TextCell.TEXT) {
-      TextEditorCell editor = TextEditing.textEditor(cell);
+      CellTextEditor editor = TextEditing.textEditor(cell);
       MessageController.setBroken(cell, isValid(editor) ? null : "Cannot resolve '" + TextEditing.text(editor) + '\'');
     }
 
@@ -82,7 +82,7 @@ class ValidTextEditingTrait extends TextEditingTrait {
   }
 
   @Override
-  protected boolean onAfterType(TextEditorCell editor) {
+  protected boolean onAfterType(CellTextEditor editor) {
     if (super.onAfterType(editor)) return true;
 
     Boolean eagerCompletion = editor.getCell().get(TextEditing.EAGER_COMPLETION);
@@ -125,7 +125,7 @@ class ValidTextEditingTrait extends TextEditingTrait {
     return true;
   }
 
-  private void handleSideTransform(TextEditorCell editor, String cellText, String sideText, Side side) {
+  private void handleSideTransform(CellTextEditor editor, String cellText, String sideText, Side side) {
     CompletionItems sideCompletion = Completion.completionFor(editor.getCell(), CompletionParameters.EMPTY, side.getKey());
     if (sideCompletion.hasSingleMatch(sideText, editor.getCell().get(TextEditing.EAGER_COMPLETION))) {
       setText(editor, cellText);
@@ -138,12 +138,12 @@ class ValidTextEditingTrait extends TextEditingTrait {
     }
   }
 
-  private Runnable expand(TextEditorCell editor, Side side, String sideText) {
+  private Runnable expand(CellTextEditor editor, Side side, String sideText) {
     return side.getExpander(editor.getCell()).apply(sideText);
   }
 
   @Override
-  protected void onAfterDelete(TextEditorCell editor) {
+  protected void onAfterDelete(CellTextEditor editor) {
     super.onAfterDelete(editor);
 
     if (!editor.getCell().get(TextEditing.EAGER_COMPLETION)) return;
@@ -160,18 +160,18 @@ class ValidTextEditingTrait extends TextEditingTrait {
       completion.completeFirstMatch(text);
       Cell focusedCell = cellContainer.focusedCell.get();
       if (!TextEditing.isTextEditor(focusedCell)) return;
-      TextEditorCell focusedEditor = TextEditing.textEditor(focusedCell);
+      CellTextEditor focusedEditor = TextEditing.textEditor(focusedCell);
       if (caret <= focusedEditor.text().get().length()) {
         focusedEditor.caretPosition().set(caret);
       }
     }
   }
 
-  private Predicate<String> getValidator(TextEditorCell editor) {
+  private Predicate<String> getValidator(CellTextEditor editor) {
     return editor.getCell().get(VALIDATOR);
   }
 
-  private boolean isValid(TextEditorCell editor) {
+  private boolean isValid(CellTextEditor editor) {
     return getValidator(editor).apply(editor.text().get());
   }
 

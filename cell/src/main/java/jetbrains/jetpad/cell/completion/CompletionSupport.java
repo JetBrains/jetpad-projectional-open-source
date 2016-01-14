@@ -23,9 +23,9 @@ import jetbrains.jetpad.base.*;
 import jetbrains.jetpad.cell.*;
 import jetbrains.jetpad.cell.event.CompletionEvent;
 import jetbrains.jetpad.cell.event.FocusEvent;
+import jetbrains.jetpad.cell.text.CellTextEditor;
 import jetbrains.jetpad.cell.text.TextEditing;
 import jetbrains.jetpad.cell.text.TextEditingTrait;
-import jetbrains.jetpad.cell.text.TextEditorCell;
 import jetbrains.jetpad.cell.trait.CellTrait;
 import jetbrains.jetpad.cell.trait.CellTraitPropertySpec;
 import jetbrains.jetpad.completion.*;
@@ -41,7 +41,7 @@ import java.util.List;
 public class CompletionSupport {
   public static final CellTraitPropertySpec<Runnable> HIDE_COMPLETION = new CellTraitPropertySpec<>("hideCompletion");
   public static final CellTraitPropertySpec<Supplier<String>> INITIAL_TEXT_PROVIDER = new CellTraitPropertySpec<>("initialTextProvider");
-  public static final CellTraitPropertySpec<TextEditorCell> EDITOR = new CellTraitPropertySpec<>("completionEditor");
+  public static final CellTraitPropertySpec<CellTextEditor> EDITOR = new CellTraitPropertySpec<>("completionEditor");
 
   public static CellTrait trait() {
     return new CellTrait() {
@@ -113,7 +113,7 @@ public class CompletionSupport {
   }
 
   public static void showCompletion(
-      final TextEditorCell editor, Async<List<CompletionItem>> items, final Registration removeOnClose,
+      final CellTextEditor editor, Async<List<CompletionItem>> items, final Registration removeOnClose,
       final Runnable beforeAnimation, final Runnable restoreCompletionState, final Runnable restoreState) {
 
     if (!editor.getCell().focused().get()) {
@@ -240,7 +240,7 @@ public class CompletionSupport {
     completionCell.scrollTo();
   }
 
-  private static ReadableProperty<String> prefixText(final TextEditorCell t) {
+  private static ReadableProperty<String> prefixText(final CellTextEditor t) {
     return new DerivedProperty<String>(t.text(), t.caretPosition()) {
       @Override
       public String doGet() {
@@ -260,7 +260,7 @@ public class CompletionSupport {
       Runnable deactivate,
       Runnable restoreFocus) {
 
-    TextEditorCell editor = cell.get(EDITOR);
+    CellTextEditor editor = cell.get(EDITOR);
     Registration removeOnClose = Registration.EMPTY;
     Runnable beforeAnimation = Runnables.EMPTY;
 
@@ -380,7 +380,7 @@ public class CompletionSupport {
       }
 
       @Override
-      protected boolean onAfterType(TextEditorCell editor) {
+      protected boolean onAfterType(CellTextEditor editor) {
         if (super.onAfterType(editor)) return true;
 
         if (!TextEditing.isEnd(editor)) return false;

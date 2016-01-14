@@ -43,7 +43,7 @@ class TextNavigationTrait extends CellTrait {
     return t.isLastAllowed() ? last : last - 1;
   }
 
-  private boolean isSelectionAvailable(TextEditorCell cell) {
+  private boolean isSelectionAvailable(CellTextEditor cell) {
     return cell.getCell().get(SELECTION_AVAILABLE);
   }
 
@@ -60,7 +60,7 @@ class TextNavigationTrait extends CellTrait {
 
   @Override
   public void onKeyPressed(Cell cell, KeyEvent event) {
-    TextEditorCell editor = TextEditing.textEditor(cell);
+    CellTextEditor editor = TextEditing.textEditor(cell);
     String currentText = TextEditing.text(editor);
     int caret = editor.caretPosition().get();
     int minCaret = getMinPos(editor);
@@ -133,7 +133,7 @@ class TextNavigationTrait extends CellTrait {
   @Override
   public void onPropertyChanged(Cell cell, CellPropertySpec<?> prop, PropertyChangeEvent<?> e) {
     if (prop == Cell.FOCUSED) {
-      TextEditorCell editor = TextEditing.textEditor(cell);
+      CellTextEditor editor = TextEditing.textEditor(cell);
       PropertyChangeEvent<Boolean> event = (PropertyChangeEvent<Boolean>) e;
 
       editor.caretVisible().set(event.getNewValue());
@@ -156,7 +156,7 @@ class TextNavigationTrait extends CellTrait {
     }
 
     if (prop == TextCell.TEXT) {
-      TextEditorCell editor = TextEditing.textEditor(cell);
+      CellTextEditor editor = TextEditing.textEditor(cell);
       PropertyChangeEvent<String> event = (PropertyChangeEvent<String>) e;
       int newLength = event.getNewValue() != null ? event.getNewValue().length() : 0;
       if (editor.caretPosition().get() > newLength) {
@@ -169,7 +169,7 @@ class TextNavigationTrait extends CellTrait {
 
   @Override
   public void onKeyTypedLowPriority(Cell cell, KeyEvent event) {
-    TextEditorCell editor = TextEditing.textEditor(cell);
+    CellTextEditor editor = TextEditing.textEditor(cell);
     String s = ("" + event.getKeyChar()).trim();
     if (TextEditing.isEnd(editor) && showCompletion(editor.getCell(), s, Completion.RIGHT_TRANSFORM, editor.getCell().rightPopup()) ) {
       event.consume();
@@ -184,7 +184,7 @@ class TextNavigationTrait extends CellTrait {
   @Override
   public void onComplete(Cell cell, CompletionEvent event) {
     CompletionItems completion = Completion.completionFor(cell, CompletionParameters.EMPTY, Completion.COMPLETION);
-    TextEditorCell editor = TextEditing.textEditor(cell);
+    CellTextEditor editor = TextEditing.textEditor(cell);
     if (completion.isEmpty()) {
       if (cell.get(Cell.RIGHT_POPUP) == null && TextEditing.isEnd(editor) &&
         showSideCompletion(editor.getCell(), Completion.RIGHT_TRANSFORM, editor.getCell().rightPopup())) {
@@ -235,7 +235,7 @@ class TextNavigationTrait extends CellTrait {
   @Override
   public void onMousePressed(Cell cell, MouseEvent event) {
     if (!cell.focusable().get()) return;
-    TextEditorCell editor = TextEditing.textEditor(cell);
+    CellTextEditor editor = TextEditing.textEditor(cell);
     int pos = getPosAt(editor, event);
     editor.caretPosition().set(pos);
     editor.getCell().focus();
@@ -246,14 +246,14 @@ class TextNavigationTrait extends CellTrait {
   @Override
   public void onMouseDragged(Cell cell, MouseEvent event) {
     if (!cell.focusable().get()) return;
-    TextEditorCell editor = TextEditing.textEditor(cell);
+    CellTextEditor editor = TextEditing.textEditor(cell);
     int pos = getPosAt(editor, event);
     editor.selectionVisible().set(true);
     editor.selectionStart().set(pos);
     event.consume();
   }
 
-  private int getPosAt(TextEditorCell editor, MouseEvent event) {
+  private int getPosAt(CellTextEditor editor, MouseEvent event) {
     int max = getMaxPos(editor);
     int min = getMinPos(editor);
     int offset = event.getX() - editor.getCell().origin().x;

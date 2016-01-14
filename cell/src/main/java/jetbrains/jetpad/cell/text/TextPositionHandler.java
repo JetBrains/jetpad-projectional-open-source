@@ -29,7 +29,7 @@ import static jetbrains.jetpad.cell.text.TextNavigationTrait.getMinPos;
 public class TextPositionHandler implements PositionHandler {
   private final TextEditor myEditor;
 
-  public TextPositionHandler(TextEditorCell editor) {
+  public TextPositionHandler(CellTextEditor editor) {
     myEditor = editor;
   }
 

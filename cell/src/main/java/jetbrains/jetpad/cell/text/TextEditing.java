@@ -51,7 +51,7 @@ public class TextEditing {
     return cell instanceof TextCell;
   }
 
-  public static TextEditorCell textEditor(Cell cell) {
+  public static CellTextEditor textEditor(Cell cell) {
     if (cell instanceof TextCell) {
       return new TextCellToEditorAdapter((TextCell) cell);
     }
@@ -239,7 +239,7 @@ public class TextEditing {
     @Override
     public TextEditorCellState saveState(Cell cell) {
       TextEditorCellState result = new TextEditorCellState();
-      TextEditorCell editor = textEditor(cell);
+      CellTextEditor editor = textEditor(cell);
       if (mySaveText) {
         String text = editor.text().get();
         result.myText = text;
@@ -251,7 +251,7 @@ public class TextEditing {
 
     @Override
     public void restoreState(Cell cell, TextEditorCellState state) {
-      TextEditorCell editor = textEditor(cell);
+      CellTextEditor editor = textEditor(cell);
       if (mySaveText) {
         editor.text().set(state.myText);
       }
