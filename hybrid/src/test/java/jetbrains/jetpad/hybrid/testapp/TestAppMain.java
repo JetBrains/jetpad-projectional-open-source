@@ -25,6 +25,10 @@ import jetbrains.jetpad.projectional.util.RootController;
 
 public class TestAppMain {
   public static void main(String[] args) {
+    /*
+     * To test expressions list, use ExprList and ExprListMapper,
+     * and add some expressions to ExprList.
+     */
     ExprContainer model = new ExprContainer();
     Mapper<?, ? extends Cell> rootMapper = new ExprContainerMapper(model);
     rootMapper.attachRoot();
