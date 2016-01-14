@@ -15,17 +15,15 @@
  */
 package jetbrains.jetpad.cell;
 
+import jetbrains.jetpad.cell.text.TextEditing;
+import jetbrains.jetpad.cell.text.TextEditorCell;
 import jetbrains.jetpad.geometry.Rectangle;
 import jetbrains.jetpad.geometry.Vector;
-import jetbrains.jetpad.model.property.DerivedProperty;
 import jetbrains.jetpad.model.property.Property;
-import jetbrains.jetpad.model.property.ReadableProperty;
 import jetbrains.jetpad.values.Color;
 import jetbrains.jetpad.values.FontFamily;
 
-public class TextCell extends Cell {
-  public static final CellPropertySpec<String> TEXT = new CellPropertySpec<>("text", "");
-  public static final CellPropertySpec<Color> TEXT_COLOR = new CellPropertySpec<>("textColor", Color.BLACK);
+public class TextCell extends Cell implements TextEditorCell {
   public static final CellPropertySpec<Boolean> CARET_VISIBLE = new CellPropertySpec<>("caretVisible", false);
   public static final CellPropertySpec<Integer> CARET_POSITION = new CellPropertySpec<>("caretPosition", 0);
 
@@ -43,11 +41,11 @@ public class TextCell extends Cell {
   }
 
   public Property<String> text() {
-    return getProp(TEXT);
+    return getProp(TextEditorCell.TEXT);
   }
 
   public Property<Color> textColor() {
-    return getProp(TEXT_COLOR);
+    return getProp(TextEditorCell.TEXT_COLOR);
   }
 
   public Property<Boolean> caretVisible() {
@@ -75,15 +73,11 @@ public class TextCell extends Cell {
   }
 
   public boolean isEnd() {
-    return caretPosition().get() == getLastPosition();
+    return TextEditing.isEnd(this);
   }
 
   public boolean isHome() {
-    return caretPosition().get() == 0;
-  }
-
-  private int getLastPosition() {
-    return text().get() == null ? 0 : text().get().length();
+    return TextEditing.isHome(this);
   }
 
   public int getCaretAt(int x) {
@@ -99,28 +93,6 @@ public class TextCell extends Cell {
     int offset = getCaretOffset(caretPosition().get());
     Rectangle bounds = getBounds();
     scrollTo(new Rectangle(offset - delta, 0, 2 * delta, bounds.dimension.y).intersect(new Rectangle(Vector.ZERO, bounds.dimension)));
-  }
-
-  public String getPrefixText() {
-    String textValue = get(TEXT);
-    if (textValue == null) {
-      textValue = "";
-    }
-    return textValue.substring(0, get(CARET_POSITION));
-  }
-
-  public ReadableProperty<String> prefixText() {
-    return new DerivedProperty<String>(text(), caretPosition()) {
-      @Override
-      public String doGet() {
-        return getPrefixText();
-      }
-
-      @Override
-      public String getPropExpr() {
-        return "prefixText(" + TextCell.this + ")";
-      }
-    };
   }
 
   @Override

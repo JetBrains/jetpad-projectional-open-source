@@ -15,56 +15,55 @@
  */
 package jetbrains.jetpad.cell.text;
 
-import jetbrains.jetpad.model.event.EventHandler;
 import jetbrains.jetpad.base.Registration;
+import jetbrains.jetpad.cell.position.PositionHandler;
+import jetbrains.jetpad.model.event.EventHandler;
 import jetbrains.jetpad.model.property.DerivedProperty;
 import jetbrains.jetpad.model.property.Property;
 import jetbrains.jetpad.model.property.PropertyChangeEvent;
 import jetbrains.jetpad.model.property.ReadableProperty;
-import jetbrains.jetpad.cell.TextCell;
-import jetbrains.jetpad.cell.position.PositionHandler;
 
 import static jetbrains.jetpad.cell.text.TextNavigationTrait.getMaxPos;
 import static jetbrains.jetpad.cell.text.TextNavigationTrait.getMinPos;
 
 public class TextCellPositionHandler implements PositionHandler {
-  private final TextCell myTextCell;
+  private final TextEditorCell myTextEditorCell;
 
-  public TextCellPositionHandler(TextCell textCell) {
-    myTextCell = textCell;
+  public TextCellPositionHandler(TextEditorCell textEditorCell) {
+    myTextEditorCell = textEditorCell;
   }
 
   @Override
   public boolean isHome() {
-    return getMinPos(myTextCell) == myTextCell.caretPosition().get();
+    return getMinPos(myTextEditorCell) == myTextEditorCell.caretPosition().get();
   }
 
   @Override
   public boolean isEnd() {
-    return getMaxPos(myTextCell) == myTextCell.caretPosition().get();
+    return getMaxPos(myTextEditorCell) == myTextEditorCell.caretPosition().get();
   }
 
   @Override
   public void home() {
-    myTextCell.caretPosition().set(getMinPos(myTextCell));
+    myTextEditorCell.caretPosition().set(getMinPos(myTextEditorCell));
   }
 
   @Override
   public void end() {
-    myTextCell.caretPosition().set(getMaxPos(myTextCell));
+    myTextEditorCell.caretPosition().set(getMaxPos(myTextEditorCell));
   }
 
   @Override
   public Property<Integer> caretOffset() {
-    final ReadableProperty<Integer> derivedOffset = new DerivedProperty<Integer>(myTextCell.caretPosition()) {
+    final ReadableProperty<Integer> derivedOffset = new DerivedProperty<Integer>(myTextEditorCell.caretPosition()) {
       @Override
       public Integer doGet() {
-        return myTextCell.getCaretOffset(myTextCell.caretPosition().get());
+        return myTextEditorCell.getCaretOffset(myTextEditorCell.caretPosition().get());
       }
 
       @Override
       public String getPropExpr() {
-        return "derivedOffset(" + myTextCell + ")";
+        return "derivedOffset(" + myTextEditorCell + ")";
       }
     };
 
@@ -81,12 +80,12 @@ public class TextCellPositionHandler implements PositionHandler {
 
       @Override
       public void set(Integer value) {
-        myTextCell.caretPosition().set(myTextCell.getCaretAt(value));
+        myTextEditorCell.caretPosition().set(myTextEditorCell.getCaretAt(value));
       }
 
       @Override
       public String getPropExpr() {
-        return "caretOffset(" + myTextCell + ")";
+        return "caretOffset(" + myTextEditorCell + ")";
       }
     };
   }

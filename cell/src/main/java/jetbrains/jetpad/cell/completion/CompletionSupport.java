@@ -25,6 +25,7 @@ import jetbrains.jetpad.cell.event.CompletionEvent;
 import jetbrains.jetpad.cell.event.FocusEvent;
 import jetbrains.jetpad.cell.text.TextEditing;
 import jetbrains.jetpad.cell.text.TextEditingTrait;
+import jetbrains.jetpad.cell.text.TextEditorCell;
 import jetbrains.jetpad.cell.trait.CellTrait;
 import jetbrains.jetpad.cell.trait.CellTraitPropertySpec;
 import jetbrains.jetpad.completion.*;
@@ -32,10 +33,7 @@ import jetbrains.jetpad.event.Key;
 import jetbrains.jetpad.event.KeyEvent;
 import jetbrains.jetpad.event.ModifierKey;
 import jetbrains.jetpad.model.event.CompositeRegistration;
-import jetbrains.jetpad.model.property.Property;
-import jetbrains.jetpad.model.property.PropertyBinding;
-import jetbrains.jetpad.model.property.PropertyChangeEvent;
-import jetbrains.jetpad.model.property.ReadableProperty;
+import jetbrains.jetpad.model.property.*;
 
 import java.util.Collections;
 import java.util.List;
@@ -43,6 +41,7 @@ import java.util.List;
 public class CompletionSupport {
   public static final CellTraitPropertySpec<Runnable> HIDE_COMPLETION = new CellTraitPropertySpec<>("hideCompletion");
   public static final CellTraitPropertySpec<Supplier<String>> INITIAL_TEXT_PROVIDER = new CellTraitPropertySpec<>("initialTextProvider");
+  public static final CellTraitPropertySpec<TextEditorCell> EDITOR = new CellTraitPropertySpec<>("completionEditor");
 
   public static CellTrait trait() {
     return new CellTrait() {
@@ -113,10 +112,11 @@ public class CompletionSupport {
     };
   }
 
-  public static void showCompletion(final TextCell textCell, Async<List<CompletionItem>> items,
-                                    final Registration removeOnClose, final Runnable beforeAnimation,
-                                    final Runnable restoreCompletionState, final Runnable restoreState) {
-    if (!textCell.focused().get()) {
+  public static void showCompletion(
+      final TextEditorCell editor, Async<List<CompletionItem>> items, final Registration removeOnClose,
+      final Runnable beforeAnimation, final Runnable restoreCompletionState, final Runnable restoreState) {
+
+    if (!((Cell) editor).focused().get()) {
       throw new IllegalArgumentException();
     }
 
@@ -124,7 +124,7 @@ public class CompletionSupport {
     menuModel.loading.set(true);
 
     final CompositeRegistration reg = new CompositeRegistration();
-    final ReadableProperty<String> prefixText = textCell.prefixText();
+    final ReadableProperty<String> prefixText = prefixText(editor);
     reg.add(PropertyBinding.bindOneWay(prefixText, menuModel.text));
 
     final Handler<CompletionItem> completer = new Handler<CompletionItem>() {
@@ -138,7 +138,7 @@ public class CompletionSupport {
 
     final CompositeRegistration disposeMenuMapper = new CompositeRegistration();
     final Cell completionCell = CompletionMenu.createCell(menuModel, completer, disposeMenuMapper);
-    reg.add(textCell.addTrait(new CellTrait() {
+    reg.add(((Cell) editor).addTrait(new CellTrait() {
       @Override
       public void onPropertyChanged(Cell cell, CellPropertySpec<?> property, PropertyChangeEvent<?> event) {
         if (property == Cell.FOCUSED) {
@@ -182,7 +182,7 @@ public class CompletionSupport {
         }
 
         if (event.is(Key.PAGE_UP) || event.is(Key.PAGE_DOWN)) {
-          int pageHeight = completionCell.getBounds().dimension.y / textCell.dimension().y;
+          int pageHeight = completionCell.getBounds().dimension.y / ((Cell) editor).dimension().y;
           for (int i = 0; i < pageHeight; i++) {
             if (event.is(Key.PAGE_DOWN)) {
               menuModel.down();
@@ -236,8 +236,22 @@ public class CompletionSupport {
       }
     });
 
-    textCell.bottomPopup().set(completionCell);
+    ((Cell) editor).bottomPopup().set(completionCell);
     completionCell.scrollTo();
+  }
+
+  private static ReadableProperty<String> prefixText(final TextEditorCell t) {
+    return new DerivedProperty<String>(t.text(), t.caretPosition()) {
+      @Override
+      public String doGet() {
+        return TextEditing.getPrefixText(t);
+      }
+
+      @Override
+      public String getPropExpr() {
+        return "prefixText(" + t + ")";
+      }
+    };
   }
 
   private static void showPopup(
@@ -246,39 +260,46 @@ public class CompletionSupport {
       Runnable deactivate,
       Runnable restoreFocus) {
 
-    CellContainer container = cell.getContainer();
-    final TextCell textCell = new TextCell();
-    textCell.focusable().set(true);
-    final Registration textEditingReg = textCell.addTrait(new TextEditingTrait());
+    TextEditorCell editor = cell.get(EDITOR);
+    Registration removeOnClose = Registration.EMPTY;
+    Runnable beforeAnimation = Runnables.EMPTY;
 
-    Supplier<String> initialProvider = cell.get(INITIAL_TEXT_PROVIDER);
-    if (initialProvider != null) {
-      String initialText = initialProvider.get();
-      textCell.text().set(initialText);
-      textCell.caretPosition().set(initialText.length());
+    if (editor == null) {
+      final TextCell textCell = new TextCell();
+      textCell.focusable().set(true);
+      final Registration textEditingReg = textCell.addTrait(new TextEditingTrait());
+
+      Supplier<String> initialProvider = cell.get(INITIAL_TEXT_PROVIDER);
+      if (initialProvider != null) {
+        String initialText = initialProvider.get();
+        textCell.text().set(initialText);
+        textCell.caretPosition().set(initialText.length());
+      }
+
+      final HorizontalCell popup = new HorizontalCell();
+      popup.children().add(textCell);
+      cell.frontPopup().set(popup);
+
+      removeOnClose = new Registration() {
+        @Override
+        protected void doRemove() {
+          popup.removeFromParent();
+          textEditingReg.remove();
+        }
+      };
+
+      beforeAnimation = new Runnable() {
+        @Override
+        public void run() {
+          textCell.text().set("");
+        }
+      };
+
+      editor = textCell;
     }
-
-    final HorizontalCell popup = new HorizontalCell();
-    popup.children().add(textCell);
-    cell.frontPopup().set(popup);
-
-    Registration removeOnClose = new Registration() {
-      @Override
-      protected void doRemove() {
-        popup.removeFromParent();
-        textEditingReg.remove();
-      }
-    };
-
-    Runnable beforeAnimation = new Runnable() {
-      @Override
-      public void run() {
-        textCell.text().set("");
-      }
-    };
-    Runnable state = container.saveState();
-    textCell.focus();
-    showCompletion(textCell, items, removeOnClose, beforeAnimation, deactivate, Runnables.seq(state, restoreFocus));
+    Runnable state = cell.getContainer().saveState();
+    ((Cell) editor).focus();
+    showCompletion(editor, items, removeOnClose, beforeAnimation, deactivate, Runnables.seq(state, restoreFocus));
   }
 
   public static TextCell showSideTransformPopup(
@@ -306,12 +327,7 @@ public class CompletionSupport {
     };
 
     final HorizontalCell popup = new HorizontalCell();
-    final TextCell textCell = new TextCell() {
-      @Override
-      public Registration addTrait(CellTrait trait) {
-        return super.addTrait(trait);
-      }
-    };
+    final TextCell textCell = new TextCell();
     final Value<Handler<Boolean>> dismiss = new Value<>();
     textCell.focusable().set(true);
     final Registration traitReg = textCell.addTrait(new TextEditingTrait() {
@@ -341,7 +357,7 @@ public class CompletionSupport {
 
       @Override
       public void onPropertyChanged(Cell cell, CellPropertySpec<?> prop, PropertyChangeEvent<?> e) {
-        if (prop == TextCell.TEXT) {
+        if (prop == TextEditorCell.TEXT) {
           PropertyChangeEvent<String> event = (PropertyChangeEvent<String>) e;
           if (Strings.isNullOrEmpty(event.getNewValue())) {
             dismiss.get().handle(false);
@@ -363,12 +379,12 @@ public class CompletionSupport {
       }
 
       @Override
-      protected boolean onAfterType(TextCell tv) {
-        if (super.onAfterType(tv)) return true;
+      protected boolean onAfterType(TextEditorCell t) {
+        if (super.onAfterType(t)) return true;
 
-        if (!textCell.isEnd()) return false;
+        if (!TextEditing.isEnd(t)) return false;
 
-        String text = textCell.text().get();
+        String text = t.text().get();
 
         final CompletionItems completion = new CompletionItems(supplier.get(wrap(CompletionParameters.EMPTY)));
 
