@@ -21,6 +21,7 @@ import jetbrains.jetpad.base.edt.EventDispatchThread;
 import jetbrains.jetpad.cell.*;
 import jetbrains.jetpad.cell.indent.IndentCell;
 import jetbrains.jetpad.cell.indent.NewLineCell;
+import jetbrains.jetpad.cell.text.TextEditorCell;
 import jetbrains.jetpad.cell.util.Cells;
 import jetbrains.jetpad.event.*;
 import jetbrains.jetpad.geometry.Rectangle;
@@ -350,7 +351,7 @@ public class CellContainerToViewMapper extends Mapper<CellContainer, View> {
           }
         }
 
-        if (prop == TextCell.CARET_VISIBLE) {
+        if (prop == TextEditorCell.CARET_VISIBLE) {
           TextCell text = (TextCell) cell;
           if (text.caretVisible().get()) {
             myWithCaret.add(text);

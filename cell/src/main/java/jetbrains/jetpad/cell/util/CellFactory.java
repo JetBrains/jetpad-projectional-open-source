@@ -20,6 +20,7 @@ import jetbrains.jetpad.cell.*;
 import jetbrains.jetpad.cell.indent.IndentCell;
 import jetbrains.jetpad.cell.indent.NewLineCell;
 import jetbrains.jetpad.cell.text.TextEditing;
+import jetbrains.jetpad.cell.text.TextEditorCell;
 import jetbrains.jetpad.cell.trait.CellTrait;
 import jetbrains.jetpad.cell.trait.CellTraitPropertySpec;
 import jetbrains.jetpad.cell.trait.DerivedCellTrait;
@@ -108,8 +109,8 @@ public class CellFactory {
 
       @Override
       protected void provideProperties(Cell cell, PropertyCollector collector) {
-        collector.add(TextCell.TEXT_COLOR, Color.DARK_BLUE);
-        collector.add(TextCell.TEXT, text);
+        collector.add(TextEditorCell.TEXT, text);
+        collector.add(TextEditorCell.TEXT_COLOR, Color.DARK_BLUE);
         collector.add(TextCell.BOLD, true);
         super.provideProperties(cell, collector);
       }
@@ -157,7 +158,7 @@ public class CellFactory {
           textCell.get(PLACEHOLDER_CELL).focusHighlighted().set(event.getNewValue());
         }
 
-        if (prop == TextCell.TEXT) {
+        if (prop == TextEditorCell.TEXT) {
           PropertyChangeEvent<String> event = (PropertyChangeEvent<String>) e;
           textCell.get(PLACEHOLDER_CELL).visible().set(Strings.isNullOrEmpty(event.getNewValue()));
         }
@@ -165,7 +166,7 @@ public class CellFactory {
         super.onPropertyChanged(c, prop, e);
       }
     });
-    result.set(TextCell.TEXT_COLOR, Color.GRAY);
+    result.set(TextEditorCell.TEXT_COLOR, Color.GRAY);
     result.visible().set(Strings.isNullOrEmpty(textCell.text().get()));
     return result;
   }

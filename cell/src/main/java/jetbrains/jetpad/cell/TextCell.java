@@ -15,25 +15,16 @@
  */
 package jetbrains.jetpad.cell;
 
+import jetbrains.jetpad.cell.text.TextEditorCell;
 import jetbrains.jetpad.geometry.Rectangle;
 import jetbrains.jetpad.geometry.Vector;
-import jetbrains.jetpad.model.property.DerivedProperty;
 import jetbrains.jetpad.model.property.Property;
-import jetbrains.jetpad.model.property.ReadableProperty;
 import jetbrains.jetpad.values.Color;
 import jetbrains.jetpad.values.FontFamily;
 
 public class TextCell extends Cell {
-  public static final CellPropertySpec<String> TEXT = new CellPropertySpec<>("text", "");
-  public static final CellPropertySpec<Color> TEXT_COLOR = new CellPropertySpec<>("textColor", Color.BLACK);
-  public static final CellPropertySpec<Boolean> CARET_VISIBLE = new CellPropertySpec<>("caretVisible", false);
-  public static final CellPropertySpec<Integer> CARET_POSITION = new CellPropertySpec<>("caretPosition", 0);
-
   public static final CellPropertySpec<FontFamily> FONT_FAMILY = new CellPropertySpec<>("fontFamily", FontFamily.MONOSPACED);
   public static final CellPropertySpec<Boolean> BOLD = new CellPropertySpec<>("bold", false);
-
-  public static final CellPropertySpec<Boolean> SELECTION_VISIBLE = new CellPropertySpec<>("selectionVisible", false);
-  public static final CellPropertySpec<Integer> SELECTION_START = new CellPropertySpec<>("selectionStart", 0);
 
   public TextCell() {
   }
@@ -43,15 +34,15 @@ public class TextCell extends Cell {
   }
 
   public Property<String> text() {
-    return getProp(TEXT);
+    return getProp(TextEditorCell.TEXT);
   }
 
   public Property<Color> textColor() {
-    return getProp(TEXT_COLOR);
+    return getProp(TextEditorCell.TEXT_COLOR);
   }
 
   public Property<Boolean> caretVisible() {
-    return getProp(CARET_VISIBLE);
+    return getProp(TextEditorCell.CARET_VISIBLE);
   }
 
   public Property<Boolean> bold() {
@@ -63,26 +54,26 @@ public class TextCell extends Cell {
   }
 
   public Property<Integer> caretPosition() {
-    return getProp(CARET_POSITION);
+    return getProp(TextEditorCell.CARET_POSITION);
   }
 
   public Property<Boolean> selectionVisible() {
-    return getProp(SELECTION_VISIBLE);
+    return getProp(TextEditorCell.SELECTION_VISIBLE);
   }
 
   public Property<Integer> selectionStart() {
-    return getProp(SELECTION_START);
+    return getProp(TextEditorCell.SELECTION_START);
   }
 
   public boolean isEnd() {
-    return caretPosition().get() == getLastPosition();
+    return caretPosition().get() == lastPosition();
   }
 
   public boolean isHome() {
     return caretPosition().get() == 0;
   }
 
-  private int getLastPosition() {
+  public int lastPosition() {
     return text().get() == null ? 0 : text().get().length();
   }
 
@@ -99,28 +90,6 @@ public class TextCell extends Cell {
     int offset = getCaretOffset(caretPosition().get());
     Rectangle bounds = getBounds();
     scrollTo(new Rectangle(offset - delta, 0, 2 * delta, bounds.dimension.y).intersect(new Rectangle(Vector.ZERO, bounds.dimension)));
-  }
-
-  public String getPrefixText() {
-    String textValue = get(TEXT);
-    if (textValue == null) {
-      textValue = "";
-    }
-    return textValue.substring(0, get(CARET_POSITION));
-  }
-
-  public ReadableProperty<String> prefixText() {
-    return new DerivedProperty<String>(text(), caretPosition()) {
-      @Override
-      public String doGet() {
-        return getPrefixText();
-      }
-
-      @Override
-      public String getPropExpr() {
-        return "prefixText(" + TextCell.this + ")";
-      }
-    };
   }
 
   @Override

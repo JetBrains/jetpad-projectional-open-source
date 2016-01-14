@@ -40,14 +40,14 @@ public class TextEditingTrait extends TextNavigationTrait {
   @Override
   public Object get(Cell cell, CellTraitPropertySpec<?> spec) {
     if (spec == Completion.COMPLETION_CONTROLLER) {
-      return getCompletionController((TextCell) cell);
+      return getCompletionController(TextEditing.textEditor(cell));
     }
 
     return super.get(cell, spec);
   }
 
-  private CompletionController getCompletionController(final TextCell cell) {
-    return new BaseCompletionController(cell) {
+  private CompletionController getCompletionController(final TextEditorCell cell) {
+    return new BaseCompletionController(cell.getCell()) {
       @Override
       public boolean canActivate() {
         BaseCompletionParameters params = new BaseCompletionParameters() {
@@ -56,12 +56,12 @@ public class TextEditingTrait extends TextNavigationTrait {
             return true;
           }
         };
-        return !Completion.isCompletionEmpty(cell, params);
+        return !Completion.isCompletionEmpty(cell.getCell(), params);
       }
 
       @Override
       protected void doActivate(Runnable deactivate, Runnable restoreFocus) {
-        CompletionSupport.showCompletion(cell, Completion.allCompletion(cell, new BaseCompletionParameters() {
+        CompletionSupport.showCompletion(cell, Completion.allCompletion(cell.getCell(), new BaseCompletionParameters() {
           @Override
           public boolean isMenu() {
             return true;
@@ -71,77 +71,69 @@ public class TextEditingTrait extends TextNavigationTrait {
 
       @Override
       protected void doDeactivate() {
-        cell.get(CompletionSupport.HIDE_COMPLETION).run();
+        cell.getCell().get(CompletionSupport.HIDE_COMPLETION).run();
       }
 
       @Override
       public boolean hasAmbiguousMatches() {
-        CompletionItems helper = Completion.completionFor(cell, new BaseCompletionParameters() {
+        CompletionItems helper = Completion.completionFor(cell.getCell(), new BaseCompletionParameters() {
           @Override
           public boolean isMenu() {
             return true;
           }
         });
-        return !helper.hasSingleMatch(cell.getPrefixText(), false);
+        return !helper.hasSingleMatch(TextEditing.getPrefixText(cell), false);
       }
     };
   }
 
-  private String currentText(TextCell cell) {
-    String currentText = cell.text().get();
-    if (currentText == null) {
-      currentText = "";
-    }
-    return currentText;
-  }
-
   @Override
   public void onKeyPressed(Cell cell, KeyEvent event) {
-    TextCell textCell = (TextCell) cell;
-    String currentText = currentText(textCell);
-    int caret = textCell.caretPosition().get();
+    TextEditorCell editor = TextEditing.textEditor(cell);
+    String currentText = TextEditing.text(editor);
+    int caret = editor.caretPosition().get();
     int textLen = currentText.length();
 
-    if (textCell.selectionVisible().get() && (event.is(Key.BACKSPACE) || event.is(Key.DELETE))) {
-      clearSelection(textCell);
+    if (editor.selectionVisible().get() && (event.is(Key.BACKSPACE) || event.is(Key.DELETE))) {
+      clearSelection(editor);
       event.consume();
       return;
     }
 
     if (event.is(Key.BACKSPACE) && caret > 0) {
-      textCell.caretPosition().set(caret - 1);
-      setText(textCell, currentText.substring(0, caret - 1) + currentText.substring(caret));
-      onAfterDelete(textCell);
+      editor.caretPosition().set(caret - 1);
+      setText(editor, currentText.substring(0, caret - 1) + currentText.substring(caret));
+      onAfterDelete(editor);
       event.consume();
       return;
     }
 
     if (event.is(Key.DELETE) && caret < textLen) {
-      setText(textCell, currentText.substring(0, caret) + currentText.substring(caret + 1));
-      onAfterDelete(textCell);
+      setText(editor, currentText.substring(0, caret) + currentText.substring(caret + 1));
+      onAfterDelete(editor);
       event.consume();
       return;
     }
 
-    if (event.is(KeyStrokeSpecs.DELETE_CURRENT) && cell.get(TextEditing.CLEAR_ON_DELETE) && !Strings.isNullOrEmpty(textCell.text().get())) {
-      setText(textCell, "");
-      onAfterDelete(textCell);
+    if (event.is(KeyStrokeSpecs.DELETE_CURRENT) && cell.get(TextEditing.CLEAR_ON_DELETE) && !Strings.isNullOrEmpty(editor.text().get())) {
+      setText(editor, "");
+      onAfterDelete(editor);
       event.consume();
     }
 
-    super.onKeyPressed(textCell, event);
+    super.onKeyPressed(cell, event);
   }
 
   @Override
-  public void onComplete(Cell cell, CompletionEvent event) {
-    final TextCell textCell = (TextCell) cell;
-    String currentText = currentText(textCell);
-    CompletionController handler = getCompletionController(textCell);
+  public void onComplete(final Cell cell, CompletionEvent event) {
+    TextEditorCell editor = TextEditing.textEditor(cell);
+    String currentText = TextEditing.text(editor);
+    CompletionController handler = getCompletionController(editor);
 
     if (!handler.isActive()) {
-      CompletionItems completion = new CompletionItems(textCell.get(Completion.COMPLETION).get(CompletionParameters.EMPTY));
-      String prefixText = textCell.getPrefixText();
-      if (textCell.isEnd()) {
+      CompletionItems completion = new CompletionItems(cell.get(Completion.COMPLETION).get(CompletionParameters.EMPTY));
+      String prefixText = TextEditing.getPrefixText(editor);
+      if (TextEditing.isEnd(editor)) {
         List<CompletionItem> matches = completion.matches(prefixText);
         List<CompletionItem> strictlyPrefixed = completion.strictlyPrefixedBy(prefixText);
         if (matches.size() == 1 && strictlyPrefixed.isEmpty()) {
@@ -156,14 +148,14 @@ public class TextEditingTrait extends TextNavigationTrait {
               return true;
             }
           };
-          CompletionSupplier supplier = textCell.get(Completion.RIGHT_TRANSFORM);
-          if ((!supplier.isEmpty(cp) || !supplier.isAsyncEmpty(cp)) && textCell.get(TextEditing.RT_ON_END)) {
-            if (textCell.get(Cell.RIGHT_POPUP) == null) {
-              TextCell popup = CompletionSupport.showSideTransformPopup(textCell, textCell.rightPopup(), textCell.get(Completion.RIGHT_TRANSFORM), true);
+          CompletionSupplier supplier = cell.get(Completion.RIGHT_TRANSFORM);
+          if ((!supplier.isEmpty(cp) || !supplier.isAsyncEmpty(cp)) && cell.get(TextEditing.RT_ON_END)) {
+            if (cell.get(Cell.RIGHT_POPUP) == null) {
+              TextCell popup = CompletionSupport.showSideTransformPopup(cell, cell.rightPopup(), cell.get(Completion.RIGHT_TRANSFORM), true);
               popup.get(Completion.COMPLETION_CONTROLLER).activate(new Runnable() {
                 @Override
                 public void run() {
-                  textCell.focus();
+                  cell.focus();
                 }
               });
             }
@@ -174,7 +166,7 @@ public class TextEditingTrait extends TextNavigationTrait {
       }
 
       List<CompletionItem> prefixed = completion.prefixedBy(prefixText);
-      if (prefixed.size() == 1 && !currentText.isEmpty() && canCompleteWithCtrlSpace(textCell)) {
+      if (prefixed.size() == 1 && !currentText.isEmpty() && canCompleteWithCtrlSpace(editor)) {
         prefixed.get(0).complete(prefixText).run();
         event.consume();
       } else if (handler.canActivate()) {
@@ -188,35 +180,35 @@ public class TextEditingTrait extends TextNavigationTrait {
     super.onComplete(cell, event);
   }
 
-  private void clearSelection(TextCell cell) {
-    if (!cell.selectionVisible().get()) return;
-    String text = cell.text().get();
+  private void clearSelection(TextEditorCell editor) {
+    if (!editor.selectionVisible().get()) return;
+    String text = editor.text().get();
     if (text == null) return;
 
-    int caret = cell.caretPosition().get();
-    int selStart = cell.selectionStart().get();
+    int caret = editor.caretPosition().get();
+    int selStart = editor.selectionStart().get();
 
     int from = Math.min(selStart, caret);
     int to = Math.max(selStart, caret);
 
-    setText(cell, text.substring(0, from) + text.substring(to));
-    cell.caretPosition().set(from);
-    cell.selectionVisible().set(false);
+    setText(editor, text.substring(0, from) + text.substring(to));
+    editor.caretPosition().set(from);
+    editor.selectionVisible().set(false);
   }
 
-  protected boolean canCompleteWithCtrlSpace(TextCell text) {
+  protected boolean canCompleteWithCtrlSpace(TextEditorCell editor) {
     return true;
   }
 
   @Override
   public void onKeyTyped(Cell cell, KeyEvent event) {
-    TextCell textCell = (TextCell) cell;
-    clearSelection(textCell);
+    TextEditorCell editor = TextEditing.textEditor(cell);
+    clearSelection(editor);
 
     String text = "" + event.getKeyChar();
-    pasteText(textCell, text);
-    textCell.scrollToCaret();
-    onAfterType(textCell);
+    pasteText(editor, text);
+    editor.scrollToCaret();
+    onAfterType(editor);
     event.consume();
   }
 
@@ -234,60 +226,60 @@ public class TextEditingTrait extends TextNavigationTrait {
       }
     }
 
-    TextCell textCell = (TextCell) cell;
-    clearSelection(textCell);
-    pasteText(textCell, newText.toString());
+    TextEditorCell editor = TextEditing.textEditor(cell);
+    clearSelection(editor);
+    pasteText(editor, newText.toString());
     event.consume();
   }
 
   @Override
   public void onCut(Cell cell, CopyCutEvent event) {
     onCopy(cell, event);
-    clearSelection((TextCell) cell);
+    clearSelection(TextEditing.textEditor(cell));
   }
 
   @Override
   public void onCopy(Cell cell, CopyCutEvent event) {
-    TextCell textCell = (TextCell) cell;
-    if (!textCell.selectionVisible().get()) return;
-    int selStart = textCell.selectionStart().get();
-    int caret = textCell.caretPosition().get();
+    TextEditorCell editor = TextEditing.textEditor(cell);
+    if (!editor.selectionVisible().get()) return;
 
+    int selStart = editor.selectionStart().get();
+    int caret = editor.caretPosition().get();
     int from = Math.min(selStart, caret);
     int to = Math.max(selStart, caret);
     if (from == to) return;
 
-    String selection = textCell.text().get().substring(from, to);
+    String selection = editor.text().get().substring(from, to);
     event.consume(new TextClipboardContent(selection));
   }
 
-  private void pasteText(TextCell cell, String text) {
-    String currentText = cell.text().get();
-    int caret = cell.caretPosition().get();
+  private void pasteText(TextEditorCell editor, String text) {
+    String currentText = editor.text().get();
+    int caret = editor.caretPosition().get();
     if (currentText != null) {
-      setText(cell, currentText.substring(0, caret) + text + currentText.substring(caret));
+      setText(editor, currentText.substring(0, caret) + text + currentText.substring(caret));
     } else {
-      setText(cell, "" + text);
+      setText(editor, "" + text);
     }
-    cell.caretPosition().set(caret + text.length());
+    editor.caretPosition().set(caret + text.length());
   }
 
-  protected void setText(TextCell cell, String text) {
+  protected void setText(TextEditorCell editor, String text) {
     if (Strings.isNullOrEmpty(text)) {
-      cell.dispatch(new Event(), Cells.BECAME_EMPTY);
+      editor.getCell().dispatch(new Event(), Cells.BECAME_EMPTY);
     }
 
-    cell.text().set(text);
+    editor.text().set(text);
   }
 
-  protected boolean onAfterType(TextCell cell) {
-    Supplier<Boolean> afterType = cell.get(TextEditing.AFTER_TYPE);
+  protected boolean onAfterType(TextEditorCell editor) {
+    Supplier<Boolean> afterType = editor.getCell().get(TextEditing.AFTER_TYPE);
     if (afterType != null) {
       return afterType.get();
     }
     return false;
   }
 
-  protected void onAfterDelete(TextCell textCell) {
+  protected void onAfterDelete(TextEditorCell editor) {
   }
 }
