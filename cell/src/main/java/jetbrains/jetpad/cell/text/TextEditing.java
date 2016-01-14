@@ -44,7 +44,33 @@ public class TextEditing {
 
   public static final CellTraitPropertySpec<Boolean> EAGER_COMPLETION = new CellTraitPropertySpec<>("eagerCompletion", false);
 
-  private static final TextCellStateHandler TEXT_CELL_STATE_HANDLER = new TextCellStateHandler(false, null);
+  private static final TextEditorStateHandler TEXT_CELL_STATE_HANDLER = new TextEditorStateHandler(false, null);
+
+
+  public static boolean isHome(TextEditorCell t) {
+    return t.caretPosition().get() == 0;
+  }
+
+  public static boolean isEnd(TextEditorCell t) {
+    return t.caretPosition().get() == lastPosition(t);
+  }
+
+  public static boolean isEmpty(TextEditorCell t) {
+    return lastPosition(t) == 0;
+  }
+
+  static int lastPosition(TextEditorCell t) {
+    return text(t).length();
+  }
+
+  public static String text(TextEditorCell t) {
+    String text = t.text().get();
+    return text == null ? "" : text;
+  }
+
+  public static String getPrefixText(TextEditorCell t) {
+    return text(t).substring(0, t.caretPosition().get());
+  }
 
   public static CellTrait textNavigation(final boolean firstAllowed, final boolean lastAllowed) {
     return new DerivedCellTrait() {
@@ -154,7 +180,7 @@ public class TextEditing {
         }
 
         if (spec == CellStateHandler.PROPERTY) {
-          return new TextCellStateHandler(true, validator);
+          return new TextEditorStateHandler(true, validator);
         }
 
         return super.get(cell, spec);
@@ -169,7 +195,6 @@ public class TextEditing {
     };
   }
 
-
   private static Function<Cell, Function<String, Runnable>> expansionProvider(final Side side) {
     return new Function<Cell, Function<String, Runnable>>() {
       @Override
@@ -177,32 +202,32 @@ public class TextEditing {
         return new Function<String, Runnable>() {
           @Override
           public Runnable apply(String sideText) {
-            TextCell popupCell = CompletionSupport.showSideTransformPopup(cell, side.getPopup(cell), cell.get(side.getKey()), false);
-            popupCell.text().set(sideText);
-            return CellActions.toEnd(popupCell);
+            TextCell popup = CompletionSupport.showSideTransformPopup(cell, side.getPopup(cell), cell.get(side.getKey()), false);
+            popup.text().set(sideText);
+            return CellActions.toEnd(popup);
           }
         };
       }
     };
   }
 
-  private static class TextCellStateHandler implements CellStateHandler<TextCell, TextCellState> {
+  private static class TextEditorStateHandler<EditorT extends Cell & TextEditorCell> implements CellStateHandler<EditorT, TextEditorCellState> {
     private boolean mySaveText;
     private Predicate<String> myValidator;
 
-    private TextCellStateHandler(boolean saveText, Predicate<String> validator) {
+    private TextEditorStateHandler(boolean saveText, Predicate<String> validator) {
       mySaveText = saveText;
       myValidator = validator;
     }
 
     @Override
-    public boolean synced(TextCell cell) {
+    public boolean synced(EditorT cell) {
       return myValidator == null || myValidator.apply(cell.text().get());
     }
 
     @Override
-    public TextCellState saveState(TextCell cell) {
-      TextCellState result = new TextCellState();
+    public TextEditorCellState saveState(EditorT cell) {
+      TextEditorCellState result = new TextEditorCellState();
       if (mySaveText) {
         String text = cell.text().get();
         result.myText = text;
@@ -213,7 +238,7 @@ public class TextEditing {
     }
 
     @Override
-    public void restoreState(TextCell cell, TextCellState state) {
+    public void restoreState(EditorT cell, TextEditorCellState state) {
       if (mySaveText) {
         cell.text().set(state.myText);
       }
@@ -221,19 +246,19 @@ public class TextEditing {
     }
   }
 
-  private static class TextCellState implements CellState {
+  private static class TextEditorCellState implements CellState {
     private int myCaretPosition;
     private String myText;
     private boolean myValid = true;
 
     @Override
     public boolean equals(Object o) {
-      if (!(o instanceof TextCellState)) return false;
+      if (!(o instanceof TextEditorCellState)) return false;
 
-      TextCellState otherState = (TextCellState) o;
+      TextEditorCellState otherState = (TextEditorCellState) o;
 
-      return Objects.equal(myText, otherState.myText) && myCaretPosition == otherState.myCaretPosition &&
-          myValid == otherState.myValid;
+      return Objects.equal(myText, otherState.myText) && myCaretPosition == otherState.myCaretPosition
+          && myValid == otherState.myValid;
     }
 
     @Override
@@ -246,10 +271,10 @@ public class TextEditing {
 
     @Override
     public CellStateDifference getDifference(CellState state) {
-      if (!(state instanceof TextCellState)) {
+      if (!(state instanceof TextEditorCellState)) {
         return myValid ? CellStateDifference.NAVIGATION : CellStateDifference.EDIT;
       }
-      TextCellState textState = (TextCellState) state;
+      TextEditorCellState textState = (TextEditorCellState) state;
       if (!Objects.equal(myText, textState.myText)) {
         return CellStateDifference.EDIT;
       }
