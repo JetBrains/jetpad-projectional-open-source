@@ -34,34 +34,17 @@ import jetbrains.jetpad.model.property.PropertyChangeEvent;
 class TextNavigationTrait extends CellTrait {
   static final CellTraitPropertySpec<Boolean> SELECTION_AVAILABLE = new CellTraitPropertySpec<>("selectionAvailable", true);
 
-  static int getMinPos(TextCell tv) {
-    if (isFirstAllowed(tv)) {
-      return 0;
-    } else {
-      return 1;
-    }
+  static int getMinPos(TextEditor t) {
+    return t.isFirstAllowed() ? 0 : 1;
   }
 
-  static int getMaxPos(TextCell tv) {
-    String text = tv.text().get();
-    if (text == null || text.isEmpty()) text = "";
-    if (isLastAllowed(tv)) {
-      return text.length();
-    } else {
-      return text.length() - 1;
-    }
+  static int getMaxPos(TextEditor t) {
+    int last = TextEditing.lastPosition(t);
+    return t.isLastAllowed() ? last : last - 1;
   }
 
-  static Boolean isFirstAllowed(TextCell tv) {
-    return tv.get(TextEditing.FIRST_ALLOWED);
-  }
-
-  static Boolean isLastAllowed(TextCell tv) {
-    return tv.get(TextEditing.LAST_ALLOWED);
-  }
-
-  private boolean isSelectionAvailable(Cell cell) {
-    return cell.get(SELECTION_AVAILABLE);
+  private boolean isSelectionAvailable(TextEditorCell cell) {
+    return cell.getCell().get(SELECTION_AVAILABLE);
   }
 
   private boolean isCaretKey(boolean selectionAvailable, KeyEvent event, Key key, ModifierKey... modifiers) {
@@ -76,32 +59,28 @@ class TextNavigationTrait extends CellTrait {
   }
 
   @Override
-  public void onKeyPressed(Cell c, KeyEvent event) {
-    TextCell cell = (TextCell) c;
-    String currentText = cell.text().get();
-    if (currentText == null) {
-      currentText = "";
-    }
-    int caret = cell.caretPosition().get();
-    int minCaret = isFirstAllowed(cell) ? 0 : 1;
+  public void onKeyPressed(Cell cell, KeyEvent event) {
+    TextEditorCell editor = TextEditing.textEditor(cell);
+    String currentText = TextEditing.text(editor);
+    int caret = editor.caretPosition().get();
+    int minCaret = getMinPos(editor);
     int textLen = currentText.length();
-    int maxCaret = isLastAllowed(cell) ? textLen : textLen - 1;
+    int maxCaret = editor.isLastAllowed() ? textLen : textLen - 1;
 
-
-    boolean selectionAvailable = isSelectionAvailable(c);
+    boolean selectionAvailable = isSelectionAvailable(editor);
 
     boolean selection = event.has(ModifierKey.SHIFT);
     try {
       if (isCaretKey(selectionAvailable, event, Key.LEFT) && caret > minCaret) {
-        cell.caretPosition().set(caret - 1);
-        cell.scrollToCaret();
+        editor.caretPosition().set(caret - 1);
+        editor.scrollToCaret();
         event.consume();
         return;
       }
 
       if (isCaretKey(selectionAvailable, event, Key.RIGHT) && caret < maxCaret) {
-        cell.caretPosition().set(caret + 1);
-        cell.scrollToCaret();
+        editor.caretPosition().set(caret + 1);
+        editor.scrollToCaret();
         event.consume();
         return;
       }
@@ -110,8 +89,8 @@ class TextNavigationTrait extends CellTrait {
           event.is(KeyStrokeSpecs.HOME) ||
           (event.is(KeyStrokeSpecs.SELECT_HOME) && selectionAvailable) ||
           event.is(KeyStrokeSpecs.PREV_WORD)) && caret > 0) {
-        cell.caretPosition().set(0);
-        cell.scrollToCaret();
+        editor.caretPosition().set(0);
+        editor.scrollToCaret();
         event.consume();
         return;
       }
@@ -121,29 +100,29 @@ class TextNavigationTrait extends CellTrait {
           (event.is(KeyStrokeSpecs.SELECT_END) && selectionAvailable) ||
           event.is(KeyStrokeSpecs.NEXT_WORD_ALT)) && caret < maxCaret ||
           event.is(KeyStrokeSpecs.NEXT_WORD_CONTROL.with(ModifierKey.SHIFT))) {
-        cell.caretPosition().set(maxCaret);
-        cell.scrollToCaret();
+        editor.caretPosition().set(maxCaret);
+        editor.scrollToCaret();
         event.consume();
         return;
       }
+
     } finally {
       if (event.isConsumed()) {
-        if (cell.selectionVisible().get() && !selection) {
-          cell.selectionVisible().set(false);
+        if (editor.selectionVisible().get() && !selection) {
+          editor.selectionVisible().set(false);
         }
-
-        if (!cell.selectionVisible().get() && selection) {
-          cell.selectionStart().set(caret);
-          cell.selectionVisible().set(true);
+        if (!editor.selectionVisible().get() && selection) {
+          editor.selectionStart().set(caret);
+          editor.selectionVisible().set(true);
         }
       }
     }
 
     if (event.is(KeyStrokeSpecs.SELECT_ALL)) {
-      cell.selectionStart().set(0);
-      cell.caretPosition().set(maxCaret);
-      cell.selectionVisible().set(true);
-      cell.scrollToCaret();
+      editor.selectionStart().set(0);
+      editor.caretPosition().set(maxCaret);
+      editor.selectionVisible().set(true);
+      editor.scrollToCaret();
       event.consume();
       return;
     }
@@ -154,35 +133,34 @@ class TextNavigationTrait extends CellTrait {
   @Override
   public void onPropertyChanged(Cell cell, CellPropertySpec<?> prop, PropertyChangeEvent<?> e) {
     if (prop == Cell.FOCUSED) {
-      TextCell textCell = (TextCell) cell;
+      TextEditorCell editor = TextEditing.textEditor(cell);
       PropertyChangeEvent<Boolean> event = (PropertyChangeEvent<Boolean>) e;
 
-      textCell.caretVisible().set(event.getNewValue());
+      editor.caretVisible().set(event.getNewValue());
       if (!event.getNewValue()) {
-        textCell.selectionVisible().set(false);
+        editor.selectionVisible().set(false);
       }
 
       if (!event.getNewValue()) return;
 
-      int caret = textCell.caretPosition().get();
-      String text = textCell.text().get();
-      if (text == null) text = "";
+      int caret = editor.caretPosition().get();
+      String text = TextEditing.text(editor);
 
-      if (!isFirstAllowed(textCell) && caret == 0) {
-        textCell.caretPosition().set(1);
+      if (!editor.isFirstAllowed() && caret == 0) {
+        editor.caretPosition().set(1);
       }
 
-      if (!isLastAllowed(textCell) && caret == text.length()) {
-        textCell.caretPosition().set(text.length() - 1);
+      if (!editor.isLastAllowed() && caret == text.length()) {
+        editor.caretPosition().set(text.length() - 1);
       }
     }
 
     if (prop == TextCell.TEXT) {
-      TextCell textCell = (TextCell) cell;
+      TextEditorCell editor = TextEditing.textEditor(cell);
       PropertyChangeEvent<String> event = (PropertyChangeEvent<String>) e;
       int newLength = event.getNewValue() != null ? event.getNewValue().length() : 0;
-      if (textCell.caretPosition().get() > newLength) {
-        textCell.caretPosition().set(newLength);
+      if (editor.caretPosition().get() > newLength) {
+        editor.caretPosition().set(newLength);
       }
     }
 
@@ -191,33 +169,30 @@ class TextNavigationTrait extends CellTrait {
 
   @Override
   public void onKeyTypedLowPriority(Cell cell, KeyEvent event) {
-    TextCell textCell = (TextCell) cell;
+    TextEditorCell editor = TextEditing.textEditor(cell);
     String s = ("" + event.getKeyChar()).trim();
-    if (textCell.isEnd() && showCompletion(textCell, s, Completion.RIGHT_TRANSFORM, textCell.rightPopup()) ) {
+    if (TextEditing.isEnd(editor) && showCompletion(editor.getCell(), s, Completion.RIGHT_TRANSFORM, editor.getCell().rightPopup()) ) {
+      event.consume();
+    }
+    if (TextEditing.isHome(editor) && showCompletion(editor.getCell(), s, Completion.LEFT_TRANSFORM, editor.getCell().leftPopup())) {
       event.consume();
     }
 
-    if (textCell.isHome() && showCompletion(textCell, s, Completion.LEFT_TRANSFORM, textCell.leftPopup())) {
-      event.consume();
-    }
-
-    super.onKeyTypedLowPriority(textCell, event);
+    super.onKeyTypedLowPriority(cell, event);
   }
 
   @Override
   public void onComplete(Cell cell, CompletionEvent event) {
-    final TextCell textCell = (TextCell) cell;
-
     CompletionItems completion = Completion.completionFor(cell, CompletionParameters.EMPTY, Completion.COMPLETION);
+    TextEditorCell editor = TextEditing.textEditor(cell);
     if (completion.isEmpty()) {
-      if (textCell.get(Cell.RIGHT_POPUP) == null && textCell.isEnd() &&
-        showSideCompletion(textCell, Completion.RIGHT_TRANSFORM, textCell.rightPopup())) {
+      if (cell.get(Cell.RIGHT_POPUP) == null && TextEditing.isEnd(editor) &&
+        showSideCompletion(editor.getCell(), Completion.RIGHT_TRANSFORM, editor.getCell().rightPopup())) {
         event.consume();
         return;
       }
-
-      if (textCell.get(Cell.LEFT_POPUP) == null && textCell.isHome() &&
-        showSideCompletion(textCell, Completion.LEFT_TRANSFORM, textCell.leftPopup())) {
+      if (cell.get(Cell.LEFT_POPUP) == null && TextEditing.isHome(editor) &&
+        showSideCompletion(editor.getCell(), Completion.LEFT_TRANSFORM, editor.getCell().leftPopup())) {
         event.consume();
         return;
       }
@@ -226,15 +201,15 @@ class TextNavigationTrait extends CellTrait {
     super.onComplete(cell, event);
   }
 
-  private boolean showSideCompletion(final TextCell textCell, CellTraitPropertySpec<CompletionSupplier> key, Property<Cell> popupProp) {
-    CompletionItems completion = Completion.completionFor(textCell, CompletionParameters.EMPTY, key);
+  private boolean showSideCompletion(final Cell cell, CellTraitPropertySpec<CompletionSupplier> key, Property<Cell> popupProp) {
+    CompletionItems completion = Completion.completionFor(cell, CompletionParameters.EMPTY, key);
     if (!completion.isEmpty()) {
-      final TextCell popup = CompletionSupport.showSideTransformPopup(textCell, popupProp, textCell.get(key), false);
+      final TextCell popup = CompletionSupport.showSideTransformPopup(cell, popupProp, cell.get(key), false);
       final CompletionController controller = popup.get(Completion.COMPLETION_CONTROLLER);
       controller.activate(new Runnable() {
         @Override
         public void run() {
-          textCell.focus();
+          cell.focus();
         }
       });
       return true;
@@ -242,16 +217,15 @@ class TextNavigationTrait extends CellTrait {
     return false;
   }
 
-
-  private boolean showCompletion(Cell cell, String text, CellTraitPropertySpec<CompletionSupplier> key, Property<Cell> popup) {
+  private boolean showCompletion(Cell cell, String text, CellTraitPropertySpec<CompletionSupplier> key, Property<Cell> popupProp) {
     CompletionItems completion = Completion.completionFor(cell, CompletionParameters.EMPTY, key);
     if (completion.hasMatches(text)) {
       if (completion.hasSingleMatch(text, cell.get(TextEditing.EAGER_COMPLETION))) {
         completion.completeFirstMatch(text);
       } else {
-        TextCell popupCell = CompletionSupport.showSideTransformPopup(cell, popup, cell.get(key), false);
-        popupCell.text().set(text);
-        popupCell.caretPosition().set(popupCell.text().get().length());
+        TextCell popup = CompletionSupport.showSideTransformPopup(cell, popupProp, cell.get(key), false);
+        popup.text().set(text);
+        popup.caretPosition().set(popup.lastPosition());
       }
       return true;
     }
@@ -259,30 +233,30 @@ class TextNavigationTrait extends CellTrait {
   }
 
   @Override
-  public void onMousePressed(Cell c, MouseEvent event) {
-    TextCell cell = (TextCell) c;
+  public void onMousePressed(Cell cell, MouseEvent event) {
     if (!cell.focusable().get()) return;
-    int pos = getPosAt(cell, event);
-    cell.caretPosition().set(pos);
-    cell.focus();
-    cell.selectionVisible().set(false);
+    TextEditorCell editor = TextEditing.textEditor(cell);
+    int pos = getPosAt(editor, event);
+    editor.caretPosition().set(pos);
+    editor.getCell().focus();
+    editor.selectionVisible().set(false);
     event.consume();
   }
 
   @Override
-  public void onMouseDragged(Cell c, MouseEvent event) {
-    TextCell cell = (TextCell) c;
+  public void onMouseDragged(Cell cell, MouseEvent event) {
     if (!cell.focusable().get()) return;
-    int pos = getPosAt(cell, event);
-    cell.selectionVisible().set(true);
-    cell.selectionStart().set(pos);
+    TextEditorCell editor = TextEditing.textEditor(cell);
+    int pos = getPosAt(editor, event);
+    editor.selectionVisible().set(true);
+    editor.selectionStart().set(pos);
     event.consume();
   }
 
-  private int getPosAt(TextCell cell, MouseEvent event) {
-    int max = getMaxPos(cell);
-    int min = getMinPos(cell);
-    int offset = event.getX() - cell.origin().x;
-    return Math.max(min, Math.min(cell.getCaretAt(offset), max));
+  private int getPosAt(TextEditorCell editor, MouseEvent event) {
+    int max = getMaxPos(editor);
+    int min = getMinPos(editor);
+    int offset = event.getX() - editor.getCell().origin().x;
+    return Math.max(min, Math.min(editor.getCaretAt(offset), max));
   }
 }
