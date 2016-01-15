@@ -59,7 +59,6 @@ import jetbrains.jetpad.model.property.WritableProperty;
 import jetbrains.jetpad.projectional.domUtil.DomUtil;
 import jetbrains.jetpad.projectional.domUtil.Scrolling;
 import jetbrains.jetpad.projectional.domUtil.TextMetricsCalculator;
-import jetbrains.jetpad.projectional.view.TextView;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -113,7 +112,7 @@ public class CellContainerToDomMapper extends Mapper<CellContainer, Element> {
 
     StyleInjector.flush();
 
-    int width = TextMetricsCalculator.calculate(TextView.DEFAULT_FONT, "xx").dimension().x;
+    int width = TextMetricsCalculator.calculate(TextCell.DEFAULT_FONT, "xx").dimension().x;
     StyleInjector.inject("." + CSS.indented() + "{ padding-left: " + width + "px }", true);
     ourIndentInjected = true;
   }
