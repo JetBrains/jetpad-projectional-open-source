@@ -20,6 +20,7 @@ import jetbrains.jetpad.geometry.Vector;
 import jetbrains.jetpad.model.property.DerivedProperty;
 import jetbrains.jetpad.model.property.Property;
 import jetbrains.jetpad.model.property.ReadableProperty;
+import jetbrains.jetpad.projectional.view.TextView;
 import jetbrains.jetpad.values.Color;
 import jetbrains.jetpad.values.FontFamily;
 
@@ -30,6 +31,8 @@ public class TextCell extends Cell {
   public static final CellPropertySpec<Integer> CARET_POSITION = new CellPropertySpec<>("caretPosition", 0);
 
   public static final CellPropertySpec<FontFamily> FONT_FAMILY = new CellPropertySpec<>("fontFamily", FontFamily.MONOSPACED);
+  public static final CellPropertySpec<Integer> FONT_SIZE = new CellPropertySpec<>("fontSize", TextView.DEFAULT_FONT.getSize());
+
   public static final CellPropertySpec<Boolean> BOLD = new CellPropertySpec<>("bold", false);
 
   public static final CellPropertySpec<Boolean> SELECTION_VISIBLE = new CellPropertySpec<>("selectionVisible", false);
@@ -60,6 +63,10 @@ public class TextCell extends Cell {
 
   public Property<FontFamily> fontFamily() {
     return getProp(FONT_FAMILY);
+  }
+
+  public Property<Integer> fontSize() {
+    return getProp(FONT_SIZE);
   }
 
   public Property<Integer> caretPosition() {
