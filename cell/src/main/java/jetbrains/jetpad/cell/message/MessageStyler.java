@@ -17,13 +17,14 @@ package jetbrains.jetpad.cell.message;
 
 import jetbrains.jetpad.base.Registration;
 import jetbrains.jetpad.cell.Cell;
-import jetbrains.jetpad.cell.TextCell;
+import jetbrains.jetpad.cell.text.TextEditing;
+import jetbrains.jetpad.cell.text.TextEditorCell;
 import jetbrains.jetpad.values.Color;
 
 public class MessageStyler {
   protected Registration doApplyBroken(Cell cell) {
-    if (cell instanceof TextCell) {
-      return cell.set(TextCell.TEXT_COLOR, Color.RED);
+    if (TextEditing.isTextEditor(cell)) {
+      return cell.set(TextEditorCell.TEXT_COLOR, Color.RED);
     }
     return cell.set(Cell.BACKGROUND, Color.LIGHT_PINK);
   }
