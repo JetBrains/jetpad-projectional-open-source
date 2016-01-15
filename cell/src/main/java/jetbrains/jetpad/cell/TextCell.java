@@ -34,6 +34,7 @@ public class TextCell extends Cell {
 
   public static final CellPropertySpec<FontFamily> FONT_FAMILY = new CellPropertySpec<>("fontFamily", DEFAULT_FONT.getFamily());
   public static final CellPropertySpec<Boolean> BOLD = new CellPropertySpec<>("bold", DEFAULT_FONT.isBold());
+  public static final CellPropertySpec<Integer> FONT_SIZE = new CellPropertySpec<>("fontSize", DEFAULT_FONT.getSize());
 
   public static final CellPropertySpec<Boolean> SELECTION_VISIBLE = new CellPropertySpec<>("selectionVisible", false);
   public static final CellPropertySpec<Integer> SELECTION_START = new CellPropertySpec<>("selectionStart", 0);
@@ -63,6 +64,10 @@ public class TextCell extends Cell {
 
   public Property<FontFamily> fontFamily() {
     return getProp(FONT_FAMILY);
+  }
+
+  public Property<Integer> fontSize() {
+    return getProp(FONT_SIZE);
   }
 
   public Property<Integer> caretPosition() {
