@@ -19,6 +19,8 @@ import com.google.common.base.Objects;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.Window;
+import jetbrains.jetpad.base.JsDebug;
 import jetbrains.jetpad.values.Color;
 import jetbrains.jetpad.values.Font;
 import jetbrains.jetpad.values.FontFamily;
@@ -27,6 +29,18 @@ public class DomTextEditor {
   public static final Font DEFAULT_FONT = new Font(FontFamily.MONOSPACED, 15);
 
   private static final TextMetrics ourDefaultFontMetrics = TextMetricsCalculator.calculate(DEFAULT_FONT);
+
+  // a hack to overcome Win+Chrome DirectWrite rendering for Consolas font
+  private static boolean canEnableSymbolFixedWidth() {
+    if (Window.Navigator.getPlatform().toLowerCase().startsWith("win")
+        && Window.Navigator.getUserAgent().toLowerCase().contains("chrome")) {
+      JsDebug.log("disable fixed width, platform=" + Window.Navigator.getPlatform() + ", agent=" + Window.Navigator.getUserAgent());
+      return false;
+    }
+    return true;
+  }
+
+  private static final boolean ourSymbolFixedWidthAllowed = canEnableSymbolFixedWidth();
 
   private int myCaretPosition;
   private int mySelectionStart;
@@ -271,7 +285,7 @@ public class DomTextEditor {
 
   public int getCaretOffset(int caretOffset) {
     if (caretOffset == 0) return 0;
-    if (FontFamily.MONOSPACED == myFont.getFamily()) {
+    if (isFixedWidth()) {
       return caretOffset * getCharWidth();
     } else {
       return TextMetricsCalculator.calculateWidth(myFont, myText.substring(0, caretOffset));
@@ -291,7 +305,7 @@ public class DomTextEditor {
     if (caretOffset <= 0) return 0;
     if (textValue == null) return 0;
 
-    if (FontFamily.MONOSPACED == myFont.getFamily()) {
+    if (isFixedWidth()) {
       int pos = caretOffset / getCharWidth();
       int tail = caretOffset - pos * getCharWidth();
       if (tail > getCharWidth() / 2) {
@@ -307,5 +321,9 @@ public class DomTextEditor {
       }
       return myText.length();
     }
+  }
+
+  private boolean isFixedWidth() {
+    return ourSymbolFixedWidthAllowed && (myFont.getFamily() == FontFamily.MONOSPACED);
   }
 }
