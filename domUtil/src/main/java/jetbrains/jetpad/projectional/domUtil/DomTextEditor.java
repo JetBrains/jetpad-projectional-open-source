@@ -105,6 +105,8 @@ public class DomTextEditor {
     myFont = new Font(myFont.getFamily(), size, myFont.isBold(), myFont.isItalic());
     fontChanged();
     updateFontSize();
+    updateLineHeight();
+    updateText();
   }
 
   private void fontChanged() {
