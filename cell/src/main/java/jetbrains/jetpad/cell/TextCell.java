@@ -17,9 +17,7 @@ package jetbrains.jetpad.cell;
 
 import jetbrains.jetpad.geometry.Rectangle;
 import jetbrains.jetpad.geometry.Vector;
-import jetbrains.jetpad.model.property.DerivedProperty;
 import jetbrains.jetpad.model.property.Property;
-import jetbrains.jetpad.model.property.ReadableProperty;
 import jetbrains.jetpad.values.Color;
 import jetbrains.jetpad.values.Font;
 import jetbrains.jetpad.values.FontFamily;
@@ -83,14 +81,14 @@ public class TextCell extends Cell {
   }
 
   public boolean isEnd() {
-    return caretPosition().get() == getLastPosition();
+    return caretPosition().get() == lastPosition();
   }
 
   public boolean isHome() {
     return caretPosition().get() == 0;
   }
 
-  private int getLastPosition() {
+  public int lastPosition() {
     return text().get() == null ? 0 : text().get().length();
   }
 
@@ -107,28 +105,6 @@ public class TextCell extends Cell {
     int offset = getCaretOffset(caretPosition().get());
     Rectangle bounds = getBounds();
     scrollTo(new Rectangle(offset - delta, 0, 2 * delta, bounds.dimension.y).intersect(new Rectangle(Vector.ZERO, bounds.dimension)));
-  }
-
-  public String getPrefixText() {
-    String textValue = get(TEXT);
-    if (textValue == null) {
-      textValue = "";
-    }
-    return textValue.substring(0, get(CARET_POSITION));
-  }
-
-  public ReadableProperty<String> prefixText() {
-    return new DerivedProperty<String>(text(), caretPosition()) {
-      @Override
-      public String doGet() {
-        return getPrefixText();
-      }
-
-      @Override
-      public String getPropExpr() {
-        return "prefixText(" + TextCell.this + ")";
-      }
-    };
   }
 
   @Override
