@@ -22,6 +22,7 @@ public interface CellToDomCss extends CssResource {
   String vertical();
   String rootContainer();
   String horizontal();
+  String alignMiddle();
   String indented();
   String hidden();
   String selected();

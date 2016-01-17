@@ -16,4 +16,18 @@
 package jetbrains.jetpad.cell;
 
 public class HorizontalCell extends Cell {
+  private boolean myContentMiddleAligned = false;
+
+  public HorizontalCell() {
+    this(false);
+  }
+
+  public HorizontalCell(boolean alignContentToMiddle) {
+    super();
+    myContentMiddleAligned = alignContentToMiddle;
+  }
+
+  public boolean isContentMiddleAligned() {
+    return myContentMiddleAligned;
+  }
 }
