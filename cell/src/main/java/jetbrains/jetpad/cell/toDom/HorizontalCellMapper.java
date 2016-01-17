@@ -22,5 +22,8 @@ class HorizontalCellMapper extends BaseCellMapper<HorizontalCell> {
   HorizontalCellMapper(HorizontalCell source, CellToDomContext ctx) {
     super(source, ctx, DOM.createDiv());
     getTarget().addClassName(CellContainerToDomMapper.CSS.horizontal());
+    if (source.isContentMiddleAligned()) {
+      getTarget().addClassName(CellContainerToDomMapper.CSS.alignMiddle());
+    }
   }
 }

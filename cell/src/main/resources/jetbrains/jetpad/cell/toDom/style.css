@@ -61,6 +61,10 @@
   font-size: 0px;
 }
 
+.alignMiddle > div {
+  vertical-align : middle;
+}
+
 .vertical > div {
   display: block;
   font-size: 0px;
