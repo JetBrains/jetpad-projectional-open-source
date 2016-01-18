@@ -23,7 +23,10 @@ import jetbrains.jetpad.cell.action.CellActions;
 import jetbrains.jetpad.cell.completion.Completion;
 import jetbrains.jetpad.cell.completion.CompletionSupport;
 import jetbrains.jetpad.cell.position.Positions;
-import jetbrains.jetpad.cell.trait.*;
+import jetbrains.jetpad.cell.trait.CellTrait;
+import jetbrains.jetpad.cell.trait.CellTraitEventSpec;
+import jetbrains.jetpad.cell.trait.CellTraitPropertySpec;
+import jetbrains.jetpad.cell.trait.DerivedCellTrait;
 import jetbrains.jetpad.cell.util.Cells;
 import jetbrains.jetpad.completion.CompletionSupplier;
 import jetbrains.jetpad.event.Event;
@@ -34,7 +37,6 @@ import jetbrains.jetpad.mapper.RoleSynchronizer;
 import jetbrains.jetpad.mapper.Synchronizers;
 import jetbrains.jetpad.model.collections.list.ObservableList;
 import jetbrains.jetpad.model.composite.Composites;
-import jetbrains.jetpad.model.event.CompositeRegistration;
 import jetbrains.jetpad.projectional.generic.CollectionEditor;
 import jetbrains.jetpad.projectional.generic.Role;
 
@@ -63,79 +65,77 @@ class ProjectionalObservableListSynchronizer<ContextT, SourceItemT> extends Base
 
   @Override
   protected Registration doRegisterChild(final SourceItemT child, final Cell childCell) {
-    return new CompositeRegistration(
-      childCell.addTrait(new DerivedCellTrait() {
-        @Override
-        protected CellTrait getBase(Cell cell) {
-          if (!(cell instanceof TextCell)) {
-            return CompletionSupport.trait();
+    return childCell.addTrait(new DerivedCellTrait() {
+      @Override
+      protected CellTrait getBase(Cell cell) {
+        if (!(cell instanceof TextCell)) {
+          return CompletionSupport.trait();
+        }
+        return CellTrait.EMPTY;
+      }
+
+      @Override
+      public void onKeyPressedLowPriority(Cell cell, KeyEvent event) {
+        try {
+          if (getSelectedItems().size() <= 1) {
+            keyPressedInChild(event);
           }
-          return CellTrait.EMPTY;
+        } finally {
+          if (event.isConsumed() && cell.isAttached()) {
+            scrollToSelection();
+          }
         }
 
-        @Override
-        public void onKeyPressedLowPriority(Cell cell, KeyEvent event) {
-          try {
-            if (getSelectedItems().size() <= 1) {
-              keyPressedInChild(event);
+        super.onKeyPressedLowPriority(cell, event);
+      }
+
+      @Override
+      public Object get(Cell cell, CellTraitPropertySpec<?> spec) {
+        if (spec == Completion.COMPLETION) {
+          return getCurrentChildCompletion();
+        }
+
+        if (spec == ITEM_HANDLER) {
+          return new ItemHandler() {
+            @Override
+            public Runnable addEmptyAfter() {
+              int index = mySource.indexOf(child);
+              final SourceItemT newItem = newItem();
+              mySource.add(index + 1, newItem);
+              return selectOnCreation(index + 1);
             }
-          } finally {
-            if (event.isConsumed() && cell.isAttached()) {
-              scrollToSelection();
-            }
-          }
-
-          super.onKeyPressedLowPriority(cell, event);
+          };
         }
 
-        @Override
-        public Object get(Cell cell, CellTraitPropertySpec<?> spec) {
-          if (spec == Completion.COMPLETION) {
-            return getCurrentChildCompletion();
-          }
+        return super.get(cell, spec);
+      }
 
-          if (spec == ITEM_HANDLER) {
-            return new ItemHandler() {
-              @Override
-              public Runnable addEmptyAfter() {
-                int index = mySource.indexOf(child);
-                final SourceItemT newItem = newItem();
-                mySource.add(index + 1, newItem);
-                return selectOnCreation(index + 1);
-              }
-            };
-          }
-
-          return super.get(cell, spec);
+      @Override
+      public void onCellTraitEvent(Cell cell, CellTraitEventSpec<?> spec, Event event) {
+        if (spec == Cells.BECAME_EMPTY && cell.get(ProjectionalSynchronizers.DELETE_ON_EMPTY)) {
+          int index = getChildCells().indexOf(cell);
+          if (index == -1) return;
+          clear(mySource.subList(index, index + 1));
+          event.consume();
+          return;
         }
 
-        @Override
-        public void onCellTraitEvent(Cell cell, CellTraitEventSpec<?> spec, Event event) {
-          if (spec == Cells.BECAME_EMPTY && cell.get(ProjectionalSynchronizers.DELETE_ON_EMPTY)) {
-            int index = getChildCells().indexOf(cell);
-            if (index == -1) return;
-            clear(mySource.subList(index, index + 1));
-            event.consume();
-            return;
-          }
+        super.onCellTraitEvent(cell, spec, event);
+      }
 
-          super.onCellTraitEvent(cell, spec, event);
+      @Override
+      public void onKeyTyped(Cell cell, KeyEvent event) {
+        if (getSeparator() != null && getSeparator() == event.getKeyChar()) {
+          int index = getChildCells().indexOf(cell);
+          SourceItemT newItem = newItem();
+          mySource.add(index + 1, newItem);
+          selectOnCreation(index + 1).run();
+          event.consume();
         }
 
-        @Override
-        public void onKeyTyped(Cell cell, KeyEvent event) {
-          if (getSeparator() != null && getSeparator() == event.getKeyChar()) {
-            int index = getChildCells().indexOf(cell);
-            SourceItemT newItem = newItem();
-            mySource.add(index + 1, newItem);
-            selectOnCreation(index + 1).run();
-            event.consume();
-          }
-
-          super.onKeyTyped(cell, event);
-        }
-      })
-    );
+        super.onKeyTyped(cell, event);
+      }
+    });
   }
 
   private void keyPressedInChild(KeyEvent event) {
