@@ -17,8 +17,6 @@ package jetbrains.jetpad.cell.text;
 
 import com.google.common.base.Strings;
 import com.google.common.base.Supplier;
-import jetbrains.jetpad.base.Registration;
-import jetbrains.jetpad.base.Runnables;
 import jetbrains.jetpad.cell.Cell;
 import jetbrains.jetpad.cell.TextCell;
 import jetbrains.jetpad.cell.completion.BaseCompletionController;
@@ -40,14 +38,14 @@ public class TextEditingTrait extends TextNavigationTrait {
   @Override
   public Object get(Cell cell, CellTraitPropertySpec<?> spec) {
     if (spec == Completion.COMPLETION_CONTROLLER) {
-      return getCompletionController(TextEditing.textEditor(cell));
+      return getCompletionController(TextEditing.cellTextEditor(cell));
     }
 
     return super.get(cell, spec);
   }
 
-  private CompletionController getCompletionController(final CellTextEditor cell) {
-    return new BaseCompletionController(cell.getCell()) {
+  private CompletionController getCompletionController(final CellTextEditor editor) {
+    return new BaseCompletionController(editor.getCell()) {
       @Override
       public boolean canActivate() {
         BaseCompletionParameters params = new BaseCompletionParameters() {
@@ -56,40 +54,40 @@ public class TextEditingTrait extends TextNavigationTrait {
             return true;
           }
         };
-        return !Completion.isCompletionEmpty(cell.getCell(), params);
+        return !Completion.isCompletionEmpty(editor.getCell(), params);
       }
 
       @Override
       protected void doActivate(Runnable deactivate, Runnable restoreFocus) {
-        CompletionSupport.showCompletion(cell, Completion.allCompletion(cell.getCell(), new BaseCompletionParameters() {
+        CompletionSupport.showCompletion(editor, Completion.allCompletion(editor.getCell(), new BaseCompletionParameters() {
           @Override
           public boolean isMenu() {
             return true;
           }
-        }), Registration.EMPTY, Runnables.EMPTY, deactivate, restoreFocus);
+        }), deactivate, restoreFocus);
       }
 
       @Override
       protected void doDeactivate() {
-        cell.getCell().get(CompletionSupport.HIDE_COMPLETION).run();
+        editor.onCompletionHidden();
       }
 
       @Override
       public boolean hasAmbiguousMatches() {
-        CompletionItems helper = Completion.completionFor(cell.getCell(), new BaseCompletionParameters() {
+        CompletionItems helper = Completion.completionFor(editor.getCell(), new BaseCompletionParameters() {
           @Override
           public boolean isMenu() {
             return true;
           }
         });
-        return !helper.hasSingleMatch(TextEditing.getPrefixText(cell), false);
+        return !helper.hasSingleMatch(TextEditing.getPrefixText(editor), false);
       }
     };
   }
 
   @Override
   public void onKeyPressed(Cell cell, KeyEvent event) {
-    CellTextEditor editor = TextEditing.textEditor(cell);
+    CellTextEditor editor = TextEditing.cellTextEditor(cell);
     String currentText = TextEditing.text(editor);
     int caret = editor.caretPosition().get();
     int textLen = currentText.length();
@@ -126,7 +124,7 @@ public class TextEditingTrait extends TextNavigationTrait {
 
   @Override
   public void onComplete(final Cell cell, CompletionEvent event) {
-    CellTextEditor editor = TextEditing.textEditor(cell);
+    CellTextEditor editor = TextEditing.cellTextEditor(cell);
     String currentText = TextEditing.text(editor);
     CompletionController handler = getCompletionController(editor);
 
@@ -202,7 +200,7 @@ public class TextEditingTrait extends TextNavigationTrait {
 
   @Override
   public void onKeyTyped(Cell cell, KeyEvent event) {
-    CellTextEditor editor = TextEditing.textEditor(cell);
+    CellTextEditor editor = TextEditing.cellTextEditor(cell);
     clearSelection(editor);
 
     String text = "" + event.getKeyChar();
@@ -226,7 +224,7 @@ public class TextEditingTrait extends TextNavigationTrait {
       }
     }
 
-    CellTextEditor editor = TextEditing.textEditor(cell);
+    CellTextEditor editor = TextEditing.cellTextEditor(cell);
     clearSelection(editor);
     pasteText(editor, newText.toString());
     event.consume();
@@ -235,12 +233,12 @@ public class TextEditingTrait extends TextNavigationTrait {
   @Override
   public void onCut(Cell cell, CopyCutEvent event) {
     onCopy(cell, event);
-    clearSelection(TextEditing.textEditor(cell));
+    clearSelection(TextEditing.cellTextEditor(cell));
   }
 
   @Override
   public void onCopy(Cell cell, CopyCutEvent event) {
-    CellTextEditor editor = TextEditing.textEditor(cell);
+    CellTextEditor editor = TextEditing.cellTextEditor(cell);
     if (!editor.selectionVisible().get()) return;
 
     int selStart = editor.selectionStart().get();
@@ -272,8 +270,8 @@ public class TextEditingTrait extends TextNavigationTrait {
     editor.text().set(text);
   }
 
-  protected boolean onAfterType(CellTextEditor editor) {
-    Supplier<Boolean> afterType = editor.getCell().get(TextEditing.AFTER_TYPE);
+  protected boolean onAfterType(TextEditor editor) {
+    Supplier<Boolean> afterType = ((CellTextEditor) editor).getCell().get(TextEditing.AFTER_TYPE);
     if (afterType != null) {
       return afterType.get();
     }

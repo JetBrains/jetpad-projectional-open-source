@@ -51,7 +51,11 @@ public class TextEditing {
     return cell instanceof TextCell;
   }
 
-  public static CellTextEditor textEditor(Cell cell) {
+  public static TextEditor textEditor(Cell cell) {
+    return cellTextEditor(cell);
+  }
+
+  static CellTextEditor cellTextEditor(Cell cell) {
     if (cell instanceof TextCell) {
       return new TextCellToEditorAdapter((TextCell) cell);
     }
@@ -233,13 +237,13 @@ public class TextEditing {
 
     @Override
     public boolean synced(Cell cell) {
-      return myValidator == null || myValidator.apply(textEditor(cell).text().get());
+      return myValidator == null || myValidator.apply(cellTextEditor(cell).text().get());
     }
 
     @Override
     public TextEditorCellState saveState(Cell cell) {
       TextEditorCellState result = new TextEditorCellState();
-      CellTextEditor editor = textEditor(cell);
+      CellTextEditor editor = cellTextEditor(cell);
       if (mySaveText) {
         String text = editor.text().get();
         result.myText = text;
@@ -251,7 +255,7 @@ public class TextEditing {
 
     @Override
     public void restoreState(Cell cell, TextEditorCellState state) {
-      CellTextEditor editor = textEditor(cell);
+      CellTextEditor editor = cellTextEditor(cell);
       if (mySaveText) {
         editor.text().set(state.myText);
       }

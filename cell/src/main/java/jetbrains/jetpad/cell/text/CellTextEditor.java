@@ -15,16 +15,24 @@
  */
 package jetbrains.jetpad.cell.text;
 
+import jetbrains.jetpad.base.Registration;
 import jetbrains.jetpad.cell.Cell;
+import jetbrains.jetpad.cell.trait.CellTrait;
+import jetbrains.jetpad.event.KeyEvent;
+import jetbrains.jetpad.geometry.Vector;
+import jetbrains.jetpad.model.event.CompositeRegistration;
+import jetbrains.jetpad.model.event.EventHandler;
+import jetbrains.jetpad.model.property.ReadableProperty;
 
-public abstract class CellTextEditor implements TextEditor {
+abstract class CellTextEditor implements TextEditor {
   private Cell myCell;
+  private CompositeRegistration myCompletionHideRegistrations = null;
 
-  public CellTextEditor(Cell cell) {
+  CellTextEditor(Cell cell) {
     myCell = cell;
   }
 
-  public Cell getCell() {
+  Cell getCell() {
     return myCell;
   }
 
@@ -36,5 +44,57 @@ public abstract class CellTextEditor implements TextEditor {
   @Override
   public boolean isLastAllowed() {
     return myCell.get(TextEditing.LAST_ALLOWED);
+  }
+
+  @Override
+  public Vector dimension() {
+    return myCell.dimension();
+  }
+
+  @Override
+  public void focus() {
+    myCell.focus();
+  }
+
+  @Override
+  public ReadableProperty<Boolean> focused() {
+    return myCell.focused();
+  }
+
+  @Override
+  public void setCompletionItems(Object items) {
+    myCell.bottomPopup().set((Cell) items);
+  }
+
+  @Override
+  public void addHideCompletionRegistration(Registration onHide) {
+    if (myCompletionHideRegistrations == null) {
+      myCompletionHideRegistrations = new CompositeRegistration();
+    }
+    myCompletionHideRegistrations.add(onHide);
+  }
+
+  @Override
+  public void onCompletionHidden() {
+    if (myCompletionHideRegistrations != null) {
+      Registration r = myCompletionHideRegistrations;
+      myCompletionHideRegistrations = null;
+      r.remove();
+    }
+  }
+
+  @Override
+  public Registration addKeyPressedHandler(final EventHandler<KeyEvent> handler) {
+    return myCell.addTrait(new CellTrait() {
+      @Override
+      public void onKeyPressed(Cell cell, KeyEvent event) {
+        handler.onEvent(event);
+      }
+    });
+  }
+
+  @Override
+  public String toString() {
+    return "TextEditor(" + myCell + ')';
   }
 }
