@@ -52,7 +52,7 @@ class ValidTextEditingTrait extends TextEditingTrait {
 
   @Override
   public void onKeyPressed(Cell cell, KeyEvent event) {
-    CellTextEditor editor = TextEditing.textEditor(cell);
+    CellTextEditor editor = TextEditing.cellTextEditor(cell);
     if (event.is(Key.ENTER) && !TextEditing.isEmpty(editor) && !isValid(editor)) {
       CompletionItems completionItems = new CompletionItems(cell.get(Completion.COMPLETION).get(CompletionParameters.EMPTY));
       String prefixText = TextEditing.getPrefixText(editor);
@@ -74,7 +74,7 @@ class ValidTextEditingTrait extends TextEditingTrait {
   @Override
   public void onPropertyChanged(Cell cell, CellPropertySpec<?> prop, PropertyChangeEvent<?> e) {
     if (prop == TextCell.TEXT) {
-      CellTextEditor editor = TextEditing.textEditor(cell);
+      CellTextEditor editor = TextEditing.cellTextEditor(cell);
       MessageController.setBroken(cell, isValid(editor) ? null : "Cannot resolve '" + TextEditing.text(editor) + '\'');
     }
 
@@ -82,9 +82,10 @@ class ValidTextEditingTrait extends TextEditingTrait {
   }
 
   @Override
-  protected boolean onAfterType(CellTextEditor editor) {
-    if (super.onAfterType(editor)) return true;
+  protected boolean onAfterType(TextEditor textEditor) {
+    if (super.onAfterType(textEditor)) return true;
 
+    CellTextEditor editor = (CellTextEditor) textEditor;
     Boolean eagerCompletion = editor.getCell().get(TextEditing.EAGER_COMPLETION);
     if (isValid(editor) && !eagerCompletion) return false;
 
@@ -160,7 +161,7 @@ class ValidTextEditingTrait extends TextEditingTrait {
       completion.completeFirstMatch(text);
       Cell focusedCell = cellContainer.focusedCell.get();
       if (!TextEditing.isTextEditor(focusedCell)) return;
-      CellTextEditor focusedEditor = TextEditing.textEditor(focusedCell);
+      CellTextEditor focusedEditor = TextEditing.cellTextEditor(focusedCell);
       if (caret <= focusedEditor.text().get().length()) {
         focusedEditor.caretPosition().set(caret);
       }
@@ -176,7 +177,7 @@ class ValidTextEditingTrait extends TextEditingTrait {
   }
 
   private void assertValid(Cell cell) {
-    if (TextEditing.isTextEditor(cell) && !isValid(TextEditing.textEditor(cell))) {
+    if (TextEditing.isTextEditor(cell) && !isValid(TextEditing.cellTextEditor(cell))) {
       throw new IllegalStateException("Completion should lead to a valid result, otherwise, we might have a stackoverflow error");
     }
   }

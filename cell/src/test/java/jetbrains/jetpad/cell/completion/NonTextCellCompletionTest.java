@@ -16,7 +16,6 @@
 package jetbrains.jetpad.cell.completion;
 
 import com.google.common.base.Predicates;
-import com.google.common.base.Supplier;
 import jetbrains.jetpad.cell.Cell;
 import jetbrains.jetpad.cell.HorizontalCell;
 import jetbrains.jetpad.cell.TextCell;
@@ -133,18 +132,6 @@ public class NonTextCellCompletionTest extends CompletionTestCase {
     complete();
 
     assertCompletionInactive();
-  }
-
-  @Test
-  public void initialCompletionText() {
-    target.set(CompletionSupport.INITIAL_TEXT_PROVIDER, new Supplier<String>() {
-      @Override
-      public String get() {
-        return "completion";
-      }
-    });
-    complete();
-    assertCompletionActive();
   }
 
   @Test

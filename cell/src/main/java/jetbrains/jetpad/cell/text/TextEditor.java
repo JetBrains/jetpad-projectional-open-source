@@ -15,9 +15,17 @@
  */
 package jetbrains.jetpad.cell.text;
 
+import jetbrains.jetpad.base.Registration;
+import jetbrains.jetpad.event.KeyEvent;
+import jetbrains.jetpad.geometry.Vector;
+import jetbrains.jetpad.model.event.EventHandler;
 import jetbrains.jetpad.model.property.Property;
+import jetbrains.jetpad.model.property.ReadableProperty;
 
 public interface TextEditor {
+  void focus();
+  ReadableProperty<Boolean> focused();
+
   Property<String> text();
 
   Property<Boolean> selectionVisible();
@@ -31,4 +39,12 @@ public interface TextEditor {
 
   boolean isFirstAllowed();
   boolean isLastAllowed();
+
+  Vector dimension();
+
+  void setCompletionItems(Object items);
+  void onCompletionHidden();
+  void addHideCompletionRegistration(Registration onHide);
+
+  Registration addKeyPressedHandler(EventHandler<KeyEvent> handler);
 }
