@@ -97,16 +97,7 @@ public class HybridSynchronizer<SourceT> implements Synchronizer {
 
     myValueMappers = myContextMapper.createChildSet();
 
-    myTargetList = new SeparatedCellList(myTarget.children()) {
-      @Override
-      protected Cell createSeparator(Cell left, Cell right) {
-        if (left.get(CellLists.NO_SPACE_TO_RIGHT) || right.get(CellLists.NO_SPACE_TO_LEFT)) {
-          return new TextCell("");
-        }
-
-        return new TextCell(" ");
-      }
-    };
+    myTargetList = CellLists.spaced(myTarget.children());
 
     myTarget.addTrait(createTargetTrait());
 
