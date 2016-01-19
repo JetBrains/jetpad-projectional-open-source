@@ -15,10 +15,7 @@
  */
 package jetbrains.jetpad.cell.util;
 
-import com.google.common.base.Function;
 import com.google.common.base.Supplier;
-import jetbrains.jetpad.base.animation.AnimatedList;
-import jetbrains.jetpad.base.animation.Animation;
 import jetbrains.jetpad.cell.Cell;
 import jetbrains.jetpad.cell.HorizontalCell;
 import jetbrains.jetpad.cell.TextCell;
