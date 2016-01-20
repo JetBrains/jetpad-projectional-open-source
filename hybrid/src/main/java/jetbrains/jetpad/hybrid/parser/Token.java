@@ -25,4 +25,6 @@ public interface Token {
   boolean isRtOnEnd();
 
   String text();
+
+  Token copy();
 }

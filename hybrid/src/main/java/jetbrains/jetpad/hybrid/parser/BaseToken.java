@@ -30,4 +30,9 @@ public abstract class BaseToken implements Token {
   public boolean isRtOnEnd() {
     return false;
   }
+
+  @Override
+  public Token copy() {
+    return this;
+  }
 }
