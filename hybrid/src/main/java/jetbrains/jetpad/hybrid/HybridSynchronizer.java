@@ -61,7 +61,7 @@ import static jetbrains.jetpad.model.composite.Composites.firstFocusable;
 import static jetbrains.jetpad.model.composite.Composites.lastFocusable;
 
 public class HybridSynchronizer<SourceT> implements Synchronizer {
-  public static final CellTraitPropertySpec<Runnable> ON_LAST_ITEM_DELETED = new CellTraitPropertySpec<Runnable>("onLastItemDeleted");
+  public static final CellTraitPropertySpec<Runnable> ON_LAST_ITEM_DELETED = new CellTraitPropertySpec<>("onLastItemDeleted");
 
   static final CellTraitPropertySpec<HybridSynchronizer<?>> HYBRID_SYNCHRONIZER = new CellTraitPropertySpec<>("hybridSynchronizer");
 
@@ -344,11 +344,7 @@ public class HybridSynchronizer<SourceT> implements Synchronizer {
 
         List<Token> result = new ArrayList<>();
         for (Token t : tokens()) {
-          if (t instanceof ValueToken) {
-            result.add(((ValueToken) t).copy());
-          } else {
-            result.add(t);
-          }
+          result.add(t.copy());
         }
         return new HybridCellState(result);
       }

@@ -28,7 +28,6 @@ import jetbrains.jetpad.model.property.ReadableProperty;
 import jetbrains.jetpad.model.property.ValueProperty;
 import jetbrains.jetpad.hybrid.parser.ParsingContext;
 import jetbrains.jetpad.hybrid.parser.Token;
-import jetbrains.jetpad.hybrid.parser.ValueToken;
 import jetbrains.jetpad.hybrid.parser.prettyprint.PrettyPrinterContext;
 import jetbrains.jetpad.hybrid.parser.prettyprint.ParseNode;
 
@@ -136,11 +135,7 @@ class TokenListEditor<SourceT> {
     } else {
       List<Token> toParse = new ArrayList<>();
       for (Token t : tokens) {
-        if (t instanceof ValueToken) {
-          toParse.add(((ValueToken) t).copy());
-        } else {
-          toParse.add(t);
-        }
+        toParse.add(t.copy());
       }
 
       SourceT result = mySpec.get().getParser().parse(new ParsingContext(toParse));
