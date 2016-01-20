@@ -16,14 +16,18 @@
 package jetbrains.jetpad.cell.util;
 
 import com.google.common.base.Strings;
-import jetbrains.jetpad.cell.*;
+import jetbrains.jetpad.cell.Cell;
+import jetbrains.jetpad.cell.HorizontalCell;
+import jetbrains.jetpad.cell.TextCell;
+import jetbrains.jetpad.cell.VerticalCell;
 import jetbrains.jetpad.cell.indent.IndentCell;
 import jetbrains.jetpad.cell.indent.NewLineCell;
 import jetbrains.jetpad.cell.text.TextEditing;
+import jetbrains.jetpad.cell.text.TextEditor;
 import jetbrains.jetpad.cell.trait.CellTrait;
-import jetbrains.jetpad.cell.trait.CellTraitPropertySpec;
 import jetbrains.jetpad.cell.trait.DerivedCellTrait;
 import jetbrains.jetpad.event.MouseEvent;
+import jetbrains.jetpad.model.event.EventHandler;
 import jetbrains.jetpad.model.property.PropertyChangeEvent;
 import jetbrains.jetpad.values.Color;
 
@@ -31,8 +35,6 @@ import java.util.Arrays;
 import java.util.Collections;
 
 public class CellFactory {
-  private static final CellTraitPropertySpec<Cell> PLACEHOLDER_CELL = new CellTraitPropertySpec<>("placeholderCell");
-
   public static Cell to(Cell target, Cell... cells) {
     Collections.addAll(target.children(), cells);
     return target;
@@ -70,8 +72,7 @@ public class CellFactory {
   }
 
   public static TextCell label(String text, boolean firstAllowed, boolean lastAllowed) {
-    TextCell result = new TextCell();
-    result.text().set(text);
+    TextCell result = new TextCell(text);
 
     boolean focusable;
     if (text.length() == 0) {
@@ -93,9 +94,7 @@ public class CellFactory {
   }
 
   public static TextCell text(String text) {
-    TextCell result = new TextCell();
-    result.text().set(text);
-    return result;
+    return new TextCell(text);
   }
 
   public static TextCell keyword(final String text) {
@@ -122,51 +121,37 @@ public class CellFactory {
   }
 
   public static Cell space(String text) {
-    TextCell result = new TextCell();
-    result.text().set(text);
-    return result;
+    return new TextCell(text);
   }
 
-  public static TextCell placeHolder(final TextCell textCell, String text) {
-    final TextCell result = new TextCell();
-    result.text().set(text);
+  public static TextCell placeHolder(TextCell textCell, String text) {
+    return placeHolder(TextEditing.textEditor(textCell), text);
+  }
 
-    result.addTrait(new CellTrait() {
-
+  public static TextCell placeHolder(final TextEditor editor, String text) {
+    final TextCell placeholder = new TextCell(text);
+    placeholder.set(TextCell.TEXT_COLOR, Color.GRAY);
+    placeholder.visible().set(Strings.isNullOrEmpty(editor.text().get()));
+    placeholder.addTrait(new CellTrait() {
       @Override
       public void onMousePressed(Cell cell, MouseEvent event) {
-        if (!textCell.focusable().get()) return;
-        textCell.focus();
+        if (!editor.focusable().get()) return;
+        editor.focus();
         event.consume();
       }
     });
-    textCell.addTrait(new CellTrait() {
+    editor.text().addHandler(new EventHandler<PropertyChangeEvent<String>>() {
       @Override
-      public Object get(Cell cell, CellTraitPropertySpec<?> spec) {
-        if (spec == PLACEHOLDER_CELL) {
-          return result;
-        }
-
-        return super.get(cell, spec);
-      }
-
-      @Override
-      public void onPropertyChanged(Cell c, CellPropertySpec<?> prop, PropertyChangeEvent<?> e) {
-        if (prop == Cell.FOCUS_HIGHLIGHTED) {
-          PropertyChangeEvent<Boolean> event = (PropertyChangeEvent<Boolean>) e;
-          textCell.get(PLACEHOLDER_CELL).focusHighlighted().set(event.getNewValue());
-        }
-
-        if (prop == TextCell.TEXT) {
-          PropertyChangeEvent<String> event = (PropertyChangeEvent<String>) e;
-          textCell.get(PLACEHOLDER_CELL).visible().set(Strings.isNullOrEmpty(event.getNewValue()));
-        }
-
-        super.onPropertyChanged(c, prop, e);
+      public void onEvent(PropertyChangeEvent<String> event) {
+        placeholder.visible().set(Strings.isNullOrEmpty(event.getNewValue()));
       }
     });
-    result.set(TextCell.TEXT_COLOR, Color.GRAY);
-    result.visible().set(Strings.isNullOrEmpty(textCell.text().get()));
-    return result;
+    editor.focusHighlighted().addHandler(new EventHandler<PropertyChangeEvent<Boolean>>() {
+      @Override
+      public void onEvent(PropertyChangeEvent<Boolean> event) {
+        placeholder.focusHighlighted().set(event.getNewValue());
+      }
+    });
+    return placeholder;
   }
 }
