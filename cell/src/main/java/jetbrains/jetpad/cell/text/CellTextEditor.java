@@ -62,6 +62,16 @@ abstract class CellTextEditor implements TextEditor {
   }
 
   @Override
+  public ReadableProperty<Boolean> focusable() {
+    return myCell.focusable();
+  }
+
+  @Override
+  public ReadableProperty<Boolean> focusHighlighted() {
+    return myCell.focusHighlighted();
+  }
+
+  @Override
   public void setCompletionItems(Object items) {
     myCell.bottomPopup().set((Cell) items);
   }
@@ -88,6 +98,16 @@ abstract class CellTextEditor implements TextEditor {
     return myCell.addTrait(new CellTrait() {
       @Override
       public void onKeyPressed(Cell cell, KeyEvent event) {
+        handler.onEvent(event);
+      }
+    });
+  }
+
+  @Override
+  public Registration addKeyPressedLowPriorityHandler(final EventHandler<KeyEvent> handler) {
+    return myCell.addTrait(new CellTrait() {
+      @Override
+      public void onKeyPressedLowPriority(Cell cell, KeyEvent event) {
         handler.onEvent(event);
       }
     });

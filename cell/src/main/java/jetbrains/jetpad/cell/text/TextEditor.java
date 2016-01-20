@@ -25,6 +25,8 @@ import jetbrains.jetpad.model.property.ReadableProperty;
 public interface TextEditor {
   void focus();
   ReadableProperty<Boolean> focused();
+  ReadableProperty<Boolean> focusable();
+  ReadableProperty<Boolean> focusHighlighted();
 
   Property<String> text();
 
@@ -47,4 +49,5 @@ public interface TextEditor {
   void addHideCompletionRegistration(Registration onHide);
 
   Registration addKeyPressedHandler(EventHandler<KeyEvent> handler);
+  Registration addKeyPressedLowPriorityHandler(EventHandler<KeyEvent> handler);
 }

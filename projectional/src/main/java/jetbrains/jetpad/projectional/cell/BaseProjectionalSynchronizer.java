@@ -19,19 +19,16 @@ import com.google.common.base.Function;
 import com.google.common.base.Objects;
 import com.google.common.base.Supplier;
 import jetbrains.jetpad.base.Registration;
-import jetbrains.jetpad.base.Validators;
 import jetbrains.jetpad.cell.Cell;
 import jetbrains.jetpad.cell.TextCell;
 import jetbrains.jetpad.cell.completion.Completion;
 import jetbrains.jetpad.cell.event.FocusEvent;
 import jetbrains.jetpad.cell.indent.IndentCell;
 import jetbrains.jetpad.cell.position.Positions;
-import jetbrains.jetpad.cell.text.TextEditing;
+import jetbrains.jetpad.cell.text.TextEditor;
 import jetbrains.jetpad.cell.trait.CellTrait;
 import jetbrains.jetpad.cell.trait.CellTraitPropertySpec;
 import jetbrains.jetpad.cell.trait.CellTraits;
-import jetbrains.jetpad.cell.trait.DerivedCellTrait;
-import jetbrains.jetpad.cell.util.CellFactory;
 import jetbrains.jetpad.completion.CompletionSupplier;
 import jetbrains.jetpad.event.*;
 import jetbrains.jetpad.mapper.*;
@@ -49,7 +46,10 @@ import jetbrains.jetpad.projectional.generic.Role;
 import jetbrains.jetpad.projectional.generic.RoleCompletion;
 import jetbrains.jetpad.values.Color;
 
-import java.util.*;
+import java.util.AbstractList;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 abstract class BaseProjectionalSynchronizer<SourceT, ContextT, SourceItemT> implements ProjectionalRoleSynchronizer<ContextT, SourceItemT> {
   private RoleSynchronizer<SourceItemT, Cell> myRoleSynchronizer;
@@ -57,16 +57,14 @@ abstract class BaseProjectionalSynchronizer<SourceT, ContextT, SourceItemT> impl
   private ObservableList<SourceItemT> mySelectedItems = new ObservableArrayList<>();
   private Mapper<? extends ContextT, ? extends Cell> myMapper;
   private Cell myTarget;
-  private String myPlaceholderText;
-  private TargetCellList myTargetCellList;
+  private Supplier<PlaceholderCell> myPlaceholderFactory = ProjectionalSynchronizerPlaceholders.empty();
+  private TargetCellList myTargetList;
   private Supplier<SourceItemT> myItemFactory;
   private RoleCompletion<? super ContextT, SourceItemT> myCompletion = new EmptyRoleCompletion<>();
   private DeleteHandler myDeleteHandler = DeleteHandler.EMPTY;
   private ContentKind<SourceItemT> myItemKind;
   private Function<SourceItemT, SourceItemT> myCloner;
   private Runnable myOnLastItemDeleted;
-  private List<Cell> myTargetList;
-  private List<Registration> myRegistrations;
   private Character mySeparatorChar;
 
   private Property<SourceItemT> myForDeletion = new ValueProperty<>();
@@ -77,17 +75,17 @@ abstract class BaseProjectionalSynchronizer<SourceT, ContextT, SourceItemT> impl
       Cell target,
       List<Cell> targetList,
       MapperFactory<SourceItemT, Cell> factory) {
+
     if (!(target.children().isEmpty())) {
-      throw new IllegalStateException("target cell for projectional synchonizer should be initially empty");
+      throw new IllegalStateException("Target cell for projectional synchronizer should be initially empty");
     }
     myMapper = mapper;
     myTarget = target;
-    myTargetList = targetList;
-    myRegistrations = new ArrayList<>(0);
-    myTargetCellList = new TargetCellList();
-    myRoleSynchronizer = createSubSynchronizer(myMapper, source, myTargetCellList, factory);
 
-    mySelectionSupport = new SelectionSupport<>(new SourceList(), myTarget, myTargetList);
+    myTargetList = new TargetCellList(targetList);
+    myRoleSynchronizer = createSubSynchronizer(myMapper, source, myTargetList, factory);
+
+    mySelectionSupport = new SelectionSupport<>(new SourceList(), myTarget, targetList);
     mySelectedItems = mySelectionSupport.selection();
 
     mySelectedItems.addListener(new CollectionAdapter<SourceItemT>() {
@@ -106,7 +104,6 @@ abstract class BaseProjectionalSynchronizer<SourceT, ContextT, SourceItemT> impl
 
     myForDeletion.addHandler(new EventHandler<PropertyChangeEvent<SourceItemT>>() {
       Cell myTargetCell;
-
 
       @Override
       public void onEvent(PropertyChangeEvent<SourceItemT> event) {
@@ -131,7 +128,7 @@ abstract class BaseProjectionalSynchronizer<SourceT, ContextT, SourceItemT> impl
   }
 
   /**
-   * This method is called from a constructor. Do not acess any fields of your class from here
+   * This method is called from a constructor. Do not access any fields of your class from here
    */
   protected abstract RoleSynchronizer<SourceItemT, Cell> createSubSynchronizer(Mapper<?, ?> mapper, SourceT source, List<Cell> target, MapperFactory<SourceItemT, Cell> factory);
 
@@ -141,25 +138,25 @@ abstract class BaseProjectionalSynchronizer<SourceT, ContextT, SourceItemT> impl
 
   protected abstract Runnable insertItems(List<SourceItemT> items);
 
-  protected Runnable insertItem(SourceItemT item) {
-    return insertItems(Arrays.asList(item));
+  private Runnable insertItem(SourceItemT item) {
+    return insertItems(Collections.singletonList(item));
   }
 
   private Registration registerChild(SourceItemT child, Cell childCell) {
     return new CompositeRegistration(
-      CellTraits.captureTo(childCell, new CellTrait() {
-        @Override
-        public void onKeyPressed(Cell cell, KeyEvent event) {
-          if (!getSelectedItems().isEmpty() && isDeleteEvent(event)) {
-            clear(getSelectedItems());
-            scrollToSelection();
-            event.consume();
-          }
+        CellTraits.captureTo(childCell, new CellTrait() {
+          @Override
+          public void onKeyPressed(Cell cell, KeyEvent event) {
+            if (!getSelectedItems().isEmpty() && isDeleteEvent(event)) {
+              clear(getSelectedItems());
+              scrollToSelection();
+              event.consume();
+            }
 
-          super.onKeyPressed(cell, event);
-        }
-      }),
-      doRegisterChild(child, childCell)
+            super.onKeyPressed(cell, event);
+          }
+        }),
+        doRegisterChild(child, childCell)
     );
   }
 
@@ -177,7 +174,7 @@ abstract class BaseProjectionalSynchronizer<SourceT, ContextT, SourceItemT> impl
     return myTarget;
   }
 
-  protected boolean canCreateNewItem() {
+  boolean canCreateNewItem() {
     return myItemFactory != null;
   }
 
@@ -185,17 +182,16 @@ abstract class BaseProjectionalSynchronizer<SourceT, ContextT, SourceItemT> impl
     if (myItemFactory == null) {
       throw new IllegalStateException();
     }
-
     return myItemFactory.get();
   }
 
-  protected CompletionSupplier createCompletion(final Role<SourceItemT> role) {
-    final ContextT context = myMapper.getSource();
+  CompletionSupplier createCompletion(Role<SourceItemT> role) {
+    ContextT context = myMapper.getSource();
     return myCompletion.createRoleCompletion(myMapper, context, role);
   }
 
-  protected List<Cell> getChildCells() {
-    return myTargetCellList;
+  List<Cell> getChildCells() {
+    return myTargetList;
   }
 
   private List<Mapper<? extends SourceItemT, ? extends Cell>> getSubMappers() {
@@ -214,7 +210,7 @@ abstract class BaseProjectionalSynchronizer<SourceT, ContextT, SourceItemT> impl
   private void initChildViews() {
   }
 
-  protected Runnable selectOnCreation(int index) {
+  Runnable selectOnCreation(int index) {
     return getChildCells().get(index).get(ProjectionalSynchronizers.ON_CREATE);
   }
 
@@ -238,9 +234,13 @@ abstract class BaseProjectionalSynchronizer<SourceT, ContextT, SourceItemT> impl
     myOnLastItemDeleted = action;
   }
 
-  @Override
   public void setPlaceholderText(String text) {
-    myPlaceholderText = text;
+    myPlaceholderFactory = ProjectionalSynchronizerPlaceholders.text(text);
+  }
+
+  @Override
+  public void setPlaceholderFactory(Supplier<PlaceholderCell> placeholderFactory) {
+    myPlaceholderFactory = placeholderFactory;
   }
 
   @Override
@@ -257,12 +257,12 @@ abstract class BaseProjectionalSynchronizer<SourceT, ContextT, SourceItemT> impl
     return mySeparatorChar;
   }
 
-  protected Runnable getOnLastItemDeleted() {
+  Runnable getOnLastItemDeleted() {
     if (myOnLastItemDeleted == null) {
       return new Runnable() {
         @Override
         public void run() {
-          myTargetCellList.getPlaceHolder().focus();
+          myTargetList.focusOnPlaceholder();
         }
       };
     }
@@ -272,7 +272,7 @@ abstract class BaseProjectionalSynchronizer<SourceT, ContextT, SourceItemT> impl
   private SourceItemT currentItem() {
     Cell focused = myTarget.getContainer().focusedCell.get();
     if (focused == null) return null;
-    if (focused.getParent() == myTarget && !myTargetCellList.myHasPlaceholder) {
+    if (focused.getParent() == myTarget && !myTargetList.myHasPlaceholder) {
       int index = myTargetList.indexOf(focused);
       return myRoleSynchronizer.getMappers().get(index).getSource();
     } else {
@@ -282,7 +282,7 @@ abstract class BaseProjectionalSynchronizer<SourceT, ContextT, SourceItemT> impl
 
   @Override
   public void attach(SynchronizerContext ctx) {
-    myTargetCellList.initList();
+    myTargetList.initList();
 
     initChildViews();
 
@@ -357,7 +357,6 @@ abstract class BaseProjectionalSynchronizer<SourceT, ContextT, SourceItemT> impl
           }
         };
       }
-
 
       private List<SourceItemT> itemsToCopy() {
         final List<SourceItemT> items = new ArrayList<>();
@@ -459,7 +458,7 @@ abstract class BaseProjectionalSynchronizer<SourceT, ContextT, SourceItemT> impl
     mySelectionSupport.select(from, to);
   }
 
-  protected boolean isSimpleDeleteEvent(KeyEvent event, Cell cell, boolean ignoreEmpty) {
+  boolean isSimpleDeleteEvent(KeyEvent event, Cell cell, boolean ignoreEmpty) {
     boolean home = Positions.isHomePosition(cell);
     boolean end = Positions.isEndPosition(cell);
 
@@ -478,16 +477,16 @@ abstract class BaseProjectionalSynchronizer<SourceT, ContextT, SourceItemT> impl
     return false;
   }
 
-  protected boolean isDeleteEvent(KeyEvent event, Cell cell) {
+  boolean isDeleteEvent(KeyEvent event, Cell cell) {
     if (event.is(KeyStrokeSpecs.DELETE_CURRENT)) return true;
     return isSimpleDeleteEvent(event, cell, false);
   }
 
-  protected boolean isDeleteEvent(KeyEvent event) {
+  private boolean isDeleteEvent(KeyEvent event) {
     return event.is(KeyStrokeSpecs.DELETE_CURRENT) || event.is(Key.BACKSPACE) || event.is(Key.DELETE);
   }
 
-  protected Cell currentCell() {
+  Cell currentCell() {
     return mySelectionSupport.currentCell();
   }
 
@@ -495,7 +494,7 @@ abstract class BaseProjectionalSynchronizer<SourceT, ContextT, SourceItemT> impl
   public SourceItemT getFocusedItem() {
     Cell currentCell = currentCell();
     if (currentCell == null) return null;
-    int index = myTargetCellList.indexOf(currentCell);
+    int index = myTargetList.indexOf(currentCell);
     return myRoleSynchronizer.getMappers().get(index).getSource();
   }
 
@@ -514,73 +513,68 @@ abstract class BaseProjectionalSynchronizer<SourceT, ContextT, SourceItemT> impl
     }
   }
 
-  protected void scrollToSelection() {
+  void scrollToSelection() {
     getTarget().getContainer().focusedCell.get().scrollTo();
   }
 
-  protected Property<SourceItemT> getForDeletion() {
+  Property<SourceItemT> getForDeletion() {
     return myForDeletion;
   }
 
   private class TargetCellList extends AbstractList<Cell> {
+    private List<Cell> mySource;
     private boolean myHasPlaceholder;
+    private List<Registration> myRegistrations = new ArrayList<>(0);
 
-    private TargetCellList() {
+    TargetCellList(List<Cell> targetList) {
+      mySource = targetList;
     }
 
     void initList() {
       myHasPlaceholder = true;
-      myTargetList.add(createPlaceholder());
+      mySource.add(createPlaceholder());
     }
 
     private Cell createPlaceholder() {
-      TextCell placeHolder = new TextCell();
-      placeHolder.addTrait(new DerivedCellTrait() {
+      PlaceholderCell placeholder = myPlaceholderFactory.get();
+      TextEditor editor = placeholder.getEditor();
+      editor.addKeyPressedLowPriorityHandler(new EventHandler<KeyEvent>() {
         @Override
-        protected CellTrait getBase(Cell cell) {
-          return TextEditing.validTextEditing(Validators.equalsTo(""));
-        }
-
-        @Override
-        public void onKeyPressedLowPriority(Cell cell, KeyEvent event) {
+        public void onEvent(KeyEvent event) {
           handlePlaceholderKeyPress(event);
-          if (event.isConsumed()) return;
-
-          super.onKeyPressedLowPriority(cell, event);
-        }
-
-        @Override
-        public Object get(Cell cell, CellTraitPropertySpec<?> spec) {
-          if (spec == Completion.COMPLETION) {
-            return createCompletion(new Role<SourceItemT>() {
-              @Override
-              public SourceItemT get() {
-                return null;
-              }
-
-              @Override
-              public Runnable set(SourceItemT target) {
-                return insertItem(target);
-              }
-            });
-          }
-
-          return super.get(cell, spec);
         }
       });
-      String placeholderText =  myPlaceholderText != null ? myPlaceholderText : "<empty>";
 
-      //todo this is tmp hack
-      if (myTarget instanceof IndentCell) {
-        return CellFactory.indent(placeHolder, CellFactory.placeHolder(placeHolder, placeholderText));
-      } else {
-        return CellFactory.horizontal(placeHolder, CellFactory.placeHolder(placeHolder, placeholderText));
+      if (placeholder instanceof ProjectionalSynchronizerPlaceholders.HeterogeneousPlaceholder) {
+        ((ProjectionalSynchronizerPlaceholders.HeterogeneousPlaceholder) placeholder)
+            .setup(myTarget instanceof IndentCell, new CellTrait() {
+              @Override
+              public Object get(Cell cell, CellTraitPropertySpec<?> spec) {
+                if (spec == Completion.COMPLETION) {
+                  return createCompletion(new Role<SourceItemT>() {
+                    @Override
+                    public SourceItemT get() {
+                      return null;
+                    }
+
+                    @Override
+                    public Runnable set(SourceItemT target) {
+                      return insertItem(target);
+                    }
+                  });
+                }
+                return super.get(cell, spec);
+              }
+            });
       }
+      return placeholder.getCell();
     }
 
-    private TextCell getPlaceHolder() {
-      if (!myHasPlaceholder) return null;
-      return (TextCell) myTargetList.get(0).children().get(0);
+    private void focusOnPlaceholder() {
+      if (!myHasPlaceholder) {
+        throw new IllegalStateException();
+      }
+      mySource.get(0).get(PlaceholderCell.FOCUSABLE_ITEM).focus();
     }
 
     @Override
@@ -588,31 +582,30 @@ abstract class BaseProjectionalSynchronizer<SourceT, ContextT, SourceItemT> impl
       if (myHasPlaceholder) {
         throw new IndexOutOfBoundsException();
       }
-      return myTargetList.get(index);
+      return mySource.get(index);
     }
 
     @Override
     public int size() {
-      if (myHasPlaceholder) return 0;
-      return myTargetList.size();
+      return myHasPlaceholder ? 0 : mySource.size();
     }
 
     @Override
     public void add(int index, Cell element) {
       if (myHasPlaceholder) {
-        myTargetList.remove(0);
+        mySource.remove(0);
         myHasPlaceholder = false;
       }
-      myTargetList.add(index, element);
+      mySource.add(index, element);
       myRegistrations.add(index, registerChild(getSubMappers().get(index).getSource(), element));
     }
 
     @Override
     public Cell remove(int index) {
-      Cell result = myTargetList.remove(index);
+      Cell result = mySource.remove(index);
       myRegistrations.remove(index).remove();
-      if (myTargetList.isEmpty()) {
-        myTargetList.add(createPlaceholder());
+      if (mySource.isEmpty()) {
+        mySource.add(createPlaceholder());
         myHasPlaceholder = true;
       }
       return result;

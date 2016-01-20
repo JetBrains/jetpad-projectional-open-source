@@ -17,9 +17,9 @@ package jetbrains.jetpad.projectional.cell;
 
 import com.google.common.base.Function;
 import com.google.common.base.Supplier;
+import jetbrains.jetpad.cell.Cell;
 import jetbrains.jetpad.event.ContentKind;
 import jetbrains.jetpad.mapper.RoleSynchronizer;
-import jetbrains.jetpad.cell.Cell;
 import jetbrains.jetpad.projectional.generic.RoleCompletion;
 
 import java.util.List;
@@ -30,6 +30,7 @@ public interface ProjectionalRoleSynchronizer<ContextT, SourceT> extends RoleSyn
   void setClipboardParameters(ContentKind<SourceT> kind, Function<SourceT, SourceT> cloner);
   void setOnLastItemDeleted(Runnable action);
   void setPlaceholderText(String text);
+  void setPlaceholderFactory(Supplier<PlaceholderCell> placeholderFactory);
   void setItemFactory(Supplier<SourceT> itemFactory);
   void setSeparator(Character ch);
 
