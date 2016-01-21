@@ -101,8 +101,7 @@ public abstract class CollectionEditor<ItemT, ViewT> {
       }
     }
 
-    if (event.is(Key.BACKSPACE) && isHome && index > 0 &&
-      (isEmpty(index) == isEmpty(index - 1) || !isEmpty(index))) {
+    if (event.is(Key.BACKSPACE) && isHome && index > 0 && (isEmpty(index) == isEmpty(index - 1) || !isEmpty(index))) {
       myItems.remove(index - 1);
       event.consume();
       return;
@@ -145,10 +144,6 @@ public abstract class CollectionEditor<ItemT, ViewT> {
         selectEnd(index - 1);
       }
     }
-  }
-
-  private boolean isEmpy(int index) {
-    return isFirst(index) && isLast(index);
   }
 
   protected boolean isDeleteEvent(KeyEvent event) {
