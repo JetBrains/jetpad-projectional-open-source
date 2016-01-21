@@ -271,7 +271,7 @@ public class DomTextEditor {
     myRoot.getStyle().setLineHeight(getLineHeight(), Style.Unit.PX);
   }
 
-  public int getCaretOffset(int caretOffset) {
+  public double getCaretOffset(int caretOffset) {
     if (caretOffset == 0) return 0;
     if (FontFamily.MONOSPACED == myFont.getFamily()) {
       return caretOffset * getCharWidth();
@@ -280,11 +280,11 @@ public class DomTextEditor {
     }
   }
 
-  private int getLineHeight() {
+  private double getLineHeight() {
     return myFontMetrics.dimension().y;
   }
 
-  private int getCharWidth() {
+  private double getCharWidth() {
     return myFontMetrics.dimension().x;
   }
 
@@ -294,18 +294,18 @@ public class DomTextEditor {
     if (textValue == null) return 0;
 
     if (FontFamily.MONOSPACED == myFont.getFamily()) {
-      int pos = caretOffset / getCharWidth();
-      int tail = caretOffset - pos * getCharWidth();
-      if (tail > getCharWidth() / 2) {
+      double charWidth = getCharWidth();
+      double pos = caretOffset / charWidth;
+      double tail = caretOffset % charWidth;
+      if (tail > charWidth / 2) {
         pos += 1;
       }
       int len = textValue.length();
-      return pos > len ? len : pos;
+      return pos > len ? len : (int) pos;
 
     } else {
       for (int i = 0; i <= myText.length(); i++) {
-        int len = TextMetricsCalculator.calculateWidth(myFont, myText.substring(0, i));
-        if (len >= caretOffset) return i;
+        if (TextMetricsCalculator.calculateWidth(myFont, myText.substring(0, i)) >= caretOffset) return i;
       }
       return myText.length();
     }

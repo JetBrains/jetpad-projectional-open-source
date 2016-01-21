@@ -19,7 +19,7 @@ import com.google.gwt.canvas.client.Canvas;
 import com.google.gwt.canvas.dom.client.Context2d;
 import com.google.gwt.canvas.dom.client.ImageData;
 import com.google.gwt.user.client.Window;
-import jetbrains.jetpad.geometry.Vector;
+import jetbrains.jetpad.geometry.DoubleVector;
 import jetbrains.jetpad.values.Font;
 import jetbrains.jetpad.values.FontFamily;
 
@@ -44,10 +44,10 @@ public class TextMetricsCalculator {
   }
 
   public static TextMetrics calculateApprox(final Font font, String text) {
-    final Vector dimension = calculateDimension(font, text);
+    final DoubleVector dimension = calculateDimension(font, text);
     return new TextMetrics() {
       @Override
-      public Vector dimension() {
+      public DoubleVector dimension() {
         return dimension;
       }
 
@@ -59,11 +59,11 @@ public class TextMetricsCalculator {
   }
 
   public static TextMetrics calculate(Font font, String text) {
-    final Vector dimension = calculateDimension(font, text);
+    final DoubleVector dimension = calculateDimension(font, text);
     final int baseLine = fontBaseLine(font);
     return new TextMetrics() {
       @Override
-      public Vector dimension() {
+      public DoubleVector dimension() {
         return dimension;
       }
 
@@ -74,15 +74,15 @@ public class TextMetricsCalculator {
     };
   }
 
-  private static Vector calculateDimension(Font font, String text) {
-    return new Vector(calculateWidth(font, text), adjustHeight(font.getSize()));
+  private static DoubleVector calculateDimension(Font font, String text) {
+    return new DoubleVector(calculateWidth(font, text), adjustHeight(font.getSize()));
   }
 
-  static int calculateWidth(Font font, String text) {
+  static double calculateWidth(Font font, String text) {
     Canvas canvas = canvas();
     Context2d ctx = canvas.getContext2d();
     ctx.setFont(getFontString(font));
-    return (int) ctx.measureText(normalize(text)).getWidth();
+    return ctx.measureText(normalize(text)).getWidth();
   }
 
   private static int adjustHeight(int height) {

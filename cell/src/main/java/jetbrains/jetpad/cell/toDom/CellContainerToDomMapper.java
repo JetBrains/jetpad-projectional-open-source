@@ -112,7 +112,7 @@ public class CellContainerToDomMapper extends Mapper<CellContainer, Element> {
 
     StyleInjector.flush();
 
-    int width = TextMetricsCalculator.calculate(TextCell.DEFAULT_FONT, "xx").dimension().x;
+    double width = TextMetricsCalculator.calculate(TextCell.DEFAULT_FONT, "xx").dimension().x;
     StyleInjector.inject("." + CSS.indented() + "{ padding-left: " + width + "px }", true);
     ourIndentInjected = true;
   }

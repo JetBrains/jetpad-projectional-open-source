@@ -310,8 +310,8 @@ public class ViewContainerToElementMapper extends Mapper<ViewContainer, Element>
 
     TextMetrics metrics = TextMetricsCalculator.calculate(TextView.DEFAULT_FONT);
     final int baseLine = metrics.baseLine();
-    final int fontWidth = metrics.dimension().x;
-    final int fontHeight = metrics.dimension().y;
+    final double fontWidth = metrics.dimension().x;
+    final double fontHeight = metrics.dimension().y;
 
     getSource().setPeer(new ViewContainerPeer() {
       private Registration myReg;
@@ -361,9 +361,9 @@ public class ViewContainerToElementMapper extends Mapper<ViewContainer, Element>
       @Override
       public int textHeight(Font font) {
         if (font.equals(TextView.DEFAULT_FONT)) {
-          return fontHeight;
+          return (int) fontHeight;
         } else {
-          return TextMetricsCalculator.calculateApprox(font).dimension().y;
+          return (int) TextMetricsCalculator.calculateApprox(font).dimension().y;
         }
       }
 
@@ -379,9 +379,9 @@ public class ViewContainerToElementMapper extends Mapper<ViewContainer, Element>
       @Override
       public int textWidth(Font font, String text) {
         if (TextView.DEFAULT_FONT.getFamily() == FontFamily.MONOSPACED && font.equals(TextView.DEFAULT_FONT)) {
-          return text.length() * fontWidth;
+          return (int) (text.length() * fontWidth);
         } else {
-          return TextMetricsCalculator.calculateApprox(font, text).dimension().x;
+          return (int) TextMetricsCalculator.calculateApprox(font, text).dimension().x;
         }
       }
 
