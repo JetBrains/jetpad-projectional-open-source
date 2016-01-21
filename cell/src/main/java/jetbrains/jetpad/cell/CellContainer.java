@@ -64,7 +64,7 @@ public class CellContainer {
         try {
           if (value != null) {
             if (!value.canFocus()) {
-              throw new IllegalStateException("cannot set focus: " + value);
+              throw new IllegalStateException("Cannot set focus to " + value);
             }
             if (value.getContainer() != CellContainer.this) {
               throw new IllegalArgumentException();
@@ -74,20 +74,16 @@ public class CellContainer {
           Cell oldValue = get();
           if (oldValue == value) return;
 
-          FocusEvent event =  new FocusEvent(oldValue, value);
-
           if (oldValue != null) {
             oldValue.set(Cell.FOCUSED, false);
           }
           super.set(value);
+          FocusEvent event = new FocusEvent(oldValue, value);
           if (oldValue != null) {
             dispatch(oldValue, event, CellEventSpec.FOCUS_LOST);
           }
           if (value != null) {
             dispatch(value, event, CellEventSpec.FOCUS_GAINED);
-          }
-
-          if (value != null) {
             value.set(Cell.FOCUSED, true);
           }
         } finally {
