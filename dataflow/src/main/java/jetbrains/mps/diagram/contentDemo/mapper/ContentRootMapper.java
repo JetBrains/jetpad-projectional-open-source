@@ -16,8 +16,8 @@
 package jetbrains.mps.diagram.contentDemo.mapper;
 
 import com.google.common.base.Supplier;
-import jetbrains.jetpad.base.Registration;
 import jetbrains.jetpad.base.Handler;
+import jetbrains.jetpad.base.Registration;
 import jetbrains.jetpad.cell.TextCell;
 import jetbrains.jetpad.cell.text.TextEditing;
 import jetbrains.jetpad.cell.view.CellView;
@@ -119,8 +119,7 @@ public class ContentRootMapper extends Mapper<Diagram, ViewContainer> {
   private Property<String> createCell(String value, final Handler<String> handler) {
     final CellView cell = new CellView();
     RootController.install(cell.container);
-    final TextCell text = new TextCell();
-    text.text().set(value);
+    final TextCell text = new TextCell(value);
     text.addTrait(TextEditing.textEditing());
     cell.cell.set(text);
 

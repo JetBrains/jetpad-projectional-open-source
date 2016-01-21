@@ -44,7 +44,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 class ProjectionalObservableListSynchronizer<ContextT, SourceItemT> extends BaseProjectionalSynchronizer<ObservableList<SourceItemT>, ContextT, SourceItemT> {
-  static final CellTraitPropertySpec<ItemHandler> ITEM_HANDLER = new CellTraitPropertySpec<ItemHandler>("itemHandler");
+  static final CellTraitPropertySpec<ItemHandler> ITEM_HANDLER = new CellTraitPropertySpec<>("itemHandler");
 
   private ObservableList<SourceItemT> mySource;
 
@@ -217,7 +217,6 @@ class ProjectionalObservableListSynchronizer<ContextT, SourceItemT> extends Base
     }.handleKey(currentCell(), event);
   }
 
-
   private CompletionSupplier getCurrentChildCompletion() {
     return createCompletion(new Role<SourceItemT>() {
       @Override
@@ -281,7 +280,7 @@ class ProjectionalObservableListSynchronizer<ContextT, SourceItemT> extends Base
     return Cells.isEmpty(getChildCells().get(index));
   }
 
-  static interface ItemHandler {
+  interface ItemHandler {
     Runnable addEmptyAfter();
   }
 }
