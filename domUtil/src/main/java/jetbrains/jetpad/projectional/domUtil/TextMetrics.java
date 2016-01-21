@@ -16,9 +16,9 @@
 package jetbrains.jetpad.projectional.domUtil;
 
 
-import jetbrains.jetpad.geometry.Vector;
+import jetbrains.jetpad.geometry.DoubleVector;
 
 public interface TextMetrics {
-  Vector dimension();
+  DoubleVector dimension();
   int baseLine();
 }
