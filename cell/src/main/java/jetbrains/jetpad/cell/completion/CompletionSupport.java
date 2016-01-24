@@ -82,7 +82,7 @@ public class CompletionSupport {
       public void onComplete(final Cell cell, CompletionEvent event) {
         if (canComplete(cell)) {
           CompletionController controller = getCompletionHandler(cell);
-          if (controller.canActivate()) {
+          if (!controller.isActive() && controller.canActivate()) {
             controller.activate(new Runnable() {
               @Override
               public void run() {
