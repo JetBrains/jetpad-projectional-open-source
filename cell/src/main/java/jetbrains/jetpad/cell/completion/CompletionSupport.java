@@ -44,7 +44,12 @@ public class CompletionSupport {
     public TextEditor apply(Cell notEditableCell) {
       final TextCell textCell = new TextCell();
       textCell.focusable().set(true);
-      final Registration textEditingReg = textCell.addTrait(new TextEditingTrait());
+      final Registration textEditingReg = textCell.addTrait(new TextEditingTrait() {
+        @Override
+        public void onComplete(Cell cell, CompletionEvent event) {
+          // nop
+        }
+      });
       final HorizontalCell popup = new HorizontalCell();
       popup.children().add(textCell);
       notEditableCell.frontPopup().set(popup);
