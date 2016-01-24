@@ -100,9 +100,6 @@ public class CellContainer {
       @Override
       public void run() {
         if (oldCell != null) {
-          if (!oldCell.canFocus()) {
-            throw new IllegalStateException();
-          }
           oldCell.focus();
         } else {
           focusedCell.set(null);
