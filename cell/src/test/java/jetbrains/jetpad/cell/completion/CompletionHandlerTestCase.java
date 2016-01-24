@@ -50,11 +50,11 @@ public abstract class CompletionHandlerTestCase extends CompletionTestCase {
 
   @Test
   public void completionCanBeDeactivatedWithCompletionHandler() {
-    assertSame(myCellContainer.focusedCell.get(), getView());
+    assertSame(getView(), myCellContainer.focusedCell.get());
     complete();
 
     getController().deactivate();
     assertFalse(getController().isActive());
-    assertSame(myCellContainer.focusedCell.get(), getView());
+    assertSame(getView(), myCellContainer.focusedCell.get());
   }
 }

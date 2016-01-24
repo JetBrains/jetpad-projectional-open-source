@@ -19,7 +19,7 @@ import com.google.common.base.Predicate;
 import jetbrains.jetpad.base.Runnables;
 import jetbrains.jetpad.cell.Cell;
 import jetbrains.jetpad.cell.TextCell;
-import jetbrains.jetpad.cell.completion.BaseCompletionController;
+import jetbrains.jetpad.cell.completion.CellCompletionController;
 import jetbrains.jetpad.cell.completion.Completion;
 import jetbrains.jetpad.cell.completion.CompletionTestCase;
 import jetbrains.jetpad.cell.trait.CellTrait;
@@ -341,11 +341,11 @@ public class ValidTextCompletionTest extends CompletionTestCase {
 
   private void assertCompletionActive() {
     assertHasBottomPopup(text);
-    assertTrue(BaseCompletionController.isCompletionActive(text));
+    assertTrue(CellCompletionController.isCompletionActive(text));
   }
 
   private void assertCompletionInactive() {
     assertNoBottomPopup(text);
-    assertFalse(BaseCompletionController.isCompletionActive(text));
+    assertFalse(CellCompletionController.isCompletionActive(text));
   }
 }

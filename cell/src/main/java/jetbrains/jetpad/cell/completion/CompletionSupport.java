@@ -39,7 +39,7 @@ import java.util.Collections;
 import java.util.List;
 
 public class CompletionSupport {
-  public static final CellTraitPropertySpec<TextEditor> EDITOR = new CellTraitPropertySpec<>("completionEditor", new Function<Cell, TextEditor>() {
+  public static final CellTraitPropertySpec<TextEditor> EDITOR = new CellTraitPropertySpec<>("textEditor", new Function<Cell, TextEditor>() {
     @Override
     public TextEditor apply(Cell notEditableCell) {
       final TextCell textCell = new TextCell();
@@ -48,9 +48,10 @@ public class CompletionSupport {
       final HorizontalCell popup = new HorizontalCell();
       popup.children().add(textCell);
       notEditableCell.frontPopup().set(popup);
+      textCell.focus();
 
       TextEditor editor = TextEditing.textEditor(textCell);
-      editor.addHideCompletionRegistration(new Registration() {
+      editor.addDisableRegistration(new Registration() {
         @Override
         protected void doRemove() {
           textCell.text().set("");
@@ -58,6 +59,7 @@ public class CompletionSupport {
           textEditingReg.remove();
         }
       });
+      editor.addDisableRegistration(notEditableCell.set(EDITOR, editor));  // to provide same editor instance to all further calls
       return editor;
     }
   });
@@ -72,46 +74,21 @@ public class CompletionSupport {
         return super.get(cell, spec);
       }
 
-      private CompletionController getCompletionHandler(final Cell cell) {
-        return new BaseCompletionController(cell) {
-          @Override
-          public boolean canActivate() {
-            return !Completion.isCompletionEmpty(cell, CompletionParameters.EMPTY);
-          }
-
-          @Override
-          protected void doActivate(Runnable deactivate, Runnable restoreFocus) {
-            Async<List<CompletionItem>> items = Completion.allCompletion(cell, new BaseCompletionParameters() {
-              @Override
-              public boolean isMenu() {
-                return true;
-              }
-            });
-            Runnable state = cell.getContainer().saveState();
-            TextEditor editor = cell.get(EDITOR);
-            editor.focus();
-            showCompletion(editor, items, deactivate, Runnables.seq(state, restoreFocus));
-          }
-
-          @Override
-          protected void doDeactivate() {
-            cell.focus();
-          }
-
-          @Override
-          public boolean hasAmbiguousMatches() {
-            //todo implement it. we use this method only in hybrid synchronizers so we have mostly text view completion
-            return true;
-          }
-        };
+      private CompletionController getCompletionHandler(Cell cell) {
+        return new CellCompletionController(cell);
       }
 
       @Override
-      public void onComplete(Cell cell, CompletionEvent event) {
+      public void onComplete(final Cell cell, CompletionEvent event) {
         if (canComplete(cell)) {
-          CompletionController handler = getCompletionHandler(cell);
-          if (handler.canActivate()) {
-            handler.activate();
+          CompletionController controller = getCompletionHandler(cell);
+          if (controller.canActivate()) {
+            controller.activate(new Runnable() {
+              @Override
+              public void run() {
+                cell.focus();
+              }
+            });
           }
           event.consume();
         }
@@ -134,8 +111,8 @@ public class CompletionSupport {
     };
   }
 
-  public static void showCompletion(final TextEditor editor, Async<List<CompletionItem>> items,
-                                    final Runnable restoreCompletionState, final Runnable restoreState) {
+  static void showCompletion(final TextEditor editor, Async<List<CompletionItem>> items,
+                             final Runnable restoreCompletionState, final Runnable restoreFocusState) {
 
     if (!editor.focused().get()) {
       throw new IllegalArgumentException();
@@ -144,14 +121,16 @@ public class CompletionSupport {
     final CompletionMenuModel menuModel = new CompletionMenuModel();
     menuModel.loading.set(true);
 
+    final CompositeRegistration completionReg = new CompositeRegistration();
+
     final ReadableProperty<String> prefixText = prefixText(editor);
-    editor.addHideCompletionRegistration(PropertyBinding.bindOneWay(prefixText, menuModel.text));
+    completionReg.add(PropertyBinding.bindOneWay(prefixText, menuModel.text));
 
     final Handler<CompletionItem> completer = new Handler<CompletionItem>() {
       @Override
       public void handle(CompletionItem item) {
-        editor.onCompletionHidden();
-        restoreState.run();
+        completionReg.remove();
+        restoreFocusState.run();
         item.complete(prefixText.get()).run();
       }
     };
@@ -159,22 +138,22 @@ public class CompletionSupport {
     final CompositeRegistration disposeMenuMapper = new CompositeRegistration();
     final Cell completionCell = CompletionMenu.createCell(menuModel, completer, disposeMenuMapper);
 
-    editor.addHideCompletionRegistration(editor.focused().addHandler(new EventHandler<PropertyChangeEvent<Boolean>>() {
+    completionReg.add(editor.focused().addHandler(new EventHandler<PropertyChangeEvent<Boolean>>() {
       @Override
       public void onEvent(PropertyChangeEvent<Boolean> event) {
         if (!event.getNewValue()) {
-          editor.onCompletionHidden();
+          completionReg.remove();
         }
       }
     }));
-    editor.addHideCompletionRegistration(editor.addKeyPressedHandler(new EventHandler<KeyEvent>() {
+    completionReg.add(editor.addKeyPressedHandler(new EventHandler<KeyEvent>() {
       @Override
       public void onEvent(KeyEvent event) {
         CompletionItem selectedItem = menuModel.selectedItem.get();
 
         if (event.is(Key.ESCAPE)) {
-          editor.onCompletionHidden();
-          restoreState.run();
+          completionReg.remove();
+          restoreFocusState.run();
           event.consume();
           return;
         }
@@ -213,7 +192,7 @@ public class CompletionSupport {
       }
     }));
 
-    editor.addHideCompletionRegistration(new Registration() {
+    completionReg.add(new Registration() {
       @Override
       protected void doRemove() {
         completionCell.removeFromParent();

@@ -17,6 +17,7 @@ package jetbrains.jetpad.cell.text;
 
 import jetbrains.jetpad.base.Registration;
 import jetbrains.jetpad.cell.Cell;
+import jetbrains.jetpad.cell.CellPropertySpec;
 import jetbrains.jetpad.cell.trait.CellTrait;
 import jetbrains.jetpad.event.KeyEvent;
 import jetbrains.jetpad.geometry.Vector;
@@ -25,14 +26,15 @@ import jetbrains.jetpad.model.event.EventHandler;
 import jetbrains.jetpad.model.property.ReadableProperty;
 
 abstract class CellTextEditor implements TextEditor {
+  private static final CellPropertySpec<CompositeRegistration> DISABLE_REG = new CellPropertySpec<>("textEditorDisposeReg");
+
   private Cell myCell;
-  private CompositeRegistration myCompletionHideRegistrations = null;
 
   CellTextEditor(Cell cell) {
     myCell = cell;
   }
 
-  Cell getCell() {
+  protected Cell getCell() {
     return myCell;
   }
 
@@ -52,11 +54,6 @@ abstract class CellTextEditor implements TextEditor {
   }
 
   @Override
-  public void focus() {
-    myCell.focus();
-  }
-
-  @Override
   public ReadableProperty<Boolean> focused() {
     return myCell.focused();
   }
@@ -67,19 +64,21 @@ abstract class CellTextEditor implements TextEditor {
   }
 
   @Override
-  public void addHideCompletionRegistration(Registration onHide) {
-    if (myCompletionHideRegistrations == null) {
-      myCompletionHideRegistrations = new CompositeRegistration();
+  public void addDisableRegistration(Registration disableReg) {
+    CompositeRegistration reg = myCell.get(DISABLE_REG);
+    if (reg == null) {
+      reg = new CompositeRegistration();
+      Registration propReg = myCell.set(DISABLE_REG, reg);
+      reg.add(propReg);
     }
-    myCompletionHideRegistrations.add(onHide);
+    reg.add(disableReg);
   }
 
   @Override
-  public void onCompletionHidden() {
-    if (myCompletionHideRegistrations != null) {
-      Registration r = myCompletionHideRegistrations;
-      myCompletionHideRegistrations = null;
-      r.remove();
+  public void disable() {
+    CompositeRegistration reg = myCell.get(DISABLE_REG);
+    if (reg != null) {
+      reg.remove();
     }
   }
 
