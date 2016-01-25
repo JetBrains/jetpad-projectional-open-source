@@ -19,7 +19,7 @@ import com.google.common.base.Strings;
 import com.google.common.base.Supplier;
 import jetbrains.jetpad.cell.Cell;
 import jetbrains.jetpad.cell.TextCell;
-import jetbrains.jetpad.cell.completion.BaseCompletionController;
+import jetbrains.jetpad.cell.completion.CellCompletionController;
 import jetbrains.jetpad.cell.completion.Completion;
 import jetbrains.jetpad.cell.completion.CompletionItems;
 import jetbrains.jetpad.cell.completion.CompletionSupport;
@@ -38,51 +38,16 @@ public class TextEditingTrait extends TextNavigationTrait {
   @Override
   public Object get(Cell cell, CellTraitPropertySpec<?> spec) {
     if (spec == Completion.COMPLETION_CONTROLLER) {
-      return getCompletionController(TextEditing.cellTextEditor(cell));
+      return getCompletionController(cell);
     }
-
+    if (spec == CompletionSupport.EDITOR) {
+      return TextEditing.textEditor(cell);
+    }
     return super.get(cell, spec);
   }
 
-  private CompletionController getCompletionController(final CellTextEditor editor) {
-    return new BaseCompletionController(editor.getCell()) {
-      @Override
-      public boolean canActivate() {
-        BaseCompletionParameters params = new BaseCompletionParameters() {
-          @Override
-          public boolean isMenu() {
-            return true;
-          }
-        };
-        return !Completion.isCompletionEmpty(editor.getCell(), params);
-      }
-
-      @Override
-      protected void doActivate(Runnable deactivate, Runnable restoreFocus) {
-        CompletionSupport.showCompletion(editor, Completion.allCompletion(editor.getCell(), new BaseCompletionParameters() {
-          @Override
-          public boolean isMenu() {
-            return true;
-          }
-        }), deactivate, restoreFocus);
-      }
-
-      @Override
-      protected void doDeactivate() {
-        editor.onCompletionHidden();
-      }
-
-      @Override
-      public boolean hasAmbiguousMatches() {
-        CompletionItems helper = Completion.completionFor(editor.getCell(), new BaseCompletionParameters() {
-          @Override
-          public boolean isMenu() {
-            return true;
-          }
-        });
-        return !helper.hasSingleMatch(TextEditing.getPrefixText(editor), false);
-      }
-    };
+  private CompletionController getCompletionController(Cell cell) {
+    return new CellCompletionController(cell);
   }
 
   @Override
@@ -124,58 +89,57 @@ public class TextEditingTrait extends TextNavigationTrait {
 
   @Override
   public void onComplete(final Cell cell, CompletionEvent event) {
-    CellTextEditor editor = TextEditing.cellTextEditor(cell);
-    String currentText = TextEditing.text(editor);
-    CompletionController handler = getCompletionController(editor);
+    CompletionController handler = getCompletionController(cell);
 
-    if (!handler.isActive()) {
-      CompletionItems completion = new CompletionItems(cell.get(Completion.COMPLETION).get(CompletionParameters.EMPTY));
-      String prefixText = TextEditing.getPrefixText(editor);
-      if (TextEditing.isEnd(editor)) {
-        List<CompletionItem> matches = completion.matches(prefixText);
-        List<CompletionItem> strictlyPrefixed = completion.strictlyPrefixedBy(prefixText);
-        if (matches.size() == 1 && strictlyPrefixed.isEmpty()) {
-          BaseCompletionParameters cp = new BaseCompletionParameters() {
-            @Override
-            public boolean isEndRightTransform() {
-              return true;
-            }
-
-            @Override
-            public boolean isMenu() {
-              return true;
-            }
-          };
-          CompletionSupplier supplier = cell.get(Completion.RIGHT_TRANSFORM);
-          if ((!supplier.isEmpty(cp) || !supplier.isAsyncEmpty(cp)) && cell.get(TextEditing.RT_ON_END)) {
-            if (cell.get(Cell.RIGHT_POPUP) == null) {
-              TextCell popup = CompletionSupport.showSideTransformPopup(cell, cell.rightPopup(), cell.get(Completion.RIGHT_TRANSFORM), true);
-              popup.get(Completion.COMPLETION_CONTROLLER).activate(new Runnable() {
-                @Override
-                public void run() {
-                  cell.focus();
-                }
-              });
-            }
-            event.consume();
-            return;
-          }
-        }
-      }
-
-      List<CompletionItem> prefixed = completion.prefixedBy(prefixText);
-      if (prefixed.size() == 1 && !currentText.isEmpty() && canCompleteWithCtrlSpace(editor)) {
-        prefixed.get(0).complete(prefixText).run();
-        event.consume();
-      } else if (handler.canActivate()) {
-        handler.activate();
-        event.consume();
-      }
+    if (handler.isActive()) {
+      super.onComplete(cell, event);
       return;
     }
 
+    CellTextEditor editor = TextEditing.cellTextEditor(cell);
+    String currentText = TextEditing.text(editor);
+    CompletionItems completion = new CompletionItems(cell.get(Completion.COMPLETION).get(CompletionParameters.EMPTY));
+    String prefixText = TextEditing.getPrefixText(editor);
+    if (TextEditing.isEnd(editor)) {
+      List<CompletionItem> matches = completion.matches(prefixText);
+      List<CompletionItem> strictlyPrefixed = completion.strictlyPrefixedBy(prefixText);
+      if (matches.size() == 1 && strictlyPrefixed.isEmpty()) {
+        BaseCompletionParameters cp = new BaseCompletionParameters() {
+          @Override
+          public boolean isEndRightTransform() {
+            return true;
+          }
 
-    super.onComplete(cell, event);
+          @Override
+          public boolean isMenu() {
+            return true;
+          }
+        };
+        CompletionSupplier supplier = cell.get(Completion.RIGHT_TRANSFORM);
+        if ((!supplier.isEmpty(cp) || !supplier.isAsyncEmpty(cp)) && cell.get(TextEditing.RT_ON_END)) {
+          if (cell.get(Cell.RIGHT_POPUP) == null) {
+            TextCell popup = CompletionSupport.showSideTransformPopup(cell, cell.rightPopup(), cell.get(Completion.RIGHT_TRANSFORM), true);
+            popup.get(Completion.COMPLETION_CONTROLLER).activate(new Runnable() {
+              @Override
+              public void run() {
+                cell.focus();
+              }
+            });
+          }
+          event.consume();
+          return;
+        }
+      }
+    }
+
+    List<CompletionItem> prefixed = completion.prefixedBy(prefixText);
+    if (prefixed.size() == 1 && !currentText.isEmpty() && canCompleteWithCtrlSpace(editor)) {
+      prefixed.get(0).complete(prefixText).run();
+      event.consume();
+    } else if (handler.canActivate()) {
+      handler.activate();
+      event.consume();
+    }
   }
 
   private void clearSelection(CellTextEditor editor) {

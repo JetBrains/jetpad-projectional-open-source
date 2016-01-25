@@ -155,11 +155,11 @@ public class NonTextCellCompletionTest extends CompletionTestCase {
 
   private void assertCompletionActive() {
     assertHasFrontPopup(target);
-    assertTrue(BaseCompletionController.isCompletionActive(target));
+    assertTrue(CellCompletionController.isCompletionActive(target));
   }
 
   private void assertCompletionInactive() {
     assertNoFrontPopup(target);
-    assertFalse(BaseCompletionController.isCompletionActive(target));
+    assertFalse(CellCompletionController.isCompletionActive(target));
   }
 }

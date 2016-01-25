@@ -16,6 +16,9 @@
 package jetbrains.jetpad.cell.completion;
 
 import jetbrains.jetpad.cell.Cell;
+import jetbrains.jetpad.cell.TextCell;
+import jetbrains.jetpad.cell.text.TextEditing;
+import jetbrains.jetpad.cell.text.TextEditingTrait;
 import jetbrains.jetpad.completion.CompletionController;
 import org.junit.Test;
 
@@ -50,11 +53,32 @@ public abstract class CompletionHandlerTestCase extends CompletionTestCase {
 
   @Test
   public void completionCanBeDeactivatedWithCompletionHandler() {
-    assertSame(myCellContainer.focusedCell.get(), getView());
+    assertSame(getView(), myCellContainer.focusedCell.get());
     complete();
 
     getController().deactivate();
     assertFalse(getController().isActive());
-    assertSame(myCellContainer.focusedCell.get(), getView());
+    assertSame(getView(), myCellContainer.focusedCell.get());
+  }
+
+  @Test
+  public void completeTwiceDefaultEditor() {
+    complete();
+    complete();
+    assertTrue(getController().isActive());
+  }
+
+  @Test
+  public void completeTwiceCustomEditor() {
+    TextCell editor = new TextCell();
+    editor.addTrait(new TextEditingTrait());
+    editor.focusable().set(true);
+    getView().children().add(editor);
+    getView().set(CompletionSupport.EDITOR, TextEditing.textEditor(editor));
+    editor.focus();
+    complete();
+    assertTrue(getController().isActive());
+    complete();
+    assertTrue(getController().isActive());
   }
 }

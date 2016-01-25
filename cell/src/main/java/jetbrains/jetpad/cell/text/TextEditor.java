@@ -23,7 +23,6 @@ import jetbrains.jetpad.model.property.Property;
 import jetbrains.jetpad.model.property.ReadableProperty;
 
 public interface TextEditor {
-  void focus();
   ReadableProperty<Boolean> focused();
 
   Property<String> text();
@@ -43,8 +42,9 @@ public interface TextEditor {
   Vector dimension();
 
   void setCompletionItems(Object items);
-  void onCompletionHidden();
-  void addHideCompletionRegistration(Registration onHide);
+
+  void disable();
+  void addDisableRegistration(Registration disableReg);
 
   Registration addKeyPressedHandler(EventHandler<KeyEvent> handler);
 }
