@@ -88,12 +88,7 @@ public class CompletionSupport {
         if (canComplete(cell)) {
           CompletionController controller = getCompletionHandler(cell);
           if (!controller.isActive() && controller.canActivate()) {
-            controller.activate(new Runnable() {
-              @Override
-              public void run() {
-                cell.focus();
-              }
-            });
+            controller.activate();
           }
           event.consume();
         }
