@@ -51,14 +51,14 @@ public class DomTextEditor {
 
     myTextContainer = DOM.createSpan();
     Style textStyle = myTextContainer.getStyle();
-    textStyle.setZIndex(2);
+    textStyle.setZIndex(10);
     textStyle.setWhiteSpace(Style.WhiteSpace.NOWRAP);
     myRoot.appendChild(myTextContainer);
 
     Element caretDiv = DOM.createDiv();
     Style caretStyle = caretDiv.getStyle();
     caretStyle.setPosition(Style.Position.ABSOLUTE);
-    caretStyle.setZIndex(2);
+    caretStyle.setZIndex(10);
     myRoot.appendChild(caretDiv);
     myCaretDiv = caretDiv;
 
