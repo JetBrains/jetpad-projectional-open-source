@@ -134,14 +134,6 @@ public class EditableCellContainer {
     press(Key.RIGHT, ModifierKey.META);
   }
 
-  public final void tab() {
-    press(Key.TAB);
-  }
-
-  public final void shiftTab() {
-    press(Key.TAB, ModifierKey.SHIFT);
-  }
-
   public final void backspace() {
     press(Key.BACKSPACE);
   }
