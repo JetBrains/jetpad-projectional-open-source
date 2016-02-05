@@ -28,7 +28,7 @@ public class KeyStrokeSpecs {
   public static final KeyStrokeSpec UNDO = commandOrMeta(Key.Z);
   public static final KeyStrokeSpec REDO = commandOrMeta(Key.Z, ModifierKey.SHIFT);
 
-  public static final KeyStrokeSpec COMPLETE = composite(new KeyStroke(Key.SPACE, ModifierKey.CONTROL));
+  public static final KeyStrokeSpec COMPLETE = composite(new KeyStroke(Key.SPACE, ModifierKey.CONTROL), new KeyStroke(Key.TAB));
 
   public static final KeyStrokeSpec HELP = composite(new KeyStroke(Key.F1, ModifierKey.CONTROL), new KeyStroke(Key.DIGIT_1, ModifierKey.CONTROL));
 

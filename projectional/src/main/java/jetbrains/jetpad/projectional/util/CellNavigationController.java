@@ -24,7 +24,10 @@ import jetbrains.jetpad.cell.TextCell;
 import jetbrains.jetpad.cell.position.PositionHandler;
 import jetbrains.jetpad.cell.trait.CellTrait;
 import jetbrains.jetpad.cell.util.Cells;
-import jetbrains.jetpad.event.*;
+import jetbrains.jetpad.event.Key;
+import jetbrains.jetpad.event.KeyEvent;
+import jetbrains.jetpad.event.KeyStrokeSpecs;
+import jetbrains.jetpad.event.MouseEvent;
 import jetbrains.jetpad.geometry.Rectangle;
 import jetbrains.jetpad.geometry.Vector;
 import jetbrains.jetpad.model.composite.Composites;
@@ -202,7 +205,7 @@ public class CellNavigationController {
     Cell next = null;
     boolean restoreOffset = false;
 
-    if (event.is(Key.RIGHT) || event.is(Key.TAB)) {
+    if (event.is(Key.RIGHT)) {
       next = nextFocusable(current);
       moveToHome(next);
     } else if (event.is(KeyStrokeSpecs.NEXT_WORD)) {
@@ -213,7 +216,7 @@ public class CellNavigationController {
         next = current;
         moveToEnd(next);
       }
-    } else if (event.is(Key.LEFT) || event.is(Key.TAB, ModifierKey.SHIFT)) {
+    } else if (event.is(Key.LEFT)) {
       next = prevFocusable(current);
       moveToEnd(next);
     } else if (event.is(KeyStrokeSpecs.PREV_WORD)) {

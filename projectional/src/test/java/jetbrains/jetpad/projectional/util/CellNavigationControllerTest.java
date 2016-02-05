@@ -111,24 +111,6 @@ public class CellNavigationControllerTest extends EditingTestCase {
   }
 
   @Test
-  public void tabWorks() {
-    c13.focus();
-
-    tab();
-
-    assertFocused(c14);
-  }
-
-  @Test
-  public void shiftTabWorks() {
-    c13.focus();
-
-    shiftTab();
-
-    assertFocused(c11);
-  }
-
-  @Test
   public void simpleUp() {
     c3.focus();
 
