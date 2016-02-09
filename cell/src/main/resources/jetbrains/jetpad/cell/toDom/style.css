@@ -64,11 +64,6 @@
 .vertical > div {
   display: block;
   font-size: 0px;
-
-
-  width: fit-content;
-  width: -webkit-fit-content;
-  width: -moz-fit-content;
 }
 
 .horizontal > div > .vertical {
@@ -83,10 +78,6 @@
   -webkit-user-select: text;
   -ms-user-select: text;
   -webkit-user-select: text;
-
-  width: fit-content;
-  width: -webkit-fit-content;
-  width: -moz-fit-content;
 }
 
 .indented {
