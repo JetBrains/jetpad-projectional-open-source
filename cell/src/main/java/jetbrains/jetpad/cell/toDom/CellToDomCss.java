@@ -32,8 +32,6 @@ public interface CellToDomCss extends CssResource {
   String lineHighlight();
   String content();
 
-  String fitContentWidth();
-
   String decorations();
 
   String hasWarning();

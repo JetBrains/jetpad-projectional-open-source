@@ -34,7 +34,6 @@ import jetbrains.jetpad.cell.mappersUtil.CounterUtil;
 import jetbrains.jetpad.cell.mappersUtil.PopupManager;
 import jetbrains.jetpad.mapper.Mapper;
 import jetbrains.jetpad.mapper.MappingContext;
-import jetbrains.jetpad.mapper.gwt.DomUtil;
 import jetbrains.jetpad.model.collections.CollectionItemEvent;
 import jetbrains.jetpad.model.property.PropertyChangeEvent;
 import jetbrains.jetpad.projectional.domUtil.DomTextEditor;
@@ -97,7 +96,7 @@ class IndentRootCellMapper extends BaseCellMapper<IndentCell> {
         @Override
         public List<Node> children(Node item) {
           if (item instanceof Element) {
-            return DomUtil.elementChildren((Element) item);
+            return divWrappedElementChildren((Element) item);
           } else {
             throw new IllegalStateException();
           }

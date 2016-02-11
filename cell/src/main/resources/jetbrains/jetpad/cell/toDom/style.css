@@ -35,12 +35,6 @@
 .cell {
 }
 
-.fitContentWidth {
-  width: fit-content;
-  width: -webkit-fit-content;
-  width: -moz-fit-content;
-}
-
 .lineHighlight {
   background: lineHighlightColor;
   position: absolute;
@@ -68,6 +62,10 @@
   -ms-flex-direction: row;
 
   white-space: nowrap;
+
+  width: fit-content;
+  width: -webkit-fit-content;
+  width: -moz-fit-content;
 }
 
 .horizontal > div {

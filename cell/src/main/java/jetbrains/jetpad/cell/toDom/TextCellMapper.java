@@ -38,7 +38,6 @@ class TextCellMapper extends BaseCellMapper<TextCell> {
     super(source, ctx, DOM.createDiv());
     myContainerFocused = ctx.focused.get();
     myTextEditor = new DomTextEditor(getTarget());
-    getTarget().addClassName(CellContainerToDomMapper.CSS.fitContentWidth());
   }
 
   @Override
