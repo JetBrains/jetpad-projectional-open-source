@@ -26,7 +26,7 @@ import org.vectomatic.dom.svg.itf.ISVGTransformable;
 import java.util.HashMap;
 import java.util.Map;
 
-class SvgGwtPeer implements SvgPlatformPeer{
+class SvgGwtPeer implements SvgPlatformPeer {
   private Map<SvgNode, Mapper<? extends SvgNode, ? extends OMNode>> myMappingMap = new HashMap<>();
 
   private void ensureElementConsistency(SvgNode source, OMNode target) {
