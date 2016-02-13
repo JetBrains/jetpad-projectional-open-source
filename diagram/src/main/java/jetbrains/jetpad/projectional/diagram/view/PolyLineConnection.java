@@ -24,7 +24,6 @@ import jetbrains.jetpad.model.property.Property;
 import jetbrains.jetpad.model.property.PropertyChangeEvent;
 import jetbrains.jetpad.model.property.ValueProperty;
 import jetbrains.jetpad.projectional.view.GroupView;
-import jetbrains.jetpad.projectional.view.LineView;
 import jetbrains.jetpad.projectional.view.PolyLineView;
 import jetbrains.jetpad.projectional.view.View;
 
@@ -170,14 +169,6 @@ public class PolyLineConnection implements Connection {
     }
     //last point
     res.add(prev);
-    return res;
-  }
-
-  public List<LineView> getLines() {
-    List<LineView> res = new ArrayList<>(myLinesView.children().size());
-    for (View v: myLinesView.children()) {
-      res.add((LineView) v);
-    }
     return res;
   }
 

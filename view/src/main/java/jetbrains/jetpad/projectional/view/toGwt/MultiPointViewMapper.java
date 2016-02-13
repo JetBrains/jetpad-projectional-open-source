@@ -16,20 +16,18 @@
 package jetbrains.jetpad.projectional.view.toGwt;
 
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.Style;
 import com.google.gwt.user.client.DOM;
+import jetbrains.jetpad.base.Registration;
 import jetbrains.jetpad.geometry.Vector;
 import jetbrains.jetpad.mapper.Synchronizer;
 import jetbrains.jetpad.mapper.SynchronizerContext;
 import jetbrains.jetpad.mapper.Synchronizers;
 import jetbrains.jetpad.model.event.EventHandler;
-import jetbrains.jetpad.base.Registration;
 import jetbrains.jetpad.model.property.WritableProperty;
 import jetbrains.jetpad.projectional.view.MultiPointView;
 import jetbrains.jetpad.projectional.view.PolyLineView;
 import jetbrains.jetpad.values.Color;
-import org.vectomatic.dom.svg.*;
-import org.vectomatic.dom.svg.utils.OMSVGParser;
-import org.vectomatic.dom.svg.utils.SVGConstants;
 
 class MultiPointViewMapper extends BaseViewMapper<MultiPointView, Element> {
   MultiPointViewMapper(ViewToDomContext ctx, MultiPointView source) {
@@ -40,18 +38,17 @@ class MultiPointViewMapper extends BaseViewMapper<MultiPointView, Element> {
   protected void registerSynchronizers(SynchronizersConfiguration conf) {
     super.registerSynchronizers(conf);
 
-    OMSVGDocument doc = OMSVGParser.createDocument();
-    final OMSVGSVGElement svg = createSVG(doc);
-    getTarget().appendChild(svg.getElement());
+    final Element svg = createSVG();
+    getTarget().appendChild(svg);
 
-    final OMSVGPolylineElement polyLine = new OMSVGPolylineElement();
+    final Element polyLine = SvgUtil.createPolyline();
     svg.appendChild(polyLine);
 
-    final OMSVGStyle style = polyLine.getStyle();
+    final Style style = polyLine.getStyle();
 
     final boolean isPolyLine = getSource() instanceof PolyLineView;
 
-    style.setSVGProperty(SVGConstants.SVG_STROKE_WIDTH_VALUE, "1");
+    style.setProperty("strokeWidth", "1");
 
     conf.add(new Synchronizer() {
       private Registration myReg;
@@ -83,29 +80,37 @@ class MultiPointViewMapper extends BaseViewMapper<MultiPointView, Element> {
       }
 
       private void updatePoints() {
-        OMSVGPointList points = polyLine.getPoints();
-        points.clear();
+        StringBuilder points = new StringBuilder();
 
         Vector origin = getSource().bounds().get().origin;
         for (Vector v : getSource().points) {
           v = v.sub(origin);
+
           //we need this shifting to fix disappearing lines in FF
-          points.appendItem(svg.createSVGPoint(v.x != 0 ? v.x : 1, v.y != 0 ? v.y : 1));
+          double x = v.x != 0 ? v.x : 1;
+          double y = v.y != 0 ? v.y : 1;
+
+          if (points.length() > 0) {
+            points.append(" ");
+          }
+          points.append(x).append(",").append(y);
         }
+
+        polyLine.setAttribute("points", points.toString());
       }
     });
 
-    conf.add(GwtViewSynchronizers.svgBoundsSyncrhonizer(getSource(), svg));
+    conf.add(GwtViewSynchronizers.boundsSyncrhonizer(getSource(), svg));
 
     conf.add(Synchronizers.forPropsOneWay(getSource().color(), new WritableProperty<Color>() {
       @Override
       public void set(Color value) {
         if (isPolyLine) {
-          style.setSVGProperty(SVGConstants.SVG_STROKE_ATTRIBUTE, value.toCssColor());
-          style.setSVGProperty(SVGConstants.SVG_FILL_ATTRIBUTE, "none");
+          style.setProperty("stroke", value.toCssColor());
+          style.setProperty("fill", "none");
         } else {
-          style.setSVGProperty(SVGConstants.SVG_STROKE_ATTRIBUTE, "none");
-          style.setSVGProperty(SVGConstants.SVG_FILL_ATTRIBUTE, value.toCssColor());
+          style.setProperty("stroke", "none");
+          style.setProperty("fill", value.toCssColor());
         }
       }
     }));
@@ -113,7 +118,7 @@ class MultiPointViewMapper extends BaseViewMapper<MultiPointView, Element> {
     conf.add(Synchronizers.forPropsOneWay(getSource().width(), new WritableProperty<Integer>() {
       @Override
       public void set(Integer value) {
-        style.setSVGProperty(SVGConstants.SVG_STROKE_WIDTH_ATTRIBUTE, "" + value);
+        style.setProperty("strokeWidth", "" + value);
       }
     }));
   }

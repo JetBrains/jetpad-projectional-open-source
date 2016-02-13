@@ -493,7 +493,7 @@ public class ViewContainerComponent extends JComponent implements Scrollable {
     final jetbrains.jetpad.geometry.Rectangle bounds = view.bounds().get();
 
     Color background = view.background().get();
-    if (!(view instanceof EllipseView) && background != null) {
+    if (background != null) {
       g.setColor(toAwtColor(background));
       g.fillRect(bounds.origin.x, bounds.origin.y, bounds.dimension.x, bounds.dimension.y);
     }
@@ -501,32 +501,6 @@ public class ViewContainerComponent extends JComponent implements Scrollable {
     if (border != null) {
       g.setColor(toAwtColor(border));
       g.drawRect(bounds.origin.x, bounds.origin.y, bounds.dimension.x - 1, bounds.dimension.y - 1);
-    }
-
-    if (view instanceof EllipseView) {
-      EllipseView ellipseView = (EllipseView) view;
-      g.setColor(toAwtColor(ellipseView.background().get()));
-
-      final double from = (ellipseView.from().get() * 360) / (2 * Math.PI);
-      final double to = (ellipseView.to().get() * 360) / (2 * Math.PI);
-
-      int borderWidth = ellipseView.borderWidth().get();
-      final Vector borderVec = new Vector(borderWidth / 2, borderWidth / 2);
-
-      final jetbrains.jetpad.geometry.Rectangle innerBounds = new jetbrains.jetpad.geometry.Rectangle(bounds.origin.add(borderVec), bounds.dimension.sub(borderVec.mul(2)));
-
-      g.fill(new Arc2D.Double(innerBounds.origin.x, innerBounds.origin.y, innerBounds.dimension.x - 1, innerBounds.dimension.y - 1, from, to - from, Arc2D.PIE));
-
-      if (borderWidth > 0) {
-        g.setColor(toAwtColor(ellipseView.borderColor().get()));
-        withStroke(g, new BasicStroke(borderWidth, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER), new Runnable() {
-          @Override
-          public void run() {
-            final jetbrains.jetpad.geometry.Rectangle borderBounds = innerBounds;
-            g.draw(new Arc2D.Double(borderBounds.origin.x, borderBounds.origin.y, borderBounds.dimension.x - 1, borderBounds.dimension.y - 1, from, to - from, Arc2D.PIE));
-          }
-        });
-      }
     }
 
     if (view instanceof LineView) {

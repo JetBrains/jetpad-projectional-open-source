@@ -1,6 +1,5 @@
 <module>
   <inherits name="com.google.gwt.query.Query"/>
-  <inherits name="org.vectomatic.libgwtsvg" />
 
   <inherits name="jetbrains.jetpad.model.Model" />
   <inherits name="jetbrains.jetpad.mapper.Mapper" />

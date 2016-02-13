@@ -66,6 +66,5 @@ class SvgNodeMapperFactory implements MapperFactory<SvgNode, Node> {
 
   private native Element createSVGElement(String name) /*-{
     return $doc.createElementNS('http://www.w3.org/2000/svg', name);
-
   }-*/;
 }

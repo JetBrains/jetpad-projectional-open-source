@@ -15,6 +15,7 @@
  */
 package jetbrains.jetpad.projectional.view.toGwt;
 
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style;
 import jetbrains.jetpad.geometry.Rectangle;
 import jetbrains.jetpad.mapper.Synchronizer;
@@ -24,13 +25,14 @@ import jetbrains.jetpad.projectional.view.View;
 import org.vectomatic.dom.svg.OMSVGSVGElement;
 
 class GwtViewSynchronizers {
-  static Synchronizer svgBoundsSyncrhonizer(View view, final OMSVGSVGElement svg) {
+  static Synchronizer boundsSyncrhonizer(View view, final Element el) {
     return Synchronizers.forPropsOneWay(view.bounds(), new WritableProperty<Rectangle>() {
       @Override
       public void set(Rectangle value) {
-        svg.setWidth(Style.Unit.PX, value.dimension.x + 1);
-        svg.setHeight(Style.Unit.PX, value.dimension.y + 1);
+        el.getStyle().setWidth(value.dimension.x + 1, Style.Unit.PX);
+        el.getStyle().setHeight(value.dimension.y + 1, Style.Unit.PX);
       }
     });
   }
+
 }

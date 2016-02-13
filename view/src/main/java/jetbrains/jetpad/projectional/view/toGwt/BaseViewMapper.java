@@ -17,21 +17,18 @@ package jetbrains.jetpad.projectional.view.toGwt;
 
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style;
+import jetbrains.jetpad.base.Registration;
 import jetbrains.jetpad.base.Value;
 import jetbrains.jetpad.geometry.Rectangle;
 import jetbrains.jetpad.mapper.Mapper;
 import jetbrains.jetpad.mapper.Synchronizers;
 import jetbrains.jetpad.model.event.EventHandler;
-import jetbrains.jetpad.base.Registration;
 import jetbrains.jetpad.model.event.EventSources;
 import jetbrains.jetpad.model.property.DerivedProperty;
 import jetbrains.jetpad.model.property.ReadableProperty;
 import jetbrains.jetpad.model.property.WritableProperty;
 import jetbrains.jetpad.projectional.view.View;
 import jetbrains.jetpad.values.Color;
-import org.vectomatic.dom.svg.OMSVGDocument;
-import org.vectomatic.dom.svg.OMSVGSVGElement;
-import org.vectomatic.dom.svg.OMSVGStyle;
 
 class BaseViewMapper<ViewT extends View, ElementT extends Element> extends Mapper<ViewT, ElementT> {
   private ViewToDomContext myContext;
@@ -193,13 +190,13 @@ class BaseViewMapper<ViewT extends View, ElementT extends Element> extends Mappe
     return false;
   }
 
-  protected OMSVGSVGElement createSVG(OMSVGDocument doc) {
-    final OMSVGSVGElement svg = doc.createSVGSVGElement();
+  protected Element createSVG() {
+    Element result = SvgUtil.createSvgElement("svg");
     //without setting absolute position svg element might move down for unknown reason
-    OMSVGStyle style = svg.getStyle();
+    Style style = result.getStyle();
     style.setPosition(Style.Position.ABSOLUTE);
     style.setLeft(0, Style.Unit.PX);
     style.setTop(0, Style.Unit.PX);
-    return svg;
+    return result;
   }
 }

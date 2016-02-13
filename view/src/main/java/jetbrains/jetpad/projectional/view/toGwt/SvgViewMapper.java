@@ -50,7 +50,7 @@ public class SvgViewMapper extends BaseViewMapper<SvgView, Element> {
     conf.add(Synchronizers.forPropsOneWay(getSource().root(), new WritableProperty<SvgSvgElement>() {
       @Override
       public void set(SvgSvgElement value) {
-        Element element = createSVGElement();
+        Element element = SvgUtil.createSvgElement("svg");
 
         getTarget().removeAllChildren();
         getTarget().appendChild((Node) element);
@@ -60,10 +60,6 @@ public class SvgViewMapper extends BaseViewMapper<SvgView, Element> {
       }
     }));
   }
-
-  private native Element createSVGElement() /*-{
-    return $doc.createElementNS('http://www.w3.org/2000/svg', 'svg');
-  }-*/;
 
   @Override
   protected void onDetach() {

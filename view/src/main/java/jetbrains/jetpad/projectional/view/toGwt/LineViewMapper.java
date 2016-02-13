@@ -23,11 +23,6 @@ import jetbrains.jetpad.model.property.DerivedProperty;
 import jetbrains.jetpad.model.property.WritableProperty;
 import jetbrains.jetpad.projectional.view.LineView;
 import jetbrains.jetpad.values.Color;
-import org.vectomatic.dom.svg.OMSVGDocument;
-import org.vectomatic.dom.svg.OMSVGLineElement;
-import org.vectomatic.dom.svg.OMSVGSVGElement;
-import org.vectomatic.dom.svg.utils.OMSVGParser;
-import org.vectomatic.dom.svg.utils.SVGConstants;
 
 class LineViewMapper extends BaseViewMapper<LineView, Element> {
   LineViewMapper(ViewToDomContext ctx, LineView source) {
@@ -38,14 +33,13 @@ class LineViewMapper extends BaseViewMapper<LineView, Element> {
   protected void registerSynchronizers(SynchronizersConfiguration conf) {
     super.registerSynchronizers(conf);
 
-    OMSVGDocument doc = OMSVGParser.createDocument();
-    final OMSVGSVGElement svg = createSVG(doc);
-    getTarget().appendChild(svg.getElement());
+    Element svg = createSVG();
+    getTarget().appendChild(svg);
 
-    final OMSVGLineElement line = new OMSVGLineElement();
+    final Element line = SvgUtil.createSvgElement("line");
     svg.appendChild(line);
 
-    conf.add(GwtViewSynchronizers.svgBoundsSyncrhonizer(getSource(), svg));
+    conf.add(GwtViewSynchronizers.boundsSyncrhonizer(getSource(), svg));
 
     conf.add(Synchronizers.forPropsOneWay(new DerivedProperty<Vector>(getSource().bounds(), getSource().start()) {
       @Override
@@ -58,8 +52,8 @@ class LineViewMapper extends BaseViewMapper<LineView, Element> {
         whenValid(new Runnable() {
           @Override
           public void run() {
-            line.getX1().getBaseVal().setValue(value.x + 1);
-            line.getY1().getBaseVal().setValue(value.y + 1);
+            line.setAttribute("x1", "" + (value.x + 1));
+            line.setAttribute("y1", "" + (value.y + 1));
           }
         });
       }
@@ -75,8 +69,8 @@ class LineViewMapper extends BaseViewMapper<LineView, Element> {
         whenValid(new Runnable() {
           @Override
           public void run() {
-            line.getX2().getBaseVal().setValue(value.x + 1);
-            line.getY2().getBaseVal().setValue(value.y + 1);
+            line.setAttribute("x2", "" + (value.x + 1));
+            line.setAttribute("y2", "" + (value.y + 1));
           }
         });
       }
@@ -84,14 +78,14 @@ class LineViewMapper extends BaseViewMapper<LineView, Element> {
     conf.add(Synchronizers.forPropsOneWay(getSource().color(), new WritableProperty<Color>() {
       @Override
       public void set(Color value) {
-        line.getStyle().setSVGProperty(SVGConstants.SVG_STROKE_ATTRIBUTE, value.toCssColor());
+        line.getStyle().setProperty("stroke", value.toCssColor());
       }
     }));
 
     conf.add(Synchronizers.forPropsOneWay(getSource().width(), new WritableProperty<Integer>() {
       @Override
       public void set(Integer value) {
-        line.getStyle().setSVGProperty(SVGConstants.SVG_STROKE_WIDTH_ATTRIBUTE, "" + value);
+        line.getStyle().setProperty("strokeWidth", "" + value);
       }
     }));
   }
