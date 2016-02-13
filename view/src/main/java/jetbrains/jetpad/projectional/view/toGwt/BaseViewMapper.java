@@ -29,6 +29,9 @@ import jetbrains.jetpad.model.property.ReadableProperty;
 import jetbrains.jetpad.model.property.WritableProperty;
 import jetbrains.jetpad.projectional.view.View;
 import jetbrains.jetpad.values.Color;
+import org.vectomatic.dom.svg.OMSVGDocument;
+import org.vectomatic.dom.svg.OMSVGSVGElement;
+import org.vectomatic.dom.svg.OMSVGStyle;
 
 class BaseViewMapper<ViewT extends View, ElementT extends Element> extends Mapper<ViewT, ElementT> {
   private ViewToDomContext myContext;
@@ -188,5 +191,15 @@ class BaseViewMapper<ViewT extends View, ElementT extends Element> extends Mappe
 
   protected boolean isCustomBackgroundSync() {
     return false;
+  }
+
+  protected OMSVGSVGElement createSVG(OMSVGDocument doc) {
+    final OMSVGSVGElement svg = doc.createSVGSVGElement();
+    //without setting absolute position svg element might move down for unknown reason
+    OMSVGStyle style = svg.getStyle();
+    style.setPosition(Style.Position.ABSOLUTE);
+    style.setLeft(0, Style.Unit.PX);
+    style.setTop(0, Style.Unit.PX);
+    return svg;
   }
 }
