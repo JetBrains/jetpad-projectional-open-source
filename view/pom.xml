@@ -23,12 +23,6 @@
 
   <dependencies>
     <dependency>
-      <groupId>org.vectomatic</groupId>
-      <artifactId>lib-gwt-svg</artifactId>
-      <version>0.5.10</version>
-    </dependency>
-
-    <dependency>
       <groupId>jetbrains.jetpad</groupId>
       <artifactId>model</artifactId>
       <version>1.1-SNAPSHOT</version>
