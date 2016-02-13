@@ -15,8 +15,11 @@
  */
 package jetbrains.jetpad.projectional.svg.toDom;
 
-import com.google.gwt.event.dom.client.*;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.query.client.Function;
+import com.google.gwt.query.client.GQuery;
+import com.google.gwt.user.client.Event;
 import jetbrains.jetpad.base.Registration;
 import jetbrains.jetpad.event.MouseEvent;
 import jetbrains.jetpad.geometry.DoubleVector;
@@ -29,17 +32,16 @@ import jetbrains.jetpad.projectional.svg.SvgElement;
 import jetbrains.jetpad.projectional.svg.SvgElementListener;
 import jetbrains.jetpad.projectional.svg.event.SvgAttributeEvent;
 import jetbrains.jetpad.projectional.svg.event.SvgEventSpec;
-import org.vectomatic.dom.svg.OMSVGElement;
 
 import java.util.EnumMap;
 import java.util.Map;
 import java.util.Set;
 
-class SvgElementMapper<SourceT extends SvgElement, TargetT extends OMSVGElement> extends SvgNodeMapper<SourceT, TargetT> {
+class SvgElementMapper<SourceT extends SvgElement> extends SvgNodeMapper<SourceT, Element> {
   private Map<SvgEventSpec, HandlerRegistration> myHandlerRegs;
   private SvgGwtPeer myPeer;
 
-  public SvgElementMapper(SourceT source, TargetT target, SvgGwtPeer peer) {
+  public SvgElementMapper(SourceT source, Element target, SvgGwtPeer peer) {
     super(source, target, peer);
     myPeer = peer;
   }
@@ -87,58 +89,51 @@ class SvgElementMapper<SourceT extends SvgElement, TargetT extends OMSVGElement>
           }
           if (!value.contains(spec) || myHandlerRegs.containsKey(spec)) continue;
 
+
+          String event = null;
           switch (spec) {
             case MOUSE_CLICKED:
-              myHandlerRegs.put(spec, getTarget().addDomHandler(new ClickHandler() {
-                @Override
-                public void onClick(ClickEvent clickEvent) {
-                  getSource().dispatch(spec, createMouseEvent(clickEvent));
-                }
-              }, ClickEvent.getType()));
+              event = "click";
               break;
             case MOUSE_PRESSED:
-              myHandlerRegs.put(spec, getTarget().addDomHandler(new MouseDownHandler() {
-                @Override
-                public void onMouseDown(MouseDownEvent mouseDownEvent) {
-                  getSource().dispatch(spec, createMouseEvent(mouseDownEvent));
-                }
-              }, MouseDownEvent.getType()));
+              event = "mousedown";
               break;
             case MOUSE_RELEASED:
-              myHandlerRegs.put(spec, getTarget().addDomHandler(new MouseUpHandler() {
-                @Override
-                public void onMouseUp(MouseUpEvent mouseUpEvent) {
-                  getSource().dispatch(spec, createMouseEvent(mouseUpEvent));
-                }
-              }, MouseUpEvent.getType()));
+              event = "mouseup";
               break;
             case MOUSE_OVER:
-              myHandlerRegs.put(spec, getTarget().addDomHandler(new MouseOverHandler() {
-                @Override
-                public void onMouseOver(MouseOverEvent mouseOverEvent) {
-                  getSource().dispatch(spec, createMouseEvent(mouseOverEvent));
-                }
-              }, MouseOverEvent.getType()));
+              event = "mouseover";
               break;
             case MOUSE_MOVE:
-              myHandlerRegs.put(spec, getTarget().addDomHandler(new MouseMoveHandler() {
-                @Override
-                public void onMouseMove(MouseMoveEvent mouseMoveEvent) {
-                  getSource().dispatch(spec, createMouseEvent(mouseMoveEvent));
-                }
-              }, MouseMoveEvent.getType()));
+              event = "mousemove";
               break;
             case MOUSE_OUT:
-              myHandlerRegs.put(spec, getTarget().addDomHandler(new MouseOutHandler() {
-                @Override
-                public void onMouseOut(MouseOutEvent mouseOutEvent) {
-                  getSource().dispatch(spec, createMouseEvent(mouseOutEvent));
-                }
-              }, MouseOutEvent.getType()));
+              event = "mouseout";
               break;
             default:
               break;
           }
+
+          if (event == null) {
+            throw new IllegalStateException();
+          }
+
+          final GQuery tq = GQuery.$(getTarget()).on(event, new Function() {
+            @Override
+            public boolean f(Event e) {
+              MouseEvent mouseEvent = createMouseEvent(e);
+              getSource().dispatch(spec, mouseEvent);
+              return true;
+            }
+          });
+
+          final String eventToRemove = event;
+          myHandlerRegs.put(spec, new HandlerRegistration() {
+            @Override
+            public void removeHandler() {
+              tq.off(eventToRemove);
+            }
+          });
         }
 
         if (myHandlerRegs.isEmpty()) {
@@ -159,9 +154,10 @@ class SvgElementMapper<SourceT extends SvgElement, TargetT extends OMSVGElement>
     }
   }
 
-  private MouseEvent createMouseEvent(com.google.gwt.event.dom.client.MouseEvent<?> evt) {
+  private MouseEvent createMouseEvent(com.google.gwt.user.client.Event evt) {
     evt.stopPropagation();
     DoubleVector coords = myPeer.inverseScreenTransform(getSource(), new DoubleVector(evt.getClientX(), evt.getClientY()));
     return new MouseEvent((int) coords.x, (int) coords.y);
   }
 }
+

@@ -16,6 +16,7 @@
 package jetbrains.jetpad.projectional.view.toGwt;
 
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.Node;
 import com.google.gwt.user.client.DOM;
 import jetbrains.jetpad.base.Registration;
 import jetbrains.jetpad.mapper.Synchronizers;
@@ -23,10 +24,9 @@ import jetbrains.jetpad.model.property.WritableProperty;
 import jetbrains.jetpad.projectional.svg.SvgSvgElement;
 import jetbrains.jetpad.projectional.svg.toDom.SvgRootDocumentMapper;
 import jetbrains.jetpad.projectional.view.SvgView;
-import org.vectomatic.dom.svg.OMSVGSVGElement;
 
 public class SvgViewMapper extends BaseViewMapper<SvgView, Element> {
-  private static Registration map(SvgSvgElement root, OMSVGSVGElement element) {
+  private static Registration map(SvgSvgElement root, Element element) {
     final SvgRootDocumentMapper mapper = new SvgRootDocumentMapper(root, element);
     mapper.attachRoot();
     return new Registration() {
@@ -50,16 +50,20 @@ public class SvgViewMapper extends BaseViewMapper<SvgView, Element> {
     conf.add(Synchronizers.forPropsOneWay(getSource().root(), new WritableProperty<SvgSvgElement>() {
       @Override
       public void set(SvgSvgElement value) {
-        OMSVGSVGElement element = new OMSVGSVGElement();
+        Element element = createSVGElement();
 
         getTarget().removeAllChildren();
-        getTarget().appendChild(element.getElement());
+        getTarget().appendChild((Node) element);
 
         myReg.remove();
         myReg = map(value, element);
       }
     }));
   }
+
+  private native Element createSVGElement() /*-{
+    return $doc.createElementNS('http://www.w3.org/2000/svg', 'svg');
+  }-*/;
 
   @Override
   protected void onDetach() {

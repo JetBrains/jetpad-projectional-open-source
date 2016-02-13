@@ -15,13 +15,14 @@
  */
 package jetbrains.jetpad.projectional.svg.toDom;
 
+import com.google.gwt.dom.client.Node;
 import jetbrains.jetpad.mapper.Mapper;
 import jetbrains.jetpad.mapper.MappingContext;
 import jetbrains.jetpad.mapper.Synchronizers;
+import jetbrains.jetpad.mapper.gwt.DomUtil;
 import jetbrains.jetpad.projectional.svg.SvgNode;
-import org.vectomatic.dom.svg.OMNode;
 
-class SvgNodeMapper<SourceT extends SvgNode, TargetT extends OMNode> extends Mapper<SourceT, TargetT> {
+class SvgNodeMapper<SourceT extends SvgNode, TargetT extends Node> extends Mapper<SourceT, TargetT> {
   private SvgGwtPeer myPeer;
 
   SvgNodeMapper(SourceT source, TargetT target, SvgGwtPeer peer) {
@@ -33,7 +34,7 @@ class SvgNodeMapper<SourceT extends SvgNode, TargetT extends OMNode> extends Map
   protected void registerSynchronizers(SynchronizersConfiguration conf) {
     super.registerSynchronizers(conf);
 
-    conf.add(Synchronizers.forObservableRole(this, getSource().children(), Utils.elementChildren(getTarget()),
+    conf.add(Synchronizers.forObservableRole(this, getSource().children(), DomUtil.nodeChildren(getTarget()),
         new SvgNodeMapperFactory(myPeer)));
   }
 

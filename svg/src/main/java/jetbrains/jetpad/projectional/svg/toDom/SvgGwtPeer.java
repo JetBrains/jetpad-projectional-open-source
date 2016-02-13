@@ -15,50 +15,18 @@
  */
 package jetbrains.jetpad.projectional.svg.toDom;
 
+import com.google.gwt.dom.client.Node;
 import jetbrains.jetpad.geometry.DoubleRectangle;
 import jetbrains.jetpad.geometry.DoubleVector;
 import jetbrains.jetpad.mapper.Mapper;
 import jetbrains.jetpad.projectional.svg.*;
-import org.vectomatic.dom.svg.*;
-import org.vectomatic.dom.svg.itf.ISVGLocatable;
-import org.vectomatic.dom.svg.itf.ISVGTransformable;
 
 import java.util.HashMap;
 import java.util.Map;
 
 class SvgGwtPeer implements SvgPlatformPeer {
-  private Map<SvgNode, Mapper<? extends SvgNode, ? extends OMNode>> myMappingMap = new HashMap<>();
+  private Map<SvgNode, Mapper<? extends SvgNode, ? extends Node>> myMappingMap = new HashMap<>();
 
-  private void ensureElementConsistency(SvgNode source, OMNode target) {
-    if (source instanceof SvgElement && !(target instanceof OMSVGElement)) {
-      throw new IllegalStateException("Target of SvgElement must be OMSVGElement");
-    }
-  }
-
-  private void ensureLocatableConsistency(SvgNode source, OMNode target) {
-    if (source instanceof SvgLocatable && !(target instanceof ISVGLocatable)) {
-      throw new IllegalStateException("Target of SvgLocatable must be ISVGLocatable");
-    }
-  }
-
-  private void ensureTextContentConsistency(SvgNode source, OMNode target) {
-    if (source instanceof SvgTextContent && !(target instanceof OMSVGTextContentElement)) {
-      throw new IllegalStateException("Target of SvgTextContent must be OMSVGTextContentElement");
-    }
-  }
-
-  private void ensureTransformableConsistency(SvgNode source, OMNode target) {
-    if (source instanceof SvgTransformable && !(target instanceof ISVGTransformable)) {
-      throw new IllegalStateException("Target of SvgTransformable must be ISVGTransformable");
-    }
-  }
-
-  private void ensureSourceTargetConsistency(SvgNode source, OMNode target) {
-    ensureElementConsistency(source, target);
-    ensureLocatableConsistency(source, target);
-    ensureTextContentConsistency(source, target);
-    ensureTransformableConsistency(source, target);
-  }
 
   private void ensureSourceRegistered(SvgNode source) {
     if (!myMappingMap.containsKey(source)) {
@@ -66,8 +34,7 @@ class SvgGwtPeer implements SvgPlatformPeer {
     }
   }
 
-  void registerMapper(SvgNode source, SvgNodeMapper<? extends SvgNode, ? extends OMNode> mapper) {
-    ensureSourceTargetConsistency(source, mapper.getTarget());
+  void registerMapper(SvgNode source, SvgNodeMapper<? extends SvgNode, ? extends Node> mapper) {
     myMappingMap.put(source, mapper);
   }
 
@@ -79,23 +46,50 @@ class SvgGwtPeer implements SvgPlatformPeer {
   public double getComputedTextLength(SvgTextContent node) {
     ensureSourceRegistered((SvgNode) node);
 
-    OMNode target = myMappingMap.get(node).getTarget();
-    return ((OMSVGTextContentElement) target).getComputedTextLength();
+    Node target = myMappingMap.get(node).getTarget();
+    return getComputedTextLength(target);
   }
 
   private DoubleVector transformCoordinates(SvgLocatable relative, DoubleVector point, boolean inverse) {
     ensureSourceRegistered((SvgNode) relative);
 
-    OMNode relativeTarget = myMappingMap.get(relative).getTarget();
-    OMSVGMatrix matrix = ((ISVGLocatable) relativeTarget)
-        .getTransformToElement(((OMSVGElement) relativeTarget).getOwnerSVGElement());
+    Node relativeTarget = myMappingMap.get(relative).getTarget();
+
+    return transformCoordinates(relativeTarget, point.x, point.y, inverse);
+  }
+
+  private native DoubleVector transformCoordinates(Node relativeTarget, double x, double y, boolean inverse) /*-{
+    matrix = relativeTarget.getTransformToElement(relativeTarget.ownerSVGElement);
     if (inverse) {
       matrix = matrix.inverse();
     }
-    OMSVGPoint pt = ((OMSVGElement) relativeTarget).getOwnerSVGElement().createSVGPoint((float) point.x, (float) point.y);
-    OMSVGPoint inversePt = pt.matrixTransform(matrix);
-    return new DoubleVector(inversePt.getX(), inversePt.getY());
+    pt = relativeTarget.ownerSVGElement.createSVGPoint();
+    pt.x = x;
+    pt.y = y;
+    inversePoint = pt.matrixTransform(matrix);
+
+    return @jetbrains.jetpad.geometry.DoubleVector::new(DD)(inversePoint.x, inversePoint.y);
+  }-*/;
+
+  public DoubleVector inverseScreenTransform(SvgElement relative, DoubleVector point) {
+    ensureSourceRegistered(relative);
+
+    SvgSvgElement owner = relative.getOwnerSvgElement();
+    ensureSourceRegistered(owner);
+
+    Node ownerTarget = myMappingMap.get(owner).getTarget();
+    return inverseScreenTransform(ownerTarget, point.x, point.y);
   }
+
+  private native DoubleVector inverseScreenTransform(Node ownerTarget, double x, double y) /*-{
+    matrix = ownerTarget.getScreenCTM().inverse();
+    pt = ownerTarget.createSVGPoint();
+    pt.x = x;
+    pt.y = y;
+    pt = pt.matrixTransform(matrix);
+    return @jetbrains.jetpad.geometry.DoubleVector::new(DD)(pt.x, pt.y);
+  }-*/;
+
 
   @Override
   public DoubleVector invertTransform(SvgLocatable relative, DoubleVector point) {
@@ -107,26 +101,21 @@ class SvgGwtPeer implements SvgPlatformPeer {
     return transformCoordinates(relative, point, false);
   }
 
-  public DoubleVector inverseScreenTransform(SvgElement relative, DoubleVector point) {
-    ensureSourceRegistered(relative);
-
-    SvgSvgElement owner = relative.getOwnerSvgElement();
-    ensureSourceRegistered(owner);
-
-    OMNode ownerTarget = myMappingMap.get(owner).getTarget();
-    OMSVGMatrix matrix = ((ISVGLocatable) ownerTarget).getScreenCTM().inverse();
-    OMSVGPoint pt = ((OMSVGSVGElement) ownerTarget).createSVGPoint((float) point.x, (float) point.y);
-    pt = pt.matrixTransform(matrix);
-
-    return new DoubleVector(pt.getX(), pt.getY());
-  }
-
   @Override
   public DoubleRectangle getBBox(SvgLocatable element) {
     ensureSourceRegistered((SvgNode) element);
 
-    OMNode target = myMappingMap.get(element).getTarget();
-    OMSVGRect bBox = ((ISVGLocatable) target).getBBox();
-    return new DoubleRectangle(bBox.getX(), bBox.getY(), bBox.getWidth(), bBox.getHeight());
+    Node target = myMappingMap.get(element).getTarget();
+    return getBoundingBox(target);
   }
+
+  private native double getComputedTextLength(Node target) /*-{
+    return target.getComputedTextLength();
+  }-*/;
+
+  private native DoubleRectangle getBoundingBox(Node target) /*-{
+    bbox = target.getBBox();
+    return @jetbrains.jetpad.geometry.DoubleRectangle::new(DDDD)(bbox.x, bbox.y, bbox.width, bbox.height);
+  }-*/;
+
 }

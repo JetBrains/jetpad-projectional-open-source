@@ -15,13 +15,13 @@
  */
 package jetbrains.jetpad.projectional.svg.toDom;
 
+import com.google.gwt.dom.client.Node;
 import jetbrains.jetpad.mapper.Synchronizers;
 import jetbrains.jetpad.model.property.WritableProperty;
 import jetbrains.jetpad.projectional.svg.SvgTextNode;
-import org.vectomatic.dom.svg.OMText;
 
-class SvgTextNodeMapper extends SvgNodeMapper<SvgTextNode, OMText> {
-  SvgTextNodeMapper(SvgTextNode source, OMText target, SvgGwtPeer peer) {
+class SvgTextNodeMapper extends SvgNodeMapper<SvgTextNode, Node> {
+  SvgTextNodeMapper(SvgTextNode source, Node target, SvgGwtPeer peer) {
     super(source, target, peer);
   }
 

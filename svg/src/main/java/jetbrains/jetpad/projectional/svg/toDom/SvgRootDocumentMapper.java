@@ -15,16 +15,16 @@
  */
 package jetbrains.jetpad.projectional.svg.toDom;
 
+import com.google.gwt.dom.client.Element;
 import jetbrains.jetpad.mapper.Mapper;
 import jetbrains.jetpad.mapper.MappingContext;
 import jetbrains.jetpad.projectional.svg.SvgSvgElement;
-import org.vectomatic.dom.svg.OMSVGSVGElement;
 
-public class SvgRootDocumentMapper extends Mapper<SvgSvgElement, OMSVGSVGElement> {
-  private SvgElementMapper<SvgSvgElement, OMSVGSVGElement> myRootMapper;
+public class SvgRootDocumentMapper extends Mapper<SvgSvgElement, Element> {
+  private SvgElementMapper<SvgSvgElement> myRootMapper;
   private SvgGwtPeer myPeer;
 
-  public SvgRootDocumentMapper(SvgSvgElement source, OMSVGSVGElement target) {
+  public SvgRootDocumentMapper(SvgSvgElement source, Element target) {
     super(source, target);
   }
 

@@ -8,11 +8,10 @@
   <inherits name="com.google.common.base.Base" />
   <inherits name="com.google.common.collect.Collect"/>
 
-  <inherits name="org.vectomatic.libgwtsvg"/>
-
   <inherits name="jetbrains.jetpad.mapper.Mapper"/>
   <inherits name="jetbrains.jetpad.values.Values"/>
   <inherits name="jetbrains.jetpad.event.Event"/>
+  <inherits name="jetbrains.jetpad.mapper.gwt.GwtMapper"/>
 
   <source path="">
     <exclude name="toAwt/**" />

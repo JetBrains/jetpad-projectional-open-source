@@ -15,12 +15,14 @@
  */
 package jetbrains.jetpad.projectional.svg.toDom;
 
+import com.google.gwt.dom.client.Document;
+import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.Node;
 import jetbrains.jetpad.mapper.Mapper;
 import jetbrains.jetpad.mapper.MapperFactory;
 import jetbrains.jetpad.projectional.svg.*;
-import org.vectomatic.dom.svg.*;
 
-class SvgNodeMapperFactory implements MapperFactory<SvgNode, OMNode> {
+class SvgNodeMapperFactory implements MapperFactory<SvgNode, Node> {
   private SvgGwtPeer myPeer;
 
   public SvgNodeMapperFactory(SvgGwtPeer peer) {
@@ -28,37 +30,42 @@ class SvgNodeMapperFactory implements MapperFactory<SvgNode, OMNode> {
   }
 
   @Override
-  public Mapper<? extends SvgNode, ? extends OMNode> createMapper(SvgNode source) {
-    Mapper<? extends SvgNode, ? extends OMNode> result;
+  public Mapper<? extends SvgNode, ? extends Node> createMapper(SvgNode source) {
+    Mapper<? extends SvgNode, ? extends Node> result;
     if (source instanceof SvgEllipseElement) {
-      result = new SvgElementMapper<>((SvgEllipseElement) source, new OMSVGEllipseElement(), myPeer);
+      result = new SvgElementMapper<>((SvgEllipseElement) source, createSVGElement("ellipse"), myPeer);
     } else if (source instanceof SvgCircleElement) {
-      result = new SvgElementMapper<>((SvgCircleElement) source, new OMSVGCircleElement(), myPeer);
+      result = new SvgElementMapper<>((SvgCircleElement) source, createSVGElement("circle"), myPeer);
     } else if (source instanceof SvgRectElement) {
-      result = new SvgElementMapper<>((SvgRectElement) source, new OMSVGRectElement(), myPeer);
+      result = new SvgElementMapper<>((SvgRectElement) source, createSVGElement("rect"), myPeer);
     } else if (source instanceof SvgTextElement) {
-      result = new SvgElementMapper<>((SvgTextElement) source, new OMSVGTextElement(), myPeer);
+      result = new SvgElementMapper<>((SvgTextElement) source, createSVGElement("text"), myPeer);
     } else if (source instanceof SvgPathElement) {
-      result = new SvgElementMapper<>((SvgPathElement) source, new OMSVGPathElement(), myPeer);
+      result = new SvgElementMapper<>((SvgPathElement) source, createSVGElement("path"), myPeer);
     } else if (source instanceof SvgLineElement) {
-      result = new SvgElementMapper<>((SvgLineElement) source, new OMSVGLineElement(), myPeer);
+      result = new SvgElementMapper<>((SvgLineElement) source, createSVGElement("line"), myPeer);
     } else if (source instanceof SvgSvgElement) {
-      result = new SvgElementMapper<>((SvgSvgElement) source, new OMSVGSVGElement(), myPeer);
+      result = new SvgElementMapper<>((SvgSvgElement) source, createSVGElement("svg"), myPeer);
     } else if (source instanceof SvgGElement) {
-      result = new SvgElementMapper<>((SvgGElement) source, new OMSVGGElement(), myPeer);
+      result = new SvgElementMapper<>((SvgGElement) source, createSVGElement("g"), myPeer);
     } else if (source instanceof SvgStyleElement) {
-      result = new SvgElementMapper<>((SvgStyleElement) source, new OMSVGStyleElement(), myPeer);
+      result = new SvgElementMapper<>((SvgStyleElement) source, createSVGElement("style"), myPeer);
     } else if (source instanceof SvgTextNode) {
-      result = new SvgTextNodeMapper((SvgTextNode) source, new OMText(null), myPeer);
+      result = new SvgTextNodeMapper((SvgTextNode) source, Document.get().createTextNode(null), myPeer);
     } else if (source instanceof SvgTSpanElement) {
-      result = new SvgElementMapper<>((SvgTSpanElement) source, new OMSVGTSpanElement(), myPeer);
+      result = new SvgElementMapper<>((SvgTSpanElement) source, createSVGElement("tspan"), myPeer);
     } else if (source instanceof SvgDefsElement) {
-      result = new SvgElementMapper<>((SvgDefsElement) source, new OMSVGDefsElement(), myPeer);
+      result = new SvgElementMapper<>((SvgDefsElement) source, createSVGElement("defs"), myPeer);
     } else if (source instanceof SvgClipPathElement) {
-      result = new SvgElementMapper<>((SvgClipPathElement) source, new OMSVGClipPathElement(), myPeer);
+      result = new SvgElementMapper<>((SvgClipPathElement) source, createSVGElement("clipPath"), myPeer);
     } else {
       throw new IllegalStateException("Unsupported SvgNode");
     }
     return result;
   }
+
+  private native Element createSVGElement(String name) /*-{
+    return $doc.createElementNS('http://www.w3.org/2000/svg', name);
+
+  }-*/;
 }
