@@ -8,8 +8,6 @@
   <inherits name="com.google.common.base.Base" />
   <inherits name="com.google.common.collect.Collect"/>
 
-  <inherits name="org.vectomatic.libgwtsvg"/>
-
   <inherits name="jetbrains.jetpad.model.Model" />
   <inherits name="jetbrains.jetpad.geometry.Geometry"/>
   <inherits name="jetbrains.jetpad.event.Event"/>
