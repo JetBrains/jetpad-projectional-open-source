@@ -22,7 +22,6 @@ import jetbrains.jetpad.mapper.Synchronizer;
 import jetbrains.jetpad.mapper.Synchronizers;
 import jetbrains.jetpad.model.property.WritableProperty;
 import jetbrains.jetpad.projectional.view.View;
-import org.vectomatic.dom.svg.OMSVGSVGElement;
 
 class GwtViewSynchronizers {
   static Synchronizer boundsSyncrhonizer(View view, final Element el) {
