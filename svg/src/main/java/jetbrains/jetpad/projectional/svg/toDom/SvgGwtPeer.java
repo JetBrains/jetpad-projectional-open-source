@@ -15,7 +15,7 @@
  */
 package jetbrains.jetpad.projectional.svg.toDom;
 
-import com.google.gwt.dom.client.Node;
+import elemental.dom.Node;
 import jetbrains.jetpad.geometry.DoubleRectangle;
 import jetbrains.jetpad.geometry.DoubleVector;
 import jetbrains.jetpad.mapper.Mapper;

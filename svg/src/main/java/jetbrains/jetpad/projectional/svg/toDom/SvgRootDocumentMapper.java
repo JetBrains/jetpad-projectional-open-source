@@ -15,13 +15,14 @@
  */
 package jetbrains.jetpad.projectional.svg.toDom;
 
-import com.google.gwt.dom.client.Element;
+import elemental.dom.Element;
+import elemental.svg.SVGSVGElement;
 import jetbrains.jetpad.mapper.Mapper;
 import jetbrains.jetpad.mapper.MappingContext;
 import jetbrains.jetpad.projectional.svg.SvgSvgElement;
 
 public class SvgRootDocumentMapper extends Mapper<SvgSvgElement, Element> {
-  private SvgElementMapper<SvgSvgElement> myRootMapper;
+  private SvgElementMapper<SvgSvgElement, SVGSVGElement> myRootMapper;
   private SvgGwtPeer myPeer;
 
   public SvgRootDocumentMapper(SvgSvgElement source, Element target) {
@@ -38,7 +39,7 @@ public class SvgRootDocumentMapper extends Mapper<SvgSvgElement, Element> {
     myPeer = new SvgGwtPeer();
     getSource().container().setPeer(myPeer);
 
-    myRootMapper = new SvgElementMapper<>(getSource(), getTarget(), myPeer);
+    myRootMapper = new SvgElementMapper<>(getSource(), (SVGSVGElement) getTarget(), myPeer);
     myRootMapper.attachRoot();
   }
 

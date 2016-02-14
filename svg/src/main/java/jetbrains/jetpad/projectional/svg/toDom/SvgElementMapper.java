@@ -15,11 +15,12 @@
  */
 package jetbrains.jetpad.projectional.svg.toDom;
 
-import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.query.client.Function;
 import com.google.gwt.query.client.GQuery;
 import com.google.gwt.user.client.Event;
+import elemental.dom.Node;
+import elemental.svg.SVGElement;
 import jetbrains.jetpad.base.Registration;
 import jetbrains.jetpad.event.MouseEvent;
 import jetbrains.jetpad.geometry.DoubleVector;
@@ -37,11 +38,11 @@ import java.util.EnumMap;
 import java.util.Map;
 import java.util.Set;
 
-class SvgElementMapper<SourceT extends SvgElement> extends SvgNodeMapper<SourceT, Element> {
+class SvgElementMapper<SourceT extends SvgElement, TargetT extends SVGElement> extends SvgNodeMapper<SourceT, TargetT> {
   private Map<SvgEventSpec, HandlerRegistration> myHandlerRegs;
   private SvgGwtPeer myPeer;
 
-  public SvgElementMapper(SourceT source, Element target, SvgGwtPeer peer) {
+  public SvgElementMapper(SourceT source, TargetT target, SvgGwtPeer peer) {
     super(source, target, peer);
     myPeer = peer;
   }

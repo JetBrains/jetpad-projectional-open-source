@@ -27,7 +27,7 @@ import jetbrains.jetpad.projectional.view.SvgView;
 
 public class SvgViewMapper extends BaseViewMapper<SvgView, Element> {
   private static Registration map(SvgSvgElement root, Element element) {
-    final SvgRootDocumentMapper mapper = new SvgRootDocumentMapper(root, element);
+    final SvgRootDocumentMapper mapper = new SvgRootDocumentMapper(root, (elemental.dom.Element) element);
     mapper.attachRoot();
     return new Registration() {
       @Override

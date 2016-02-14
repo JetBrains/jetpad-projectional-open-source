@@ -13,6 +13,8 @@
   <inherits name="jetbrains.jetpad.event.Event"/>
   <inherits name="jetbrains.jetpad.mapper.gwt.GwtMapper"/>
 
+  <inherits name="jetbrains.jetpad.mapper.gwt.elemental.GwtElementalUtil" />
+
   <source path="">
     <exclude name="toAwt/**" />
   </source>
