@@ -104,7 +104,7 @@ public class CellContainerToDomMapper extends Mapper<CellContainer, Element> {
 
   private static boolean ourIndentInjected;
 
-  static final CellToDomBundle BUNDLE = GWT.create(CellToDomBundle.class);
+  private static final CellToDomBundle BUNDLE = GWT.create(CellToDomBundle.class);
   static final CellToDomCss CSS = BUNDLE.style();
 
   private static void ensureIndentInjected() {
