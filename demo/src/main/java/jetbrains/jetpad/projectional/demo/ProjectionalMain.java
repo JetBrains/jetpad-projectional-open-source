@@ -16,6 +16,9 @@
 package jetbrains.jetpad.projectional.demo;
 
 import com.google.gwt.core.client.EntryPoint;
+import com.google.gwt.dom.client.Element;
+import elemental.client.Browser;
+import elemental.dom.Document;
 import jetbrains.jetpad.cell.toDom.CellContainerToDomMapper;
 import jetbrains.jetpad.projectional.demo.concept.ConceptDemo;
 import jetbrains.jetpad.projectional.demo.diagram.DiagramDemo;
@@ -25,16 +28,16 @@ import jetbrains.jetpad.projectional.demo.hybridExpr.HybridExprDemo;
 import jetbrains.jetpad.projectional.demo.indentDemo.IndentDemo;
 import jetbrains.jetpad.projectional.view.toGwt.ViewToDom;
 
-import static com.google.gwt.query.client.GQuery.$;
-
 public class ProjectionalMain implements EntryPoint {
   @Override
   public void onModuleLoad() {
-    new CellContainerToDomMapper(ConceptDemo.create(), $("#conceptDemo").get(0)).attachRoot();
-    new CellContainerToDomMapper(ExprDemo.createDemo(), $("#exprDemo").get(0)).attachRoot();
-    new CellContainerToDomMapper(IndentDemo.create(), $("#indentDemo").get(0)).attachRoot();
-    new CellContainerToDomMapper(HybridExprDemo.createDemo(), $("#hybridExprDemo").get(0)).attachRoot();
-    ViewToDom.map(DiagramDemo.createContainer(), $("#diagramDemo").get(0));
-    ViewToDom.map(DiagramExprDemo.createContainer(), $("#diagramExprDemo").get(0));
+    Document doc = Browser.getDocument();
+
+    new CellContainerToDomMapper(ConceptDemo.create(), (Element) doc.getElementById("conceptDemo")).attachRoot();
+    new CellContainerToDomMapper(ExprDemo.createDemo(), (Element) doc.getElementById("#exprDemo")).attachRoot();
+    new CellContainerToDomMapper(IndentDemo.create(), (Element) doc.getElementById("#indentDemo")).attachRoot();
+    new CellContainerToDomMapper(HybridExprDemo.createDemo(), (Element) doc.getElementById("#hybridExprDemo")).attachRoot();
+    ViewToDom.map(DiagramDemo.createContainer(), (Element) doc.getElementById("diagramDemo"));
+    ViewToDom.map(DiagramExprDemo.createContainer(), (Element) doc.getElementById("diagramExprDemo"));
   }
 }
