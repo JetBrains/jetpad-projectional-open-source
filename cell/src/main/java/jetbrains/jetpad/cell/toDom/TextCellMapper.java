@@ -20,6 +20,7 @@ import com.google.gwt.user.client.Timer;
 import jetbrains.jetpad.base.Registration;
 import jetbrains.jetpad.cell.Cell;
 import jetbrains.jetpad.cell.TextCell;
+import jetbrains.jetpad.mapper.MappingContext;
 import jetbrains.jetpad.model.event.CompositeRegistration;
 import jetbrains.jetpad.model.event.EventHandler;
 import jetbrains.jetpad.model.property.PropertyChangeEvent;
@@ -43,6 +44,12 @@ class TextCellMapper extends BaseCellMapper<TextCell> {
   @Override
   protected boolean isAutoChildManagement() {
     return false;
+  }
+
+  @Override
+  protected void onAttach(MappingContext ctx) {
+    super.onAttach(ctx);
+    getTarget().addClassName(CellContainerToDomMapper.CSS.fitContentWidth());
   }
 
   @Override
