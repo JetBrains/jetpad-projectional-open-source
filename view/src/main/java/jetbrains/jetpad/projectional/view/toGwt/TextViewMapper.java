@@ -19,13 +19,8 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.user.client.DOM;
 import jetbrains.jetpad.mapper.Synchronizers;
-import jetbrains.jetpad.model.property.WritableProperty;
 import jetbrains.jetpad.projectional.domUtil.DomTextEditor;
 import jetbrains.jetpad.projectional.view.TextView;
-import jetbrains.jetpad.values.Color;
-import jetbrains.jetpad.values.FontFamily;
-
-import static com.google.gwt.query.client.GQuery.$;
 
 class TextViewMapper extends BaseViewMapper<TextView, Element> {
   TextViewMapper(ViewToDomContext ctx, TextView source) {
@@ -46,65 +41,15 @@ class TextViewMapper extends BaseViewMapper<TextView, Element> {
 
     super.registerSynchronizers(conf);
 
-    conf.add(Synchronizers.forPropsOneWay(getSource().selectionVisible(), new WritableProperty<Boolean>() {
-      @Override
-      public void set(Boolean value) {
-        editor.setSelectionVisible(value);
-      }
-    }));
-    conf.add(Synchronizers.forPropsOneWay(getSource().selectionStart(), new WritableProperty<Integer>() {
-      @Override
-      public void set(Integer value) {
-        editor.setSelectionStart(value);
-      }
-    }));
-    conf.add(Synchronizers.forPropsOneWay(getSource().text(), new WritableProperty<String>() {
-      @Override
-      public void set(String value) {
-        editor.setText(value);
-      }
-    }));
-    conf.add(Synchronizers.forPropsOneWay(getSource().textColor(), new WritableProperty<Color>() {
-      @Override
-      public void set(Color value) {
-        editor.setTextColor(value);
-      }
-    }));
-    conf.add(Synchronizers.forPropsOneWay(getSource().caretVisible(), new WritableProperty<Boolean>() {
-      @Override
-      public void set(Boolean value) {
-        editor.setCaretVisible(value);
-      }
-    }));
-    conf.add(Synchronizers.forPropsOneWay(getSource().caretPosition(), new WritableProperty<Integer>() {
-      @Override
-      public void set(Integer value) {
-        editor.setCaretPosition(value);
-      }
-    }));
-    conf.add(Synchronizers.forPropsOneWay(getSource().bold(), new WritableProperty<Boolean>() {
-      @Override
-      public void set(Boolean value) {
-        editor.setBold(value);
-      }
-    }));
-    conf.add(Synchronizers.forPropsOneWay(getSource().italic(), new WritableProperty<Boolean>() {
-      @Override
-      public void set(Boolean value) {
-        editor.setItalic(value);
-      }
-    }));
-    conf.add(Synchronizers.forPropsOneWay(getSource().fontFamily(), new WritableProperty<FontFamily>() {
-      @Override
-      public void set(FontFamily value) {
-        editor.setFontFamily(value);
-      }
-    }));
-    conf.add(Synchronizers.forPropsOneWay(getSource().fontSize(), new WritableProperty<Integer>() {
-      @Override
-      public void set(Integer value) {
-        editor.setFontSize(value);
-      }
-    }));
+    conf.add(Synchronizers.forPropsOneWay(getSource().selectionVisible(), editor::setSelectionVisible));
+    conf.add(Synchronizers.forPropsOneWay(getSource().selectionStart(), editor::setSelectionStart));
+    conf.add(Synchronizers.forPropsOneWay(getSource().text(), editor::setText));
+    conf.add(Synchronizers.forPropsOneWay(getSource().textColor(), editor::setTextColor));
+    conf.add(Synchronizers.forPropsOneWay(getSource().caretVisible(), editor::setCaretVisible));
+    conf.add(Synchronizers.forPropsOneWay(getSource().caretPosition(), editor::setCaretPosition));
+    conf.add(Synchronizers.forPropsOneWay(getSource().bold(), editor::setBold));
+    conf.add(Synchronizers.forPropsOneWay(getSource().italic(), editor::setItalic));
+    conf.add(Synchronizers.forPropsOneWay(getSource().fontFamily(), editor::setFontFamily));
+    conf.add(Synchronizers.forPropsOneWay(getSource().fontSize(), editor::setFontSize));
   }
 }
