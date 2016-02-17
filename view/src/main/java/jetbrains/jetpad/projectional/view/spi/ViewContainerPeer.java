@@ -20,7 +20,6 @@ import jetbrains.jetpad.geometry.Rectangle;
 import jetbrains.jetpad.model.property.PropertyChangeEvent;
 import jetbrains.jetpad.projectional.view.View;
 import jetbrains.jetpad.projectional.view.ViewContainer;
-import jetbrains.jetpad.base.animation.Animation;
 import jetbrains.jetpad.values.Font;
 
 public interface ViewContainerPeer {
