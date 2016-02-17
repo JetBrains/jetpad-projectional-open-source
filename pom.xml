@@ -7,13 +7,6 @@
   <version>1.1-SNAPSHOT</version>
   <packaging>pom</packaging>
 
-  <parent>
-    <groupId>jetbrains.jetpad</groupId>
-    <artifactId>dependencies</artifactId>
-    <version>1.1-SNAPSHOT</version>
-    <relativePath></relativePath>
-  </parent>
-
   <modules>
     <module>projectional-deps</module>
 
