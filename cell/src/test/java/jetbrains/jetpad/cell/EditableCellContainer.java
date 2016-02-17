@@ -138,6 +138,10 @@ public class EditableCellContainer {
     press(Key.BACKSPACE);
   }
 
+  public final void ctrlBackspace() {
+    press(Key.BACKSPACE, ModifierKey.CONTROL);
+  }
+
   public final void del() {
     press(Key.DELETE);
   }

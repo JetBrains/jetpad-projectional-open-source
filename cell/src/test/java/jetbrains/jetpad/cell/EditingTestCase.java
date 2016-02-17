@@ -126,6 +126,10 @@ public abstract class EditingTestCase extends BaseTestCase {
     myEditableCellContainer.backspace();
   }
 
+  protected final void ctrlBackspace() {
+    myEditableCellContainer.ctrlBackspace();
+  }
+
   protected final void del() {
     myEditableCellContainer.del();
   }
