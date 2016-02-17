@@ -20,8 +20,6 @@ import com.google.gwt.user.client.Window;
 import jetbrains.jetpad.geometry.Rectangle;
 import jetbrains.jetpad.geometry.Vector;
 
-import static com.google.gwt.query.client.GQuery.$;
-
 public class DomUtil {
   public static boolean hasScrollers(Element ctx) {
     if (ctx.getParentElement() == null) return false;
@@ -30,7 +28,7 @@ public class DomUtil {
   }
 
   private static boolean hasScroller(Element e) {
-    String overflow = $(e).css("overflow");
+    String overflow = e.getStyle().getOverflow();
     return "scroll".equals(overflow) || "auto".equals(overflow);
   }
 
