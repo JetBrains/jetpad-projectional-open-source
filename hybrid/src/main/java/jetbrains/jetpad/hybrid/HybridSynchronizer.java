@@ -16,7 +16,6 @@
 package jetbrains.jetpad.hybrid;
 
 import com.google.common.base.Predicates;
-import com.google.common.collect.FluentIterable;
 import com.google.common.collect.Range;
 import jetbrains.jetpad.base.Handler;
 import jetbrains.jetpad.base.Registration;
