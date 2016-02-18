@@ -16,15 +16,24 @@
 package jetbrains.jetpad.hybrid.parser;
 
 public interface Token {
-  boolean noSpaceToLeft();
-  boolean noSpaceToRight();
+  default boolean noSpaceToLeft() {
+    return false;
+  }
+
+  default boolean noSpaceToRight() {
+    return false;
+  }
 
   /**
    * If returns true, then we can invoke right transform by pressing ctrl+space on the end of the token
    */
-  boolean isRtOnEnd();
+  default boolean isRtOnEnd() {
+    return false;
+  }
 
   String text();
 
-  Token copy();
+  default Token copy() {
+    return this;
+  }
 }

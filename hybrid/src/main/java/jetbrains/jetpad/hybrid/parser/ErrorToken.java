@@ -15,7 +15,7 @@
  */
 package jetbrains.jetpad.hybrid.parser;
 
-public class ErrorToken extends BaseToken {
+public class ErrorToken implements Token {
   private String myText;
 
   public ErrorToken(String text) {
