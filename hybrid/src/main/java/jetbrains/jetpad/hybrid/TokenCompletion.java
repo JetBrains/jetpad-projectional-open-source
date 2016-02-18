@@ -192,7 +192,7 @@ class TokenCompletion {
       public List<CompletionItem> get(CompletionParameters cp) {
         List<CompletionItem> result = new ArrayList<>();
         if (!(cp.isMenu() && mySync.isHideTokensInMenu())) {
-          result.addAll(editorSpec().getTokenCompletion(input -> completer.complete(input)).get(cp));
+          result.addAll(editorSpec().getTokenCompletion(completer::complete).get(cp));
         }
         if (cp.isMenu()) {
           result.addAll(editorSpec().getAdditionalCompletion(ctx, completer).get(cp));

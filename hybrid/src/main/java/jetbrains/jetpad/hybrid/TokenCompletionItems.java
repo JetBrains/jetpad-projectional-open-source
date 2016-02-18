@@ -50,24 +50,6 @@ public class TokenCompletionItems {
     };
   }
 
-  public List<CompletionItem> forToken(final Token token, String... matchingTexts) {
-    List<CompletionItem> result = new ArrayList<>(Collections.singleton(forToken(token)));
-    for (final String match : matchingTexts) {
-      result.add(new SimpleCompletionItem(match) {
-        @Override
-        public Runnable complete(String text) {
-          return myTokenHandler.apply(token);
-        }
-
-        @Override
-        public String toString() {
-          return match + "->Token[" + token + "]";
-        }
-      });
-    }
-    return result;
-  }
-
   public List<CompletionItem> forTokens(Token ...tokens) {
     List<CompletionItem> result = new ArrayList<>();
     for (Token t : tokens) {
