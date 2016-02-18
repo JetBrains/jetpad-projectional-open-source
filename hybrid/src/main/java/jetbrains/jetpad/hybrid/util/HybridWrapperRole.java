@@ -17,6 +17,7 @@ package jetbrains.jetpad.hybrid.util;
 
 import com.google.common.base.Function;
 import com.google.common.base.Supplier;
+import com.google.common.collect.FluentIterable;
 import jetbrains.jetpad.cell.Cell;
 import jetbrains.jetpad.completion.*;
 import jetbrains.jetpad.hybrid.*;
@@ -114,7 +115,7 @@ public class HybridWrapperRole<ContainerT, WrapperT, TargetT> implements RoleCom
               return target.get();
             }
           }, completer);
-          result.addAll(compl.get(new BaseCompletionParameters()));
+          result.addAll(FluentIterable.from(compl.get(new BaseCompletionParameters())).toList());
         }
         return result;
       }

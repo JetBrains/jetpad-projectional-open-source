@@ -15,7 +15,7 @@
  */
 package jetbrains.jetpad.cell.text;
 
-import com.google.common.base.Predicate;
+import com.google.common.collect.FluentIterable;
 import jetbrains.jetpad.base.Runnables;
 import jetbrains.jetpad.cell.Cell;
 import jetbrains.jetpad.cell.TextCell;
@@ -53,13 +53,7 @@ public class ValidTextCompletionTest extends CompletionTestCase {
       @Override
       protected CellTrait getBase(Cell cell) {
         return
-          TextEditing.validTextEditing(
-            new Predicate<String>() {
-              @Override
-              public boolean apply(String input) {
-                return "".equals(input) || "u".equals(input) || "qaz".equals(input);
-              }
-            });
+          TextEditing.validTextEditing(input -> "".equals(input) || "u".equals(input) || "qaz".equals(input));
       }
 
       @Override
@@ -67,7 +61,7 @@ public class ValidTextCompletionTest extends CompletionTestCase {
         if (spec == Completion.COMPLETION) {
           return new CompletionSupplier() {
             @Override
-            public List<CompletionItem> get(CompletionParameters cp) {
+            public Iterable<CompletionItem> get(CompletionParameters cp) {
               class LowPriorityCompletionItem extends SimpleCompletionItem {
                 LowPriorityCompletionItem(String matchingText) {
                   super(matchingText);
@@ -97,17 +91,15 @@ public class ValidTextCompletionTest extends CompletionTestCase {
                 }
               }
 
-              List<CompletionItem> result = new ArrayList<>();
-              result.addAll(createCompletion("a", "c", "ae", "zz", "d", "u", "q").get(cp));
-              result.add(new LowPriorityCompletionItem("d"));
-              result.add(new LowPriorityCompletionItem("xx"));
-              result.add(new LowPriorityCompletionItem("qq"));
-              result.add(new LowPriorityCompletionItem("v"));
-              result.add(new LowPriorityCompletionItem("va"));
-              result.add(new SetTextToCompletionItem("var"));
-              result.add(new SetTextToCompletionItem("foobar"));
-              result.add(new ActuallySetTextToCompletionItem("foo", "qaz"));
-              return result;
+              return FluentIterable.from(createCompletion("a", "c", "ae", "zz", "d", "u", "q").get(cp))
+                .append(new LowPriorityCompletionItem("d"))
+                .append(new LowPriorityCompletionItem("xx"))
+                .append(new LowPriorityCompletionItem("qq"))
+                .append(new LowPriorityCompletionItem("v"))
+                .append(new LowPriorityCompletionItem("va"))
+                .append(new SetTextToCompletionItem("var"))
+                .append(new SetTextToCompletionItem("foobar"))
+                .append(new ActuallySetTextToCompletionItem("foo", "qaz"));
             }
           };
         }

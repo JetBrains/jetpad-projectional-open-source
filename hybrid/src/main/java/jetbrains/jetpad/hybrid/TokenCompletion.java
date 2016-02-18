@@ -17,6 +17,7 @@ package jetbrains.jetpad.hybrid;
 
 import com.google.common.base.Function;
 import com.google.common.base.Objects;
+import com.google.common.collect.FluentIterable;
 import jetbrains.jetpad.base.Async;
 import jetbrains.jetpad.base.Asyncs;
 import jetbrains.jetpad.base.Runnables;
@@ -172,12 +173,12 @@ class TokenCompletion {
       }
 
       @Override
-      public List<CompletionItem> get(final CompletionParameters cp) {
+      public Iterable<CompletionItem> get(final CompletionParameters cp) {
         return tokenCompletion(createContext(cp), createCompleter(cp)).get(cp);
       }
 
       @Override
-      public Async<List<CompletionItem>> getAsync(CompletionParameters cp) {
+      public Async<? extends Iterable<CompletionItem>> getAsync(CompletionParameters cp) {
         if (cp.isMenu()) {
           return editorSpec().getAdditionalCompletion(createContext(cp), createCompleter(cp)).getAsync(cp);
         }
@@ -192,17 +193,17 @@ class TokenCompletion {
       public List<CompletionItem> get(CompletionParameters cp) {
         List<CompletionItem> result = new ArrayList<>();
         if (!(cp.isMenu() && mySync.isHideTokensInMenu())) {
-          result.addAll(editorSpec().getTokenCompletion(completer::complete).get(cp));
+          result.addAll(FluentIterable.from(editorSpec().getTokenCompletion(completer::complete).get(cp)).toList());
         }
         if (cp.isMenu()) {
-          result.addAll(editorSpec().getAdditionalCompletion(ctx, completer).get(cp));
+          result.addAll(FluentIterable.from(editorSpec().getAdditionalCompletion(ctx, completer).get(cp)).toList());
           ctx.getPrefix();
         }
         return result;
       }
 
       @Override
-      public Async<List<CompletionItem>> getAsync(CompletionParameters cp) {
+      public Async<? extends Iterable<CompletionItem>> getAsync(CompletionParameters cp) {
         if (cp.isMenu()) {
           return editorSpec().getAdditionalCompletion(ctx, completer).getAsync(cp);
         }

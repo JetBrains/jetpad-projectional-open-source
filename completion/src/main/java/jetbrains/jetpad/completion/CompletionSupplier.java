@@ -15,6 +15,8 @@
  */
 package jetbrains.jetpad.completion;
 
+import com.google.common.collect.FluentIterable;
+import com.google.common.collect.Iterables;
 import jetbrains.jetpad.base.*;
 
 import java.util.ArrayList;
@@ -43,21 +45,21 @@ public abstract class CompletionSupplier {
     return create(Arrays.asList(items));
   }
 
-  public List<CompletionItem> get(CompletionParameters cp) {
+  public Iterable<CompletionItem> get(CompletionParameters cp) {
     return Collections.emptyList();
   }
 
-  public Async<List<CompletionItem>> getAsync(CompletionParameters cp) {
+  public Async<? extends Iterable<CompletionItem>> getAsync(CompletionParameters cp) {
     return Asyncs.constant(Collections.<CompletionItem>emptyList());
   }
 
   public final boolean isAsyncEmpty(CompletionParameters cp) {
-    Async<List<CompletionItem>> async = getAsync(cp);
+    Async<? extends Iterable<CompletionItem>> async = getAsync(cp);
     final Value<Boolean> loaded = new Value<>(false);
     final List<CompletionItem> items = new ArrayList<>();
     final Registration reg = async.onSuccess(result -> {
       loaded.set(true);
-      items.addAll(result);
+      items.addAll(FluentIterable.from(result).toList());
     });
 
     reg.remove();
@@ -69,7 +71,7 @@ public abstract class CompletionSupplier {
   }
 
   public final boolean isEmpty(CompletionParameters cp) {
-    return get(cp).isEmpty();
+    return FluentIterable.from(get(cp)).isEmpty();
   }
 
 }

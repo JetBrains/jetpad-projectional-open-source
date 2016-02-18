@@ -15,6 +15,7 @@
  */
 package jetbrains.jetpad.cell.completion;
 
+import com.google.common.collect.FluentIterable;
 import jetbrains.jetpad.base.Async;
 import jetbrains.jetpad.base.Handler;
 import jetbrains.jetpad.base.SimpleAsync;
@@ -33,14 +34,14 @@ public class Completion {
 
   public static Async<List<CompletionItem>> allCompletion(Cell cell, CompletionParameters params) {
     final CompletionSupplier supplier = cell.get(COMPLETION);
-    final List<CompletionItem> syncCompletion = supplier.get(params);
-    Async<List<CompletionItem>> asyncCompletion = supplier.getAsync(params);
+    final Iterable<CompletionItem> syncCompletion = supplier.get(params);
+    Async<? extends Iterable<CompletionItem>> asyncCompletion = supplier.getAsync(params);
 
     final SimpleAsync<List<CompletionItem>> allItems = new SimpleAsync<>();
     asyncCompletion.onResult(items -> {
-      List<CompletionItem> result = new ArrayList<>(items);
-      result.addAll(syncCompletion);
-      allItems.success(result);
+      allItems.success(FluentIterable.from(items)
+        .append(syncCompletion)
+        .toList());
     }, allItems::failure);
 
     return allItems;
