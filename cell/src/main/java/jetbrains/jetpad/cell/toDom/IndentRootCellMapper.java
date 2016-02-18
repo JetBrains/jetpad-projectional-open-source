@@ -163,28 +163,22 @@ class IndentRootCellMapper extends BaseCellMapper<IndentCell> {
       }
 
       private void updateCounters(Cell cell, final CellPropertySpec<?> prop, final PropertyChangeEvent<?> event) {
-        IndentUtil.iterateLeaves(cell, new Handler<Cell>() {
-          @Override
-          public void handle(Cell item) {
-            BaseCellMapper<?> mapper = (BaseCellMapper<?>) getDescendantMapper(item);
-            if (mapper == null) {
-              throw new IllegalStateException();
-            }
-            if (CounterUtil.update(mapper, prop, event)) {
-              mapper.refreshProperties();
-            }
+        IndentUtil.iterateLeaves(cell, item -> {
+          BaseCellMapper<?> mapper = (BaseCellMapper<?>) getDescendantMapper(item);
+          if (mapper == null) {
+            throw new IllegalStateException();
+          }
+          if (CounterUtil.update(mapper, prop, event)) {
+            mapper.refreshProperties();
           }
         });
       }
 
       private void updateBackground(Cell cell) {
-        IndentUtil.iterateLeaves(cell, new Handler<Cell>() {
-          @Override
-          public void handle(Cell item) {
-            BaseCellMapper<?> mapper = (BaseCellMapper<?>) getDescendantMapper(item);
-            mapper.setAncestorBackground(AncestorUtil.getAncestorBackground(getSource(), item));
-            mapper.refreshProperties();
-          }
+        IndentUtil.iterateLeaves(cell, item -> {
+          BaseCellMapper<?> mapper = (BaseCellMapper<?>) getDescendantMapper(item);
+          mapper.setAncestorBackground(AncestorUtil.getAncestorBackground(getSource(), item));
+          mapper.refreshProperties();
         });
       }
     });

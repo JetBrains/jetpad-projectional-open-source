@@ -37,19 +37,11 @@ public class Completion {
     Async<List<CompletionItem>> asyncCompletion = supplier.getAsync(params);
 
     final SimpleAsync<List<CompletionItem>> allItems = new SimpleAsync<>();
-    asyncCompletion.onResult(new Handler<List<CompletionItem>>() {
-      @Override
-      public void handle(List<CompletionItem> items) {
-        List<CompletionItem> result = new ArrayList<>(items);
-        result.addAll(syncCompletion);
-        allItems.success(result);
-      }
-    }, new Handler<Throwable>() {
-      @Override
-      public void handle(Throwable item) {
-        allItems.failure(item);
-      }
-    });
+    asyncCompletion.onResult(items -> {
+      List<CompletionItem> result = new ArrayList<>(items);
+      result.addAll(syncCompletion);
+      allItems.success(result);
+    }, allItems::failure);
 
     return allItems;
   }

@@ -25,12 +25,7 @@ import jetbrains.jetpad.model.property.Selector;
 
 public class CellProperties {
   public static ReadableProperty<Boolean> focusIn(final Cell cell) {
-    final ReadableProperty<Cell> focusedCell = Properties.select(cell.cellContainer(), new Selector<CellContainer, ReadableProperty<Cell>>() {
-      @Override
-      public ReadableProperty<Cell> select(CellContainer source) {
-        return source.focusedCell;
-      }
-    });
+    final ReadableProperty<Cell> focusedCell = Properties.select(cell.cellContainer(), source -> source.focusedCell);
 
     return new DerivedProperty<Boolean>(focusedCell) {
       @Override

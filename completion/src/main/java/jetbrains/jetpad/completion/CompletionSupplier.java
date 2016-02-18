@@ -55,12 +55,9 @@ public abstract class CompletionSupplier {
     Async<List<CompletionItem>> async = getAsync(cp);
     final Value<Boolean> loaded = new Value<>(false);
     final List<CompletionItem> items = new ArrayList<>();
-    final Registration reg = async.onSuccess(new Handler<List<CompletionItem>>() {
-      @Override
-      public void handle(List<CompletionItem> result) {
-        loaded.set(true);
-        items.addAll(result);
-      }
+    final Registration reg = async.onSuccess(result -> {
+      loaded.set(true);
+      items.addAll(result);
     });
 
     reg.remove();

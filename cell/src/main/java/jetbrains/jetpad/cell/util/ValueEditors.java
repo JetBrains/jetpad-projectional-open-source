@@ -97,17 +97,7 @@ public class ValueEditors {
       }
     });
 
-    return Properties.map(validatedProperty(textCell.text(), new MyEnumValidator()), new Function<String, EnumT>() {
-        @Override
-        public EnumT apply(String s) {
-          return Strings.isNullOrEmpty(s) ? null : Enums.valueOf(cls, s);
-        }
-      }, new Function<EnumT, String>() {
-        @Override
-        public String apply(EnumT enumT) {
-          return enumT == null ? null : "" + enumT;
-        }
-      }
+    return Properties.map(validatedProperty(textCell.text(), new MyEnumValidator()), s -> Strings.isNullOrEmpty(s) ? null : Enums.valueOf(cls, s), enumT -> enumT == null ? null : "" + enumT
     );
   }
 
@@ -115,17 +105,7 @@ public class ValueEditors {
     textCell.addTrait(TextEditing.validTextEditing(Validators.unsignedInteger(), Color.BLUE));
     Property<String> validated = validatedProperty(textCell.text(), Validators.unsignedInteger());
 
-    return Properties.map(validated, new Function<String, Integer>() {
-        @Override
-        public Integer apply(String s) {
-          return s == null ? null : Integer.parseInt(s);
-        }
-      }, new Function<Integer, String>() {
-        @Override
-        public String apply(Integer integer) {
-          return integer == null ? null : "" + integer;
-        }
-      }
+    return Properties.map(validated, s -> s == null ? null : Integer.parseInt(s), integer -> integer == null ? null : "" + integer
     );
   }
 
@@ -172,17 +152,6 @@ public class ValueEditors {
       }
     });
 
-    return Properties.map(textCell.text(), new Function<String, Boolean>() {
-        @Override
-        public Boolean apply(String s) {
-          return s == null ? null : Boolean.parseBoolean(s);
-        }
-      }, new Function<Boolean, String>() {
-        @Override
-        public String apply(Boolean bool) {
-          return "" + bool;
-        }
-      }
-    );
+    return Properties.map(textCell.text(), s -> s == null ? null : Boolean.parseBoolean(s), (bool) -> "" + bool);
   }
 }
