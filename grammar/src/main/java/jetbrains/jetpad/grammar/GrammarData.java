@@ -77,7 +77,7 @@ class GrammarData {
 
   private void calculateFirst() {
     for (NonTerminal nt : myGrammar.getNonTerminals()) {
-      myFirst.put(nt, new LinkedHashSet<Terminal>());
+      myFirst.put(nt, new LinkedHashSet<>());
     }
 
     boolean hasChanges = true;
@@ -109,7 +109,7 @@ class GrammarData {
 
   private void calculateFollow() {
     for (NonTerminal nt : myGrammar.getNonTerminals()) {
-      myFollow.put(nt, new LinkedHashSet<Terminal>());
+      myFollow.put(nt, new LinkedHashSet<>());
     }
 
     boolean hasChanges = true;

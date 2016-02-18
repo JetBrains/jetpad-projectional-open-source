@@ -67,83 +67,74 @@ class TokenCompletion {
   }
 
   CompletionSupplier placeholderCompletion(final Cell placeholder) {
-    return tokenCompletion(new PlaceholderCompletionContext(), new BaseCompleter() {
-      @Override
-      public Runnable complete(int selectionIndex, Token... tokens) {
-        CompletionController controller = placeholder.get(Completion.COMPLETION_CONTROLLER);
-        boolean wasActive = controller.isActive();
+    return tokenCompletion(new PlaceholderCompletionContext(), (selectionIndex, tokens) -> {
+      CompletionController controller = placeholder.get(Completion.COMPLETION_CONTROLLER);
+      boolean wasActive = controller.isActive();
 
-        tokenListEditor().tokens.addAll(Arrays.asList(tokens));
-        tokenListEditor().updateToPrintedTokens();
+      tokenListEditor().tokens.addAll(Arrays.asList(tokens));
+      tokenListEditor().updateToPrintedTokens();
 
-        Runnable result = tokenOperations().selectOnCreation(selectionIndex, LAST);
-        if (wasActive) {
-          result = seq(result, activateCompletion(selectionIndex));
-        }
-
-        return result;
+      Runnable result = tokenOperations().selectOnCreation(selectionIndex, LAST);
+      if (wasActive) {
+        result = seq(result, activateCompletion(selectionIndex));
       }
+
+      return result;
     });
   }
 
   CompletionSupplier tokenCompletion(final Cell tokenCell) {
     final int index = mySync.tokenCells().indexOf(tokenCell);
-    return tokenCompletion(new TokenCompletionContext(index), new BaseCompleter() {
-      @Override
-      public Runnable complete(int selectionIndex, Token... tokens) {
-        final int caretPosition;
-        String oldText = null;
-        SelectionPosition position = LAST;
-        if (tokenCell instanceof TextCell) {
-          TextCell cell = (TextCell) tokenCell;
-          caretPosition = cell.caretPosition().get();
-          oldText = cell.text().get();
-          if (caretPosition == 0) {
-            position = FIRST;
-          } else if (caretPosition == cell.text().get().length()) {
-            position = LAST;
-          } else {
-            position = null;
-          }
-        } else {
-          caretPosition = -1;
-        }
-
-
-        CompletionController controller = tokenCell.get(Completion.COMPLETION_CONTROLLER);
-        final boolean wasCompletionActive = controller != null && controller.isActive();
-
-        tokenListEditor().tokens.remove(index);
-        int i = index;
-        for (Token t : tokens) {
-          tokenListEditor().tokens.add(i++, t);
-        }
-
-        tokenListEditor().updateToPrintedTokens();
-
-        final Cell targetCell =  mySync.tokenCells().get(index + selectionIndex);
-        if (!(targetCell instanceof TextCell) || !Objects.equal(((TextCell) targetCell).text().get(), oldText)) {
+    return tokenCompletion(new TokenCompletionContext(index), (selectionIndex, tokens) -> {
+      final int caretPosition;
+      String oldText = null;
+      SelectionPosition position = LAST;
+      if (tokenCell instanceof TextCell) {
+        TextCell cell = (TextCell) tokenCell;
+        caretPosition = cell.caretPosition().get();
+        oldText = cell.text().get();
+        if (caretPosition == 0) {
+          position = FIRST;
+        } else if (caretPosition == cell.text().get().length()) {
           position = LAST;
-        }
-
-        Runnable result;
-        if (position == null) {
-          result = new Runnable() {
-            @Override
-            public void run() {
-              targetCell.focus();
-              ((TextCell) targetCell).caretPosition().set(caretPosition);
-            }
-          };
         } else {
-          result = mySync.tokenOperations().selectOnCreation(index + selectionIndex, position);
+          position = null;
         }
-
-        if (wasCompletionActive) {
-          result = seq(result, activateCompletion(index + selectionIndex));
-        }
-        return result;
+      } else {
+        caretPosition = -1;
       }
+
+
+      CompletionController controller = tokenCell.get(Completion.COMPLETION_CONTROLLER);
+      final boolean wasCompletionActive = controller != null && controller.isActive();
+
+      tokenListEditor().tokens.remove(index);
+      int i = index;
+      for (Token t : tokens) {
+        tokenListEditor().tokens.add(i++, t);
+      }
+
+      tokenListEditor().updateToPrintedTokens();
+
+      final Cell targetCell =  mySync.tokenCells().get(index + selectionIndex);
+      if (!(targetCell instanceof TextCell) || !Objects.equal(((TextCell) targetCell).text().get(), oldText)) {
+        position = LAST;
+      }
+
+      Runnable result;
+      if (position == null) {
+        result = () -> {
+          targetCell.focus();
+          ((TextCell) targetCell).caretPosition().set(caretPosition);
+        };
+      } else {
+        result = mySync.tokenOperations().selectOnCreation(index + selectionIndex, position);
+      }
+
+      if (wasCompletionActive) {
+        result = seq(result, activateCompletion(index + selectionIndex));
+      }
+      return result;
     });
   }
 
@@ -154,24 +145,21 @@ class TokenCompletion {
     return new CompletionSupplier() {
 
       private Completer createCompleter(final CompletionParameters cp) {
-        return new BaseCompleter() {
-          @Override
-          public Runnable complete(int selectionIndex, Token... tokens) {
-            int i = index + delta;
-            ObservableList<Token> editorTokenList = tokenListEditor().tokens;
-            if (i < editorTokenList.size() && tokens.length >= 1 && tokens[0] instanceof ValueToken && editorTokenList.get(i) instanceof ValueToken) {
-              editorTokenList.remove(i);
-            }
-            for (Token t : tokens) {
-              editorTokenList.add(i++, t);
-            }
-            tokenListEditor().updateToPrintedTokens();
-            Runnable result = tokenOperations().selectOnCreation(index + delta + selectionIndex, LAST);
-            if (cp.isEndRightTransform() && !cp.isMenu()) {
-              result = seq(result, activateCompletion(index + delta + selectionIndex));
-            }
-            return result;
+        return (selectionIndex, tokens) -> {
+          int i = index + delta;
+          ObservableList<Token> editorTokenList = tokenListEditor().tokens;
+          if (i < editorTokenList.size() && tokens.length >= 1 && tokens[0] instanceof ValueToken && editorTokenList.get(i) instanceof ValueToken) {
+            editorTokenList.remove(i);
           }
+          for (Token t : tokens) {
+            editorTokenList.add(i++, t);
+          }
+          tokenListEditor().updateToPrintedTokens();
+          Runnable result = tokenOperations().selectOnCreation(index + delta + selectionIndex, LAST);
+          if (cp.isEndRightTransform() && !cp.isMenu()) {
+            result = seq(result, activateCompletion(index + delta + selectionIndex));
+          }
+          return result;
         };
       }
 
@@ -193,7 +181,7 @@ class TokenCompletion {
         if (cp.isMenu()) {
           return editorSpec().getAdditionalCompletion(createContext(cp), createCompleter(cp)).getAsync(cp);
         }
-        return Asyncs.<List<CompletionItem>>constant(new ArrayList<CompletionItem>());
+        return Asyncs.<List<CompletionItem>>constant(new ArrayList<>());
       }
     };
   }
@@ -204,12 +192,7 @@ class TokenCompletion {
       public List<CompletionItem> get(CompletionParameters cp) {
         List<CompletionItem> result = new ArrayList<>();
         if (!(cp.isMenu() && mySync.isHideTokensInMenu())) {
-          result.addAll(editorSpec().getTokenCompletion(new Function<Token, Runnable>() {
-            @Override
-            public Runnable apply(Token input) {
-              return completer.complete(input);
-            }
-          }).get(cp));
+          result.addAll(editorSpec().getTokenCompletion(input -> completer.complete(input)).get(cp));
         }
         if (cp.isMenu()) {
           result.addAll(editorSpec().getAdditionalCompletion(ctx, completer).get(cp));
@@ -223,19 +206,16 @@ class TokenCompletion {
         if (cp.isMenu()) {
           return editorSpec().getAdditionalCompletion(ctx, completer).getAsync(cp);
         }
-        return Asyncs.<List<CompletionItem>>constant(new ArrayList<CompletionItem>());
+        return Asyncs.<List<CompletionItem>>constant(new ArrayList<>());
       }
     };
   }
 
   Token completeToken(String text) {
     final Value<Token> result = new Value<>();
-    CompletionItems completion = completion(new Function<Token, Runnable>() {
-      @Override
-      public Runnable apply(Token token) {
-        result.set(token);
-        return Runnables.EMPTY;
-      }
+    CompletionItems completion = completion(token -> {
+      result.set(token);
+      return Runnables.EMPTY;
     });
     List<CompletionItem> matches = completion.matches(text);
     if (matches.size() == 1) {
@@ -246,13 +226,10 @@ class TokenCompletion {
   }
 
   private Runnable activateCompletion(final int index) {
-    return new Runnable() {
-      @Override
-      public void run() {
-        CompletionController ctrl = mySync.tokenCells().get(index).get(Completion.COMPLETION_CONTROLLER);
-        if (ctrl.hasAmbiguousMatches()) {
-          ctrl.activate();
-        }
+    return () -> {
+      CompletionController ctrl = mySync.tokenCells().get(index).get(Completion.COMPLETION_CONTROLLER);
+      if (ctrl.hasAmbiguousMatches()) {
+        ctrl.activate();
       }
     };
   }
