@@ -18,7 +18,6 @@ package jetbrains.jetpad.hybrid;
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 import jetbrains.jetpad.base.Validators;
-import jetbrains.jetpad.completion.BaseCompletionItem;
 import jetbrains.jetpad.completion.CompletionItem;
 import jetbrains.jetpad.completion.SimpleCompletionItem;
 import jetbrains.jetpad.hybrid.parser.BoolValueToken;
@@ -86,7 +85,7 @@ public class TokenCompletionItems {
   }
 
   public CompletionItem forId(final Predicate<String> idPredicate) {
-    return new BaseCompletionItem() {
+    return new CompletionItem() {
       @Override
       public String visibleText(String text) {
         return "id";
@@ -116,7 +115,7 @@ public class TokenCompletionItems {
   }
 
   public CompletionItem forNumber() {
-    return new BaseCompletionItem() {
+    return new CompletionItem() {
       @Override
       public String visibleText(String text) {
         return "number";

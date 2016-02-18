@@ -17,7 +17,7 @@ package jetbrains.jetpad.completion;
 
 import javax.annotation.Nonnull;
 
-public abstract class SimpleCompletionItem extends BaseCompletionItem {
+public abstract class SimpleCompletionItem implements CompletionItem {
   private String myMatchingText;
   private String myVisibleText;
 

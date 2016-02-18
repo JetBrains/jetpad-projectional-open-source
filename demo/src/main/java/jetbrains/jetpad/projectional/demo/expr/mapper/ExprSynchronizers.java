@@ -18,7 +18,7 @@ package jetbrains.jetpad.projectional.demo.expr.mapper;
 import com.google.common.base.Supplier;
 import jetbrains.jetpad.base.Validators;
 import jetbrains.jetpad.cell.Cell;
-import jetbrains.jetpad.completion.BaseCompletionItem;
+import jetbrains.jetpad.completion.CompletionItem;
 import jetbrains.jetpad.completion.CompletionSupplier;
 import jetbrains.jetpad.completion.SimpleCompletionItem;
 import jetbrains.jetpad.mapper.Mapper;
@@ -116,7 +116,7 @@ public class ExprSynchronizers {
           return target.set(new ParensExpression());
         }
       },
-      new BaseCompletionItem() {
+      new CompletionItem() {
         @Override
         public String visibleText(String text) {
           return "number";
