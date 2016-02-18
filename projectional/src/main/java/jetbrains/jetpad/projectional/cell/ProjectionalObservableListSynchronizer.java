@@ -96,14 +96,11 @@ class ProjectionalObservableListSynchronizer<ContextT, SourceItemT> extends Base
         }
 
         if (spec == ITEM_HANDLER) {
-          return new ItemHandler() {
-            @Override
-            public Runnable addEmptyAfter() {
-              int index = mySource.indexOf(child);
-              final SourceItemT newItem = newItem();
-              mySource.add(index + 1, newItem);
-              return selectOnCreation(index + 1);
-            }
+          return (ItemHandler) () -> {
+            int index = mySource.indexOf(child);
+            final SourceItemT newItem = newItem();
+            mySource.add(index + 1, newItem);
+            return selectOnCreation(index + 1);
           };
         }
 

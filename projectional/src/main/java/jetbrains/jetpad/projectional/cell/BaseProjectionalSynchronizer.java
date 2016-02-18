@@ -259,12 +259,7 @@ abstract class BaseProjectionalSynchronizer<SourceT, ContextT, SourceItemT> impl
 
   protected Runnable getOnLastItemDeleted() {
     if (myOnLastItemDeleted == null) {
-      return new Runnable() {
-        @Override
-        public void run() {
-          myTargetCellList.getPlaceHolder().focus();
-        }
-      };
+      return () -> myTargetCellList.getPlaceHolder().focus();
     }
     return myOnLastItemDeleted;
   }

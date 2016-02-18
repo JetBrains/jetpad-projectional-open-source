@@ -35,13 +35,10 @@ public class AutoPopupController {
         final Cell newFocus = event.getNewValue();
         final int currentEvent = eventCount;
         if (newFocus instanceof TextCell) {
-          container.getEdt().schedule(1500, new Runnable() {
-            @Override
-            public void run() {
-              CompletionController controller = newFocus.get(Completion.COMPLETION_CONTROLLER);
-              if (eventCount == currentEvent && controller != null && !controller.isActive() && controller.canActivate()) {
-                controller.activate();
-              }
+          container.getEdt().schedule(1500, () -> {
+            CompletionController controller = newFocus.get(Completion.COMPLETION_CONTROLLER);
+            if (eventCount == currentEvent && controller != null && !controller.isActive() && controller.canActivate()) {
+              controller.activate();
             }
           });
         }
