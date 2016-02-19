@@ -30,15 +30,12 @@ public class CellActions {
       throw new NullPointerException();
     }
 
-    return new Runnable() {
-      @Override
-      public void run() {
-        if (!cell.focusable().get()) {
-          throw new IllegalStateException();
-        }
-        cell.focus();
-        cell.scrollTo();
+    return () -> {
+      if (!cell.focusable().get()) {
+        throw new IllegalStateException();
       }
+      cell.focus();
+      cell.scrollTo();
     };
   }
 
@@ -47,16 +44,13 @@ public class CellActions {
       throw new NullPointerException();
     }
 
-    return new Runnable() {
-      @Override
-      public void run() {
-        if (!cell.focusable().get()) {
-          throw new IllegalStateException();
-        }
-        cell.get(PositionHandler.PROPERTY).home();
-        cell.focus();
-        cell.scrollTo();
+    return () -> {
+      if (!cell.focusable().get()) {
+        throw new IllegalStateException();
       }
+      cell.get(PositionHandler.PROPERTY).home();
+      cell.focus();
+      cell.scrollTo();
     };
   }
 
@@ -65,16 +59,13 @@ public class CellActions {
       throw new NullPointerException();
     }
 
-    return new Runnable() {
-      @Override
-      public void run() {
-        if (!cell.focusable().get()) {
-          throw new IllegalStateException();
-        }
-        cell.get(PositionHandler.PROPERTY).end();
-        cell.focus();
-        cell.scrollTo();
+    return () -> {
+      if (!cell.focusable().get()) {
+        throw new IllegalStateException();
       }
+      cell.get(PositionHandler.PROPERTY).end();
+      cell.focus();
+      cell.scrollTo();
     };
   }
 
@@ -83,12 +74,7 @@ public class CellActions {
       throw new NullPointerException();
     }
 
-    return new Runnable() {
-      @Override
-      public void run() {
-        toHome(Composites.firstFocusable(cell)).run();
-      }
-    };
+    return () -> toHome(Composites.firstFocusable(cell)).run();
   }
 
   public static Runnable toLastFocusable(final Cell cell) {
@@ -96,12 +82,9 @@ public class CellActions {
       throw new NullPointerException();
     }
 
-    return new Runnable() {
-      @Override
-      public void run() {
-        Cell lf = Composites.lastFocusable(cell);
-        toEnd(lf).run();
-      }
+    return () -> {
+      Cell lf = Composites.lastFocusable(cell);
+      toEnd(lf).run();
     };
   }
 
@@ -118,37 +101,28 @@ public class CellActions {
       throw new NullPointerException();
     }
 
-    return new Runnable() {
-      @Override
-      public void run() {
-        cell.focus();
-        cell.caretPosition().set(pos);
-        cell.scrollTo();
-      }
+    return () -> {
+      cell.focus();
+      cell.caretPosition().set(pos);
+      cell.scrollTo();
     };
   }
 
   public static Runnable showCompletion(final Cell cell) {
-    return new Runnable() {
-      @Override
-      public void run() {
-        cell.focus();
-        CompletionController controller = cell.get(Completion.COMPLETION_CONTROLLER);
-        if (controller == null || !controller.canActivate() || controller.isActive()) return;
-        controller.activate();
-      }
+    return () -> {
+      cell.focus();
+      CompletionController controller = cell.get(Completion.COMPLETION_CONTROLLER);
+      if (controller == null || !controller.canActivate() || controller.isActive()) return;
+      controller.activate();
     };
   }
 
   public static Runnable ifAction(final ReadableProperty<Boolean> cond, final Runnable ifTrue, final Runnable ifFalse) {
-    return new Runnable() {
-      @Override
-      public void run() {
-        if (cond.get()) {
-          ifTrue.run();
-        } else {
-          ifFalse.run();
-        }
+    return () -> {
+      if (cond.get()) {
+        ifTrue.run();
+      } else {
+        ifFalse.run();
       }
     };
   }

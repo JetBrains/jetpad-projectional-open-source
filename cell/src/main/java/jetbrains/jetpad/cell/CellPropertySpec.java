@@ -26,12 +26,7 @@ public class CellPropertySpec<ValueT> {
   }
 
   public CellPropertySpec(String name, final ValueT defaultValue) {
-    this(name, new Function<Cell, ValueT>() {
-      @Override
-      public ValueT apply(Cell cell) {
-        return defaultValue;
-      }
-    });
+    this(name, cell -> defaultValue);
   }
 
   public CellPropertySpec(String name, Function<Cell, ValueT> defaultValue) {

@@ -31,7 +31,6 @@ import jetbrains.jetpad.model.event.CompositeRegistration;
 import jetbrains.jetpad.model.property.DerivedProperty;
 import jetbrains.jetpad.model.property.Properties;
 import jetbrains.jetpad.model.property.ReadableProperty;
-import jetbrains.jetpad.model.property.WritableProperty;
 import jetbrains.jetpad.values.Color;
 
 import java.util.Arrays;

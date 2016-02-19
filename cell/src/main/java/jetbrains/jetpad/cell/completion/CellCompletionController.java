@@ -65,12 +65,7 @@ public final class CellCompletionController implements CompletionController {
     }
     myCell.set(ACTIVE, true);
     Runnable state = myCell.getContainer().saveState();
-    Runnable deactivate = new Runnable() {
-      @Override
-      public void run() {
-        CellCompletionController.this.doDeactivate();
-      }
-    };
+    Runnable deactivate = CellCompletionController.this::doDeactivate;
     CompletionSupport.showCompletion(
         myCell.get(CompletionSupport.EDITOR),
         Completion.allCompletion(myCell, menuCompletionParameters()),
