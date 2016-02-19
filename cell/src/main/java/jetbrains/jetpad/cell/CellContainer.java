@@ -283,11 +283,11 @@ public class CellContainer {
       r.run();
     } else {
       myInCommand = true;
-      myListeners.fire(CellContainerListener::onBeforeCommand);
+      myListeners.fire(l -> l.onBeforeCommand());
       try {
         r.run();
       } finally {
-        myListeners.fire(CellContainerListener::onAfterCommand);
+        myListeners.fire(l -> l.onAfterCommand());
         myInCommand = false;
       }
     }
