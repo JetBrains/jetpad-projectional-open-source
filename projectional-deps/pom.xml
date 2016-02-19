@@ -17,13 +17,8 @@
   </parent>
 
   <properties>
-    <!--<guava.version>20.0-SNAPSHOT</guava.version>-->
-    <!--<gwtquery.version>1.5-beta1</gwtquery.version>-->
-    <!--<gwt.version>2.8.0-beta1</gwt.version>-->
-    <!--<gwtplugin.version>2.8.0-beta1</gwtplugin.version>-->
-
-    <!--<java.source.level>1.8</java.source.level>-->
-    <!--<java.target.level>1.8</java.target.level>-->
+    <java.source.level>1.7</java.source.level>
+    <java.target.level>1.7</java.target.level>
   </properties>
 
   <dependencies>
