@@ -168,9 +168,12 @@ class TokenOperations<SourceT> {
           tokens().set(index - 1, item);
         }
       };
-      completer = t -> {
-        tokenHandler.handle(t);
-        return select(index - 1, 0);
+      completer = new Function<Token, Runnable>() {
+        @Override
+        public Runnable apply(Token token) {
+          tokenHandler.handle(token);
+          return select(index - 1, 0);
+        }
       };
     } else {
       String currentText = token.text();
@@ -188,9 +191,12 @@ class TokenOperations<SourceT> {
           tokens().set(index, item);
         }
       };
-      completer = t -> {
-        tokenHandler.handle(t);
-        return select(index, 0);
+      completer = new Function<Token, Runnable>() {
+        @Override
+        public Runnable apply(Token token) {
+          tokenHandler.handle(token);
+          return select(index, 0);
+        }
       };
     }
 
@@ -234,7 +240,12 @@ class TokenOperations<SourceT> {
       }
     }
 
-    CompletionItems completion = tc.completion(token -> Runnables.EMPTY);
+    CompletionItems completion = tc.completion(new Function<Token, Runnable>() {
+      @Override
+      public Runnable apply(Token token) {
+        return Runnables.EMPTY;
+      }
+    });
     if (completion.isBoundary(text, caret - 1) && completion.isBoundary(text.substring(caret - 1), 1)) {
       Token first = tc.completeToken(text.substring(0, caret - 1));
       Token second = tc.completeToken(text.substring(caret - 1, caret));

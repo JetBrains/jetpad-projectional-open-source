@@ -93,14 +93,20 @@ class TextCellMapper extends BaseCellMapper<TextCell> {
         timer.scheduleRepeating(500);
         myContainerFocused = getContext().focused.get();
         myFocusRegistration = new CompositeRegistration(
-          getContext().focused.addHandler(event -> {
-            myContainerFocused = event.getNewValue();
-            updateCaretVisibility();
+          getContext().focused.addHandler(new EventHandler<PropertyChangeEvent<Boolean>>() {
+            @Override
+            public void onEvent(PropertyChangeEvent<Boolean> event) {
+              myContainerFocused = event.getNewValue();
+              updateCaretVisibility();
+            }
           }),
-          getSource().caretVisible().addHandler(event -> {
-            if (event.getNewValue()) {
-              myLastChangeTime = System.currentTimeMillis();
-              myCaretVisible = true;
+          getSource().caretVisible().addHandler(new EventHandler<PropertyChangeEvent<Boolean>>() {
+            @Override
+            public void onEvent(PropertyChangeEvent<Boolean> event) {
+              if (event.getNewValue()) {
+                myLastChangeTime = System.currentTimeMillis();
+                myCaretVisible = true;
+              }
             }
           }),
           new Registration() {

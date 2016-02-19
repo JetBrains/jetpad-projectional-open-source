@@ -17,16 +17,19 @@ package jetbrains.jetpad.hybrid;
 
 import com.google.common.base.Objects;
 import jetbrains.jetpad.base.Registration;
-import jetbrains.jetpad.hybrid.parser.ParsingContext;
-import jetbrains.jetpad.hybrid.parser.Token;
-import jetbrains.jetpad.hybrid.parser.prettyprint.ParseNode;
 import jetbrains.jetpad.hybrid.parser.prettyprint.PrettyPrinter;
-import jetbrains.jetpad.hybrid.parser.prettyprint.PrettyPrinterContext;
+import jetbrains.jetpad.model.collections.CollectionItemEvent;
 import jetbrains.jetpad.model.collections.list.ObservableArrayList;
 import jetbrains.jetpad.model.collections.list.ObservableList;
+import jetbrains.jetpad.model.event.EventHandler;
 import jetbrains.jetpad.model.property.Property;
+import jetbrains.jetpad.model.property.PropertyChangeEvent;
 import jetbrains.jetpad.model.property.ReadableProperty;
 import jetbrains.jetpad.model.property.ValueProperty;
+import jetbrains.jetpad.hybrid.parser.ParsingContext;
+import jetbrains.jetpad.hybrid.parser.Token;
+import jetbrains.jetpad.hybrid.parser.prettyprint.PrettyPrinterContext;
+import jetbrains.jetpad.hybrid.parser.prettyprint.ParseNode;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -52,11 +55,39 @@ class TokenListEditor<SourceT> {
   TokenListEditor(Property<HybridEditorSpec<SourceT>> spec) {
     mySpec = spec;
 
-    tokens.addHandler(event -> sync(this::reparse));
-    value.addHandler(event -> sync(this::update));
-    spec.addHandler(event -> {
-      sync(this::reparse);
-      updateToPrintedTokens();
+    tokens.addHandler(new EventHandler<CollectionItemEvent<? extends Token>>() {
+      @Override
+      public void onEvent(CollectionItemEvent<? extends Token> event) {
+        sync(new Runnable() {
+          @Override
+          public void run() {
+            reparse();
+          }
+        });
+      }
+    });
+    value.addHandler(new EventHandler<PropertyChangeEvent<SourceT>>() {
+      @Override
+      public void onEvent(PropertyChangeEvent<SourceT> event) {
+        sync(new Runnable() {
+          @Override
+          public void run() {
+            update();
+          }
+        });
+      }
+    });
+    spec.addHandler(new EventHandler<PropertyChangeEvent<HybridEditorSpec<SourceT>>>() {
+      @Override
+      public void onEvent(PropertyChangeEvent<HybridEditorSpec<SourceT>> event) {
+        sync(new Runnable() {
+          @Override
+          public void run() {
+            reparse();
+          }
+        });
+        updateToPrintedTokens();
+      }
     });
   }
 
@@ -138,20 +169,33 @@ class TokenListEditor<SourceT> {
     myPrintedTokens = ctx.tokens();
 
     myChangeReg.remove();
-    myChangeReg = ctx.changeSource().addHandler(event -> sync(this::update));
+    myChangeReg = ctx.changeSource().addHandler(new EventHandler<Object>() {
+      @Override
+      public void onEvent(Object event) {
+        sync(new Runnable() {
+          @Override
+          public void run() {
+            update();
+          }
+        });
+      }
+    });
     return ctx;
   }
 
   void updateToPrintedTokens() {
     if (myPrintedTokens == null) return;
 
-    sync(() -> {
-      List<Token> newTokens = myPrintedTokens;
-      for (int i = 0; i < newTokens.size(); i++) {
-        Token newToken = newTokens.get(i);
-        Token token = tokens.get(i);
-        if (!Objects.equal(newToken, token)) {
-          tokens.set(i, newToken);
+    sync(new Runnable() {
+      @Override
+      public void run() {
+        List<Token> newTokens = myPrintedTokens;
+        for (int i = 0; i < newTokens.size(); i++) {
+          Token newToken = newTokens.get(i);
+          Token token = tokens.get(i);
+          if (!Objects.equal(newToken, token)) {
+            tokens.set(i, newToken);
+          }
         }
       }
     });

@@ -17,7 +17,7 @@ package jetbrains.jetpad.cell.completion;
 
 import com.google.common.base.Function;
 import com.google.common.base.Strings;
-import com.google.common.collect.FluentIterable;
+import com.google.common.collect.Lists;
 import jetbrains.jetpad.base.*;
 import jetbrains.jetpad.cell.*;
 import jetbrains.jetpad.cell.event.CompletionEvent;
@@ -32,6 +32,7 @@ import jetbrains.jetpad.event.Key;
 import jetbrains.jetpad.event.KeyEvent;
 import jetbrains.jetpad.event.ModifierKey;
 import jetbrains.jetpad.model.event.CompositeRegistration;
+import jetbrains.jetpad.model.event.EventHandler;
 import jetbrains.jetpad.model.property.*;
 
 import java.util.Collections;
@@ -125,60 +126,69 @@ public class CompletionSupport {
     final ReadableProperty<String> prefixText = prefixText(editor);
     completionReg.add(PropertyBinding.bindOneWay(prefixText, menuModel.text));
 
-    final Handler<CompletionItem> completer = item -> {
-      completionReg.remove();
-      restoreFocusState.run();
-      item.complete(prefixText.get()).run();
+    final Handler<CompletionItem> completer = new Handler<CompletionItem>() {
+      @Override
+      public void handle(CompletionItem item) {
+        completionReg.remove();
+        restoreFocusState.run();
+        item.complete(prefixText.get()).run();
+      }
     };
 
     final CompositeRegistration disposeMenuMapper = new CompositeRegistration();
     final Cell completionCell = CompletionMenu.createCell(menuModel, completer, disposeMenuMapper);
 
-    completionReg.add(editor.focused().addHandler(event -> {
-      if (!event.getNewValue()) {
-        completionReg.remove();
+    completionReg.add(editor.focused().addHandler(new EventHandler<PropertyChangeEvent<Boolean>>() {
+      @Override
+      public void onEvent(PropertyChangeEvent<Boolean> event) {
+        if (!event.getNewValue()) {
+          completionReg.remove();
+        }
       }
     }));
-    completionReg.add(editor.addKeyPressedHandler(event -> {
-      CompletionItem selectedItem = menuModel.selectedItem.get();
+    completionReg.add(editor.addKeyPressedHandler(new EventHandler<KeyEvent>() {
+      @Override
+      public void onEvent(KeyEvent event) {
+        CompletionItem selectedItem = menuModel.selectedItem.get();
 
-      if (event.is(Key.ESCAPE)) {
-        completionReg.remove();
-        restoreFocusState.run();
-        event.consume();
-        return;
-      }
-
-      if (selectedItem == null) return;
-
-      if (event.is(Key.ENTER)) {
-        completer.handle(selectedItem);
-        event.consume();
-        return;
-      }
-
-      if (event.is(Key.UP)) {
-        menuModel.up();
-        event.consume();
-        return;
-      }
-
-      if (event.is(Key.DOWN)) {
-        menuModel.down();
-        event.consume();
-        return;
-      }
-
-      if (event.is(Key.PAGE_UP) || event.is(Key.PAGE_DOWN)) {
-        int pageHeight = completionCell.getBounds().dimension.y / editor.dimension().y;
-        for (int i = 0; i < pageHeight; i++) {
-          if (event.is(Key.PAGE_DOWN)) {
-            menuModel.down();
-          } else {
-            menuModel.up();
-          }
+        if (event.is(Key.ESCAPE)) {
+          completionReg.remove();
+          restoreFocusState.run();
+          event.consume();
+          return;
         }
-        event.consume();
+
+        if (selectedItem == null) return;
+
+        if (event.is(Key.ENTER)) {
+          completer.handle(selectedItem);
+          event.consume();
+          return;
+        }
+
+        if (event.is(Key.UP)) {
+          menuModel.up();
+          event.consume();
+          return;
+        }
+
+        if (event.is(Key.DOWN)) {
+          menuModel.down();
+          event.consume();
+          return;
+        }
+
+        if (event.is(Key.PAGE_UP) || event.is(Key.PAGE_DOWN)) {
+          int pageHeight = completionCell.getBounds().dimension.y / editor.dimension().y;
+          for (int i = 0; i < pageHeight; i++) {
+            if (event.is(Key.PAGE_DOWN)) {
+              menuModel.down();
+            } else {
+              menuModel.up();
+            }
+          }
+          event.consume();
+        }
       }
     }));
 
@@ -191,11 +201,19 @@ public class CompletionSupport {
       }
     });
 
-    items.onSuccess(its -> {
-      menuModel.loading.set(false);
-      menuModel.items.addAll(its);
+    items.onSuccess(new Handler<List<CompletionItem>>() {
+      @Override
+      public void handle(List<CompletionItem> items) {
+        menuModel.loading.set(false);
+        menuModel.items.addAll(items);
+      }
     });
-    items.onFailure(item -> menuModel.loading.set(true));
+    items.onFailure(new Handler<Throwable>() {
+      @Override
+      public void handle(Throwable item) {
+        menuModel.loading.set(true);
+      }
+    });
 
     editor.setCompletionItems(completionCell);
     completionCell.scrollTo();
@@ -249,13 +267,18 @@ public class CompletionSupport {
         if (spec == Completion.COMPLETION) {
           return new CompletionSupplier() {
             @Override
-            public Iterable<CompletionItem> get(CompletionParameters cp) {
-              return FluentIterable.from(supplier.get(wrap(cp))).transform(wrap);
+            public List<CompletionItem> get(CompletionParameters cp) {
+              return Lists.transform(supplier.get(wrap(cp)), wrap);
             }
 
             @Override
-            public Async<Iterable<CompletionItem>> getAsync(CompletionParameters cp) {
-              return Asyncs.map(supplier.getAsync(wrap(cp)), (Function<Iterable<CompletionItem>, Iterable<CompletionItem>>) input -> FluentIterable.from(input).transform(wrap));
+            public Async<List<CompletionItem>> getAsync(CompletionParameters cp) {
+              return Asyncs.map(supplier.getAsync(wrap(cp)), new Function<List<CompletionItem>, List<CompletionItem>>() {
+                @Override
+                public List<CompletionItem> apply(List<CompletionItem> input) {
+                  return Lists.transform(input, wrap);
+                }
+              });
             }
           };
         }
@@ -342,13 +365,16 @@ public class CompletionSupport {
     targetPopup.set(popup);
     textCell.focus();
 
-    dismiss.set(focusLoss -> {
-      if (dismissed.get()) return;
-      dismissed.set(true);
-      popup.removeFromParent();
-      traitReg.remove();
-      if (!completed.get() && !focusLoss) {
-        restoreState.run();
+    dismiss.set(new Handler<Boolean>() {
+      @Override
+      public void handle(Boolean focusLoss) {
+        if (dismissed.get()) return;
+        dismissed.set(true);
+        popup.removeFromParent();
+        traitReg.remove();
+        if (!completed.get() && !focusLoss) {
+          restoreState.run();
+        }
       }
     });
 

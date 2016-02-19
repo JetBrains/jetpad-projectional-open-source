@@ -48,16 +48,13 @@ import jetbrains.jetpad.model.collections.list.ObservableList;
 import jetbrains.jetpad.model.collections.list.UnmodifiableObservableList;
 import jetbrains.jetpad.model.composite.Composites;
 import jetbrains.jetpad.model.event.CompositeRegistration;
-import jetbrains.jetpad.model.property.Property;
-import jetbrains.jetpad.model.property.PropertyBinding;
-import jetbrains.jetpad.model.property.ReadableProperty;
-import jetbrains.jetpad.model.property.ValueProperty;
+import jetbrains.jetpad.model.event.EventHandler;
+import jetbrains.jetpad.model.property.*;
 import jetbrains.jetpad.model.util.ListMap;
 import jetbrains.jetpad.projectional.cell.SelectionSupport;
 
 import java.util.*;
 
-import static com.google.common.collect.FluentIterable.from;
 import static jetbrains.jetpad.hybrid.SelectionPosition.FIRST;
 import static jetbrains.jetpad.hybrid.SelectionPosition.LAST;
 import static jetbrains.jetpad.model.composite.Composites.firstFocusable;
@@ -106,7 +103,12 @@ public class HybridSynchronizer<SourceT> implements Synchronizer {
 
     addPlaceholder();
 
-    myTokenListEditor.tokens.addHandler(event -> mySelectionSupport.clearSelection());
+    myTokenListEditor.tokens.addHandler(new EventHandler<CollectionItemEvent<? extends Token>>() {
+      @Override
+      public void onEvent(CollectionItemEvent<? extends Token> event) {
+        mySelectionSupport.clearSelection();
+      }
+    });
 
     mySelectionSupport = new SelectionSupport<Cell>(myTargetList, myTarget, myTargetList) {
       @Override
@@ -119,7 +121,12 @@ public class HybridSynchronizer<SourceT> implements Synchronizer {
       protected Runnable focusAndScrollTo(final int index, boolean first) {
         return Runnables.seq(
           tokenOperations().select(index, first ? FIRST : LAST),
-          () -> tokenCells().get(index).scrollTo()
+          new Runnable() {
+            @Override
+            public void run() {
+              tokenCells().get(index).scrollTo();
+            }
+          }
         );
       }
     };
@@ -159,7 +166,12 @@ public class HybridSynchronizer<SourceT> implements Synchronizer {
     });
 
     updateTargetError();
-    myTokenListEditor.valid.addHandler(event -> updateTargetError());
+    myTokenListEditor.valid.addHandler(new EventHandler<PropertyChangeEvent<Boolean>>() {
+      @Override
+      public void onEvent(PropertyChangeEvent<Boolean> event) {
+        updateTargetError();
+      }
+    });
   }
 
   private void updateTargetError() {
@@ -330,9 +342,11 @@ public class HybridSynchronizer<SourceT> implements Synchronizer {
           return new HybridCellState(null);
         }
 
-        return new HybridCellState(from(tokens())
-          .transform(Token::copy)
-          .toList());
+        List<Token> result = new ArrayList<>();
+        for (Token t : tokens()) {
+          result.add(t.copy());
+        }
+        return new HybridCellState(result);
       }
 
       @Override
@@ -359,12 +373,22 @@ public class HybridSynchronizer<SourceT> implements Synchronizer {
             ((TextTokenCell) tokenCell).setFirst(true);
           }
           if (!myTargetList.isEmpty()) {
-            updateTokenCell(0, item -> item.setFirst(false));
+            updateTokenCell(0, new Handler<TextTokenCell>() {
+              @Override
+              public void handle(TextTokenCell item) {
+                item.setFirst(false);
+              }
+            });
           }
         }
 
         if (index > 0) {
-          updateTokenCell(index - 1, item -> item.setNextToken(token));
+          updateTokenCell(index - 1, new Handler<TextTokenCell>() {
+            @Override
+            public void handle(TextTokenCell item) {
+              item.setNextToken(token);
+            }
+          });
         }
         if (index + 1 < tokens().size() && tokenCell instanceof TextTokenCell) {
           ((TextTokenCell) tokenCell).setNextToken(tokens().get(index + 1));
@@ -391,12 +415,27 @@ public class HybridSynchronizer<SourceT> implements Synchronizer {
           addPlaceholder();
         } else {
           if (index == 0 && myTargetList.get(0) instanceof TextTokenCell) {
-            updateTokenCell(0, item -> item.setFirst(true));
+            updateTokenCell(0, new Handler<TextTokenCell>() {
+              @Override
+              public void handle(TextTokenCell item) {
+                item.setFirst(true);
+              }
+            });
           }
           if (index == myTargetList.size()) {
-            updateTokenCell(myTargetList.size() - 1, item -> item.setNextToken(null));
+            updateTokenCell(myTargetList.size() - 1, new Handler<TextTokenCell>() {
+              @Override
+              public void handle(TextTokenCell item) {
+                item.setNextToken(null);
+              }
+            });
           } else if (index > 0 && myTargetList.get(index - 1) instanceof TextTokenCell) {
-            updateTokenCell(index - 1, item -> item.setNextToken(tokens().get(index)));
+            updateTokenCell(index - 1, new Handler<TextTokenCell>() {
+              @Override
+              public void handle(TextTokenCell item) {
+                item.setNextToken(tokens().get(index));
+              }
+            });
           }
         }
       }
@@ -563,7 +602,7 @@ public class HybridSynchronizer<SourceT> implements Synchronizer {
   public void setPlaceHolderText(String text) {
     myPlaceHolderText = text;
     if (myPlaceholder != null) {
-      TextCell placeHolder = (TextCell) Composites.nextLeaf(myPlaceholder);
+      TextCell placeHolder = (TextCell) Composites.<Cell>nextLeaf(myPlaceholder);
       placeHolder.text().set(text);
     }
   }

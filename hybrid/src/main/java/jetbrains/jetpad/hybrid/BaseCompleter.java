@@ -13,11 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package jetbrains.jetpad.completion;
+package jetbrains.jetpad.hybrid;
 
-public interface CompletionParameters {
-  static final CompletionParameters EMPTY = new BaseCompletionParameters();
+import jetbrains.jetpad.hybrid.parser.Token;
 
-  boolean isEndRightTransform();
-  boolean isMenu();
+public abstract class BaseCompleter implements Completer {
+  @Override
+  public final Runnable complete(Token token) {
+    return complete(new Token[] { token });
+  }
+
+  @Override
+  public Runnable complete(Token... tokens) {
+    return complete(tokens.length - 1, tokens);
+  }
 }

@@ -72,7 +72,7 @@ abstract class BaseCellMapper<SourceT extends Cell> extends Mapper<SourceT, Elem
 
     myContext.register(this);
 
-    myWasPopup = Composites.isNonCompositeChild(getSource());
+    myWasPopup = Composites.<Cell>isNonCompositeChild(getSource());
     getSource().getProp(ELEMENT).set(getTarget());
     getTarget().addClassName(CSS.cell());
 

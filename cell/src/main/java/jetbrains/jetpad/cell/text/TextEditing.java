@@ -211,10 +211,18 @@ public class TextEditing {
   }
 
   private static Function<Cell, Function<String, Runnable>> expansionProvider(final Side side) {
-    return cell -> (Function<String, Runnable>) sideText -> {
-      TextCell popup = CompletionSupport.showSideTransformPopup(cell, side.getPopup(cell), cell.get(side.getKey()), false);
-      popup.text().set(sideText);
-      return CellActions.toEnd(popup);
+    return new Function<Cell, Function<String, Runnable>>() {
+      @Override
+      public Function<String, Runnable> apply(final Cell cell) {
+        return new Function<String, Runnable>() {
+          @Override
+          public Runnable apply(String sideText) {
+            TextCell popup = CompletionSupport.showSideTransformPopup(cell, side.getPopup(cell), cell.get(side.getKey()), false);
+            popup.text().set(sideText);
+            return CellActions.toEnd(popup);
+          }
+        };
+      }
     };
   }
 

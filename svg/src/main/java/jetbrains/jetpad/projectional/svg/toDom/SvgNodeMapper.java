@@ -15,11 +15,11 @@
  */
 package jetbrains.jetpad.projectional.svg.toDom;
 
-import elemental.dom.Node;
+import com.google.gwt.dom.client.Node;
 import jetbrains.jetpad.mapper.Mapper;
 import jetbrains.jetpad.mapper.MappingContext;
 import jetbrains.jetpad.mapper.Synchronizers;
-import jetbrains.jetpad.mapper.gwt.elemental.DomUtil;
+import jetbrains.jetpad.mapper.gwt.DomUtil;
 import jetbrains.jetpad.projectional.svg.SvgNode;
 
 class SvgNodeMapper<SourceT extends SvgNode, TargetT extends Node> extends Mapper<SourceT, TargetT> {

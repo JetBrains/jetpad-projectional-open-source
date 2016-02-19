@@ -16,4 +16,13 @@
 package jetbrains.jetpad.completion;
 
 public class BaseCompletionParameters implements CompletionParameters {
+  @Override
+  public boolean isEndRightTransform() {
+    return false;
+  }
+
+  @Override
+  public boolean isMenu() {
+    return false;
+  }
 }

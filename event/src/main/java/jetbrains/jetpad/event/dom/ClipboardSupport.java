@@ -24,6 +24,7 @@ import jetbrains.jetpad.base.Handler;
 import jetbrains.jetpad.event.ClipboardContent;
 import jetbrains.jetpad.event.ContentKinds;
 
+import static com.google.gwt.query.client.GQuery.$;
 
 public class ClipboardSupport {
   private Element myTarget;
@@ -38,7 +39,7 @@ public class ClipboardSupport {
       @Override
       public void run() {
         RootPanel.get().remove(pasteArea);
-        myTarget.focus();
+        $(myTarget).focus();
         String text = pasteArea.getText();
         handler.handle(text);
       }
@@ -57,7 +58,7 @@ public class ClipboardSupport {
       @Override
       public void run() {
         RootPanel.get().remove(copyArea);
-        myTarget.focus();
+        $(myTarget).focus();
       }
     }.schedule(20);
   }

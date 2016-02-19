@@ -170,116 +170,122 @@ public class SelectionSupport<ItemT> {
 
   private void handleTargetKeyPress(final KeyEvent event) {
     if (event.is(KeyStrokeSpecs.SELECT_AFTER)) {
-      runSelectionAction(() -> {
-        if (isLowerPrioritySelection()) return;
+      runSelectionAction(new Runnable() {
+        @Override
+        public void run() {
+          if (isLowerPrioritySelection()) return;
 
-        Cell currentCell = currentCell();
-        if (currentCell == null) return;
+          Cell currentCell = currentCell();
+          if (currentCell == null) return;
 
-        int currentIndex = myTargetList.indexOf(currentCell);
-        ItemT currentItem = mySource.get(currentIndex);
-        boolean consumed = false;
+          int currentIndex = myTargetList.indexOf(currentCell);
+          ItemT currentItem = mySource.get(currentIndex);
+          boolean consumed = false;
 
-        if (!Positions.isEndPosition(currentCell) && !isCurrentCompletelySelected()) {
-          if (!mySelectedItems.contains(currentItem)) {
-            mySelectedItems.add(currentItem);
-            focusAndScrollTo(currentIndex, false).run();
-          } else {
-            if (myDirection == Direction.FORWARD) {
+          if (!Positions.isEndPosition(currentCell) && !isCurrentCompletelySelected()) {
+            if (!mySelectedItems.contains(currentItem)) {
+              mySelectedItems.add(currentItem);
               focusAndScrollTo(currentIndex, false).run();
             } else {
-              mySelectedItems.remove(currentItem);
-              if (currentIndex == myTargetList.size() - 1) {
+              if (myDirection == Direction.FORWARD) {
                 focusAndScrollTo(currentIndex, false).run();
               } else {
-                focusAndScrollTo(currentIndex + 1, true).run();
+                mySelectedItems.remove(currentItem);
+                if (currentIndex == myTargetList.size() - 1) {
+                  focusAndScrollTo(currentIndex, false).run();
+                } else {
+                  focusAndScrollTo(currentIndex + 1, true).run();
+                }
               }
             }
-          }
 
-          consumed = true;
-        } else {
-          if (!mySelectedItems.contains(currentItem) && Positions.isHomePosition(currentCell) && Positions.isEndPosition(currentCell)) {
-            mySelectedItems.add(currentItem);
             consumed = true;
-          }
-
-          if (currentIndex < myTargetList.size() - 1) {
-            ItemT nextItem = mySource.get(currentIndex + 1);
-            if (mySelectedItems.contains(nextItem)) {
-              mySelectedItems.remove(currentItem);
-              focusAndScrollTo(currentIndex + 1, true).run();
-            } else {
-              mySelectedItems.add(nextItem);
-              focusAndScrollTo(currentIndex + 1, false).run();
+          } else {
+            if (!mySelectedItems.contains(currentItem) && Positions.isHomePosition(currentCell) && Positions.isEndPosition(currentCell)) {
+              mySelectedItems.add(currentItem);
+              consumed = true;
             }
-            consumed = true;
+
+            if (currentIndex < myTargetList.size() - 1) {
+              ItemT nextItem = mySource.get(currentIndex + 1);
+              if (mySelectedItems.contains(nextItem)) {
+                mySelectedItems.remove(currentItem);
+                focusAndScrollTo(currentIndex + 1, true).run();
+              } else {
+                mySelectedItems.add(nextItem);
+                focusAndScrollTo(currentIndex + 1, false).run();
+              }
+              consumed = true;
+            }
           }
-        }
 
 
-        if (consumed) {
-          if (myDirection == null) {
-            myDirection = Direction.FORWARD;
+          if (consumed) {
+            if (myDirection == null) {
+              myDirection = Direction.FORWARD;
+            }
+            event.consume();
           }
-          event.consume();
         }
       });
     }
 
     if (event.is(KeyStrokeSpecs.SELECT_BEFORE)) {
-      runSelectionAction(() -> {
-        if (isLowerPrioritySelection()) return;
+      runSelectionAction(new Runnable() {
+        @Override
+        public void run() {
+          if (isLowerPrioritySelection()) return;
 
-        Cell currentCell = currentCell();
-        if (currentCell == null) return;
+          Cell currentCell = currentCell();
+          if (currentCell == null) return;
 
-        int currentIndex = myTargetList.indexOf(currentCell);
-        ItemT currentItem = mySource.get(currentIndex);
-        boolean consumed = false;
+          int currentIndex = myTargetList.indexOf(currentCell);
+          ItemT currentItem = mySource.get(currentIndex);
+          boolean consumed = false;
 
-        if (!Positions.isHomePosition(currentCell) && !isCurrentCompletelySelected()) {
-          if (!mySelectedItems.contains(currentItem)) {
-            mySelectedItems.add(0, currentItem);
-            focusAndScrollTo(currentIndex, true).run();
-          } else {
-            if (myDirection == Direction.BACKWARD) {
+          if (!Positions.isHomePosition(currentCell) && !isCurrentCompletelySelected()) {
+            if (!mySelectedItems.contains(currentItem)) {
+              mySelectedItems.add(0, currentItem);
               focusAndScrollTo(currentIndex, true).run();
             } else {
-              mySelectedItems.remove(currentItem);
-              if (currentIndex == 0) {
+              if (myDirection == Direction.BACKWARD) {
                 focusAndScrollTo(currentIndex, true).run();
               } else {
-                focusAndScrollTo(currentIndex - 1, false).run();
+                mySelectedItems.remove(currentItem);
+                if (currentIndex == 0) {
+                  focusAndScrollTo(currentIndex, true).run();
+                } else {
+                  focusAndScrollTo(currentIndex - 1, false).run();
+                }
               }
             }
-          }
-          consumed = true;
-        } else {
-          if (!mySelectedItems.contains(currentItem) && Positions.isHomePosition(currentCell) && Positions.isEndPosition(currentCell)) {
-            mySelectedItems.add(currentItem);
             consumed = true;
-          }
-
-          if (currentIndex > 0) {
-            ItemT prevItem = mySource.get(currentIndex - 1);
-
-            if (mySelectedItems.contains(prevItem)) {
-              mySelectedItems.remove(currentItem);
-              focusAndScrollTo(currentIndex - 1, false).run();
-            } else {
-              mySelectedItems.add(0, prevItem);
-              focusAndScrollTo(currentIndex - 1, true).run();
+          } else {
+            if (!mySelectedItems.contains(currentItem) && Positions.isHomePosition(currentCell) && Positions.isEndPosition(currentCell)) {
+              mySelectedItems.add(currentItem);
+              consumed = true;
             }
-            consumed = true;
-          }
-        }
 
-        if (consumed) {
-          if (myDirection == null) {
-            myDirection = Direction.BACKWARD;
+            if (currentIndex > 0) {
+              ItemT prevItem = mySource.get(currentIndex - 1);
+
+              if (mySelectedItems.contains(prevItem)) {
+                mySelectedItems.remove(currentItem);
+                focusAndScrollTo(currentIndex - 1, false).run();
+              } else {
+                mySelectedItems.add(0, prevItem);
+                focusAndScrollTo(currentIndex - 1, true).run();
+              }
+              consumed = true;
+            }
           }
-          event.consume();
+
+          if (consumed) {
+            if (myDirection == null) {
+              myDirection = Direction.BACKWARD;
+            }
+            event.consume();
+          }
         }
       });
     }
@@ -325,7 +331,12 @@ public class SelectionSupport<ItemT> {
     final Cell child = myTargetList.get(index);
     return Runnables.seq(
       first ? CellActions.toFirstFocusable(child) : CellActions.toLastFocusable(child),
-      child::scrollTo
+      new Runnable() {
+        @Override
+        public void run() {
+          child.scrollTo();
+        }
+      }
     );
   }
 
@@ -345,7 +356,7 @@ public class SelectionSupport<ItemT> {
     }
   }
 
-  private enum Direction {
+  private static enum Direction {
     FORWARD, BACKWARD;
   }
 }

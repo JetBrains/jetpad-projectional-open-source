@@ -31,6 +31,7 @@ import jetbrains.jetpad.model.event.CompositeRegistration;
 import jetbrains.jetpad.model.property.DerivedProperty;
 import jetbrains.jetpad.model.property.Properties;
 import jetbrains.jetpad.model.property.ReadableProperty;
+import jetbrains.jetpad.model.property.WritableProperty;
 import jetbrains.jetpad.values.Color;
 
 import java.util.Arrays;
@@ -85,7 +86,12 @@ class CompletionMenu {
           this,
           getSource().visibleItems,
           myVerticalCell.children(),
-        (MapperFactory<CompletionItem, Cell>) CompletionItemMapper::new));
+          new MapperFactory<CompletionItem, Cell>() {
+            @Override
+            public Mapper<? extends CompletionItem, ? extends Cell> createMapper(CompletionItem source) {
+              return new CompletionItemMapper(source);
+            }
+          }));
 
       conf.add(Synchronizers.forPropsOneWay(getSource().loading, Properties.ifProp(myEmptyCell.text(), "Loading...", "<no completion items>")));
       conf.add(Synchronizers.forPropsOneWay(getSource().loading, Properties.ifProp(myEmptyCell.textColor(), Color.GRAY, Color.RED)));
@@ -152,15 +158,18 @@ class CompletionMenu {
         }
       }, myText.text()));
 
-      conf.add(Synchronizers.forPropsOneWay(selected, value -> {
-        if (value == null) {
-          value = Boolean.FALSE;
-        }
-        getTarget().background().set(value ? SELECTED_BACKGROUND : null);
-        if (value && getTarget().isAttached()) {
-          getTarget().scrollTo(new Rectangle(0, 0, 1, getTarget().dimension().y));
-        }
-      }
+      conf.add(Synchronizers.forPropsOneWay(selected, new WritableProperty<Boolean>() {
+            @Override
+            public void set(Boolean value) {
+              if (value == null) {
+                value = Boolean.FALSE;
+              }
+              getTarget().background().set(value ? SELECTED_BACKGROUND : null);
+              if (value && getTarget().isAttached()) {
+                getTarget().scrollTo(new Rectangle(0, 0, 1, getTarget().dimension().y));
+              }
+            }
+          }
       ));
     }
   }

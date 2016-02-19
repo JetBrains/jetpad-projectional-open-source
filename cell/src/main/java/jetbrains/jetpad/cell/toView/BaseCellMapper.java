@@ -187,7 +187,12 @@ class BaseCellMapper<SourceT extends Cell, TargetT extends View> extends Mapper<
 
       @Override
       protected Registration setPopupUpdate() {
-        return getTarget().bounds().addHandler(event -> updatePopupPositions());
+        return getTarget().bounds().addHandler(new EventHandler<PropertyChangeEvent<Rectangle>>() {
+          @Override
+          public void onEvent(PropertyChangeEvent<Rectangle> event) {
+            updatePopupPositions();
+          }
+        });
       }
 
       @Override

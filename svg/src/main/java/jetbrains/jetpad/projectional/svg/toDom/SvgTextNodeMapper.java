@@ -15,7 +15,7 @@
  */
 package jetbrains.jetpad.projectional.svg.toDom;
 
-import elemental.dom.Node;
+import com.google.gwt.dom.client.Node;
 import jetbrains.jetpad.mapper.Synchronizers;
 import jetbrains.jetpad.model.property.WritableProperty;
 import jetbrains.jetpad.projectional.svg.SvgTextNode;

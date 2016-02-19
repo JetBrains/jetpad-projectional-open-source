@@ -25,6 +25,7 @@ import jetbrains.jetpad.event.*;
 import jetbrains.jetpad.geometry.Rectangle;
 import jetbrains.jetpad.geometry.Vector;
 import jetbrains.jetpad.model.collections.CollectionItemEvent;
+import jetbrains.jetpad.model.event.ListenerCaller;
 import jetbrains.jetpad.model.event.Listeners;
 import jetbrains.jetpad.model.property.Property;
 import jetbrains.jetpad.model.property.PropertyChangeEvent;
@@ -95,11 +96,14 @@ public class CellContainer {
   public Runnable saveState() {
     final Cell oldCell = focusedCell.get();
 
-    return () -> {
-      if (oldCell != null) {
-        oldCell.focus();
-      } else {
-        focusedCell.set(null);
+    return new Runnable() {
+      @Override
+      public void run() {
+        if (oldCell != null) {
+          oldCell.focus();
+        } else {
+          focusedCell.set(null);
+        }
       }
     };
   }
@@ -262,12 +266,22 @@ public class CellContainer {
   }
 
   private <EventT extends Event> void dispatch(final EventT e, final CellEventSpec<EventT> spec) {
-    executeCommand(() -> dispatch(focusedCell.get(), e, spec));
+    executeCommand(new Runnable() {
+      @Override
+      public void run() {
+        dispatch(focusedCell.get(), e, spec);
+      }
+    });
   }
 
   private <EventT extends Event> void dispatch(final Cell target, final EventT e, final CellEventSpec<EventT> spec) {
     if (target == null) return;
-    executeCommand(() -> target.dispatch(e, spec));
+    executeCommand(new Runnable() {
+      @Override
+      public void run() {
+        target.dispatch(e, spec);
+      }
+    });
   }
 
   public boolean isInCommand() {
@@ -283,11 +297,21 @@ public class CellContainer {
       r.run();
     } else {
       myInCommand = true;
-      myListeners.fire(l -> l.onBeforeCommand());
+      myListeners.fire(new ListenerCaller<CellContainerListener>() {
+        @Override
+        public void call(CellContainerListener l) {
+          l.onBeforeCommand();
+        }
+      });
       try {
         r.run();
       } finally {
-        myListeners.fire(l -> l.onAfterCommand());
+        myListeners.fire(new ListenerCaller<CellContainerListener>() {
+          @Override
+          public void call(CellContainerListener l) {
+            l.onAfterCommand();
+          }
+        });
         myInCommand = false;
       }
     }
@@ -306,15 +330,30 @@ public class CellContainer {
   }
 
   void cellPropertyChanged(final Cell cell, final CellPropertySpec<?> prop, final PropertyChangeEvent<?> change) {
-    myListeners.fire(l -> l.onCellPropertyChanged(cell, prop, change));
+    myListeners.fire(new ListenerCaller<CellContainerListener>() {
+      @Override
+      public void call(CellContainerListener l) {
+        l.onCellPropertyChanged(cell, prop, change);
+      }
+    });
   }
 
   void cellChildAdded(final Cell cell, final CollectionItemEvent<? extends Cell> change) {
-    myListeners.fire(l -> l.onChildAdded(cell, change));
+    myListeners.fire(new ListenerCaller<CellContainerListener>() {
+      @Override
+      public void call(CellContainerListener l) {
+        l.onChildAdded(cell, change);
+      }
+    });
   }
 
   void cellChildRemoved(final Cell cell, final CollectionItemEvent<? extends Cell> change) {
-    myListeners.fire(l -> l.onChildRemoved(cell, change));
+    myListeners.fire(new ListenerCaller<CellContainerListener>() {
+      @Override
+      public void call(CellContainerListener l) {
+        l.onChildRemoved(cell, change);
+      }
+    });
   }
 
   void popupAdded(Cell c) {

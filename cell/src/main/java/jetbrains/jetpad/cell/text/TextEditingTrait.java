@@ -119,7 +119,12 @@ public class TextEditingTrait extends TextNavigationTrait {
         if ((!supplier.isEmpty(cp) || !supplier.isAsyncEmpty(cp)) && cell.get(TextEditing.RT_ON_END)) {
           if (cell.get(Cell.RIGHT_POPUP) == null) {
             TextCell popup = CompletionSupport.showSideTransformPopup(cell, cell.rightPopup(), cell.get(Completion.RIGHT_TRANSFORM), true);
-            popup.get(Completion.COMPLETION_CONTROLLER).activate(cell::focus);
+            popup.get(Completion.COMPLETION_CONTROLLER).activate(new Runnable() {
+              @Override
+              public void run() {
+                cell.focus();
+              }
+            });
           }
           event.consume();
           return;

@@ -30,10 +30,13 @@ class ViewCellMapper extends BaseCellMapper<ViewCell, View> {
   protected void registerSynchronizers(SynchronizersConfiguration conf) {
     super.registerSynchronizers(conf);
 
-    conf.add(Synchronizers.forPropsOneWay(getSource().view, value -> {
-      getTarget().children().clear();
-      if (value != null) {
-        getTarget().children().add(value);
+    conf.add(Synchronizers.forPropsOneWay(getSource().view, new WritableProperty<View>() {
+      @Override
+      public void set(View value) {
+        getTarget().children().clear();
+        if (value != null) {
+          getTarget().children().add(value);
+        }
       }
     }));
   }

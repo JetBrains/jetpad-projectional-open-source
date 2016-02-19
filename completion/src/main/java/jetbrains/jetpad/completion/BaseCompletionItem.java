@@ -15,9 +15,19 @@
  */
 package jetbrains.jetpad.completion;
 
-public interface CompletionParameters {
-  static final CompletionParameters EMPTY = new BaseCompletionParameters();
+public abstract class BaseCompletionItem implements CompletionItem {
+  @Override
+  public boolean isLowMatchPriority() {
+    return false;
+  }
 
-  boolean isEndRightTransform();
-  boolean isMenu();
+  @Override
+  public int getSortPriority() {
+    return 0;
+  }
+
+  @Override
+  public final boolean isMatchPrefix(String text) {
+    return isStrictMatchPrefix(text) || isMatch(text);
+  }
 }

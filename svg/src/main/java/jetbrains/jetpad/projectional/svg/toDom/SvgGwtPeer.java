@@ -15,10 +15,7 @@
  */
 package jetbrains.jetpad.projectional.svg.toDom;
 
-import elemental.dom.Node;
-import elemental.svg.SVGLocatable;
-import elemental.svg.SVGRect;
-import elemental.svg.SVGTextElement;
+import com.google.gwt.dom.client.Node;
 import jetbrains.jetpad.geometry.DoubleRectangle;
 import jetbrains.jetpad.geometry.DoubleVector;
 import jetbrains.jetpad.mapper.Mapper;
@@ -49,8 +46,8 @@ class SvgGwtPeer implements SvgPlatformPeer {
   public double getComputedTextLength(SvgTextContent node) {
     ensureSourceRegistered((SvgNode) node);
 
-    SVGTextElement target = (SVGTextElement) myMappingMap.get(node).getTarget();
-    return target.getComputedTextLength();
+    Node target = myMappingMap.get(node).getTarget();
+    return getComputedTextLength(target);
   }
 
   private DoubleVector transformCoordinates(SvgLocatable relative, DoubleVector point, boolean inverse) {
@@ -108,9 +105,17 @@ class SvgGwtPeer implements SvgPlatformPeer {
   public DoubleRectangle getBBox(SvgLocatable element) {
     ensureSourceRegistered((SvgNode) element);
 
-    SVGLocatable target = (SVGLocatable) myMappingMap.get(element).getTarget();
-    SVGRect bBox = target.getBBox();
-
-    return new DoubleRectangle(bBox.getX(), bBox.getY(), bBox.getWidth(), bBox.getHeight());
+    Node target = myMappingMap.get(element).getTarget();
+    return getBoundingBox(target);
   }
+
+  private native double getComputedTextLength(Node target) /*-{
+    return target.getComputedTextLength();
+  }-*/;
+
+  private native DoubleRectangle getBoundingBox(Node target) /*-{
+    bbox = target.getBBox();
+    return @jetbrains.jetpad.geometry.DoubleRectangle::new(DDDD)(bbox.x, bbox.y, bbox.width, bbox.height);
+  }-*/;
+
 }

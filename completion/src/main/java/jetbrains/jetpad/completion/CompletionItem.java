@@ -24,9 +24,10 @@ public interface CompletionItem {
    */
   boolean isStrictMatchPrefix(String text);
 
-  default boolean isMatchPrefix(String text) {
-    return isStrictMatchPrefix(text) || isMatch(text);
-  }
+  /**
+   * isMatch(text) || isStrictMatchPrefix(text)
+   */
+  boolean isMatchPrefix(String text);
 
   /**
    * Returns is the string text can be matched
@@ -38,17 +39,13 @@ public interface CompletionItem {
    * priority item beats the lower priority item. We need this in order to support variable references and keyword variables. If
    * there's a keyword expression, it beats variable reference.
    */
-  default boolean isLowMatchPriority() {
-    return false;
-  }
+  boolean isLowMatchPriority();
 
   /**
    * Use this priority to move items higher in completion menu. Default priority should be 0. The higher
    * the priority, the higher in completion menu the item will be.
    */
-  default int getSortPriority() {
-    return 0;
-  }
+  int getSortPriority();
 
   Runnable complete(String text);
 }

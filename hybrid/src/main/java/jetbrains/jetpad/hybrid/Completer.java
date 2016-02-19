@@ -18,13 +18,8 @@ package jetbrains.jetpad.hybrid;
 import jetbrains.jetpad.hybrid.parser.Token;
 
 public interface Completer {
-  default Runnable complete(Token token) {
-    return complete(new Token[] { token });
-  }
-
-  default Runnable complete(Token... tokens) {
-    return complete(tokens.length - 1, tokens);
-  }
+  Runnable complete(Token token);
+  Runnable complete(Token... token);
 
   /**
    * @param selectionIndex of the passed token to be selected after the action

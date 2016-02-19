@@ -16,11 +16,11 @@
 package jetbrains.mps.diagram.dataflow;
 
 import com.google.gwt.core.client.EntryPoint;
-import com.google.gwt.dom.client.Element;
-import elemental.client.Browser;
 import jetbrains.jetpad.projectional.view.toGwt.ViewToDom;
 import jetbrains.mps.diagram.dataflow.mapper.RootDiagramMapper;
 import jetbrains.mps.diagram.dataflow.model.Diagram;
+
+import static com.google.gwt.query.client.GQuery.$;
 
 public class DataFlowEntryPoint implements EntryPoint {
   @Override
@@ -29,8 +29,6 @@ public class DataFlowEntryPoint implements EntryPoint {
     RootDiagramMapper mapper = new RootDiagramMapper(model);
     mapper.attachRoot();
 
-
-
-    ViewToDom.map(mapper.getTarget(), (Element) Browser.getDocument().getElementById("diagram"));
+    ViewToDom.map(mapper.getTarget(), $("#diagram").get(0));
   }
 }

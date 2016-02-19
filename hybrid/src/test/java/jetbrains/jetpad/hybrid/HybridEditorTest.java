@@ -15,7 +15,6 @@
  */
 package jetbrains.jetpad.hybrid;
 
-import com.google.common.collect.FluentIterable;
 import com.google.common.collect.Range;
 import jetbrains.jetpad.base.Registration;
 import jetbrains.jetpad.cell.Cell;
@@ -1028,8 +1027,8 @@ public class HybridEditorTest extends EditingTestCase {
         return true;
       }
     };
-    Iterable<CompletionItem> completionItems = roleCompletion.get(completionParameters);
-    assertTrue(FluentIterable.from(completionItems).isEmpty());
+    List<CompletionItem> completionItems = roleCompletion.get(completionParameters);
+    assertTrue(completionItems.isEmpty());
   }
 
   private ValueToken createComplexToken() {

@@ -57,7 +57,7 @@ public abstract class CompletionTestCase extends EditingTestCase {
   protected CompletionSupplier createAsyncCompletion(final String... items) {
     return new CompletionSupplier() {
       @Override
-      public Async<Iterable<CompletionItem>> getAsync(CompletionParameters cp) {
+      public Async<List<CompletionItem>> getAsync(CompletionParameters cp) {
         return Asyncs.constant(createItems(items));
       }
     };

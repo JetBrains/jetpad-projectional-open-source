@@ -33,18 +33,21 @@ class ImageCellMapper extends BaseCellMapper<ImageCell> {
   protected void registerSynchronizers(SynchronizersConfiguration conf) {
     super.registerSynchronizers(conf);
 
-    conf.add(Synchronizers.forPropsOneWay(getSource().image, value -> {
-      if (value != null) {
-        getTarget().setAttribute("width", "" + value.getDimension().x);
-        getTarget().setAttribute("height", "" + value.getDimension().y);
-      } else {
-        getTarget().removeAttribute("width");
-        getTarget().removeAttribute("height");
-      }
+    conf.add(Synchronizers.forPropsOneWay(getSource().image, new WritableProperty<ImageData>() {
+      @Override
+      public void set(ImageData value) {
+        if (value != null) {
+          getTarget().setAttribute("width", "" + value.getDimension().x);
+          getTarget().setAttribute("height", "" + value.getDimension().y);
+        } else {
+          getTarget().removeAttribute("width");
+          getTarget().removeAttribute("height");
+        }
 
-      if (value instanceof ImageData.UrlImageData) {
-        ImageData.UrlImageData data = (ImageData.UrlImageData) value;
-        getTarget().setAttribute("src", data.getUrl());
+        if (value instanceof ImageData.UrlImageData) {
+          ImageData.UrlImageData data = (ImageData.UrlImageData) value;
+          getTarget().setAttribute("src", data.getUrl());
+        }
       }
     }));
   }

@@ -20,6 +20,8 @@ import com.google.gwt.user.client.Window;
 import jetbrains.jetpad.base.Interval;
 import jetbrains.jetpad.geometry.Rectangle;
 
+import static com.google.gwt.query.client.GQuery.$;
+
 public class Scrolling {
   public static void scrollTo(Rectangle rect, Element element) {
     rect = rect.intersect(new Rectangle(0, 0, element.getScrollWidth(), element.getScrollHeight()));
@@ -65,7 +67,7 @@ public class Scrolling {
     while (element.getParentElement() != null) {
       Element parent = element.getParentElement();
 
-      String overflow = parent.getStyle().getOverflow();
+      String overflow = $(parent).css("overflow");
       if ("scroll".equals(overflow) || "auto".equals(overflow)) {
         int scrollTop = parent.getScrollTop();
         int parentTop = parent.getAbsoluteTop();

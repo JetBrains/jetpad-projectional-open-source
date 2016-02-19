@@ -185,7 +185,12 @@ class TokenCellTraits {
       if (spec == Completion.LEFT_TRANSFORM) return tokenCompletion(cell).sideTransform(tokenView(cell), 0);
 
       if (spec == TextEditing.EXPAND_LEFT) {
-        return (Function<String, Runnable>) text -> tokenOperations(cell).expandToError(cell, text, 0);
+        return new Function<String, Runnable>() {
+          @Override
+          public Runnable apply(String text) {
+            return tokenOperations(cell).expandToError(cell, text, 0);
+          }
+        };
       }
 
       return super.get(cell, spec);
@@ -198,7 +203,12 @@ class TokenCellTraits {
       if (spec == Completion.RIGHT_TRANSFORM) return tokenCompletion(cell).sideTransform(tokenView(cell), 1);
 
       if (spec == TextEditing.EXPAND_RIGHT) {
-        return (Function<String, Runnable>) text -> tokenOperations(cell).expandToError(cell, text, 1);
+        return new Function<String, Runnable>() {
+          @Override
+          public Runnable apply(String text) {
+            return tokenOperations(cell).expandToError(cell, text, 1);
+          }
+        };
       }
 
       return super.get(cell, spec);

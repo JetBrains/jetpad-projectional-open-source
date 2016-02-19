@@ -33,6 +33,7 @@ import jetbrains.jetpad.mapper.MapperFactory;
 import jetbrains.jetpad.mapper.RoleSynchronizer;
 import jetbrains.jetpad.mapper.Synchronizers;
 import jetbrains.jetpad.model.property.Property;
+import jetbrains.jetpad.model.property.WritableProperty;
 import jetbrains.jetpad.projectional.generic.Role;
 
 import java.util.List;
@@ -51,10 +52,13 @@ class ProjectionalPropertySynchronizer<ContextT, SourceItemT> extends BaseProjec
 
   @Override
   protected RoleSynchronizer<SourceItemT, Cell> createSubSynchronizer(Mapper<?, ?> mapper, Property<SourceItemT> source, final List<Cell> target, MapperFactory<SourceItemT, Cell> factory) {
-    return Synchronizers.forSingleRole(mapper, source, value -> {
-      target.clear();
-      if (value != null) {
-        target.add(value);
+    return Synchronizers.forSingleRole(mapper, source, new WritableProperty<Cell>() {
+      @Override
+      public void set(Cell value) {
+        target.clear();
+        if (value != null) {
+          target.add(value);
+        }
       }
     }, factory);
   }

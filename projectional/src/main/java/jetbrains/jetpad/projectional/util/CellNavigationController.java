@@ -65,11 +65,19 @@ public class CellNavigationController {
   public CompositeRegistration install() {
     CompositeRegistration result = new CompositeRegistration();
     result.add(
-      selectedCaretOffset().addHandler(event -> myPrevXOffset.set(null)),
-      focusedCell().addHandler(event -> {
-        //todo we should reset the stuff on every view structure change
-        if (myStackResetEnabled.get()) {
-          mySelectionStack.clear();
+      selectedCaretOffset().addHandler(new EventHandler<PropertyChangeEvent<Integer>>() {
+        @Override
+        public void onEvent(PropertyChangeEvent<Integer> event) {
+          myPrevXOffset.set(null);
+        }
+      }),
+      focusedCell().addHandler(new EventHandler<PropertyChangeEvent<Cell>>() {
+        @Override
+        public void onEvent(PropertyChangeEvent<Cell> event) {
+          //todo we should reset the stuff on every view structure change
+          if (myStackResetEnabled.get()) {
+            mySelectionStack.clear();
+          }
         }
       }));
     result.add(myContainer.root.addTrait(new CellTrait() {
@@ -153,7 +161,12 @@ public class CellNavigationController {
   }
 
   private Selector<Cell, ReadableProperty<Integer>> caretPositionSelector() {
-    return source -> source.get(PositionHandler.PROPERTY).caretOffset();
+    return new Selector<Cell, ReadableProperty<Integer>>() {
+      @Override
+      public ReadableProperty<Integer> select(Cell source) {
+        return source.get(PositionHandler.PROPERTY).caretOffset();
+      }
+    };
   }
 
   private void moveToHome(Cell next) {

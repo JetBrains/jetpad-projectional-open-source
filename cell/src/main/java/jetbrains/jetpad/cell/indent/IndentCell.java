@@ -20,6 +20,7 @@ import jetbrains.jetpad.cell.Cell;
 import jetbrains.jetpad.cell.CellPropertySpec;
 import jetbrains.jetpad.geometry.Rectangle;
 import jetbrains.jetpad.model.collections.CollectionItemEvent;
+import jetbrains.jetpad.model.event.ListenerCaller;
 import jetbrains.jetpad.model.event.Listeners;
 import jetbrains.jetpad.model.property.PropertyChangeEvent;
 
@@ -99,21 +100,36 @@ public class IndentCell extends Cell {
     checkRootIndent();
 
     if (myListeners == null) return;
-    myListeners.fire(l -> l.childAdded(event));
+    myListeners.fire(new ListenerCaller<IndentContainerCellListener>() {
+      @Override
+      public void call(IndentContainerCellListener l) {
+        l.childAdded(event);
+      }
+    });
   }
 
   void handleChildRemove(final CollectionItemEvent<Cell> event) {
     checkRootIndent();
 
     if (myListeners == null) return;
-    myListeners.fire(l -> l.childRemoved(event));
+    myListeners.fire(new ListenerCaller<IndentContainerCellListener>() {
+      @Override
+      public void call(IndentContainerCellListener l) {
+        l.childRemoved(event);
+      }
+    });
   }
 
   void handlePropertyChanged(final Cell cell, final CellPropertySpec<?> prop, final PropertyChangeEvent<?> event) {
     checkRootIndent();
 
     if (myListeners == null) return;
-    myListeners.fire(l -> l.propertyChanged(cell, prop, event));
+    myListeners.fire(new ListenerCaller<IndentContainerCellListener>() {
+      @Override
+      public void call(IndentContainerCellListener l) {
+        l.propertyChanged(cell, prop, event);
+      }
+    });
   }
 
   private void checkRootIndent() {

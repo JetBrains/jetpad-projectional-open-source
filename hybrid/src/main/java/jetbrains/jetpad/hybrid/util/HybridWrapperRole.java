@@ -17,10 +17,12 @@ package jetbrains.jetpad.hybrid.util;
 
 import com.google.common.base.Function;
 import com.google.common.base.Supplier;
-import com.google.common.collect.FluentIterable;
 import jetbrains.jetpad.cell.Cell;
 import jetbrains.jetpad.completion.*;
-import jetbrains.jetpad.hybrid.*;
+import jetbrains.jetpad.hybrid.BaseCompleter;
+import jetbrains.jetpad.hybrid.CompletionContext;
+import jetbrains.jetpad.hybrid.HybridEditorSpec;
+import jetbrains.jetpad.hybrid.HybridSynchronizer;
 import jetbrains.jetpad.hybrid.parser.Token;
 import jetbrains.jetpad.mapper.Mapper;
 import jetbrains.jetpad.projectional.generic.Role;
@@ -58,17 +60,26 @@ public class HybridWrapperRole<ContainerT, WrapperT, TargetT> implements RoleCom
       public List<CompletionItem> get(CompletionParameters cp) {
         List<CompletionItem> result = new ArrayList<>();
 
-        final Completer completer = (selectionIndex, tokens) -> {
-          WrapperT targetItem = myFactory.get();
-          target.set(targetItem);
-          Mapper<?, ?> targetItemMapper =  mapper.getDescendantMapper(targetItem);
-          HybridSynchronizer<?> sync = mySyncProvider.apply(targetItemMapper);
-          sync.setTokens(Arrays.asList(tokens));
-          return sync.selectOnCreation(selectionIndex, LAST);
+        final BaseCompleter completer = new BaseCompleter() {
+          @Override
+          public Runnable complete(int selectionIndex, Token... tokens) {
+            WrapperT targetItem = myFactory.get();
+            target.set(targetItem);
+            Mapper<?, ?> targetItemMapper =  mapper.getDescendantMapper(targetItem);
+            HybridSynchronizer<?> sync = mySyncProvider.apply(targetItemMapper);
+            sync.setTokens(Arrays.asList(tokens));
+            return sync.selectOnCreation(selectionIndex, LAST);
+
+          }
         };
 
         if (!(cp.isMenu() && myHideTokensInMenu)) {
-          for (CompletionItem ci : mySpec.getTokenCompletion(completer::complete).get(cp)) {
+          for (CompletionItem ci : mySpec.getTokenCompletion(new Function<Token, Runnable>() {
+            @Override
+            public Runnable apply(Token input) {
+              return completer.complete(input);
+            }
+          }).get(cp)) {
             result.add(new WrapperCompletionItem(ci) {
               @Override
               public boolean isLowMatchPriority() {
@@ -115,7 +126,7 @@ public class HybridWrapperRole<ContainerT, WrapperT, TargetT> implements RoleCom
               return target.get();
             }
           }, completer);
-          result.addAll(FluentIterable.from(compl.get(new BaseCompletionParameters())).toList());
+          result.addAll(compl.get(new BaseCompletionParameters()));
         }
         return result;
       }

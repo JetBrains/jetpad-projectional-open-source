@@ -206,7 +206,12 @@ class TextNavigationTrait extends CellTrait {
     if (!completion.isEmpty()) {
       final TextCell popup = CompletionSupport.showSideTransformPopup(cell, popupProp, cell.get(key), false);
       final CompletionController controller = popup.get(Completion.COMPLETION_CONTROLLER);
-      controller.activate(cell::focus);
+      controller.activate(new Runnable() {
+        @Override
+        public void run() {
+          cell.focus();
+        }
+      });
       return true;
     }
     return false;

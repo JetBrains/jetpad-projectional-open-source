@@ -16,14 +16,12 @@
 package jetbrains.jetpad.projectional.svgDemo;
 
 import com.google.gwt.core.client.EntryPoint;
-import com.google.gwt.dom.client.Element;
-import elemental.client.Browser;
-import elemental.dom.Document;
 import jetbrains.jetpad.projectional.view.toGwt.ViewToDom;
+
+import static com.google.gwt.query.client.GQuery.$;
 
 public class GwtDemo implements EntryPoint {
   public void onModuleLoad() {
-    Document doc = Browser.getDocument();
-    ViewToDom.map(DemoModel.demoViewContainer(), (Element) doc.getElementById("svg"));
+    ViewToDom.map(DemoModel.demoViewContainer(), $("#svg").get(0));
   }
 }

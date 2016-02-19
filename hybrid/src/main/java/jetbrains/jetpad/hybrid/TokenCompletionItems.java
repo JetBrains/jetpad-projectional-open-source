@@ -18,6 +18,7 @@ package jetbrains.jetpad.hybrid;
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 import jetbrains.jetpad.base.Validators;
+import jetbrains.jetpad.completion.BaseCompletionItem;
 import jetbrains.jetpad.completion.CompletionItem;
 import jetbrains.jetpad.completion.SimpleCompletionItem;
 import jetbrains.jetpad.hybrid.parser.BoolValueToken;
@@ -50,6 +51,24 @@ public class TokenCompletionItems {
     };
   }
 
+  public List<CompletionItem> forToken(final Token token, String... matchingTexts) {
+    List<CompletionItem> result = new ArrayList<>(Collections.singleton(forToken(token)));
+    for (final String match : matchingTexts) {
+      result.add(new SimpleCompletionItem(match) {
+        @Override
+        public Runnable complete(String text) {
+          return myTokenHandler.apply(token);
+        }
+
+        @Override
+        public String toString() {
+          return match + "->Token[" + token + "]";
+        }
+      });
+    }
+    return result;
+  }
+
   public List<CompletionItem> forTokens(Token ...tokens) {
     List<CompletionItem> result = new ArrayList<>();
     for (Token t : tokens) {
@@ -67,7 +86,7 @@ public class TokenCompletionItems {
   }
 
   public CompletionItem forId(final Predicate<String> idPredicate) {
-    return new CompletionItem() {
+    return new BaseCompletionItem() {
       @Override
       public String visibleText(String text) {
         return "id";
@@ -97,7 +116,7 @@ public class TokenCompletionItems {
   }
 
   public CompletionItem forNumber() {
-    return new CompletionItem() {
+    return new BaseCompletionItem() {
       @Override
       public String visibleText(String text) {
         return "number";

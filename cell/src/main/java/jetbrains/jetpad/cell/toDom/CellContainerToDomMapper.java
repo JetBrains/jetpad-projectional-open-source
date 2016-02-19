@@ -16,6 +16,7 @@
 package jetbrains.jetpad.cell.toDom;
 
 import com.google.common.base.Strings;
+import com.google.common.base.Supplier;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.dom.client.Document;
@@ -28,6 +29,7 @@ import com.google.gwt.query.client.GQuery;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Window;
+import jetbrains.jetpad.base.Handler;
 import jetbrains.jetpad.base.Registration;
 import jetbrains.jetpad.base.Value;
 import jetbrains.jetpad.base.edt.EventDispatchThread;
@@ -43,11 +45,13 @@ import jetbrains.jetpad.event.dom.EventTranslator;
 import jetbrains.jetpad.geometry.Rectangle;
 import jetbrains.jetpad.geometry.Vector;
 import jetbrains.jetpad.mapper.Mapper;
+import jetbrains.jetpad.mapper.MapperFactory;
 import jetbrains.jetpad.mapper.MappingContext;
 import jetbrains.jetpad.mapper.Synchronizers;
 import jetbrains.jetpad.model.collections.CollectionItemEvent;
 import jetbrains.jetpad.model.composite.Composites;
 import jetbrains.jetpad.model.event.CompositeRegistration;
+import jetbrains.jetpad.model.event.EventHandler;
 import jetbrains.jetpad.model.property.Properties;
 import jetbrains.jetpad.model.property.PropertyChangeEvent;
 import jetbrains.jetpad.model.property.ReadableProperty;
@@ -76,11 +80,14 @@ public class CellContainerToDomMapper extends Mapper<CellContainer, Element> {
     } else {
       final CompositeRegistration reg = new CompositeRegistration();
       final Value<Boolean> removed = new Value<>(false);
-      reg.add(prop.addHandler(event -> {
-        if (event.getNewValue() != null) {
-          r.run();
-          reg.remove();
-          removed.set(true);
+      reg.add(prop.addHandler(new EventHandler<PropertyChangeEvent<Element>>() {
+        @Override
+        public void onEvent(PropertyChangeEvent<Element> event) {
+          if (event.getNewValue() != null) {
+            r.run();
+            reg.remove();
+            removed.set(true);
+          }
         }
       }));
 
@@ -171,9 +178,12 @@ public class CellContainerToDomMapper extends Mapper<CellContainer, Element> {
     myScrollLeft = Window.getScrollLeft();
     myScrollTop = Window.getScrollTop();
 
-    myWindowReg = Window.addWindowScrollHandler(event -> {
-      myScrollLeft = event.getScrollLeft();
-      myScrollTop = event.getScrollTop();
+    myWindowReg = Window.addWindowScrollHandler(new Window.ScrollHandler() {
+      @Override
+      public void onWindowScroll(Window.ScrollEvent event) {
+        myScrollLeft = event.getScrollLeft();
+        myScrollTop = event.getScrollTop();
+      }
     });
   }
 
@@ -197,7 +207,12 @@ public class CellContainerToDomMapper extends Mapper<CellContainer, Element> {
   private void invalidateLineHighlight() {
     myLineHighlightUpToDate = false;
 
-    Scheduler.get().scheduleDeferred(this::refreshLineHighlight);
+    Scheduler.get().scheduleDeferred(new Scheduler.ScheduledCommand() {
+      @Override
+      public void execute() {
+        refreshLineHighlight();
+      }
+    });
   }
 
   private void refreshLineHighlight() {
@@ -237,49 +252,62 @@ public class CellContainerToDomMapper extends Mapper<CellContainer, Element> {
           $(myContent).html("");
         }
       }
-    }, source -> CellMappers.createMapper(source, myCellToDomContext)));
+    }, new MapperFactory<Cell, Element>() {
+      @Override
+      public Mapper<? extends Cell, ? extends Element> createMapper(Cell source) {
+        return CellMappers.createMapper(source, myCellToDomContext);
+      }
+    }));
 
-    conf.add(Synchronizers.forRegistration(() -> {
-      return getSource().addListener(new CellContainerAdapter() {
-        @Override
-        public void onCellPropertyChanged(Cell cell, CellPropertySpec<?> prop, PropertyChangeEvent<?> event) {
-          BaseCellMapper<?> mapper = (BaseCellMapper<?>) rootMapper().getDescendantMapper(cell);
-          if (mapper != null) {
-            if (Cell.isPopupProp(prop)) {
-              if (mapper.isAutoPopupManagement()) {
-                mapper.onEvent((PropertyChangeEvent<Cell>) event);
-              }
-            } else {
-              mapper.refreshProperties();
-              if (cell.isPopup() && mapper.isAutoPopupManagement()) {
-                mapper.onPopupPropertyChanged(prop, event);
+    conf.add(Synchronizers.forRegistration(new Supplier<Registration>() {
+      @Override
+      public Registration get() {
+        return getSource().addListener(new CellContainerAdapter() {
+          @Override
+          public void onCellPropertyChanged(Cell cell, CellPropertySpec<?> prop, PropertyChangeEvent<?> event) {
+            BaseCellMapper<?> mapper = (BaseCellMapper<?>) rootMapper().getDescendantMapper(cell);
+            if (mapper != null) {
+              if (Cell.isPopupProp(prop)) {
+                if (mapper.isAutoPopupManagement()) {
+                  mapper.onEvent((PropertyChangeEvent<Cell>) event);
+                }
+              } else {
+                mapper.refreshProperties();
+                if (cell.isPopup() && mapper.isAutoPopupManagement()) {
+                  mapper.onPopupPropertyChanged(prop, event);
+                }
               }
             }
+
+            invalidateLineHighlight();
           }
 
-          invalidateLineHighlight();
-        }
+          @Override
+          public void onChildAdded(Cell parent, CollectionItemEvent<? extends Cell> change) {
+            BaseCellMapper<?> mapper = (BaseCellMapper<?>) rootMapper().getDescendantMapper(parent);
+            if (mapper == null) return;
+            mapper.childAdded(change.getIndex(), change.getNewItem());
+            invalidateLineHighlight();
+          }
 
-        @Override
-        public void onChildAdded(Cell parent, CollectionItemEvent<? extends Cell> change) {
-          BaseCellMapper<?> mapper = (BaseCellMapper<?>) rootMapper().getDescendantMapper(parent);
-          if (mapper == null) return;
-          mapper.childAdded(change.getIndex(), change.getNewItem());
-          invalidateLineHighlight();
-        }
-
-        @Override
-        public void onChildRemoved(Cell parent, CollectionItemEvent<? extends Cell> change) {
-          BaseCellMapper<?> mapper = (BaseCellMapper<?>) rootMapper().getDescendantMapper(parent);
-          if (mapper == null) return;
-          mapper.childRemoved(change.getIndex(), change.getNewItem());
-          invalidateLineHighlight();
-        }
-      });
+          @Override
+          public void onChildRemoved(Cell parent, CollectionItemEvent<? extends Cell> change) {
+            BaseCellMapper<?> mapper = (BaseCellMapper<?>) rootMapper().getDescendantMapper(parent);
+            if (mapper == null) return;
+            mapper.childRemoved(change.getIndex(), change.getNewItem());
+            invalidateLineHighlight();
+          }
+        });
+      }
     }));
 
     if (!myCellToDomContext.eventsDisabled) {
-      conf.add(Synchronizers.forRegistration(this::registerListeners));
+      conf.add(Synchronizers.forRegistration(new Supplier<Registration>() {
+        @Override
+        public Registration get() {
+          return registerListeners();
+        }
+      }));
     }
   }
 
@@ -520,55 +548,69 @@ public class CellContainerToDomMapper extends Mapper<CellContainer, Element> {
     reg.add(eventRegistration(Event.ONKEYDOWN, focusTarget, new Function() {
       @Override
       public boolean f(Event e) {
-        return EventTranslator.dispatchKeyPress(e, e1 -> {
-          if (e1.is(Key.SPACE)) {
-            getSource().keyPressed(e1);
-            getSource().keyTyped(new KeyEvent(Key.SPACE, ' ', Collections.<ModifierKey>emptySet()));
-            return;
-          }
+        return EventTranslator.dispatchKeyPress(e, new Handler<KeyEvent>() {
+          @Override
+          public void handle(final KeyEvent e) {
+            if (e.is(Key.SPACE)) {
+              getSource().keyPressed(e);
+              getSource().keyTyped(new KeyEvent(Key.SPACE, ' ', Collections.<ModifierKey>emptySet()));
+              return;
+            }
 
-          if (e1.is(KeyStrokeSpecs.PASTE)) {
-            clipboardSupport.pasteContent(text -> {
-              if (Strings.isNullOrEmpty(text)) {
-                getSource().keyPressed(e1.copy());
+            if (e.is(KeyStrokeSpecs.PASTE)) {
+              clipboardSupport.pasteContent(new Handler<String>() {
+                @Override
+                public void handle(String text) {
+                  if (Strings.isNullOrEmpty(text)) {
+                    getSource().keyPressed(e.copy());
+                  } else {
+                    getSource().paste(text);
+                  }
+                }
+              });
+              return;
+            }
+
+            if (e.is(KeyStrokeSpecs.CUT) || e.is(KeyStrokeSpecs.COPY)) {
+              CopyCutEvent copyEvent;
+              if (e.is(KeyStrokeSpecs.CUT)) {
+                getSource().cut(copyEvent = new CopyCutEvent(true));
               } else {
-                getSource().paste(text);
+                getSource().copy(copyEvent = new CopyCutEvent(false));
               }
-            });
-            return;
-          }
-
-          if (e1.is(KeyStrokeSpecs.CUT) || e1.is(KeyStrokeSpecs.COPY)) {
-            CopyCutEvent copyEvent;
-            if (e1.is(KeyStrokeSpecs.CUT)) {
-              getSource().cut(copyEvent = new CopyCutEvent(true));
-            } else {
-              getSource().copy(copyEvent = new CopyCutEvent(false));
+              ClipboardContent content = copyEvent.getResult();
+              if (content != null) {
+                clipboardSupport.copyContent(content);
+              }
+              return;
             }
-            ClipboardContent content = copyEvent.getResult();
-            if (content != null) {
-              clipboardSupport.copyContent(content);
-            }
-            return;
-          }
 
-          getSource().keyPressed(e1);
+            getSource().keyPressed(e);
+          }
         });
       }
     }));
     reg.add(eventRegistration(Event.ONKEYUP, focusTarget, new Function() {
       @Override
       public boolean f(Event e) {
-        return EventTranslator.dispatchKeyRelease(e, e1 -> getSource().keyReleased(e1));
+        return EventTranslator.dispatchKeyRelease(e, new Handler<KeyEvent>() {
+          @Override
+          public void handle(KeyEvent e) {
+            getSource().keyReleased(e);
+          }
+        });
       }
     }));
     reg.add(eventRegistration(Event.ONKEYPRESS, focusTarget, new Function() {
       @Override
       public boolean f(Event e) {
-        return EventTranslator.dispatchKeyType(e, e1 -> {
-          //Space is a special key in Chrome. We emulate its typing in keydown
-          if (e1.getKeyChar() == ' ') return;
-          getSource().keyTyped(e1);
+        return EventTranslator.dispatchKeyType(e, new Handler<KeyEvent>() {
+          @Override
+          public void handle(KeyEvent e) {
+            //Space is a special key in Chrome. We emulate its typing in keydown
+            if (e.getKeyChar() == ' ') return;
+            getSource().keyTyped(e);
+          }
         });
       }
     }));
@@ -588,7 +630,12 @@ public class CellContainerToDomMapper extends Mapper<CellContainer, Element> {
       }
     }));
 
-    reg.add(getSource().focusedCell.addHandler(event -> invalidateLineHighlight()));
+    reg.add(getSource().focusedCell.addHandler(new EventHandler<PropertyChangeEvent<Cell>>() {
+      @Override
+      public void onEvent(PropertyChangeEvent<Cell> event) {
+        invalidateLineHighlight();
+      }
+    }));
 
     return reg;
   }

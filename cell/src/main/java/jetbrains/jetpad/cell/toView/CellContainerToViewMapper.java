@@ -15,13 +15,14 @@
  */
 package jetbrains.jetpad.cell.toView;
 
+import com.google.common.base.Supplier;
+import jetbrains.jetpad.base.Registration;
 import jetbrains.jetpad.base.edt.EventDispatchThread;
 import jetbrains.jetpad.cell.*;
 import jetbrains.jetpad.cell.indent.IndentCell;
 import jetbrains.jetpad.cell.indent.NewLineCell;
 import jetbrains.jetpad.cell.util.Cells;
-import jetbrains.jetpad.event.ClipboardContent;
-import jetbrains.jetpad.event.ContentKinds;
+import jetbrains.jetpad.event.*;
 import jetbrains.jetpad.geometry.Rectangle;
 import jetbrains.jetpad.geometry.Vector;
 import jetbrains.jetpad.mapper.Mapper;
@@ -34,6 +35,7 @@ import jetbrains.jetpad.model.event.EventHandler;
 import jetbrains.jetpad.model.property.Properties;
 import jetbrains.jetpad.model.property.PropertyChangeEvent;
 import jetbrains.jetpad.model.property.ReadableProperty;
+import jetbrains.jetpad.model.property.WritableProperty;
 import jetbrains.jetpad.projectional.view.*;
 import jetbrains.jetpad.values.Color;
 
@@ -77,44 +79,55 @@ public class CellContainerToViewMapper extends Mapper<CellContainer, View> {
 
     conf.add(Synchronizers.forPropsOneWay(Properties.TRUE, myTargetView.focusable()));
     conf.add(Synchronizers.forSingleRole(this, Properties.<Cell>constant(getSource().root),
-      value -> {
-        myTargetView.children().clear();
-        if (value != null) {
-          myTargetView.children().add(value);
+      new WritableProperty<View>() {
+        @Override
+        public void set(View value) {
+          myTargetView.children().clear();
+          if (value != null) {
+            myTargetView.children().add(value);
+          }
         }
       },
-      (MapperFactory<Cell, View>) source -> CellMappers.create(source, myContext)
+      new MapperFactory<Cell, View>() {
+        @Override
+        public Mapper<? extends Cell, ? extends View> createMapper(Cell source) {
+          return CellMappers.create(source, myContext);
+        }
+      }
     ));
-    conf.add(Synchronizers.forRegistration(() -> {
-      ViewTrait redispatchTrait = createRedistpatchTrait();
-      myContext.focused.set(myTargetView.focused().get());
-      return new CompositeRegistration(
-        getSource().addListener(createCellContainerListener()),
-        getSource().focusedCell.addHandler(new EventHandler<PropertyChangeEvent<Cell>>() {
-          @Override
-          public void onEvent(PropertyChangeEvent<Cell> event) {
-            if (event.getNewValue() != null) {
-              myTargetView.container().focusedView().set(myTargetView);
+    conf.add(Synchronizers.forRegistration(new Supplier<Registration>() {
+      @Override
+      public Registration get() {
+        ViewTrait redispatchTrait = createRedistpatchTrait();
+        myContext.focused.set(myTargetView.focused().get());
+        return new CompositeRegistration(
+          getSource().addListener(createCellContainerListener()),
+          getSource().focusedCell.addHandler(new EventHandler<PropertyChangeEvent<Cell>>() {
+            @Override
+            public void onEvent(PropertyChangeEvent<Cell> event) {
+              if (event.getNewValue() != null) {
+                myTargetView.container().focusedView().set(myTargetView);
+              }
             }
-          }
-        }),
-        myTargetView.focused().addHandler(new EventHandler<PropertyChangeEvent<Boolean>>() {
-          @Override
-          public void onEvent(PropertyChangeEvent<Boolean> event) {
-            myContext.focused.set(event.getNewValue());
-            for (TextCell cell : myWithCaret) {
-              BaseCellMapper<?, ?> mapper = (BaseCellMapper<?, ?>) rootMapper().getDescendantMapper(cell);
-              mapper.refreshProperties();
+          }),
+          myTargetView.focused().addHandler(new EventHandler<PropertyChangeEvent<Boolean>>() {
+            @Override
+            public void onEvent(PropertyChangeEvent<Boolean> event) {
+              myContext.focused.set(event.getNewValue());
+              for (TextCell cell : myWithCaret) {
+                BaseCellMapper<?, ?> mapper = (BaseCellMapper<?, ?>) rootMapper().getDescendantMapper(cell);
+                mapper.refreshProperties();
+              }
+              for (Cell cell : myHighlighted) {
+                BaseCellMapper<?, ?> mapper = (BaseCellMapper<?, ?>) rootMapper().getDescendantMapper(cell);
+                mapper.refreshProperties();
+              }
             }
-            for (Cell cell : myHighlighted) {
-              BaseCellMapper<?, ?> mapper = (BaseCellMapper<?, ?>) rootMapper().getDescendantMapper(cell);
-              mapper.refreshProperties();
-            }
-          }
-        }),
-        getTarget().addTrait(redispatchTrait),
-        myPopupView.addTrait(redispatchTrait)
-      );
+          }),
+          getTarget().addTrait(redispatchTrait),
+          myPopupView.addTrait(redispatchTrait)
+        );
+      }
     }));
   }
 
@@ -224,28 +237,89 @@ public class CellContainerToViewMapper extends Mapper<CellContainer, View> {
     final CellContainer cellContainer = getSource();
 
     return new ViewTraitBuilder()
-      .on(ViewEvents.MOUSE_CLICKED, (view, e) -> cellContainer.mouseClicked(e))
-      .on(ViewEvents.MOUSE_PRESSED, (view, e) -> {
-        cellContainer.mousePressed(e);
-        if (targetView.isAttached()) {
-          targetView.container().focusedView().set(targetView);
+      .on(ViewEvents.MOUSE_CLICKED, new ViewEventHandler<MouseEvent>() {
+        @Override
+        public void handle(View view, MouseEvent e) {
+          cellContainer.mouseClicked(e);
         }
       })
-      .on(ViewEvents.MOUSE_RELEASED, (view, e) -> cellContainer.mouseReleased(e))
-      .on(ViewEvents.MOUSE_MOVED, (view, e) -> cellContainer.mouseMoved(e))
-      .on(ViewEvents.MOUSE_ENTERED, (view, e) -> cellContainer.mouseEntered(e))
-      .on(ViewEvents.MOUSE_LEFT, (view, e) -> cellContainer.mouseLeft(e))
-      .on(ViewEvents.MOUSE_DRAGGED, (view, e) -> cellContainer.mouseDragged(e))
-      .on(ViewEvents.KEY_PRESSED, (view, e) -> cellContainer.keyPressed(e))
-      .on(ViewEvents.KEY_RELEASED, (view, e) -> cellContainer.keyReleased(e))
-      .on(ViewEvents.KEY_TYPED, (view, e) -> cellContainer.keyTyped(e))
-      .on(ViewEvents.COPY, (view, e) -> cellContainer.copy(e))
-      .on(ViewEvents.CUT, (view, e) -> cellContainer.cut(e))
-      .on(ViewEvents.PASTE, (view, e) -> {
-        ClipboardContent content = e.getContent();
-        if (content.isSupported(ContentKinds.TEXT)) {
-          cellContainer.paste(content.get(ContentKinds.TEXT));
-          e.consume();
+      .on(ViewEvents.MOUSE_PRESSED, new ViewEventHandler<MouseEvent>() {
+        @Override
+        public void handle(View view, MouseEvent e) {
+          cellContainer.mousePressed(e);
+          if (targetView.isAttached()) {
+            targetView.container().focusedView().set(targetView);
+          }
+        }
+      })
+      .on(ViewEvents.MOUSE_RELEASED, new ViewEventHandler<MouseEvent>() {
+        @Override
+        public void handle(View view, MouseEvent e) {
+          cellContainer.mouseReleased(e);
+        }
+      })
+      .on(ViewEvents.MOUSE_MOVED, new ViewEventHandler<MouseEvent>() {
+        @Override
+        public void handle(View view, MouseEvent e) {
+          cellContainer.mouseMoved(e);
+        }
+      })
+      .on(ViewEvents.MOUSE_ENTERED, new ViewEventHandler<MouseEvent>() {
+        @Override
+        public void handle(View view, MouseEvent e) {
+          cellContainer.mouseEntered(e);
+        }
+      })
+      .on(ViewEvents.MOUSE_LEFT, new ViewEventHandler<MouseEvent>() {
+        @Override
+        public void handle(View view, MouseEvent e) {
+          cellContainer.mouseLeft(e);
+        }
+      })
+      .on(ViewEvents.MOUSE_DRAGGED, new ViewEventHandler<MouseEvent>() {
+        @Override
+        public void handle(View view, MouseEvent e) {
+          cellContainer.mouseDragged(e);
+        }
+      })
+      .on(ViewEvents.KEY_PRESSED, new ViewEventHandler<KeyEvent>() {
+        @Override
+        public void handle(View view, KeyEvent e) {
+          cellContainer.keyPressed(e);
+        }
+      })
+      .on(ViewEvents.KEY_RELEASED, new ViewEventHandler<KeyEvent>() {
+        @Override
+        public void handle(View view, KeyEvent e) {
+          cellContainer.keyReleased(e);
+        }
+      })
+      .on(ViewEvents.KEY_TYPED, new ViewEventHandler<KeyEvent>() {
+        @Override
+        public void handle(View view, KeyEvent e) {
+          cellContainer.keyTyped(e);
+        }
+      })
+      .on(ViewEvents.COPY, new ViewEventHandler<CopyCutEvent>() {
+        @Override
+        public void handle(View view, CopyCutEvent e) {
+          cellContainer.copy(e);
+        }
+      })
+      .on(ViewEvents.CUT, new ViewEventHandler<CopyCutEvent>() {
+        @Override
+        public void handle(View view, CopyCutEvent e) {
+          cellContainer.cut(e);
+        }
+      })
+      .on(ViewEvents.PASTE, new ViewEventHandler<PasteEvent>() {
+        @Override
+        public void handle(View view, PasteEvent e) {
+          ClipboardContent content = e.getContent();
+          if (content.isSupported(ContentKinds.TEXT)) {
+            cellContainer.paste(content.get(ContentKinds.TEXT));
+            e.consume();
+          }
         }
       })
       .build();

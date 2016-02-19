@@ -17,7 +17,7 @@ package jetbrains.jetpad.hybrid.parser;
 
 import jetbrains.jetpad.values.Color;
 
-public class SimpleToken implements Token {
+public class SimpleToken extends BaseToken {
   private String myName;
   private boolean myNoSpaceLeft;
   private boolean myNoSpaceRight;

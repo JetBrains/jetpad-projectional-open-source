@@ -20,7 +20,7 @@ package jetbrains.jetpad.hybrid.parser;
  * can't be tokenized further and should be treated by a parser as an already
  * parsed node, i.e. parser should just return a value
  */
-public class ValueToken implements Token {
+public class ValueToken extends BaseToken {
   private Object myValue;
   private ValueCloner myCloner;
 

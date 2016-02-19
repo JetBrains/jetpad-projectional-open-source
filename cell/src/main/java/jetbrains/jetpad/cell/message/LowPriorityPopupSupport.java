@@ -39,9 +39,19 @@ class LowPriorityPopupSupport extends Registration implements EventHandler<Colle
   LowPriorityPopupSupport(Cell lowPriorityPopup, boolean forceHide) {
     myLowPriorityPopup = lowPriorityPopup;
 
-    myPopupVisibleHandler = event -> onChildPopupBecameVisible(event.getNewValue());
+    myPopupVisibleHandler = new EventHandler<PropertyChangeEvent<Boolean>>() {
+      @Override
+      public void onEvent(PropertyChangeEvent<Boolean> event) {
+        onChildPopupBecameVisible(event.getNewValue());
+      }
+    };
 
-    myPopupHandler = this::onChildPopupChanged;
+    myPopupHandler = new EventHandler<PropertyChangeEvent<Cell>>() {
+      @Override
+      public void onEvent(PropertyChangeEvent<Cell> event) {
+        onChildPopupChanged(event);
+      }
+    };
 
     subscribe(lowPriorityPopup.getParent(), true);
 

@@ -122,11 +122,14 @@ class MessageTrait extends CellTrait {
     myLastEditingKeyEvent = myContainer.getEdt().getCurrentTimeMillis();
     if (myForceHide) return;
     setForceHide(true);
-    myUpdatesReg = myContainer.getEdt().scheduleRepeating(POPUPS_SHOW_DELAY_MILLIS, () -> {
-      if (myContainer.getEdt().getCurrentTimeMillis() - myLastEditingKeyEvent < POPUPS_SHOW_DELAY_MILLIS) return;
-      myUpdatesReg.remove();
-      myUpdatesReg = null;
-      setForceHide(false);
+    myUpdatesReg = myContainer.getEdt().scheduleRepeating(POPUPS_SHOW_DELAY_MILLIS, new Runnable() {
+      @Override
+      public void run() {
+        if (myContainer.getEdt().getCurrentTimeMillis() - myLastEditingKeyEvent < POPUPS_SHOW_DELAY_MILLIS) return;
+        myUpdatesReg.remove();
+        myUpdatesReg = null;
+        setForceHide(false);
+      }
     });
   }
 
