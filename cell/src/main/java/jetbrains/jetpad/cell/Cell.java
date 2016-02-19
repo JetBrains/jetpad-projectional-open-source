@@ -33,7 +33,6 @@ import jetbrains.jetpad.model.collections.list.ObservableArrayList;
 import jetbrains.jetpad.model.collections.list.ObservableList;
 import jetbrains.jetpad.model.composite.*;
 import jetbrains.jetpad.model.event.EventHandler;
-import jetbrains.jetpad.model.event.ListenerCaller;
 import jetbrains.jetpad.model.event.Listeners;
 import jetbrains.jetpad.model.property.BaseReadableProperty;
 import jetbrains.jetpad.model.property.Property;
@@ -260,22 +259,16 @@ public abstract class Cell implements NavComposite<Cell>, HasVisibility, HasFocu
 
     for (final CellPropertySpec<?> p : t.getChangedProperties(this)) {
       final Object val = get(p);
-      toRun.add(new Runnable() {
-        @Override
-        public void run() {
-          final Object newVal = get(p);
-          if (Objects.equal(val, newVal)) return;
-          firePropertyChange(p, new PropertyChangeEvent(val, newVal));
-        }
+      toRun.add(() -> {
+        final Object newVal = get(p);
+        if (Objects.equal(val, newVal)) return;
+        firePropertyChange(p, new PropertyChangeEvent(val, newVal));
       });
     }
 
-    return new Runnable() {
-      @Override
-      public void run() {
-        for (Runnable r : toRun) {
-          r.run();
-        }
+    return () -> {
+      for (Runnable r : toRun) {
+        r.run();
       }
     };
   }
@@ -436,12 +429,7 @@ public abstract class Cell implements NavComposite<Cell>, HasVisibility, HasFocu
     }
 
     if (myListeners != null) {
-      myListeners.fire(new ListenerCaller<CellListener>() {
-        @Override
-        public void call(CellListener l) {
-          l.onPropertyChanged(prop, event);
-        }
-      });
+      myListeners.fire(l -> l.onPropertyChanged(prop, event));
     }
 
     if (myContainer != null) {
@@ -541,12 +529,7 @@ public abstract class Cell implements NavComposite<Cell>, HasVisibility, HasFocu
     myContainer.cellAdded(this);
 
     if (myListeners != null) {
-      myListeners.fire(new ListenerCaller<CellListener>() {
-        @Override
-        public void call(CellListener l) {
-          l.onAttach(container);
-        }
-      });
+      myListeners.fire(l -> l.onAttach(container));
     }
 
     if (myChildren != null) {
@@ -569,12 +552,7 @@ public abstract class Cell implements NavComposite<Cell>, HasVisibility, HasFocu
     final CellContainer oldContainer = myContainer;
     myContainer = null;
     if (myListeners != null) {
-      myListeners.fire(new ListenerCaller<CellListener>() {
-        @Override
-        public void call(CellListener l) {
-          l.onDetach(oldContainer);
-        }
-      });
+      myListeners.fire(l -> l.onDetach(oldContainer));
     }
 
     if (myChildren != null) {
@@ -649,12 +627,7 @@ public abstract class Cell implements NavComposite<Cell>, HasVisibility, HasFocu
     final PropertyChangeEvent<Cell> event = myListeners != null ? new PropertyChangeEvent<>(myParent, newParent) : null;
     myParent = newParent;
     if (myListeners != null) {
-      myListeners.fire(new ListenerCaller<CellListener>() {
-        @Override
-        public void call(CellListener l) {
-          l.onParentChanged(event);
-        }
-      });
+      myListeners.fire(l -> l.onParentChanged(event));
     }
   }
 
@@ -706,12 +679,7 @@ public abstract class Cell implements NavComposite<Cell>, HasVisibility, HasFocu
             myContainer.cellChildAdded(Cell.this, event);
           }
           if (myListeners != null) {
-            myListeners.fire(new ListenerCaller<CellListener>() {
-              @Override
-              public void call(CellListener l) {
-                l.onChildAdded(event);
-              }
-            });
+            myListeners.fire(l -> l.onChildAdded(event));
           }
         }
 
@@ -725,12 +693,7 @@ public abstract class Cell implements NavComposite<Cell>, HasVisibility, HasFocu
             myContainer.cellChildRemoved(Cell.this, event);
           }
           if (myListeners != null) {
-            myListeners.fire(new ListenerCaller<CellListener>() {
-              @Override
-              public void call(CellListener l) {
-                l.onChildRemoved(event);
-              }
-            });
+            myListeners.fire(l -> l.onChildRemoved(event));
           }
         }
       });
