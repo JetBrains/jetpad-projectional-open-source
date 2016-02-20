@@ -1023,8 +1023,8 @@ public class ProjectionalListSynchronizerTest extends EditingTestCase {
           }
 
           @Override
-          public Async<List<CompletionItem>> getAsync(CompletionParameters cp) {
-            return Asyncs.constant(Arrays.<CompletionItem>asList(new SimpleCompletionItem("asyncItem") {
+          public Async<Iterable<CompletionItem>> getAsync(CompletionParameters cp) {
+            return Asyncs.<Iterable<CompletionItem>>constant(Arrays.<CompletionItem>asList(new SimpleCompletionItem("asyncItem") {
               @Override
               public Runnable complete(String text) {
                 return target.set(new NonEmptyChild());

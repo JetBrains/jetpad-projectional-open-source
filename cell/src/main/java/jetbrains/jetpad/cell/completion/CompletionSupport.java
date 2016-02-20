@@ -17,6 +17,7 @@ package jetbrains.jetpad.cell.completion;
 
 import com.google.common.base.Function;
 import com.google.common.base.Strings;
+import com.google.common.collect.FluentIterable;
 import com.google.common.collect.Lists;
 import jetbrains.jetpad.base.*;
 import jetbrains.jetpad.cell.*;
@@ -111,7 +112,7 @@ public class CompletionSupport {
     };
   }
 
-  static void showCompletion(final TextEditor editor, Async<List<CompletionItem>> items,
+  static void showCompletion(final TextEditor editor, Async<Iterable<CompletionItem>> items,
                              final Runnable restoreCompletionState, final Runnable restoreFocusState) {
 
     if (!editor.focused().get()) {
@@ -201,11 +202,11 @@ public class CompletionSupport {
       }
     });
 
-    items.onSuccess(new Handler<List<CompletionItem>>() {
+    items.onSuccess(new Handler<Iterable<CompletionItem>>() {
       @Override
-      public void handle(List<CompletionItem> items) {
+      public void handle(Iterable<CompletionItem> items) {
         menuModel.loading.set(false);
-        menuModel.items.addAll(items);
+        menuModel.items.addAll(FluentIterable.from(items).toList());
       }
     });
     items.onFailure(new Handler<Throwable>() {
@@ -267,16 +268,16 @@ public class CompletionSupport {
         if (spec == Completion.COMPLETION) {
           return new CompletionSupplier() {
             @Override
-            public List<CompletionItem> get(CompletionParameters cp) {
-              return Lists.transform(supplier.get(wrap(cp)), wrap);
+            public Iterable<CompletionItem> get(CompletionParameters cp) {
+              return FluentIterable.from(supplier.get(wrap(cp))).transform(wrap);
             }
 
             @Override
-            public Async<List<CompletionItem>> getAsync(CompletionParameters cp) {
-              return Asyncs.map(supplier.getAsync(wrap(cp)), new Function<List<CompletionItem>, List<CompletionItem>>() {
+            public Async<Iterable<CompletionItem>> getAsync(CompletionParameters cp) {
+              return Asyncs.map(supplier.getAsync(wrap(cp)), new Function<Iterable<CompletionItem>, Iterable<CompletionItem>>() {
                 @Override
-                public List<CompletionItem> apply(List<CompletionItem> input) {
-                  return Lists.transform(input, wrap);
+                public Iterable<CompletionItem> apply(Iterable<CompletionItem> input) {
+                  return FluentIterable.from(input).transform(wrap);
                 }
               });
             }

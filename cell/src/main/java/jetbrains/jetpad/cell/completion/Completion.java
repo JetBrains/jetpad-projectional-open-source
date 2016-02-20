@@ -15,6 +15,7 @@
  */
 package jetbrains.jetpad.cell.completion;
 
+import com.google.common.collect.FluentIterable;
 import jetbrains.jetpad.base.Async;
 import jetbrains.jetpad.base.Handler;
 import jetbrains.jetpad.base.SimpleAsync;
@@ -31,17 +32,17 @@ public class Completion {
   public static final CellTraitPropertySpec<CompletionSupplier> RIGHT_TRANSFORM = new CellTraitPropertySpec<>("rightTransform", CompletionSupplier.EMPTY);
   public static final CellTraitPropertySpec<CompletionController> COMPLETION_CONTROLLER = new CellTraitPropertySpec<>("completionController");
 
-  public static Async<List<CompletionItem>> allCompletion(Cell cell, CompletionParameters params) {
+  public static Async<Iterable<CompletionItem>> allCompletion(Cell cell, CompletionParameters params) {
     final CompletionSupplier supplier = cell.get(COMPLETION);
-    final List<CompletionItem> syncCompletion = supplier.get(params);
-    Async<List<CompletionItem>> asyncCompletion = supplier.getAsync(params);
+    final Iterable<CompletionItem> syncCompletion = supplier.get(params);
+    Async<? extends Iterable<CompletionItem>> asyncCompletion = supplier.getAsync(params);
 
-    final SimpleAsync<List<CompletionItem>> allItems = new SimpleAsync<>();
-    asyncCompletion.onResult(new Handler<List<CompletionItem>>() {
+    final SimpleAsync<Iterable<CompletionItem>> allItems = new SimpleAsync<>();
+    asyncCompletion.onResult(new Handler<Iterable<CompletionItem>>() {
       @Override
-      public void handle(List<CompletionItem> items) {
-        List<CompletionItem> result = new ArrayList<>(items);
-        result.addAll(syncCompletion);
+      public void handle(Iterable<CompletionItem> items) {
+        List<CompletionItem> result = new ArrayList<>(FluentIterable.from(items).toList());
+        result.addAll(FluentIterable.from(syncCompletion).toList());
         allItems.success(result);
       }
     }, new Handler<Throwable>() {

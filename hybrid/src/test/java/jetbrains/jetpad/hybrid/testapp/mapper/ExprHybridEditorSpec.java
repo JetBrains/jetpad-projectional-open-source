@@ -326,8 +326,8 @@ public class ExprHybridEditorSpec implements HybridEditorSpec<Expr> {
   public CompletionSupplier getAdditionalCompletion(CompletionContext ctx, final Completer complerer) {
     return new CompletionSupplier() {
       @Override
-      public Async<List<CompletionItem>> getAsync(CompletionParameters cp) {
-        return Asyncs.<List<CompletionItem>>constant(Arrays.<CompletionItem>asList(
+      public Async<Iterable<CompletionItem>> getAsync(CompletionParameters cp) {
+        return Asyncs.<Iterable<CompletionItem>>constant(Arrays.<CompletionItem>asList(
           new SimpleCompletionItem("asyncValue") {
             @Override
             public Runnable complete(String text) {

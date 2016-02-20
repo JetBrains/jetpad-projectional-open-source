@@ -16,6 +16,7 @@
 package jetbrains.jetpad.cell.text;
 
 import com.google.common.base.Predicate;
+import com.google.common.collect.FluentIterable;
 import jetbrains.jetpad.base.Runnables;
 import jetbrains.jetpad.cell.Cell;
 import jetbrains.jetpad.cell.TextCell;
@@ -98,7 +99,7 @@ public class ValidTextCompletionTest extends CompletionTestCase {
               }
 
               List<CompletionItem> result = new ArrayList<>();
-              result.addAll(createCompletion("a", "c", "ae", "zz", "d", "u", "q").get(cp));
+              result.addAll(FluentIterable.from(createCompletion("a", "c", "ae", "zz", "d", "u", "q").get(cp)).toList());
               result.add(new LowPriorityCompletionItem("d"));
               result.add(new LowPriorityCompletionItem("xx"));
               result.add(new LowPriorityCompletionItem("qq"));

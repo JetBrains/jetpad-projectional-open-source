@@ -36,7 +36,7 @@ public abstract class CompletionTestCase extends EditingTestCase {
   protected CompletionSupplier createCompletion(final String... items) {
     return new CompletionSupplier() {
       @Override
-      public List<CompletionItem> get(CompletionParameters cp) {
+      public Iterable<CompletionItem> get(CompletionParameters cp) {
         return createItems(items);
       }
     };
@@ -57,7 +57,7 @@ public abstract class CompletionTestCase extends EditingTestCase {
   protected CompletionSupplier createAsyncCompletion(final String... items) {
     return new CompletionSupplier() {
       @Override
-      public Async<List<CompletionItem>> getAsync(CompletionParameters cp) {
+      public Async<Iterable<CompletionItem>> getAsync(CompletionParameters cp) {
         return Asyncs.constant(createItems(items));
       }
     };
@@ -76,7 +76,7 @@ public abstract class CompletionTestCase extends EditingTestCase {
     };
   }
 
-  private List<CompletionItem> createItems(String... items) {
+  private Iterable<CompletionItem> createItems(String... items) {
     List<CompletionItem> result = new ArrayList<>();
     for (String i : items) {
       result.add(new SetTextToCompletionItem(i));

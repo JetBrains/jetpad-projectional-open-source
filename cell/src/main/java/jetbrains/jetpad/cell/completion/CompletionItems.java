@@ -15,6 +15,7 @@
  */
 package jetbrains.jetpad.cell.completion;
 
+import com.google.common.collect.FluentIterable;
 import jetbrains.jetpad.completion.CompletionItem;
 
 import java.util.ArrayList;
@@ -24,8 +25,8 @@ import java.util.List;
 public class CompletionItems {
   private List<CompletionItem> myItems = new ArrayList<>();
 
-  public CompletionItems(List<CompletionItem> items) {
-    myItems.addAll(items);
+  public CompletionItems(Iterable<CompletionItem> items) {
+    myItems.addAll(FluentIterable.from(items).toList());
   }
 
   public boolean isEmpty() {
