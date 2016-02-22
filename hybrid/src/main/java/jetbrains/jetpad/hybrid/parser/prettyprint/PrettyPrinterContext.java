@@ -17,15 +17,18 @@ package jetbrains.jetpad.hybrid.parser.prettyprint;
 
 import com.google.common.base.Function;
 import com.google.common.collect.Range;
+import jetbrains.jetpad.base.Registration;
 import jetbrains.jetpad.hybrid.parser.*;
 import jetbrains.jetpad.model.collections.list.ObservableList;
 import jetbrains.jetpad.model.event.CompositeRegistration;
 import jetbrains.jetpad.model.event.EventHandler;
 import jetbrains.jetpad.model.event.EventSource;
-import jetbrains.jetpad.base.Registration;
-import jetbrains.jetpad.model.property.Property;
+import jetbrains.jetpad.model.property.ReadableProperty;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Stack;
 
 public class PrettyPrinterContext<NodeT>  {
   private PrettyPrinter<NodeT> myPrettyPrinter;
@@ -71,13 +74,13 @@ public class PrettyPrinterContext<NodeT>  {
     myResult.myStack.peek().add(result);
   }
 
-  public <ValueT> void append(Property<ValueT> prop, Function<ValueT, Token> f) {
+  public <ValueT> void append(ReadableProperty<ValueT> prop, Function<ValueT, Token> f) {
     myResult.myChangeSources.add(prop);
 
     append(f.apply(prop.get()));
   }
 
-  public void append(Property<? extends NodeT> prop) {
+  public void append(ReadableProperty<? extends NodeT> prop) {
     myResult.myChangeSources.add(prop);
 
     final NodeT value = prop.get();
@@ -123,7 +126,7 @@ public class PrettyPrinterContext<NodeT>  {
     }
   }
 
-  public void appendInt(Property<Integer> prop) {
+  public void appendInt(ReadableProperty<Integer> prop) {
     append(prop, new Function<Integer, Token>() {
       @Override
       public Token apply(Integer input) {
@@ -132,7 +135,7 @@ public class PrettyPrinterContext<NodeT>  {
     });
   }
 
-  public void appendBool(Property<Boolean> prop) {
+  public void appendBool(ReadableProperty<Boolean> prop) {
     append(prop, new Function<Boolean, Token>() {
       @Override
       public Token apply(Boolean input) {
@@ -141,7 +144,7 @@ public class PrettyPrinterContext<NodeT>  {
     });
   }
 
-  public void appendId(Property<String> prop) {
+  public void appendId(ReadableProperty<String> prop) {
     append(prop, new Function<String, Token>() {
       @Override
       public Token apply(String input) {
@@ -150,7 +153,7 @@ public class PrettyPrinterContext<NodeT>  {
     });
   }
 
-  public void appendError(Property<String> prop) {
+  public void appendError(ReadableProperty<String> prop) {
     append(prop, new Function<String, Token>() {
       @Override
       public Token apply(String input) {
