@@ -28,11 +28,7 @@ import jetbrains.jetpad.cell.message.MessageController;
 import jetbrains.jetpad.cell.position.Positions;
 import jetbrains.jetpad.cell.util.CellState;
 import jetbrains.jetpad.cell.util.CellStateHandler;
-import jetbrains.jetpad.completion.BaseCompletionParameters;
-import jetbrains.jetpad.completion.CompletionController;
-import jetbrains.jetpad.completion.CompletionItem;
-import jetbrains.jetpad.completion.CompletionParameters;
-import jetbrains.jetpad.completion.CompletionSupplier;
+import jetbrains.jetpad.completion.*;
 import jetbrains.jetpad.event.Key;
 import jetbrains.jetpad.event.KeyEvent;
 import jetbrains.jetpad.event.KeyStrokeSpecs;
@@ -51,7 +47,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Arrays;
-import java.util.List;
 
 import static jetbrains.jetpad.hybrid.SelectionPosition.FIRST;
 import static jetbrains.jetpad.hybrid.SelectionPosition.LAST;
@@ -570,6 +565,17 @@ public class HybridEditorTest extends EditingTestCase {
     type(" ");
 
     assertTokens(Tokens.ID, Tokens.MUL, new IdentifierToken("x"), Tokens.LP_CALL, Tokens.RP);
+  }
+
+  @Test
+  public void tokenFocusAfterReparseAndSplitGivesDifferentTokens() {
+    setTokens(new IdentifierToken("func("), Tokens.RP);
+
+    select(0, false);
+    left();
+    type(" ");
+
+    assertEquals(0, sync.focusedIndex());
   }
 
   @Test

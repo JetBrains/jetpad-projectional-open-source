@@ -234,8 +234,8 @@ class TokenOperations<SourceT> {
 
         tokens().set(index, firstToken != null ? firstToken : new ErrorToken(firstTokenText));
         tokens().add(index + 1, secondToken != null ? secondToken : new ErrorToken(secondTokenText));
-        select(index + 1, FIRST).run();
         mySync.tokenListEditor().updateToPrintedTokens();
+        select(index + 1, FIRST).run();
         return true;
       }
     }
@@ -256,8 +256,8 @@ class TokenOperations<SourceT> {
       tokens().add(index, first);
       tokens().add(index + 1, second);
       tokens().add(index + 2, third);
-      select(index + 1, LAST).run();
       mySync.tokenListEditor().updateToPrintedTokens();
+      select(index + 1, LAST).run();
       return true;
     }
 

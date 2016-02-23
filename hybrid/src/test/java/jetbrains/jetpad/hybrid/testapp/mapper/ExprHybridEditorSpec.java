@@ -298,6 +298,12 @@ public class ExprHybridEditorSpec implements HybridEditorSpec<Expr> {
         TokenCompletionItems items = new TokenCompletionItems(tokenHandler);
         result.addAll(items.forTokens(Tokens.ID, Tokens.INCREMENT, Tokens.FACTORIAL, Tokens.PLUS, Tokens.MUL, Tokens.LP, Tokens.RP, Tokens.DOT));
         result.add(items.forNumber());
+        result.add(new SimpleCompletionItem("func") {
+          @Override
+          public Runnable complete(String text) {
+            return tokenHandler.apply(new IdentifierToken("func"));
+          }
+        });
         result.add(new SimpleCompletionItem("value") {
           @Override
           public Runnable complete(String text) {
