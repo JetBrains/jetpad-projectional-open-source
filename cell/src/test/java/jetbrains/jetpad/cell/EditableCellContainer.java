@@ -16,7 +16,7 @@
 package jetbrains.jetpad.cell;
 
 import jetbrains.jetpad.cell.event.CompletionEvent;
-import jetbrains.jetpad.cell.toView.CellToView;
+import jetbrains.jetpad.cell.toView.CellContainerToViewMapper;
 import jetbrains.jetpad.event.*;
 import jetbrains.jetpad.geometry.Vector;
 import jetbrains.jetpad.projectional.view.ViewContainer;
@@ -25,12 +25,15 @@ import java.util.Collections;
 
 public class EditableCellContainer {
   public final CellContainer container;
+  public final CellContainerToViewMapper mapper;
 
   private ViewContainer myViewContainer = new ViewContainer();
 
   public EditableCellContainer(CellContainer container) {
     this.container = container;
-    CellToView.map(container, myViewContainer);
+    mapper = new CellContainerToViewMapper(
+        container, myViewContainer.root(), myViewContainer.contentRoot(), myViewContainer.decorationRoot());
+    mapper.attachRoot();
   }
 
   public void layout() {

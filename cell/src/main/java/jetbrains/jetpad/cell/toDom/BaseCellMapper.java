@@ -135,8 +135,8 @@ abstract class BaseCellMapper<SourceT extends Cell> extends Mapper<SourceT, Elem
   void childAdded(int index, Cell child) {
     if (!isAutoChildManagement()) return;
     BaseCellMapper<? extends Cell> mapper = myContext.apply(child);
-    myChildMappers.add(index, mapper);
     myChildTargets.add(index, mapper.getTarget());
+    myChildMappers.add(index, mapper);
   }
 
   void childRemoved(int index, Cell child) {
