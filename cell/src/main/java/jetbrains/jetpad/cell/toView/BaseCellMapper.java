@@ -110,8 +110,8 @@ class BaseCellMapper<SourceT extends Cell, TargetT extends View> extends Mapper<
   void childAdded(int index, Cell child) {
     if (!isAutoChildManagement()) return;
     BaseCellMapper<? extends Cell, ? extends View> mapper = myContext.apply(child);
-    myChildMappers.add(index, mapper);
     getTarget().children().add(index, mapper.getTarget());
+    myChildMappers.add(index, mapper);
   }
 
   void childRemoved(int index, Cell child) {

@@ -40,14 +40,15 @@ public class Cells {
     }
   }
 
+  public static boolean inPopup(Cell cell) {
+    return getContainingPopup(cell) != null;
+  }
+
   private static Cell getContainingPopup(Cell c) {
-    Cell current = c;
-    while (true) {
-      Cell parent = current.getParent();
-      if (parent == null) return null;
+    for (Cell current = c; current != null; current = current.getParent()) {
       if (current.isPopup()) return current;
-      current = parent;
     }
+    return null;
   }
 
   public static boolean isEmpty(Cell cell) {
@@ -144,10 +145,11 @@ public class Cells {
     if (firstLeaf == null) return null;
 
     Cell lastLeaf = lastVisibleLeaf(cell);
+    if (lastLeaf == null) return null;
 
     Rectangle firstBounds = firstLeaf.getBounds();
     Rectangle lastBounds = lastLeaf.getBounds();
-
-    return new Rectangle(new Vector(bounds.origin.x, firstLeaf.getBounds().origin.y), new Vector(bounds.dimension.x, lastBounds.origin.y + lastBounds.dimension.y - firstBounds.origin.y));
+    return new Rectangle(new Vector(bounds.origin.x, firstLeaf.getBounds().origin.y),
+        new Vector(bounds.dimension.x, lastBounds.origin.y + lastBounds.dimension.y - firstBounds.origin.y));
   }
 }

@@ -15,6 +15,7 @@
  */
 package jetbrains.jetpad.cell;
 
+import jetbrains.jetpad.cell.toView.CellContainerToViewMapper;
 import jetbrains.jetpad.event.*;
 import jetbrains.jetpad.geometry.Vector;
 import jetbrains.jetpad.test.BaseTestCase;
@@ -25,6 +26,10 @@ public abstract class EditingTestCase extends BaseTestCase {
   protected final CellContainer myCellContainer = new CellContainer();
 
   private EditableCellContainer myEditableCellContainer = new EditableCellContainer(myCellContainer);
+
+  protected CellContainerToViewMapper getContainerMapper() {
+    return myEditableCellContainer.mapper;
+  }
 
   protected void layout() {
     myEditableCellContainer.layout();

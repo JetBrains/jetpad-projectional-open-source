@@ -76,4 +76,21 @@ public class MessageControllerTest extends MessageControllerTestCase {
     cell.bottomPopup().set(null);
     assertEquals(2, controller.getDecoratedCellsCount());
   }
+
+  @Test
+  public void setNotBrokenBeforeAttach() {
+    HorizontalCell child = new HorizontalCell();
+    MessageController.setBroken(child, "a");
+    assertTrue(MessageController.isBroken(child));
+
+    cell.children().add(child);
+    MessageController.setBroken(child, null);
+  }
+
+  @Test
+  public void messagesPriority() {
+    assertEquals(0, MessageController.MESSAGE_PROPS.indexOf(MessageController.BROKEN));
+    assertEquals(1, MessageController.MESSAGE_PROPS.indexOf(MessageController.ERROR));
+    assertEquals(2, MessageController.MESSAGE_PROPS.indexOf(MessageController.WARNING));
+  }
 }
