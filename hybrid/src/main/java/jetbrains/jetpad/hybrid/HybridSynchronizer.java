@@ -44,12 +44,14 @@ import jetbrains.jetpad.mapper.SynchronizerContext;
 import jetbrains.jetpad.model.collections.CollectionAdapter;
 import jetbrains.jetpad.model.collections.CollectionItemEvent;
 import jetbrains.jetpad.model.collections.CollectionListener;
+import jetbrains.jetpad.model.collections.list.ObservableArrayList;
 import jetbrains.jetpad.model.collections.list.ObservableList;
 import jetbrains.jetpad.model.collections.list.UnmodifiableObservableList;
 import jetbrains.jetpad.model.composite.Composites;
 import jetbrains.jetpad.model.event.CompositeRegistration;
 import jetbrains.jetpad.model.event.EventHandler;
 import jetbrains.jetpad.model.property.*;
+import jetbrains.jetpad.model.property.Properties;
 import jetbrains.jetpad.model.util.ListMap;
 import jetbrains.jetpad.projectional.cell.SelectionSupport;
 
@@ -82,17 +84,22 @@ public class HybridSynchronizer<SourceT> implements Synchronizer {
   private String myPlaceHolderText = "empty";
   private boolean myHideTokensInMenu = false;
 
-  private Property<HybridEditorSpec<SourceT>> mySpec;
+  private ReadableProperty<HybridEditorSpec<SourceT>> mySpec;
 
   public HybridSynchronizer(Mapper<?, ?> contextMapper, Property<SourceT> prop, Cell target, HybridEditorSpec<SourceT> spec) {
-    this(contextMapper, prop, target, new ValueProperty<>(spec));
+    this(contextMapper, prop, target, Properties.constant(spec), new ObservableArrayList<Token>());
   }
 
-  public HybridSynchronizer(Mapper<?, ?> contextMapper, Property<SourceT> prop, Cell target, Property<HybridEditorSpec<SourceT>> spec) {
+  public HybridSynchronizer(Mapper<?, ?> contextMapper, Property<SourceT> prop, Cell target, ReadableProperty<HybridEditorSpec<SourceT>> spec) {
+    this(contextMapper, prop, target, spec, new ObservableArrayList<Token>());
+  }
+
+  public HybridSynchronizer(Mapper<?, ?> contextMapper, Property<SourceT> prop, Cell target,
+      ReadableProperty<HybridEditorSpec<SourceT>> spec, ObservableList<Token> tokens) {
     myContextMapper = contextMapper;
     myProperty = prop;
     mySpec = spec;
-    myTokenListEditor = new TokenListEditor<>(spec);
+    myTokenListEditor = new TokenListEditor<>(spec, tokens);
     myTarget = target;
 
     myValueMappers = myContextMapper.createChildSet();
