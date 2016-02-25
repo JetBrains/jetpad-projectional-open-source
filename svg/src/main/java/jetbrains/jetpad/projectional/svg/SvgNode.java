@@ -16,11 +16,11 @@
 package jetbrains.jetpad.projectional.svg;
 
 import jetbrains.jetpad.model.children.ChildList;
-import jetbrains.jetpad.model.children.HasParent;
+import jetbrains.jetpad.model.children.SimpleComposite;
 import jetbrains.jetpad.model.collections.list.ObservableList;
 
 
-public abstract class SvgNode extends HasParent<SvgNode, SvgNode> {
+public abstract class SvgNode extends SimpleComposite<SvgNode, SvgNode> {
   private SvgNodeContainer myContainer;
 
   private SvgChildList myChildren;

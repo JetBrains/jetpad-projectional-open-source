@@ -15,9 +15,9 @@
  */
 package jetbrains.jetpad.projectional.demo.concept.model;
 
-import jetbrains.jetpad.model.children.HasParent;
+import jetbrains.jetpad.model.children.SimpleComposite;
 
-public abstract class ConceptMember extends HasParent<ConceptDeclaration, ConceptMember> {
+public abstract class ConceptMember extends SimpleComposite<ConceptDeclaration, ConceptMember> {
 
   public ConceptMember copy() {
     if (this instanceof EmptyMember) {

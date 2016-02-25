@@ -15,7 +15,7 @@
  */
 package jetbrains.jetpad.projectional.demo.expr.model;
 
-import jetbrains.jetpad.model.children.HasParent;
+import jetbrains.jetpad.model.children.SimpleComposite;
 
-public abstract class ExpressionAstNode extends HasParent<ExpressionAstNode, ExpressionAstNode> {
+public abstract class ExpressionAstNode extends SimpleComposite<ExpressionAstNode, ExpressionAstNode> {
 }

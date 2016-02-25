@@ -16,11 +16,11 @@
 package jetbrains.mps.diagram.dataflow.model;
 
 import jetbrains.jetpad.geometry.Vector;
-import jetbrains.jetpad.model.children.HasParent;
+import jetbrains.jetpad.model.children.SimpleComposite;
 import jetbrains.jetpad.model.property.Property;
 import jetbrains.jetpad.model.property.ValueProperty;
 
-public class Connector extends HasParent<Diagram, Connector> {
+public class Connector extends SimpleComposite<Diagram, Connector> {
   public final Property<OutputPort> output = new ValueProperty<>();
   public final Property<InputPort> input = new ValueProperty<>();
 

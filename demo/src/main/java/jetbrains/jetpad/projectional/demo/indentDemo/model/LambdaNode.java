@@ -15,7 +15,7 @@
  */
 package jetbrains.jetpad.projectional.demo.indentDemo.model;
 
-import jetbrains.jetpad.model.children.HasParent;
+import jetbrains.jetpad.model.children.SimpleComposite;
 
-public abstract class LambdaNode extends HasParent<LambdaNode, LambdaNode> {
+public abstract class LambdaNode extends SimpleComposite<LambdaNode, LambdaNode> {
 }

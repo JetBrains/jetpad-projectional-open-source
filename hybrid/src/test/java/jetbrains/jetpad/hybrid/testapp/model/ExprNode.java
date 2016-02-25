@@ -15,7 +15,7 @@
  */
 package jetbrains.jetpad.hybrid.testapp.model;
 
-import jetbrains.jetpad.model.children.HasParent;
+import jetbrains.jetpad.model.children.SimpleComposite;
 
-public abstract class ExprNode extends HasParent<ExprNode, ExprNode> {
+public abstract class ExprNode extends SimpleComposite<ExprNode, ExprNode> {
 }
