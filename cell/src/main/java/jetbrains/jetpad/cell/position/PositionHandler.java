@@ -23,15 +23,15 @@ import jetbrains.jetpad.cell.trait.CellTraitPropertySpec;
 import jetbrains.jetpad.model.property.Property;
 
 public interface PositionHandler {
-  public static PositionHandler EMPTY = new EmptyPositionHandler();
+  PositionHandler EMPTY = new EmptyPositionHandler();
 
-  public static final CellTraitPropertySpec<PositionHandler> PROPERTY = new CellTraitPropertySpec<>("positionHandler", new Function<Cell, PositionHandler>() {
+  CellTraitPropertySpec<PositionHandler> PROPERTY = new CellTraitPropertySpec<>("positionHandler", new Function<Cell, PositionHandler>() {
     @Override
     public PositionHandler apply(Cell input) {
       if (TextEditing.isTextEditor(input)) {
         return new TextPositionHandler(TextEditing.textEditor(input));
       }
-      return new DefaultPositionHandler();
+      return new CellDefaultPositionHandler(input);
     }
   });
 
