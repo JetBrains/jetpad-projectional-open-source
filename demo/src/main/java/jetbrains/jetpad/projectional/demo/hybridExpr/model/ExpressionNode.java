@@ -15,7 +15,7 @@
  */
 package jetbrains.jetpad.projectional.demo.hybridExpr.model;
 
-import jetbrains.jetpad.model.children.HasParent;
+import jetbrains.jetpad.model.children.SimpleComposite;
 
-public abstract class ExpressionNode extends HasParent<ExpressionNode, ExpressionNode> {
+public abstract class ExpressionNode extends SimpleComposite<ExpressionNode, ExpressionNode> {
 }

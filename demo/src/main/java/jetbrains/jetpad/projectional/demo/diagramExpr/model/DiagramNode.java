@@ -17,13 +17,13 @@ package jetbrains.jetpad.projectional.demo.diagramExpr.model;
 
 import jetbrains.jetpad.geometry.Vector;
 import jetbrains.jetpad.model.children.ChildList;
-import jetbrains.jetpad.model.children.HasParent;
+import jetbrains.jetpad.model.children.SimpleComposite;
 import jetbrains.jetpad.model.collections.list.ObservableList;
 import jetbrains.jetpad.model.property.Property;
 import jetbrains.jetpad.model.property.ValueProperty;
 import jetbrains.jetpad.projectional.demo.hybridExpr.model.Expression;
 
-public class DiagramNode extends HasParent<SimpleDiagram, DiagramNode> {
+public class DiagramNode extends SimpleComposite<SimpleDiagram, DiagramNode> {
   public final Property<Vector> location = new ValueProperty<>(Vector.ZERO);
   public final Property<Expression> expression = new ValueProperty<>();
   public final ObservableList<DiagramNodeConnection> connections = new ChildList<>(this);

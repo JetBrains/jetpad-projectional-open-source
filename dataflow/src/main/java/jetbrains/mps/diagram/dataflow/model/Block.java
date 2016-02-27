@@ -17,13 +17,13 @@ package jetbrains.mps.diagram.dataflow.model;
 
 import jetbrains.jetpad.geometry.Vector;
 import jetbrains.jetpad.model.children.ChildList;
-import jetbrains.jetpad.model.children.HasParent;
+import jetbrains.jetpad.model.children.SimpleComposite;
 import jetbrains.jetpad.model.collections.list.ObservableList;
 import jetbrains.jetpad.model.property.Property;
 import jetbrains.jetpad.model.property.ValueProperty;
 import jetbrains.jetpad.values.Color;
 
-public class Block extends HasParent<Diagram, Block> {
+public class Block extends SimpleComposite<Diagram, Block> {
   public final Property<Vector> location = new ValueProperty<>(Vector.ZERO);
   public final Property<Color> color = new ValueProperty<>(Color.GRAY);
 

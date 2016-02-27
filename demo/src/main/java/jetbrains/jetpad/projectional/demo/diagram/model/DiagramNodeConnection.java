@@ -15,10 +15,10 @@
  */
 package jetbrains.jetpad.projectional.demo.diagram.model;
 
-import jetbrains.jetpad.model.children.HasParent;
+import jetbrains.jetpad.model.children.SimpleComposite;
 import jetbrains.jetpad.model.property.Property;
 import jetbrains.jetpad.model.property.ValueProperty;
 
-public class DiagramNodeConnection extends HasParent<DiagramNode, DiagramNodeConnection> {
+public class DiagramNodeConnection extends SimpleComposite<DiagramNode, DiagramNodeConnection> {
   public final Property<DiagramNode> target = new ValueProperty<>();
 }

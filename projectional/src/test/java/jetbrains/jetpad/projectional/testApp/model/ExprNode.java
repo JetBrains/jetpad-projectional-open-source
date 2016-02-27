@@ -15,7 +15,7 @@
  */
 package jetbrains.jetpad.projectional.testApp.model;
 
-import jetbrains.jetpad.model.children.HasParent;
+import jetbrains.jetpad.model.children.SimpleComposite;
 
-public class ExprNode extends HasParent<ExprNode, ExprNode> {
+public class ExprNode extends SimpleComposite<ExprNode, ExprNode> {
 }

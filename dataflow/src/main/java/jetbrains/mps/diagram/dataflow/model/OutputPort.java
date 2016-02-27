@@ -15,7 +15,7 @@
  */
 package jetbrains.mps.diagram.dataflow.model;
 
-import jetbrains.jetpad.model.children.HasParent;
+import jetbrains.jetpad.model.children.SimpleComposite;
 
-public class OutputPort extends HasParent<Block, OutputPort> {
+public class OutputPort extends SimpleComposite<Block, OutputPort> {
 }
