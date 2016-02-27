@@ -106,6 +106,13 @@ public class CellsTest extends BaseTestCase {
   }
 
   @Test
+  public void emptinessOfVerticalCell() {
+    VerticalCell cell = new VerticalCell();
+    cell.children().add(new TextCell());
+    assertTrue(Cells.isEmpty(cell));
+  }
+
+  @Test
   public void nextCellAfterAdd() {
     container.children().add(c1);
     container.children().add(c2);

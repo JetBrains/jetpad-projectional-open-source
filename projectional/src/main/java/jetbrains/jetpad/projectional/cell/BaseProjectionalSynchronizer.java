@@ -25,6 +25,7 @@ import jetbrains.jetpad.cell.TextCell;
 import jetbrains.jetpad.cell.completion.Completion;
 import jetbrains.jetpad.cell.event.FocusEvent;
 import jetbrains.jetpad.cell.indent.IndentCell;
+import jetbrains.jetpad.cell.position.PositionHandler;
 import jetbrains.jetpad.cell.position.Positions;
 import jetbrains.jetpad.cell.text.TextEditing;
 import jetbrains.jetpad.cell.trait.CellTrait;
@@ -570,12 +571,15 @@ abstract class BaseProjectionalSynchronizer<SourceT, ContextT, SourceItemT> impl
       });
       String placeholderText =  myPlaceholderText != null ? myPlaceholderText : "<empty>";
 
+      Cell result;
       //todo this is tmp hack
       if (myTarget instanceof IndentCell) {
-        return CellFactory.indent(placeHolder, CellFactory.placeHolder(placeHolder, placeholderText));
+        result = CellFactory.indent(placeHolder, CellFactory.placeHolder(placeHolder, placeholderText));
       } else {
-        return CellFactory.horizontal(placeHolder, CellFactory.placeHolder(placeHolder, placeholderText));
+        result = CellFactory.horizontal(placeHolder, CellFactory.placeHolder(placeHolder, placeholderText));
       }
+      result.set(PositionHandler.PROPERTY, placeHolder.get(PositionHandler.PROPERTY));
+      return result;
     }
 
     private TextCell getPlaceHolder() {
