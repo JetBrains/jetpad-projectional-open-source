@@ -882,6 +882,13 @@ public class ProjectionalListSynchronizerTest extends EditingTestCase {
     assertTrue(container.children.isEmpty());
   }
 
+  @Test
+  public void emptinessOfPlaceholder() {
+    EmptyCompositeChild emptyCompositeChild = new EmptyCompositeChild();
+    container.children.add(emptyCompositeChild);
+    assertTrue(Cells.isEmpty(getChild(0)));
+  }
+
   private Child get(int index) {
     return container.children.get(index);
   }
@@ -970,6 +977,10 @@ public class ProjectionalListSynchronizerTest extends EditingTestCase {
 
         if (source instanceof CompositeChild) {
           return new CompositeChildMapper((CompositeChild) source);
+        }
+
+        if (source instanceof EmptyCompositeChild) {
+          return new EmptyCompositeChildMapper((EmptyCompositeChild) source);
         }
 
         if (source instanceof DeleteOnEmptyChild) {
@@ -1075,6 +1086,9 @@ public class ProjectionalListSynchronizerTest extends EditingTestCase {
     final ObservableList<Child> children = new ObservableArrayList<>();
   }
 
+  private class EmptyCompositeChild extends Child {
+    final ObservableList<Child> children = new ObservableArrayList<>();
+  }
 
   private class NonSelectableChild extends Child {
   }
@@ -1199,6 +1213,18 @@ public class ProjectionalListSynchronizerTest extends EditingTestCase {
     protected void registerSynchronizers(SynchronizersConfiguration conf) {
       super.registerSynchronizers(conf);
       conf.add(createSynchronizer(this, getTarget().children().get(1), getSource().children));
+    }
+  }
+
+  private class EmptyCompositeChildMapper extends Mapper<EmptyCompositeChild, HorizontalCell> {
+    private EmptyCompositeChildMapper(EmptyCompositeChild source) {
+      super(source, new HorizontalCell());
+    }
+
+    @Override
+    protected void registerSynchronizers(SynchronizersConfiguration conf) {
+      super.registerSynchronizers(conf);
+      conf.add(createSynchronizer(this, getTarget(), getSource().children));
     }
   }
 
