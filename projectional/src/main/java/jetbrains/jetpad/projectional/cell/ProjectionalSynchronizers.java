@@ -23,6 +23,7 @@ import jetbrains.jetpad.event.KeyEvent;
 import jetbrains.jetpad.event.KeyStrokeSpecs;
 import jetbrains.jetpad.mapper.Mapper;
 import jetbrains.jetpad.mapper.MapperFactory;
+import jetbrains.jetpad.mapper.Synchronizer;
 import jetbrains.jetpad.model.collections.list.ObservableList;
 import jetbrains.jetpad.model.property.Property;
 
@@ -53,7 +54,7 @@ public class ProjectionalSynchronizers {
       Mapper<? extends ContextT, ? extends Cell> mapper,
       ObservableList<SourceT> source, Cell target, List<Cell> targetList,
       MapperFactory<SourceT, Cell> factory) {
-    return new ProjectionalObservableListSynchronizer<>(mapper, source, target, targetList, factory);
+      return new ProjectionalObservableListSynchronizer<>(mapper, source, target, targetList, factory);
   }
 
   public static <ContextT, SourceT> ProjectionalRoleSynchronizer<ContextT, SourceT> forSingleRole(
@@ -64,5 +65,10 @@ public class ProjectionalSynchronizers {
 
   public static boolean isAdd(KeyEvent event) {
     return event.is(KeyStrokeSpecs.INSERT_BEFORE) || event.is(KeyStrokeSpecs.INSERT_AFTER);
+  }
+
+  public static <ContextT, SourceT> Synchronizer toCellMapping(
+      ProjectionalRoleSynchronizer<ContextT, SourceT> sync) {
+    return new BaseProjectionalToCellMapping(sync);
   }
 }
