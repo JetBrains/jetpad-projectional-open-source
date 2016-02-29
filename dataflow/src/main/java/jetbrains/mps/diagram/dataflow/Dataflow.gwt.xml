@@ -8,7 +8,6 @@
     <exclude name="DataFlowMain.java" />
   </source>
 
-  <inherits name="jetbrains.jetpad.model.ModelGwt"/>
   <inherits name="jetbrains.jetpad.model.Model" />
   <inherits name="jetbrains.jetpad.mapper.Mapper" />
   <inherits name="jetbrains.jetpad.projectional.diagram.Diagram" />

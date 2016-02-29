@@ -29,29 +29,29 @@
       <artifactId>values</artifactId>
       <version>1.1-SNAPSHOT</version>
     </dependency>
-    <dependency>
-      <groupId>jetbrains.jetpad</groupId>
-      <artifactId>model-gwt</artifactId>
-      <version>1.1-SNAPSHOT</version>
-    </dependency>
+
     <dependency>
       <groupId>jetbrains.jetpad.projectional</groupId>
       <artifactId>svg</artifactId>
       <version>1.1-SNAPSHOT</version>
     </dependency>
+
     <dependency>
       <groupId>jetbrains.jetpad.projectional</groupId>
       <artifactId>view</artifactId>
       <version>1.1-SNAPSHOT</version>
     </dependency>
+
     <dependency>
       <groupId>com.google.gwt</groupId>
       <artifactId>gwt-user</artifactId>
     </dependency>
+
     <dependency>
       <groupId>com.google.guava</groupId>
       <artifactId>guava-gwt</artifactId>
     </dependency>
+
     <dependency>
       <groupId>org.apache.xmlgraphics</groupId>
       <artifactId>batik-swing</artifactId>

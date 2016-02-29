@@ -4,7 +4,6 @@
 
   <inherits name='com.google.gwt.user.User'/>
   <inherits name="jetbrains.jetpad.values.Values" />
-  <inherits name="jetbrains.jetpad.model.ModelGwt"/>
   <inherits name="jetbrains.jetpad.projectional.svg.Svg" />
   <inherits name="jetbrains.jetpad.projectional.view.View"/>
 
