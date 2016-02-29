@@ -28,21 +28,58 @@ import java.util.Arrays;
 import static org.junit.Assert.*;
 
 public class TokenListEditorTest {
-  private TokenListEditor<Expr> editor = new TokenListEditor<>(new ExprHybridEditorSpec());
+  private TokenListEditor<Expr> editor;
 
   @Test
-  public void updating() {
-    PlusExpr plus = new PlusExpr();
-    plus.left.set(new NumberExpr());
-    plus.right.set(new NumberExpr());
-    editor.value.set(plus);
+  public void autoReprint() {
+    editor = new TokenListEditor<>(new ExprHybridEditorSpec(), true, false);
+    setSimpleExpression();
 
     assertEquals(Arrays.asList(new IntValueToken(0), Tokens.PLUS, new IntValueToken(0)), editor.tokens);
     assertTrue(editor.valid.get());
   }
 
   @Test
-  public void errorParsing() {
+  public void disabledAutoReprint() {
+    editor = new TokenListEditor<>(new ExprHybridEditorSpec(), false, false);
+    setSimpleExpression();
+
+    assertTrue(editor.tokens.isEmpty());
+    assertTrue(editor.valid.get());
+
+    editor.reprintToTokens();
+    assertEquals(Arrays.asList(new IntValueToken(0), Tokens.PLUS, new IntValueToken(0)), editor.tokens);
+    assertTrue(editor.valid.get());
+  }
+
+  @Test
+  public void autoReparse() {
+    editor = new TokenListEditor<>(new ExprHybridEditorSpec(), false, true);
+    editor.tokens.add(new IntValueToken(2));
+
+    assertNotNull(editor.value.get());
+    assertTrue(editor.valid.get());
+  }
+
+  @Test
+  public void disabledAutoReparse() {
+    editor = new TokenListEditor<>(new ExprHybridEditorSpec(), false, false);
+    editor.tokens.add(new IntValueToken(2));
+
+    assertNull(editor.value.get());
+    assertTrue(editor.valid.get());
+
+    editor.reparse();
+    assertNotNull(editor.value.get());
+    assertTrue(editor.valid.get());
+  }
+
+  @Test
+  public void errorAutoReparsing() {
+    editor = new TokenListEditor<>(new ExprHybridEditorSpec(), false, true);
+    assertNull(editor.value.get());
+    assertTrue(editor.valid.get());
+
     editor.tokens.add(Tokens.PLUS);
 
     assertNull(editor.value.get());
@@ -50,10 +87,22 @@ public class TokenListEditorTest {
   }
 
   @Test
-  public void correctParsing() {
-    editor.tokens.add(new IntValueToken(2));
+  public void errorExplicitReparsing() {
+    editor = new TokenListEditor<>(new ExprHybridEditorSpec(), false, false);
+    editor.tokens.add(Tokens.PLUS);
 
-    assertNotNull(editor.value.get());
+    assertNull(editor.value.get());
     assertTrue(editor.valid.get());
+
+    editor.reparse();
+    assertNull(editor.value.get());
+    assertFalse(editor.valid.get());
+  }
+
+  private void setSimpleExpression() {
+    PlusExpr plus = new PlusExpr();
+    plus.left.set(new NumberExpr());
+    plus.right.set(new NumberExpr());
+    editor.value.set(plus);
   }
 }

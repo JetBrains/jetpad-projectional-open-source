@@ -45,20 +45,18 @@ import jetbrains.jetpad.model.collections.CollectionAdapter;
 import jetbrains.jetpad.model.collections.CollectionItemEvent;
 import jetbrains.jetpad.model.collections.CollectionListener;
 import jetbrains.jetpad.model.collections.list.ObservableList;
-import jetbrains.jetpad.model.collections.list.UnmodifiableObservableList;
 import jetbrains.jetpad.model.composite.Composites;
 import jetbrains.jetpad.model.event.CompositeRegistration;
 import jetbrains.jetpad.model.event.EventHandler;
+import jetbrains.jetpad.model.property.Properties;
 import jetbrains.jetpad.model.property.*;
 import jetbrains.jetpad.model.util.ListMap;
 import jetbrains.jetpad.projectional.cell.SelectionSupport;
 
 import java.util.*;
 
-import static jetbrains.jetpad.hybrid.SelectionPosition.FIRST;
-import static jetbrains.jetpad.hybrid.SelectionPosition.LAST;
-import static jetbrains.jetpad.model.composite.Composites.firstFocusable;
-import static jetbrains.jetpad.model.composite.Composites.lastFocusable;
+import static jetbrains.jetpad.hybrid.SelectionPosition.*;
+import static jetbrains.jetpad.model.composite.Composites.*;
 
 public class HybridSynchronizer<SourceT> implements Synchronizer {
   public static final CellTraitPropertySpec<Runnable> ON_LAST_ITEM_DELETED = new CellTraitPropertySpec<>("onLastItemDeleted");
@@ -82,18 +80,25 @@ public class HybridSynchronizer<SourceT> implements Synchronizer {
   private String myPlaceHolderText = "empty";
   private boolean myHideTokensInMenu = false;
 
-  private Property<HybridEditorSpec<SourceT>> mySpec;
+  private ReadableProperty<HybridEditorSpec<SourceT>> mySpec;
+  private HybridEditorBehavior<SourceT> myBehavior;
 
   public HybridSynchronizer(Mapper<?, ?> contextMapper, Property<SourceT> prop, Cell target, HybridEditorSpec<SourceT> spec) {
-    this(contextMapper, prop, target, new ValueProperty<>(spec));
+    this(contextMapper, prop, target, Properties.constant(spec));
   }
 
-  public HybridSynchronizer(Mapper<?, ?> contextMapper, Property<SourceT> prop, Cell target, Property<HybridEditorSpec<SourceT>> spec) {
+  public HybridSynchronizer(Mapper<?, ?> contextMapper, Property<SourceT> prop, Cell target, ReadableProperty<HybridEditorSpec<SourceT>> spec) {
+    this(contextMapper, prop, target, spec, HybridEditorBehavior.<SourceT>simple());
+  }
+
+  public HybridSynchronizer(Mapper<?, ?> contextMapper, Property<SourceT> prop, Cell target,
+      ReadableProperty<HybridEditorSpec<SourceT>> spec, HybridEditorBehavior<SourceT> behavior) {
     myContextMapper = contextMapper;
     myProperty = prop;
     mySpec = spec;
-    myTokenListEditor = new TokenListEditor<>(spec);
+    myTokenListEditor = new TokenListEditor<>(spec, behavior.reprintOnChange, behavior.reparseOnChange);
     myTarget = target;
+    myBehavior = behavior;
 
     myValueMappers = myContextMapper.createChildSet();
 
@@ -538,7 +543,11 @@ public class HybridSynchronizer<SourceT> implements Synchronizer {
   }
 
   public ObservableList<Token> tokens() {
-    return new UnmodifiableObservableList<>(myTokenListEditor.tokens);
+    return myTokenListEditor.tokens;
+  }
+
+  public void reprint() {
+    myTokenListEditor.reprintToTokens();
   }
 
   boolean hasSelection() {
@@ -624,7 +633,7 @@ public class HybridSynchronizer<SourceT> implements Synchronizer {
       lastItemDeleted().run();
     } else {
       boolean isEnd = tokens().size() == firstIndex;
-      tokenOperations().select(!isEnd ? firstIndex : firstIndex - 1, isEnd ? LAST :  FIRST).run();
+      tokenOperations().select(!isEnd ? firstIndex : firstIndex - 1, isEnd ? LAST : FIRST).run();
     }
   }
 
@@ -741,6 +750,8 @@ public class HybridSynchronizer<SourceT> implements Synchronizer {
       Token t = tokens.get(i);
       tokensListener.onItemAdded(new CollectionItemEvent<>(null, t, i, CollectionItemEvent.EventType.ADD));
     }
+
+    myBehavior.attachHandler.handle(this);
   }
 
   @Override
