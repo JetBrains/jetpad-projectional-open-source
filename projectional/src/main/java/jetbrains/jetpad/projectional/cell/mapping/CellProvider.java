@@ -21,6 +21,7 @@ import jetbrains.jetpad.mapper.Mapper;
 import jetbrains.jetpad.mapper.MappingContext;
 import jetbrains.jetpad.mapper.Synchronizer;
 import jetbrains.jetpad.model.composite.HasParent;
+import jetbrains.jetpad.model.composite.TreePath;
 import jetbrains.jetpad.projectional.cell.ProjectionalRoleSynchronizer;
 
 import java.util.*;
@@ -136,6 +137,7 @@ public final class CellProvider {
           cells.addAll(doGetCells((Mapper<?, ? extends Cell>) mapper, actualSource));
         }
       }
+      TreePath.sort(cells);
       return cells;
     }
     if (parents.hasNext()) {
