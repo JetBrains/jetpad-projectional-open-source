@@ -52,6 +52,7 @@ import jetbrains.jetpad.model.event.EventHandler;
 import jetbrains.jetpad.model.property.*;
 import jetbrains.jetpad.model.util.ListMap;
 import jetbrains.jetpad.projectional.cell.SelectionSupport;
+import jetbrains.jetpad.projectional.cell.mapping.ToCellMapping;
 
 import java.util.*;
 
@@ -60,7 +61,7 @@ import static jetbrains.jetpad.hybrid.SelectionPosition.LAST;
 import static jetbrains.jetpad.model.composite.Composites.firstFocusable;
 import static jetbrains.jetpad.model.composite.Composites.lastFocusable;
 
-public class HybridSynchronizer<SourceT> implements Synchronizer {
+public class HybridSynchronizer<SourceT> implements Synchronizer, ToCellMapping {
   public static final CellTraitPropertySpec<Runnable> ON_LAST_ITEM_DELETED = new CellTraitPropertySpec<>("onLastItemDeleted");
 
   static final CellTraitPropertySpec<HybridSynchronizer<?>> HYBRID_SYNCHRONIZER = new CellTraitPropertySpec<>("hybridSynchronizer");
@@ -585,6 +586,7 @@ public class HybridSynchronizer<SourceT> implements Synchronizer {
     return myHideTokensInMenu;
   }
 
+  @Deprecated
   public int focusedIndex() {
     Cell focusedCell = myTarget.getContainer().focusedCell.get();
     if (focusedCell == null) return -1;
@@ -594,9 +596,48 @@ public class HybridSynchronizer<SourceT> implements Synchronizer {
     return -1;
   }
 
+  @Deprecated
   public Object objectAt(int index) {
-    if (myTokenListEditor.objects().isEmpty()) return null;
-    return myTokenListEditor.objects().get(index);
+    List<Object> tokenObjects = myTokenListEditor.objects();
+    return tokenObjects.isEmpty() ? null : tokenObjects.get(index);
+  }
+
+  @Override
+  public List<Cell> getCells(Object source) {
+    if (source == myProperty.get()) {
+      return Collections.singletonList(myTarget);
+    }
+    List<Object> tokenObjects = myTokenListEditor.objects();
+    return selectCells(source, tokenObjects);
+  }
+
+  private List<Cell> selectCells(Object source, List<Object> tokenObjects) {
+    List<Cell> result = null;
+    for (int i = 0; i < tokenObjects.size(); i++) {
+      Object o = tokenObjects.get(i);
+      if (o == source) {
+        if (result == null) {
+          result = new ArrayList<>(1);
+        }
+        result.add(myTargetList.get(i));
+      }
+    }
+    return result == null ? Collections.<Cell>emptyList() : result;
+  }
+
+  @Override
+  public Object getSource(Cell cell) {
+    if (cell == myTarget) {
+      return myProperty.get();
+    }
+    int index = 0;
+    for (; index < myTargetList.size(); index++) {
+      if (Composites.isDescendant(myTargetList.get(index), cell)) {
+        List<Object> objects = myTokenListEditor.objects();
+        return objects.isEmpty() ? null : objects.get(index);
+      }
+    }
+    return null;
   }
 
   public void setPlaceHolderText(String text) {
@@ -753,7 +794,7 @@ public class HybridSynchronizer<SourceT> implements Synchronizer {
   private static class HybridCellState implements CellState {
     private final List<Token> tokens;
 
-    public HybridCellState(List<Token> tokens) {
+    HybridCellState(List<Token> tokens) {
       this.tokens = tokens;
     }
 
