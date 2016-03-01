@@ -20,7 +20,7 @@ import jetbrains.jetpad.model.event.EventHandler;
 import jetbrains.jetpad.model.property.Property;
 import jetbrains.jetpad.model.property.PropertyChangeEvent;
 
-public class DefaultPositionHandler implements PositionHandler {
+public abstract class DefaultPositionHandler implements PositionHandler {
 
   protected DefaultPositionHandler() {
   }

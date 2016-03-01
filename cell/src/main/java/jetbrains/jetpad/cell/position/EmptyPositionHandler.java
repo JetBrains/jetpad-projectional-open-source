@@ -25,4 +25,9 @@ class EmptyPositionHandler extends DefaultPositionHandler {
   public boolean isEnd() {
     return true;
   }
+
+  @Override
+  public boolean isEmpty() {
+    return true;
+  }
 }

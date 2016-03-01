@@ -38,6 +38,8 @@ public interface PositionHandler {
   boolean isHome();
   boolean isEnd();
 
+  boolean isEmpty();
+
   void home();
   void end();
 

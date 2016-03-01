@@ -37,4 +37,16 @@ final class CellDefaultPositionHandler extends DefaultPositionHandler {
     return childCell == null ? super.isEnd() : childCell.get(PositionHandler.PROPERTY).isEnd();
   }
 
+  @Override
+  public boolean isEmpty() {
+    boolean empty = true;
+    for (Cell child : myCell.children()) {
+      if (!child.get(PositionHandler.PROPERTY).isEmpty()) {
+        empty = false;
+        break;
+      }
+    }
+    return empty;
+  }
+
 }

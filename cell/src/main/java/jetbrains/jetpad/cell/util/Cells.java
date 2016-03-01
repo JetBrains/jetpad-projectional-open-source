@@ -53,7 +53,7 @@ public class Cells {
 
   public static boolean isEmpty(Cell cell) {
     PositionHandler handler = cell.get(PositionHandler.PROPERTY);
-    return handler.isHome() && handler.isEnd();
+    return handler.isEmpty();
   }
 
   public static boolean isLeaf(Cell cell) {

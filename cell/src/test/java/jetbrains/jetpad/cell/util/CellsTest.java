@@ -61,7 +61,7 @@ public class CellsTest extends BaseTestCase {
 
   @Test
   public void nonEmptinessOfComposite() {
-    assertFalse(Cells.isEmpty(new HorizontalCell()));
+    assertTrue(Cells.isEmpty(new HorizontalCell()));
   }
 
   @Test
@@ -80,6 +80,11 @@ public class CellsTest extends BaseTestCase {
 
             @Override
             public boolean isEnd() {
+              return true;
+            }
+
+            @Override
+            public boolean isEmpty() {
               return true;
             }
 

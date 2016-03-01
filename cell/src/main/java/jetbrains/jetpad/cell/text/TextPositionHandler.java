@@ -44,6 +44,11 @@ public class TextPositionHandler implements PositionHandler {
   }
 
   @Override
+  public boolean isEmpty() {
+    return getMinPos(myEditor) == getMaxPos(myEditor);
+  }
+
+  @Override
   public void home() {
     myEditor.caretPosition().set(getMinPos(myEditor));
   }
