@@ -2,6 +2,7 @@
   <source path="">
     <include name="binOp/*.java" />
     <include name="cell/*.java" />
+    <include name="cell/mapping/*.java" />
     <include name="generic/*.java" />
     <include name="util/*.java" />
   </source>
