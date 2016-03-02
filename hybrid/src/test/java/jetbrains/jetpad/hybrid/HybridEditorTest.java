@@ -575,7 +575,8 @@ public class HybridEditorTest extends EditingTestCase {
     left();
     type(" ");
 
-    assertEquals(0, sync.focusedIndex());
+    Cell focusedCell = sync.target().getContainer().focusedCell.get();
+    assertTrue(sync.getSource(focusedCell) instanceof CallExpr);
   }
 
   @Test
@@ -914,7 +915,8 @@ public class HybridEditorTest extends EditingTestCase {
     setTokens(Tokens.PLUS, Tokens.PLUS, Tokens.PLUS);
     select(1, false);
 
-    assertEquals(1, sync.focusedIndex());
+    Cell focusedCell = sync.target().getContainer().focusedCell.get();
+    assertSame(sync.tokenCells().get(1), focusedCell);
   }
 
   @Test
