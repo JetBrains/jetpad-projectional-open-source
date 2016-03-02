@@ -586,22 +586,6 @@ public class HybridSynchronizer<SourceT> implements Synchronizer, ToCellMapping 
     return myHideTokensInMenu;
   }
 
-  @Deprecated
-  public int focusedIndex() {
-    Cell focusedCell = myTarget.getContainer().focusedCell.get();
-    if (focusedCell == null) return -1;
-    for (int i = 0; i < myTargetList.size(); i++) {
-      if (Composites.isDescendant(myTargetList.get(i), focusedCell)) return i;
-    }
-    return -1;
-  }
-
-  @Deprecated
-  public Object objectAt(int index) {
-    List<Object> tokenObjects = myTokenListEditor.objects();
-    return tokenObjects.isEmpty() ? null : tokenObjects.get(index);
-  }
-
   @Override
   public List<Cell> getCells(Object source) {
     if (source == myProperty.get()) {
