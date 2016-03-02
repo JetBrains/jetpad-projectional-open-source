@@ -146,7 +146,7 @@ public final class CellProvider {
 
   private List<Cell> doGetCells(Mapper<?, ? extends Cell> mapper, Object actualSource) {
     if (mapper.getSource() == actualSource) {
-      return Collections.singletonList(mapper.getTarget());
+      return Collections.<Cell>singletonList(mapper.getTarget());
     }
     List<Cell> result = null;
     for (Synchronizer sync : mapper.synchronizers()) {
