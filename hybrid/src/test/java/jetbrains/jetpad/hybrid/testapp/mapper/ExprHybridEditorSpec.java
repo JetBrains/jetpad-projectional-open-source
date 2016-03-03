@@ -18,21 +18,37 @@ package jetbrains.jetpad.hybrid.testapp.mapper;
 import com.google.common.base.Function;
 import jetbrains.jetpad.base.Async;
 import jetbrains.jetpad.base.Asyncs;
-import jetbrains.jetpad.completion.CompletionItem;
-import jetbrains.jetpad.completion.CompletionParameters;
-import jetbrains.jetpad.completion.CompletionSupplier;
-import jetbrains.jetpad.completion.SimpleCompletionItem;
+import jetbrains.jetpad.completion.*;
 import jetbrains.jetpad.hybrid.*;
 import jetbrains.jetpad.hybrid.parser.*;
 import jetbrains.jetpad.hybrid.parser.prettyprint.PrettyPrinter;
 import jetbrains.jetpad.hybrid.parser.prettyprint.PrettyPrinterContext;
 import jetbrains.jetpad.hybrid.testapp.model.*;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 public class ExprHybridEditorSpec implements HybridEditorSpec<Expr> {
+  private static final Function<Expr, String> STRING_TEXT_GEN = new Function<Expr, String>() {
+    @Nullable
+    @Override
+    public String apply(@Nullable Expr stringExpr) {
+      return stringExpr.toString();
+    }
+  };
+
+  private static String dequote(String text, String quote) {
+    if (text.startsWith(quote)) {
+      if (text.length() >= quote.length() * 2 && text.endsWith(quote)) {
+        return text.substring(quote.length(), text.length() - quote.length());
+      }
+      return text.substring(quote.length());
+    }
+    return text;
+  }
+
   private final Token tokenPlus;
   private final Token tokenMul;
 
@@ -200,6 +216,10 @@ public class ExprHybridEditorSpec implements HybridEditorSpec<Expr> {
           return (Expr) ((ValueToken) current).value();
         }
 
+        if (current instanceof ValueToken && ((ValueToken) current).value() instanceof StringExpr) {
+          ctx.advance();
+          return (Expr) ((ValueToken) current).value();
+        }
         return null;
       }
     };
@@ -279,6 +299,11 @@ public class ExprHybridEditorSpec implements HybridEditorSpec<Expr> {
           return;
         }
 
+        if (value instanceof StringExpr) {
+          ctx.append(new ValueTokenWithTextGen<>(value, new ValueExprCloner(), STRING_TEXT_GEN));
+          return;
+        }
+
         throw new IllegalStateException();
       }
     };
@@ -322,6 +347,32 @@ public class ExprHybridEditorSpec implements HybridEditorSpec<Expr> {
             return tokenHandler.apply(new ValueToken(new PosValueExpr(), new ValueExprCloner()));
           }
         });
+        for (final String quote : new String[] { "\"", "'" }) {
+          result.add(new SimpleCompletionItem(quote) {
+            @Override
+            public Runnable complete(String text) {
+              StringExpr stringExpr = new StringExpr(quote);
+              stringExpr.body.set(dequote(text, quote));
+              return tokenHandler.apply(new ValueTokenWithTextGen<>(stringExpr, new ValueExprCloner(), STRING_TEXT_GEN));
+            }
+            @Override
+            public int getSortPriority() {
+              return -1;
+            }
+          });
+          result.add(new ByBoundsCompletionItem(quote, quote) {
+            @Override
+            public Runnable complete(String text) {
+              StringExpr stringExpr = new StringExpr(quote);
+              stringExpr.body.set(dequote(text, quote));
+              return tokenHandler.apply(new ValueTokenWithTextGen<>(stringExpr, new ValueExprCloner(), STRING_TEXT_GEN));
+            }
+            @Override
+            public int getSortPriority() {
+              return -2;
+            }
+          });
+        }
 
         return result;
       }
@@ -364,6 +415,10 @@ public class ExprHybridEditorSpec implements HybridEditorSpec<Expr> {
 
       if (val instanceof AsyncValueExpr) {
         return new AsyncValueExpr();
+      }
+
+      if (val instanceof StringExpr) {
+        return new StringExpr((StringExpr) val);
       }
 
       throw new IllegalArgumentException(val.toString());

@@ -16,6 +16,7 @@
 package jetbrains.jetpad.hybrid;
 
 import com.google.common.base.Predicates;
+import com.google.common.base.Supplier;
 import com.google.common.collect.Range;
 import jetbrains.jetpad.base.Handler;
 import jetbrains.jetpad.base.Registration;
@@ -285,7 +286,22 @@ public class HybridSynchronizer<SourceT> implements Synchronizer, ToCellMapping 
         int targetIndex;
         if (currentCell != null) {
           int currentCellIndex = myTargetList.indexOf(currentCell);
-          targetIndex = Positions.isHomePosition(currentCell) ? currentCellIndex : currentCellIndex + 1;
+          boolean home = Positions.isHomePosition(currentCell);
+          boolean end = Positions.isEndPosition(currentCell);
+          if (home && end) {
+            // One-char token which allows editing at only one side
+            if (currentCell instanceof TextTokenCell
+                && ((TextTokenCell) currentCell).noSpaceToLeft()) {
+              targetIndex = currentCellIndex + 1;
+            } else {
+              targetIndex = currentCellIndex;
+            }
+
+          } else if (home) {
+            targetIndex = currentCellIndex;
+          } else {
+            targetIndex = currentCellIndex + 1;
+          }
         } else {
           targetIndex = 0;
         }
@@ -315,7 +331,25 @@ public class HybridSynchronizer<SourceT> implements Synchronizer, ToCellMapping 
             }
             return null;
           }
+
+          @Override
+          public String toString() {
+            return join(tokens);
+          }
         };
+      }
+
+      private String join(List<Token> tokens) {
+        StringBuilder result = new StringBuilder();
+        Token prevToken = null;
+        for (Token currToken : tokens) {
+          if (prevToken != null && !prevToken.noSpaceToRight() && !currToken.noSpaceToLeft()) {
+            result.append(' ');
+          }
+          result.append(currToken.text());
+          prevToken = currToken;
+        }
+        return result.toString();
       }
 
       private boolean canCut() {
@@ -513,7 +547,7 @@ public class HybridSynchronizer<SourceT> implements Synchronizer, ToCellMapping 
   }
 
   private TextCell createPlaceholder() {
-    TextCell result = new TextCell();
+    final TextCell result = new TextCell();
     result.addTrait(new DerivedCellTrait() {
       @Override
       protected CellTrait getBase(Cell cell) {
@@ -521,10 +555,19 @@ public class HybridSynchronizer<SourceT> implements Synchronizer, ToCellMapping 
       }
 
       @Override
-      public Object get(Cell cell, CellTraitPropertySpec<?> spec) {
+      public Object get(final Cell cell, CellTraitPropertySpec<?> spec) {
         if (spec == TextEditing.EAGER_COMPLETION) return true;
 
         if (spec == Completion.COMPLETION) return tokenCompletion().placeholderCompletion(cell);
+
+        if (spec == TextEditing.AFTER_PASTE) {
+          return new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+              return tokenOperations().afterPaste(result);
+            }
+          };
+        }
 
         return super.get(cell, spec);
       }

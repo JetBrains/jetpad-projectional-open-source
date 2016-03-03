@@ -28,6 +28,11 @@ public abstract class DerivedCellTrait extends CellTrait {
   protected abstract CellTrait getBase(Cell cell);
 
   @Override
+  public void onAdded(Cell cell) {
+    getBase(cell).onAdded(cell);
+  }
+
+  @Override
   public void onPropertyChanged(Cell cell, CellPropertySpec<?> prop, PropertyChangeEvent<?> event) {
     getBase(cell).onPropertyChanged(cell, prop, event);
   }
