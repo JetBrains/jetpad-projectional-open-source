@@ -22,11 +22,11 @@ package jetbrains.jetpad.hybrid.parser;
  */
 public class ValueToken extends BaseToken {
   private Object myValue;
-  private ValueCloner myCloner;
+  ValueCloner cloner;
 
   public <ValueT> ValueToken(ValueT val, ValueCloner<ValueT> cloner) {
     myValue = val;
-    myCloner = cloner;
+    this.cloner = cloner;
   }
 
   public Object value() {
@@ -34,7 +34,7 @@ public class ValueToken extends BaseToken {
   }
 
   public ValueToken copy() {
-    return new ValueToken(myCloner.clone(myValue), myCloner);
+    return new ValueToken(cloner.clone(myValue), cloner);
   }
 
   @Override

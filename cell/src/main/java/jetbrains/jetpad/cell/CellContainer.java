@@ -232,6 +232,11 @@ public class CellContainer {
     dispatch(new PasteEvent(myContent), CellEventSpec.PASTE);
   }
 
+  // For tests
+  String getLastSeenText() {
+    return myLastSeenText;
+  }
+
   private void mouseEventHappened(MouseEvent e, CellEventSpec<MouseEvent> eventSpec) {
     Cell target = findCell(e.getLocation());
 

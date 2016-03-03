@@ -51,6 +51,11 @@ class ValidTextEditingTrait extends TextEditingTrait {
   }
 
   @Override
+  public void onAdded(Cell cell) {
+    validate(cell);
+  }
+
+  @Override
   public void onKeyPressed(Cell cell, KeyEvent event) {
     CellTextEditor editor = TextEditing.cellTextEditor(cell);
     if (event.is(Key.ENTER) && !TextEditing.isEmpty(editor) && !isValid(editor)) {
@@ -74,11 +79,15 @@ class ValidTextEditingTrait extends TextEditingTrait {
   @Override
   public void onPropertyChanged(Cell cell, CellPropertySpec<?> prop, PropertyChangeEvent<?> e) {
     if (prop == TextCell.TEXT) {
-      CellTextEditor editor = TextEditing.cellTextEditor(cell);
-      MessageController.setBroken(cell, isValid(editor) ? null : "Cannot resolve '" + TextEditing.text(editor) + '\'');
+      validate(cell);
     }
 
     super.onPropertyChanged(cell, prop, e);
+  }
+
+  private void validate(Cell cell) {
+      CellTextEditor editor = TextEditing.cellTextEditor(cell);
+      MessageController.setBroken(cell, isValid(editor) ? null : "Cannot resolve '" + TextEditing.text(editor) + '\'');
   }
 
   @Override
