@@ -33,6 +33,10 @@ public class ValueToken extends BaseToken {
     return myValue;
   }
 
+  ValueCloner cloner() {
+    return myCloner;
+  }
+
   public ValueToken copy() {
     return new ValueToken(myCloner.clone(myValue), myCloner);
   }
