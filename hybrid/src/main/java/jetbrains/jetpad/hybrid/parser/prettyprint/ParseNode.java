@@ -20,9 +20,9 @@ import com.google.common.collect.Range;
 import java.util.List;
 
 public interface ParseNode {
-  ParseNode parent();
+  ParseNode getParent();
 
-  Object value();
-  List<ParseNode> children();
-  Range<Integer> range();
+  Object getValue();
+  List<ParseNode> getChildren();
+  Range<Integer> getRange();
 }

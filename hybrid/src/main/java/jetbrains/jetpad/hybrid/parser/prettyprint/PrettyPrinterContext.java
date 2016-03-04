@@ -219,7 +219,7 @@ public class PrettyPrinterContext<NodeT>  {
     private BaseParseNode myParent;
 
     @Override
-    public ParseNode parent() {
+    public ParseNode getParent() {
       return myParent;
     }
   }
@@ -240,19 +240,19 @@ public class PrettyPrinterContext<NodeT>  {
     }
 
     @Override
-    public Object value() {
+    public Object getValue() {
       return myValue;
     }
 
     @Override
-    public List<ParseNode> children() {
+    public List<ParseNode> getChildren() {
       return Collections.unmodifiableList(myChildren);
     }
 
     @Override
-    public Range<Integer> range() {
-      int start = myChildren.get(0).range().lowerEndpoint();
-      int end = myChildren.get(myChildren.size() - 1).range().upperEndpoint();
+    public Range<Integer> getRange() {
+      int start = myChildren.get(0).getRange().lowerEndpoint();
+      int end = myChildren.get(myChildren.size() - 1).getRange().upperEndpoint();
       return Range.closed(start, end);
     }
 
@@ -272,17 +272,17 @@ public class PrettyPrinterContext<NodeT>  {
     }
 
     @Override
-    public Object value() {
+    public Object getValue() {
       return myValue;
     }
 
     @Override
-    public List<ParseNode> children() {
+    public List<ParseNode> getChildren() {
       return Collections.<ParseNode>emptyList();
     }
 
     @Override
-    public Range<Integer> range() {
+    public Range<Integer> getRange() {
       return Range.closed(myOffset, myOffset);
     }
 
@@ -302,17 +302,17 @@ public class PrettyPrinterContext<NodeT>  {
     }
 
     @Override
-    public Object value() {
+    public Object getValue() {
       return myToken;
     }
 
     @Override
-    public List<ParseNode> children() {
+    public List<ParseNode> getChildren() {
       return Collections.emptyList();
     }
 
     @Override
-    public Range<Integer> range() {
+    public Range<Integer> getRange() {
       return Range.closed(myOffset, myOffset + 1);
     }
 

@@ -91,11 +91,11 @@ class TokenListEditor<SourceT> {
     });
   }
 
-  ParseNode parseNode() {
+  ParseNode getParseNode() {
     return myParseNode;
   }
 
-  List<Object> objects() {
+  List<Object> getObjects() {
     if (myParseNode == null) return Collections.emptyList();
     List<Object> result = new ArrayList<>();
     toObjects(myParseNode, result);
@@ -103,9 +103,9 @@ class TokenListEditor<SourceT> {
   }
 
   private void toObjects(ParseNode node, List<Object> result) {
-    for (ParseNode child : node.children()) {
-      if (child.value() instanceof Token) {
-        result.add(node.value());
+    for (ParseNode child : node.getChildren()) {
+      if (child.getValue() instanceof Token) {
+        result.add(node.getValue());
       } else {
         toObjects(child, result);
       }

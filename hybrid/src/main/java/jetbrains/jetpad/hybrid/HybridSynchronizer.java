@@ -206,13 +206,13 @@ public class HybridSynchronizer<SourceT> implements Synchronizer, ToCellMapping 
           } else {
             Range<Integer> currentRange = selection();
             if (event.is(KeyStrokeSpecs.SELECT_UP)) {
-              ParseNode parseNode = myTokenListEditor.parseNode();
+              ParseNode parseNode = myTokenListEditor.getParseNode();
               if (parseNode != null) {
-                if (!currentRange.equals(parseNode.range())) {
+                if (!currentRange.equals(parseNode.getRange())) {
                   ParseNode node = ParseNodes.findForRange(parseNode, currentRange);
                   ParseNode parentNode = ParseNodes.nonSameRangeParent(node);
                   if (parentNode != null) {
-                    select(parentNode.range());
+                    select(parentNode.getRange());
                     event.consume();
                   }
                 }
@@ -225,12 +225,12 @@ public class HybridSynchronizer<SourceT> implements Synchronizer, ToCellMapping 
             }
 
             if (event.is(KeyStrokeSpecs.SELECT_DOWN)) {
-              ParseNode parseNode = myTokenListEditor.parseNode();
+              ParseNode parseNode = myTokenListEditor.getParseNode();
               if (parseNode != null) {
                 ParseNode node = ParseNodes.findForRange(parseNode, currentRange);
                 ParseNode childNode = ParseNodes.nonSameRangeChild(node, myTargetList.indexOf(mySelectionSupport.currentCell()));
                 if (childNode != null) {
-                  select(childNode.range());
+                  select(childNode.getRange());
                   event.consume();
                   return;
                 }
@@ -559,7 +559,7 @@ public class HybridSynchronizer<SourceT> implements Synchronizer, ToCellMapping 
   }
 
   public Range<Integer> rangeFor(Object object) {
-    ParseNode parseNode = tokenListEditor().parseNode();
+    ParseNode parseNode = tokenListEditor().getParseNode();
     if (parseNode == null) {
       throw new IllegalStateException("Hybrid Synchronizer is in invalid state");
     }
@@ -567,7 +567,7 @@ public class HybridSynchronizer<SourceT> implements Synchronizer, ToCellMapping 
     if (result == null) {
       throw new IllegalStateException("Can't find parse node for " + object);
     }
-    return result.range();
+    return result.getRange();
   }
 
   public Runnable select(int index, SelectionPosition pos) {
@@ -591,7 +591,7 @@ public class HybridSynchronizer<SourceT> implements Synchronizer, ToCellMapping 
     if (source == myProperty.get()) {
       return Collections.singletonList(myTarget);
     }
-    List<Object> tokenObjects = myTokenListEditor.objects();
+    List<Object> tokenObjects = myTokenListEditor.getObjects();
     return selectCells(source, tokenObjects);
   }
 
@@ -617,7 +617,7 @@ public class HybridSynchronizer<SourceT> implements Synchronizer, ToCellMapping 
     int index = 0;
     for (; index < myTargetList.size(); index++) {
       if (Composites.isDescendant(myTargetList.get(index), cell)) {
-        List<Object> objects = myTokenListEditor.objects();
+        List<Object> objects = myTokenListEditor.getObjects();
         return objects.isEmpty() ? null : objects.get(index);
       }
     }

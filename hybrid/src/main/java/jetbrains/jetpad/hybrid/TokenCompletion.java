@@ -18,7 +18,6 @@ package jetbrains.jetpad.hybrid;
 import com.google.common.base.Function;
 import com.google.common.base.Objects;
 import com.google.common.collect.FluentIterable;
-import com.google.common.collect.Iterables;
 import jetbrains.jetpad.base.Async;
 import jetbrains.jetpad.base.Asyncs;
 import jetbrains.jetpad.base.Runnables;
@@ -325,7 +324,7 @@ class TokenCompletion {
 
     @Override
     public List<Object> getObjects() {
-      return Collections.unmodifiableList(tokenListEditor().objects());
+      return Collections.unmodifiableList(tokenListEditor().getObjects());
     }
 
     @Override
