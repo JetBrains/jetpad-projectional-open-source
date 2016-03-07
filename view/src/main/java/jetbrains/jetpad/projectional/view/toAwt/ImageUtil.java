@@ -7,12 +7,16 @@ import java.awt.image.BufferedImage;
 
 final class ImageUtil {
 
-  static Image getScaledImage(Image image, int width, int height) {
-    BufferedImage bufferedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
-    Graphics2D graphics = bufferedImage.createGraphics();
-    graphics.addRenderingHints(new RenderingHints(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY));
-    graphics.drawImage(image, 0, 0, width, height, null);
-    return bufferedImage;
+  static Image getScaledImage(BufferedImage originalImage, int width, int height) {
+    BufferedImage resultImage = new BufferedImage(width, height, originalImage.getType());
+    Graphics2D graphics = resultImage.createGraphics();
+    try {
+      graphics.addRenderingHints(new RenderingHints(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY));
+      graphics.drawImage(originalImage, 0, 0, width, height, null);
+    } finally {
+      graphics.dispose();
+    }
+    return resultImage;
   }
 
   private ImageUtil() {
