@@ -623,7 +623,7 @@ public class ViewContainerComponent extends JComponent implements Scrollable {
           throw new RuntimeException(e);
         }
 
-        g.drawImage(image, bounds.origin.x, bounds.origin.y, new ImageObserver() {
+        g.drawImage(image, bounds.origin.x, bounds.origin.y, bounds.dimension.x, bounds.dimension.y, new ImageObserver() {
           @Override
           public boolean imageUpdate(Image img, int infoflags, int x, int y, int width, int height) {
             return true;
