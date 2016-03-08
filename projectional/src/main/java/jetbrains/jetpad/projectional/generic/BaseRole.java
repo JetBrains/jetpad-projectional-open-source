@@ -15,8 +15,13 @@
  */
 package jetbrains.jetpad.projectional.generic;
 
-public interface Role<TargetT> {
-  TargetT get();
-  Runnable set(TargetT target);
-  void clear();
+public abstract class BaseRole<TargetT> implements Role<TargetT> {
+
+  protected BaseRole() {
+  }
+
+  @Override
+  public void clear() {
+  }
+
 }
