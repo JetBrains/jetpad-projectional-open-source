@@ -21,12 +21,18 @@ package jetbrains.jetpad.hybrid.parser;
  * parsed node, i.e. parser should just return a value
  */
 public class ValueToken extends BaseToken {
-  private Object myValue;
-  private ValueCloner myCloner;
+  private final Object myValue;
+  private final ValueCloner myCloner;
+  private final ValueTextGen myTextGen;
 
   public <ValueT> ValueToken(ValueT val, ValueCloner<ValueT> cloner) {
+    this(val, cloner, new TextGenNotSupported<ValueT>());
+  }
+
+  public <ValueT> ValueToken(ValueT val, ValueCloner<ValueT> cloner, ValueTextGen<ValueT> textGen) {
     myValue = val;
     myCloner = cloner;
+    myTextGen = textGen;
   }
 
   public Object value() {
@@ -34,12 +40,12 @@ public class ValueToken extends BaseToken {
   }
 
   public ValueToken copy() {
-    return new ValueToken(myCloner.clone(myValue), myCloner);
+    return new ValueToken(myCloner.clone(myValue), myCloner, myTextGen);
   }
 
   @Override
   public String text() {
-    throw new UnsupportedOperationException();
+    return myTextGen.toText(myValue);
   }
 
   @Override
@@ -64,5 +70,16 @@ public class ValueToken extends BaseToken {
 
   public interface ValueCloner<ValueT> {
     ValueT clone(ValueT val);
+  }
+
+  public interface ValueTextGen<ValueT> {
+    String toText(ValueT value);
+  }
+
+  private static class TextGenNotSupported<ValueT> implements ValueTextGen<ValueT> {
+    @Override
+    public String toText(ValueT value) {
+      throw new UnsupportedOperationException();
+    }
   }
 }
