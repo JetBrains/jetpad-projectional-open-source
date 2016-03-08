@@ -37,8 +37,8 @@ import jetbrains.jetpad.mapper.RoleSynchronizer;
 import jetbrains.jetpad.mapper.Synchronizers;
 import jetbrains.jetpad.model.collections.list.ObservableList;
 import jetbrains.jetpad.model.composite.Composites;
+import jetbrains.jetpad.projectional.generic.BaseRole;
 import jetbrains.jetpad.projectional.generic.CollectionEditor;
-import jetbrains.jetpad.projectional.generic.Role;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -218,7 +218,7 @@ class ProjectionalObservableListSynchronizer<ContextT, SourceItemT> extends Base
   }
 
   private CompletionSupplier getCurrentChildCompletion() {
-    return createCompletion(new Role<SourceItemT>() {
+    return createCompletion(new BaseRole<SourceItemT>() {
       @Override
       public SourceItemT get() {
         return mySource.get(getChildCells().indexOf(currentCell()));

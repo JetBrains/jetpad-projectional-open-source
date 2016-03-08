@@ -535,7 +535,7 @@ abstract class BaseProjectionalSynchronizer<SourceT, ContextT, SourceItemT> impl
     }
 
     private Cell createPlaceholder() {
-      TextCell placeHolder = new TextCell();
+      final TextCell placeHolder = new TextCell();
       placeHolder.addTrait(new DerivedCellTrait() {
         @Override
         protected CellTrait getBase(Cell cell) {
@@ -562,6 +562,11 @@ abstract class BaseProjectionalSynchronizer<SourceT, ContextT, SourceItemT> impl
               @Override
               public Runnable set(SourceItemT target) {
                 return insertItem(target);
+              }
+
+              @Override
+              public void clear() {
+                placeHolder.text().set("");
               }
             });
           }

@@ -34,7 +34,7 @@ import jetbrains.jetpad.mapper.RoleSynchronizer;
 import jetbrains.jetpad.mapper.Synchronizers;
 import jetbrains.jetpad.model.property.Property;
 import jetbrains.jetpad.model.property.WritableProperty;
-import jetbrains.jetpad.projectional.generic.Role;
+import jetbrains.jetpad.projectional.generic.BaseRole;
 
 import java.util.List;
 
@@ -126,7 +126,7 @@ class ProjectionalPropertySynchronizer<ContextT, SourceItemT> extends BaseProjec
   }
 
   private CompletionSupplier getCompletion() {
-    return createCompletion(new Role<SourceItemT>() {
+    return createCompletion(new BaseRole<SourceItemT>() {
       @Override
       public SourceItemT get() {
         return mySource.get();
