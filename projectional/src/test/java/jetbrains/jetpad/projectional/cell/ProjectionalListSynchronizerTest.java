@@ -50,6 +50,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -889,6 +890,17 @@ public class ProjectionalListSynchronizerTest extends EditingTestCase {
     assertTrue(Cells.isEmpty(getChild(0)));
   }
 
+  @Test
+  public void roleSetNullForPlaceholder() {
+    container.children.add(new EmptyCompositeChild());
+
+    CellActions.toFirstFocusable(getChild(0)).run();
+    type("clea");
+    complete();
+
+    assertTrue(Cells.isEmpty(getChild(0)));
+  }
+
   private Child get(int index) {
     return container.children.get(index);
   }
@@ -1025,12 +1037,21 @@ public class ProjectionalListSynchronizerTest extends EditingTestCase {
         return new CompletionSupplier() {
           @Override
           public List<CompletionItem> get(CompletionParameters cp) {
-            return Arrays.<CompletionItem>asList(new SimpleCompletionItem("item") {
+            List<CompletionItem> result = new ArrayList<>();
+            result.add(new SimpleCompletionItem("item") {
               @Override
               public Runnable complete(String text) {
                 return target.set(new NonEmptyChild());
               }
             });
+            result.add(new SimpleCompletionItem("clear") {
+              @Override
+              public Runnable complete(String text) {
+                target.set(null);
+                return Runnables.EMPTY;
+              }
+            });
+            return result;
           }
 
           @Override
