@@ -264,4 +264,19 @@ class TokenOperations<SourceT> {
     return false;
   }
 
+  boolean afterPaste(TextCell textView) {
+    Tokenizer<SourceT> tokenizer = new Tokenizer<>(mySync.editorSpec());
+    List<Token> newTokens = tokenizer.tokenize(textView.text().get());
+    int index;
+    if (!tokens().isEmpty()) {
+      index = tokenViews().indexOf(textView);
+      tokens().remove(index);
+    } else {
+      index = 0;
+    }
+    tokens().addAll(index, newTokens);
+    mySync.tokenListEditor().updateToPrintedTokens();
+    select(index + newTokens.size() - 1, LAST).run();
+    return true;
+  }
 }

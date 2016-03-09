@@ -33,6 +33,12 @@ public abstract class CellTrait {
   public static final Object NULL = new Object();
   public static final CellTrait[] EMPTY_ARRAY = new CellTrait[0];
 
+  public void onAdd(Cell cell) {
+  }
+
+  public void onRemove(Cell cell) {
+  }
+
   public void onPropertyChanged(Cell cell, CellPropertySpec<?> prop, PropertyChangeEvent<?> event) {
   }
 

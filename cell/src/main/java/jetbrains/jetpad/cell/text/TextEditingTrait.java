@@ -191,6 +191,7 @@ public class TextEditingTrait extends TextNavigationTrait {
     CellTextEditor editor = TextEditing.cellTextEditor(cell);
     clearSelection(editor);
     pasteText(editor, newText.toString());
+    onAfterPaste(editor);
     event.consume();
   }
 
@@ -238,6 +239,14 @@ public class TextEditingTrait extends TextNavigationTrait {
     Supplier<Boolean> afterType = ((CellTextEditor) editor).getCell().get(TextEditing.AFTER_TYPE);
     if (afterType != null) {
       return afterType.get();
+    }
+    return false;
+  }
+
+  protected boolean onAfterPaste(TextEditor editor) {
+    Supplier<Boolean> afterPaste = ((CellTextEditor) editor).getCell().get(TextEditing.AFTER_PASTE);
+    if (afterPaste != null) {
+      return afterPaste.get();
     }
     return false;
   }
