@@ -20,31 +20,23 @@ import jetbrains.jetpad.cell.Cell;
 import jetbrains.jetpad.hybrid.parser.Token;
 import jetbrains.jetpad.mapper.Mapper;
 import jetbrains.jetpad.model.collections.CollectionListener;
-import jetbrains.jetpad.model.collections.list.ObservableArrayList;
-import jetbrains.jetpad.model.event.CompositeRegistration;
+import jetbrains.jetpad.model.collections.list.ObservableList;
 import jetbrains.jetpad.model.property.Properties;
-import jetbrains.jetpad.model.property.Property;
-import jetbrains.jetpad.model.property.PropertyBinding;
 import jetbrains.jetpad.model.property.ReadableProperty;
 
-public class HybridSynchronizer<SourceT> extends AbstractHybridSynchronizer<SourceT> {
-  private Property<SourceT> myWritableSource;
-
-  public HybridSynchronizer(Mapper<?, ?> contextMapper, Property<SourceT> source, Cell target,
+public class SimpleHybridSynchronyzer<SourceT> extends AbstractHybridSynchronizer<SourceT> {
+  public SimpleHybridSynchronyzer(
+      Mapper<?, ?> contextMapper,
+      ObservableList<Token> tokens,
+      ReadableProperty<SourceT> source,
+      Cell target,
       HybridEditorSpec<SourceT> spec) {
-    this(contextMapper, source, target, Properties.constant(spec));
-  }
-
-  public HybridSynchronizer(Mapper<?, ?> contextMapper, Property<SourceT> source, Cell target,
-      ReadableProperty<HybridEditorSpec<SourceT>> spec) {
-    super(contextMapper, source, target, spec, new TokenListEditor<>(spec, new ObservableArrayList<Token>(), true));
-    myWritableSource = source;
+    super(contextMapper, source, target, Properties.constant(spec),
+      new TokenListEditor<>(spec, tokens, false));
   }
 
   @Override
   protected Registration onAttach(CollectionListener<Token> tokensListener) {
-    return new CompositeRegistration(
-      PropertyBinding.bindTwoWay(myWritableSource, myTokenListEditor.value),
-      myTokenListEditor.tokens.addListener(tokensListener));
+    return myTokenListEditor.tokens.addListener(tokensListener);
   }
 }

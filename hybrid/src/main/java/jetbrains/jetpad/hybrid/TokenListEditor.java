@@ -17,19 +17,15 @@ package jetbrains.jetpad.hybrid;
 
 import com.google.common.base.Objects;
 import jetbrains.jetpad.base.Registration;
-import jetbrains.jetpad.hybrid.parser.prettyprint.PrettyPrinter;
-import jetbrains.jetpad.model.collections.CollectionItemEvent;
-import jetbrains.jetpad.model.collections.list.ObservableArrayList;
-import jetbrains.jetpad.model.collections.list.ObservableList;
-import jetbrains.jetpad.model.event.EventHandler;
-import jetbrains.jetpad.model.property.Property;
-import jetbrains.jetpad.model.property.PropertyChangeEvent;
-import jetbrains.jetpad.model.property.ReadableProperty;
-import jetbrains.jetpad.model.property.ValueProperty;
 import jetbrains.jetpad.hybrid.parser.ParsingContext;
 import jetbrains.jetpad.hybrid.parser.Token;
-import jetbrains.jetpad.hybrid.parser.prettyprint.PrettyPrinterContext;
 import jetbrains.jetpad.hybrid.parser.prettyprint.ParseNode;
+import jetbrains.jetpad.hybrid.parser.prettyprint.PrettyPrinter;
+import jetbrains.jetpad.hybrid.parser.prettyprint.PrettyPrinterContext;
+import jetbrains.jetpad.model.collections.CollectionItemEvent;
+import jetbrains.jetpad.model.collections.list.ObservableList;
+import jetbrains.jetpad.model.event.EventHandler;
+import jetbrains.jetpad.model.property.*;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -38,57 +34,62 @@ import java.util.List;
 class TokenListEditor<SourceT> {
   private Property<Boolean> myValid = new ValueProperty<>(true);
   private ParseNode myParseNode;
-  private Property<HybridEditorSpec<SourceT>> mySpec;
+  private ReadableProperty<HybridEditorSpec<SourceT>> mySpec;
+  private boolean myUpdateModel;
   private boolean mySyncing;
   private List<Token> myPrintedTokens;
   private boolean myRestoringState;
   private Registration myChangeReg = Registration.EMPTY;
 
-  final ObservableList<Token> tokens = new ObservableArrayList<>();
+  final ObservableList<Token> tokens;
   final Property<SourceT> value = new ValueProperty<>();
   final ReadableProperty<Boolean> valid = myValid;
 
-  TokenListEditor(HybridEditorSpec<SourceT> spec) {
-    this(new ValueProperty<>(spec));
+  TokenListEditor(HybridEditorSpec<SourceT> spec, ObservableList<Token> tokens, boolean updateModel) {
+    this(Properties.constant(spec), tokens, updateModel);
   }
 
-  TokenListEditor(Property<HybridEditorSpec<SourceT>> spec) {
+  TokenListEditor(ReadableProperty<HybridEditorSpec<SourceT>> spec, ObservableList<Token> tokens, boolean updateModel) {
+    this.tokens = tokens;
     mySpec = spec;
+    myUpdateModel = updateModel;
 
-    tokens.addHandler(new EventHandler<CollectionItemEvent<? extends Token>>() {
-      @Override
-      public void onEvent(CollectionItemEvent<? extends Token> event) {
-        sync(new Runnable() {
-          @Override
-          public void run() {
-            reparse();
-          }
-        });
-      }
-    });
-    value.addHandler(new EventHandler<PropertyChangeEvent<SourceT>>() {
-      @Override
-      public void onEvent(PropertyChangeEvent<SourceT> event) {
-        sync(new Runnable() {
-          @Override
-          public void run() {
-            update();
-          }
-        });
-      }
-    });
-    spec.addHandler(new EventHandler<PropertyChangeEvent<HybridEditorSpec<SourceT>>>() {
-      @Override
-      public void onEvent(PropertyChangeEvent<HybridEditorSpec<SourceT>> event) {
-        sync(new Runnable() {
-          @Override
-          public void run() {
-            reparse();
-          }
-        });
-        updateToPrintedTokens();
-      }
-    });
+    if (updateModel) {
+      tokens.addHandler(new EventHandler<CollectionItemEvent<? extends Token>>() {
+        @Override
+        public void onEvent(CollectionItemEvent<? extends Token> event) {
+          sync(new Runnable() {
+            @Override
+            public void run() {
+              reparse();
+            }
+          });
+        }
+      });
+      value.addHandler(new EventHandler<PropertyChangeEvent<SourceT>>() {
+        @Override
+        public void onEvent(PropertyChangeEvent<SourceT> event) {
+          sync(new Runnable() {
+            @Override
+            public void run() {
+              reprintToTokens();
+            }
+          });
+        }
+      });
+      spec.addHandler(new EventHandler<PropertyChangeEvent<HybridEditorSpec<SourceT>>>() {
+        @Override
+        public void onEvent(PropertyChangeEvent<HybridEditorSpec<SourceT>> event) {
+          sync(new Runnable() {
+            @Override
+            public void run() {
+              reparse();
+            }
+          });
+          updateToPrintedTokens();
+        }
+      });
+    }
   }
 
   ParseNode getParseNode() {
@@ -154,7 +155,7 @@ class TokenListEditor<SourceT> {
     }
   }
 
-  private void update() {
+  void reprintToTokens() {
     PrettyPrinterContext<? super SourceT> ctx = reprint();
     myValid.set(true);
     tokens.clear();
@@ -175,7 +176,7 @@ class TokenListEditor<SourceT> {
         sync(new Runnable() {
           @Override
           public void run() {
-            update();
+            reprintToTokens();
           }
         });
       }
@@ -184,7 +185,7 @@ class TokenListEditor<SourceT> {
   }
 
   void updateToPrintedTokens() {
-    if (myPrintedTokens == null) return;
+    if (myPrintedTokens == null || !myUpdateModel) return;
 
     sync(new Runnable() {
       @Override
@@ -212,7 +213,7 @@ class TokenListEditor<SourceT> {
         tokens.clear();
         tokens.addAll(state);
       } else if (!myValid.get()) {
-        update();
+        reprintToTokens();
       }
     } finally {
       myRestoringState = false;
