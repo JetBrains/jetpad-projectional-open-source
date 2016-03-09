@@ -24,7 +24,7 @@ import jetbrains.jetpad.model.collections.list.ObservableList;
 import jetbrains.jetpad.model.property.Properties;
 import jetbrains.jetpad.model.property.ReadableProperty;
 
-public class SimpleHybridSynchronyzer<SourceT> extends AbstractHybridSynchronizer<SourceT> {
+public class SimpleHybridSynchronyzer<SourceT> extends BaseHybridSynchronizer<SourceT> {
   public SimpleHybridSynchronyzer(
       Mapper<?, ?> contextMapper,
       ObservableList<Token> tokens,

@@ -45,9 +45,9 @@ import static jetbrains.jetpad.hybrid.SelectionPosition.FIRST;
 import static jetbrains.jetpad.hybrid.SelectionPosition.LAST;
 
 class TokenCompletion {
-  private AbstractHybridSynchronizer<?> mySync;
+  private BaseHybridSynchronizer<?> mySync;
 
-  TokenCompletion(AbstractHybridSynchronizer<?> sync) {
+  TokenCompletion(BaseHybridSynchronizer<?> sync) {
     mySync = sync;
   }
 

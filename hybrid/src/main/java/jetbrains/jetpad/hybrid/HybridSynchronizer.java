@@ -27,7 +27,7 @@ import jetbrains.jetpad.model.property.Property;
 import jetbrains.jetpad.model.property.PropertyBinding;
 import jetbrains.jetpad.model.property.ReadableProperty;
 
-public class HybridSynchronizer<SourceT> extends AbstractHybridSynchronizer<SourceT> {
+public class HybridSynchronizer<SourceT> extends BaseHybridSynchronizer<SourceT> {
   private Property<SourceT> myWritableSource;
 
   public HybridSynchronizer(Mapper<?, ?> contextMapper, Property<SourceT> source, Cell target,
