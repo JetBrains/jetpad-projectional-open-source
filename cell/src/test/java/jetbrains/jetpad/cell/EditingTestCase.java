@@ -55,6 +55,14 @@ public abstract class EditingTestCase extends BaseTestCase {
     return myEditableCellContainer.press(ks);
   }
 
+  protected ClipboardContent cut() {
+    return myEditableCellContainer.cut();
+  }
+
+  protected ClipboardContent copy() {
+    return myEditableCellContainer.copy();
+  }
+
   protected void paste(String text) {
     myEditableCellContainer.paste(text);
   }
