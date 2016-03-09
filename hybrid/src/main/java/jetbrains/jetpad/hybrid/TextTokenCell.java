@@ -106,6 +106,15 @@ class TextTokenCell extends TextCell {
           };
         }
 
+        if (spec == TextEditing.AFTER_PASTE) {
+          return new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+              return tokenOperations(cell).afterPaste(TextTokenCell.this);
+            }
+          };
+        }
+
         return super.get(cell, spec);
       }
 
