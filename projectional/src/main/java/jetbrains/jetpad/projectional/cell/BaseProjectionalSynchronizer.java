@@ -19,6 +19,7 @@ import com.google.common.base.Function;
 import com.google.common.base.Objects;
 import com.google.common.base.Supplier;
 import jetbrains.jetpad.base.Registration;
+import jetbrains.jetpad.base.Runnables;
 import jetbrains.jetpad.base.Validators;
 import jetbrains.jetpad.cell.Cell;
 import jetbrains.jetpad.cell.TextCell;
@@ -535,7 +536,7 @@ abstract class BaseProjectionalSynchronizer<SourceT, ContextT, SourceItemT> impl
     }
 
     private Cell createPlaceholder() {
-      TextCell placeHolder = new TextCell();
+      final TextCell placeHolder = new TextCell();
       placeHolder.addTrait(new DerivedCellTrait() {
         @Override
         protected CellTrait getBase(Cell cell) {
@@ -561,7 +562,14 @@ abstract class BaseProjectionalSynchronizer<SourceT, ContextT, SourceItemT> impl
 
               @Override
               public Runnable set(SourceItemT target) {
-                return insertItem(target);
+                Runnable runnable;
+                if (target == null) {
+                  placeHolder.text().set("");
+                  runnable = Runnables.EMPTY;
+                } else {
+                  runnable = insertItem(target);
+                }
+                return runnable;
               }
             });
           }
