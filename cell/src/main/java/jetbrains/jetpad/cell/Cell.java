@@ -240,6 +240,7 @@ public abstract class Cell implements NavComposite<Cell>, HasVisibility, HasFocu
     newTraits[0] = trait;
     System.arraycopy(myCellTraits, 0, newTraits, 1, myCellTraits.length);
     myCellTraits = newTraits;
+    trait.onAdded(this);
     r.run();
     return new Registration() {
       @Override

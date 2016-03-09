@@ -172,4 +172,8 @@ public class EditableCellContainer {
   public final void help() {
     press(Key.F1, ModifierKey.CONTROL);
   }
+
+  public String getLastSeenText() {
+    return container.getLastSeenText();
+  }
 }
