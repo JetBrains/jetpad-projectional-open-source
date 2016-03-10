@@ -17,18 +17,17 @@ package jetbrains.jetpad.hybrid;
 
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.Range;
-import jetbrains.jetpad.base.Registration;
 import jetbrains.jetpad.cell.Cell;
-import jetbrains.jetpad.cell.EditingTestCase;
 import jetbrains.jetpad.cell.HorizontalCell;
 import jetbrains.jetpad.cell.TextCell;
-import jetbrains.jetpad.cell.action.CellActions;
-import jetbrains.jetpad.cell.completion.Completion;
 import jetbrains.jetpad.cell.message.MessageController;
 import jetbrains.jetpad.cell.position.Positions;
 import jetbrains.jetpad.cell.util.CellState;
 import jetbrains.jetpad.cell.util.CellStateHandler;
-import jetbrains.jetpad.completion.*;
+import jetbrains.jetpad.completion.BaseCompletionParameters;
+import jetbrains.jetpad.completion.CompletionItem;
+import jetbrains.jetpad.completion.CompletionParameters;
+import jetbrains.jetpad.completion.CompletionSupplier;
 import jetbrains.jetpad.event.Key;
 import jetbrains.jetpad.event.KeyEvent;
 import jetbrains.jetpad.event.KeyStrokeSpecs;
@@ -41,37 +40,19 @@ import jetbrains.jetpad.hybrid.testapp.model.*;
 import jetbrains.jetpad.hybrid.util.HybridWrapperRole;
 import jetbrains.jetpad.mapper.Mapper;
 import jetbrains.jetpad.model.composite.Composites;
-import jetbrains.jetpad.projectional.util.RootController;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 
-import java.util.Arrays;
-
-import static jetbrains.jetpad.hybrid.SelectionPosition.FIRST;
-import static jetbrains.jetpad.hybrid.SelectionPosition.LAST;
 import static org.junit.Assert.*;
 
-public class HybridEditorEditingTest extends EditingTestCase {
-  private ExprContainer container = new ExprContainer();
-  private Registration registration;
-  private ExprContainerMapper mapper = new ExprContainerMapper(container);
-  private HybridSynchronizer<Expr> sync;
-  private Cell myTargetCell;
-
-  @Before
-  public void init() {
-    registration = RootController.install(myCellContainer);
-    mapper.attachRoot();
-    myCellContainer.root.children().add(myTargetCell = mapper.getTarget());
-    CellActions.toFirstFocusable(mapper.getTarget()).run();
-    sync = mapper.hybridSync;
+public class HybridEditorEditingTest extends BaseHybridEditorEditingTest<ExprContainerMapper> {
+  @Override
+  protected ExprContainerMapper createMapper() {
+    return new ExprContainerMapper(container);
   }
 
-  @After
-  public void dispose() {
-    mapper.detachRoot();
-    registration.remove();
+  @Override
+  protected BaseHybridSynchronizer<Expr> getSync(ExprContainerMapper mapper) {
+    return mapper.hybridSync;
   }
 
   @Test
@@ -1040,71 +1021,5 @@ public class HybridEditorEditingTest extends EditingTestCase {
     };
     Iterable<CompletionItem> completionItems = roleCompletion.get(completionParameters);
     assertTrue(FluentIterable.from(completionItems).isEmpty());
-  }
-
-  private ValueToken createComplexToken() {
-    return new ValueToken(new ComplexValueExpr(), new ComplexValueCloner());
-  }
-
-  private void assertTokens(Token... tokens) {
-    assertEquals(Arrays.asList(tokens), sync.tokens());
-  }
-
-  private void setTokens(Token... tokens) {
-    sync.setTokens(Arrays.asList(tokens));
-  }
-
-  private void select(int index, boolean first) {
-    sync.tokenOperations().select(index, first ? FIRST : LAST).run();
-  }
-
-  private void select(int index, int pos) {
-    sync.tokenOperations().select(index, pos).run();
-  }
-
-  private Cell tokenCell(int index) {
-    return sync.tokenCells().get(index);
-  }
-
-  private Cell assertSelected(int index) {
-    Cell cell = sync.tokenCells().get(index);
-    assertTrue(cell.focused().get());
-    return cell;
-  }
-
-  private void assertSelectedEnd(int index) {
-    Cell cell = assertSelected(index);
-    assertTrue(Positions.isEndPosition(cell));
-  }
-
-  private void assertSelection(int start, int end) {
-    assertEquals(Range.closed(start, end), sync.selection());
-  }
-
-  private void assertNoSelection() {
-    assertFalse(sync.hasSelection());
-  }
-
-  private boolean isCompletionActive() {
-    Cell focused = myCellContainer.focusedCell.get();
-    CompletionController ctrl = focused.get(Completion.COMPLETION_CONTROLLER);
-    if (ctrl == null) return false;
-    return ctrl.isActive();
-  }
-
-  private static class ValueExprCloner implements ValueToken.ValueCloner<ValueExpr> {
-    @Override
-    public ValueExpr clone(ValueExpr val) {
-      ValueExpr result = new ValueExpr();
-      result.val.set(val.val.get());
-      return result;
-    }
-  }
-
-  private static class ComplexValueCloner implements ValueToken.ValueCloner<ComplexValueExpr> {
-    @Override
-    public ComplexValueExpr clone(ComplexValueExpr val) {
-      return new ComplexValueExpr();
-    }
   }
 }
