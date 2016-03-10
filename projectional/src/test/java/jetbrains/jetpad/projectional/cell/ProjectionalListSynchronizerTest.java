@@ -851,7 +851,7 @@ public class ProjectionalListSynchronizerTest extends EditingTestCase {
   }
 
   @Test
-  public void cut() {
+  public void cutOneChild() {
     container.children.add(new EmptyChild());
     selectChild(0);
 

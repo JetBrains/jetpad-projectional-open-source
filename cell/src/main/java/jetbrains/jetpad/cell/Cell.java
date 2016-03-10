@@ -240,6 +240,7 @@ public abstract class Cell implements NavComposite<Cell>, HasVisibility, HasFocu
     newTraits[0] = trait;
     System.arraycopy(myCellTraits, 0, newTraits, 1, myCellTraits.length);
     myCellTraits = newTraits;
+    trait.onAdd(this);
     r.run();
     return new Registration() {
       @Override
@@ -251,6 +252,7 @@ public abstract class Cell implements NavComposite<Cell>, HasVisibility, HasFocu
         System.arraycopy(myCellTraits, index + 1, newTraits, index, myCellTraits.length - index - 1);
         myCellTraits = newTraits;
         r.run();
+        trait.onRemove(Cell.this);
       }
     };
   }

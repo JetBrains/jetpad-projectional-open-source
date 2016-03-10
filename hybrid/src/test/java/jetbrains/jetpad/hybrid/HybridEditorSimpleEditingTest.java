@@ -17,12 +17,9 @@ package jetbrains.jetpad.hybrid;
 
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.Range;
-import jetbrains.jetpad.base.Registration;
 import jetbrains.jetpad.cell.Cell;
-import jetbrains.jetpad.cell.EditingTestCase;
 import jetbrains.jetpad.cell.HorizontalCell;
 import jetbrains.jetpad.cell.TextCell;
-import jetbrains.jetpad.cell.action.CellActions;
 import jetbrains.jetpad.cell.completion.Completion;
 import jetbrains.jetpad.cell.message.MessageController;
 import jetbrains.jetpad.cell.position.Positions;
@@ -34,52 +31,23 @@ import jetbrains.jetpad.event.KeyEvent;
 import jetbrains.jetpad.event.KeyStrokeSpecs;
 import jetbrains.jetpad.event.ModifierKey;
 import jetbrains.jetpad.hybrid.parser.*;
-import jetbrains.jetpad.hybrid.testapp.mapper.ExprContainerMapper;
 import jetbrains.jetpad.hybrid.testapp.mapper.ExprHybridEditorSpec;
 import jetbrains.jetpad.hybrid.testapp.mapper.Tokens;
 import jetbrains.jetpad.hybrid.testapp.model.*;
 import jetbrains.jetpad.hybrid.util.HybridWrapperRole;
 import jetbrains.jetpad.mapper.Mapper;
 import jetbrains.jetpad.model.composite.Composites;
-import jetbrains.jetpad.projectional.util.RootController;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 
-import java.util.Arrays;
-
-import static jetbrains.jetpad.hybrid.SelectionPosition.FIRST;
-import static jetbrains.jetpad.hybrid.SelectionPosition.LAST;
 import static org.junit.Assert.*;
 
-public class HybridEditorEditingTest extends EditingTestCase {
-  private ExprContainer container = new ExprContainer();
-  private Registration registration;
-  private ExprContainerMapper mapper = new ExprContainerMapper(container);
-  private HybridSynchronizer<Expr> sync;
-  private Cell myTargetCell;
-
-  @Before
-  public void init() {
-    registration = RootController.install(myCellContainer);
-    mapper.attachRoot();
-    myCellContainer.root.children().add(myTargetCell = mapper.getTarget());
-    CellActions.toFirstFocusable(mapper.getTarget()).run();
-    sync = mapper.hybridSync;
-  }
-
-  @After
-  public void dispose() {
-    mapper.detachRoot();
-    registration.remove();
-  }
-
+public class HybridEditorSimpleEditingTest extends BaseHybridEditorEditingTestCase {
   @Test
   public void simpleTyping() {
     type("id");
 
     assertTrue(container.expr.get() instanceof IdExpr);
-    assertEquals(1, myTargetCell.children().size());
+    assertEquals(1, targetCell.children().size());
   }
 
   @Test
@@ -95,7 +63,7 @@ public class HybridEditorEditingTest extends EditingTestCase {
     type("id+id");
 
     assertTrue(container.expr.get() instanceof PlusExpr);
-    assertEquals(5, myTargetCell.children().size());
+    assertEquals(5, targetCell.children().size());
   }
 
   @Test
@@ -697,7 +665,7 @@ public class HybridEditorEditingTest extends EditingTestCase {
     setTokens();
     sync.placeholder().focus();
 
-    KeyEvent event = press(KeyStrokeSpecs.SELECT_UP);;
+    KeyEvent event = press(KeyStrokeSpecs.SELECT_UP);
     assertFalse(event.isConsumed());
   }
 
@@ -766,54 +734,6 @@ public class HybridEditorEditingTest extends EditingTestCase {
   }
 
   @Test
-  public void copyPaste() {
-    setTokens(Tokens.ID, Tokens.PLUS);
-    select(0, true);
-
-    press(Key.RIGHT, ModifierKey.SHIFT);
-    press(KeyStrokeSpecs.COPY);
-    press(KeyStrokeSpecs.PASTE);
-
-    assertTokens(Tokens.ID, Tokens.ID, Tokens.PLUS);
-  }
-
-  @Test
-  public void cut() {
-    setTokens(Tokens.ID, Tokens.PLUS);
-    select(0, true);
-
-    press(Key.RIGHT, ModifierKey.SHIFT);
-    press(KeyStrokeSpecs.CUT);
-
-    assertTokens(Tokens.PLUS);
-  }
-
-  @Test
-  public void cutPaste() {
-    setTokens(Tokens.ID, Tokens.PLUS);
-    select(0, true);
-
-    press(Key.RIGHT, ModifierKey.SHIFT);
-    press(KeyStrokeSpecs.CUT);
-    press(KeyStrokeSpecs.PASTE);
-    press(KeyStrokeSpecs.PASTE);
-
-    assertTokens(Tokens.ID, Tokens.ID, Tokens.PLUS);
-  }
-
-  @Test
-  public void pasteToEmpty() {
-    setTokens(Tokens.ID);
-    select(0, true);
-    press(Key.RIGHT, ModifierKey.SHIFT);
-
-    press(KeyStrokeSpecs.CUT);
-    press(KeyStrokeSpecs.PASTE);
-
-    assertTokens(Tokens.ID);
-  }
-
-  @Test
   public void clearAll() {
     setTokens(Tokens.ID, Tokens.ID);
 
@@ -838,7 +758,7 @@ public class HybridEditorEditingTest extends EditingTestCase {
 
     del();
 
-    Cell tokenCell = myTargetCell.children().get(0);
+    Cell tokenCell = targetCell.children().get(0);
     assertFocused(tokenCell);
     assertTrue(Positions.isHomePosition(tokenCell));
     assertTokens(Tokens.ID);
@@ -853,7 +773,7 @@ public class HybridEditorEditingTest extends EditingTestCase {
 
     del();
 
-    Cell tokenCell = myTargetCell.children().get(0);
+    Cell tokenCell = targetCell.children().get(0);
     assertFocused(tokenCell);
     assertTrue(Positions.isEndPosition(tokenCell));
     assertTokens(Tokens.ID);
@@ -861,30 +781,30 @@ public class HybridEditorEditingTest extends EditingTestCase {
 
   @Test
   public void statePersistence() {
-    CellStateHandler handler = myTargetCell.get(CellStateHandler.PROPERTY);
+    CellStateHandler handler = targetCell.get(CellStateHandler.PROPERTY);
 
     setTokens(Tokens.ID, Tokens.ID, Tokens.ID);
-    CellState state = handler.saveState(myTargetCell);
+    CellState state = handler.saveState(targetCell);
 
     select(1, true);
     type(" id");
 
-    handler.restoreState(myTargetCell, state);
+    handler.restoreState(targetCell, state);
 
     assertTokens(Tokens.ID, Tokens.ID, Tokens.ID);
   }
 
   @Test
   public void valueTokenStatePersistence() {
-    CellStateHandler handler = myTargetCell.get(CellStateHandler.PROPERTY);
+    CellStateHandler handler = targetCell.get(CellStateHandler.PROPERTY);
 
     ValueExpr valExpr = new ValueExpr();
     setTokens(new ValueToken(valExpr, new ValueExprCloner()), Tokens.ID);
 
-    CellState state = handler.saveState(myTargetCell);
+    CellState state = handler.saveState(targetCell);
     valExpr.val.set("z");
 
-    handler.restoreState(myTargetCell, state);
+    handler.restoreState(targetCell, state);
 
     ValueToken newVal = (ValueToken) sync.tokens().get(0);
     assertNull(((ValueExpr) newVal.value()).val.get());
@@ -1044,22 +964,6 @@ public class HybridEditorEditingTest extends EditingTestCase {
 
   private ValueToken createComplexToken() {
     return new ValueToken(new ComplexValueExpr(), new ComplexValueCloner());
-  }
-
-  private void assertTokens(Token... tokens) {
-    assertEquals(Arrays.asList(tokens), sync.tokens());
-  }
-
-  private void setTokens(Token... tokens) {
-    sync.setTokens(Arrays.asList(tokens));
-  }
-
-  private void select(int index, boolean first) {
-    sync.tokenOperations().select(index, first ? FIRST : LAST).run();
-  }
-
-  private void select(int index, int pos) {
-    sync.tokenOperations().select(index, pos).run();
   }
 
   private Cell tokenCell(int index) {

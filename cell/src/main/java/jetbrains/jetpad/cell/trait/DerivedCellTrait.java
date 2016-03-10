@@ -22,10 +22,18 @@ import jetbrains.jetpad.cell.event.FocusEvent;
 import jetbrains.jetpad.event.*;
 import jetbrains.jetpad.model.property.PropertyChangeEvent;
 
-import javax.annotation.Nonnull;
-
 public abstract class DerivedCellTrait extends CellTrait {
   protected abstract CellTrait getBase(Cell cell);
+
+  @Override
+  public void onAdd(Cell cell) {
+    getBase(cell).onAdd(cell);
+  }
+
+  @Override
+  public void onRemove(Cell cell) {
+    getBase(cell).onRemove(cell);
+  }
 
   @Override
   public void onPropertyChanged(Cell cell, CellPropertySpec<?> prop, PropertyChangeEvent<?> event) {

@@ -204,7 +204,7 @@ public class ProjectionalPropertySynchronizerTest extends EditingTestCase {
   }
 
   @Test
-  public void cut() {
+  public void cutItem() {
     AutoDeleteChild child = new AutoDeleteChild();
     container.child.set(child);
     focusChild(child);
