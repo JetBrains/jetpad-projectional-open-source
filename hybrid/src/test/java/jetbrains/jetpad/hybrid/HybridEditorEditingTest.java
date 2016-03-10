@@ -60,7 +60,7 @@ public class HybridEditorEditingTest extends BaseHybridEditorEditingTest<ExprCon
     type("id");
 
     assertTrue(container.expr.get() instanceof IdExpr);
-    assertEquals(1, myTargetCell.children().size());
+    assertEquals(1, targetCell.children().size());
   }
 
   @Test
@@ -76,7 +76,7 @@ public class HybridEditorEditingTest extends BaseHybridEditorEditingTest<ExprCon
     type("id+id");
 
     assertTrue(container.expr.get() instanceof PlusExpr);
-    assertEquals(5, myTargetCell.children().size());
+    assertEquals(5, targetCell.children().size());
   }
 
   @Test
@@ -678,7 +678,7 @@ public class HybridEditorEditingTest extends BaseHybridEditorEditingTest<ExprCon
     setTokens();
     sync.placeholder().focus();
 
-    KeyEvent event = press(KeyStrokeSpecs.SELECT_UP);;
+    KeyEvent event = press(KeyStrokeSpecs.SELECT_UP);
     assertFalse(event.isConsumed());
   }
 
@@ -747,54 +747,6 @@ public class HybridEditorEditingTest extends BaseHybridEditorEditingTest<ExprCon
   }
 
   @Test
-  public void copyPaste() {
-    setTokens(Tokens.ID, Tokens.PLUS);
-    select(0, true);
-
-    press(Key.RIGHT, ModifierKey.SHIFT);
-    press(KeyStrokeSpecs.COPY);
-    press(KeyStrokeSpecs.PASTE);
-
-    assertTokens(Tokens.ID, Tokens.ID, Tokens.PLUS);
-  }
-
-  @Test
-  public void cut() {
-    setTokens(Tokens.ID, Tokens.PLUS);
-    select(0, true);
-
-    press(Key.RIGHT, ModifierKey.SHIFT);
-    press(KeyStrokeSpecs.CUT);
-
-    assertTokens(Tokens.PLUS);
-  }
-
-  @Test
-  public void cutPaste() {
-    setTokens(Tokens.ID, Tokens.PLUS);
-    select(0, true);
-
-    press(Key.RIGHT, ModifierKey.SHIFT);
-    press(KeyStrokeSpecs.CUT);
-    press(KeyStrokeSpecs.PASTE);
-    press(KeyStrokeSpecs.PASTE);
-
-    assertTokens(Tokens.ID, Tokens.ID, Tokens.PLUS);
-  }
-
-  @Test
-  public void pasteToEmpty() {
-    setTokens(Tokens.ID);
-    select(0, true);
-    press(Key.RIGHT, ModifierKey.SHIFT);
-
-    press(KeyStrokeSpecs.CUT);
-    press(KeyStrokeSpecs.PASTE);
-
-    assertTokens(Tokens.ID);
-  }
-
-  @Test
   public void clearAll() {
     setTokens(Tokens.ID, Tokens.ID);
 
@@ -819,7 +771,7 @@ public class HybridEditorEditingTest extends BaseHybridEditorEditingTest<ExprCon
 
     del();
 
-    Cell tokenCell = myTargetCell.children().get(0);
+    Cell tokenCell = targetCell.children().get(0);
     assertFocused(tokenCell);
     assertTrue(Positions.isHomePosition(tokenCell));
     assertTokens(Tokens.ID);
@@ -834,7 +786,7 @@ public class HybridEditorEditingTest extends BaseHybridEditorEditingTest<ExprCon
 
     del();
 
-    Cell tokenCell = myTargetCell.children().get(0);
+    Cell tokenCell = targetCell.children().get(0);
     assertFocused(tokenCell);
     assertTrue(Positions.isEndPosition(tokenCell));
     assertTokens(Tokens.ID);
@@ -842,30 +794,30 @@ public class HybridEditorEditingTest extends BaseHybridEditorEditingTest<ExprCon
 
   @Test
   public void statePersistence() {
-    CellStateHandler handler = myTargetCell.get(CellStateHandler.PROPERTY);
+    CellStateHandler handler = targetCell.get(CellStateHandler.PROPERTY);
 
     setTokens(Tokens.ID, Tokens.ID, Tokens.ID);
-    CellState state = handler.saveState(myTargetCell);
+    CellState state = handler.saveState(targetCell);
 
     select(1, true);
     type(" id");
 
-    handler.restoreState(myTargetCell, state);
+    handler.restoreState(targetCell, state);
 
     assertTokens(Tokens.ID, Tokens.ID, Tokens.ID);
   }
 
   @Test
   public void valueTokenStatePersistence() {
-    CellStateHandler handler = myTargetCell.get(CellStateHandler.PROPERTY);
+    CellStateHandler handler = targetCell.get(CellStateHandler.PROPERTY);
 
     ValueExpr valExpr = new ValueExpr();
     setTokens(new ValueToken(valExpr, new ValueExprCloner()), Tokens.ID);
 
-    CellState state = handler.saveState(myTargetCell);
+    CellState state = handler.saveState(targetCell);
     valExpr.val.set("z");
 
-    handler.restoreState(myTargetCell, state);
+    handler.restoreState(targetCell, state);
 
     ValueToken newVal = (ValueToken) sync.tokens().get(0);
     assertNull(((ValueExpr) newVal.value()).val.get());

@@ -38,7 +38,7 @@ public class SimpleHybridEditorEditingTest extends BaseHybridEditorEditingTest<S
     type("+");
     type("id");
 
-    assertEquals(5, myTargetCell.children().size());
+    assertEquals(5, targetCell.children().size());
     assertEquals(3, sync.tokens().size());
   }
 
@@ -47,7 +47,7 @@ public class SimpleHybridEditorEditingTest extends BaseHybridEditorEditingTest<S
     type("id");
     del();
 
-    assertEquals(1, myTargetCell.children().size());
+    assertEquals(1, targetCell.children().size());
     assertEquals(1, sync.tokens().size());
   }
 
@@ -58,7 +58,7 @@ public class SimpleHybridEditorEditingTest extends BaseHybridEditorEditingTest<S
     backspace();
     backspace();
 
-    assertEquals(1, myTargetCell.children().size());
+    assertEquals(1, targetCell.children().size());
     assertEquals(1, sync.tokens().size());
   }
 }

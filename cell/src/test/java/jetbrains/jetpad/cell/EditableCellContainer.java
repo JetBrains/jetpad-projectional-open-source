@@ -69,6 +69,18 @@ public class EditableCellContainer {
     return event;
   }
 
+  public ClipboardContent cut() {
+    CopyCutEvent e = new CopyCutEvent(true);
+    myViewContainer.cut(e);
+    return e.getResult();
+  }
+
+  public ClipboardContent copy() {
+    CopyCutEvent e = new CopyCutEvent(false);
+    myViewContainer.copy(e);
+    return e.getResult();
+  }
+
   public void paste(String text) {
     container.paste(text);
   }

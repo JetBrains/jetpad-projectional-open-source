@@ -26,6 +26,20 @@ public abstract class CompositeCellTrait extends CellTrait {
   protected abstract CellTrait[] getBaseTraits(Cell cell);
 
   @Override
+  public void onAdd(Cell cell) {
+    for (CellTrait t : getBaseTraits(cell)) {
+      t.onAdd(cell);
+    }
+  }
+
+  @Override
+  public void onRemove(Cell cell) {
+    for (CellTrait t : getBaseTraits(cell)) {
+      t.onRemove(cell);
+    }
+  }
+
+  @Override
   public void onPropertyChanged(Cell cell, CellPropertySpec<?> prop, PropertyChangeEvent<?> event) {
     for (CellTrait t : getBaseTraits(cell)) {
       t.onPropertyChanged(cell, prop, event);

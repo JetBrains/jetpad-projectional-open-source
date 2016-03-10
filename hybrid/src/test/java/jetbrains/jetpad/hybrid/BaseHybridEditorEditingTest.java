@@ -43,7 +43,7 @@ abstract class BaseHybridEditorEditingTest<MapperT extends Mapper<ExprContainer,
   protected ExprContainer container = new ExprContainer();
   protected MapperT mapper = createMapper();
   protected BaseHybridSynchronizer<Expr> sync;
-  protected Cell myTargetCell;
+  protected Cell targetCell;
 
   private Registration registration;
 
@@ -54,7 +54,7 @@ abstract class BaseHybridEditorEditingTest<MapperT extends Mapper<ExprContainer,
   public void init() {
     registration = RootController.install(myCellContainer);
     mapper.attachRoot();
-    myCellContainer.root.children().add(myTargetCell = mapper.getTarget());
+    myCellContainer.root.children().add(targetCell = mapper.getTarget());
     CellActions.toFirstFocusable(mapper.getTarget()).run();
     sync = getSync(mapper);
   }
