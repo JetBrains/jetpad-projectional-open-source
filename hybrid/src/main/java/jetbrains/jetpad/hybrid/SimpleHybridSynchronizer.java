@@ -26,6 +26,16 @@ import jetbrains.jetpad.model.property.ReadableProperty;
 
 public class SimpleHybridSynchronizer<SourceT> extends BaseHybridSynchronizer<SourceT> {
   public SimpleHybridSynchronizer(
+    Mapper<?, ?> contextMapper,
+    HybridProperty<SourceT> source,
+    Cell target,
+    HybridEditorSpec<SourceT> spec) {
+    super(contextMapper, source, target, Properties.constant(spec),
+      new TokenListEditor<>(spec, source.source(), false));
+  }
+
+  @Deprecated
+  public SimpleHybridSynchronizer(
       Mapper<?, ?> contextMapper,
       ObservableList<Token> tokens,
       ReadableProperty<SourceT> source,
