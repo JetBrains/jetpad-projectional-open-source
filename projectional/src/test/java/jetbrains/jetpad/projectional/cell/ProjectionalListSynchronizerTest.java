@@ -901,6 +901,19 @@ public class ProjectionalListSynchronizerTest extends EditingTestCase {
     assertTrue(Cells.isEmpty(getChild(0)));
   }
 
+  @Test
+  public void addEmptyAfter() {
+    EmptyCompositeChild cc = new EmptyCompositeChild();
+    container.children.add(cc);
+    selectFirst(0);
+
+    enter();
+    enter();
+
+    assertEquals(0, cc.children.size());
+    assertEquals(2, container.children.size());
+  }
+
   private Child get(int index) {
     return container.children.get(index);
   }
