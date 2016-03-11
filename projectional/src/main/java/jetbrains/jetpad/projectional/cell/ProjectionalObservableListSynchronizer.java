@@ -95,7 +95,7 @@ class ProjectionalObservableListSynchronizer<ContextT, SourceItemT> extends Base
           return getCurrentChildCompletion();
         }
 
-        if (spec == ITEM_HANDLER) {
+        if (spec == ITEM_HANDLER && canCreateNewItem()) {
           return new ItemHandler() {
             @Override
             public Runnable addEmptyAfter() {
