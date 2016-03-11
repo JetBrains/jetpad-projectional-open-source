@@ -17,18 +17,17 @@ package jetbrains.jetpad.hybrid;
 
 import jetbrains.jetpad.hybrid.parser.Token;
 import jetbrains.jetpad.hybrid.testapp.mapper.ExprHybridEditorSpec;
-import jetbrains.jetpad.hybrid.testapp.model.Expr;
 import org.junit.Test;
 
 import java.util.List;
 
-import static com.google.common.collect.ImmutableList.of;
+import static com.google.common.collect.ImmutableList.*;
 import static jetbrains.jetpad.hybrid.TokensUtil.*;
 import static jetbrains.jetpad.hybrid.testapp.mapper.Tokens.*;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class TokenizerTest {
-  private Tokenizer<Expr> tokenizer = new Tokenizer<>(new ExprHybridEditorSpec());
+  private Tokenizer tokenizer = new Tokenizer(new ExprHybridEditorSpec());
 
   @Test
   public void oneToken() {

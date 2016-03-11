@@ -265,7 +265,7 @@ class TokenOperations<SourceT> {
   }
 
   boolean afterPaste(TextCell textView) {
-    Tokenizer<SourceT> tokenizer = new Tokenizer<>(mySync.editorSpec());
+    Tokenizer tokenizer = new Tokenizer(mySync.editorSpec());
     List<Token> newTokens = tokenizer.tokenize(textView.text().get());
     int index;
     if (!tokens().isEmpty()) {
