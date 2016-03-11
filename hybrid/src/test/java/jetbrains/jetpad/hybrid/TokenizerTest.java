@@ -86,6 +86,12 @@ public class TokenizerTest {
   }
 
   @Test
+  public void incompleteStringLiteral() {
+    List<Token> tokens = tokenizer.tokenize("\"text 1");
+    assertTokensEqual(of(doubleQtd("text 1")), tokens);
+  }
+
+  @Test
   public void nestedQuotesOfDifferentKind() {
     List<Token> tokens = tokenizer.tokenize("\"'\"'\"'");
     assertTokensEqual(of(doubleQtd("'"), singleQtd("\"")), tokens);
