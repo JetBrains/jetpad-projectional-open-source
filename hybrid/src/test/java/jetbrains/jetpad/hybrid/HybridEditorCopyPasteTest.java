@@ -22,7 +22,7 @@ public class HybridEditorCopyPasteTest extends BaseHybridEditorEditingTest<ExprC
   }
 
   @Override
-  protected BaseHybridSynchronizer<Expr> getSync(ExprContainerMapper mapper) {
+  protected BaseHybridSynchronizer<Expr, ?> getSync(ExprContainerMapper mapper) {
     return mapper.hybridSync;
   }
 

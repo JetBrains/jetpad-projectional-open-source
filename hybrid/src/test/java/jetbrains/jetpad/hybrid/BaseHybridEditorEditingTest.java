@@ -42,13 +42,13 @@ import static org.junit.Assert.*;
 abstract class BaseHybridEditorEditingTest<MapperT extends Mapper<ExprContainer, ? extends Cell>> extends EditingTestCase {
   protected ExprContainer container = new ExprContainer();
   protected MapperT mapper = createMapper();
-  protected BaseHybridSynchronizer<Expr> sync;
+  protected BaseHybridSynchronizer<Expr, ?> sync;
   protected Cell targetCell;
 
   private Registration registration;
 
   protected abstract MapperT createMapper();
-  protected abstract BaseHybridSynchronizer<Expr> getSync(MapperT mapper);
+  protected abstract BaseHybridSynchronizer<Expr, ?> getSync(MapperT mapper);
 
   @Before
   public void init() {

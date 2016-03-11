@@ -45,13 +45,13 @@ import static jetbrains.jetpad.hybrid.SelectionPosition.FIRST;
 import static jetbrains.jetpad.hybrid.SelectionPosition.LAST;
 
 class TokenCompletion {
-  private BaseHybridSynchronizer<?> mySync;
+  private BaseHybridSynchronizer<?, ?> mySync;
 
-  TokenCompletion(BaseHybridSynchronizer<?> sync) {
+  TokenCompletion(BaseHybridSynchronizer<?, ?> sync) {
     mySync = sync;
   }
 
-  private HybridEditorSpec<?> editorSpec() {
+  private SimpleHybridEditorSpec<?> editorSpec() {
     return mySync.editorSpec();
   }
 
@@ -110,7 +110,6 @@ class TokenCompletion {
           caretPosition = -1;
         }
 
-
         CompletionController controller = tokenCell.get(Completion.COMPLETION_CONTROLLER);
         final boolean wasCompletionActive = controller != null && controller.isActive();
 
@@ -150,7 +149,6 @@ class TokenCompletion {
 
   CompletionSupplier sideTransform(Cell tokenCell, final int delta) {
     final int index = mySync.tokenCells().indexOf(tokenCell);
-
 
     return new CompletionSupplier() {
 

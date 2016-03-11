@@ -28,7 +28,7 @@ public class SimpleHybridEditorEditingTest extends BaseHybridEditorEditingTest<S
   }
 
   @Override
-  protected BaseHybridSynchronizer<Expr> getSync(SimpleExprContainerMapper mapper) {
+  protected BaseHybridSynchronizer<Expr, ?> getSync(SimpleExprContainerMapper mapper) {
     return mapper.hybridSync;
   }
 
