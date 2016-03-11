@@ -59,7 +59,7 @@ import java.util.*;
 import static jetbrains.jetpad.hybrid.SelectionPosition.*;
 import static jetbrains.jetpad.model.composite.Composites.*;
 
-abstract class BaseHybridSynchronizer<SourceT> implements Synchronizer, ToCellMapping {
+abstract class BaseHybridSynchronizer<SourceT, SpecT extends SimpleHybridEditorSpec<SourceT>> implements Synchronizer, ToCellMapping {
   public static final CellTraitPropertySpec<Runnable> ON_LAST_ITEM_DELETED = new CellTraitPropertySpec<>("onLastItemDeleted");
 
   static final CellTraitPropertySpec<HybridSynchronizer<?>> HYBRID_SYNCHRONIZER = new CellTraitPropertySpec<>("hybridSynchronizer");
@@ -82,10 +82,10 @@ abstract class BaseHybridSynchronizer<SourceT> implements Synchronizer, ToCellMa
   private String myPlaceHolderText = "empty";
 
   private boolean myHideTokensInMenu = false;
-  private ReadableProperty<HybridEditorSpec<SourceT>> mySpec;
+  private ReadableProperty<SpecT> mySpec;
 
   public BaseHybridSynchronizer(Mapper<?, ?> contextMapper, ReadableProperty<SourceT> source, Cell target,
-                                ReadableProperty<HybridEditorSpec<SourceT>> spec, TokenListEditor<SourceT> editor) {
+                                ReadableProperty<SpecT> spec, TokenListEditor<SourceT> editor) {
     myContextMapper = contextMapper;
     mySource = source;
     mySpec = spec;
@@ -707,7 +707,7 @@ abstract class BaseHybridSynchronizer<SourceT> implements Synchronizer, ToCellMa
     return Collections.unmodifiableList(myTargetList);
   }
 
-  HybridEditorSpec<SourceT> editorSpec() {
+  SpecT editorSpec() {
     return mySpec.get();
   }
 

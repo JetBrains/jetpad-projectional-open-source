@@ -15,14 +15,8 @@
  */
 package jetbrains.jetpad.hybrid;
 
-import jetbrains.jetpad.completion.CompletionSupplier;
 import jetbrains.jetpad.hybrid.parser.Parser;
-import jetbrains.jetpad.hybrid.parser.prettyprint.PrettyPrinter;
 
-public interface HybridEditorSpec<SourceT> extends CompletionSpec {
+public interface HybridEditorSpec<SourceT> extends SimpleHybridEditorSpec<SourceT> {
   Parser<SourceT> getParser();
-  PrettyPrinter<? super SourceT> getPrettyPrinter();
-  PairSpec getPairSpec();
-
-  CompletionSupplier getAdditionalCompletion(CompletionContext ctx, Completer completer);
 }
