@@ -30,16 +30,6 @@ import java.util.Arrays;
 import java.util.List;
 
 public class ExprHybridEditorSpec implements HybridEditorSpec<Expr> {
-  private static String dequote(String text, String quote) {
-    if (text.startsWith(quote)) {
-      if (text.length() >= quote.length() * 2 && text.endsWith(quote)) {
-        return text.substring(quote.length(), text.length() - quote.length());
-      }
-      return text.substring(quote.length());
-    }
-    return text;
-  }
-
   private final Token tokenPlus;
   private final Token tokenMul;
 
@@ -340,28 +330,16 @@ public class ExprHybridEditorSpec implements HybridEditorSpec<Expr> {
           }
         });
         for (final String quote : new String[] { "\"", "'" }) {
-          result.add(new SimpleCompletionItem(quote) {
+          result.add(new ByBoundsCompletionItem(quote, quote) {
             @Override
             public Runnable complete(String text) {
               StringExpr stringExpr = new StringExpr(quote);
-              stringExpr.body.set(dequote(text, quote));
+              stringExpr.body.set(getBody(text));
               return tokenHandler.apply(new ValueToken(stringExpr, new ValueExprCloner(), new ValueExprTextGen()));
             }
             @Override
             public int getSortPriority() {
               return -1;
-            }
-          });
-          result.add(new ByBoundsCompletionItem(quote, quote) {
-            @Override
-            public Runnable complete(String text) {
-              StringExpr stringExpr = new StringExpr(quote);
-              stringExpr.body.set(dequote(text, quote));
-              return tokenHandler.apply(new ValueToken(stringExpr, new ValueExprCloner(), new ValueExprTextGen()));
-            }
-            @Override
-            public int getSortPriority() {
-              return -2;
             }
           });
         }

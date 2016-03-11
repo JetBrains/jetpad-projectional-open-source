@@ -33,19 +33,31 @@ public abstract class ByBoundsCompletionItem extends BaseCompletionItem {
 
   @Override
   public boolean isStrictMatchPrefix(String text) {
-    return myPrefix.startsWith(text) || isPrefixedButNotSuffixed(text);
+    return text.length() < myPrefix.length() && myPrefix.startsWith(text);
   }
 
   @Override
   public boolean isMatch(String text) {
-    return isPrefixedAndSuffixed(text);
+    return hasPrefixAndDoesNotExceedSuffix(text);
   }
 
-  private boolean isPrefixedButNotSuffixed(String text) {
-    return text.startsWith(myPrefix) && text.indexOf(mySuffix, myPrefix.length()) == -1;
+  private boolean hasPrefixAndDoesNotExceedSuffix(String text) {
+    if (text.startsWith(myPrefix)) {
+      int suffixPos = text.indexOf(mySuffix, myPrefix.length());
+      return (suffixPos == -1) || (suffixPos == text.length() - mySuffix.length());
+    }
+    return false;
   }
 
-  private boolean isPrefixedAndSuffixed(String text) {
-    return text.startsWith(myPrefix) && text.indexOf(mySuffix, myPrefix.length()) == (text.length() - mySuffix.length());
+  protected String getBody(String text) {
+    if (text.startsWith(myPrefix)) {
+      if ((text.length() - myPrefix.length() >= mySuffix.length())
+          && text.endsWith(mySuffix)) {
+        return text.substring(myPrefix.length(), text.length() - mySuffix.length());
+      } else {
+        return text.substring(myPrefix.length());
+      }
+    }
+    return text;
   }
 }
