@@ -51,20 +51,20 @@ class TokenCompleter {
     mySync = sync;
   }
 
-  private SimpleHybridEditorSpec<?> editorSpec() {
+  private SimpleHybridEditorSpec<?> getEditorSpec() {
     return mySync.editorSpec();
   }
 
-  private TokenListEditor<?> tokenListEditor() {
+  private TokenListEditor<?> getTokeListEditor() {
     return mySync.tokenListEditor();
   }
 
-  private TokenOperations<?> tokenOperations() {
+  private TokenOperations<?> getTokenOperations() {
     return mySync.tokenOperations();
   }
 
   CompletionItems completion(Function<Token, Runnable> handler) {
-    return new CompletionItems(editorSpec().getTokenCompletion(handler).get(CompletionParameters.EMPTY));
+    return new CompletionItems(getEditorSpec().getTokenCompletion(handler).get(CompletionParameters.EMPTY));
   }
 
   CompletionSupplier placeholderCompletion(final Cell placeholder) {
@@ -74,10 +74,10 @@ class TokenCompleter {
         CompletionController controller = placeholder.get(Completion.COMPLETION_CONTROLLER);
         boolean wasActive = controller.isActive();
 
-        tokenListEditor().tokens.addAll(Arrays.asList(tokens));
-        tokenListEditor().updateToPrintedTokens();
+        getTokeListEditor().tokens.addAll(Arrays.asList(tokens));
+        getTokeListEditor().updateToPrintedTokens();
 
-        Runnable result = tokenOperations().selectOnCreation(selectionIndex, LAST);
+        Runnable result = getTokenOperations().selectOnCreation(selectionIndex, LAST);
         if (wasActive) {
           result = seq(result, activateCompletion(selectionIndex));
         }
@@ -113,13 +113,13 @@ class TokenCompleter {
         CompletionController controller = tokenCell.get(Completion.COMPLETION_CONTROLLER);
         final boolean wasCompletionActive = controller != null && controller.isActive();
 
-        tokenListEditor().tokens.remove(index);
+        getTokeListEditor().tokens.remove(index);
         int i = index;
         for (Token t : tokens) {
-          tokenListEditor().tokens.add(i++, t);
+          getTokeListEditor().tokens.add(i++, t);
         }
 
-        tokenListEditor().updateToPrintedTokens();
+        getTokeListEditor().updateToPrintedTokens();
 
         final Cell targetCell =  mySync.tokenCells().get(index + selectionIndex);
         if (!(targetCell instanceof TextCell) || !Objects.equal(((TextCell) targetCell).text().get(), oldText)) {
@@ -157,15 +157,15 @@ class TokenCompleter {
           @Override
           public Runnable complete(int selectionIndex, Token... tokens) {
             int i = index + delta;
-            ObservableList<Token> editorTokenList = tokenListEditor().tokens;
+            ObservableList<Token> editorTokenList = getTokeListEditor().tokens;
             if (i < editorTokenList.size() && tokens.length >= 1 && tokens[0] instanceof ValueToken && editorTokenList.get(i) instanceof ValueToken) {
               editorTokenList.remove(i);
             }
             for (Token t : tokens) {
               editorTokenList.add(i++, t);
             }
-            tokenListEditor().updateToPrintedTokens();
-            Runnable result = tokenOperations().selectOnCreation(index + delta + selectionIndex, LAST);
+            getTokeListEditor().updateToPrintedTokens();
+            Runnable result = getTokenOperations().selectOnCreation(index + delta + selectionIndex, LAST);
             if (cp.isEndRightTransform() && !cp.isMenu()) {
               result = seq(result, activateCompletion(index + delta + selectionIndex));
             }
@@ -190,7 +190,7 @@ class TokenCompleter {
       @Override
       public Async<? extends Iterable<CompletionItem>> getAsync(CompletionParameters cp) {
         if (cp.isMenu()) {
-          return editorSpec().getAdditionalCompletion(createContext(cp), createCompleter(cp)).getAsync(cp);
+          return getEditorSpec().getAdditionalCompletion(createContext(cp), createCompleter(cp)).getAsync(cp);
         }
         return Asyncs.<Iterable<CompletionItem>>constant(new ArrayList<CompletionItem>());
       }
@@ -203,7 +203,7 @@ class TokenCompleter {
       public List<CompletionItem> get(CompletionParameters cp) {
         List<CompletionItem> result = new ArrayList<>();
         if (!(cp.isMenu() && mySync.isHideTokensInMenu())) {
-          result.addAll(FluentIterable.from(editorSpec().getTokenCompletion(new Function<Token, Runnable>() {
+          result.addAll(FluentIterable.from(getEditorSpec().getTokenCompletion(new Function<Token, Runnable>() {
             @Override
             public Runnable apply(Token input) {
               return completer.complete(input);
@@ -211,7 +211,7 @@ class TokenCompleter {
           }).get(cp)).toList());
         }
         if (cp.isMenu()) {
-          result.addAll(FluentIterable.from(editorSpec().getAdditionalCompletion(ctx, completer).get(cp)).toList());
+          result.addAll(FluentIterable.from(getEditorSpec().getAdditionalCompletion(ctx, completer).get(cp)).toList());
           ctx.getPrefix();
         }
         return result;
@@ -220,7 +220,7 @@ class TokenCompleter {
       @Override
       public Async<? extends Iterable<CompletionItem>> getAsync(CompletionParameters cp) {
         if (cp.isMenu()) {
-          return editorSpec().getAdditionalCompletion(ctx, completer).getAsync(cp);
+          return getEditorSpec().getAdditionalCompletion(ctx, completer).getAsync(cp);
         }
         return Asyncs.<Iterable<CompletionItem>>constant(new ArrayList<CompletionItem>());
       }
@@ -307,7 +307,7 @@ class TokenCompleter {
 
     @Override
     public List<Token> getPrefix() {
-      return Collections.unmodifiableList(tokenListEditor().tokens.subList(0, myTargetIndex));
+      return Collections.unmodifiableList(getTokeListEditor().tokens.subList(0, myTargetIndex));
     }
 
     @Override
@@ -317,12 +317,12 @@ class TokenCompleter {
 
     @Override
     public List<Token> getTokens() {
-      return Collections.unmodifiableList(tokenListEditor().tokens);
+      return Collections.unmodifiableList(getTokeListEditor().tokens);
     }
 
     @Override
     public List<Object> getObjects() {
-      return Collections.unmodifiableList(tokenListEditor().getObjects());
+      return Collections.unmodifiableList(getTokeListEditor().getObjects());
     }
 
     @Override
