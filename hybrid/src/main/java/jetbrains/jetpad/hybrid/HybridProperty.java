@@ -20,5 +20,5 @@ import jetbrains.jetpad.model.collections.list.ObservableList;
 import jetbrains.jetpad.model.property.ReadableProperty;
 
 public interface HybridProperty<ModelT> extends ReadableProperty<ModelT> {
-  public ObservableList<Token> getSource();
+  public ObservableList<Token> getTokens();
 }

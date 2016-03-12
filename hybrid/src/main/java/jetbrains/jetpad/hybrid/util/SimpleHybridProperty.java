@@ -59,7 +59,7 @@ public class SimpleHybridProperty<ModelT> extends BaseDerivedProperty<ModelT> im
   }
 
   @Override
-  public ObservableList<Token> getSource() {
+  public ObservableList<Token> getTokens() {
     return myTokens;
   }
 }
