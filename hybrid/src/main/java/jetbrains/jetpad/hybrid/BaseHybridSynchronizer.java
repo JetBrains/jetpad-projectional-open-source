@@ -85,7 +85,7 @@ abstract class BaseHybridSynchronizer<SourceT, SpecT extends SimpleHybridEditorS
   private ReadableProperty<SpecT> mySpec;
 
   public BaseHybridSynchronizer(Mapper<?, ?> contextMapper, ReadableProperty<SourceT> source, Cell target,
-                                ReadableProperty<SpecT> spec, TokenListEditor<SourceT> editor) {
+                                ReadableProperty<? extends SpecT> spec, TokenListEditor<SourceT> editor) {
     myContextMapper = contextMapper;
     mySource = source;
     mySpec = spec;
