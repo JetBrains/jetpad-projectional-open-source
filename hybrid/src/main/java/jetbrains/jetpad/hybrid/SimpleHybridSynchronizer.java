@@ -15,16 +15,49 @@
  */
 package jetbrains.jetpad.hybrid;
 
+import com.google.common.base.Function;
 import jetbrains.jetpad.base.Registration;
 import jetbrains.jetpad.cell.Cell;
+import jetbrains.jetpad.completion.CompletionSupplier;
+import jetbrains.jetpad.hybrid.parser.Parser;
 import jetbrains.jetpad.hybrid.parser.Token;
+import jetbrains.jetpad.hybrid.parser.prettyprint.PrettyPrinter;
 import jetbrains.jetpad.mapper.Mapper;
 import jetbrains.jetpad.model.collections.CollectionListener;
 import jetbrains.jetpad.model.collections.list.ObservableList;
 import jetbrains.jetpad.model.property.Properties;
 import jetbrains.jetpad.model.property.ReadableProperty;
 
-public class SimpleHybridSynchronizer<SourceT> extends BaseHybridSynchronizer<SourceT> {
+public class SimpleHybridSynchronizer<SourceT> extends BaseHybridSynchronizer<SourceT, SimpleHybridEditorSpec<SourceT>> {
+  private static <SourceT> HybridEditorSpec<SourceT> toHybridEditorSpec(final SimpleHybridEditorSpec<SourceT> spec) {
+    return new HybridEditorSpec<SourceT>() {
+      @Override
+      public Parser<SourceT> getParser() {
+        throw new UnsupportedOperationException("Parser is not available for SimpleHybridSynchronizer");
+      }
+
+      @Override
+      public PrettyPrinter<? super SourceT> getPrettyPrinter() {
+        return spec.getPrettyPrinter();
+      }
+
+      @Override
+      public PairSpec getPairSpec() {
+        return spec.getPairSpec();
+      }
+
+      @Override
+      public CompletionSupplier getTokenCompletion(Function<Token, Runnable> tokenHandler) {
+        return spec.getTokenCompletion(tokenHandler);
+      }
+
+      @Override
+      public CompletionSupplier getAdditionalCompletion(CompletionContext ctx, Completer completer) {
+        return spec.getAdditionalCompletion(ctx, completer);
+      }
+    };
+  }
+
   public SimpleHybridSynchronizer(
     Mapper<?, ?> contextMapper,
     HybridProperty<SourceT> source,
@@ -40,9 +73,9 @@ public class SimpleHybridSynchronizer<SourceT> extends BaseHybridSynchronizer<So
       ObservableList<Token> tokens,
       ReadableProperty<SourceT> source,
       Cell target,
-      HybridEditorSpec<SourceT> spec) {
+      final SimpleHybridEditorSpec<SourceT> spec) {
     super(contextMapper, source, target, Properties.constant(spec),
-      new TokenListEditor<>(spec, tokens, false));
+      new TokenListEditor<>(toHybridEditorSpec(spec), tokens, false));
   }
 
   @Override

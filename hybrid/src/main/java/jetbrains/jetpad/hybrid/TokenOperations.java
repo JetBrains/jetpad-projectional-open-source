@@ -34,9 +34,9 @@ import static jetbrains.jetpad.hybrid.SelectionPosition.FIRST;
 import static jetbrains.jetpad.hybrid.SelectionPosition.LAST;
 
 class TokenOperations<SourceT> {
-  private BaseHybridSynchronizer<SourceT> mySync;
+  private BaseHybridSynchronizer<SourceT, ?> mySync;
 
-  TokenOperations(BaseHybridSynchronizer<SourceT> sync) {
+  TokenOperations(BaseHybridSynchronizer<SourceT, ?> sync) {
     mySync = sync;
   }
 
@@ -218,7 +218,7 @@ class TokenOperations<SourceT> {
   }
 
   boolean afterType(TextCell textView) {
-    TokenCompletion tc = mySync.tokenCompletion();
+    EditorCompleter tc = mySync.tokenCompletion();
 
     String text = textView.text().get();
     int caret = textView.caretPosition().get();
@@ -265,7 +265,7 @@ class TokenOperations<SourceT> {
   }
 
   boolean afterPaste(TextCell textView) {
-    Tokenizer<SourceT> tokenizer = new Tokenizer<>(mySync.editorSpec());
+    Tokenizer tokenizer = new Tokenizer(mySync.editorSpec());
     List<Token> newTokens = tokenizer.tokenize(textView.text().get());
     int index;
     if (!tokens().isEmpty()) {

@@ -31,12 +31,12 @@ import jetbrains.jetpad.projectional.util.CellNavigationController;
 import jetbrains.jetpad.values.Color;
 
 class TextTokenCell extends TextCell {
-  private BaseHybridSynchronizer<?> mySync;
+  private BaseHybridSynchronizer<?, ?> mySync;
   private boolean myFirst;
   private Token myToken;
   private Token myNextToken;
 
-  TextTokenCell(BaseHybridSynchronizer<?> sync, Token token) {
+  TextTokenCell(BaseHybridSynchronizer<?, ?> sync, Token token) {
     mySync = sync;
     myToken = token;
 

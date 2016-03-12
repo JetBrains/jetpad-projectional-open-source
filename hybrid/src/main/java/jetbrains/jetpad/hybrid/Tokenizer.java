@@ -28,10 +28,10 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-class Tokenizer<SourceT> {
-  private final HybridEditorSpec<SourceT> mySpec;
+class Tokenizer {
+  private final TokenCompletion mySpec;
 
-  Tokenizer(HybridEditorSpec<SourceT> spec) {
+  Tokenizer(TokenCompletion spec) {
     mySpec = spec;
   }
 

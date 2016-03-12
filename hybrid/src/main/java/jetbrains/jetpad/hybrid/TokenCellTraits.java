@@ -42,8 +42,8 @@ class TokenCellTraits {
       return CellTrait.EMPTY_ARRAY;
     }
 
-    protected BaseHybridSynchronizer<?> hybridSync(Cell cell) {
-      BaseHybridSynchronizer<?> sync = cell.get(HybridSynchronizer.HYBRID_SYNCHRONIZER);
+    protected BaseHybridSynchronizer<?, ?> hybridSync(Cell cell) {
+      BaseHybridSynchronizer<?, ?> sync = cell.get(HybridSynchronizer.HYBRID_SYNCHRONIZER);
       if (sync != null) return sync;
       Cell parent = cell.getParent();
       if (parent == null) return null;
@@ -69,7 +69,7 @@ class TokenCellTraits {
       return hybridSync(cell).tokenOperations();
     }
 
-    protected TokenCompletion tokenCompletion(Cell cell) {
+    protected EditorCompleter tokenCompletion(Cell cell) {
       return hybridSync(cell).tokenCompletion();
     }
   }
@@ -95,7 +95,7 @@ class TokenCellTraits {
 
     @Override
     public void onKeyTyped(Cell cell, KeyEvent event) {
-      BaseHybridSynchronizer<?> sync = hybridSync(cell);
+      BaseHybridSynchronizer<?, ?> sync = hybridSync(cell);
       if (sync.hasSelection()) {
         CellContainer container = cell.getContainer();
         sync.clearSelection();
