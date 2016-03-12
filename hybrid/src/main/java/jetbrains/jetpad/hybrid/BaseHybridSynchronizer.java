@@ -82,7 +82,7 @@ abstract class BaseHybridSynchronizer<SourceT, SpecT extends SimpleHybridEditorS
   private String myPlaceHolderText = "empty";
 
   private boolean myHideTokensInMenu = false;
-  private ReadableProperty<SpecT> mySpec;
+  private ReadableProperty<? extends SpecT> mySpec;
 
   public BaseHybridSynchronizer(Mapper<?, ?> contextMapper, ReadableProperty<SourceT> source, Cell target,
                                 ReadableProperty<? extends SpecT> spec, TokenListEditor<SourceT> editor) {
