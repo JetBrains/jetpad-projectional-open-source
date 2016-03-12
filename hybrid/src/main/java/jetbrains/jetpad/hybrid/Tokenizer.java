@@ -29,9 +29,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 class Tokenizer {
-  private final CompletionSpec mySpec;
+  private final TokenCompletion mySpec;
 
-  Tokenizer(CompletionSpec spec) {
+  Tokenizer(TokenCompletion spec) {
     mySpec = spec;
   }
 
