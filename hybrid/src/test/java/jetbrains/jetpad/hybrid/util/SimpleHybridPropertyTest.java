@@ -31,7 +31,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.*;
 
-public class HybridPropertyImplTest extends BaseTestCase {
+public class SimpleHybridPropertyTest extends BaseTestCase {
 
   private ObservableList<Token> myTokens;
   private HybridProperty<Expr> myProp;
@@ -39,7 +39,7 @@ public class HybridPropertyImplTest extends BaseTestCase {
   @Before
   public void init() {
     myTokens = new ObservableArrayList<>();
-    myProp = new HybridPropertyImpl<>(new ExprHybridEditorSpec().getParser(), myTokens);
+    myProp = new SimpleHybridProperty<>(new ExprHybridEditorSpec().getParser(), myTokens);
   }
 
   @Test

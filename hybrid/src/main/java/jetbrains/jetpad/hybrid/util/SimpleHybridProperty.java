@@ -25,14 +25,14 @@ import jetbrains.jetpad.model.collections.list.ObservableList;
 import jetbrains.jetpad.model.event.EventHandler;
 import jetbrains.jetpad.model.property.BaseDerivedProperty;
 
-public class HybridPropertyImpl<ModelT> extends BaseDerivedProperty<ModelT> implements HybridProperty<ModelT> {
+public class SimpleHybridProperty<ModelT> extends BaseDerivedProperty<ModelT> implements HybridProperty<ModelT> {
 
   private final Parser<ModelT> myParser;
   private final ObservableList<Token> myTokens;
 
   private Registration myRegistration;
 
-  public HybridPropertyImpl(Parser<ModelT> parser, ObservableList<Token> tokens) {
+  public SimpleHybridProperty(Parser<ModelT> parser, ObservableList<Token> tokens) {
     super(parser.parse(new ParsingContext(tokens)));
     myParser = parser;
     myTokens = tokens;
@@ -59,7 +59,7 @@ public class HybridPropertyImpl<ModelT> extends BaseDerivedProperty<ModelT> impl
   }
 
   @Override
-  public ObservableList<Token> source() {
+  public ObservableList<Token> getSource() {
     return myTokens;
   }
 }

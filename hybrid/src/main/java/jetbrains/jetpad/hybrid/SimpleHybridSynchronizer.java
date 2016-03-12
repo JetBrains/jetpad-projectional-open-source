@@ -31,7 +31,7 @@ public class SimpleHybridSynchronizer<SourceT> extends BaseHybridSynchronizer<So
     Cell target,
     HybridEditorSpec<SourceT> spec) {
     super(contextMapper, source, target, Properties.constant(spec),
-      new TokenListEditor<>(spec, source.source(), false));
+      new TokenListEditor<>(spec, source.getSource(), false));
   }
 
   @Deprecated
