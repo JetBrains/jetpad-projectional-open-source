@@ -901,6 +901,35 @@ public class ProjectionalListSynchronizerTest extends EditingTestCase {
     assertTrue(Cells.isEmpty(getChild(0)));
   }
 
+  @Test
+  public void addEmptyAfter() {
+    EmptyCompositeChild cc = new EmptyCompositeChild();
+    container.children.add(cc);
+    selectFirst(0);
+
+    enter();
+    enter();
+
+    assertEquals(0, cc.children.size());
+    assertEquals(2, container.children.size());
+  }
+
+  @Test
+  public void canCreateItemCheck() {
+    RecordCompositeChild recordCompositeChild = new RecordCompositeChild();
+    container.children.add(recordCompositeChild);
+    CompositeRecord compositeRecord = new CompositeRecord();
+    recordCompositeChild.records.add(compositeRecord);
+    selectFirst(0);
+
+    enter();
+    enter();
+
+    assertEquals(0, compositeRecord.records.size());
+    assertEquals(1, recordCompositeChild.records.size());
+    assertEquals(2, container.children.size());
+  }
+
   private Child get(int index) {
     return container.children.get(index);
   }
@@ -995,6 +1024,10 @@ public class ProjectionalListSynchronizerTest extends EditingTestCase {
           return new EmptyCompositeChildMapper((EmptyCompositeChild) source);
         }
 
+        if (source instanceof RecordCompositeChild) {
+          return new RecordCompositeChildMapper((RecordCompositeChild) source);
+        }
+
         if (source instanceof DeleteOnEmptyChild) {
           return new DeleteOnEmptyChildMapper((DeleteOnEmptyChild) source);
         }
@@ -1076,6 +1109,38 @@ public class ProjectionalListSynchronizerTest extends EditingTestCase {
     return result;
   }
 
+  private MapperFactory<Record, Cell> createRecordMapperFactory() {
+    return new MapperFactory<Record, Cell>() {
+      @Override
+      public Mapper<? extends Record, ? extends Cell> createMapper(Record source) {
+        if (source instanceof EmptyRecord) {
+          return new EmptyRecordMapper((EmptyRecord) source);
+        }
+        if (source instanceof CompositeRecord) {
+          return new CompositeRecordMapper((CompositeRecord) source);
+        }
+        return null;
+      }
+    };
+  }
+
+  private ProjectionalRoleSynchronizer<Object, Record> createRecordSynchronizer(
+      Mapper<?, ? extends Cell> contextMapper, Cell target, ObservableList<Record> list, boolean hasItemFactory) {
+    ProjectionalRoleSynchronizer<Object, Record> result =
+        ProjectionalSynchronizers.forRole(contextMapper, list, target, createRecordMapperFactory());
+
+    if (hasItemFactory) {
+      result.setItemFactory(new Supplier<Record>() {
+        @Override
+        public Record get() {
+          return new EmptyRecord();
+        }
+      });
+    }
+
+    return result;
+  }
+
   private void enableItemHandler() {
     rootMapper.getTarget().set(ProjectionalObservableListSynchronizer.ITEM_HANDLER, new ProjectionalObservableListSynchronizer.ItemHandler() {
       @Override
@@ -1089,6 +1154,16 @@ public class ProjectionalListSynchronizerTest extends EditingTestCase {
   private class Container {
     final Property<Boolean> parensVisible = new ValueProperty<>(false);
     final ObservableList<Child> children = new ObservableArrayList<>();
+  }
+
+  private abstract class Record {
+  }
+
+  private class EmptyRecord extends Record {
+  }
+
+  private class CompositeRecord extends Record {
+    final ObservableList<Record> records = new ObservableArrayList<>();
   }
 
   private abstract class Child {
@@ -1109,6 +1184,10 @@ public class ProjectionalListSynchronizerTest extends EditingTestCase {
 
   private class EmptyCompositeChild extends Child {
     final ObservableList<Child> children = new ObservableArrayList<>();
+  }
+
+  private class RecordCompositeChild extends Child {
+    final ObservableList<Record> records = new ObservableArrayList<>();
   }
 
   private class NonSelectableChild extends Child {
@@ -1328,6 +1407,38 @@ public class ProjectionalListSynchronizerTest extends EditingTestCase {
       getTarget().children().add(l);
 
       l.focusable().set(true);
+    }
+  }
+
+  private class RecordCompositeChildMapper extends Mapper<RecordCompositeChild, VerticalCell> {
+    private RecordCompositeChildMapper(RecordCompositeChild source) {
+      super(source, new VerticalCell());
+    }
+
+    @Override
+    protected void registerSynchronizers(SynchronizersConfiguration conf) {
+      super.registerSynchronizers(conf);
+      conf.add(createRecordSynchronizer(this, getTarget(), getSource().records, false));
+    }
+  }
+
+  private class EmptyRecordMapper extends Mapper<EmptyRecord, TextCell> {
+    EmptyRecordMapper(EmptyRecord source) {
+      super(source, new TextCell());
+      getTarget().text().set("");
+      getTarget().addTrait(TextEditing.validTextEditing(Validators.equalsTo("")));
+    }
+  }
+
+  private class CompositeRecordMapper extends Mapper<CompositeRecord, VerticalCell> {
+    CompositeRecordMapper(CompositeRecord source) {
+      super(source, new VerticalCell());
+    }
+
+    @Override
+    protected void registerSynchronizers(SynchronizersConfiguration conf) {
+      super.registerSynchronizers(conf);
+      conf.add(createRecordSynchronizer(this, getTarget(), getSource().records, true));
     }
   }
 }
