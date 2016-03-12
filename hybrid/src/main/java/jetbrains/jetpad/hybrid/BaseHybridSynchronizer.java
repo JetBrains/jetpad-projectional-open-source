@@ -731,8 +731,8 @@ abstract class BaseHybridSynchronizer<SourceT, SpecT extends SimpleHybridEditorS
     return new TokenOperations<>(this);
   }
 
-  EditorCompleter tokenCompletion() {
-    return new EditorCompleter(this);
+  TokenCompleter tokenCompletion() {
+    return new TokenCompleter(this);
   }
 
   TokenListEditor<SourceT> tokenListEditor() {

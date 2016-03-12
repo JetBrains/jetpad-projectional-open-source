@@ -44,10 +44,10 @@ import static jetbrains.jetpad.base.Runnables.seq;
 import static jetbrains.jetpad.hybrid.SelectionPosition.FIRST;
 import static jetbrains.jetpad.hybrid.SelectionPosition.LAST;
 
-class EditorCompleter {
+class TokenCompleter {
   private BaseHybridSynchronizer<?, ?> mySync;
 
-  EditorCompleter(BaseHybridSynchronizer<?, ?> sync) {
+  TokenCompleter(BaseHybridSynchronizer<?, ?> sync) {
     mySync = sync;
   }
 

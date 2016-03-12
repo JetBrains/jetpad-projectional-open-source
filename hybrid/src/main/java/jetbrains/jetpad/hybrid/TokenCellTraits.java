@@ -69,7 +69,7 @@ class TokenCellTraits {
       return hybridSync(cell).tokenOperations();
     }
 
-    protected EditorCompleter tokenCompletion(Cell cell) {
+    protected TokenCompleter tokenCompletion(Cell cell) {
       return hybridSync(cell).tokenCompletion();
     }
   }

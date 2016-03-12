@@ -218,7 +218,7 @@ class TokenOperations<SourceT> {
   }
 
   boolean afterType(TextCell textView) {
-    EditorCompleter tc = mySync.tokenCompletion();
+    TokenCompleter tc = mySync.tokenCompletion();
 
     String text = textView.text().get();
     int caret = textView.caretPosition().get();
