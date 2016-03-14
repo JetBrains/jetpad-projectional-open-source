@@ -360,32 +360,7 @@ abstract class BaseHybridSynchronizer<SourceT, SpecT extends SimpleHybridEditorS
     };
   }
 
-  private CellStateHandler<Cell, HybridCellState> getCellStateHandler() {
-    return new CellStateHandler<Cell, HybridCellState>() {
-      @Override
-      public boolean synced(Cell cell) {
-        return valid().get();
-      }
-
-      @Override
-      public HybridCellState saveState(Cell cell) {
-        if (valid().get()) {
-          return new HybridCellState(null);
-        }
-
-        List<Token> result = new ArrayList<>();
-        for (Token t : tokens()) {
-          result.add(t.copy());
-        }
-        return new HybridCellState(result);
-      }
-
-      @Override
-      public void restoreState(Cell cell, HybridCellState state) {
-        tokenListEditor().restoreState(state.tokens);
-      }
-    };
-  }
+  protected abstract  CellStateHandler<Cell, ? extends CellState> getCellStateHandler();
 
   protected CollectionListener<Token> createTokensListener() {
     return new CollectionAdapter<Token>() {
@@ -810,39 +785,5 @@ abstract class BaseHybridSynchronizer<SourceT, SpecT extends SimpleHybridEditorS
     myTokenListEditor.dispose();
     myRegistration.remove();
     myRegistration = null;
-  }
-
-  private static class HybridCellState implements CellState {
-    private final List<Token> tokens;
-
-    HybridCellState(List<Token> tokens) {
-      this.tokens = tokens;
-    }
-
-    @Override
-    public CellStateDifference getDifference(CellState state) {
-      if (!(state instanceof HybridCellState)) {
-        return tokens == null ? CellStateDifference.NAVIGATION : CellStateDifference.EDIT;
-      }
-      if (!Objects.equals(tokens, ((HybridCellState) state).tokens)) {
-        return CellStateDifference.EDIT;
-      }
-      return CellStateDifference.EQUAL;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-      if (this == o) return true;
-      if (o == null || getClass() != o.getClass()) return false;
-
-      HybridCellState that = (HybridCellState) o;
-
-      return !(tokens != null ? !tokens.equals(that.tokens) : that.tokens != null);
-    }
-
-    @Override
-    public int hashCode() {
-      return tokens != null ? tokens.hashCode() : 0;
-    }
   }
 }

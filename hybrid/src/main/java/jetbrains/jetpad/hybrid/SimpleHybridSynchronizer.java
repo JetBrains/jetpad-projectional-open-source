@@ -18,6 +18,8 @@ package jetbrains.jetpad.hybrid;
 import com.google.common.base.Function;
 import jetbrains.jetpad.base.Registration;
 import jetbrains.jetpad.cell.Cell;
+import jetbrains.jetpad.cell.util.CellState;
+import jetbrains.jetpad.cell.util.CellStateHandler;
 import jetbrains.jetpad.completion.CompletionSupplier;
 import jetbrains.jetpad.hybrid.parser.Parser;
 import jetbrains.jetpad.hybrid.parser.Token;
@@ -81,5 +83,10 @@ public class SimpleHybridSynchronizer<SourceT> extends BaseHybridSynchronizer<So
   @Override
   protected Registration onAttach(CollectionListener<Token> tokensListener) {
     return myTokenListEditor.tokens.addListener(tokensListener);
+  }
+
+  @Override
+  protected CellStateHandler<Cell, ? extends CellState> getCellStateHandler() {
+    return null;
   }
 }
