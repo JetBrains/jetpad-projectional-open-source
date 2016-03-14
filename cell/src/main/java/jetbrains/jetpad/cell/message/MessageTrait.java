@@ -30,7 +30,9 @@ import jetbrains.jetpad.model.property.PropertyChangeEvent;
 import jetbrains.jetpad.values.Color;
 import jetbrains.jetpad.values.FontFamily;
 
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 class MessageTrait extends CellTrait {
@@ -38,6 +40,9 @@ class MessageTrait extends CellTrait {
   static final CellPropertySpec<Boolean> POPUP_ACTIVE = new CellPropertySpec<>("isMessagePopupActive", false);
 
   static final int POPUPS_SHOW_DELAY_MILLIS = 1000;
+
+  private static final List<CellPropertySpec<String>> MESSAGES_IN_PRIORITY_ORDER =
+      Arrays.asList(MessageController.BROKEN, MessageController.ERROR, MessageController.WARNING);
 
   private Registration myUpdatesReg = null;
   private long myLastEditingKeyEvent = 0;
@@ -56,8 +61,18 @@ class MessageTrait extends CellTrait {
   }
 
   @Override
+  public void onAdd(Cell cell) {
+    for (CellPropertySpec<String> prop : MESSAGES_IN_PRIORITY_ORDER) {
+      String value = cell.get(prop);
+      if (value != null) {
+        onPropertyChanged(cell, prop, new PropertyChangeEvent<>(null, value));
+      }
+    }
+  }
+
+  @Override
   public void onPropertyChanged(Cell cell, CellPropertySpec<?> prop, PropertyChangeEvent<?> event) {
-    if (MessageController.MESSAGE_PROPS.contains(prop)) {
+    if (MESSAGES_IN_PRIORITY_ORDER.contains(prop)) {
       updateDecorations(cell, (CellPropertySpec<String>) prop, (PropertyChangeEvent<String>) event);
       updatePopup(cell, (CellPropertySpec<String>) prop, (PropertyChangeEvent<String>) event);
 
@@ -271,7 +286,7 @@ class MessageTrait extends CellTrait {
   }
 
   private boolean priority(CellPropertySpec<String> p1, CellPropertySpec<String> p2) {
-    return MessageController.MESSAGE_PROPS.indexOf(p1) <= MessageController.MESSAGE_PROPS.indexOf(p2);
+    return MESSAGES_IN_PRIORITY_ORDER.indexOf(p1) <= MESSAGES_IN_PRIORITY_ORDER.indexOf(p2);
   }
 
   private void updateMessage(TextCell popup, String message) {
