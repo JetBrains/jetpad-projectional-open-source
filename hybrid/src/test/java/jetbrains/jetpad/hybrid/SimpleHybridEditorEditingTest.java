@@ -15,6 +15,7 @@
  */
 package jetbrains.jetpad.hybrid;
 
+import jetbrains.jetpad.cell.util.CellStateHandler;
 import jetbrains.jetpad.hybrid.testapp.mapper.SimpleExprContainerMapper;
 import jetbrains.jetpad.hybrid.testapp.model.Expr;
 import org.junit.Test;
@@ -60,5 +61,10 @@ public class SimpleHybridEditorEditingTest extends BaseHybridEditorEditingTest<S
 
     assertEquals(1, targetCell.children().size());
     assertEquals(1, sync.tokens().size());
+  }
+
+  @Test
+  public void statePersistence() {
+    assertNull(targetCell.get(CellStateHandler.PROPERTY));
   }
 }
