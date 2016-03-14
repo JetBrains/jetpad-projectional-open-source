@@ -17,17 +17,8 @@ package jetbrains.jetpad.hybrid.parser;
 
 import java.util.List;
 
-public interface ParsingContext {
+public interface ParsingContextFactory {
 
-  List<Token> getTokens();
+  ParsingContext getParsingContext(List<Token> tokenList);
 
-  Token current();
-
-  void advance();
-
-  State saveState();
-
-  interface State {
-    void restore();
-  }
 }
