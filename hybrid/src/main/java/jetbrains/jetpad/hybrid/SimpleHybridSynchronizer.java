@@ -19,6 +19,8 @@ import com.google.common.base.Function;
 import jetbrains.jetpad.base.Registration;
 import jetbrains.jetpad.cell.Cell;
 import jetbrains.jetpad.cell.message.MessageController;
+import jetbrains.jetpad.cell.util.CellState;
+import jetbrains.jetpad.cell.util.CellStateHandler;
 import jetbrains.jetpad.completion.CompletionSupplier;
 import jetbrains.jetpad.hybrid.parser.Parser;
 import jetbrains.jetpad.hybrid.parser.Token;
@@ -93,6 +95,11 @@ public class SimpleHybridSynchronizer<SourceT> extends BaseHybridSynchronizer<So
           updateTargetError();
         }
       }));
+  }
+
+  @Override
+  protected CellStateHandler<Cell, ? extends CellState> getCellStateHandler() {
+    return null;
   }
 
   private void updateTargetError() {
