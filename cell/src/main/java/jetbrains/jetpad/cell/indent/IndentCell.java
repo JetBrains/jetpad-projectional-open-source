@@ -82,7 +82,6 @@ public class IndentCell extends Cell {
 
     IndentCell container = indentContainer();
     if (container == null) return;
-
     container.handleChildAdd(event);
   }
 
@@ -92,11 +91,10 @@ public class IndentCell extends Cell {
 
     IndentCell container = indentContainer();
     if (container == null) return;
-
     container.handleChildRemove(event);
   }
 
-  void handleChildAdd(final CollectionItemEvent<? extends Cell> event) {
+  private void handleChildAdd(final CollectionItemEvent<? extends Cell> event) {
     checkRootIndent();
 
     if (myListeners == null) return;
@@ -108,7 +106,7 @@ public class IndentCell extends Cell {
     });
   }
 
-  void handleChildRemove(final CollectionItemEvent<Cell> event) {
+  private void handleChildRemove(final CollectionItemEvent<Cell> event) {
     checkRootIndent();
 
     if (myListeners == null) return;
@@ -120,7 +118,7 @@ public class IndentCell extends Cell {
     });
   }
 
-  void handlePropertyChanged(final Cell cell, final CellPropertySpec<?> prop, final PropertyChangeEvent<?> event) {
+  private void handlePropertyChanged(final Cell cell, final CellPropertySpec<?> prop, final PropertyChangeEvent<?> event) {
     checkRootIndent();
 
     if (myListeners == null) return;

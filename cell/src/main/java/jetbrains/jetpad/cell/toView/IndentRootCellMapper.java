@@ -89,10 +89,8 @@ class IndentRootCellMapper extends BaseCellMapper<IndentCell, VerticalView> {
                 if (myRemoved) {
                   throw new IllegalStateException();
                 }
-
                 CounterUtil.updateOnRemove(getSource(), cell, mapper);
                 myCellMappers.remove(mapper);
-
                 myRemoved = true;
               }
             };
@@ -213,15 +211,15 @@ class IndentRootCellMapper extends BaseCellMapper<IndentCell, VerticalView> {
       @Override
       protected Mapper<? extends Cell, ? extends View> attachPopup(Cell popup) {
         BaseCellMapper<? extends Cell, ? extends View> popupMapper = getContext().apply(popup);
-        myCellMappers.add(popupMapper);
         getContext().popupView.children().add(popupMapper.getTarget());
+        myCellMappers.add(popupMapper);
         return popupMapper;
       }
 
       @Override
       protected void detachPopup(Mapper<? extends Cell, ? extends View> popupMapper) {
-        Composites.<View>removeFromParent(popupMapper.getTarget());
         myCellMappers.remove((BaseCellMapper) popupMapper);
+        Composites.<View>removeFromParent(popupMapper.getTarget());
       }
 
       @Override
@@ -231,7 +229,7 @@ class IndentRootCellMapper extends BaseCellMapper<IndentCell, VerticalView> {
 
       @Override
       protected PopupPositionUpdater<View> getPositionUpdater(Mapper<? extends Cell, ? extends View> popupMapper) {
-        return new PopupPositioner((View) popupMapper.getParent().getTarget());
+        return new PopupPositioner(popupMapper.getTarget().container());
       }
     };
   }

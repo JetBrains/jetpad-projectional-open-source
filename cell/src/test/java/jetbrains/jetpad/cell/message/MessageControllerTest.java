@@ -86,11 +86,4 @@ public class MessageControllerTest extends MessageControllerTestCase {
     cell.children().add(child);
     MessageController.setBroken(child, null);
   }
-
-  @Test
-  public void messagesPriority() {
-    assertEquals(0, MessageController.MESSAGE_PROPS.indexOf(MessageController.BROKEN));
-    assertEquals(1, MessageController.MESSAGE_PROPS.indexOf(MessageController.ERROR));
-    assertEquals(2, MessageController.MESSAGE_PROPS.indexOf(MessageController.WARNING));
-  }
 }
