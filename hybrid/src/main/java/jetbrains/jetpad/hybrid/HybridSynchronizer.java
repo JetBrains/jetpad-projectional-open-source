@@ -17,15 +17,14 @@ package jetbrains.jetpad.hybrid;
 
 import jetbrains.jetpad.base.Registration;
 import jetbrains.jetpad.cell.Cell;
+import jetbrains.jetpad.cell.message.MessageController;
 import jetbrains.jetpad.hybrid.parser.Token;
 import jetbrains.jetpad.mapper.Mapper;
 import jetbrains.jetpad.model.collections.CollectionListener;
 import jetbrains.jetpad.model.collections.list.ObservableArrayList;
 import jetbrains.jetpad.model.event.CompositeRegistration;
-import jetbrains.jetpad.model.property.Properties;
-import jetbrains.jetpad.model.property.Property;
-import jetbrains.jetpad.model.property.PropertyBinding;
-import jetbrains.jetpad.model.property.ReadableProperty;
+import jetbrains.jetpad.model.event.EventHandler;
+import jetbrains.jetpad.model.property.*;
 
 public class HybridSynchronizer<SourceT> extends BaseHybridSynchronizer<SourceT, HybridEditorSpec<SourceT>> {
   private Property<SourceT> myWritableSource;
@@ -43,8 +42,20 @@ public class HybridSynchronizer<SourceT> extends BaseHybridSynchronizer<SourceT,
 
   @Override
   protected Registration onAttach(CollectionListener<Token> tokensListener) {
+    updateTargetError();
     return new CompositeRegistration(
       PropertyBinding.bindTwoWay(myWritableSource, myTokenListEditor.value),
-      myTokenListEditor.tokens.addListener(tokensListener));
+      myTokenListEditor.tokens.addListener(tokensListener),
+      myTokenListEditor.valid.addHandler(new EventHandler<PropertyChangeEvent<Boolean>>() {
+        @Override
+        public void onEvent(PropertyChangeEvent<Boolean> event) {
+          updateTargetError();
+        }
+      }));
   }
+
+  private void updateTargetError() {
+    MessageController.setError(myTarget, myTokenListEditor.valid.get() ? null : "parsing error");
+  }
+
 }

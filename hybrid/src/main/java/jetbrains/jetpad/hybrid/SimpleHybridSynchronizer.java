@@ -18,6 +18,7 @@ package jetbrains.jetpad.hybrid;
 import com.google.common.base.Function;
 import jetbrains.jetpad.base.Registration;
 import jetbrains.jetpad.cell.Cell;
+import jetbrains.jetpad.cell.message.MessageController;
 import jetbrains.jetpad.completion.CompletionSupplier;
 import jetbrains.jetpad.hybrid.parser.Parser;
 import jetbrains.jetpad.hybrid.parser.Token;
@@ -25,7 +26,10 @@ import jetbrains.jetpad.hybrid.parser.prettyprint.PrettyPrinter;
 import jetbrains.jetpad.mapper.Mapper;
 import jetbrains.jetpad.model.collections.CollectionListener;
 import jetbrains.jetpad.model.collections.list.ObservableList;
+import jetbrains.jetpad.model.event.CompositeRegistration;
+import jetbrains.jetpad.model.event.EventHandler;
 import jetbrains.jetpad.model.property.Properties;
+import jetbrains.jetpad.model.property.PropertyChangeEvent;
 import jetbrains.jetpad.model.property.ReadableProperty;
 
 public class SimpleHybridSynchronizer<SourceT> extends BaseHybridSynchronizer<SourceT, SimpleHybridEditorSpec<SourceT>> {
@@ -80,6 +84,18 @@ public class SimpleHybridSynchronizer<SourceT> extends BaseHybridSynchronizer<So
 
   @Override
   protected Registration onAttach(CollectionListener<Token> tokensListener) {
-    return myTokenListEditor.tokens.addListener(tokensListener);
+    updateTargetError();
+    return new CompositeRegistration(
+      myTokenListEditor.tokens.addListener(tokensListener),
+      Properties.isNull(mySource).addHandler(new EventHandler<PropertyChangeEvent<Boolean>>() {
+        @Override
+        public void onEvent(PropertyChangeEvent<Boolean> event) {
+          updateTargetError();
+        }
+      }));
+  }
+
+  private void updateTargetError() {
+    MessageController.setError(myTarget, mySource.get() == null ? "parsing error" : null);
   }
 }
