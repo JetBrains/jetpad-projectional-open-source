@@ -11,7 +11,7 @@ import org.junit.After;
 import org.junit.Before;
 
 public abstract class BaseHybridEditorTest<ContainerT, MapperT extends Mapper<ContainerT, ? extends Cell>> extends BaseTestCase {
-  protected Registration registration;
+  private Registration registration;
   protected ContainerT container;
   protected MapperT mapper;
   protected BaseHybridSynchronizer<Expr, ?> sync;
