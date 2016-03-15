@@ -19,11 +19,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-class SimpleParsingContext implements ParsingContext {
+public class SimpleParsingContext implements ParsingContext {
   private List<Token> myTokens;
   private int myPosition;
 
-  SimpleParsingContext(List<Token> tokens) {
+  public SimpleParsingContext(List<Token> tokens) {
     myTokens = new ArrayList<>(tokens);
   }
 
