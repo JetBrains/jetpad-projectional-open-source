@@ -153,7 +153,7 @@ class TokenListEditor<SourceT> {
         value.set(result);
         myValid.set(true);
         reprint();
-        if (myPrintedTokens.size() != tokens.size()) {
+        if (myPrintedTokens.size() != parsingContext.getTokens().size()) {
           throw new IllegalStateException();
         }
       } else {

@@ -29,7 +29,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class ExprHybridEditorSpec extends BaseHybridEditorSpec<Expr> {
+public class ExprHybridEditorSpec implements HybridEditorSpec<Expr> {
   private final Token tokenPlus;
   private final Token tokenMul;
 
@@ -364,5 +364,10 @@ public class ExprHybridEditorSpec extends BaseHybridEditorSpec<Expr> {
         ));
       }
     };
+  }
+
+  @Override
+  public ParsingContextFactory getParsingContextFactory() {
+    return new ExprParsingContextFactory();
   }
 }
