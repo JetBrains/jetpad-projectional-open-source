@@ -146,7 +146,9 @@ class TokenListEditor<SourceT> {
         toParse.add(t.copy());
       }
 
-      SourceT result = mySpec.get().getParser().parse(new ParsingContext(toParse));
+      HybridEditorSpec<SourceT> hybridEditorSpec = mySpec.get();
+      ParsingContext parsingContext = hybridEditorSpec.getParsingContextFactory().getParsingContext(toParse);
+      SourceT result = hybridEditorSpec.getParser().parse(parsingContext);
       if (result != null) {
         value.set(result);
         myValid.set(true);

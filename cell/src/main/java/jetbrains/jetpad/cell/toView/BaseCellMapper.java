@@ -197,7 +197,7 @@ class BaseCellMapper<SourceT extends Cell, TargetT extends View> extends Mapper<
 
       @Override
       protected PopupPositionUpdater<View> getPositionUpdater(Mapper<? extends Cell, ? extends View> popupMapper) {
-        return new PopupPositioner(getTarget());
+        return new PopupPositioner(popupMapper.getTarget().container());
       }
     };
   }

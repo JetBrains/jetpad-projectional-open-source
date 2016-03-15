@@ -27,18 +27,15 @@ import jetbrains.jetpad.cell.trait.CellTraitPropertySpec;
 import jetbrains.jetpad.cell.util.Cells;
 import jetbrains.jetpad.model.collections.CollectionItemEvent;
 import jetbrains.jetpad.model.event.CompositeRegistration;
-import jetbrains.jetpad.model.property.PropertyChangeEvent;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
 public final class MessageController {
   private static final CellTraitPropertySpec<MessageController> TRAIT = new CellTraitPropertySpec<>("messageController");
   static final CellPropertySpec<String> ERROR = new CellPropertySpec<>("error");
   static final CellPropertySpec<String> WARNING = new CellPropertySpec<>("warning");
   static final CellPropertySpec<String> BROKEN = new CellPropertySpec<>("broken");
-
-  static final List<CellPropertySpec<String>> MESSAGE_PROPS =
-      Collections.unmodifiableList(Arrays.asList(MessageController.BROKEN, MessageController.ERROR, MessageController.WARNING));
 
   public static Registration install(CellContainer container) {
     return install(container, null);
@@ -136,17 +133,6 @@ public final class MessageController {
     return myChildrenListener.myRegistrations.size();
   }
 
-//  private static Registration addMessagingTrait(Cell cell, MessageTrait trait) {
-//    Registration reg = cell.addTrait(trait);
-//    for (CellPropertySpec<String> prop : MESSAGE_PROPS) {
-//      String value = cell.get(prop);
-//      if (value != null) {
-//        trait.onPropertyChanged(cell, prop, new PropertyChangeEvent<>(null, value));
-//      }
-//    }
-//    return reg;
-//  }
-
   private static class MyChildrenListener extends CellContainerAdapter implements Disposable {
     private MessageTrait myTrait;
     private Map<Cell, Registration> myRegistrations;
@@ -160,7 +146,7 @@ public final class MessageController {
         if (myRegistrations != null && myRegistrations.containsKey(cell)) {
           throw new IllegalStateException();
         }
-        final Registration decorationReg = addMessagingTrait(cell, myTrait);
+        final Registration decorationReg = cell.addTrait(myTrait);
         if (myRegistrations == null) {
           myRegistrations = new HashMap<>();
         }
@@ -191,17 +177,6 @@ public final class MessageController {
     private MyChildrenListener(CellContainer container, MessageTrait trait) {
       myTrait = trait;
       visit(container.root, myAttachHandler);
-    }
-
-    private Registration addMessagingTrait(Cell cell, MessageTrait trait) {
-      Registration reg = cell.addTrait(trait);
-      for (CellPropertySpec<String> prop : MESSAGE_PROPS) {
-        String value = cell.get(prop);
-        if (value != null) {
-          trait.onPropertyChanged(cell, prop, new PropertyChangeEvent<>(null, value));
-        }
-      }
-      return reg;
     }
 
     @Override

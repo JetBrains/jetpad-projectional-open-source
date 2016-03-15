@@ -32,7 +32,7 @@ import jetbrains.jetpad.projectional.demo.indentDemo.model.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class LambdaHybridEditorSpec implements HybridEditorSpec<Expr> {
+public class LambdaHybridEditorSpec extends BaseHybridEditorSpec<Expr> {
   @Override
   public Parser<Expr> getParser() {
     return LambdaParser.EXPR;

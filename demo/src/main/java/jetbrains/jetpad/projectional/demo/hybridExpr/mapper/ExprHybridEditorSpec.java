@@ -30,7 +30,7 @@ import jetbrains.jetpad.hybrid.parser.prettyprint.PrettyPrinterContext;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ExprHybridEditorSpec implements HybridEditorSpec<Expression> {
+public class ExprHybridEditorSpec extends BaseHybridEditorSpec<Expression> {
   @Override
   public Parser<Expression> getParser() {
     return ExpressionParser.PARSER;
@@ -182,7 +182,7 @@ public class ExprHybridEditorSpec implements HybridEditorSpec<Expression> {
   public CompletionSupplier getAdditionalCompletion(final CompletionContext ctx, final Completer completer) {
     List<Token> input = new ArrayList<>(ctx.getPrefix());
     input.add(new IdentifierToken("dummy"));
-    Expression result = getParser().parse(new ParsingContext(input));
+    Expression result = getParser().parse(getParsingContextFactory().getParsingContext(input));
 
     final Type type;
     if (ctx.getTargetIndex() < ctx.getViews().size() && ctx.getObjects().get(ctx.getTargetIndex()) instanceof Operation) {

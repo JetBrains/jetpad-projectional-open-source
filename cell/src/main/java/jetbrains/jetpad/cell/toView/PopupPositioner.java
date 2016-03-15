@@ -20,12 +20,16 @@ import jetbrains.jetpad.geometry.Rectangle;
 import jetbrains.jetpad.geometry.Vector;
 import jetbrains.jetpad.model.property.ReadableProperty;
 import jetbrains.jetpad.projectional.view.View;
+import jetbrains.jetpad.projectional.view.ViewContainer;
 
 class PopupPositioner extends PopupPositionUpdater<View> {
-  private View myParent;
+  private ViewContainer myViewContainer;
 
-  PopupPositioner(View parent) {
-    myParent = parent;
+  PopupPositioner(ViewContainer viewContainer) {
+    if (viewContainer == null) {
+      throw new IllegalArgumentException();
+    }
+    myViewContainer = viewContainer;
   }
 
   @Override
@@ -34,7 +38,7 @@ class PopupPositioner extends PopupPositionUpdater<View> {
     popup.moveTo(target);
     if (hasTop) return;
 
-    Rectangle visibleRect = myParent.container().visibleRect();
+    Rectangle visibleRect = myViewContainer.visibleRect();
     ReadableProperty<Rectangle> popupBounds = popup.bounds();
     boolean bottom = visibleRect.contains(popupBounds.get());
     Vector delta = new Vector(0, -targetRect.dimension.y - popupBounds.get().dimension.y);
@@ -51,7 +55,7 @@ class PopupPositioner extends PopupPositionUpdater<View> {
     popup.moveTo(target);
     if (hasBottom) return;
 
-    Rectangle visibleRect = myParent.container().visibleRect();
+    Rectangle visibleRect = myViewContainer.visibleRect();
     boolean top = visibleRect.contains(popupBounds.get());
     Vector delta = new Vector(0, targetRect.dimension.y + popupBounds.get().dimension.y);
     boolean bottom = visibleRect.contains(popupBounds.get().add(delta));

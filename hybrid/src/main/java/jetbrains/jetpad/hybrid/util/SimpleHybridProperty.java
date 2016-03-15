@@ -18,7 +18,7 @@ package jetbrains.jetpad.hybrid.util;
 import jetbrains.jetpad.base.Registration;
 import jetbrains.jetpad.hybrid.HybridProperty;
 import jetbrains.jetpad.hybrid.parser.Parser;
-import jetbrains.jetpad.hybrid.parser.ParsingContext;
+import jetbrains.jetpad.hybrid.parser.ParsingContextFactory;
 import jetbrains.jetpad.hybrid.parser.Token;
 import jetbrains.jetpad.model.collections.CollectionItemEvent;
 import jetbrains.jetpad.model.collections.list.ObservableList;
@@ -29,13 +29,15 @@ public class SimpleHybridProperty<ModelT> extends BaseDerivedProperty<ModelT> im
 
   private final Parser<ModelT> myParser;
   private final ObservableList<Token> myTokens;
+  private final ParsingContextFactory myParsingContextFactory;
 
   private Registration myRegistration;
 
-  public SimpleHybridProperty(Parser<ModelT> parser, ObservableList<Token> tokens) {
-    super(parser.parse(new ParsingContext(tokens)));
+  public SimpleHybridProperty(Parser<ModelT> parser, ObservableList<Token> tokens, ParsingContextFactory parsingContextFactory) {
+    super(parser.parse(parsingContextFactory.getParsingContext(tokens)));
     myParser = parser;
     myTokens = tokens;
+    myParsingContextFactory = parsingContextFactory;
   }
 
   @Override
@@ -55,7 +57,7 @@ public class SimpleHybridProperty<ModelT> extends BaseDerivedProperty<ModelT> im
 
   @Override
   protected ModelT doGet() {
-    return myParser.parse(new ParsingContext(myTokens));
+    return myParser.parse(myParsingContextFactory.getParsingContext(myTokens));
   }
 
   @Override
