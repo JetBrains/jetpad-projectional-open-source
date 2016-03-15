@@ -93,7 +93,14 @@ class TokenListEditor<SourceT> {
   }
 
   ParseNode getParseNode() {
-    return myParseNode;
+    if (myUpdateModel) {
+      return myParseNode;
+    } else if (value.get() != null) {
+      reprint(false);
+      return myParseNode;
+    } else {
+      return null;
+    }
   }
 
   List<Object> getObjects() {
@@ -143,7 +150,7 @@ class TokenListEditor<SourceT> {
       if (result != null) {
         value.set(result);
         myValid.set(true);
-        reprint();
+        reprint(true);
         if (myPrintedTokens.size() != tokens.size()) {
           throw new IllegalStateException();
         }
@@ -156,31 +163,33 @@ class TokenListEditor<SourceT> {
   }
 
   void reprintToTokens() {
-    PrettyPrinterContext<? super SourceT> ctx = reprint();
+    PrettyPrinterContext<? super SourceT> ctx = reprint(true);
     myValid.set(true);
     tokens.clear();
     tokens.addAll(ctx.tokens());
   }
 
-  private PrettyPrinterContext<? super SourceT> reprint() {
+  private PrettyPrinterContext<? super SourceT> reprint(boolean setChangeSourceHandler) {
     PrettyPrinter<? super SourceT> printer = mySpec.get().getPrettyPrinter();
     PrettyPrinterContext<? super SourceT> ctx = new PrettyPrinterContext<>(printer);
     ctx.print(value.get());
     myParseNode = ctx.result();
     myPrintedTokens = ctx.tokens();
 
-    myChangeReg.remove();
-    myChangeReg = ctx.changeSource().addHandler(new EventHandler<Object>() {
-      @Override
-      public void onEvent(Object event) {
-        sync(new Runnable() {
-          @Override
-          public void run() {
-            reprintToTokens();
-          }
-        });
-      }
-    });
+    if (setChangeSourceHandler) {
+      myChangeReg.remove();
+      myChangeReg = ctx.changeSource().addHandler(new EventHandler<Object>() {
+        @Override
+        public void onEvent(Object event) {
+          sync(new Runnable() {
+            @Override
+            public void run() {
+              reprintToTokens();
+            }
+          });
+        }
+      });
+    }
     return ctx;
   }
 
