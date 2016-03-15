@@ -26,7 +26,6 @@ import jetbrains.jetpad.cell.TextCell;
 import jetbrains.jetpad.cell.action.CellActions;
 import jetbrains.jetpad.cell.completion.Completion;
 import jetbrains.jetpad.cell.completion.CompletionSupport;
-import jetbrains.jetpad.cell.message.MessageController;
 import jetbrains.jetpad.cell.position.Positions;
 import jetbrains.jetpad.cell.text.TextEditing;
 import jetbrains.jetpad.cell.trait.CellTrait;
@@ -48,7 +47,6 @@ import jetbrains.jetpad.model.collections.CollectionListener;
 import jetbrains.jetpad.model.collections.list.ObservableList;
 import jetbrains.jetpad.model.composite.Composites;
 import jetbrains.jetpad.model.event.EventHandler;
-import jetbrains.jetpad.model.property.PropertyChangeEvent;
 import jetbrains.jetpad.model.property.ReadableProperty;
 import jetbrains.jetpad.model.util.ListMap;
 import jetbrains.jetpad.projectional.cell.SelectionSupport;
@@ -161,18 +159,14 @@ abstract class BaseHybridSynchronizer<SourceT, SpecT extends SimpleHybridEditorS
         }
       }
     });
-
-    updateTargetError();
-    myTokenListEditor.valid.addHandler(new EventHandler<PropertyChangeEvent<Boolean>>() {
-      @Override
-      public void onEvent(PropertyChangeEvent<Boolean> event) {
-        updateTargetError();
-      }
-    });
   }
 
-  private void updateTargetError() {
-    MessageController.setError(myTarget, myTokenListEditor.valid.get() ? null : "parsing error");
+  protected ReadableProperty<SourceT> getSource() {
+    return mySource;
+  }
+
+  protected Cell getTarget() {
+    return myTarget;
   }
 
   private CellTrait createTargetTrait() {
