@@ -23,6 +23,8 @@ import jetbrains.jetpad.cell.action.CellActions;
 import jetbrains.jetpad.cell.completion.Completion;
 import jetbrains.jetpad.cell.position.Positions;
 import jetbrains.jetpad.completion.CompletionController;
+import jetbrains.jetpad.event.Key;
+import jetbrains.jetpad.event.ModifierKey;
 import jetbrains.jetpad.hybrid.parser.Token;
 import jetbrains.jetpad.hybrid.parser.ValueToken;
 import jetbrains.jetpad.hybrid.testapp.model.ComplexValueExpr;
@@ -48,7 +50,8 @@ abstract class BaseHybridEditorEditingTest<ContainerT, MapperT extends Mapper<Co
 
   protected abstract ContainerT createContainer();
   protected abstract MapperT createMapper();
-  protected abstract BaseHybridSynchronizer<Expr, ?> getSync(MapperT mapper);
+  protected abstract BaseHybridSynchronizer<Expr, ?> getSync();
+  protected abstract Expr getExpr();
 
   @Before
   public void init() {
@@ -58,7 +61,7 @@ abstract class BaseHybridEditorEditingTest<ContainerT, MapperT extends Mapper<Co
     mapper.attachRoot();
     myCellContainer.root.children().add(targetCell = mapper.getTarget());
     CellActions.toFirstFocusable(mapper.getTarget()).run();
-    sync = getSync(mapper);
+    sync = getSync();
   }
 
   @After
@@ -115,6 +118,12 @@ abstract class BaseHybridEditorEditingTest<ContainerT, MapperT extends Mapper<Co
     CompletionController ctrl = focused.get(Completion.COMPLETION_CONTROLLER);
     if (ctrl == null) return false;
     return ctrl.isActive();
+  }
+
+  protected void selectLeft(int steps) {
+    for (int i = 0; i < steps; i++) {
+      press(Key.LEFT, ModifierKey.SHIFT);
+    }
   }
 
   protected static class ValueExprCloner implements ValueToken.ValueCloner<ValueExpr> {
