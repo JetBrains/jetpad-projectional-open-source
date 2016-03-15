@@ -125,4 +125,13 @@ public class TokenListEditorTest {
     assertNotNull(editor.value.get());
     assertTrue(editor.valid.get());
   }
+
+  @Test
+  public void validWhenCommentAtTheBeginning() {
+    editor = newTokenListEditor(true);
+    editor.tokens.add(new ValueToken(new Comment(), new ValueExprNodeCloner()));
+
+    assertNull(editor.value.get());
+    assertTrue(editor.valid.get());
+  }
 }
