@@ -18,11 +18,17 @@ package jetbrains.jetpad.hybrid;
 import jetbrains.jetpad.cell.util.CellStateHandler;
 import jetbrains.jetpad.hybrid.testapp.mapper.SimpleExprContainerMapper;
 import jetbrains.jetpad.hybrid.testapp.model.Expr;
+import jetbrains.jetpad.hybrid.testapp.model.SimpleExprContainer;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
 
-public class SimpleHybridEditorEditingTest extends BaseHybridEditorEditingTest<SimpleExprContainerMapper> {
+public class SimpleHybridEditorEditingTest extends BaseHybridEditorEditingTest<SimpleExprContainer, SimpleExprContainerMapper> {
+  @Override
+  protected SimpleExprContainer createContainer() {
+    return new SimpleExprContainer();
+  }
+
   @Override
   protected SimpleExprContainerMapper createMapper() {
     return new SimpleExprContainerMapper(container);

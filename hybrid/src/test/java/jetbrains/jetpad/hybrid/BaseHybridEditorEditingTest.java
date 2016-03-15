@@ -27,7 +27,6 @@ import jetbrains.jetpad.hybrid.parser.Token;
 import jetbrains.jetpad.hybrid.parser.ValueToken;
 import jetbrains.jetpad.hybrid.testapp.model.ComplexValueExpr;
 import jetbrains.jetpad.hybrid.testapp.model.Expr;
-import jetbrains.jetpad.hybrid.testapp.model.ExprContainer;
 import jetbrains.jetpad.hybrid.testapp.model.ValueExpr;
 import jetbrains.jetpad.mapper.Mapper;
 import jetbrains.jetpad.projectional.util.RootController;
@@ -39,19 +38,22 @@ import java.util.Arrays;
 import static jetbrains.jetpad.hybrid.SelectionPosition.*;
 import static org.junit.Assert.*;
 
-abstract class BaseHybridEditorEditingTest<MapperT extends Mapper<ExprContainer, ? extends Cell>> extends EditingTestCase {
-  protected ExprContainer container = new ExprContainer();
-  protected MapperT mapper = createMapper();
+abstract class BaseHybridEditorEditingTest<ContainerT, MapperT extends Mapper<ContainerT, ? extends Cell>> extends EditingTestCase {
+  protected ContainerT container;
+  protected MapperT mapper;
   protected BaseHybridSynchronizer<Expr, ?> sync;
   protected Cell targetCell;
 
   private Registration registration;
 
+  protected abstract ContainerT createContainer();
   protected abstract MapperT createMapper();
   protected abstract BaseHybridSynchronizer<Expr, ?> getSync(MapperT mapper);
 
   @Before
   public void init() {
+    container = createContainer();
+    mapper = createMapper();
     registration = RootController.install(myCellContainer);
     mapper.attachRoot();
     myCellContainer.root.children().add(targetCell = mapper.getTarget());

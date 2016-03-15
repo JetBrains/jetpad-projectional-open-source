@@ -17,18 +17,16 @@ package jetbrains.jetpad.hybrid.testapp.mapper;
 
 import jetbrains.jetpad.cell.HorizontalCell;
 import jetbrains.jetpad.hybrid.SimpleHybridSynchronizer;
-import jetbrains.jetpad.hybrid.parser.Token;
 import jetbrains.jetpad.hybrid.testapp.model.Expr;
-import jetbrains.jetpad.hybrid.testapp.model.ExprContainer;
+import jetbrains.jetpad.hybrid.testapp.model.SimpleExprContainer;
 import jetbrains.jetpad.mapper.Mapper;
-import jetbrains.jetpad.model.collections.list.ObservableArrayList;
 
-public class SimpleExprContainerMapper extends Mapper<ExprContainer, HorizontalCell> {
+public class SimpleExprContainerMapper extends Mapper<SimpleExprContainer, HorizontalCell> {
   public final SimpleHybridSynchronizer<Expr> hybridSync;
 
-  public SimpleExprContainerMapper(ExprContainer source) {
+  public SimpleExprContainerMapper(SimpleExprContainer source) {
     super(source, new HorizontalCell());
-    hybridSync = new SimpleHybridSynchronizer<>(this, new ObservableArrayList<Token>(), getSource().expr, getTarget(), new ExprHybridEditorSpec());
+    hybridSync = new SimpleHybridSynchronizer<>(this, getSource().expr, getTarget(), new ExprHybridEditorSpec());
     hybridSync.setMapperFactory(new ExprMapperFactory());
   }
 

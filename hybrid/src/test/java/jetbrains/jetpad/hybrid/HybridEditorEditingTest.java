@@ -44,7 +44,12 @@ import org.junit.Test;
 
 import static org.junit.Assert.*;
 
-public class HybridEditorEditingTest extends BaseHybridEditorEditingTest<ExprContainerMapper> {
+public class HybridEditorEditingTest extends BaseHybridEditorEditingTest<ExprContainer, ExprContainerMapper> {
+  @Override
+  protected ExprContainer createContainer() {
+    return new ExprContainer();
+  }
+
   @Override
   protected ExprContainerMapper createMapper() {
     return new ExprContainerMapper(container);

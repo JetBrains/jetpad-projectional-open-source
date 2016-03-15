@@ -9,13 +9,19 @@ import jetbrains.jetpad.event.ModifierKey;
 import jetbrains.jetpad.hybrid.testapp.mapper.ExprContainerMapper;
 import jetbrains.jetpad.hybrid.testapp.mapper.Tokens;
 import jetbrains.jetpad.hybrid.testapp.model.Expr;
+import jetbrains.jetpad.hybrid.testapp.model.ExprContainer;
 import jetbrains.jetpad.values.Color;
 import org.junit.Test;
 
 import static jetbrains.jetpad.hybrid.TokensUtil.*;
 import static org.junit.Assert.assertEquals;
 
-public class HybridEditorCopyPasteTest extends BaseHybridEditorEditingTest<ExprContainerMapper> {
+public class HybridEditorCopyPasteTest extends BaseHybridEditorEditingTest<ExprContainer, ExprContainerMapper> {
+  @Override
+  protected ExprContainer createContainer() {
+    return new ExprContainer();
+  }
+
   @Override
   protected ExprContainerMapper createMapper() {
     return new ExprContainerMapper(container);
