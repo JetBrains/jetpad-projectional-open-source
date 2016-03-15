@@ -19,6 +19,7 @@ import jetbrains.jetpad.hybrid.parser.IdentifierToken;
 import jetbrains.jetpad.hybrid.testapp.mapper.ExprContainerMapper;
 import jetbrains.jetpad.hybrid.testapp.model.Expr;
 import jetbrains.jetpad.hybrid.testapp.model.ExprContainer;
+import jetbrains.jetpad.hybrid.testapp.model.VarExpr;
 import org.junit.Test;
 
 import java.util.Arrays;
@@ -43,6 +44,13 @@ public class HybridEditorTest extends BaseHybridEditorTest<ExprContainer, ExprCo
 
   @Test
   public void initial() {
+    container = createContainer();
+    VarExpr expr = new VarExpr();
+    expr.name.set("id");
+    container.expr.set(expr);
+
+    initEditor();
+
     assertEquals(1, myTargetCell.children().size());
     assertEquals(Arrays.asList(new IdentifierToken("id")), sync.tokens());
   }

@@ -4,7 +4,6 @@ import jetbrains.jetpad.base.Registration;
 import jetbrains.jetpad.cell.Cell;
 import jetbrains.jetpad.cell.CellContainer;
 import jetbrains.jetpad.hybrid.testapp.model.Expr;
-import jetbrains.jetpad.hybrid.testapp.model.VarExpr;
 import jetbrains.jetpad.mapper.Mapper;
 import jetbrains.jetpad.projectional.util.RootController;
 import jetbrains.jetpad.test.BaseTestCase;
@@ -17,23 +16,13 @@ public abstract class BaseHybridEditorTest<ContainerT, MapperT extends Mapper<Co
   protected MapperT mapper;
   protected BaseHybridSynchronizer<Expr, ?> sync;
   protected Cell myTargetCell;
+  protected CellContainer cellContainer;
 
   @Before
-  public void init() {
-    CellContainer cc = new CellContainer();
-    registration = RootController.install(cc);
-
+  public void setUp() {
+    cellContainer = new CellContainer();
+    registration = RootController.install(cellContainer);
     container = createContainer();
-    VarExpr expr = new VarExpr();
-    // TODO DP-920
-    expr.name.set("id");
-//    container.expr.set(expr);
-
-    mapper = createMapper();
-    mapper.attachRoot();
-    myTargetCell = mapper.getTarget();
-    cc.root.children().add(myTargetCell);
-    sync = getSync(mapper);
   }
 
   protected abstract ContainerT createContainer();
@@ -44,5 +33,13 @@ public abstract class BaseHybridEditorTest<ContainerT, MapperT extends Mapper<Co
   public void dispose() {
     registration.remove();
     mapper.detachRoot();
+  }
+
+  protected void initEditor() {
+    mapper = createMapper();
+    mapper.attachRoot();
+    myTargetCell = mapper.getTarget();
+    cellContainer.root.children().add(myTargetCell);
+    sync = getSync(mapper);
   }
 }
