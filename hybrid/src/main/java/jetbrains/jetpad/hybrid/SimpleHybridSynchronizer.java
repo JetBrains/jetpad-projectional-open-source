@@ -89,7 +89,7 @@ public class SimpleHybridSynchronizer<SourceT> extends BaseHybridSynchronizer<So
     updateTargetError();
     return new CompositeRegistration(
       myTokenListEditor.tokens.addListener(tokensListener),
-      Properties.isNull(mySource).addHandler(new EventHandler<PropertyChangeEvent<Boolean>>() {
+      Properties.isNull(getSource()).addHandler(new EventHandler<PropertyChangeEvent<Boolean>>() {
         @Override
         public void onEvent(PropertyChangeEvent<Boolean> event) {
           updateTargetError();
@@ -103,6 +103,6 @@ public class SimpleHybridSynchronizer<SourceT> extends BaseHybridSynchronizer<So
   }
 
   private void updateTargetError() {
-    MessageController.setError(myTarget, mySource.get() == null ? "parsing error" : null);
+    MessageController.setError(getTarget(), getSource().get() == null ? "parsing error" : null);
   }
 }

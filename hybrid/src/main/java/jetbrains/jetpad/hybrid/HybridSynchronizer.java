@@ -90,7 +90,7 @@ public class HybridSynchronizer<SourceT> extends BaseHybridSynchronizer<SourceT,
   }
 
   private void updateTargetError() {
-    MessageController.setError(myTarget, myTokenListEditor.valid.get() ? null : "parsing error");
+    MessageController.setError(getTarget(), myTokenListEditor.valid.get() ? null : "parsing error");
   }
 
   private static class HybridCellState implements CellState {

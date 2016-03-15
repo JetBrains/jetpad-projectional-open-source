@@ -68,8 +68,8 @@ abstract class BaseHybridSynchronizer<SourceT, SpecT extends SimpleHybridEditorS
 
   private Registration myRegistration;
   private Mapper<?, ?> myContextMapper;
-  protected final ReadableProperty<SourceT> mySource;
-  protected final Cell myTarget;
+  private ReadableProperty<SourceT> mySource;
+  private Cell myTarget;
   private List<Cell> myTargetList;
   private Set<Mapper<?, ? extends Cell>> myValueMappers;
   private ListMap<Cell, Mapper<?, ? extends Cell>> myValueCellToMapper;
@@ -159,6 +159,14 @@ abstract class BaseHybridSynchronizer<SourceT, SpecT extends SimpleHybridEditorS
         }
       }
     });
+  }
+
+  protected ReadableProperty<SourceT> getSource() {
+    return mySource;
+  }
+
+  protected Cell getTarget() {
+    return myTarget;
   }
 
   private CellTrait createTargetTrait() {
