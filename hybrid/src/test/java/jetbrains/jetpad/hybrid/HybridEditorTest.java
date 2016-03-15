@@ -18,13 +18,20 @@ package jetbrains.jetpad.hybrid;
 import jetbrains.jetpad.hybrid.parser.IdentifierToken;
 import jetbrains.jetpad.hybrid.testapp.mapper.ExprContainerMapper;
 import jetbrains.jetpad.hybrid.testapp.model.Expr;
+import jetbrains.jetpad.hybrid.testapp.model.ExprContainer;
+import jetbrains.jetpad.hybrid.testapp.model.VarExpr;
 import org.junit.Test;
 
 import java.util.Arrays;
 
 import static org.junit.Assert.assertEquals;
 
-public class HybridEditorTest extends BaseHybridEditorTest<ExprContainerMapper> {
+public class HybridEditorTest extends BaseHybridEditorTest<ExprContainer, ExprContainerMapper> {
+  @Override
+  protected ExprContainer createContainer() {
+    return new ExprContainer();
+  }
+
   @Override
   protected ExprContainerMapper createMapper() {
     return new ExprContainerMapper(container);
@@ -37,6 +44,13 @@ public class HybridEditorTest extends BaseHybridEditorTest<ExprContainerMapper> 
 
   @Test
   public void initial() {
+    container = createContainer();
+    VarExpr expr = new VarExpr();
+    expr.name.set("id");
+    container.expr.set(expr);
+
+    initEditor();
+
     assertEquals(1, myTargetCell.children().size());
     assertEquals(Arrays.asList(new IdentifierToken("id")), sync.tokens());
   }

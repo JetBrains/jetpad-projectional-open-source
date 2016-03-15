@@ -2,13 +2,19 @@ package jetbrains.jetpad.hybrid;
 
 import jetbrains.jetpad.cell.message.MessageController;
 import jetbrains.jetpad.hybrid.testapp.mapper.SimpleExprContainerMapper;
+import jetbrains.jetpad.hybrid.testapp.mapper.Tokens;
 import jetbrains.jetpad.hybrid.testapp.model.Expr;
-import jetbrains.jetpad.hybrid.testapp.model.IdExpr;
+import jetbrains.jetpad.hybrid.testapp.model.SimpleExprContainer;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
 
-public class SimpleHybridEditorTest extends BaseHybridEditorTest<SimpleExprContainerMapper> {
+public class SimpleHybridEditorTest extends BaseHybridEditorTest<SimpleExprContainer, SimpleExprContainerMapper> {
+  @Override
+  protected SimpleExprContainer createContainer() {
+    return new SimpleExprContainer();
+  }
+
   @Override
   protected SimpleExprContainerMapper createMapper() {
     return new SimpleExprContainerMapper(container);
@@ -21,12 +27,14 @@ public class SimpleHybridEditorTest extends BaseHybridEditorTest<SimpleExprConta
 
   @Test
   public void cellMessage() {
-    assertFalse(MessageController.hasError(myTargetCell));
+    initEditor();
 
-    mapper.getSource().expr.set(null);
     assertTrue(MessageController.hasError(myTargetCell));
 
-    mapper.getSource().expr.set(new IdExpr());
+    sync.tokens().add(Tokens.ID);
     assertFalse(MessageController.hasError(myTargetCell));
+
+    sync.tokens().clear();
+    assertTrue(MessageController.hasError(myTargetCell));
   }
 }

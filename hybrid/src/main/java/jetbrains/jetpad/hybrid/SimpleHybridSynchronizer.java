@@ -28,12 +28,11 @@ import jetbrains.jetpad.hybrid.parser.Token;
 import jetbrains.jetpad.hybrid.parser.prettyprint.PrettyPrinter;
 import jetbrains.jetpad.mapper.Mapper;
 import jetbrains.jetpad.model.collections.CollectionListener;
-import jetbrains.jetpad.model.collections.list.ObservableList;
 import jetbrains.jetpad.model.event.CompositeRegistration;
 import jetbrains.jetpad.model.event.EventHandler;
 import jetbrains.jetpad.model.property.Properties;
+import jetbrains.jetpad.model.property.PropertyBinding;
 import jetbrains.jetpad.model.property.PropertyChangeEvent;
-import jetbrains.jetpad.model.property.ReadableProperty;
 
 public class SimpleHybridSynchronizer<SourceT> extends BaseHybridSynchronizer<SourceT, SimpleHybridEditorSpec<SourceT>> {
   private static <SourceT> HybridEditorSpec<SourceT> toHybridEditorSpec(final SimpleHybridEditorSpec<SourceT> spec) {
@@ -74,26 +73,16 @@ public class SimpleHybridSynchronizer<SourceT> extends BaseHybridSynchronizer<So
     Mapper<?, ?> contextMapper,
     HybridProperty<SourceT> source,
     Cell target,
-    HybridEditorSpec<SourceT> spec) {
+    SimpleHybridEditorSpec<SourceT> spec) {
     super(contextMapper, source, target, Properties.constant(spec),
-      new TokenListEditor<>(spec, source.getTokens(), false));
+      new TokenListEditor<>(toHybridEditorSpec(spec), source.getTokens(), false));
   }
-
-  @Deprecated
-  public SimpleHybridSynchronizer(
-      Mapper<?, ?> contextMapper,
-      ObservableList<Token> tokens,
-      ReadableProperty<SourceT> source,
-      Cell target,
-      final SimpleHybridEditorSpec<SourceT> spec) {
-    super(contextMapper, source, target, Properties.constant(spec),
-      new TokenListEditor<>(toHybridEditorSpec(spec), tokens, false));
-  }
-
+  
   @Override
   protected Registration onAttach(CollectionListener<Token> tokensListener) {
     updateTargetError();
     return new CompositeRegistration(
+      PropertyBinding.bindOneWay(getSource(), myTokenListEditor.value),
       myTokenListEditor.tokens.addListener(tokensListener),
       Properties.isNull(getSource()).addHandler(new EventHandler<PropertyChangeEvent<Boolean>>() {
         @Override

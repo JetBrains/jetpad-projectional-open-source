@@ -18,29 +18,31 @@ package jetbrains.jetpad.hybrid;
 import jetbrains.jetpad.cell.util.CellStateHandler;
 import jetbrains.jetpad.hybrid.testapp.mapper.SimpleExprContainerMapper;
 import jetbrains.jetpad.hybrid.testapp.model.Expr;
+import jetbrains.jetpad.hybrid.testapp.model.IdExpr;
+import jetbrains.jetpad.hybrid.testapp.model.SimpleExprContainer;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
 
-public class SimpleHybridEditorEditingTest extends BaseHybridEditorEditingTest<SimpleExprContainerMapper> {
+public class SimpleHybridEditorEditingTest extends BaseHybridEditorEditingTest<SimpleExprContainer, SimpleExprContainerMapper> {
+  @Override
+  protected SimpleExprContainer createContainer() {
+    return new SimpleExprContainer();
+  }
+
   @Override
   protected SimpleExprContainerMapper createMapper() {
     return new SimpleExprContainerMapper(container);
   }
 
   @Override
-  protected BaseHybridSynchronizer<Expr, ?> getSync(SimpleExprContainerMapper mapper) {
+  protected BaseHybridSynchronizer<Expr, ?> getSync() {
     return mapper.hybridSync;
   }
 
-  @Test
-  public void simpleTyping() {
-    type("id");
-    type("+");
-    type("id");
-
-    assertEquals(5, targetCell.children().size());
-    assertEquals(3, sync.tokens().size());
+  @Override
+  protected Expr getExpr() {
+    return container.expr.get();
   }
 
   @Test
@@ -48,6 +50,7 @@ public class SimpleHybridEditorEditingTest extends BaseHybridEditorEditingTest<S
     type("id");
     del();
 
+    assertTrue(getExpr() instanceof IdExpr);
     assertEquals(1, targetCell.children().size());
     assertEquals(1, sync.tokens().size());
   }
@@ -59,6 +62,7 @@ public class SimpleHybridEditorEditingTest extends BaseHybridEditorEditingTest<S
     backspace();
     backspace();
 
+    assertTrue(getExpr() instanceof IdExpr);
     assertEquals(1, targetCell.children().size());
     assertEquals(1, sync.tokens().size());
   }
