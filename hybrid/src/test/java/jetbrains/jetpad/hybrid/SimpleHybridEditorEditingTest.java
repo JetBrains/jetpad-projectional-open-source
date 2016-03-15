@@ -18,6 +18,7 @@ package jetbrains.jetpad.hybrid;
 import jetbrains.jetpad.cell.util.CellStateHandler;
 import jetbrains.jetpad.hybrid.testapp.mapper.SimpleExprContainerMapper;
 import jetbrains.jetpad.hybrid.testapp.model.Expr;
+import jetbrains.jetpad.hybrid.testapp.model.IdExpr;
 import jetbrains.jetpad.hybrid.testapp.model.SimpleExprContainer;
 import org.junit.Test;
 
@@ -45,20 +46,11 @@ public class SimpleHybridEditorEditingTest extends BaseHybridEditorEditingTest<S
   }
 
   @Test
-  public void simpleTyping() {
-    type("id");
-    type("+");
-    type("id");
-
-    assertEquals(5, targetCell.children().size());
-    assertEquals(3, sync.tokens().size());
-  }
-
-  @Test
   public void typeDelete() {
     type("id");
     del();
 
+    assertTrue(getExpr() instanceof IdExpr);
     assertEquals(1, targetCell.children().size());
     assertEquals(1, sync.tokens().size());
   }
@@ -70,6 +62,7 @@ public class SimpleHybridEditorEditingTest extends BaseHybridEditorEditingTest<S
     backspace();
     backspace();
 
+    assertTrue(getExpr() instanceof IdExpr);
     assertEquals(1, targetCell.children().size());
     assertEquals(1, sync.tokens().size());
   }
