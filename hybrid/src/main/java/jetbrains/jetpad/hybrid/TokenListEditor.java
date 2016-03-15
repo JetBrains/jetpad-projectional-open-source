@@ -96,7 +96,7 @@ class TokenListEditor<SourceT> {
     if (myUpdateModel) {
       return myParseNode;
     } else if (value.get() != null) {
-      reprint(false);
+      reprint();
       return myParseNode;
     } else {
       return null;
@@ -152,7 +152,7 @@ class TokenListEditor<SourceT> {
       if (result != null) {
         value.set(result);
         myValid.set(true);
-        reprint(true);
+        reprint();
         if (myPrintedTokens.size() != tokens.size()) {
           throw new IllegalStateException();
         }
@@ -165,20 +165,20 @@ class TokenListEditor<SourceT> {
   }
 
   void reprintToTokens() {
-    PrettyPrinterContext<? super SourceT> ctx = reprint(true);
+    PrettyPrinterContext<? super SourceT> ctx = reprint();
     myValid.set(true);
     tokens.clear();
     tokens.addAll(ctx.tokens());
   }
 
-  private PrettyPrinterContext<? super SourceT> reprint(boolean setChangeSourceHandler) {
+  private PrettyPrinterContext<? super SourceT> reprint() {
     PrettyPrinter<? super SourceT> printer = mySpec.get().getPrettyPrinter();
     PrettyPrinterContext<? super SourceT> ctx = new PrettyPrinterContext<>(printer);
     ctx.print(value.get());
     myParseNode = ctx.result();
     myPrintedTokens = ctx.tokens();
 
-    if (setChangeSourceHandler) {
+    if (myUpdateModel) {
       myChangeReg.remove();
       myChangeReg = ctx.changeSource().addHandler(new EventHandler<Object>() {
         @Override
