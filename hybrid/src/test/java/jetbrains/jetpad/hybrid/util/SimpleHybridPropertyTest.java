@@ -15,6 +15,7 @@
  */
 package jetbrains.jetpad.hybrid.util;
 
+import jetbrains.jetpad.hybrid.HybridEditorSpec;
 import jetbrains.jetpad.hybrid.HybridProperty;
 import jetbrains.jetpad.hybrid.parser.ErrorToken;
 import jetbrains.jetpad.hybrid.parser.IdentifierToken;
@@ -39,7 +40,8 @@ public class SimpleHybridPropertyTest extends BaseTestCase {
   @Before
   public void init() {
     myTokens = new ObservableArrayList<>();
-    myProp = new SimpleHybridProperty<>(new ExprHybridEditorSpec().getParser(), myTokens);
+    HybridEditorSpec<Expr> hybridEditorSpec = new ExprHybridEditorSpec();
+    myProp = new SimpleHybridProperty<>(hybridEditorSpec.getParser(), myTokens, hybridEditorSpec.getParsingContextFactory());
   }
 
   @Test

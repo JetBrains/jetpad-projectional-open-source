@@ -22,6 +22,7 @@ import jetbrains.jetpad.cell.util.CellState;
 import jetbrains.jetpad.cell.util.CellStateHandler;
 import jetbrains.jetpad.completion.CompletionSupplier;
 import jetbrains.jetpad.hybrid.parser.Parser;
+import jetbrains.jetpad.hybrid.parser.ParsingContextFactory;
 import jetbrains.jetpad.hybrid.parser.Token;
 import jetbrains.jetpad.hybrid.parser.prettyprint.PrettyPrinter;
 import jetbrains.jetpad.mapper.Mapper;
@@ -56,6 +57,11 @@ public class SimpleHybridSynchronizer<SourceT> extends BaseHybridSynchronizer<So
       @Override
       public CompletionSupplier getAdditionalCompletion(CompletionContext ctx, Completer completer) {
         return spec.getAdditionalCompletion(ctx, completer);
+      }
+
+      @Override
+      public ParsingContextFactory getParsingContextFactory() {
+        return spec.getParsingContextFactory();
       }
     };
   }

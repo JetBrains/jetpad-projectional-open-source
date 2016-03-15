@@ -13,21 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package jetbrains.jetpad.hybrid.parser;
+package jetbrains.jetpad.hybrid;
 
-import java.util.List;
+import jetbrains.jetpad.hybrid.parser.ParsingContextFactory;
+import jetbrains.jetpad.hybrid.parser.SimpleParsingContextFactory;
 
-public interface ParsingContext {
+public abstract class BaseHybridEditorSpec<SourceT> implements HybridEditorSpec<SourceT> {
 
-  List<Token> getTokens();
-
-  Token current();
-
-  void advance();
-
-  State saveState();
-
-  interface State {
-    void restore();
+  protected BaseHybridEditorSpec() {
   }
+
+  @Override
+  public ParsingContextFactory getParsingContextFactory() {
+    return new SimpleParsingContextFactory();
+  }
+
 }
