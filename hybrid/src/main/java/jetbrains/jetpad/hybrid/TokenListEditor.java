@@ -133,7 +133,15 @@ class TokenListEditor<SourceT> {
   private void reparse() {
     if (myRestoringState) return;
 
-    if (tokens.size() == 0) {
+    List<Token> toParse = new ArrayList<>();
+    for (Token t : tokens) {
+      toParse.add(t.copy());
+    }
+
+    HybridEditorSpec<SourceT> hybridEditorSpec = mySpec.get();
+    ParsingContext parsingContext = hybridEditorSpec.getParsingContextFactory().getParsingContext(toParse);
+
+    if (parsingContext.getTokens().isEmpty()) {
       value.set(null);
       myValid.set(true);
       myParseNode = null;
@@ -141,19 +149,12 @@ class TokenListEditor<SourceT> {
       myChangeReg.remove();
       myChangeReg = Registration.EMPTY;
     } else {
-      List<Token> toParse = new ArrayList<>();
-      for (Token t : tokens) {
-        toParse.add(t.copy());
-      }
-
-      HybridEditorSpec<SourceT> hybridEditorSpec = mySpec.get();
-      ParsingContext parsingContext = hybridEditorSpec.getParsingContextFactory().getParsingContext(toParse);
       SourceT result = hybridEditorSpec.getParser().parse(parsingContext);
       if (result != null) {
         value.set(result);
         myValid.set(true);
         reprint();
-        if (myPrintedTokens.size() != tokens.size()) {
+        if (myPrintedTokens.size() != parsingContext.getTokens().size()) {
           throw new IllegalStateException();
         }
       } else {

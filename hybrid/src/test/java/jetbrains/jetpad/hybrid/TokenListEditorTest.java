@@ -16,8 +16,11 @@
 package jetbrains.jetpad.hybrid;
 
 import jetbrains.jetpad.hybrid.parser.Token;
+import jetbrains.jetpad.hybrid.parser.ValueToken;
 import jetbrains.jetpad.hybrid.testapp.mapper.ExprHybridEditorSpec;
 import jetbrains.jetpad.hybrid.testapp.mapper.Tokens;
+import jetbrains.jetpad.hybrid.testapp.mapper.ValueExprNodeCloner;
+import jetbrains.jetpad.hybrid.testapp.model.Comment;
 import jetbrains.jetpad.hybrid.testapp.model.Expr;
 import jetbrains.jetpad.hybrid.testapp.model.NumberExpr;
 import jetbrains.jetpad.hybrid.testapp.model.PlusExpr;
@@ -42,11 +45,15 @@ public class TokenListEditorTest {
     editor.value.set(plus);
   }
 
+  private static TokenListEditor<Expr> newTokenListEditor(boolean updateModel) {
+    return new TokenListEditor<>(new ExprHybridEditorSpec(), new ObservableArrayList<Token>(), updateModel);
+  }
+
   private TokenListEditor<Expr> editor;
 
   @Test
   public void autoReprint() {
-    editor = new TokenListEditor<>(new ExprHybridEditorSpec(), new ObservableArrayList<Token>(), true);
+    editor = newTokenListEditor(true);
     setSimpleExpression(editor);
 
     assertEquals(simpleTokenList(), editor.tokens);
@@ -55,7 +62,7 @@ public class TokenListEditorTest {
 
   @Test
   public void disabledAutoReprint() {
-    editor = new TokenListEditor<>(new ExprHybridEditorSpec(), new ObservableArrayList<Token>(), false);
+    editor = newTokenListEditor(false);
     setSimpleExpression(editor);
 
     assertTrue(editor.tokens.isEmpty());
@@ -68,7 +75,7 @@ public class TokenListEditorTest {
 
   @Test
   public void autoReparse() {
-    editor = new TokenListEditor<>(new ExprHybridEditorSpec(), new ObservableArrayList<Token>(), true);
+    editor = newTokenListEditor(true);
     editor.tokens.add(new IntValueToken(2));
 
     assertNotNull(editor.value.get());
@@ -77,7 +84,7 @@ public class TokenListEditorTest {
 
   @Test
   public void disabledAutoReparse() {
-    editor = new TokenListEditor<>(new ExprHybridEditorSpec(), new ObservableArrayList<Token>(), false);
+    editor = newTokenListEditor(false);
     editor.tokens.add(new IntValueToken(2));
 
     assertNull(editor.value.get());
@@ -86,7 +93,7 @@ public class TokenListEditorTest {
 
   @Test
   public void errorAutoReparsing() {
-    editor = new TokenListEditor<>(new ExprHybridEditorSpec(), new ObservableArrayList<Token>(), true);
+    editor = newTokenListEditor(true);
     assertNull(editor.value.get());
     assertTrue(editor.valid.get());
 
@@ -98,7 +105,7 @@ public class TokenListEditorTest {
 
   @Test
   public void updateToPrintedDisable() {
-    editor = new TokenListEditor<>(new ExprHybridEditorSpec(), new ObservableArrayList<Token>(), false);
+    editor = newTokenListEditor(false);
     setSimpleExpression(editor);
 
     editor.reprintToTokens();
@@ -107,5 +114,24 @@ public class TokenListEditorTest {
     editor.tokens.set(0, new IntValueToken(1));
     editor.updateToPrintedTokens();
     assertEquals(1, ((IntValueToken)editor.tokens.get(0)).getValue());
+  }
+
+  @Test
+  public void reparseWithComment() {
+    editor = newTokenListEditor(true);
+    editor.tokens.add(new IntValueToken(2));
+    editor.tokens.add(new ValueToken(new Comment(), new ValueExprNodeCloner()));
+
+    assertNotNull(editor.value.get());
+    assertTrue(editor.valid.get());
+  }
+
+  @Test
+  public void validWhenCommentAtTheBeginning() {
+    editor = newTokenListEditor(true);
+    editor.tokens.add(new ValueToken(new Comment(), new ValueExprNodeCloner()));
+
+    assertNull(editor.value.get());
+    assertTrue(editor.valid.get());
   }
 }
