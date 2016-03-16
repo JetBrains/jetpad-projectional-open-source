@@ -36,17 +36,17 @@ import static jetbrains.jetpad.hybrid.SelectionPosition.*;
 public class HybridWrapperRole<ContainerT, WrapperT, TargetT> implements RoleCompletion<ContainerT, WrapperT> {
   private SimpleHybridEditorSpec<TargetT> mySpec;
   private Supplier<WrapperT> myFactory;
-  private Function<Mapper<?, ?>, HybridSynchronizer<TargetT>> mySyncProvider;
+  private Function<Mapper<?, ?>, BaseHybridSynchronizer<TargetT, ?>> mySyncProvider;
   private boolean myHideTokensInMenu;
 
 
   public HybridWrapperRole(SimpleHybridEditorSpec<TargetT> spec, Supplier<WrapperT> targetFactory, Function<Mapper<?, ?>,
-      HybridSynchronizer<TargetT>> syncProvider) {
+      BaseHybridSynchronizer<TargetT, ?>> syncProvider) {
     this(spec, targetFactory, syncProvider, false);
   }
 
   public HybridWrapperRole(SimpleHybridEditorSpec<TargetT> spec, Supplier<WrapperT> targetFactory, Function<Mapper<?, ?>,
-      HybridSynchronizer<TargetT>> syncProvider, boolean hideTokensInMenus) {
+      BaseHybridSynchronizer<TargetT, ?>> syncProvider, boolean hideTokensInMenus) {
     mySpec = spec;
     myFactory = targetFactory;
     mySyncProvider = syncProvider;
@@ -66,10 +66,9 @@ public class HybridWrapperRole<ContainerT, WrapperT, TargetT> implements RoleCom
             WrapperT targetItem = myFactory.get();
             target.set(targetItem);
             Mapper<?, ?> targetItemMapper =  mapper.getDescendantMapper(targetItem);
-            HybridSynchronizer<?> sync = mySyncProvider.apply(targetItemMapper);
+            BaseHybridSynchronizer<?, ?> sync = mySyncProvider.apply(targetItemMapper);
             sync.setTokens(Arrays.asList(tokens));
             return sync.selectOnCreation(selectionIndex, LAST);
-
           }
         };
 
