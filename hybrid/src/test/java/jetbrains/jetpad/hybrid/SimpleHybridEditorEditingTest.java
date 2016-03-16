@@ -45,6 +45,11 @@ public class SimpleHybridEditorEditingTest extends BaseHybridEditorEditingTest<S
     return container.expr.get();
   }
 
+  @Override
+  protected SimpleHybridEditorSpec<Expr> getSpec() {
+    return mapper.hybridSyncSpec;
+  }
+
   @Test
   public void typeDelete() {
     type("id");

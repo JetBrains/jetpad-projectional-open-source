@@ -15,14 +15,9 @@
  */
 package jetbrains.jetpad.hybrid;
 
-import com.google.common.collect.FluentIterable;
 import jetbrains.jetpad.cell.Cell;
 import jetbrains.jetpad.cell.util.CellState;
 import jetbrains.jetpad.cell.util.CellStateHandler;
-import jetbrains.jetpad.completion.BaseCompletionParameters;
-import jetbrains.jetpad.completion.CompletionItem;
-import jetbrains.jetpad.completion.CompletionParameters;
-import jetbrains.jetpad.completion.CompletionSupplier;
 import jetbrains.jetpad.event.Key;
 import jetbrains.jetpad.event.ModifierKey;
 import jetbrains.jetpad.hybrid.parser.IdentifierToken;
@@ -31,7 +26,6 @@ import jetbrains.jetpad.hybrid.testapp.mapper.ExprContainerMapper;
 import jetbrains.jetpad.hybrid.testapp.mapper.ExprHybridEditorSpec;
 import jetbrains.jetpad.hybrid.testapp.mapper.Tokens;
 import jetbrains.jetpad.hybrid.testapp.model.*;
-import jetbrains.jetpad.hybrid.util.HybridWrapperRole;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -50,6 +44,11 @@ public class HybridEditorEditingTest extends BaseHybridEditorEditingTest<ExprCon
   @Override
   protected BaseHybridSynchronizer<Expr, ?> getSync() {
     return mapper.hybridSync;
+  }
+
+  @Override
+  protected SimpleHybridEditorSpec<Expr> getSpec() {
+    return mapper.hybridSyncSpec.get();
   }
 
   @Override
@@ -141,20 +140,6 @@ public class HybridEditorEditingTest extends BaseHybridEditorEditingTest<ExprCon
 
     mapper.hybridSyncSpec.set(new ExprHybridEditorSpec(Tokens.MUL, Tokens.PLUS));
     assertTrue(container.expr.get() instanceof MulExpr);
-  }
-
-  @Test
-  public void hideTokensInMenuForHybridWrapperRole() {
-    HybridWrapperRole<Object, Expr, Expr> hybridWrapperRole = new HybridWrapperRole<>(mapper.hybridSyncSpec.get(), null, null, true);
-    CompletionSupplier roleCompletion = hybridWrapperRole.createRoleCompletion(mapper, null, null);
-    CompletionParameters completionParameters = new BaseCompletionParameters() {
-      @Override
-      public boolean isMenu() {
-        return true;
-      }
-    };
-    Iterable<CompletionItem> completionItems = roleCompletion.get(completionParameters);
-    assertTrue(FluentIterable.from(completionItems).isEmpty());
   }
 
 }

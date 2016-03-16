@@ -20,10 +20,7 @@ import com.google.common.base.Supplier;
 import com.google.common.collect.FluentIterable;
 import jetbrains.jetpad.cell.Cell;
 import jetbrains.jetpad.completion.*;
-import jetbrains.jetpad.hybrid.BaseCompleter;
-import jetbrains.jetpad.hybrid.CompletionContext;
-import jetbrains.jetpad.hybrid.HybridEditorSpec;
-import jetbrains.jetpad.hybrid.HybridSynchronizer;
+import jetbrains.jetpad.hybrid.*;
 import jetbrains.jetpad.hybrid.parser.Token;
 import jetbrains.jetpad.mapper.Mapper;
 import jetbrains.jetpad.projectional.generic.Role;
@@ -34,20 +31,22 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import static jetbrains.jetpad.hybrid.SelectionPosition.LAST;
+import static jetbrains.jetpad.hybrid.SelectionPosition.*;
 
 public class HybridWrapperRole<ContainerT, WrapperT, TargetT> implements RoleCompletion<ContainerT, WrapperT> {
-  private HybridEditorSpec<TargetT> mySpec;
+  private SimpleHybridEditorSpec<TargetT> mySpec;
   private Supplier<WrapperT> myFactory;
   private Function<Mapper<?, ?>, HybridSynchronizer<TargetT>> mySyncProvider;
   private boolean myHideTokensInMenu;
 
 
-  public HybridWrapperRole(HybridEditorSpec<TargetT> spec, Supplier<WrapperT> targetFactory, Function<Mapper<?, ?>, HybridSynchronizer<TargetT>> syncProvider) {
+  public HybridWrapperRole(SimpleHybridEditorSpec<TargetT> spec, Supplier<WrapperT> targetFactory, Function<Mapper<?, ?>,
+      HybridSynchronizer<TargetT>> syncProvider) {
     this(spec, targetFactory, syncProvider, false);
   }
 
-  public HybridWrapperRole(HybridEditorSpec<TargetT> spec, Supplier<WrapperT> targetFactory, Function<Mapper<?, ?>, HybridSynchronizer<TargetT>> syncProvider, boolean hideTokensInMenus) {
+  public HybridWrapperRole(SimpleHybridEditorSpec<TargetT> spec, Supplier<WrapperT> targetFactory, Function<Mapper<?, ?>,
+      HybridSynchronizer<TargetT>> syncProvider, boolean hideTokensInMenus) {
     mySpec = spec;
     myFactory = targetFactory;
     mySyncProvider = syncProvider;
