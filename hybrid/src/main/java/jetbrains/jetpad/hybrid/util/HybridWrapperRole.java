@@ -36,17 +36,17 @@ import static jetbrains.jetpad.hybrid.SelectionPosition.*;
 public class HybridWrapperRole<ContainerT, WrapperT, TargetT> implements RoleCompletion<ContainerT, WrapperT> {
   private SimpleHybridEditorSpec<TargetT> mySpec;
   private Supplier<WrapperT> myFactory;
-  private Function<Mapper<?, ?>, BaseHybridSynchronizer<TargetT, ?>> mySyncProvider;
+  private Function<Mapper<?, ?>, ? extends BaseHybridSynchronizer<TargetT, ?>> mySyncProvider;
   private boolean myHideTokensInMenu;
 
 
-  public HybridWrapperRole(SimpleHybridEditorSpec<TargetT> spec, Supplier<WrapperT> targetFactory, Function<Mapper<?, ?>,
-      BaseHybridSynchronizer<TargetT, ?>> syncProvider) {
+  public HybridWrapperRole(SimpleHybridEditorSpec<TargetT> spec, Supplier<WrapperT> targetFactory,
+      Function<Mapper<?, ?>, ? extends BaseHybridSynchronizer<TargetT, ?>> syncProvider) {
     this(spec, targetFactory, syncProvider, false);
   }
 
-  public HybridWrapperRole(SimpleHybridEditorSpec<TargetT> spec, Supplier<WrapperT> targetFactory, Function<Mapper<?, ?>,
-      BaseHybridSynchronizer<TargetT, ?>> syncProvider, boolean hideTokensInMenus) {
+  public HybridWrapperRole(SimpleHybridEditorSpec<TargetT> spec, Supplier<WrapperT> targetFactory,
+      Function<Mapper<?, ?>, ? extends BaseHybridSynchronizer<TargetT, ?>> syncProvider, boolean hideTokensInMenus) {
     mySpec = spec;
     myFactory = targetFactory;
     mySyncProvider = syncProvider;
