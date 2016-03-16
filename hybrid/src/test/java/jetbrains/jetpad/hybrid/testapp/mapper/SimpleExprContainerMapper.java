@@ -16,6 +16,7 @@
 package jetbrains.jetpad.hybrid.testapp.mapper;
 
 import jetbrains.jetpad.cell.HorizontalCell;
+import jetbrains.jetpad.hybrid.HybridEditorSpec;
 import jetbrains.jetpad.hybrid.SimpleHybridSynchronizer;
 import jetbrains.jetpad.hybrid.testapp.model.Expr;
 import jetbrains.jetpad.hybrid.testapp.model.SimpleExprContainer;
@@ -23,10 +24,12 @@ import jetbrains.jetpad.mapper.Mapper;
 
 public class SimpleExprContainerMapper extends Mapper<SimpleExprContainer, HorizontalCell> {
   public final SimpleHybridSynchronizer<Expr> hybridSync;
+  public final HybridEditorSpec<Expr> hybridSyncSpec;
 
   public SimpleExprContainerMapper(SimpleExprContainer source) {
     super(source, new HorizontalCell());
-    hybridSync = new SimpleHybridSynchronizer<>(this, getSource().expr, getTarget(), new ExprHybridEditorSpec());
+    hybridSyncSpec = new ExprHybridEditorSpec();
+    hybridSync = new SimpleHybridSynchronizer<>(this, getSource().expr, getTarget(), hybridSyncSpec);
     hybridSync.setMapperFactory(new ExprMapperFactory());
   }
 

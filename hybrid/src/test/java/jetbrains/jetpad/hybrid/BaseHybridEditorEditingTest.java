@@ -15,6 +15,7 @@
  */
 package jetbrains.jetpad.hybrid;
 
+import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Range;
 import jetbrains.jetpad.base.Registration;
@@ -28,11 +29,12 @@ import jetbrains.jetpad.cell.message.MessageController;
 import jetbrains.jetpad.cell.position.Positions;
 import jetbrains.jetpad.cell.util.CellState;
 import jetbrains.jetpad.cell.util.CellStateHandler;
-import jetbrains.jetpad.completion.CompletionController;
+import jetbrains.jetpad.completion.*;
 import jetbrains.jetpad.event.*;
 import jetbrains.jetpad.hybrid.parser.*;
 import jetbrains.jetpad.hybrid.testapp.mapper.Tokens;
 import jetbrains.jetpad.hybrid.testapp.model.*;
+import jetbrains.jetpad.hybrid.util.HybridWrapperRole;
 import jetbrains.jetpad.mapper.Mapper;
 import jetbrains.jetpad.model.composite.Composites;
 import jetbrains.jetpad.projectional.util.RootController;
@@ -59,6 +61,7 @@ abstract class BaseHybridEditorEditingTest<ContainerT, MapperT extends Mapper<Co
   protected abstract MapperT createMapper();
   protected abstract BaseHybridSynchronizer<Expr, ?> getSync();
   protected abstract Expr getExpr();
+  protected abstract SimpleHybridEditorSpec<Expr> getSpec();
 
   @Before
   public void init() {
@@ -1000,6 +1003,20 @@ abstract class BaseHybridEditorEditingTest<ContainerT, MapperT extends Mapper<Co
   public void pasteStringLiteralWithOtherTokens() {
     paste("\"text 1\" + 10");
     assertTokensEqual(ImmutableList.of(doubleQtd("text 1"), Tokens.PLUS, integer(10)), sync.tokens());
+  }
+
+  @Test
+  public void hideTokensInMenuForHybridWrapperRole() {
+    HybridWrapperRole<Object, Expr, Expr> hybridWrapperRole = new HybridWrapperRole<>(getSpec(), null, null, true);
+    CompletionSupplier roleCompletion = hybridWrapperRole.createRoleCompletion(mapper, null, null);
+    CompletionParameters completionParameters = new BaseCompletionParameters() {
+      @Override
+      public boolean isMenu() {
+        return true;
+      }
+    };
+    Iterable<CompletionItem> completionItems = roleCompletion.get(completionParameters);
+    assertTrue(FluentIterable.from(completionItems).isEmpty());
   }
 
   protected ValueToken createComplexToken() {

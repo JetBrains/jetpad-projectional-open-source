@@ -57,7 +57,7 @@ import java.util.*;
 import static jetbrains.jetpad.hybrid.SelectionPosition.*;
 import static jetbrains.jetpad.model.composite.Composites.*;
 
-abstract class BaseHybridSynchronizer<SourceT, SpecT extends SimpleHybridEditorSpec<SourceT>> implements Synchronizer, ToCellMapping {
+public abstract class BaseHybridSynchronizer<SourceT, SpecT extends SimpleHybridEditorSpec<SourceT>> implements Synchronizer, ToCellMapping {
   public static final CellTraitPropertySpec<Runnable> ON_LAST_ITEM_DELETED = new CellTraitPropertySpec<>("onLastItemDeleted");
 
   static final CellTraitPropertySpec<HybridSynchronizer<?>> HYBRID_SYNCHRONIZER = new CellTraitPropertySpec<>("hybridSynchronizer");
