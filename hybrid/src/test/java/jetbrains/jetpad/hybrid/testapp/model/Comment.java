@@ -20,4 +20,17 @@ import jetbrains.jetpad.model.property.ValueProperty;
 
 public class Comment extends ExprNode {
   public Property<String> text = new ValueProperty<>();
+
+  public Comment() {
+  }
+
+  public Comment(String text) {
+    this.text.set(text);
+  }
+
+  @Override
+  public String toString() {
+    return "'#" + text.get() + "'";
+  }
+
 }

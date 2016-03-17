@@ -26,10 +26,19 @@ import jetbrains.jetpad.hybrid.parser.prettyprint.PrettyPrinterContext;
 import jetbrains.jetpad.hybrid.testapp.model.*;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class ExprHybridEditorSpec implements HybridEditorSpec<Expr> {
+
+  private static String getText(List<Token> tokenList) {
+    StringBuilder builder = new StringBuilder();
+    for (Token token : tokenList) {
+      builder.append(token.text());
+    }
+    return builder.toString();
+  }
+
   private final Token tokenPlus;
   private final Token tokenMul;
 
@@ -297,7 +306,7 @@ public class ExprHybridEditorSpec implements HybridEditorSpec<Expr> {
   }
 
   @Override
-  public CompletionSupplier getTokenCompletion(final Function<Token, Runnable> tokenHandler) {
+  public CompletionSupplier getTokenCompletion(final CompletionContext completionContext, final Function<Token, Runnable> tokenHandler) {
     return new CompletionSupplier() {
       @Override
       public List<CompletionItem> get(CompletionParameters cp) {
@@ -343,6 +352,22 @@ public class ExprHybridEditorSpec implements HybridEditorSpec<Expr> {
             }
           });
         }
+        result.add(new ByBoundsCompletionItem("#", "") {
+          @Override
+          public Runnable complete(String text) {
+            List<Token> tokens = completionContext.getTokens();
+            int targetIndex = completionContext.getTargetIndex();
+            List<Token> subList = tokens.subList(targetIndex, tokens.size());
+            String tokenListText = getText(subList);
+            for (int i = 0; i < subList.size(); i++) {
+              completionContext.removeToken(targetIndex);
+            }
+
+            Comment comment = new Comment();
+            comment.text.set(tokenListText);
+            return tokenHandler.apply(new ValueToken(comment, new ValueExprNodeCloner()));
+          }
+        });
 
         return result;
       }
@@ -350,17 +375,17 @@ public class ExprHybridEditorSpec implements HybridEditorSpec<Expr> {
   }
 
   @Override
-  public CompletionSupplier getAdditionalCompletion(CompletionContext ctx, final Completer complerer) {
+  public CompletionSupplier getAdditionalCompletion(CompletionContext ctx, final Completer completer) {
     return new CompletionSupplier() {
       @Override
       public Async<Iterable<CompletionItem>> getAsync(CompletionParameters cp) {
-        return Asyncs.<Iterable<CompletionItem>>constant(Arrays.<CompletionItem>asList(
-          new SimpleCompletionItem("asyncValue") {
-            @Override
-            public Runnable complete(String text) {
-              return complerer.complete(new ValueToken(new AsyncValueExpr(), new ValueExprCloner()));
+        return Asyncs.<Iterable<CompletionItem>>constant(Collections.<CompletionItem>singletonList(
+            new SimpleCompletionItem("asyncValue") {
+              @Override
+              public Runnable complete(String text) {
+                return completer.complete(new ValueToken(new AsyncValueExpr(), new ValueExprCloner()));
+              }
             }
-          }
         ));
       }
     };

@@ -33,6 +33,7 @@ import jetbrains.jetpad.completion.*;
 import jetbrains.jetpad.event.*;
 import jetbrains.jetpad.hybrid.parser.*;
 import jetbrains.jetpad.hybrid.testapp.mapper.Tokens;
+import jetbrains.jetpad.hybrid.testapp.mapper.ValueExprNodeCloner;
 import jetbrains.jetpad.hybrid.testapp.model.*;
 import jetbrains.jetpad.hybrid.util.HybridWrapperRole;
 import jetbrains.jetpad.mapper.Mapper;
@@ -415,9 +416,7 @@ abstract class BaseHybridEditorEditingTest<ContainerT, MapperT extends Mapper<Co
     select(1, false);
 
     complete();
-    down();
-    down();
-    down();
+    type("*");
     enter();
 
     assertTokens(Tokens.ID, Tokens.DOT, Tokens.MUL);
@@ -1019,12 +1018,22 @@ abstract class BaseHybridEditorEditingTest<ContainerT, MapperT extends Mapper<Co
     assertTrue(FluentIterable.from(completionItems).isEmpty());
   }
 
+  @Test
+  public void commentInTheMiddle() {
+    setTokens(integer(1), Tokens.PLUS, integer(2), Tokens.PLUS, integer(3));
+    select(2, false);
+
+    type("#");
+
+    assertTokens(integer(1), Tokens.PLUS, integer(2), new ValueToken(new Comment("+3"), new ValueExprNodeCloner()));
+  }
+
   protected ValueToken createComplexToken() {
     return new ValueToken(new ComplexValueExpr(), new ComplexValueCloner());
   }
 
   protected void assertTokens(Token... tokens) {
-    assertEquals(Arrays.asList(tokens), sync.tokens());
+    TokensUtil.assertTokensEqual(Arrays.asList(tokens), sync.tokens());
   }
 
   protected void setTokens(Token... tokens) {

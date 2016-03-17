@@ -22,14 +22,18 @@ import jetbrains.jetpad.cell.Cell;
 import java.util.List;
 
 public interface CompletionContext {
-  public static final CompletionContext EMPTY = new EmptyCompletionContext();
+  CompletionContext EMPTY = new EmptyCompletionContext();
+  CompletionContext UNSUPPORTED = new UnsupportedCompletionContext();
 
   int getTargetIndex();
 
   List<Token> getPrefix();
 
   List<Cell> getViews();
+
   List<Token> getTokens();
+  Token removeToken(int index);
+
   List<Object> getObjects();
 
   Mapper<?, ?> getContextMapper();
