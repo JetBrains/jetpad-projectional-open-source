@@ -104,9 +104,10 @@ class TokenListEditor<SourceT> {
   }
 
   List<Object> getObjects() {
-    if (myParseNode == null) return Collections.emptyList();
+    ParseNode node = getParseNode();
+    if (node == null) return Collections.emptyList();
     List<Object> result = new ArrayList<>();
-    toObjects(myParseNode, result);
+    toObjects(node, result);
     return result;
   }
 
