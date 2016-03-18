@@ -21,12 +21,22 @@ import jetbrains.jetpad.grammar.parser.LRParserTable;
 import jetbrains.jetpad.grammar.parser.Lexeme;
 import org.junit.Test;
 
-import static jetbrains.jetpad.grammar.GrammarTestUtil.asTokens;
+import java.util.List;
+
+import static jetbrains.jetpad.grammar.GrammarTestUtil.asLexemes;
+import static jetbrains.jetpad.grammar.GrammarTestUtil.asLexemesList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 public abstract class BaseParserGenerationTest {
+  private static void assertValuesEqual(List<Lexeme> expected, List<Lexeme> actual) {
+    assertEquals(expected.size(), actual.size());
+    for (int i = 0; i < expected.size(); i++) {
+      assertEquals(expected.get(i).getValue(), actual.get(i).getValue());
+    }
+  }
+
   protected abstract LRParserTable generateTable(Grammar g);
 
   @Test(expected = IllegalArgumentException.class)
@@ -106,7 +116,7 @@ public abstract class BaseParserGenerationTest {
     g.plusRule.setAssociativity(Associativity.LEFT).setPriority(0);
 
     LRParser parser = new LRParser(generateTable(g.grammar));
-    Object parse = parser.parse(asTokens(g.id, g.plus, g.id, g.plus, g.id));
+    Object parse = parser.parse(asLexemes(g.id, g.plus, g.id, g.plus, g.id));
 
     assertEquals("((id + id) + id)", parse.toString());
   }
@@ -117,7 +127,7 @@ public abstract class BaseParserGenerationTest {
     g.plusRule.setAssociativity(Associativity.RIGHT).setPriority(0);
 
     LRParser parser = new LRParser(generateTable(g.grammar));
-    Object parse = parser.parse(asTokens(g.id, g.plus, g.id, g.plus, g.id));
+    Object parse = parser.parse(asLexemes(g.id, g.plus, g.id, g.plus, g.id));
 
     assertEquals("(id + (id + id))", parse.toString());
   }
@@ -135,7 +145,7 @@ public abstract class BaseParserGenerationTest {
     LRParserTable table = generateTable(g.grammar);
     LRParser parser = new LRParser(table);
 
-    Object parse = parser.parse(asTokens(g.id, g.plus, g.id, g.mul, g.id));
+    Object parse = parser.parse(asLexemes(g.id, g.plus, g.id, g.mul, g.id));
 
     assertEquals("(id + (id * id))", parse.toString());
   }
@@ -149,11 +159,16 @@ public abstract class BaseParserGenerationTest {
     LRParserTable table = generateTable(g.grammar);
 
     LRParser parser = new LRParser(table);
-    BinExpr parse = (BinExpr) parser.parse(asTokens(g.id, g.plus, g.id));
+    BinExpr parse = (BinExpr) parser.parse(asLexemes(g.id, g.plus, g.id));
 
     assertEquals(Range.closed(0, 3), parse.getRange());
+    assertValuesEqual(asLexemesList(g.id, g.plus, g.id), parse.getLexemes());
+
     assertEquals(Range.closed(0, 1), parse.left.getRange());
+    assertValuesEqual(asLexemesList(g.id), parse.left.getLexemes());
+
     assertEquals(Range.closed(2, 3), parse.right.getRange());
+    assertValuesEqual(asLexemesList(g.id), parse.right.getLexemes());
   }
 
   private class SimplePrecedenceGrammar {
@@ -179,7 +194,7 @@ public abstract class BaseParserGenerationTest {
       idRule.setHandler(new RuleHandler() {
         @Override
         public Object handle(RuleContext ctx) {
-          return new IdExpr(ctx.getRange());
+          return new IdExpr(ctx.getRange(), ctx.getLexemes());
         }
       });
 
@@ -192,7 +207,7 @@ public abstract class BaseParserGenerationTest {
         Expr left = (Expr) ctx.get(0);
         Lexeme sign = (Lexeme) ctx.get(1);
         Expr right = (Expr) ctx.get(2);
-        return new BinExpr(left, right, sign.getTerminal(), ctx.getRange());
+        return new BinExpr(left, right, sign.getTerminal(), ctx.getRange(), ctx.getLexemes());
       }
     }
   }
@@ -209,19 +224,25 @@ public abstract class BaseParserGenerationTest {
 
   private abstract class Expr {
     private Range<Integer> myRange;
+    private List<Lexeme> myLexemes;
 
-    protected Expr(Range<Integer> range) {
+    protected Expr(Range<Integer> range, List<Lexeme> lexemes) {
       myRange = range;
+      myLexemes = lexemes;
     }
 
     Range<Integer> getRange() {
       return myRange;
     }
+
+    List<Lexeme> getLexemes() {
+      return myLexemes;
+    }
   }
 
   private class IdExpr extends Expr {
-    private IdExpr(Range<Integer> range) {
-      super(range);
+    private IdExpr(Range<Integer> range, List<Lexeme> lexemes) {
+      super(range, lexemes);
     }
 
     @Override
@@ -235,8 +256,8 @@ public abstract class BaseParserGenerationTest {
     final Expr right;
     final Terminal symbol;
 
-    private BinExpr(Expr left, Expr right, Terminal symbol, Range<Integer> range) {
-      super(range);
+    private BinExpr(Expr left, Expr right, Terminal symbol, Range<Integer> range, List<Lexeme> lexemes) {
+      super(range, lexemes);
       this.left = left;
       this.right = right;
       this.symbol = symbol;
