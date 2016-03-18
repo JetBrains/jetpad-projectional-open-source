@@ -25,6 +25,11 @@ public class SimpleHybridEditorTest extends BaseHybridEditorTest<SimpleExprConta
     return mapper.hybridSync;
   }
 
+  @Override
+  protected Expr getExpr() {
+    return container.expr.get();
+  }
+
   @Test
   public void cellMessage() {
     initEditor();

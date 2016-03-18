@@ -42,6 +42,11 @@ public class HybridEditorTest extends BaseHybridEditorTest<ExprContainer, ExprCo
     return mapper.hybridSync;
   }
 
+  @Override
+  protected Expr getExpr() {
+    return container.expr.get();
+  }
+
   @Test
   public void initial() {
     container = createContainer();
