@@ -64,7 +64,7 @@ class TokenCompleter {
   }
 
   CompletionItems completion(Function<Token, Runnable> handler) {
-    return new CompletionItems(getEditorSpec().getTokenCompletion(handler).get(CompletionParameters.EMPTY));
+    return new CompletionItems(getEditorSpec().getTokenCompletion(CompletionContext.UNSUPPORTED, handler).get(CompletionParameters.EMPTY));
   }
 
   CompletionSupplier placeholderCompletion(final Cell placeholder) {
@@ -203,7 +203,7 @@ class TokenCompleter {
       public List<CompletionItem> get(CompletionParameters cp) {
         List<CompletionItem> result = new ArrayList<>();
         if (!(cp.isMenu() && mySync.isHideTokensInMenu())) {
-          result.addAll(FluentIterable.from(getEditorSpec().getTokenCompletion(new Function<Token, Runnable>() {
+          result.addAll(FluentIterable.from(getEditorSpec().getTokenCompletion(ctx, new Function<Token, Runnable>() {
             @Override
             public Runnable apply(Token input) {
               return completer.complete(input);
@@ -278,6 +278,11 @@ class TokenCompleter {
     }
 
     @Override
+    public Token removeToken(int index) {
+      throw new UnsupportedOperationException();
+    }
+
+    @Override
     public List<Object> getObjects() {
       return Collections.emptyList();
     }
@@ -318,6 +323,11 @@ class TokenCompleter {
     @Override
     public List<Token> getTokens() {
       return Collections.unmodifiableList(getTokeListEditor().tokens);
+    }
+
+    @Override
+    public Token removeToken(int index) {
+      return getTokeListEditor().tokens.remove(index);
     }
 
     @Override

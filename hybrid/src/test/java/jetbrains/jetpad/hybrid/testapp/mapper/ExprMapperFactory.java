@@ -22,7 +22,7 @@ import jetbrains.jetpad.mapper.MapperFactory;
 
 class ExprMapperFactory implements MapperFactory<Object,Cell> {
   @Override
-  public Mapper<? extends Expr, ? extends Cell> createMapper(Object source) {
+  public Mapper<? extends ExprNode, ? extends Cell> createMapper(Object source) {
     if (source instanceof PosValueExpr) {
       return new PosValueExprMapper((PosValueExpr) source);
     }
@@ -37,6 +37,9 @@ class ExprMapperFactory implements MapperFactory<Object,Cell> {
     }
     if (source instanceof StringExpr) {
       return new StringExprMapper((StringExpr) source);
+    }
+    if (source instanceof Comment) {
+      return new CommentMapper((Comment) source);
     }
     throw new IllegalArgumentException("Unknown source: " + source);
   }

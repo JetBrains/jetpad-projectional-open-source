@@ -78,6 +78,9 @@ class TokensUtil {
     } else if (expectedValue instanceof StringExpr) {
       assertTrue(actualValue instanceof StringExpr);
       assertEquals(actualValue.toString(), expectedValue.toString());
+    } else if (expectedValue instanceof Comment) {
+      assertTrue(actualValue instanceof Comment);
+      assertEquals(((Comment) expectedValue).text.get(), ((Comment) actualValue).text.get());
     } else {
       assertEquals(expectedValue, actualValue);
     }
