@@ -18,6 +18,8 @@ package jetbrains.jetpad.grammar;
 
 import com.google.common.collect.Range;
 
+import java.util.List;
+
 public interface RuleContext {
   ParserParameters getParams();
   Object get(int index);
@@ -26,4 +28,5 @@ public interface RuleContext {
   <ValueT> ValueT get(ParserParameter<ValueT> key);
 
   Range<Integer> getRange();
+  List getLexemesValues();
 }

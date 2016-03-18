@@ -21,10 +21,11 @@ import jetbrains.jetpad.grammar.parser.LRParserTable;
 import jetbrains.jetpad.grammar.parser.Lexeme;
 import org.junit.Test;
 
-import static jetbrains.jetpad.grammar.GrammarTestUtil.asTokens;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import java.util.List;
+
+import static com.google.common.collect.ImmutableList.of;
+import static jetbrains.jetpad.grammar.GrammarTestUtil.asLexemes;
+import static org.junit.Assert.*;
 
 public abstract class BaseParserGenerationTest {
   protected abstract LRParserTable generateTable(Grammar g);
@@ -106,7 +107,7 @@ public abstract class BaseParserGenerationTest {
     g.plusRule.setAssociativity(Associativity.LEFT).setPriority(0);
 
     LRParser parser = new LRParser(generateTable(g.grammar));
-    Object parse = parser.parse(asTokens(g.id, g.plus, g.id, g.plus, g.id));
+    Object parse = parser.parse(asLexemes(g.id, g.plus, g.id, g.plus, g.id));
 
     assertEquals("((id + id) + id)", parse.toString());
   }
@@ -117,7 +118,7 @@ public abstract class BaseParserGenerationTest {
     g.plusRule.setAssociativity(Associativity.RIGHT).setPriority(0);
 
     LRParser parser = new LRParser(generateTable(g.grammar));
-    Object parse = parser.parse(asTokens(g.id, g.plus, g.id, g.plus, g.id));
+    Object parse = parser.parse(asLexemes(g.id, g.plus, g.id, g.plus, g.id));
 
     assertEquals("(id + (id + id))", parse.toString());
   }
@@ -135,7 +136,7 @@ public abstract class BaseParserGenerationTest {
     LRParserTable table = generateTable(g.grammar);
     LRParser parser = new LRParser(table);
 
-    Object parse = parser.parse(asTokens(g.id, g.plus, g.id, g.mul, g.id));
+    Object parse = parser.parse(asLexemes(g.id, g.plus, g.id, g.mul, g.id));
 
     assertEquals("(id + (id * id))", parse.toString());
   }
@@ -149,11 +150,16 @@ public abstract class BaseParserGenerationTest {
     LRParserTable table = generateTable(g.grammar);
 
     LRParser parser = new LRParser(table);
-    BinExpr parse = (BinExpr) parser.parse(asTokens(g.id, g.plus, g.id));
+    BinExpr parse = (BinExpr) parser.parse(asLexemes(g.id, g.plus, g.id));
 
     assertEquals(Range.closed(0, 3), parse.getRange());
+    assertEquals(of("id", "+", "id"), parse.getLexemesValues());
+
     assertEquals(Range.closed(0, 1), parse.left.getRange());
+    assertEquals(of("id"), parse.left.getLexemesValues());
+
     assertEquals(Range.closed(2, 3), parse.right.getRange());
+    assertEquals(of("id"), parse.right.getLexemesValues());
   }
 
   private class SimplePrecedenceGrammar {
@@ -179,7 +185,7 @@ public abstract class BaseParserGenerationTest {
       idRule.setHandler(new RuleHandler() {
         @Override
         public Object handle(RuleContext ctx) {
-          return new IdExpr(ctx.getRange());
+          return new IdExpr(ctx.getRange(), ctx.getLexemesValues());
         }
       });
 
@@ -192,7 +198,7 @@ public abstract class BaseParserGenerationTest {
         Expr left = (Expr) ctx.get(0);
         Lexeme sign = (Lexeme) ctx.get(1);
         Expr right = (Expr) ctx.get(2);
-        return new BinExpr(left, right, sign.getTerminal(), ctx.getRange());
+        return new BinExpr(left, right, sign.getTerminal(), ctx.getRange(), ctx.getLexemesValues());
       }
     }
   }
@@ -209,19 +215,25 @@ public abstract class BaseParserGenerationTest {
 
   private abstract class Expr {
     private Range<Integer> myRange;
+    private List<Object> myLexemesValues;
 
-    protected Expr(Range<Integer> range) {
+    protected Expr(Range<Integer> range, List<Object> lexemesValues) {
       myRange = range;
+      myLexemesValues = lexemesValues;
     }
 
     Range<Integer> getRange() {
       return myRange;
     }
+
+    List<Object> getLexemesValues() {
+      return myLexemesValues;
+    }
   }
 
   private class IdExpr extends Expr {
-    private IdExpr(Range<Integer> range) {
-      super(range);
+    private IdExpr(Range<Integer> range, List<Object> lexemesValues) {
+      super(range, lexemesValues);
     }
 
     @Override
@@ -235,8 +247,8 @@ public abstract class BaseParserGenerationTest {
     final Expr right;
     final Terminal symbol;
 
-    private BinExpr(Expr left, Expr right, Terminal symbol, Range<Integer> range) {
-      super(range);
+    private BinExpr(Expr left, Expr right, Terminal symbol, Range<Integer> range, List<Object> lexemesValues) {
+      super(range, lexemesValues);
       this.left = left;
       this.right = right;
       this.symbol = symbol;

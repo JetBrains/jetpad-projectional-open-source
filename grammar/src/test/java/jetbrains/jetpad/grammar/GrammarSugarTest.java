@@ -20,7 +20,7 @@ import jetbrains.jetpad.grammar.slr.SLRTableGenerator;
 import org.junit.Test;
 
 import static jetbrains.jetpad.grammar.GrammarSugar.*;
-import static jetbrains.jetpad.grammar.GrammarTestUtil.asTokens;
+import static jetbrains.jetpad.grammar.GrammarTestUtil.asLexemes;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
@@ -33,7 +33,7 @@ public class GrammarSugarTest {
 
     LRParser parser = new LRParser(new SLRTableGenerator(g).generateTable());
 
-    assertEquals("[id, id]", "" + parser.parse(asTokens(id, id)));
+    assertEquals("[id, id]", "" + parser.parse(asLexemes(id, id)));
     assertFalse(parser.parse(id));
   }
 
@@ -46,8 +46,8 @@ public class GrammarSugarTest {
 
     LRParser parser = new LRParser(new SLRTableGenerator(g).generateTable());
 
-    assertEquals("[id]", "" + parser.parse(asTokens(id)));
-    assertEquals("[]", "" + parser.parse(asTokens()));
+    assertEquals("[id]", "" + parser.parse(asLexemes(id)));
+    assertEquals("[]", "" + parser.parse(asLexemes()));
     assertFalse(parser.parse(error));
   }
 
@@ -61,8 +61,8 @@ public class GrammarSugarTest {
     LRParser parser = new LRParser(new SLRTableGenerator(g).generateTable());
 
     assertFalse(parser.parse(error));
-    assertEquals("[]", "" + parser.parse(asTokens(new Terminal[0])));
-    assertEquals("[id, id, id]", "" + parser.parse(asTokens(id, id, id)));
+    assertEquals("[]", "" + parser.parse(asLexemes(new Terminal[0])));
+    assertEquals("[id, id, id]", "" + parser.parse(asLexemes(id, id, id)));
   }
 
   @Test
@@ -76,7 +76,7 @@ public class GrammarSugarTest {
 
     assertFalse(parser.parse(error));
     assertFalse(parser.parse(new Terminal[0]));
-    assertEquals("[id, id, id]", "" + parser.parse(asTokens(id, id, id)));
+    assertEquals("[id, id, id]", "" + parser.parse(asLexemes(id, id, id)));
   }
 
   @Test
@@ -91,9 +91,9 @@ public class GrammarSugarTest {
     assertFalse(parser.parse(comma));
     assertFalse(parser.parse(id, comma));
     assertFalse(parser.parse(id, comma, id, comma));
-    assertEquals("[]", "" + parser.parse(asTokens()));
-    assertEquals("[id]", "" + parser.parse(asTokens(id)));
-    assertEquals("[id, id]", "" + parser.parse(asTokens(id, comma, id)));
+    assertEquals("[]", "" + parser.parse(asLexemes()));
+    assertEquals("[id]", "" + parser.parse(asLexemes(id)));
+    assertEquals("[id, id]", "" + parser.parse(asLexemes(id, comma, id)));
   }
 
   @Test
@@ -109,8 +109,8 @@ public class GrammarSugarTest {
     assertFalse(parser.parse(comma));
     assertFalse(parser.parse(id, comma));
     assertFalse(parser.parse(id, comma, id, comma));
-    assertEquals("[id]", "" + parser.parse(asTokens(id)));
-    assertEquals("[id, id]", "" + parser.parse(asTokens(id, comma, id)));
+    assertEquals("[id]", "" + parser.parse(asLexemes(id)));
+    assertEquals("[id, id]", "" + parser.parse(asLexemes(id, comma, id)));
   }
 
   @Test
@@ -126,8 +126,8 @@ public class GrammarSugarTest {
     assertFalse(parser.parse(comma));
     assertFalse(parser.parse(id));
     assertFalse(parser.parse(id, comma, id));
-    assertEquals("[id]", "" + parser.parse(asTokens(id, comma)));
-    assertEquals("[id, id]", "" + parser.parse(asTokens(id, comma, id, comma)));
+    assertEquals("[id]", "" + parser.parse(asLexemes(id, comma)));
+    assertEquals("[id, id]", "" + parser.parse(asLexemes(id, comma, id, comma)));
   }
 
   @Test
@@ -141,9 +141,9 @@ public class GrammarSugarTest {
 
     assertFalse(parser.parse(new Terminal[0]));
     assertFalse(parser.parse(comma));
-    assertEquals("[[id], []]", "" + parser.parse(asTokens(id)));
-    assertEquals("[[id, id], []]", "" + parser.parse(asTokens(id, comma, id)));
-    assertEquals("[[id], [,]]", "" + parser.parse(asTokens(id, comma)));
-    assertEquals("[[id, id], [,]]", "" + parser.parse(asTokens(id, comma, id, comma)));
+    assertEquals("[[id], []]", "" + parser.parse(asLexemes(id)));
+    assertEquals("[[id, id], []]", "" + parser.parse(asLexemes(id, comma, id)));
+    assertEquals("[[id], [,]]", "" + parser.parse(asLexemes(id, comma)));
+    assertEquals("[[id, id], [,]]", "" + parser.parse(asLexemes(id, comma, id, comma)));
   }
 }
