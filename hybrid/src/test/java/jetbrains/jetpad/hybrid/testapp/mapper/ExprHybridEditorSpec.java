@@ -31,6 +31,7 @@ import java.util.List;
 
 public class ExprHybridEditorSpec implements HybridEditorSpec<Expr> {
 
+  /*
   private static String getText(List<Token> tokenList) {
     StringBuilder builder = new StringBuilder();
     for (Token token : tokenList) {
@@ -38,6 +39,7 @@ public class ExprHybridEditorSpec implements HybridEditorSpec<Expr> {
     }
     return builder.toString();
   }
+  */
 
   private final Token tokenPlus;
   private final Token tokenMul;
@@ -306,7 +308,7 @@ public class ExprHybridEditorSpec implements HybridEditorSpec<Expr> {
   }
 
   @Override
-  public CompletionSupplier getTokenCompletion(final CompletionContext completionContext, final Function<Token, Runnable> tokenHandler) {
+  public CompletionSupplier getTokenCompletion(final CompletionContext completionContext, final Completer completer, final Function<Token, Runnable> tokenHandler) {
     return new CompletionSupplier() {
       @Override
       public List<CompletionItem> get(CompletionParameters cp) {
@@ -355,6 +357,7 @@ public class ExprHybridEditorSpec implements HybridEditorSpec<Expr> {
         result.add(new ByBoundsCompletionItem("#", "") {
           @Override
           public Runnable complete(String text) {
+            /*
             List<Token> tokens = completionContext.getTokens();
             int targetIndex = completionContext.getTargetIndex();
             List<Token> subList = tokens.subList(targetIndex, tokens.size());
@@ -362,10 +365,11 @@ public class ExprHybridEditorSpec implements HybridEditorSpec<Expr> {
             for (int i = 0; i < subList.size(); i++) {
               completionContext.removeToken(targetIndex);
             }
+            */
 
             Comment comment = new Comment();
-            comment.text.set(tokenListText);
-            return tokenHandler.apply(new ValueToken(comment, new ValueExprNodeCloner()));
+            TerminatorToken<?> terminatorToken = new TerminatorToken<>(comment, new CommentCloner());
+            return completer.completeTerminatorToken(terminatorToken);
           }
         });
 

@@ -15,10 +15,11 @@
  */
 package jetbrains.jetpad.hybrid.testapp.model;
 
+import jetbrains.jetpad.hybrid.TextValue;
 import jetbrains.jetpad.model.property.Property;
 import jetbrains.jetpad.model.property.ValueProperty;
 
-public class Comment extends ExprNode {
+public class Comment extends ExprNode implements TextValue {
   public Property<String> text = new ValueProperty<>();
 
   public Comment() {
@@ -31,6 +32,11 @@ public class Comment extends ExprNode {
   @Override
   public String toString() {
     return "'#" + text.get() + "'";
+  }
+
+  @Override
+  public void setText(String text) {
+    this.text.set(text);
   }
 
 }

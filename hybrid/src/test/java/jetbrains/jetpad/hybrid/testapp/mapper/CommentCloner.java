@@ -13,20 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package jetbrains.jetpad.hybrid;
+package jetbrains.jetpad.hybrid.testapp.mapper;
 
-import jetbrains.jetpad.hybrid.parser.Token;
+import jetbrains.jetpad.hybrid.parser.ValueToken;
+import jetbrains.jetpad.hybrid.testapp.model.Comment;
 
-public interface Completer {
-  Completer UNSUPPORTED_COMPLETER = new UnsupportedCompleter();
+final class CommentCloner implements ValueToken.ValueCloner<Comment> {
 
-  Runnable complete(Token token);
-  Runnable complete(Token... tokens);
+  CommentCloner() {
+  }
 
-  /**
-   * @param selectionIndex of the passed token to be selected after the action
-   */
-  Runnable complete(int selectionIndex, Token... tokens);
+  @Override
+  public Comment clone(Comment val) {
+    return new Comment();
+  }
 
-  Runnable completeTerminatorToken(TerminatorToken<?> terminatorToken);
 }

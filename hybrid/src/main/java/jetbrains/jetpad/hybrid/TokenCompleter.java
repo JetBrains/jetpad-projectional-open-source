@@ -45,6 +45,15 @@ import static jetbrains.jetpad.hybrid.SelectionPosition.FIRST;
 import static jetbrains.jetpad.hybrid.SelectionPosition.LAST;
 
 class TokenCompleter {
+
+  private static String getText(List<Token> tokenList) {
+    StringBuilder builder = new StringBuilder();
+    for (Token token : tokenList) {
+      builder.append(token.text());
+    }
+    return builder.toString();
+  }
+
   private BaseHybridSynchronizer<?, ?> mySync;
 
   TokenCompleter(BaseHybridSynchronizer<?, ?> sync) {
@@ -64,7 +73,7 @@ class TokenCompleter {
   }
 
   CompletionItems completion(Function<Token, Runnable> handler) {
-    return new CompletionItems(getEditorSpec().getTokenCompletion(CompletionContext.UNSUPPORTED, handler).get(CompletionParameters.EMPTY));
+    return new CompletionItems(getEditorSpec().getTokenCompletion(CompletionContext.UNSUPPORTED, Completer.UNSUPPORTED_COMPLETER, handler).get(CompletionParameters.EMPTY));
   }
 
   CompletionSupplier placeholderCompletion(final Cell placeholder) {
@@ -83,6 +92,11 @@ class TokenCompleter {
         }
 
         return result;
+      }
+
+      @Override
+      public Runnable completeTerminatorToken(TerminatorToken<?> terminatorToken) {
+        throw new UnsupportedOperationException();
       }
     });
   }
@@ -144,6 +158,11 @@ class TokenCompleter {
         }
         return result;
       }
+
+      @Override
+      public Runnable completeTerminatorToken(TerminatorToken<?> terminatorToken) {
+        throw new UnsupportedOperationException();
+      }
     });
   }
 
@@ -171,6 +190,19 @@ class TokenCompleter {
             }
             return result;
           }
+
+          @Override
+          public Runnable completeTerminatorToken(TerminatorToken<?> terminatorToken) {
+            List<Token> tokenList = getTokenListEditor().tokens;
+            int targetIndex = index + delta;
+            List<Token> subList = tokenList.subList(targetIndex, tokenList.size());
+            String tokenListText = getText(subList);
+            TextValue textValue = terminatorToken.value();
+            textValue.setText(tokenListText);
+            subList.clear();
+            return complete(terminatorToken);
+          }
+
         };
       }
 
@@ -203,7 +235,7 @@ class TokenCompleter {
       public List<CompletionItem> get(CompletionParameters cp) {
         List<CompletionItem> result = new ArrayList<>();
         if (!(cp.isMenu() && mySync.isHideTokensInMenu())) {
-          result.addAll(FluentIterable.from(getEditorSpec().getTokenCompletion(ctx, new Function<Token, Runnable>() {
+          result.addAll(FluentIterable.from(getEditorSpec().getTokenCompletion(ctx, completer, new Function<Token, Runnable>() {
             @Override
             public Runnable apply(Token input) {
               return completer.complete(input);

@@ -53,8 +53,8 @@ public class SimpleHybridSynchronizer<SourceT> extends BaseHybridSynchronizer<So
       }
 
       @Override
-      public CompletionSupplier getTokenCompletion(CompletionContext completionContext, Function<Token, Runnable> tokenHandler) {
-        return spec.getTokenCompletion(completionContext, tokenHandler);
+      public CompletionSupplier getTokenCompletion(CompletionContext completionContext, Completer completer, Function<Token, Runnable> tokenHandler) {
+        return spec.getTokenCompletion(completionContext, completer, tokenHandler);
       }
 
       @Override
