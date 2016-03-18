@@ -17,8 +17,8 @@ package jetbrains.jetpad.grammar;
 
 import jetbrains.jetpad.grammar.parser.Lexeme;
 
-public class GrammarTestUtil {
-  public static Lexeme[] asTokens(Terminal... ts) {
+class GrammarTestUtil {
+  static Lexeme[] asLexemes(Terminal... ts) {
     Lexeme[] result = new Lexeme[ts.length];
     for (int i = 0; i < ts.length; i++) {
       result[i] = new Lexeme(ts[i], "" + ts[i]);

@@ -16,6 +16,7 @@
 package jetbrains.jetpad.grammar.parser;
 
 import com.google.common.base.Function;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Range;
 import jetbrains.jetpad.grammar.*;
 
@@ -84,7 +85,7 @@ public class LRParser {
         Collections.reverse(handlerInput);
 
         LRParserState nextState = stack.peek().state.getNextState(reduce.getRule().getHead());
-        RuleContext ruleContext = new MyRuleContext(Range.closed(startOffset, pos), handlerInput);
+        RuleContext ruleContext = new MyRuleContext(Range.closed(startOffset, pos), handlerInput, input);
         RuleHandler handler = handlerProvider.apply(reduce.getRule());
         Object result = handler != null ? handler.handle(ruleContext) : handlerInput;
 
@@ -114,12 +115,14 @@ public class LRParser {
   }
 
   private class MyRuleContext implements RuleContext {
-    private List<Object> myValues;
-    private Range<Integer> myRange;
+    private final List<Object> myValues;
+    private final Range<Integer> myRange;
+    private final List<Lexeme> myInput;
 
-    private MyRuleContext(Range<Integer> range, List<Object> values) {
+    private MyRuleContext(Range<Integer> range, List<Object> values, List<Lexeme> input) {
       myValues = values;
       myRange = range;
+      myInput = input;
     }
 
     @Override
@@ -145,6 +148,18 @@ public class LRParser {
     @Override
     public Range<Integer> getRange() {
       return myRange;
+    }
+
+    @Override
+    public List getLexemesValues() {
+      List<Lexeme> matchedLexemes = myInput.subList(myRange.lowerEndpoint(), myRange.upperEndpoint());
+      return Collections.unmodifiableList(
+          Lists.transform(matchedLexemes, new Function<Lexeme, Object>() {
+            @Override
+            public Object apply(Lexeme lexeme) {
+              return lexeme.getValue();
+            }
+          }));
     }
   }
 }
