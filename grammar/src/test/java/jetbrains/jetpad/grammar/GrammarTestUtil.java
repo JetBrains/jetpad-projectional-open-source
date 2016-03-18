@@ -17,12 +17,19 @@ package jetbrains.jetpad.grammar;
 
 import jetbrains.jetpad.grammar.parser.Lexeme;
 
-public class GrammarTestUtil {
-  public static Lexeme[] asTokens(Terminal... ts) {
+import java.util.Arrays;
+import java.util.List;
+
+class GrammarTestUtil {
+  static Lexeme[] asLexemes(Terminal... ts) {
     Lexeme[] result = new Lexeme[ts.length];
     for (int i = 0; i < ts.length; i++) {
       result[i] = new Lexeme(ts[i], "" + ts[i]);
     }
     return result;
+  }
+
+  static List<Lexeme> asLexemesList(Terminal... ts) {
+    return Arrays.asList(asLexemes(ts));
   }
 }
