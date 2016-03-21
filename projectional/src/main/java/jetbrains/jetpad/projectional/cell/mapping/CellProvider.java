@@ -70,11 +70,11 @@ public final class CellProvider {
     });
   }
 
-  public List<Cell> getCells(Iterable<Object> sourcePath) {
+  public List<Cell> getCells(Iterable<?> sourcePath) {
     return getCells(sourcePath.iterator());
   }
 
-  public List<Cell> getCells(Iterator<Object> sourcePath) {
+  public List<Cell> getCells(Iterator<?> sourcePath) {
     Object actualSource = sourcePath.next();
     return lookupCells(actualSource, actualSource, sourcePath);
   }
@@ -128,7 +128,7 @@ public final class CellProvider {
     return null;
   }
 
-  private List<Cell> lookupCells(Object source, Object actualSource, Iterator<Object> parents) {
+  private List<Cell> lookupCells(Object source, Object actualSource, Iterator<?> parents) {
     Set<Mapper<? super Object, ?>> mappers = myRootMapper.getMappingContext().getMappers(myRootMapper, source);
     if (!mappers.isEmpty()) {
       List<Cell> cells = new ArrayList<>(mappers.size());
