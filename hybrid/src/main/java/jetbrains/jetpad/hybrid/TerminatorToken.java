@@ -15,18 +15,18 @@
  */
 package jetbrains.jetpad.hybrid;
 
-import jetbrains.jetpad.hybrid.parser.Token;
+import jetbrains.jetpad.hybrid.parser.ValueToken;
 
-public interface Completer {
-  Completer UNSUPPORTED_COMPLETER = new UnsupportedCompleter();
+public final class TerminatorToken<ValueT extends TextValue> extends ValueToken {
 
-  Runnable complete(Token token);
-  Runnable complete(Token... tokens);
+  public TerminatorToken(ValueT val, ValueCloner<ValueT> cloner) {
+    super(val, cloner);
+  }
 
-  /**
-   * @param selectionIndex of the passed token to be selected after the action
-   */
-  Runnable complete(int selectionIndex, Token... tokens);
+  @Override
+  public ValueT value() {
+    //noinspection unchecked
+    return (ValueT) super.value();
+  }
 
-  Runnable completeTerminatorToken(TerminatorToken<?> terminatorToken);
 }

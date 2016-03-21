@@ -18,13 +18,17 @@ package jetbrains.jetpad.hybrid;
 import jetbrains.jetpad.hybrid.parser.Token;
 
 public abstract class BaseCompleter implements Completer {
+
+  protected BaseCompleter() {
+  }
+
   @Override
   public final Runnable complete(Token token) {
     return complete(new Token[] { token });
   }
 
   @Override
-  public Runnable complete(Token... tokens) {
+  public final Runnable complete(Token... tokens) {
     return complete(tokens.length - 1, tokens);
   }
 }

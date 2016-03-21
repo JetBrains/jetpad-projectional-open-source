@@ -15,18 +15,8 @@
  */
 package jetbrains.jetpad.hybrid;
 
-import jetbrains.jetpad.hybrid.parser.Token;
+public interface TextValue {
 
-public interface Completer {
-  Completer UNSUPPORTED_COMPLETER = new UnsupportedCompleter();
+  void setText(String text);
 
-  Runnable complete(Token token);
-  Runnable complete(Token... tokens);
-
-  /**
-   * @param selectionIndex of the passed token to be selected after the action
-   */
-  Runnable complete(int selectionIndex, Token... tokens);
-
-  Runnable completeTerminatorToken(TerminatorToken<?> terminatorToken);
 }
