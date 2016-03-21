@@ -26,8 +26,8 @@ import static jetbrains.jetpad.hybrid.TokensUtil.*;
 import static jetbrains.jetpad.hybrid.testapp.mapper.Tokens.*;
 import static org.junit.Assert.*;
 
-public class TokenizerTest {
-  private Tokenizer tokenizer = new Tokenizer(new ExprHybridEditorSpec());
+public class CompletionBasedTokenizerTest {
+  private CompletionBasedTokenizer tokenizer = new CompletionBasedTokenizer(new ExprHybridEditorSpec());
 
   @Test
   public void oneToken() {
@@ -102,6 +102,18 @@ public class TokenizerTest {
     assertTokensEqual(of(LP, integer(10), RP, MUL, integer(5), FACTORIAL, PLUS, ID, DOT, value(), INCREMENT, PLUS,
         singleQtd("\"text 1\""), PLUS, doubleQtd("text 2")),
         tokens);
+  }
+
+  @Test
+  public void tokenizeSubstringWithWholeTokens() {
+    List<Token> tokens = tokenizer.tokenizeSubstring("1 + 2 + 3", 2, 6);
+    assertTokensEqual(of(PLUS, integer(2)), tokens);
+  }
+
+  @Test
+  public void tokenizeSubstringWithTokenParts() {
+    List<Token> tokens = tokenizer.tokenizeSubstring("123 + 789", 2, 8);
+    assertTokensEqual(of(integer(3), PLUS, integer(78)), tokens);
   }
 
   @Test
