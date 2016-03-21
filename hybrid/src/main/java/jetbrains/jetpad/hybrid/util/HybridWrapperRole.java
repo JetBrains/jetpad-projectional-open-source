@@ -70,10 +70,15 @@ public class HybridWrapperRole<ContainerT, WrapperT, TargetT> implements RoleCom
             sync.setTokens(Arrays.asList(tokens));
             return sync.selectOnCreation(selectionIndex, LAST);
           }
+
+          @Override
+          public Runnable completeTerminatorToken() {
+            throw new UnsupportedOperationException();
+          }
         };
 
         if (!(cp.isMenu() && myHideTokensInMenu)) {
-          for (CompletionItem ci : mySpec.getTokenCompletion(CompletionContext.UNSUPPORTED, new Function<Token, Runnable>() {
+          for (CompletionItem ci : mySpec.getTokenCompletion(completer, new Function<Token, Runnable>() {
             @Override
             public Runnable apply(Token input) {
               return completer.complete(input);
@@ -108,11 +113,6 @@ public class HybridWrapperRole<ContainerT, WrapperT, TargetT> implements RoleCom
             @Override
             public List<Token> getTokens() {
               return Collections.emptyList();
-            }
-
-            @Override
-            public Token removeToken(int index) {
-              throw new UnsupportedOperationException();
             }
 
             @Override

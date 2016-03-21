@@ -23,7 +23,6 @@ import java.util.List;
 
 public interface CompletionContext {
   CompletionContext EMPTY = new EmptyCompletionContext();
-  CompletionContext UNSUPPORTED = new UnsupportedCompletionContext();
 
   int getTargetIndex();
 
@@ -32,7 +31,6 @@ public interface CompletionContext {
   List<Cell> getViews();
 
   List<Token> getTokens();
-  Token removeToken(int index);
 
   List<Object> getObjects();
 
