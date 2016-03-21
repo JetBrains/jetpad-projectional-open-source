@@ -31,14 +31,6 @@ import java.util.List;
 
 public class ExprHybridEditorSpec implements HybridEditorSpec<Expr> {
 
-  private static String getText(List<Token> tokenList) {
-    StringBuilder builder = new StringBuilder();
-    for (Token token : tokenList) {
-      builder.append(token.text());
-    }
-    return builder.toString();
-  }
-
   private final Token tokenPlus;
   private final Token tokenMul;
 
@@ -306,7 +298,7 @@ public class ExprHybridEditorSpec implements HybridEditorSpec<Expr> {
   }
 
   @Override
-  public CompletionSupplier getTokenCompletion(final CompletionContext completionContext, final Function<Token, Runnable> tokenHandler) {
+  public CompletionSupplier getTokenCompletion(final Completer completer, final Function<Token, Runnable> tokenHandler) {
     return new CompletionSupplier() {
       @Override
       public List<CompletionItem> get(CompletionParameters cp) {
@@ -355,17 +347,7 @@ public class ExprHybridEditorSpec implements HybridEditorSpec<Expr> {
         result.add(new ByBoundsCompletionItem("#", "") {
           @Override
           public Runnable complete(String text) {
-            List<Token> tokens = completionContext.getTokens();
-            int targetIndex = completionContext.getTargetIndex();
-            List<Token> subList = tokens.subList(targetIndex, tokens.size());
-            String tokenListText = getText(subList);
-            for (int i = 0; i < subList.size(); i++) {
-              completionContext.removeToken(targetIndex);
-            }
-
-            Comment comment = new Comment();
-            comment.text.set(tokenListText);
-            return tokenHandler.apply(new ValueToken(comment, new ValueExprNodeCloner()));
+            return completer.completeTerminatorToken();
           }
         });
 

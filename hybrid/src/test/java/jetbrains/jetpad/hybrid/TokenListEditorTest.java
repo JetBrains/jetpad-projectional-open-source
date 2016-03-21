@@ -15,12 +15,10 @@
  */
 package jetbrains.jetpad.hybrid;
 
+import jetbrains.jetpad.hybrid.parser.TerminatorToken;
 import jetbrains.jetpad.hybrid.parser.Token;
-import jetbrains.jetpad.hybrid.parser.ValueToken;
 import jetbrains.jetpad.hybrid.testapp.mapper.ExprHybridEditorSpec;
 import jetbrains.jetpad.hybrid.testapp.mapper.Tokens;
-import jetbrains.jetpad.hybrid.testapp.mapper.ValueExprNodeCloner;
-import jetbrains.jetpad.hybrid.testapp.model.Comment;
 import jetbrains.jetpad.hybrid.testapp.model.Expr;
 import jetbrains.jetpad.hybrid.testapp.model.NumberExpr;
 import jetbrains.jetpad.hybrid.testapp.model.PlusExpr;
@@ -120,7 +118,7 @@ public class TokenListEditorTest {
   public void reparseWithComment() {
     editor = newTokenListEditor(true);
     editor.tokens.add(new IntValueToken(2));
-    editor.tokens.add(new ValueToken(new Comment(), new ValueExprNodeCloner()));
+    editor.tokens.add(new TerminatorToken());
 
     assertNotNull(editor.value.get());
     assertTrue(editor.valid.get());
@@ -129,7 +127,7 @@ public class TokenListEditorTest {
   @Test
   public void validWhenCommentAtTheBeginning() {
     editor = newTokenListEditor(true);
-    editor.tokens.add(new ValueToken(new Comment(), new ValueExprNodeCloner()));
+    editor.tokens.add(new TerminatorToken());
 
     assertNull(editor.value.get());
     assertTrue(editor.valid.get());

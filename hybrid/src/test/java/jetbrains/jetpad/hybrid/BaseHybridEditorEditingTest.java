@@ -33,7 +33,6 @@ import jetbrains.jetpad.completion.*;
 import jetbrains.jetpad.event.*;
 import jetbrains.jetpad.hybrid.parser.*;
 import jetbrains.jetpad.hybrid.testapp.mapper.Tokens;
-import jetbrains.jetpad.hybrid.testapp.mapper.ValueExprNodeCloner;
 import jetbrains.jetpad.hybrid.testapp.model.*;
 import jetbrains.jetpad.hybrid.util.HybridWrapperRole;
 import jetbrains.jetpad.mapper.Mapper;
@@ -1025,7 +1024,7 @@ abstract class BaseHybridEditorEditingTest<ContainerT, MapperT extends Mapper<Co
 
     type("#");
 
-    assertTokens(integer(1), Tokens.PLUS, integer(2), new ValueToken(new Comment("+3"), new ValueExprNodeCloner()));
+    assertTokens(integer(1), Tokens.PLUS, integer(2), new TerminatorToken("+3"));
   }
 
   protected ValueToken createComplexToken() {

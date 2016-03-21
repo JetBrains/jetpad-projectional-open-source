@@ -38,9 +38,6 @@ class ExprMapperFactory implements MapperFactory<Object,Cell> {
     if (source instanceof StringExpr) {
       return new StringExprMapper((StringExpr) source);
     }
-    if (source instanceof Comment) {
-      return new CommentMapper((Comment) source);
-    }
     throw new IllegalArgumentException("Unknown source: " + source);
   }
 }
