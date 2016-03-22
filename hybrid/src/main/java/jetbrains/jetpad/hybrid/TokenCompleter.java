@@ -194,7 +194,7 @@ class TokenCompleter {
 
           @Override
           public Runnable completeTerminatorToken() {
-            List<Token> tokenList = getTokeListEditor().tokens;
+            List<Token> tokenList = getTokenListEditor().tokens;
             int targetIndex = index + delta;
             List<Token> subList = tokenList.subList(targetIndex, tokenList.size());
             String tokenListText = getText(subList);
