@@ -17,11 +17,12 @@ package jetbrains.jetpad.hybrid.parser;
 
 public final class TerminatorToken extends SimpleToken {
 
-  public TerminatorToken() {
+  public TerminatorToken(String prefix) {
+    this(prefix, "");
   }
 
-  public TerminatorToken(String name) {
-    super(name);
+  public TerminatorToken(String prefix, String name) {
+    super(prefix + name);
   }
 
   @Override

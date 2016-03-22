@@ -72,7 +72,7 @@ public class HybridWrapperRole<ContainerT, WrapperT, TargetT> implements RoleCom
           }
 
           @Override
-          public Runnable completeTerminatorToken() {
+          public Runnable completeTerminatorToken(String prefix) {
             throw new UnsupportedOperationException();
           }
         };
