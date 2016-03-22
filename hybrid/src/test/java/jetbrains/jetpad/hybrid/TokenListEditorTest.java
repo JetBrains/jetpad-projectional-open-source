@@ -118,7 +118,7 @@ public class TokenListEditorTest {
   public void reparseWithComment() {
     editor = newTokenListEditor(true);
     editor.tokens.add(new IntValueToken(2));
-    editor.tokens.add(new TerminatorToken());
+    editor.tokens.add(new TerminatorToken("#"));
 
     assertNotNull(editor.value.get());
     assertTrue(editor.valid.get());
@@ -127,7 +127,7 @@ public class TokenListEditorTest {
   @Test
   public void validWhenCommentAtTheBeginning() {
     editor = newTokenListEditor(true);
-    editor.tokens.add(new TerminatorToken());
+    editor.tokens.add(new TerminatorToken("#"));
 
     assertNull(editor.value.get());
     assertTrue(editor.valid.get());

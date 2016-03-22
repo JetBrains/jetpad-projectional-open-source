@@ -96,7 +96,7 @@ class TokenCompleter {
       }
 
       @Override
-      public Runnable completeTerminatorToken() {
+      public Runnable completeTerminatorToken(String prefix) {
         throw new UnsupportedOperationException();
       }
     });
@@ -161,7 +161,7 @@ class TokenCompleter {
       }
 
       @Override
-      public Runnable completeTerminatorToken() {
+      public Runnable completeTerminatorToken(String prefix) {
         throw new UnsupportedOperationException();
       }
     });
@@ -193,12 +193,12 @@ class TokenCompleter {
           }
 
           @Override
-          public Runnable completeTerminatorToken() {
+          public Runnable completeTerminatorToken(String prefix) {
             List<Token> tokenList = getTokenListEditor().tokens;
             int targetIndex = index + delta;
             List<Token> subList = tokenList.subList(targetIndex, tokenList.size());
             String tokenListText = getText(subList);
-            Token terminatorToken = new TerminatorToken(tokenListText);
+            Token terminatorToken = new TerminatorToken(prefix, tokenListText);
             subList.clear();
             return complete(terminatorToken);
           }

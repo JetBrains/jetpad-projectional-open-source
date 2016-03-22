@@ -625,7 +625,7 @@ public abstract class BaseHybridSynchronizer<SourceT, SpecT extends SimpleHybrid
     for (; index < myTargetList.size(); index++) {
       if (Composites.isDescendant(myTargetList.get(index), cell)) {
         List<Object> objects = myTokenListEditor.getObjects();
-        return objects.isEmpty() ? null : objects.get(index);
+        return objects.isEmpty() || index >= objects.size() ? null : objects.get(index);
       }
     }
     return null;
