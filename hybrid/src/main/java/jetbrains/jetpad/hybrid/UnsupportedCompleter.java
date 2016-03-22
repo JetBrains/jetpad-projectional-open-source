@@ -13,7 +13,7 @@ final class UnsupportedCompleter extends BaseCompleter {
   }
 
   @Override
-  public Runnable completeTerminatorToken() {
+  public Runnable completeTerminatorToken(String prefix) {
     throw new UnsupportedOperationException();
   }
 
