@@ -44,11 +44,6 @@ class EmptyCompletionContext implements CompletionContext {
   }
 
   @Override
-  public Token removeToken(int index) {
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
   public List<Object> getObjects() {
     return new ArrayList<>();
   }

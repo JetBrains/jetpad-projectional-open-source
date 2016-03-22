@@ -13,24 +13,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package jetbrains.jetpad.hybrid.testapp.model;
+package jetbrains.jetpad.hybrid.parser;
 
-import jetbrains.jetpad.model.property.Property;
-import jetbrains.jetpad.model.property.ValueProperty;
+public final class TerminatorToken extends SimpleToken {
 
-public class Comment extends ExprNode {
-  public Property<String> text = new ValueProperty<>();
-
-  public Comment() {
+  public TerminatorToken() {
   }
 
-  public Comment(String text) {
-    this.text.set(text);
+  public TerminatorToken(String name) {
+    super(name);
   }
 
   @Override
-  public String toString() {
-    return "'#" + text.get() + "'";
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+
+    TerminatorToken that = (TerminatorToken) o;
+
+    return text().equals(that.text());
+
+  }
+
+  @Override
+  public int hashCode() {
+    return text().hashCode();
   }
 
 }
