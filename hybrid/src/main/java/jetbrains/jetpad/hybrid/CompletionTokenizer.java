@@ -28,17 +28,21 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-class Tokenizer {
+public class CompletionTokenizer {
   private final TokenCompletion mySpec;
 
-  Tokenizer(TokenCompletion spec) {
+  public CompletionTokenizer(TokenCompletion spec) {
     mySpec = spec;
   }
 
-  List<Token> tokenize(String input) {
+  public List<Token> tokenize(String input) {
+    return tokenizeSubstring(input, 0, input.length());
+  }
+
+  public List<Token> tokenizeSubstring(String input, int beginIndex, int rightBound) {
     TokensCollector tc = new TokensCollector();
-    for (char currentChar : input.toCharArray()) {
-      tc.append(currentChar);
+    for (int i = beginIndex; i < rightBound; i++) {
+      tc.append(input.charAt(i));
     }
     tc.collectLastToken();
     return tc.tokens;

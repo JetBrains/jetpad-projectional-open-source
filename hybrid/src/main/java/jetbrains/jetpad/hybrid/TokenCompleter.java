@@ -65,7 +65,7 @@ class TokenCompleter {
     return mySync.editorSpec();
   }
 
-  private TokenListEditor<?> getTokeListEditor() {
+  private TokenListEditor<?> getTokenListEditor() {
     return mySync.tokenListEditor();
   }
 
@@ -84,8 +84,8 @@ class TokenCompleter {
         CompletionController controller = placeholder.get(Completion.COMPLETION_CONTROLLER);
         boolean wasActive = controller.isActive();
 
-        getTokeListEditor().tokens.addAll(Arrays.asList(tokens));
-        getTokeListEditor().updateToPrintedTokens();
+        getTokenListEditor().tokens.addAll(Arrays.asList(tokens));
+        getTokenListEditor().updateToPrintedTokens();
 
         Runnable result = getTokenOperations().selectOnCreation(selectionIndex, LAST);
         if (wasActive) {
@@ -128,13 +128,13 @@ class TokenCompleter {
         CompletionController controller = tokenCell.get(Completion.COMPLETION_CONTROLLER);
         final boolean wasCompletionActive = controller != null && controller.isActive();
 
-        getTokeListEditor().tokens.remove(index);
+        getTokenListEditor().tokens.remove(index);
         int i = index;
         for (Token t : tokens) {
-          getTokeListEditor().tokens.add(i++, t);
+          getTokenListEditor().tokens.add(i++, t);
         }
 
-        getTokeListEditor().updateToPrintedTokens();
+        getTokenListEditor().updateToPrintedTokens();
 
         final Cell targetCell =  mySync.tokenCells().get(index + selectionIndex);
         if (!(targetCell instanceof TextCell) || !Objects.equal(((TextCell) targetCell).text().get(), oldText)) {
@@ -177,14 +177,14 @@ class TokenCompleter {
           @Override
           public Runnable complete(int selectionIndex, Token... tokens) {
             int i = index + delta;
-            ObservableList<Token> editorTokenList = getTokeListEditor().tokens;
+            ObservableList<Token> editorTokenList = getTokenListEditor().tokens;
             if (i < editorTokenList.size() && tokens.length >= 1 && tokens[0] instanceof ValueToken && editorTokenList.get(i) instanceof ValueToken) {
               editorTokenList.remove(i);
             }
             for (Token t : tokens) {
               editorTokenList.add(i++, t);
             }
-            getTokeListEditor().updateToPrintedTokens();
+            getTokenListEditor().updateToPrintedTokens();
             Runnable result = getTokenOperations().selectOnCreation(index + delta + selectionIndex, LAST);
             if (cp.isEndRightTransform() && !cp.isMenu()) {
               result = seq(result, activateCompletion(index + delta + selectionIndex));
@@ -339,7 +339,7 @@ class TokenCompleter {
 
     @Override
     public List<Token> getPrefix() {
-      return Collections.unmodifiableList(getTokeListEditor().tokens.subList(0, myTargetIndex));
+      return Collections.unmodifiableList(getTokenListEditor().tokens.subList(0, myTargetIndex));
     }
 
     @Override
@@ -349,12 +349,12 @@ class TokenCompleter {
 
     @Override
     public List<Token> getTokens() {
-      return Collections.unmodifiableList(getTokeListEditor().tokens);
+      return Collections.unmodifiableList(getTokenListEditor().tokens);
     }
 
     @Override
     public List<Object> getObjects() {
-      return Collections.unmodifiableList(getTokeListEditor().getObjects());
+      return Collections.unmodifiableList(getTokenListEditor().getObjects());
     }
 
     @Override
