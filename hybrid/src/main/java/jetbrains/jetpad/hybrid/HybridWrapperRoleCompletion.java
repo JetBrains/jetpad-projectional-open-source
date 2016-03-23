@@ -13,14 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package jetbrains.jetpad.hybrid.util;
+package jetbrains.jetpad.hybrid;
 
 import com.google.common.base.Function;
 import com.google.common.base.Supplier;
 import com.google.common.collect.FluentIterable;
 import jetbrains.jetpad.cell.Cell;
 import jetbrains.jetpad.completion.*;
-import jetbrains.jetpad.hybrid.*;
 import jetbrains.jetpad.hybrid.parser.Token;
 import jetbrains.jetpad.mapper.Mapper;
 import jetbrains.jetpad.projectional.generic.Role;
@@ -31,22 +30,23 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import static jetbrains.jetpad.hybrid.SelectionPosition.*;
+import static jetbrains.jetpad.hybrid.SelectionPosition.LAST;
 
-public class HybridWrapperRole<ContainerT, WrapperT, TargetT> implements RoleCompletion<ContainerT, WrapperT> {
+public class HybridWrapperRoleCompletion<ContainerT, WrapperT, TargetT> implements RoleCompletion<ContainerT, WrapperT> {
   private SimpleHybridEditorSpec<TargetT> mySpec;
   private Supplier<WrapperT> myFactory;
   private Function<Mapper<?, ?>, ? extends BaseHybridSynchronizer<TargetT, ?>> mySyncProvider;
   private boolean myHideTokensInMenu;
 
 
-  public HybridWrapperRole(SimpleHybridEditorSpec<TargetT> spec, Supplier<WrapperT> targetFactory,
-      Function<Mapper<?, ?>, ? extends BaseHybridSynchronizer<TargetT, ?>> syncProvider) {
+  public HybridWrapperRoleCompletion(SimpleHybridEditorSpec<TargetT> spec, Supplier<WrapperT> targetFactory,
+                                     Function<Mapper<?, ?>, ? extends BaseHybridSynchronizer<TargetT, ?>> syncProvider) {
     this(spec, targetFactory, syncProvider, false);
   }
 
-  public HybridWrapperRole(SimpleHybridEditorSpec<TargetT> spec, Supplier<WrapperT> targetFactory,
-      Function<Mapper<?, ?>, ? extends BaseHybridSynchronizer<TargetT, ?>> syncProvider, boolean hideTokensInMenus) {
+  public HybridWrapperRoleCompletion(SimpleHybridEditorSpec<TargetT> spec, Supplier<WrapperT> targetFactory,
+                                     Function<Mapper<?, ?>, ? extends BaseHybridSynchronizer<TargetT, ?>> syncProvider,
+                                     boolean hideTokensInMenus) {
     mySpec = spec;
     myFactory = targetFactory;
     mySyncProvider = syncProvider;

@@ -27,14 +27,15 @@ import jetbrains.jetpad.hybrid.parser.ParsingContextFactory;
 import jetbrains.jetpad.hybrid.parser.Token;
 import jetbrains.jetpad.hybrid.parser.prettyprint.PrettyPrinter;
 import jetbrains.jetpad.mapper.Mapper;
-import jetbrains.jetpad.model.collections.CollectionListener;
 import jetbrains.jetpad.model.event.CompositeRegistration;
 import jetbrains.jetpad.model.event.EventHandler;
 import jetbrains.jetpad.model.property.Properties;
+import jetbrains.jetpad.model.property.Property;
 import jetbrains.jetpad.model.property.PropertyBinding;
 import jetbrains.jetpad.model.property.PropertyChangeEvent;
 
 public class SimpleHybridSynchronizer<SourceT> extends BaseHybridSynchronizer<SourceT, SimpleHybridEditorSpec<SourceT>> {
+
   private static <SourceT> HybridEditorSpec<SourceT> toHybridEditorSpec(final SimpleHybridEditorSpec<SourceT> spec) {
     return new HybridEditorSpec<SourceT>() {
       @Override
@@ -77,13 +78,12 @@ public class SimpleHybridSynchronizer<SourceT> extends BaseHybridSynchronizer<So
     super(contextMapper, source, target, Properties.constant(spec),
       new TokenListEditor<>(toHybridEditorSpec(spec), source.getTokens(), false));
   }
-  
+
   @Override
-  protected Registration onAttach(CollectionListener<Token> tokensListener) {
+  protected Registration onAttach(Property<SourceT> syncValue) {
     updateTargetError();
     return new CompositeRegistration(
-      PropertyBinding.bindOneWay(getSource(), myTokenListEditor.value),
-      myTokenListEditor.tokens.addListener(tokensListener),
+      PropertyBinding.bindOneWay(getSource(), syncValue),
       Properties.isNull(getSource()).addHandler(new EventHandler<PropertyChangeEvent<Boolean>>() {
         @Override
         public void onEvent(PropertyChangeEvent<Boolean> event) {

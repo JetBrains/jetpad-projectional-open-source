@@ -13,10 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package jetbrains.jetpad.hybrid.util;
+package jetbrains.jetpad.hybrid;
 
-import jetbrains.jetpad.hybrid.HybridEditorSpec;
-import jetbrains.jetpad.hybrid.HybridProperty;
 import jetbrains.jetpad.hybrid.parser.ErrorToken;
 import jetbrains.jetpad.hybrid.parser.IdentifierToken;
 import jetbrains.jetpad.hybrid.parser.Token;
@@ -30,7 +28,8 @@ import jetbrains.jetpad.test.BaseTestCase;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 public class SimpleHybridPropertyTest extends BaseTestCase {
 
