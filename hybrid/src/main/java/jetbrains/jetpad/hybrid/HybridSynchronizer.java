@@ -23,7 +23,6 @@ import jetbrains.jetpad.cell.util.CellStateDifference;
 import jetbrains.jetpad.cell.util.CellStateHandler;
 import jetbrains.jetpad.hybrid.parser.Token;
 import jetbrains.jetpad.mapper.Mapper;
-import jetbrains.jetpad.model.collections.CollectionListener;
 import jetbrains.jetpad.model.collections.list.ObservableArrayList;
 import jetbrains.jetpad.model.composite.Composites;
 import jetbrains.jetpad.model.event.CompositeRegistration;
@@ -40,23 +39,22 @@ public class HybridSynchronizer<SourceT> extends BaseHybridSynchronizer<SourceT,
   private Property<SourceT> myWritableSource;
 
   public HybridSynchronizer(Mapper<?, ?> contextMapper, Property<SourceT> source, Cell target,
-      HybridEditorSpec<SourceT> spec) {
+                            HybridEditorSpec<SourceT> spec) {
     this(contextMapper, source, target, Properties.constant(spec));
   }
 
   public HybridSynchronizer(Mapper<?, ?> contextMapper, Property<SourceT> source, Cell target,
-      ReadableProperty<HybridEditorSpec<SourceT>> spec) {
+                            ReadableProperty<HybridEditorSpec<SourceT>> spec) {
     super(contextMapper, source, target, spec, new TokenListEditor<>(spec, new ObservableArrayList<Token>(), true));
     myWritableSource = source;
   }
 
   @Override
-  protected Registration onAttach(CollectionListener<Token> tokensListener) {
+  protected Registration onAttach(Property<SourceT> syncValue) {
     updateTargetError();
     return new CompositeRegistration(
-      PropertyBinding.bindTwoWay(myWritableSource, myTokenListEditor.value),
-      myTokenListEditor.tokens.addListener(tokensListener),
-      myTokenListEditor.valid.addHandler(new EventHandler<PropertyChangeEvent<Boolean>>() {
+      PropertyBinding.bindTwoWay(myWritableSource, syncValue),
+      valid().addHandler(new EventHandler<PropertyChangeEvent<Boolean>>() {
         @Override
         public void onEvent(PropertyChangeEvent<Boolean> event) {
           updateTargetError();
@@ -69,7 +67,7 @@ public class HybridSynchronizer<SourceT> extends BaseHybridSynchronizer<SourceT,
     if (source == getSource().get()) {
       return Collections.singletonList(getTarget());
     }
-    List<Object> tokenObjects = myTokenListEditor.getObjects();
+    List<Object> tokenObjects = tokenListEditor().getObjects();
     return selectCells(source, tokenObjects);
   }
 
@@ -95,7 +93,7 @@ public class HybridSynchronizer<SourceT> extends BaseHybridSynchronizer<SourceT,
     int index = 0;
     for (; index < getTargetList().size(); index++) {
       if (Composites.isDescendant(getTargetList().get(index), cell)) {
-        List<Object> objects = myTokenListEditor.getObjects();
+        List<Object> objects = tokenListEditor().getObjects();
         return objects.isEmpty() ? null : objects.get(index);
       }
     }
@@ -131,7 +129,7 @@ public class HybridSynchronizer<SourceT> extends BaseHybridSynchronizer<SourceT,
   }
 
   private void updateTargetError() {
-    MessageController.setError(getTarget(), myTokenListEditor.valid.get() ? null : "parsing error");
+    MessageController.setError(getTarget(), valid().get() ? null : "parsing error");
   }
 
   private static class HybridCellState implements CellState {

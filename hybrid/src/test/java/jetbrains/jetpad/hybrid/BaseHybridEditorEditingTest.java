@@ -34,7 +34,6 @@ import jetbrains.jetpad.event.*;
 import jetbrains.jetpad.hybrid.parser.*;
 import jetbrains.jetpad.hybrid.testapp.mapper.Tokens;
 import jetbrains.jetpad.hybrid.testapp.model.*;
-import jetbrains.jetpad.hybrid.util.HybridWrapperRole;
 import jetbrains.jetpad.mapper.Mapper;
 import jetbrains.jetpad.model.composite.Composites;
 import jetbrains.jetpad.projectional.util.RootController;
@@ -45,7 +44,8 @@ import org.junit.Test;
 
 import java.util.Arrays;
 
-import static jetbrains.jetpad.hybrid.SelectionPosition.*;
+import static jetbrains.jetpad.hybrid.SelectionPosition.FIRST;
+import static jetbrains.jetpad.hybrid.SelectionPosition.LAST;
 import static jetbrains.jetpad.hybrid.TokensUtil.*;
 import static org.junit.Assert.*;
 
@@ -1005,7 +1005,7 @@ abstract class BaseHybridEditorEditingTest<ContainerT, MapperT extends Mapper<Co
 
   @Test
   public void hideTokensInMenuForHybridWrapperRole() {
-    HybridWrapperRole<Object, Expr, Expr> hybridWrapperRole = new HybridWrapperRole<>(getSpec(), null, null, true);
+    HybridWrapperRoleCompletion<Object, Expr, Expr> hybridWrapperRole = new HybridWrapperRoleCompletion<>(getSpec(), null, null, true);
     CompletionSupplier roleCompletion = hybridWrapperRole.createRoleCompletion(mapper, null, null);
     CompletionParameters completionParameters = new BaseCompletionParameters() {
       @Override
