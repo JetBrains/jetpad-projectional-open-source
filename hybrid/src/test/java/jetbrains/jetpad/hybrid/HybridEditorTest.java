@@ -66,7 +66,7 @@ public class HybridEditorTest extends BaseHybridEditorTest<ExprContainer, ExprCo
   }
 
   @Test
-  public void testCellMapping() {
+  public void cellMapping() {
     initEditor();
     sync.tokens().addAll(Arrays.asList(Tokens.ID, Tokens.PLUS, Tokens.ID));
 

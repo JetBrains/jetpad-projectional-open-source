@@ -50,7 +50,7 @@ public class SimpleHybridEditorTest extends BaseHybridEditorTest<SimpleExprConta
   }
 
   @Test
-  public void testCellMapping() {
+  public void cellMapping() {
     initEditor();
     sync.tokens().addAll(Arrays.asList(Tokens.ID, Tokens.PLUS, Tokens.ID));
 
