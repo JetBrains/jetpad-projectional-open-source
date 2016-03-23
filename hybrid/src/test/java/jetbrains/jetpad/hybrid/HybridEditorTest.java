@@ -24,12 +24,11 @@ import jetbrains.jetpad.hybrid.testapp.model.ExprContainer;
 import jetbrains.jetpad.hybrid.testapp.model.PlusExpr;
 import jetbrains.jetpad.hybrid.testapp.model.VarExpr;
 import jetbrains.jetpad.projectional.cell.mapping.ToCellMapping;
-import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.Arrays;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 public class HybridEditorTest extends BaseHybridEditorTest<ExprContainer, ExprContainerMapper> {
   @Override
@@ -72,12 +71,12 @@ public class HybridEditorTest extends BaseHybridEditorTest<ExprContainer, ExprCo
 
     ToCellMapping mapping = (ToCellMapping)sync;
     PlusExpr plus = (PlusExpr)getExpr();
-    Assert.assertFalse(mapping.getCells(plus).isEmpty());
-    Assert.assertFalse(mapping.getCells(plus.left.get()).isEmpty());
-    Assert.assertFalse(mapping.getCells(plus.right.get()).isEmpty());
+    assertFalse(mapping.getCells(plus).isEmpty());
+    assertFalse(mapping.getCells(plus.left.get()).isEmpty());
+    assertFalse(mapping.getCells(plus.right.get()).isEmpty());
 
     for (Cell c : sync.tokenCells()) {
-      Assert.assertNotNull(mapping.getSource(c));
+      assertNotNull(mapping.getSource(c));
     }
   }
 }

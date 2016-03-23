@@ -7,7 +7,6 @@ import jetbrains.jetpad.hybrid.testapp.mapper.Tokens;
 import jetbrains.jetpad.hybrid.testapp.model.Expr;
 import jetbrains.jetpad.hybrid.testapp.model.SimpleExprContainer;
 import jetbrains.jetpad.projectional.cell.mapping.ToCellMapping;
-import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.Arrays;
@@ -62,7 +61,7 @@ public class SimpleHybridEditorTest extends BaseHybridEditorTest<SimpleExprConta
     assertTrue(mapping.getCells("3").isEmpty());
 
     for (Cell c : sync.tokenCells()) {
-      Assert.assertNotNull(mapping.getSource(c));
+      assertNotNull(mapping.getSource(c));
     }
   }
 }
