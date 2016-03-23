@@ -21,8 +21,8 @@ import jetbrains.jetpad.hybrid.parser.Parser;
 import jetbrains.jetpad.hybrid.parser.ParsingContextFactory;
 import jetbrains.jetpad.hybrid.parser.Token;
 import jetbrains.jetpad.model.collections.CollectionItemEvent;
+import jetbrains.jetpad.model.collections.CollectionListener;
 import jetbrains.jetpad.model.collections.list.ObservableList;
-import jetbrains.jetpad.model.event.EventHandler;
 import jetbrains.jetpad.model.property.BaseDerivedProperty;
 
 public class SimpleHybridProperty<ModelT> extends BaseDerivedProperty<ModelT> implements HybridProperty<ModelT> {
@@ -42,9 +42,19 @@ public class SimpleHybridProperty<ModelT> extends BaseDerivedProperty<ModelT> im
 
   @Override
   protected void doAddListeners() {
-    myRegistration = myTokens.addHandler(new EventHandler<CollectionItemEvent<? extends Token>>() {
+    myRegistration = myTokens.addListener(new CollectionListener<Token>() {
       @Override
-      public void onEvent(CollectionItemEvent<? extends Token> event) {
+      public void onItemAdded(CollectionItemEvent<? extends Token> event) {
+        somethingChanged();
+      }
+
+      @Override
+      public void onItemSet(CollectionItemEvent<? extends Token> event) {
+        somethingChanged();
+      }
+
+      @Override
+      public void onItemRemoved(CollectionItemEvent<? extends Token> event) {
         somethingChanged();
       }
     });
