@@ -15,16 +15,20 @@
  */
 package jetbrains.jetpad.hybrid;
 
+import jetbrains.jetpad.cell.Cell;
 import jetbrains.jetpad.hybrid.parser.IdentifierToken;
 import jetbrains.jetpad.hybrid.testapp.mapper.ExprContainerMapper;
+import jetbrains.jetpad.hybrid.testapp.mapper.Tokens;
 import jetbrains.jetpad.hybrid.testapp.model.Expr;
 import jetbrains.jetpad.hybrid.testapp.model.ExprContainer;
+import jetbrains.jetpad.hybrid.testapp.model.PlusExpr;
 import jetbrains.jetpad.hybrid.testapp.model.VarExpr;
+import jetbrains.jetpad.projectional.cell.mapping.ToCellMapping;
 import org.junit.Test;
 
 import java.util.Arrays;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 public class HybridEditorTest extends BaseHybridEditorTest<ExprContainer, ExprContainerMapper> {
   @Override
@@ -58,5 +62,21 @@ public class HybridEditorTest extends BaseHybridEditorTest<ExprContainer, ExprCo
 
     assertEquals(1, myTargetCell.children().size());
     assertEquals(Arrays.asList(new IdentifierToken("id")), sync.tokens());
+  }
+
+  @Test
+  public void cellMapping() {
+    initEditor();
+    sync.tokens().addAll(Arrays.asList(Tokens.ID, Tokens.PLUS, Tokens.ID));
+
+    ToCellMapping mapping = (ToCellMapping)sync;
+    PlusExpr plus = (PlusExpr)getExpr();
+    assertFalse(mapping.getCells(plus).isEmpty());
+    assertFalse(mapping.getCells(plus.left.get()).isEmpty());
+    assertFalse(mapping.getCells(plus.right.get()).isEmpty());
+
+    for (Cell c : sync.tokenCells()) {
+      assertNotNull(mapping.getSource(c));
+    }
   }
 }

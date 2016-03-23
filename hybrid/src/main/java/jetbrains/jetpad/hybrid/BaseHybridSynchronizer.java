@@ -55,7 +55,6 @@ import jetbrains.jetpad.model.property.Property;
 import jetbrains.jetpad.model.property.ReadableProperty;
 import jetbrains.jetpad.model.util.ListMap;
 import jetbrains.jetpad.projectional.cell.SelectionSupport;
-import jetbrains.jetpad.projectional.cell.mapping.ToCellMapping;
 
 import java.util.*;
 
@@ -64,7 +63,7 @@ import static jetbrains.jetpad.hybrid.SelectionPosition.LAST;
 import static jetbrains.jetpad.model.composite.Composites.firstFocusable;
 import static jetbrains.jetpad.model.composite.Composites.lastFocusable;
 
-public abstract class BaseHybridSynchronizer<SourceT, SpecT extends SimpleHybridEditorSpec<SourceT>> implements Synchronizer, ToCellMapping {
+public abstract class BaseHybridSynchronizer<SourceT, SpecT extends SimpleHybridEditorSpec<SourceT>> implements Synchronizer {
   public static final CellTraitPropertySpec<Runnable> ON_LAST_ITEM_DELETED = new CellTraitPropertySpec<>("onLastItemDeleted");
 
   static final CellTraitPropertySpec<HybridSynchronizer<?>> HYBRID_SYNCHRONIZER = new CellTraitPropertySpec<>("hybridSynchronizer");
@@ -174,6 +173,10 @@ public abstract class BaseHybridSynchronizer<SourceT, SpecT extends SimpleHybrid
 
   protected Cell getTarget() {
     return myTarget;
+  }
+
+  protected List<Cell> getTargetList() {
+    return myTargetList;
   }
 
   private CellTrait createTargetTrait() {
@@ -597,44 +600,6 @@ public abstract class BaseHybridSynchronizer<SourceT, SpecT extends SimpleHybrid
 
   public boolean isHideTokensInMenu() {
     return myHideTokensInMenu;
-  }
-
-  @Override
-  public List<Cell> getCells(Object source) {
-    if (source == mySource.get()) {
-      return Collections.singletonList(myTarget);
-    }
-    List<Object> tokenObjects = myTokenListEditor.getObjects();
-    return selectCells(source, tokenObjects);
-  }
-
-  private List<Cell> selectCells(Object source, List<Object> tokenObjects) {
-    List<Cell> result = null;
-    for (int i = 0; i < tokenObjects.size(); i++) {
-      Object o = tokenObjects.get(i);
-      if (o == source) {
-        if (result == null) {
-          result = new ArrayList<>(1);
-        }
-        result.add(myTargetList.get(i));
-      }
-    }
-    return result == null ? Collections.<Cell>emptyList() : result;
-  }
-
-  @Override
-  public Object getSource(Cell cell) {
-    if (cell == myTarget) {
-      return mySource.get();
-    }
-    int index = 0;
-    for (; index < myTargetList.size(); index++) {
-      if (Composites.isDescendant(myTargetList.get(index), cell)) {
-        List<Object> objects = myTokenListEditor.getObjects();
-        return objects.isEmpty() ? null : objects.get(index);
-      }
-    }
-    return null;
   }
 
   public void setPlaceHolderText(String text) {

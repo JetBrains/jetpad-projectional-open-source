@@ -24,15 +24,18 @@ import jetbrains.jetpad.cell.util.CellStateHandler;
 import jetbrains.jetpad.hybrid.parser.Token;
 import jetbrains.jetpad.mapper.Mapper;
 import jetbrains.jetpad.model.collections.list.ObservableArrayList;
+import jetbrains.jetpad.model.composite.Composites;
 import jetbrains.jetpad.model.event.CompositeRegistration;
 import jetbrains.jetpad.model.event.EventHandler;
 import jetbrains.jetpad.model.property.*;
+import jetbrains.jetpad.projectional.cell.mapping.ToCellMapping;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
-public class HybridSynchronizer<SourceT> extends BaseHybridSynchronizer<SourceT, HybridEditorSpec<SourceT>> {
+public class HybridSynchronizer<SourceT> extends BaseHybridSynchronizer<SourceT, HybridEditorSpec<SourceT>> implements ToCellMapping {
   private Property<SourceT> myWritableSource;
 
   public HybridSynchronizer(Mapper<?, ?> contextMapper, Property<SourceT> source, Cell target,
@@ -57,6 +60,44 @@ public class HybridSynchronizer<SourceT> extends BaseHybridSynchronizer<SourceT,
           updateTargetError();
         }
       }));
+  }
+
+  @Override
+  public List<Cell> getCells(Object source) {
+    if (source == getSource().get()) {
+      return Collections.singletonList(getTarget());
+    }
+    List<Object> tokenObjects = tokenListEditor().getObjects();
+    return selectCells(source, tokenObjects);
+  }
+
+  private List<Cell> selectCells(Object source, List<Object> tokenObjects) {
+    List<Cell> result = null;
+    for (int i = 0; i < tokenObjects.size(); i++) {
+      Object o = tokenObjects.get(i);
+      if (o == source) {
+        if (result == null) {
+          result = new ArrayList<>(1);
+        }
+        result.add(getTargetList().get(i));
+      }
+    }
+    return result == null ? Collections.<Cell>emptyList() : result;
+  }
+
+  @Override
+  public Object getSource(Cell cell) {
+    if (cell == getTarget()) {
+      return getSource().get();
+    }
+    int index = 0;
+    for (; index < getTargetList().size(); index++) {
+      if (Composites.isDescendant(getTargetList().get(index), cell)) {
+        List<Object> objects = tokenListEditor().getObjects();
+        return objects.isEmpty() ? null : objects.get(index);
+      }
+    }
+    return null;
   }
 
   @Override

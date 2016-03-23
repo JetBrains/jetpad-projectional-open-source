@@ -33,8 +33,15 @@ import jetbrains.jetpad.model.property.Properties;
 import jetbrains.jetpad.model.property.Property;
 import jetbrains.jetpad.model.property.PropertyBinding;
 import jetbrains.jetpad.model.property.PropertyChangeEvent;
+import jetbrains.jetpad.projectional.cell.mapping.ToCellMapping;
 
-public class SimpleHybridSynchronizer<SourceT> extends BaseHybridSynchronizer<SourceT, SimpleHybridEditorSpec<SourceT>> {
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
+
+public class SimpleHybridSynchronizer<SourceT> extends BaseHybridSynchronizer<SourceT, SimpleHybridEditorSpec<SourceT>>
+    implements ToCellMapping {
 
   private static <SourceT> HybridEditorSpec<SourceT> toHybridEditorSpec(final SimpleHybridEditorSpec<SourceT> spec) {
     return new HybridEditorSpec<SourceT>() {
@@ -70,13 +77,25 @@ public class SimpleHybridSynchronizer<SourceT> extends BaseHybridSynchronizer<So
     };
   }
 
+  private final Function<Integer, Object> mySourceSupplier;
+
   public SimpleHybridSynchronizer(
     Mapper<?, ?> contextMapper,
     HybridProperty<SourceT> source,
     Cell target,
     SimpleHybridEditorSpec<SourceT> spec) {
+    this(contextMapper, source, target, spec, null);
+  }
+
+  public SimpleHybridSynchronizer(
+    Mapper<?, ?> contextMapper,
+    HybridProperty<SourceT> source,
+    Cell target,
+    SimpleHybridEditorSpec<SourceT> spec,
+    Function<Integer, Object> sourceSupplier) {
     super(contextMapper, source, target, Properties.constant(spec),
       new TokenListEditor<>(toHybridEditorSpec(spec), source.getTokens(), false));
+    mySourceSupplier = sourceSupplier;
   }
 
   @Override
@@ -90,6 +109,39 @@ public class SimpleHybridSynchronizer<SourceT> extends BaseHybridSynchronizer<So
           updateTargetError();
         }
       }));
+  }
+
+  @Override
+  public List<Cell> getCells(Object source) {
+    if (mySourceSupplier == null || source == null) {
+      return Collections.emptyList();
+    }
+
+    List<Cell> res = new ArrayList<>();
+    for (int i = 0; i < tokenCells().size(); i++) {
+      if (Objects.equals(mySourceSupplier.apply(i), source)) {
+        res.add(tokenCells().get(i));
+      }
+    }
+    return res;
+  }
+
+  @Override
+  public Object getSource(Cell cell) {
+    if (mySourceSupplier == null || cell == null) return null;
+
+    if (cell == getTarget() && tokenCells().isEmpty()) {
+      return tokenCells().get(0);
+    }
+
+    for (int i = 0; i < tokenCells().size(); i++) {
+      Cell c = tokenCells().get(i);
+      if (c == cell) {
+        return mySourceSupplier.apply(i);
+      }
+    }
+
+    return null;
   }
 
   @Override

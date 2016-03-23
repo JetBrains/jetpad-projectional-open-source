@@ -26,6 +26,7 @@ import jetbrains.jetpad.hybrid.testapp.mapper.ExprContainerMapper;
 import jetbrains.jetpad.hybrid.testapp.mapper.ExprHybridEditorSpec;
 import jetbrains.jetpad.hybrid.testapp.mapper.Tokens;
 import jetbrains.jetpad.hybrid.testapp.model.*;
+import jetbrains.jetpad.projectional.cell.mapping.ToCellMapping;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -106,7 +107,7 @@ public class HybridEditorEditingTest extends BaseHybridEditorEditingTest<ExprCon
     type(" ");
 
     Cell focusedCell = sync.target().getContainer().focusedCell.get();
-    assertTrue(sync.getSource(focusedCell) instanceof CallExpr);
+    assertTrue(((ToCellMapping)sync).getSource(focusedCell) instanceof CallExpr);
   }
 
   @Test
