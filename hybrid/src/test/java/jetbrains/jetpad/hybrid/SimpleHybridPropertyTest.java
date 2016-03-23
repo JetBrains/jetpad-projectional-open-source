@@ -13,11 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package jetbrains.jetpad.hybrid.util;
+package jetbrains.jetpad.hybrid;
 
 import jetbrains.jetpad.base.Registration;
-import jetbrains.jetpad.hybrid.HybridEditorSpec;
-import jetbrains.jetpad.hybrid.HybridProperty;
 import jetbrains.jetpad.hybrid.parser.*;
 import jetbrains.jetpad.hybrid.testapp.mapper.ExprHybridEditorSpec;
 import jetbrains.jetpad.hybrid.testapp.mapper.Tokens;

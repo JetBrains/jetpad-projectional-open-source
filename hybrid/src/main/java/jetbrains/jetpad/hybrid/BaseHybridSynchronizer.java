@@ -31,7 +31,10 @@ import jetbrains.jetpad.cell.text.TextEditing;
 import jetbrains.jetpad.cell.trait.CellTrait;
 import jetbrains.jetpad.cell.trait.CellTraitPropertySpec;
 import jetbrains.jetpad.cell.trait.DerivedCellTrait;
-import jetbrains.jetpad.cell.util.*;
+import jetbrains.jetpad.cell.util.CellFactory;
+import jetbrains.jetpad.cell.util.CellLists;
+import jetbrains.jetpad.cell.util.CellState;
+import jetbrains.jetpad.cell.util.CellStateHandler;
 import jetbrains.jetpad.event.*;
 import jetbrains.jetpad.hybrid.parser.Token;
 import jetbrains.jetpad.hybrid.parser.ValueToken;
@@ -46,7 +49,9 @@ import jetbrains.jetpad.model.collections.CollectionItemEvent;
 import jetbrains.jetpad.model.collections.CollectionListener;
 import jetbrains.jetpad.model.collections.list.ObservableList;
 import jetbrains.jetpad.model.composite.Composites;
+import jetbrains.jetpad.model.event.CompositeRegistration;
 import jetbrains.jetpad.model.event.EventHandler;
+import jetbrains.jetpad.model.property.Property;
 import jetbrains.jetpad.model.property.ReadableProperty;
 import jetbrains.jetpad.model.util.ListMap;
 import jetbrains.jetpad.projectional.cell.SelectionSupport;
@@ -54,8 +59,10 @@ import jetbrains.jetpad.projectional.cell.mapping.ToCellMapping;
 
 import java.util.*;
 
-import static jetbrains.jetpad.hybrid.SelectionPosition.*;
-import static jetbrains.jetpad.model.composite.Composites.*;
+import static jetbrains.jetpad.hybrid.SelectionPosition.FIRST;
+import static jetbrains.jetpad.hybrid.SelectionPosition.LAST;
+import static jetbrains.jetpad.model.composite.Composites.firstFocusable;
+import static jetbrains.jetpad.model.composite.Composites.lastFocusable;
 
 public abstract class BaseHybridSynchronizer<SourceT, SpecT extends SimpleHybridEditorSpec<SourceT>> implements Synchronizer, ToCellMapping {
   public static final CellTraitPropertySpec<Runnable> ON_LAST_ITEM_DELETED = new CellTraitPropertySpec<>("onLastItemDeleted");
@@ -64,9 +71,9 @@ public abstract class BaseHybridSynchronizer<SourceT, SpecT extends SimpleHybrid
 
   private static final ContentKind<List<Token>> TOKENS_CONTENT = new ContentKind<List<Token>>() {};
 
-  protected TokenListEditor<SourceT> myTokenListEditor;
+  private TokenListEditor<SourceT> myTokenListEditor;
 
-  private Registration myRegistration;
+  private Registration myAttachRegistration;
   private Mapper<?, ?> myContextMapper;
   private ReadableProperty<SourceT> mySource;
   private Cell myTarget;
@@ -82,8 +89,8 @@ public abstract class BaseHybridSynchronizer<SourceT, SpecT extends SimpleHybrid
   private boolean myHideTokensInMenu = false;
   private ReadableProperty<? extends SpecT> mySpec;
 
-  public BaseHybridSynchronizer(Mapper<?, ?> contextMapper, ReadableProperty<SourceT> source, Cell target,
-                                ReadableProperty<? extends SpecT> spec, TokenListEditor<SourceT> editor) {
+  BaseHybridSynchronizer(Mapper<?, ?> contextMapper, ReadableProperty<SourceT> source, Cell target,
+                         ReadableProperty<? extends SpecT> spec, TokenListEditor<SourceT> editor) {
     myContextMapper = contextMapper;
     mySource = source;
     mySpec = spec;
@@ -279,8 +286,7 @@ public abstract class BaseHybridSynchronizer<SourceT, SpecT extends SimpleHybrid
           boolean end = Positions.isEndPosition(currentCell);
           if (home && end) {
             // One-char token which allows editing at only one side
-            if (currentCell instanceof TextTokenCell
-                && ((TextTokenCell) currentCell).noSpaceToLeft()) {
+            if (currentCell instanceof TextTokenCell && ((TextTokenCell) currentCell).noSpaceToLeft()) {
               targetIndex = currentCellIndex + 1;
             } else {
               targetIndex = currentCellIndex;
@@ -356,7 +362,7 @@ public abstract class BaseHybridSynchronizer<SourceT, SpecT extends SimpleHybrid
 
   protected abstract  CellStateHandler<Cell, ? extends CellState> getCellStateHandler();
 
-  protected CollectionListener<Token> createTokensListener() {
+  private CollectionListener<Token> createTokensListener() {
     return new CollectionAdapter<Token>() {
       @Override
       public void onItemAdded(CollectionItemEvent<? extends Token> event) {
@@ -539,7 +545,7 @@ public abstract class BaseHybridSynchronizer<SourceT, SpecT extends SimpleHybrid
     return result;
   }
 
-  public void setTokens(List<Token> tokens) {
+  void setTokens(List<Token> tokens) {
     myTokenListEditor.tokens.clear();
     myTokenListEditor.tokens.addAll(tokens);
     myTokenListEditor.updateToPrintedTokens();
@@ -719,9 +725,10 @@ public abstract class BaseHybridSynchronizer<SourceT, SpecT extends SimpleHybrid
 
       Stack<Token> pairStack = new Stack<>();
       for (int i = index + 1; i < myTargetList.size(); i++) {
-        if (!(myTargetList.get(i) instanceof TextTokenCell)) continue;
+        Cell targetCell = myTargetList.get(i);
+        if (!(targetCell instanceof TextTokenCell)) continue;
 
-        TextTokenCell tc = (TextTokenCell) myTargetList.get(i);
+        TextTokenCell tc = (TextTokenCell) targetCell;
         Token t = tc.getToken();
         if (pairStack.isEmpty() && pairSpec.isPair(token, t)) {
           return tc;
@@ -740,9 +747,10 @@ public abstract class BaseHybridSynchronizer<SourceT, SpecT extends SimpleHybrid
       Stack<Token> pairStack = new Stack<>();
 
       for (int i = index - 1; i >=0; i--) {
-        if (!(myTargetList.get(i) instanceof TextTokenCell)) continue;
+        Cell targetCell = myTargetList.get(i);
+        if (!(targetCell instanceof TextTokenCell)) continue;
 
-        TextTokenCell tc = (TextTokenCell) myTargetList.get(i);
+        TextTokenCell tc = (TextTokenCell) targetCell;
         Token t = tokens.get(i);
         if (pairStack.isEmpty() && pairSpec.isPair(t, token)) {
           return tc;
@@ -760,12 +768,14 @@ public abstract class BaseHybridSynchronizer<SourceT, SpecT extends SimpleHybrid
     }
   }
 
-  protected abstract Registration onAttach(CollectionListener<Token> tokensListener);
+  protected abstract Registration onAttach(Property<SourceT> syncValue);
 
   @Override
   public void attach(SynchronizerContext ctx) {
     CollectionListener<Token> tokensListener = createTokensListener();
-    myRegistration = onAttach(tokensListener);
+    myAttachRegistration = new CompositeRegistration(
+        onAttach(myTokenListEditor.value),
+        myTokenListEditor.tokens.addListener(tokensListener));
 
     ObservableList<Token> tokens = myTokenListEditor.tokens;
     for (int i = 0; i < tokens.size(); i++) {
@@ -777,7 +787,7 @@ public abstract class BaseHybridSynchronizer<SourceT, SpecT extends SimpleHybrid
   @Override
   public void detach() {
     myTokenListEditor.dispose();
-    myRegistration.remove();
-    myRegistration = null;
+    myAttachRegistration.remove();
+    myAttachRegistration = null;
   }
 }
