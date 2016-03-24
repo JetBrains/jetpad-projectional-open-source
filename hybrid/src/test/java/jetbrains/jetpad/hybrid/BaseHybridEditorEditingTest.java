@@ -1024,7 +1024,7 @@ abstract class BaseHybridEditorEditingTest<ContainerT, MapperT extends Mapper<Co
 
     type("#");
 
-    assertTokens(integer(1), Tokens.PLUS, integer(2), new TerminatorToken("+3"));
+    assertTokens(integer(1), Tokens.PLUS, integer(2), new TerminatorToken("#", "+3"));
   }
 
   protected ValueToken createComplexToken() {

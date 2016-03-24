@@ -28,5 +28,5 @@ public interface Completer {
    */
   Runnable complete(int selectionIndex, Token... tokens);
 
-  Runnable completeTerminatorToken();
+  Runnable completeTerminatorToken(String prefix);
 }

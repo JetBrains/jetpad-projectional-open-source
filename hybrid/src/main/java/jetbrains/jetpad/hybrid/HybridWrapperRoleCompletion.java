@@ -72,7 +72,7 @@ public class HybridWrapperRoleCompletion<ContainerT, WrapperT, TargetT> implemen
           }
 
           @Override
-          public Runnable completeTerminatorToken() {
+          public Runnable completeTerminatorToken(String prefix) {
             throw new UnsupportedOperationException();
           }
         };

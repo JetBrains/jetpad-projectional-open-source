@@ -344,10 +344,11 @@ public class ExprHybridEditorSpec implements HybridEditorSpec<Expr> {
             }
           });
         }
-        result.add(new ByBoundsCompletionItem("#", "") {
+        final String commentPrefix = "#";
+        result.add(new ByBoundsCompletionItem(commentPrefix, "") {
           @Override
           public Runnable complete(String text) {
-            return completer.completeTerminatorToken();
+            return completer.completeTerminatorToken(commentPrefix);
           }
         });
 
