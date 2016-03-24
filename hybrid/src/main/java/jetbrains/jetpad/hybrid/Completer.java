@@ -18,8 +18,6 @@ package jetbrains.jetpad.hybrid;
 import jetbrains.jetpad.hybrid.parser.Token;
 
 public interface Completer {
-  Completer UNSUPPORTED_COMPLETER = new UnsupportedCompleter();
-
   Runnable complete(Token token);
   Runnable complete(Token... tokens);
 
@@ -27,6 +25,4 @@ public interface Completer {
    * @param selectionIndex of the passed token to be selected after the action
    */
   Runnable complete(int selectionIndex, Token... tokens);
-
-  Runnable completeTerminatorToken(String prefix);
 }

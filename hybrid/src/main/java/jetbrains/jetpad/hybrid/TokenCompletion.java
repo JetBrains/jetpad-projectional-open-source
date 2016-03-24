@@ -20,5 +20,5 @@ import jetbrains.jetpad.completion.CompletionSupplier;
 import jetbrains.jetpad.hybrid.parser.Token;
 
 public interface TokenCompletion {
-  CompletionSupplier getTokenCompletion(Completer completer, Function<Token, Runnable> tokenHandler);
+  CompletionSupplier getTokenCompletion(Function<Token, Runnable> tokenHandler);
 }

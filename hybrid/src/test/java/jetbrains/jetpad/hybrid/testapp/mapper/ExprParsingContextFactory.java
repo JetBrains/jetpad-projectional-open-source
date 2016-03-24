@@ -18,7 +18,7 @@ package jetbrains.jetpad.hybrid.testapp.mapper;
 import jetbrains.jetpad.hybrid.parser.ParsingContext;
 import jetbrains.jetpad.hybrid.parser.ParsingContextFactory;
 import jetbrains.jetpad.hybrid.parser.SimpleParsingContext;
-import jetbrains.jetpad.hybrid.parser.TerminatorToken;
+import jetbrains.jetpad.hybrid.testapp.model.CommentToken;
 import jetbrains.jetpad.hybrid.parser.Token;
 
 import java.util.ArrayList;
@@ -33,7 +33,7 @@ final class ExprParsingContextFactory implements ParsingContextFactory {
   public ParsingContext getParsingContext(List<Token> tokenList) {
     List<Token> list = new ArrayList<>();
     for (Token token : tokenList) {
-      if (token instanceof TerminatorToken) {
+      if (token instanceof CommentToken) {
         break;
       }
       list.add(token);
