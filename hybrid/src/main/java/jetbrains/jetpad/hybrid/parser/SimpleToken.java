@@ -23,10 +23,6 @@ public class SimpleToken extends BaseToken {
   private final boolean myNoSpaceRight;
   private final boolean myRtOnEnd;
 
-  public SimpleToken() {
-    this("");
-  }
-
   public SimpleToken(String text) {
     this(text, false, false);
   }
