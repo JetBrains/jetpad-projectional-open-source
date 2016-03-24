@@ -16,37 +16,23 @@
 package jetbrains.jetpad.hybrid.parser;
 
 public class IdentifierToken extends SimpleToken {
-  private String myName;
 
   public IdentifierToken(String name) {
-    if (name == null) {
-      throw new NullPointerException();
-    }
-    myName =  name;
+    super(name);
   }
 
   public String getName() {
-    return myName;
-  }
-
-  @Override
-  public String text() {
-    return myName;
-  }
-
-  @Override
-  public String toString() {
     return text();
   }
 
   @Override
   public boolean equals(Object obj) {
     if (!(obj instanceof IdentifierToken)) return false;
-    return ((IdentifierToken) obj).myName.equals(myName);
+    return ((IdentifierToken) obj).text().equals(text());
   }
 
   @Override
   public int hashCode() {
-    return myName.hashCode();
+    return text().hashCode();
   }
 }

@@ -18,9 +18,10 @@ package jetbrains.jetpad.hybrid.parser;
 import jetbrains.jetpad.values.Color;
 
 public class IntValueToken extends SimpleToken {
-  private int myValue;
+  private final int myValue;
 
   public IntValueToken(int value) {
+    super(String.valueOf(value));
     myValue = value;
   }
 
@@ -31,16 +32,6 @@ public class IntValueToken extends SimpleToken {
 
   public int getValue() {
     return myValue;
-  }
-
-  @Override
-  public String text() {
-    return "" + myValue;
-  }
-
-  @Override
-  public String toString() {
-    return text();
   }
 
   @Override
