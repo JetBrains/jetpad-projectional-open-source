@@ -21,30 +21,25 @@ public final class TerminatorToken extends SimpleToken {
     this(prefix, "");
   }
 
-  public TerminatorToken(String prefix, String name) {
-    super(prefix + name);
+  public TerminatorToken(String prefix, String text) {
+    super(prefix + text);
     if (prefix == null) {
-      throw new NullPointerException();
+      throw new NullPointerException("Null prefix");
     }
-    if (name == null) {
-      throw new NullPointerException();
+    if (text == null) {
+      throw new NullPointerException("Null text");
     }
   }
 
   @Override
   public boolean equals(Object o) {
     if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
-
-    TerminatorToken that = (TerminatorToken) o;
-
-    return text().equals(that.text());
-
+    if (!(o instanceof TerminatorToken)) return false;
+    return text().equals(((TerminatorToken) o).text());
   }
 
   @Override
   public int hashCode() {
     return text().hashCode();
   }
-
 }
