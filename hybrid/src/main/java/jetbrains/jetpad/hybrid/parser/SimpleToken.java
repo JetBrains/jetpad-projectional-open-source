@@ -18,25 +18,28 @@ package jetbrains.jetpad.hybrid.parser;
 import jetbrains.jetpad.values.Color;
 
 public class SimpleToken extends BaseToken {
-  private String myName;
-  private boolean myNoSpaceLeft;
-  private boolean myNoSpaceRight;
-  private boolean myRtOnEnd;
+  private final String myText;
+  private final boolean myNoSpaceLeft;
+  private final boolean myNoSpaceRight;
+  private final boolean myRtOnEnd;
 
   public SimpleToken() {
-    this(null);
+    this("");
   }
 
-  public SimpleToken(String name) {
-    this(name, false, false);
+  public SimpleToken(String text) {
+    this(text, false, false);
   }
 
-  public SimpleToken(String name, boolean noSpaceLeft, boolean noSpaceRight) {
-    this(name, false, noSpaceLeft, noSpaceRight);
+  public SimpleToken(String text, boolean noSpaceLeft, boolean noSpaceRight) {
+    this(text, false, noSpaceLeft, noSpaceRight);
   }
 
-  public SimpleToken(String name, boolean rtOnEnd, boolean noSpaceLeft, boolean noSpaceRight) {
-    myName = name;
+  public SimpleToken(String text, boolean rtOnEnd, boolean noSpaceLeft, boolean noSpaceRight) {
+    if (text == null) {
+      throw new NullPointerException();
+    }
+    myText = text;
     myNoSpaceLeft = noSpaceLeft;
     myNoSpaceRight = noSpaceRight;
     myRtOnEnd = rtOnEnd;
@@ -67,11 +70,11 @@ public class SimpleToken extends BaseToken {
 
   @Override
   public String text() {
-    return myName;
+    return myText;
   }
 
   @Override
   public String toString() {
-    return myName;
+    return myText;
   }
 }
