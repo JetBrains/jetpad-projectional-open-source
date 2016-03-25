@@ -37,6 +37,7 @@ import jetbrains.jetpad.cell.util.CellState;
 import jetbrains.jetpad.cell.util.CellStateHandler;
 import jetbrains.jetpad.event.*;
 import jetbrains.jetpad.hybrid.parser.Token;
+import jetbrains.jetpad.hybrid.parser.TokenUtil;
 import jetbrains.jetpad.hybrid.parser.ValueToken;
 import jetbrains.jetpad.hybrid.parser.prettyprint.ParseNode;
 import jetbrains.jetpad.hybrid.parser.prettyprint.ParseNodes;
@@ -331,22 +332,11 @@ public abstract class BaseHybridSynchronizer<SourceT, SpecT extends SimpleHybrid
 
           @Override
           public String toString() {
-            StringBuilder joinedTokens = new StringBuilder();
-            Token prevToken = null;
-            for (Token currToken : tokens) {
-              if (prevToken != null && !prevToken.noSpaceToRight() && !currToken.noSpaceToLeft()) {
-                joinedTokens.append(' ');
-              }
-              String currText;
-              try {
-                currText = currToken.text();
-              } catch (UnsupportedOperationException e) {
-                return super.toString();
-              }
-              joinedTokens.append(currText);
-              prevToken = currToken;
+            try {
+              return TokenUtil.getText(tokens);
+            } catch (UnsupportedOperationException e) {
+              return super.toString();
             }
-            return joinedTokens.toString();
           }
         };
       }
