@@ -15,6 +15,7 @@
  */
 package jetbrains.jetpad.hybrid;
 
+import com.google.common.base.CharMatcher;
 import com.google.common.base.Function;
 import com.google.common.base.Supplier;
 import com.google.common.collect.FluentIterable;
@@ -33,6 +34,10 @@ import java.util.List;
 import static jetbrains.jetpad.hybrid.SelectionPosition.LAST;
 
 public class HybridWrapperRoleCompletion<ContainerT, WrapperT, TargetT> implements RoleCompletion<ContainerT, WrapperT> {
+  private static boolean isNotBlank(String string) {
+    return CharMatcher.whitespace().negate().matchesAnyOf(string);
+  }
+
   private SimpleHybridEditorSpec<TargetT> mySpec;
   private Supplier<WrapperT> myFactory;
   private Function<Mapper<?, ?>, ? extends BaseHybridSynchronizer<TargetT, ?>> mySyncProvider;
@@ -40,13 +45,13 @@ public class HybridWrapperRoleCompletion<ContainerT, WrapperT, TargetT> implemen
 
 
   public HybridWrapperRoleCompletion(SimpleHybridEditorSpec<TargetT> spec, Supplier<WrapperT> targetFactory,
-                                     Function<Mapper<?, ?>, ? extends BaseHybridSynchronizer<TargetT, ?>> syncProvider) {
+      Function<Mapper<?, ?>, ? extends BaseHybridSynchronizer<TargetT, ?>> syncProvider) {
     this(spec, targetFactory, syncProvider, false);
   }
 
   public HybridWrapperRoleCompletion(SimpleHybridEditorSpec<TargetT> spec, Supplier<WrapperT> targetFactory,
-                                     Function<Mapper<?, ?>, ? extends BaseHybridSynchronizer<TargetT, ?>> syncProvider,
-                                     boolean hideTokensInMenus) {
+      Function<Mapper<?, ?>, ? extends BaseHybridSynchronizer<TargetT, ?>> syncProvider,
+      boolean hideTokensInMenus) {
     mySpec = spec;
     myFactory = targetFactory;
     mySyncProvider = syncProvider;
@@ -77,60 +82,98 @@ public class HybridWrapperRoleCompletion<ContainerT, WrapperT, TargetT> implemen
           }
         };
 
-        if (!(cp.isMenu() && myHideTokensInMenu)) {
-          for (CompletionItem ci : mySpec.getTokenCompletion(completer, new Function<Token, Runnable>() {
+        if (cp.isBulkCompletionRequired()) {
+          result.add(new BaseCompletionItem() {
             @Override
-            public Runnable apply(Token input) {
-              return completer.complete(input);
+            public String visibleText(String text) {
+              throw new IllegalStateException("This completion item must not be visible");
             }
-          }).get(cp)) {
-            result.add(new WrapperCompletionItem(ci) {
+
+            @Override
+            public boolean isLowMatchPriority() {
+              return true;
+            }
+
+            @Override
+            public boolean isStrictMatchPrefix(String text) {
+              return !isMatch(text);
+            }
+
+            @Override
+            public boolean isMatch(String text) {
+              return isNotBlank(text);
+            }
+
+            @Override
+            public Runnable complete(final String text) {
+              return new Runnable() {
+                @Override
+                public void run() {
+                  CompletionTokenizer tokenizer = new CompletionTokenizer(mySpec);
+                  List<Token> tokens = tokenizer.tokenize(text);
+                  if (!tokens.isEmpty()) {
+                    completer.complete(tokens.toArray(new Token[tokens.size()])).run();
+                  }
+                }
+              };
+            }
+          });
+        } else {
+          if (!(cp.isMenu() && myHideTokensInMenu)) {
+            for (CompletionItem ci : mySpec.getTokenCompletion(completer, new Function<Token, Runnable>() {
               @Override
-              public boolean isLowMatchPriority() {
-                return true;
+              public Runnable apply(Token input) {
+                return completer.complete(input);
               }
-            });
+            }).get(cp)) {
+              result.add(new WrapperCompletionItem(ci) {
+                @Override
+                public boolean isLowMatchPriority() {
+                  return true;
+                }
+              });
+            }
           }
-        }
 
-        if (cp.isMenu()) {
-          CompletionSupplier compl = mySpec.getAdditionalCompletion(new CompletionContext() {
-            @Override
-            public int getTargetIndex() {
-              return 0;
-            }
+          if (cp.isMenu()) {
+            CompletionSupplier compl = mySpec.getAdditionalCompletion(new CompletionContext() {
+              @Override
+              public int getTargetIndex() {
+                return 0;
+              }
 
-            @Override
-            public List<Token> getPrefix() {
-              return Collections.emptyList();
-            }
+              @Override
+              public List<Token> getPrefix() {
+                return Collections.emptyList();
+              }
 
-            @Override
-            public List<Cell> getViews() {
-              return Collections.emptyList();
-            }
+              @Override
+              public List<Cell> getViews() {
+                return Collections.emptyList();
+              }
 
-            @Override
-            public List<Token> getTokens() {
-              return Collections.emptyList();
-            }
+              @Override
+              public List<Token> getTokens() {
+                return Collections.emptyList();
+              }
 
-            @Override
-            public List<Object> getObjects() {
-              return Collections.emptyList();
-            }
+              @Override
+              public List<Object> getObjects() {
+                return Collections.emptyList();
+              }
 
-            @Override
-            public Mapper<?, ?> getContextMapper() {
-              return mapper;
-            }
+              @Override
+              public Mapper<?, ?> getContextMapper() {
+                return mapper;
+              }
 
-            @Override
-            public Object getTarget() {
-              return target.get();
-            }
-          }, completer);
-          result.addAll(FluentIterable.from(compl.get(new BaseCompletionParameters())).toList());
+              @Override
+              public Object getTarget() {
+                return target.get();
+              }
+            }, completer);
+            result.addAll(FluentIterable.from(compl.get(new BaseCompletionParameters())).toList());
+          }
         }
         return result;
       }

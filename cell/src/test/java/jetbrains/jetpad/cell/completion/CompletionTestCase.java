@@ -25,13 +25,13 @@ import jetbrains.jetpad.cell.trait.CellTraitPropertySpec;
 import jetbrains.jetpad.completion.*;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
 
 public abstract class CompletionTestCase extends EditingTestCase {
-  private String mySetTo;
+  private List<String> mySetTo = new ArrayList<>();
 
   protected CompletionSupplier createCompletion(final String... items) {
     return new CompletionSupplier() {
@@ -84,12 +84,12 @@ public abstract class CompletionTestCase extends EditingTestCase {
     return result;
   }
 
-  protected void assertCompleted(String text) {
-    assertEquals(text, mySetTo);
+  protected void assertCompleted(String ... text) {
+    assertEquals(Arrays.asList(text), mySetTo);
   }
 
   protected void assertNotCompleted() {
-    assertNull(mySetTo);
+    assertEquals(0, mySetTo.size());
   }
 
   protected class SetTextToCompletionItem extends SimpleCompletionItem {
@@ -106,7 +106,7 @@ public abstract class CompletionTestCase extends EditingTestCase {
 
     @Override
     public Runnable complete(String text) {
-      mySetTo = myCompletion;
+      mySetTo.add(myCompletion);
       return Runnables.EMPTY;
     }
   }

@@ -26,6 +26,7 @@ import jetbrains.jetpad.cell.completion.CompletionItems;
 import jetbrains.jetpad.cell.completion.Side;
 import jetbrains.jetpad.cell.message.MessageController;
 import jetbrains.jetpad.cell.trait.CellTraitPropertySpec;
+import jetbrains.jetpad.completion.BaseCompletionParameters;
 import jetbrains.jetpad.completion.CompletionItem;
 import jetbrains.jetpad.completion.CompletionParameters;
 import jetbrains.jetpad.event.Key;
@@ -93,6 +94,24 @@ class ValidTextEditingTrait extends TextEditingTrait {
   protected boolean onAfterType(TextEditor textEditor) {
     if (super.onAfterType(textEditor)) return true;
 
+    return onAfterTextAdded(textEditor, CompletionParameters.EMPTY, true);
+  }
+
+  @Override
+  protected boolean onAfterPaste(TextEditor textEditor) {
+    if (super.onAfterPaste(textEditor)) return true;
+
+    CompletionParameters requireBulkCompletion = new BaseCompletionParameters() {
+      @Override
+      public boolean isBulkCompletionRequired() {
+        return true;
+      }
+    };
+
+    return onAfterTextAdded(textEditor, requireBulkCompletion, false);
+  }
+
+  private boolean onAfterTextAdded(TextEditor textEditor, CompletionParameters cp, boolean sideTransformationsAllowed) {
     CellTextEditor editor = (CellTextEditor) textEditor;
     Boolean eagerCompletion = editor.getCell().get(TextEditing.EAGER_COMPLETION);
     if (isValid(editor) && !eagerCompletion) return false;
@@ -101,34 +120,36 @@ class ValidTextEditingTrait extends TextEditingTrait {
     if (text == null || text.isEmpty()) return false;
 
     //simple validation
-    CompletionItems completion = Completion.completionFor(editor.getCell(), CompletionParameters.EMPTY);
+    CompletionItems completion = Completion.completionFor(editor.getCell(), cp);
     if (completion.hasSingleMatch(text, eagerCompletion)) {
       completion.completeFirstMatch(text);
       return true;
     }
 
-    CellContainer container = editor.getCell().getContainer();
-    if (TextEditing.isEnd(editor) && !completion.hasMatches(text)) {
-      //right transform
-      String prefix = text.substring(0, text.length() - 1);
-      String suffix = text.substring(text.length() - 1);
+    if (sideTransformationsAllowed) {
+      CellContainer container = editor.getCell().getContainer();
+      if (TextEditing.isEnd(editor) && !completion.hasMatches(text)) {
+        //right transform
+        String prefix = text.substring(0, text.length() - 1);
+        String suffix = text.substring(text.length() - 1);
 
-      if (getValidator(editor).apply(prefix)) {
-        handleSideTransform(editor, prefix, suffix.trim(), Side.RIGHT);
-      } else {
-        List<CompletionItem> matches = completion.matches(prefix);
-        if (matches.size() == 1) {
-          matches.get(0).complete(prefix).run();
-          assertValid(container.focusedCell.get());
-          container.keyTyped(new KeyEvent(Key.UNKNOWN, suffix.charAt(0), Collections.<ModifierKey>emptySet()));
+        if (getValidator(editor).apply(prefix)) {
+          handleSideTransform(editor, prefix, suffix.trim(), Side.RIGHT);
+        } else {
+          List<CompletionItem> matches = completion.matches(prefix);
+          if (matches.size() == 1) {
+            matches.get(0).complete(prefix).run();
+            assertValid(container.focusedCell.get());
+            container.keyTyped(new KeyEvent(Key.UNKNOWN, suffix.charAt(0), Collections.<ModifierKey>emptySet()));
+          }
         }
-      }
-    } else if (editor.caretPosition().get() == 1 && !CellCompletionController.isCompletionActive(editor.getCell())) {
-      //left transform
-      String prefix = text.substring(0, 1).trim();
-      String suffix = text.substring(1);
-      if (getValidator(editor).apply(suffix)) {
-        handleSideTransform(editor, suffix, prefix, Side.LEFT);
+      } else if (editor.caretPosition().get() == 1 && !CellCompletionController.isCompletionActive(editor.getCell())) {
+        //left transform
+        String prefix = text.substring(0, 1).trim();
+        String suffix = text.substring(1);
+        if (getValidator(editor).apply(suffix)) {
+          handleSideTransform(editor, suffix, prefix, Side.LEFT);
+        }
       }
     }
     return true;
