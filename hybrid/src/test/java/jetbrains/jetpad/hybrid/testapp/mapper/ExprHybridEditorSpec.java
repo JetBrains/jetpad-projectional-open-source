@@ -380,7 +380,7 @@ public class ExprHybridEditorSpec implements HybridEditorSpec<Expr> {
   }
 
   @Override
-  public TokenListValidator getTokenListValidator() {
-    return new ExprTokenListValidator();
+  public TokenListCorrector getTokenListValidator() {
+    return new ExprTokenListCorrector();
   }
 }

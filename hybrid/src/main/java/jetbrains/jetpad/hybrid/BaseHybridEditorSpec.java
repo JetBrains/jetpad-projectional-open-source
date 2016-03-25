@@ -29,8 +29,8 @@ public abstract class BaseHybridEditorSpec<SourceT> implements HybridEditorSpec<
   }
 
   @Override
-  public TokenListValidator getTokenListValidator() {
-    return TokenListValidator.NO_OP;
+  public TokenListCorrector getTokenListValidator() {
+    return TokenListCorrector.NO_OP;
   }
 
 }
