@@ -15,16 +15,20 @@
  */
 package jetbrains.jetpad.hybrid;
 
+import com.google.common.base.Function;
+import com.google.common.base.Supplier;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Range;
 import jetbrains.jetpad.base.Registration;
+import jetbrains.jetpad.base.Runnables;
 import jetbrains.jetpad.cell.Cell;
 import jetbrains.jetpad.cell.EditingTestCase;
 import jetbrains.jetpad.cell.HorizontalCell;
 import jetbrains.jetpad.cell.TextCell;
 import jetbrains.jetpad.cell.action.CellActions;
 import jetbrains.jetpad.cell.completion.Completion;
+import jetbrains.jetpad.cell.completion.CompletionItems;
 import jetbrains.jetpad.cell.message.MessageController;
 import jetbrains.jetpad.cell.position.Positions;
 import jetbrains.jetpad.cell.util.CellState;
@@ -36,6 +40,7 @@ import jetbrains.jetpad.hybrid.testapp.mapper.Tokens;
 import jetbrains.jetpad.hybrid.testapp.model.*;
 import jetbrains.jetpad.mapper.Mapper;
 import jetbrains.jetpad.model.composite.Composites;
+import jetbrains.jetpad.projectional.generic.Role;
 import jetbrains.jetpad.projectional.util.RootController;
 import jetbrains.jetpad.values.Color;
 import org.junit.After;
@@ -1015,6 +1020,51 @@ abstract class BaseHybridEditorEditingTest<ContainerT, MapperT extends Mapper<Co
     };
     Iterable<CompletionItem> completionItems = roleCompletion.get(completionParameters);
     assertTrue(FluentIterable.from(completionItems).isEmpty());
+  }
+
+  @Test
+  public void bulkCompletionInHybridWrapperRole() {
+    Supplier<ContainerT> containerSupplier = new Supplier<ContainerT>() {
+      @Override
+      public ContainerT get() {
+        return container;
+      }
+    };
+    Function<Mapper<?, ?>, BaseHybridSynchronizer<Expr, ?>> syncSupplier = new Function<Mapper<?, ?>, BaseHybridSynchronizer<Expr, ?>>() {
+      @Override
+      public BaseHybridSynchronizer<Expr, ?> apply(Mapper<?, ?> mapper) {
+        return getSync();
+      }
+    };
+    Role<ContainerT> containerRole = new Role<ContainerT>() {
+      @Override
+      public ContainerT get() {
+        return container;
+      }
+      @Override
+      public Runnable set(ContainerT target) {
+        return Runnables.EMPTY;
+      }
+    };
+    CompletionParameters requireBulkCompletion = new BaseCompletionParameters() {
+      @Override
+      public boolean isBulkCompletionRequired() {
+        return true;
+      }
+    };
+
+    HybridWrapperRoleCompletion<Object, ContainerT, Expr> hybridWrapperRole = new HybridWrapperRoleCompletion<>(
+        getSpec(), containerSupplier, syncSupplier);
+    CompletionSupplier roleCompletion = hybridWrapperRole.createRoleCompletion(mapper, container, containerRole);
+    CompletionItems completionItems = new CompletionItems(roleCompletion.get(requireBulkCompletion));
+
+    String code = "'text 1' + 1";
+    for (boolean eagerCompletion : new boolean[] { false, true }) {
+      assertTrue(completionItems.hasSingleMatch(code, eagerCompletion));
+    }
+    completionItems.completeFirstMatch(code);
+    assertTokensEqual(ImmutableList.of(singleQtd("text 1"), Tokens.PLUS, integer(1)), sync.tokens());
+    assertFocused(targetCell.lastChild());
   }
 
   @Test
