@@ -30,7 +30,6 @@ import jetbrains.jetpad.completion.CompletionController;
 import jetbrains.jetpad.completion.CompletionItem;
 import jetbrains.jetpad.completion.CompletionParameters;
 import jetbrains.jetpad.completion.CompletionSupplier;
-import jetbrains.jetpad.hybrid.parser.TerminatorToken;
 import jetbrains.jetpad.hybrid.parser.Token;
 import jetbrains.jetpad.hybrid.parser.ValueToken;
 import jetbrains.jetpad.mapper.Mapper;
@@ -46,14 +45,6 @@ import static jetbrains.jetpad.hybrid.SelectionPosition.FIRST;
 import static jetbrains.jetpad.hybrid.SelectionPosition.LAST;
 
 class TokenCompleter {
-
-  private static String getText(List<Token> tokenList) {
-    StringBuilder builder = new StringBuilder();
-    for (Token token : tokenList) {
-      builder.append(token.text());
-    }
-    return builder.toString();
-  }
 
   private BaseHybridSynchronizer<?, ?> mySync;
 
@@ -74,7 +65,7 @@ class TokenCompleter {
   }
 
   CompletionItems completion(Function<Token, Runnable> handler) {
-    return new CompletionItems(getEditorSpec().getTokenCompletion(Completer.UNSUPPORTED_COMPLETER, handler).get(CompletionParameters.EMPTY));
+    return new CompletionItems(getEditorSpec().getTokenCompletion(handler).get(CompletionParameters.EMPTY));
   }
 
   CompletionSupplier placeholderCompletion(final Cell placeholder) {
@@ -93,11 +84,6 @@ class TokenCompleter {
         }
 
         return result;
-      }
-
-      @Override
-      public Runnable completeTerminatorToken(String prefix) {
-        throw new UnsupportedOperationException();
       }
     });
   }
@@ -159,11 +145,6 @@ class TokenCompleter {
         }
         return result;
       }
-
-      @Override
-      public Runnable completeTerminatorToken(String prefix) {
-        throw new UnsupportedOperationException();
-      }
     });
   }
 
@@ -177,32 +158,22 @@ class TokenCompleter {
           @Override
           public Runnable complete(int selectionIndex, Token... tokens) {
             int i = index + delta;
-            ObservableList<Token> editorTokenList = getTokenListEditor().tokens;
+            TokenListEditor<?> tokenListEditor = getTokenListEditor();
+            ObservableList<Token> editorTokenList = tokenListEditor.tokens;
             if (i < editorTokenList.size() && tokens.length >= 1 && tokens[0] instanceof ValueToken && editorTokenList.get(i) instanceof ValueToken) {
               editorTokenList.remove(i);
             }
             for (Token t : tokens) {
               editorTokenList.add(i++, t);
             }
-            getTokenListEditor().updateToPrintedTokens();
+            tokenListEditor.validateTokens();
+            tokenListEditor.updateToPrintedTokens();
             Runnable result = getTokenOperations().selectOnCreation(index + delta + selectionIndex, LAST);
             if (cp.isEndRightTransform() && !cp.isMenu()) {
               result = seq(result, activateCompletion(index + delta + selectionIndex));
             }
             return result;
           }
-
-          @Override
-          public Runnable completeTerminatorToken(String prefix) {
-            List<Token> tokenList = getTokenListEditor().tokens;
-            int targetIndex = index + delta;
-            List<Token> subList = tokenList.subList(targetIndex, tokenList.size());
-            String tokenListText = getText(subList);
-            Token terminatorToken = new TerminatorToken(prefix, tokenListText);
-            subList.clear();
-            return complete(terminatorToken);
-          }
-
         };
       }
 
@@ -235,7 +206,7 @@ class TokenCompleter {
       public List<CompletionItem> get(CompletionParameters cp) {
         List<CompletionItem> result = new ArrayList<>();
         if (!(cp.isMenu() && mySync.isHideTokensInMenu())) {
-          result.addAll(FluentIterable.from(getEditorSpec().getTokenCompletion(completer, new Function<Token, Runnable>() {
+          result.addAll(FluentIterable.from(getEditorSpec().getTokenCompletion(new Function<Token, Runnable>() {
             @Override
             public Runnable apply(Token input) {
               return completer.complete(input);

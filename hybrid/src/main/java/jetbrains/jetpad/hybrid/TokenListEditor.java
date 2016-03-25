@@ -131,6 +131,10 @@ class TokenListEditor<SourceT> {
     }
   }
 
+  private HybridEditorSpec<SourceT> getHybridEditorSpec() {
+    return mySpec.get();
+  }
+
   private void reparse() {
     if (myRestoringState) return;
 
@@ -139,7 +143,7 @@ class TokenListEditor<SourceT> {
       toParse.add(t.copy());
     }
 
-    HybridEditorSpec<SourceT> hybridEditorSpec = mySpec.get();
+    HybridEditorSpec<SourceT> hybridEditorSpec = getHybridEditorSpec();
     ParsingContext parsingContext = hybridEditorSpec.getParsingContextFactory().getParsingContext(toParse);
 
     if (parsingContext.getTokens().isEmpty()) {
@@ -174,7 +178,7 @@ class TokenListEditor<SourceT> {
   }
 
   private PrettyPrinterContext<? super SourceT> reprint() {
-    PrettyPrinter<? super SourceT> printer = mySpec.get().getPrettyPrinter();
+    PrettyPrinter<? super SourceT> printer = getHybridEditorSpec().getPrettyPrinter();
     PrettyPrinterContext<? super SourceT> ctx = new PrettyPrinterContext<>(printer);
     ctx.print(value.get());
     myParseNode = ctx.result();
@@ -239,5 +243,11 @@ class TokenListEditor<SourceT> {
   void dispose() {
     myChangeReg.remove();
     myChangeReg = Registration.EMPTY;
+  }
+
+  void validateTokens() {
+    HybridEditorSpec<SourceT> hybridEditorSpec = getHybridEditorSpec();
+    TokenListValidator tokenListValidator = hybridEditorSpec.getTokenListValidator();
+    tokenListValidator.validate(tokens);
   }
 }

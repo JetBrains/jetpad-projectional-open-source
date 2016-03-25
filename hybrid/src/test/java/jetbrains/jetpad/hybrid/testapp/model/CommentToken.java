@@ -13,29 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package jetbrains.jetpad.hybrid.parser;
+package jetbrains.jetpad.hybrid.testapp.model;
 
-public final class TerminatorToken extends SimpleToken {
+import jetbrains.jetpad.hybrid.parser.SimpleToken;
 
-  public TerminatorToken(String prefix) {
-    this(prefix, "");
-  }
+public final class CommentToken extends SimpleToken {
 
-  public TerminatorToken(String prefix, String text) {
-    super(prefix + text);
-    if (prefix == null) {
-      throw new NullPointerException("Null prefix");
-    }
-    if (text == null) {
-      throw new NullPointerException("Null text");
-    }
+  public CommentToken(String text) {
+    super(text);
   }
 
   @Override
   public boolean equals(Object o) {
     if (this == o) return true;
-    if (!(o instanceof TerminatorToken)) return false;
-    return text().equals(((TerminatorToken) o).text());
+    if (!(o instanceof CommentToken)) return false;
+    return text().equals(((CommentToken) o).text());
   }
 
   @Override

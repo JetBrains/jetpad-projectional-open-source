@@ -44,7 +44,7 @@ public class SimpleHybridSynchronizer<SourceT> extends BaseHybridSynchronizer<So
     implements ToCellMapping {
 
   private static <SourceT> HybridEditorSpec<SourceT> toHybridEditorSpec(final SimpleHybridEditorSpec<SourceT> spec) {
-    return new HybridEditorSpec<SourceT>() {
+    return new BaseHybridEditorSpec<SourceT>() {
       @Override
       public Parser<SourceT> getParser() {
         throw new UnsupportedOperationException("Parser is not available for SimpleHybridSynchronizer");
@@ -61,8 +61,8 @@ public class SimpleHybridSynchronizer<SourceT> extends BaseHybridSynchronizer<So
       }
 
       @Override
-      public CompletionSupplier getTokenCompletion(Completer completer, Function<Token, Runnable> tokenHandler) {
-        return spec.getTokenCompletion(completer, tokenHandler);
+      public CompletionSupplier getTokenCompletion(Function<Token, Runnable> tokenHandler) {
+        return spec.getTokenCompletion(tokenHandler);
       }
 
       @Override

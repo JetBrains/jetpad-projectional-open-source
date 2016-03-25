@@ -97,7 +97,7 @@ public class CompletionTokenizer {
   private class TextMatcher {
     private final Value<Token> tokenHolder = new Value<>();
     private final CompletionItems completionItems = new CompletionItems(
-        mySpec.getTokenCompletion(Completer.UNSUPPORTED_COMPLETER, new Function<Token, Runnable>() {
+        mySpec.getTokenCompletion(new Function<Token, Runnable>() {
           @Nullable
           @Override
           public Runnable apply(@Nullable final Token token) {

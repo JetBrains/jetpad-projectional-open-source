@@ -19,4 +19,5 @@ import jetbrains.jetpad.hybrid.parser.Parser;
 
 public interface HybridEditorSpec<SourceT> extends SimpleHybridEditorSpec<SourceT> {
   Parser<SourceT> getParser();
+  TokenListValidator getTokenListValidator();
 }

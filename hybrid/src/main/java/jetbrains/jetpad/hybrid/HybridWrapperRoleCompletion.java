@@ -70,15 +70,10 @@ public class HybridWrapperRoleCompletion<ContainerT, WrapperT, TargetT> implemen
             sync.setTokens(Arrays.asList(tokens));
             return sync.selectOnCreation(selectionIndex, LAST);
           }
-
-          @Override
-          public Runnable completeTerminatorToken(String prefix) {
-            throw new UnsupportedOperationException();
-          }
         };
 
         if (!(cp.isMenu() && myHideTokensInMenu)) {
-          for (CompletionItem ci : mySpec.getTokenCompletion(completer, new Function<Token, Runnable>() {
+          for (CompletionItem ci : mySpec.getTokenCompletion(new Function<Token, Runnable>() {
             @Override
             public Runnable apply(Token input) {
               return completer.complete(input);

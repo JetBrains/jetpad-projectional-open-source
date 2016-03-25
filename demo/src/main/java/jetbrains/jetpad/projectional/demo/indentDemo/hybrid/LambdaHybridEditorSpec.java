@@ -81,7 +81,7 @@ public class LambdaHybridEditorSpec extends BaseHybridEditorSpec<Expr> {
   }
 
   @Override
-  public CompletionSupplier getTokenCompletion(Completer completer, final Function<Token, Runnable> tokenHandler) {
+  public CompletionSupplier getTokenCompletion(final Function<Token, Runnable> tokenHandler) {
     return new CompletionSupplier() {
       @Override
       public List<CompletionItem> get(CompletionParameters cp) {

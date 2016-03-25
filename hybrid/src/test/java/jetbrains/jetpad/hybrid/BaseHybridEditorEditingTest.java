@@ -1017,16 +1017,6 @@ abstract class BaseHybridEditorEditingTest<ContainerT, MapperT extends Mapper<Co
     assertTrue(FluentIterable.from(completionItems).isEmpty());
   }
 
-  @Test
-  public void commentInTheMiddle() {
-    setTokens(integer(1), Tokens.PLUS, integer(2), Tokens.PLUS, integer(3));
-    select(2, false);
-
-    type("#");
-
-    assertTokens(integer(1), Tokens.PLUS, integer(2), new TerminatorToken("#", "+3"));
-  }
-
   protected ValueToken createComplexToken() {
     return new ValueToken(new ComplexValueExpr(), new ComplexValueCloner());
   }
