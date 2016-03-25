@@ -23,6 +23,7 @@ import jetbrains.jetpad.cell.action.CellActions;
 import jetbrains.jetpad.cell.completion.CompletionItems;
 import jetbrains.jetpad.cell.util.CellLists;
 import jetbrains.jetpad.completion.CompletionItem;
+import jetbrains.jetpad.hybrid.parser.CommentToken;
 import jetbrains.jetpad.hybrid.parser.ErrorToken;
 import jetbrains.jetpad.hybrid.parser.Token;
 import jetbrains.jetpad.hybrid.parser.ValueToken;
@@ -34,6 +35,11 @@ import static jetbrains.jetpad.hybrid.SelectionPosition.FIRST;
 import static jetbrains.jetpad.hybrid.SelectionPosition.LAST;
 
 class TokenOperations<SourceT> {
+
+  private static boolean canSplit(Token token) {
+    return !(token instanceof CommentToken);
+  }
+
   private BaseHybridSynchronizer<SourceT, ?> mySync;
 
   TokenOperations(BaseHybridSynchronizer<SourceT, ?> sync) {
@@ -217,20 +223,20 @@ class TokenOperations<SourceT> {
     return select(targetIndex, LAST);
   }
 
-  boolean afterType(TextCell textView) {
+  boolean afterType(TextTokenCell textTokenCell) {
     TokenCompleter tc = mySync.tokenCompletion();
 
-    String text = textView.text().get();
-    int caret = textView.caretPosition().get();
+    String text = textTokenCell.text().get();
+    int caret = textTokenCell.caretPosition().get();
     char ch = text.charAt(caret - 1);
     if (ch == ' ') {
       String firstTokenText = text.substring(0, caret - 1);
       String secondTokenText = text.substring(caret);
-      if (firstTokenText.length() > 0 && secondTokenText.length() > 0) {
+      if (firstTokenText.length() > 0 && secondTokenText.length() > 0 && canSplit(textTokenCell.getToken())) {
         Token firstToken = tc.completeToken(firstTokenText);
         Token secondToken = tc.completeToken(secondTokenText);
 
-        int index = tokenViews().indexOf(textView);
+        int index = tokenViews().indexOf(textTokenCell);
 
         tokens().set(index, firstToken != null ? firstToken : new ErrorToken(firstTokenText));
         tokens().add(index + 1, secondToken != null ? secondToken : new ErrorToken(secondTokenText));
@@ -251,7 +257,7 @@ class TokenOperations<SourceT> {
       Token second = tc.completeToken(text.substring(caret - 1, caret));
       Token third = tc.completeToken(text.substring(caret));
 
-      int index = tokenViews().indexOf(textView);
+      int index = tokenViews().indexOf(textTokenCell);
       tokens().remove(index);
       tokens().add(index, first);
       tokens().add(index + 1, second);

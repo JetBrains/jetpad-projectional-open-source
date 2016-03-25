@@ -17,8 +17,10 @@ package jetbrains.jetpad.hybrid;
 
 import com.google.common.base.Objects;
 import jetbrains.jetpad.base.Registration;
+import jetbrains.jetpad.hybrid.parser.CommentToken;
 import jetbrains.jetpad.hybrid.parser.ParsingContext;
 import jetbrains.jetpad.hybrid.parser.Token;
+import jetbrains.jetpad.hybrid.parser.TokenUtil;
 import jetbrains.jetpad.hybrid.parser.prettyprint.ParseNode;
 import jetbrains.jetpad.hybrid.parser.prettyprint.PrettyPrinter;
 import jetbrains.jetpad.hybrid.parser.prettyprint.PrettyPrinterContext;
@@ -32,6 +34,22 @@ import java.util.Collections;
 import java.util.List;
 
 class TokenListEditor<SourceT> {
+
+  private static void processComments(List<Token> tokenList) {
+    int size = tokenList.size();
+    for (int i = 0; i < size; i++) {
+      Token token = tokenList.get(i);
+      if (token instanceof CommentToken && i < size - 1) {
+        List<Token> subList = tokenList.subList(i, size);
+        String tokenListText = TokenUtil.getText(subList);
+        Token terminatorToken = new CommentToken(tokenListText);
+        subList.clear();
+        tokenList.add(terminatorToken);
+        break;
+      }
+    }
+  }
+
   private Property<Boolean> myValid = new ValueProperty<>(true);
   private ParseNode myParseNode;
   private ReadableProperty<HybridEditorSpec<SourceT>> mySpec;
@@ -144,7 +162,7 @@ class TokenListEditor<SourceT> {
     }
 
     HybridEditorSpec<SourceT> hybridEditorSpec = getHybridEditorSpec();
-    ParsingContext parsingContext = hybridEditorSpec.getParsingContextFactory().getParsingContext(toParse);
+    ParsingContext parsingContext = HybridEditorSpecUtil.getParsingContextFactory(hybridEditorSpec).getParsingContext(toParse);
 
     if (parsingContext.getTokens().isEmpty()) {
       value.set(null);
@@ -245,9 +263,7 @@ class TokenListEditor<SourceT> {
     myChangeReg = Registration.EMPTY;
   }
 
-  void correctTokens() {
-    HybridEditorSpec<SourceT> hybridEditorSpec = getHybridEditorSpec();
-    TokenListCorrector tokenListCorrector = hybridEditorSpec.getTokenListValidator();
-    tokenListCorrector.correct(tokens);
+  void processComments() {
+    processComments(tokens);
   }
 }

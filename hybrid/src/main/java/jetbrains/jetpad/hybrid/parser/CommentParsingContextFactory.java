@@ -13,20 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package jetbrains.jetpad.hybrid.testapp.mapper;
-
-import jetbrains.jetpad.hybrid.parser.ParsingContext;
-import jetbrains.jetpad.hybrid.parser.ParsingContextFactory;
-import jetbrains.jetpad.hybrid.parser.SimpleParsingContext;
-import jetbrains.jetpad.hybrid.testapp.model.CommentToken;
-import jetbrains.jetpad.hybrid.parser.Token;
+package jetbrains.jetpad.hybrid.parser;
 
 import java.util.ArrayList;
 import java.util.List;
 
-final class ExprParsingContextFactory implements ParsingContextFactory {
+public final class CommentParsingContextFactory implements ParsingContextFactory {
 
-  ExprParsingContextFactory() {
+  public CommentParsingContextFactory() {
   }
 
   @Override

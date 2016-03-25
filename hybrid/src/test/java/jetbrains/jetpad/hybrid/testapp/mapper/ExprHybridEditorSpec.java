@@ -345,7 +345,7 @@ public class ExprHybridEditorSpec implements HybridEditorSpec<Expr> {
           });
         }
         final String commentPrefix = "#";
-        result.add(new ByBoundsCompletionItem(commentPrefix, "") {
+        result.add(new ByBoundsCompletionItem(commentPrefix) {
           @Override
           public Runnable complete(String text) {
             return tokenHandler.apply(new CommentToken(commentPrefix + getBody(text)));
@@ -375,12 +375,7 @@ public class ExprHybridEditorSpec implements HybridEditorSpec<Expr> {
   }
 
   @Override
-  public ParsingContextFactory getParsingContextFactory() {
-    return new ExprParsingContextFactory();
-  }
-
-  @Override
-  public TokenListCorrector getTokenListValidator() {
-    return new ExprTokenListCorrector();
+  public CommentSpec getCommentSpec() {
+    return new ExprCommentSpec();
   }
 }

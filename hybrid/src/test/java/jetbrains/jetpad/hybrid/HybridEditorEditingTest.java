@@ -21,7 +21,6 @@ import jetbrains.jetpad.cell.util.CellStateHandler;
 import jetbrains.jetpad.event.Key;
 import jetbrains.jetpad.event.ModifierKey;
 import jetbrains.jetpad.hybrid.parser.IdentifierToken;
-import jetbrains.jetpad.hybrid.testapp.model.CommentToken;
 import jetbrains.jetpad.hybrid.parser.ValueToken;
 import jetbrains.jetpad.hybrid.testapp.mapper.ExprContainerMapper;
 import jetbrains.jetpad.hybrid.testapp.mapper.ExprHybridEditorSpec;
@@ -30,7 +29,6 @@ import jetbrains.jetpad.hybrid.testapp.model.*;
 import jetbrains.jetpad.projectional.cell.mapping.ToCellMapping;
 import org.junit.Test;
 
-import static jetbrains.jetpad.hybrid.TokensUtil.integer;
 import static org.junit.Assert.*;
 
 public class HybridEditorEditingTest extends BaseHybridEditorEditingTest<ExprContainer, ExprContainerMapper> {
@@ -143,16 +141,6 @@ public class HybridEditorEditingTest extends BaseHybridEditorEditingTest<ExprCon
 
     mapper.hybridSyncSpec.set(new ExprHybridEditorSpec(Tokens.MUL, Tokens.PLUS));
     assertTrue(container.expr.get() instanceof MulExpr);
-  }
-
-  @Test
-  public void commentInTheMiddle() {
-    setTokens(integer(1), Tokens.PLUS, integer(2), Tokens.PLUS, integer(3));
-    select(2, false);
-
-    type("#");
-
-    assertTokens(integer(1), Tokens.PLUS, integer(2), new CommentToken("# + 3"));
   }
 
 }
