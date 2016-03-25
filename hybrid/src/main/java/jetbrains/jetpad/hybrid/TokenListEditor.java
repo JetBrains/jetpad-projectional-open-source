@@ -245,9 +245,9 @@ class TokenListEditor<SourceT> {
     myChangeReg = Registration.EMPTY;
   }
 
-  void validateTokens() {
+  void correctTokens() {
     HybridEditorSpec<SourceT> hybridEditorSpec = getHybridEditorSpec();
-    TokenListValidator tokenListValidator = hybridEditorSpec.getTokenListValidator();
-    tokenListValidator.validate(tokens);
+    TokenListCorrector tokenListCorrector = hybridEditorSpec.getTokenListValidator();
+    tokenListCorrector.correct(tokens);
   }
 }

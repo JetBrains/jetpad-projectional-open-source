@@ -19,14 +19,14 @@ import jetbrains.jetpad.hybrid.parser.Token;
 
 import java.util.List;
 
-public interface TokenListValidator {
+public interface TokenListCorrector {
 
-  TokenListValidator NO_OP = new TokenListValidator() {
+  TokenListCorrector NO_OP = new TokenListCorrector() {
     @Override
-    public void validate(List<Token> tokenList) {
+    public void correct(List<Token> tokenList) {
     }
   };
 
-  void validate(List<Token> tokenList);
+  void correct(List<Token> tokenList);
 
 }

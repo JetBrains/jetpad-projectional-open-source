@@ -166,7 +166,7 @@ class TokenCompleter {
             for (Token t : tokens) {
               editorTokenList.add(i++, t);
             }
-            tokenListEditor.validateTokens();
+            tokenListEditor.correctTokens();
             tokenListEditor.updateToPrintedTokens();
             Runnable result = getTokenOperations().selectOnCreation(index + delta + selectionIndex, LAST);
             if (cp.isEndRightTransform() && !cp.isMenu()) {
