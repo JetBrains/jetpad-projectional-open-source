@@ -16,24 +16,24 @@
 package jetbrains.jetpad.cell.text;
 
 import com.google.common.base.Predicate;
+import com.google.common.base.Splitter;
 import com.google.common.collect.FluentIterable;
 import jetbrains.jetpad.base.Runnables;
 import jetbrains.jetpad.cell.Cell;
 import jetbrains.jetpad.cell.TextCell;
 import jetbrains.jetpad.cell.completion.CellCompletionController;
 import jetbrains.jetpad.cell.completion.Completion;
+import jetbrains.jetpad.cell.completion.CompletionItems;
 import jetbrains.jetpad.cell.completion.CompletionTestCase;
 import jetbrains.jetpad.cell.trait.CellTrait;
 import jetbrains.jetpad.cell.trait.CellTraitPropertySpec;
 import jetbrains.jetpad.cell.trait.DerivedCellTrait;
-import jetbrains.jetpad.completion.CompletionItem;
-import jetbrains.jetpad.completion.CompletionParameters;
-import jetbrains.jetpad.completion.CompletionSupplier;
-import jetbrains.jetpad.completion.SimpleCompletionItem;
+import jetbrains.jetpad.completion.*;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import static org.junit.Assert.*;
@@ -98,16 +98,73 @@ public class ValidTextCompletionTest extends CompletionTestCase {
                 }
               }
 
-              List<CompletionItem> result = new ArrayList<>();
-              result.addAll(FluentIterable.from(createCompletion("a", "c", "ae", "zz", "d", "u", "q").get(cp)).toList());
-              result.add(new LowPriorityCompletionItem("d"));
-              result.add(new LowPriorityCompletionItem("xx"));
-              result.add(new LowPriorityCompletionItem("qq"));
-              result.add(new LowPriorityCompletionItem("v"));
-              result.add(new LowPriorityCompletionItem("va"));
-              result.add(new SetTextToCompletionItem("var"));
-              result.add(new SetTextToCompletionItem("foobar"));
-              result.add(new ActuallySetTextToCompletionItem("foo", "qaz"));
+              class BulkCompletionItem extends BaseCompletionItem {
+                private final CompletionItems items;
+                private final Splitter splitter = Splitter.on(' ');
+
+                private BulkCompletionItem(Iterable<CompletionItem> simpleItems) {
+                  this.items = new CompletionItems(simpleItems);
+                }
+
+                @Override
+                public String visibleText(String text) {
+                  throw new IllegalStateException("Must not be visible");
+                }
+
+                @Override
+                public boolean isStrictMatchPrefix(String text) {
+                  if (text.isEmpty()) {
+                    return true;
+                  }
+                  for (Iterator<String> i = splitter.split(text).iterator(); ; ) {
+                    String part = i.next();
+                    if (i.hasNext()) {
+                      if (!items.hasSingleMatch(part, false)) {
+                        return false;
+                      }
+                    } else {
+                      return items.strictlyPrefixedBy(part).size() > 0;
+                    }
+                  }
+                }
+
+                @Override
+                public boolean isMatch(String text) {
+                  for (String part : splitter.split(text)) {
+                    if (!items.hasSingleMatch(part, false)) {
+                      return false;
+                    }
+                  }
+                  return true;
+                }
+
+                @Override
+                public Runnable complete(final String text) {
+                  return new Runnable() {
+                    @Override
+                    public void run() {
+                      for (String part : splitter.split(text)) {
+                        items.completeFirstMatch(part);
+                      }
+                    }
+                  };
+                }
+              }
+
+              final List<CompletionItem> simpleItems = new ArrayList<>();
+              simpleItems.addAll(FluentIterable.from(createCompletion("a", "c", "ae", "zz", "d", "u", "q").get(cp)).toList());
+              simpleItems.add(new LowPriorityCompletionItem("d"));
+              simpleItems.add(new LowPriorityCompletionItem("xx"));
+              simpleItems.add(new LowPriorityCompletionItem("qq"));
+              simpleItems.add(new LowPriorityCompletionItem("v"));
+              simpleItems.add(new LowPriorityCompletionItem("va"));
+              simpleItems.add(new SetTextToCompletionItem("var"));
+              simpleItems.add(new SetTextToCompletionItem("foobar"));
+              simpleItems.add(new ActuallySetTextToCompletionItem("foo", "qaz"));
+              List<CompletionItem> result = new ArrayList<>(simpleItems);
+              if (cp.isBulkCompletionRequired()) {
+                result.add(new BulkCompletionItem(simpleItems));
+              }
               return result;
             }
           };
@@ -338,6 +395,12 @@ public class ValidTextCompletionTest extends CompletionTestCase {
 
     assertFalse(lowPriorityCompleted);
     assertCompleted("var");
+  }
+
+  @Test
+  public void bulkCompletionOnPaste() {
+    paste("d u q");
+    assertCompleted("d", "u", "q");
   }
 
   private void assertCompletionActive() {
