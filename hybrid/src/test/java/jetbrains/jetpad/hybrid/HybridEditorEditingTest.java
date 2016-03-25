@@ -152,7 +152,7 @@ public class HybridEditorEditingTest extends BaseHybridEditorEditingTest<ExprCon
 
     type("#");
 
-    assertTokens(integer(1), Tokens.PLUS, integer(2), new CommentToken("#+3"));
+    assertTokens(integer(1), Tokens.PLUS, integer(2), new CommentToken("# + 3"));
   }
 
 }
