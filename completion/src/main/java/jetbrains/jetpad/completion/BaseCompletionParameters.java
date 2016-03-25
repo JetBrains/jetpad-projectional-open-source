@@ -25,4 +25,9 @@ public class BaseCompletionParameters implements CompletionParameters {
   public boolean isMenu() {
     return false;
   }
+
+  @Override
+  public boolean isBulkCompletionRequired() {
+    return false;
+  }
 }
