@@ -114,13 +114,15 @@ class TokenCompleter {
         CompletionController controller = tokenCell.get(Completion.COMPLETION_CONTROLLER);
         final boolean wasCompletionActive = controller != null && controller.isActive();
 
-        getTokenListEditor().tokens.remove(index);
+        TokenListEditor<?> tokenListEditor = getTokenListEditor();
+        tokenListEditor.tokens.remove(index);
         int i = index;
         for (Token t : tokens) {
-          getTokenListEditor().tokens.add(i++, t);
+          tokenListEditor.tokens.add(i++, t);
         }
 
-        getTokenListEditor().updateToPrintedTokens();
+        tokenListEditor.processComments();
+        tokenListEditor.updateToPrintedTokens();
 
         final Cell targetCell =  mySync.tokenCells().get(index + selectionIndex);
         if (!(targetCell instanceof TextCell) || !Objects.equal(((TextCell) targetCell).text().get(), oldText)) {
@@ -166,7 +168,7 @@ class TokenCompleter {
             for (Token t : tokens) {
               editorTokenList.add(i++, t);
             }
-            tokenListEditor.correctTokens();
+            tokenListEditor.processComments();
             tokenListEditor.updateToPrintedTokens();
             Runnable result = getTokenOperations().selectOnCreation(index + delta + selectionIndex, LAST);
             if (cp.isEndRightTransform() && !cp.isMenu()) {

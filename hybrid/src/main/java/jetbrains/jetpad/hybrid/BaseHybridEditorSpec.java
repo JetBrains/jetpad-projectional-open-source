@@ -15,8 +15,9 @@
  */
 package jetbrains.jetpad.hybrid;
 
-import jetbrains.jetpad.hybrid.parser.ParsingContextFactory;
-import jetbrains.jetpad.hybrid.parser.SimpleParsingContextFactory;
+import jetbrains.jetpad.hybrid.parser.Token;
+
+import java.util.List;
 
 public abstract class BaseHybridEditorSpec<SourceT> implements HybridEditorSpec<SourceT> {
 
@@ -24,13 +25,12 @@ public abstract class BaseHybridEditorSpec<SourceT> implements HybridEditorSpec<
   }
 
   @Override
-  public ParsingContextFactory getParsingContextFactory() {
-    return new SimpleParsingContextFactory();
+  public CommentSpec getCommentSpec() {
+    return CommentSpec.EMPTY;
   }
 
-  @Override
-  public TokenListCorrector getTokenListValidator() {
-    return TokenListCorrector.NO_OP;
+  protected final SourceT parse(List<Token> input) {
+    return getParser().parse(HybridEditorSpecUtil.getParsingContextFactory(this).getParsingContext(input));
   }
 
 }

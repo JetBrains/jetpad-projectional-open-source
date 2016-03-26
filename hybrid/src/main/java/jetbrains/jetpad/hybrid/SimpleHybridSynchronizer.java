@@ -23,7 +23,6 @@ import jetbrains.jetpad.cell.util.CellState;
 import jetbrains.jetpad.cell.util.CellStateHandler;
 import jetbrains.jetpad.completion.CompletionSupplier;
 import jetbrains.jetpad.hybrid.parser.Parser;
-import jetbrains.jetpad.hybrid.parser.ParsingContextFactory;
 import jetbrains.jetpad.hybrid.parser.Token;
 import jetbrains.jetpad.hybrid.parser.prettyprint.PrettyPrinter;
 import jetbrains.jetpad.mapper.Mapper;
@@ -44,7 +43,7 @@ public class SimpleHybridSynchronizer<SourceT> extends BaseHybridSynchronizer<So
     implements ToCellMapping {
 
   private static <SourceT> HybridEditorSpec<SourceT> toHybridEditorSpec(final SimpleHybridEditorSpec<SourceT> spec) {
-    return new BaseHybridEditorSpec<SourceT>() {
+    return new HybridEditorSpec<SourceT>() {
       @Override
       public Parser<SourceT> getParser() {
         throw new UnsupportedOperationException("Parser is not available for SimpleHybridSynchronizer");
@@ -61,6 +60,11 @@ public class SimpleHybridSynchronizer<SourceT> extends BaseHybridSynchronizer<So
       }
 
       @Override
+      public CommentSpec getCommentSpec() {
+        return spec.getCommentSpec();
+      }
+
+      @Override
       public CompletionSupplier getTokenCompletion(Function<Token, Runnable> tokenHandler) {
         return spec.getTokenCompletion(tokenHandler);
       }
@@ -68,11 +72,6 @@ public class SimpleHybridSynchronizer<SourceT> extends BaseHybridSynchronizer<So
       @Override
       public CompletionSupplier getAdditionalCompletion(CompletionContext ctx, Completer completer) {
         return spec.getAdditionalCompletion(ctx, completer);
-      }
-
-      @Override
-      public ParsingContextFactory getParsingContextFactory() {
-        return spec.getParsingContextFactory();
       }
     };
   }

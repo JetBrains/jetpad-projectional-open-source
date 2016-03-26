@@ -1067,6 +1067,38 @@ abstract class BaseHybridEditorEditingTest<ContainerT, MapperT extends Mapper<Co
     assertFocused(targetCell.lastChild());
   }
 
+  @Test
+  public void processTokensInSideTransform() {
+    setTokens(integer(1), Tokens.PLUS, integer(2), Tokens.PLUS, integer(3));
+    select(2, false);
+
+    type("#");
+
+    assertTokens(integer(1), Tokens.PLUS, integer(2), new CommentToken("# + 3"));
+  }
+
+  @Test
+  public void processTokensInTokenCompletion() {
+    setTokens(integer(1), Tokens.PLUS, integer(2), Tokens.PLUS, integer(3));
+    select(3, true);
+
+    type("#");
+
+    assertTokens(integer(1), Tokens.PLUS, integer(2), new CommentToken("#+ 3"));
+  }
+
+  @Test
+  public void processTokensInAfterType() {
+    setTokens(integer(1), Tokens.PLUS, integer(2), new CommentToken("# + 34"));
+    select(3, false);
+
+    left();
+    type(" ");
+
+    assertTokens(integer(1), Tokens.PLUS, integer(2), new CommentToken("# + 3 4"));
+    assertEquals(6, (int) ((TextCell) tokenCell(3)).caretPosition().get());
+  }
+
   protected ValueToken createComplexToken() {
     return new ValueToken(new ComplexValueExpr(), new ComplexValueCloner());
   }

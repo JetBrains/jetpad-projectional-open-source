@@ -13,10 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package jetbrains.jetpad.hybrid;
+package jetbrains.jetpad.completion;
 
-import jetbrains.jetpad.hybrid.parser.Parser;
+import jetbrains.jetpad.base.Runnables;
+import org.junit.Test;
 
-public interface HybridEditorSpec<SourceT> extends SimpleHybridEditorSpec<SourceT> {
-  Parser<SourceT> getParser();
+import static org.junit.Assert.assertTrue;
+
+public final class ByBoundsCompletionItemTest {
+
+  @Test
+  public void noSuffix() {
+    ByBoundsCompletionItem byBoundsCompletionItem = new ByBoundsCompletionItem("#") {
+      @Override
+      public Runnable complete(String text) {
+        return Runnables.EMPTY;
+      }
+    };
+    assertTrue(byBoundsCompletionItem.isMatch("# + 3"));
+  }
+
 }

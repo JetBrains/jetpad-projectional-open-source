@@ -13,10 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package jetbrains.jetpad.hybrid;
+package jetbrains.jetpad.hybrid.testapp.mapper;
 
-import jetbrains.jetpad.hybrid.parser.Parser;
+import jetbrains.jetpad.hybrid.CommentSpec;
 
-public interface HybridEditorSpec<SourceT> extends SimpleHybridEditorSpec<SourceT> {
-  Parser<SourceT> getParser();
+final class ExprCommentSpec implements CommentSpec {
+
+  ExprCommentSpec() {
+  }
+
+  @Override
+  public String getCommentPrefix() {
+    return "#";
+  }
+
 }

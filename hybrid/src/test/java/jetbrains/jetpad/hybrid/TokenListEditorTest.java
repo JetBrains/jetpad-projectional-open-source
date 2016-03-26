@@ -15,7 +15,7 @@
  */
 package jetbrains.jetpad.hybrid;
 
-import jetbrains.jetpad.hybrid.testapp.model.CommentToken;
+import jetbrains.jetpad.hybrid.parser.CommentToken;
 import jetbrains.jetpad.hybrid.parser.Token;
 import jetbrains.jetpad.hybrid.testapp.mapper.ExprHybridEditorSpec;
 import jetbrains.jetpad.hybrid.testapp.mapper.Tokens;

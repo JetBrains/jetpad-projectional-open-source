@@ -13,20 +13,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package jetbrains.jetpad.hybrid;
+package jetbrains.jetpad.hybrid.parser;
 
-import jetbrains.jetpad.hybrid.parser.Token;
+import jetbrains.jetpad.values.Color;
 
-import java.util.List;
+public final class CommentToken extends SimpleToken {
 
-public interface TokenListCorrector {
+  public CommentToken(String text) {
+    super(text);
+  }
 
-  TokenListCorrector NO_OP = new TokenListCorrector() {
-    @Override
-    public void correct(List<Token> tokenList) {
-    }
-  };
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (!(o instanceof CommentToken)) return false;
+    return text().equals(((CommentToken) o).text());
+  }
 
-  void correct(List<Token> tokenList);
+  @Override
+  public int hashCode() {
+    return text().hashCode();
+  }
 
+  @Override
+  public Color getColor() {
+    return Color.GRAY;
+  }
 }

@@ -20,6 +20,10 @@ public abstract class ByBoundsCompletionItem extends BaseCompletionItem {
   private final String mySuffix;
   private final String myVisibleText;
 
+  protected ByBoundsCompletionItem(String prefix) {
+    this(prefix, "");
+  }
+
   protected ByBoundsCompletionItem(String prefix, String suffix) {
     myPrefix = prefix;
     mySuffix = suffix;
@@ -43,8 +47,12 @@ public abstract class ByBoundsCompletionItem extends BaseCompletionItem {
 
   private boolean hasPrefixAndDoesNotExceedSuffix(String text) {
     if (text.startsWith(myPrefix)) {
-      int suffixPos = text.indexOf(mySuffix, myPrefix.length());
-      return (suffixPos == -1) || (suffixPos == text.length() - mySuffix.length());
+      int suffixLength = mySuffix.length();
+      if (suffixLength > 0) {
+        int suffixPos = text.indexOf(mySuffix, myPrefix.length());
+        return (suffixPos == -1) || (suffixPos == text.length() - suffixLength);
+      }
+      return true;
     }
     return false;
   }

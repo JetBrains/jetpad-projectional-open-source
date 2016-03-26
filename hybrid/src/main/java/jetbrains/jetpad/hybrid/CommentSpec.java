@@ -13,25 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package jetbrains.jetpad.hybrid.testapp.model;
+package jetbrains.jetpad.hybrid;
 
-import jetbrains.jetpad.hybrid.parser.SimpleToken;
+public interface CommentSpec {
 
-public final class CommentToken extends SimpleToken {
+  CommentSpec EMPTY = new CommentSpec() {
+    @Override
+    public String getCommentPrefix() {
+      return null;
+    }
+  };
 
-  public CommentToken(String text) {
-    super(text);
-  }
+  String getCommentPrefix();
 
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) return true;
-    if (!(o instanceof CommentToken)) return false;
-    return text().equals(((CommentToken) o).text());
-  }
-
-  @Override
-  public int hashCode() {
-    return text().hashCode();
-  }
 }

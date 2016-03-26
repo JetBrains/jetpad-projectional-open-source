@@ -42,7 +42,7 @@ public class SimpleHybridPropertyTest extends BaseTestCase {
     myTokens = new ObservableArrayList<>();
     final HybridEditorSpec<Expr> hybridEditorSpec = new ExprHybridEditorSpec();
     parser = new TestParser(hybridEditorSpec);
-    myProp = new SimpleHybridProperty<>(parser, myTokens, hybridEditorSpec.getParsingContextFactory());
+    myProp = new SimpleHybridProperty<>(parser, myTokens, HybridEditorSpecUtil.getParsingContextFactory(hybridEditorSpec));
   }
 
   @Test
