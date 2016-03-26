@@ -18,7 +18,7 @@ package jetbrains.jetpad.hybrid;
 import jetbrains.jetpad.completion.CompletionSupplier;
 import jetbrains.jetpad.hybrid.parser.prettyprint.PrettyPrinter;
 
-interface SimpleHybridEditorSpec<SourceT> extends TokenCompletion {
+public interface SimpleHybridEditorSpec<SourceT> extends TokenCompletion {
   PrettyPrinter<? super SourceT> getPrettyPrinter();
   PairSpec getPairSpec();
   CommentSpec getCommentSpec();

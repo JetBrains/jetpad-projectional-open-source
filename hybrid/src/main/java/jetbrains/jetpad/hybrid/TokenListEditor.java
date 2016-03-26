@@ -35,21 +35,6 @@ import java.util.List;
 
 class TokenListEditor<SourceT> {
 
-  private static void processComments(List<Token> tokenList) {
-    int size = tokenList.size();
-    for (int i = 0; i < size; i++) {
-      Token token = tokenList.get(i);
-      if (token instanceof CommentToken && i < size - 1) {
-        List<Token> subList = tokenList.subList(i, size);
-        String tokenListText = TokenUtil.getText(subList);
-        Token terminatorToken = new CommentToken(tokenListText);
-        subList.clear();
-        tokenList.add(terminatorToken);
-        break;
-      }
-    }
-  }
-
   private Property<Boolean> myValid = new ValueProperty<>(true);
   private ParseNode myParseNode;
   private ReadableProperty<HybridEditorSpec<SourceT>> mySpec;
@@ -264,6 +249,17 @@ class TokenListEditor<SourceT> {
   }
 
   void processComments() {
-    processComments(tokens);
+    int size = tokens.size();
+    for (int i = 0; i < size; i++) {
+      Token token = tokens.get(i);
+      if (token instanceof CommentToken && i < size - 1) {
+        List<Token> subList = tokens.subList(i, size);
+        String tokenListText = TokenUtil.getText(subList);
+        Token terminatorToken = new CommentToken(tokenListText);
+        subList.clear();
+        tokens.add(terminatorToken);
+        break;
+      }
+    }
   }
 }
