@@ -1068,35 +1068,47 @@ abstract class BaseHybridEditorEditingTest<ContainerT, MapperT extends Mapper<Co
   }
 
   @Test
-  public void processTokensInSideTransform() {
+  public void processCommentsSideTransform() {
     setTokens(integer(1), Tokens.PLUS, integer(2), Tokens.PLUS, integer(3));
     select(2, false);
 
     type("#");
 
-    assertTokens(integer(1), Tokens.PLUS, integer(2), new CommentToken("# + 3"));
+    assertTokens(integer(1), Tokens.PLUS, integer(2), new CommentToken("#", " + 3"));
+    assertEquals(1, (int) ((TextCell) tokenCell(3)).caretPosition().get());
   }
 
   @Test
-  public void processTokensInTokenCompletion() {
+  public void processCommentsTokenCompletion() {
     setTokens(integer(1), Tokens.PLUS, integer(2), Tokens.PLUS, integer(3));
     select(3, true);
 
     type("#");
 
-    assertTokens(integer(1), Tokens.PLUS, integer(2), new CommentToken("#+ 3"));
+    assertTokens(integer(1), Tokens.PLUS, integer(2), new CommentToken("#", "+ 3"));
+    assertEquals(1, (int) ((TextCell) tokenCell(3)).caretPosition().get());
   }
 
   @Test
-  public void processTokensInAfterType() {
-    setTokens(integer(1), Tokens.PLUS, integer(2), new CommentToken("# + 34"));
+  public void processCommentsAfterType() {
+    setTokens(integer(1), Tokens.PLUS, integer(2), new CommentToken("#", " + 34"));
     select(3, false);
 
     left();
     type(" ");
 
-    assertTokens(integer(1), Tokens.PLUS, integer(2), new CommentToken("# + 3 4"));
+    assertTokens(integer(1), Tokens.PLUS, integer(2), new CommentToken("#", " + 3 4"));
     assertEquals(6, (int) ((TextCell) tokenCell(3)).caretPosition().get());
+  }
+
+  @Test
+  public void uncomment() {
+    setTokens(integer(1), Tokens.PLUS, integer(2), new CommentToken("#", " + 3"));
+    select(3, true);
+
+    del();
+
+    assertTokens(integer(1), Tokens.PLUS, integer(2), Tokens.PLUS, integer(3));
   }
 
   protected ValueToken createComplexToken() {

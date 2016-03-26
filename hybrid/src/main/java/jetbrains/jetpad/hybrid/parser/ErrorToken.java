@@ -15,6 +15,9 @@
  */
 package jetbrains.jetpad.hybrid.parser;
 
+import com.google.common.base.Predicate;
+import com.google.common.base.Predicates;
+
 public class ErrorToken extends BaseToken {
   private String myText;
 
@@ -42,5 +45,10 @@ public class ErrorToken extends BaseToken {
   @Override
   public String toString() {
     return "error: '" + myText + "'";
+  }
+
+  @Override
+  public Predicate<String> getValidator() {
+    return Predicates.alwaysFalse();
   }
 }

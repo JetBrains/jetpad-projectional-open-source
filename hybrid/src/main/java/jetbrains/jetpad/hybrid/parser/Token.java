@@ -15,6 +15,8 @@
  */
 package jetbrains.jetpad.hybrid.parser;
 
+import com.google.common.base.Predicate;
+
 public interface Token {
   boolean noSpaceToLeft();
   boolean noSpaceToRight();
@@ -27,4 +29,6 @@ public interface Token {
   String text();
 
   Token copy();
+
+  Predicate<String> getValidator();
 }

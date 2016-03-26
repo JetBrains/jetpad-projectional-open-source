@@ -30,6 +30,7 @@ import jetbrains.jetpad.completion.CompletionController;
 import jetbrains.jetpad.completion.CompletionItem;
 import jetbrains.jetpad.completion.CompletionParameters;
 import jetbrains.jetpad.completion.CompletionSupplier;
+import jetbrains.jetpad.hybrid.parser.CommentToken;
 import jetbrains.jetpad.hybrid.parser.Token;
 import jetbrains.jetpad.hybrid.parser.ValueToken;
 import jetbrains.jetpad.mapper.Mapper;
@@ -45,6 +46,16 @@ import static jetbrains.jetpad.hybrid.SelectionPosition.FIRST;
 import static jetbrains.jetpad.hybrid.SelectionPosition.LAST;
 
 class TokenCompleter {
+
+  private static boolean isComment(Cell targetCell) {
+    return targetCell instanceof TextTokenCell && ((TextTokenCell) targetCell).getToken() instanceof CommentToken;
+  }
+
+  private static int getCommentPrefixLength(Cell targetCell) {
+    TextTokenCell textTokenCell = (TextTokenCell) targetCell;
+    CommentToken commentToken = (CommentToken) textTokenCell.getToken();
+    return commentToken.getPrefix().length();
+  }
 
   private BaseHybridSynchronizer<?, ?> mySync;
 
@@ -126,7 +137,11 @@ class TokenCompleter {
 
         final Cell targetCell =  mySync.tokenCells().get(index + selectionIndex);
         if (!(targetCell instanceof TextCell) || !Objects.equal(((TextCell) targetCell).text().get(), oldText)) {
-          position = LAST;
+          if (isComment(targetCell)) {
+            position = null;
+          } else {
+            position = LAST;
+          }
         }
 
         Runnable result;
@@ -170,9 +185,22 @@ class TokenCompleter {
             }
             tokenListEditor.processComments();
             tokenListEditor.updateToPrintedTokens();
-            Runnable result = getTokenOperations().selectOnCreation(index + delta + selectionIndex, LAST);
+            Runnable result;
+            int targetIndex = index + delta + selectionIndex;
+            final Cell targetCell =  mySync.tokenCells().get(targetIndex);
+            if (isComment(targetCell)) {
+              result = new Runnable() {
+                @Override
+                public void run() {
+                  targetCell.focus();
+                  ((TextCell) targetCell).caretPosition().set(getCommentPrefixLength(targetCell));
+                }
+              };
+            } else {
+              result = getTokenOperations().selectOnCreation(targetIndex, LAST);
+            }
             if (cp.isEndRightTransform() && !cp.isMenu()) {
-              result = seq(result, activateCompletion(index + delta + selectionIndex));
+              result = seq(result, activateCompletion(targetIndex));
             }
             return result;
           }

@@ -49,7 +49,7 @@ class TokensUtil {
   }
 
   static void assertTokensEqual(List<Token> expected, List<Token> actual) {
-    assertEquals(expected.size(), actual.size());
+    assertEquals(expected + " " + actual, expected.size(), actual.size());
     for (int i = 0; i < expected.size(); i++) {
       Token expectedToken = expected.get(i);
       Token actualToken = actual.get(i);

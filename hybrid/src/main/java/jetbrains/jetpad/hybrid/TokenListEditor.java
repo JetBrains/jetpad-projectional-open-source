@@ -253,11 +253,13 @@ class TokenListEditor<SourceT> {
     for (int i = 0; i < size; i++) {
       Token token = tokens.get(i);
       if (token instanceof CommentToken && i < size - 1) {
+        CommentToken commentToken = (CommentToken) token;
         List<Token> subList = tokens.subList(i, size);
-        String tokenListText = TokenUtil.getText(subList);
-        Token terminatorToken = new CommentToken(tokenListText);
+        String prefix = commentToken.getPrefix();
+        String bodyText = TokenUtil.getText(subList).substring(prefix.length());
+        Token newCommentToken = new CommentToken(prefix, bodyText);
         subList.clear();
-        tokens.add(terminatorToken);
+        tokens.add(newCommentToken);
         break;
       }
     }

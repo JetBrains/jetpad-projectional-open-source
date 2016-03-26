@@ -134,6 +134,18 @@ class TokenOperations<SourceT> {
     return select(index, FIRST);
   }
 
+  private List<Token> toTokenList(TextCell textCell) {
+    CompletionTokenizer tokenizer = new CompletionTokenizer(mySync.editorSpec());
+    return tokenizer.tokenize(textCell.text().get());
+  }
+
+  Runnable replaceCommentToken(Cell contextCell, TextCell textCell) {
+    int index = tokenViews().indexOf(contextCell);
+    tokens().remove(index);
+    tokens().addAll(index, toTokenList(textCell));
+    return select(index, FIRST);
+  }
+
   boolean canMerge(Cell contextCell, int delta) {
     final int index = tokenViews().indexOf(contextCell);
 
@@ -270,12 +282,11 @@ class TokenOperations<SourceT> {
     return false;
   }
 
-  boolean afterPaste(TextCell textView) {
-    CompletionTokenizer tokenizer = new CompletionTokenizer(mySync.editorSpec());
-    List<Token> newTokens = tokenizer.tokenize(textView.text().get());
+  boolean afterPaste(TextCell textCell) {
+    List<Token> newTokens = toTokenList(textCell);
     int index;
     if (!tokens().isEmpty()) {
-      index = tokenViews().indexOf(textView);
+      index = tokenViews().indexOf(textCell);
       tokens().remove(index);
     } else {
       index = 0;

@@ -15,6 +15,7 @@
  */
 package jetbrains.jetpad.hybrid;
 
+import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 import com.google.common.base.Supplier;
 import jetbrains.jetpad.cell.trait.CellTrait;
@@ -80,7 +81,7 @@ class TextTokenCell extends TextCell {
         return new CellTrait[] {
           new TokenCellTraits.LeftLeafTokenCellTrait(),
           new TokenCellTraits.RightLeafTokenCellTrait(),
-          TextEditing.validTextEditing(myToken instanceof ErrorToken ? Predicates.<String>alwaysFalse() : Predicates.equalTo(myToken.text()), tokenTextColor(), false)
+          TextEditing.validTextEditing(myToken.getValidator(), tokenTextColor(), false)
         };
       }
 
@@ -137,5 +138,10 @@ class TextTokenCell extends TextCell {
 
   boolean noSpaceToLeft() {
     return myToken.noSpaceToLeft() && !myFirst;
+  }
+
+  @Override
+  public String toString() {
+    return "TextTokenCell('" + text().get() + "')@" + Integer.toHexString(hashCode());
   }
 }
