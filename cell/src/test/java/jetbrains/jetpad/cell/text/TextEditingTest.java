@@ -567,11 +567,11 @@ public class TextEditingTest extends EditingTestCase {
   }
 
   @Test
-  public void textPasteFiltersNewLines() {
-    textView.text().set("");
+  public void textPasteRejectsMultilineString() {
+    textView.text().set("a");
     textView.caretPosition().set(0);
 
-    paste("\na");
+    paste("\nb");
 
     assertEquals("a", textView.text().get());
   }

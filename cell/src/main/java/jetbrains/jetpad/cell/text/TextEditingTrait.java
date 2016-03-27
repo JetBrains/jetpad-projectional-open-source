@@ -181,16 +181,13 @@ public class TextEditingTrait extends TextNavigationTrait {
 
     String text = content.get(ContentKinds.TEXT);
 
-    StringBuilder newText = new StringBuilder();
-    for (int i = 0; i < text.length(); i++) {
-      if (text.charAt(i) != '\n') {
-        newText.append(text.charAt(i));
-      }
+    if (text.contains("\n") || text.contains("\r")) {
+      return;
     }
 
     CellTextEditor editor = TextEditing.cellTextEditor(cell);
     clearSelection(editor);
-    pasteText(editor, newText.toString());
+    pasteText(editor, text);
     onAfterPaste(editor);
     event.consume();
   }
