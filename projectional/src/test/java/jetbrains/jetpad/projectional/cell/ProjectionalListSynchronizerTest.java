@@ -16,7 +16,9 @@
 package jetbrains.jetpad.projectional.cell;
 
 import com.google.common.base.Function;
+import com.google.common.base.Splitter;
 import com.google.common.base.Supplier;
+import com.google.common.collect.Lists;
 import jetbrains.jetpad.base.*;
 import jetbrains.jetpad.cell.*;
 import jetbrains.jetpad.cell.action.CellActions;
@@ -54,6 +56,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static com.google.common.collect.ImmutableList.of;
 import static org.junit.Assert.*;
 
 
@@ -65,6 +68,52 @@ public class ProjectionalListSynchronizerTest extends EditingTestCase {
   }
 
   private static final ContentKind<Child> KIND = ContentKinds.create("child");
+
+  private final Function<String, Child> itemParser = new Function<String, Child>() {
+    @Override
+    public Child apply(String s) {
+      switch (s) {
+        case "EmptyChild":
+        case "EmptyChild\n":
+          return new EmptyChild();
+        case "NonEmptyChild":
+        case "NonEmptyChild\n":
+          return new NonEmptyChild();
+        default:
+          throw new IllegalArgumentException(s);
+      }
+    }
+  };
+
+  private final Function<String, List<Child>> listParser = new Function<String, List<Child>>() {
+    @Override
+    public List<Child> apply(String s) {
+      return Lists.transform(Splitter.on('\n').omitEmptyStrings().splitToList(s), new Function<String, Child>() {
+        @Override
+        public Child apply(String s) {
+          return itemParser.apply(s);
+        }
+      });
+    }
+  };
+
+  private final Function<Child, String> itemTextGen = new Function<Child, String>() {
+    @Override
+    public String apply(Child child) {
+      return child.getClass().getSimpleName() + '\n';
+    }
+  };
+
+  private final Function<List<Child>, String> listTextGen = new Function<List<Child>, String>() {
+    @Override
+    public String apply(List<Child> children) {
+      StringBuilder text = new StringBuilder();
+      for (Child child : children) {
+        text.append(child.getClass().getSimpleName()).append('\n');
+      }
+      return text.toString();
+    }
+  };
 
   private boolean myWithSeparator;
 
@@ -838,6 +887,66 @@ public class ProjectionalListSynchronizerTest extends EditingTestCase {
     assertEquals(2, container.children.size());
   }
 
+  @Test
+  public void copyPasteMultiple() {
+    container.children.add(new EmptyChild());
+    container.children.add(new EmptyChild());
+    selectChild(0);
+
+    press(KeyStrokeSpecs.SELECT_AFTER);
+    press(KeyStrokeSpecs.SELECT_AFTER);
+    press(KeyStrokeSpecs.COPY);
+    press(KeyStrokeSpecs.PASTE);
+
+    assertEquals(4, container.children.size());
+  }
+
+  @Test
+  public void copyWithItemToTextSupport() {
+    rootMapper.mySynchronizer.supportContentKind(ContentKinds.TEXT, itemParser, itemTextGen);
+    container.children.add(new EmptyChild());
+    container.children.add(new NonEmptyChild());
+    selectChild(0);
+
+    press(KeyStrokeSpecs.SELECT_AFTER);
+    press(KeyStrokeSpecs.SELECT_AFTER);
+
+    ClipboardContent content = copy();
+    assertEquals(itemTextGen.apply(new EmptyChild()), content.toString());
+  }
+
+  @Test
+  public void copyWithListToTextSupport() {
+    rootMapper.mySynchronizer.supportContentKindCompatibleToItemsList(ContentKinds.TEXT, listParser, listTextGen);
+    container.children.add(new EmptyChild());
+    container.children.add(new NonEmptyChild());
+
+    selectChild(0);
+    press(KeyStrokeSpecs.SELECT_AFTER);
+    press(KeyStrokeSpecs.SELECT_AFTER);
+
+    ClipboardContent content = copy();
+    assertEquals(listTextGen.apply(of(new EmptyChild(), new NonEmptyChild())), content.toString());
+  }
+
+  @Test
+  public void pasteItemAsText() {
+    rootMapper.mySynchronizer.supportContentKind(ContentKinds.TEXT, itemParser, itemTextGen);
+
+    paste(itemTextGen.apply(new EmptyChild()));
+    assertEquals(1, container.children.size());
+    assertTrue(container.children.get(0) instanceof EmptyChild);
+  }
+
+  @Test
+  public void pasteListAsText() {
+    rootMapper.mySynchronizer.supportContentKindCompatibleToItemsList(ContentKinds.TEXT, listParser, listTextGen);
+
+    paste(listTextGen.apply(of(new EmptyChild(), new NonEmptyChild())));
+    assertEquals(2, container.children.size());
+    assertTrue(container.children.get(0) instanceof EmptyChild);
+    assertTrue(container.children.get(1) instanceof NonEmptyChild);
+  }
 
   @Test
   public void canCopyFocusedItem() {
