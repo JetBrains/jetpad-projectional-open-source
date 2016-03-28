@@ -15,19 +15,16 @@
  */
 package jetbrains.jetpad.hybrid;
 
-import com.google.common.base.Predicate;
-import com.google.common.base.Predicates;
 import com.google.common.base.Supplier;
+import jetbrains.jetpad.cell.Cell;
+import jetbrains.jetpad.cell.TextCell;
+import jetbrains.jetpad.cell.text.TextEditing;
 import jetbrains.jetpad.cell.trait.CellTrait;
 import jetbrains.jetpad.cell.trait.CellTraitPropertySpec;
-import jetbrains.jetpad.hybrid.parser.ErrorToken;
+import jetbrains.jetpad.cell.util.CellLists;
 import jetbrains.jetpad.hybrid.parser.SimpleToken;
 import jetbrains.jetpad.hybrid.parser.Token;
-import jetbrains.jetpad.cell.TextCell;
-import jetbrains.jetpad.cell.Cell;
-import jetbrains.jetpad.cell.util.CellLists;
 import jetbrains.jetpad.projectional.cell.ProjectionalSynchronizers;
-import jetbrains.jetpad.cell.text.TextEditing;
 import jetbrains.jetpad.projectional.util.CellNavigationController;
 import jetbrains.jetpad.values.Color;
 
