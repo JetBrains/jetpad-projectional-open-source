@@ -173,6 +173,8 @@ abstract class BaseCellMapper<SourceT extends Cell> extends Mapper<SourceT, Elem
     String backgroundColor = null;
     if (isLeaf() && focusHighlighted) {
       backgroundColor = CSS.currentHighlightColor();
+    } else if (getSource().get(Cell.YELLOWISH_BACKGROUND)) {
+      backgroundColor = CSS.yellowishBackgroundColor();
     } else if (background != null) {
       backgroundColor = background.toCssColor();
     }

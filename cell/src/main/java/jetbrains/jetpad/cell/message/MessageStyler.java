@@ -33,6 +33,6 @@ public class MessageStyler {
   }
 
   protected Registration doApplyWarning(Cell cell) {
-    return cell.set(Cell.YELLOW_UNDERLINE, true);
+    return cell.set(Cell.YELLOWISH_BACKGROUND, true);
   }
 }
