@@ -148,6 +148,8 @@ class BaseCellMapper<SourceT extends Cell, TargetT extends View> extends Mapper<
       background = isLeaf() ? CellContainerToViewMapper.FOCUS_HIGHLIGHT_COLOR : CellContainerToViewMapper.SELECTION_COLOR;
     } else if (getSource().get(Cell.PAIR_HIGHLIGHTED)) {
       background = CellContainerToViewMapper.PAIR_HIGHLIGHT_COLOR;
+    } else if (getSource().get(Cell.YELLOWISH_BACKGROUND)) {
+      background = CellContainerToViewMapper.YELLOWISH_BACKGROUND_COLOR;
     }
     getTarget().background().set(background);
 
