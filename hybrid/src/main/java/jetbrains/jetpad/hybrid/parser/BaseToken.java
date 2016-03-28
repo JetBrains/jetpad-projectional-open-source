@@ -15,6 +15,9 @@
  */
 package jetbrains.jetpad.hybrid.parser;
 
+import com.google.common.base.Predicate;
+import com.google.common.base.Predicates;
+
 public abstract class BaseToken implements Token {
   @Override
   public boolean noSpaceToLeft() {
@@ -34,5 +37,10 @@ public abstract class BaseToken implements Token {
   @Override
   public Token copy() {
     return this;
+  }
+
+  @Override
+  public Predicate<String> getValidator() {
+    return Predicates.equalTo(text());
   }
 }

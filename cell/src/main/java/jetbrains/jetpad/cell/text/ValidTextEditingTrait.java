@@ -26,9 +26,11 @@ import jetbrains.jetpad.cell.completion.CompletionItems;
 import jetbrains.jetpad.cell.completion.Side;
 import jetbrains.jetpad.cell.message.MessageController;
 import jetbrains.jetpad.cell.trait.CellTraitPropertySpec;
+import jetbrains.jetpad.cell.util.Cells;
 import jetbrains.jetpad.completion.BaseCompletionParameters;
 import jetbrains.jetpad.completion.CompletionItem;
 import jetbrains.jetpad.completion.CompletionParameters;
+import jetbrains.jetpad.event.Event;
 import jetbrains.jetpad.event.Key;
 import jetbrains.jetpad.event.KeyEvent;
 import jetbrains.jetpad.event.ModifierKey;
@@ -87,7 +89,11 @@ class ValidTextEditingTrait extends TextEditingTrait {
 
   private void validate(Cell cell) {
     CellTextEditor editor = TextEditing.cellTextEditor(cell);
-    MessageController.setBroken(cell, isValid(editor) ? null : "Cannot resolve '" + TextEditing.text(editor) + '\'');
+    boolean valid = isValid(editor);
+    MessageController.setBroken(cell, valid ? null : "Cannot resolve '" + TextEditing.text(editor) + '\'');
+    if (!valid) {
+      cell.dispatch(new Event(), Cells.BECAME_INVALID);
+    }
   }
 
   @Override
@@ -176,7 +182,9 @@ class ValidTextEditingTrait extends TextEditingTrait {
   protected void onAfterDelete(CellTextEditor editor) {
     super.onAfterDelete(editor);
 
-    if (!editor.getCell().get(TextEditing.EAGER_COMPLETION)) return;
+    Cell cell = editor.getCell();
+    if (cell.getParent() == null) return;
+    if (!cell.get(TextEditing.EAGER_COMPLETION)) return;
 
     if (isValid(editor)) return;
     String text = editor.text().get();
@@ -184,9 +192,9 @@ class ValidTextEditingTrait extends TextEditingTrait {
     if (text.isEmpty()) return;
 
     int caret = editor.caretPosition().get();
-    CellContainer cellContainer = editor.getCell().getContainer();
-    CompletionItems completion = Completion.completionFor(editor.getCell(), CompletionParameters.EMPTY);
-    if (completion.hasSingleMatch(text, editor.getCell().get(TextEditing.EAGER_COMPLETION))) {
+    CellContainer cellContainer = cell.getContainer();
+    CompletionItems completion = Completion.completionFor(cell, CompletionParameters.EMPTY);
+    if (completion.hasSingleMatch(text, cell.get(TextEditing.EAGER_COMPLETION))) {
       completion.completeFirstMatch(text);
       Cell focusedCell = cellContainer.focusedCell.get();
       if (!TextEditing.isTextEditor(focusedCell)) return;

@@ -348,7 +348,7 @@ public class ExprHybridEditorSpec implements HybridEditorSpec<Expr> {
         result.add(new ByBoundsCompletionItem(commentPrefix) {
           @Override
           public Runnable complete(String text) {
-            return tokenHandler.apply(new CommentToken(commentPrefix + getBody(text)));
+            return tokenHandler.apply(new CommentToken(commentPrefix, getBody(text)));
           }
         });
 

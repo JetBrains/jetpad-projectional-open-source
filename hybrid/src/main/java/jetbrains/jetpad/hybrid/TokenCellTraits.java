@@ -18,6 +18,7 @@ package jetbrains.jetpad.hybrid;
 import com.google.common.base.Function;
 import jetbrains.jetpad.cell.Cell;
 import jetbrains.jetpad.cell.CellContainer;
+import jetbrains.jetpad.cell.TextCell;
 import jetbrains.jetpad.cell.completion.Completion;
 import jetbrains.jetpad.cell.position.Positions;
 import jetbrains.jetpad.cell.text.TextEditing;
@@ -30,6 +31,7 @@ import jetbrains.jetpad.event.Event;
 import jetbrains.jetpad.event.Key;
 import jetbrains.jetpad.event.KeyEvent;
 import jetbrains.jetpad.event.KeyStrokeSpecs;
+import jetbrains.jetpad.hybrid.parser.CommentToken;
 import jetbrains.jetpad.hybrid.parser.ErrorToken;
 import jetbrains.jetpad.hybrid.parser.Token;
 
@@ -167,12 +169,26 @@ class TokenCellTraits {
         return;
       }
 
+      if (spec == Cells.BECAME_INVALID && cell.getParent() != null) {
+        int index = tokenCells(cell).indexOf(cell);
+        Token current = tokens(cell).get(index);
+
+        if (current instanceof CommentToken) {
+          TextCell textCell = (TextCell) cell;
+          tokenOperations(cell).replaceCommentToken(cell, textCell).run();
+          event.consume();
+          return;
+        }
+      }
+
       super.onCellTraitEvent(cell, spec, event);
     }
 
     @Override
     public Object get(Cell cell, CellTraitPropertySpec<?> spec) {
-      if (spec == Completion.COMPLETION && !hybridSync(cell).hasSelection()) return tokenCompletion(cell).tokenCompletion(cell);
+      if (spec == Completion.COMPLETION && !hybridSync(cell).hasSelection()) {
+        return tokenCompletion(cell).tokenCompletion(cell);
+      }
 
       return super.get(cell, spec);
     }

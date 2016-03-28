@@ -15,12 +15,28 @@
  */
 package jetbrains.jetpad.hybrid.parser;
 
+import com.google.common.base.Predicate;
 import jetbrains.jetpad.values.Color;
+
+import javax.annotation.Nullable;
 
 public final class CommentToken extends SimpleToken {
 
-  public CommentToken(String text) {
-    super(text);
+  private final String myPrefix;
+
+  public CommentToken(String prefix, String bodyText) {
+    super(prefix + bodyText);
+    if (prefix == null) {
+      throw new NullPointerException("Null prefix");
+    }
+    if (bodyText == null) {
+      throw new NullPointerException("Null bodyText");
+    }
+    myPrefix = prefix;
+  }
+
+  public String getPrefix() {
+    return myPrefix;
   }
 
   @Override
@@ -38,5 +54,15 @@ public final class CommentToken extends SimpleToken {
   @Override
   public Color getColor() {
     return Color.GRAY;
+  }
+
+  @Override
+  public Predicate<String> getValidator() {
+    return new Predicate<String>() {
+      @Override
+      public boolean apply(@Nullable String input) {
+        return input != null && input.startsWith(myPrefix);
+      }
+    };
   }
 }
