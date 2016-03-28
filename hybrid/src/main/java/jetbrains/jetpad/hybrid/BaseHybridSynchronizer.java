@@ -69,7 +69,7 @@ public abstract class BaseHybridSynchronizer<SourceT, SpecT extends SimpleHybrid
 
   static final CellTraitPropertySpec<HybridSynchronizer<?>> HYBRID_SYNCHRONIZER = new CellTraitPropertySpec<>("hybridSynchronizer");
 
-  private static final ContentKind<List<Token>> TOKENS_CONTENT = new ContentKind<List<Token>>() {};
+  public static final ContentKind<List<Token>> TOKENS_CONTENT = new ContentKind<List<Token>>() {};
 
   private TokenListEditor<SourceT> myTokenListEditor;
 
