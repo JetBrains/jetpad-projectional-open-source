@@ -629,9 +629,7 @@ public abstract class BaseHybridSynchronizer<SourceT, SpecT extends SimpleHybrid
     return CellActions.toCell(myPlaceholder);
   }
 
-  public ReadableProperty<Boolean> valid() {
-    return myTokenListEditor.valid;
-  }
+  public abstract ReadableProperty<Boolean> valid();
 
   public List<Cell> tokenCells() {
     return Collections.unmodifiableList(myTargetList);

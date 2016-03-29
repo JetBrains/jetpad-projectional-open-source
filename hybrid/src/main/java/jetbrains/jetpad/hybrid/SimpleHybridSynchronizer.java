@@ -28,10 +28,7 @@ import jetbrains.jetpad.hybrid.parser.prettyprint.PrettyPrinter;
 import jetbrains.jetpad.mapper.Mapper;
 import jetbrains.jetpad.model.event.CompositeRegistration;
 import jetbrains.jetpad.model.event.EventHandler;
-import jetbrains.jetpad.model.property.Properties;
-import jetbrains.jetpad.model.property.Property;
-import jetbrains.jetpad.model.property.PropertyBinding;
-import jetbrains.jetpad.model.property.PropertyChangeEvent;
+import jetbrains.jetpad.model.property.*;
 import jetbrains.jetpad.projectional.cell.mapping.ToCellMapping;
 
 import java.util.ArrayList;
@@ -77,6 +74,7 @@ public class SimpleHybridSynchronizer<SourceT> extends BaseHybridSynchronizer<So
   }
 
   private final Function<Integer, Object> mySourceSupplier;
+  private final ReadableProperty<Boolean> myValid;
 
   public SimpleHybridSynchronizer(
     Mapper<?, ?> contextMapper,
@@ -95,17 +93,18 @@ public class SimpleHybridSynchronizer<SourceT> extends BaseHybridSynchronizer<So
     super(contextMapper, source, target, Properties.constant(spec),
       new TokenListEditor<>(toHybridEditorSpec(spec), source.getTokens(), false));
     mySourceSupplier = sourceSupplier;
+    myValid = Properties.or(Properties.empty(source.getTokens()), Properties.notNull(source));
   }
 
   @Override
   protected Registration onAttach(Property<SourceT> syncValue) {
-    updateTargetError();
+    updateTargetError(myValid.get());
     return new CompositeRegistration(
       PropertyBinding.bindOneWay(getSource(), syncValue),
-      Properties.isNull(getSource()).addHandler(new EventHandler<PropertyChangeEvent<Boolean>>() {
+      myValid.addHandler(new EventHandler<PropertyChangeEvent<Boolean>>() {
         @Override
         public void onEvent(PropertyChangeEvent<Boolean> event) {
-          updateTargetError();
+          updateTargetError(event.getNewValue());
         }
       }));
   }
@@ -148,7 +147,12 @@ public class SimpleHybridSynchronizer<SourceT> extends BaseHybridSynchronizer<So
     return null;
   }
 
-  private void updateTargetError() {
-    MessageController.setError(getTarget(), getSource().get() == null ? "parsing error" : null);
+  @Override
+  public ReadableProperty<Boolean> valid() {
+    return myValid;
+  }
+
+  private void updateTargetError(boolean valid) {
+    MessageController.setError(getTarget(), valid ? null : "parsing error");
   }
 }

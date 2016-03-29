@@ -128,6 +128,11 @@ public class HybridSynchronizer<SourceT> extends BaseHybridSynchronizer<SourceT,
     };
   }
 
+  @Override
+  public ReadableProperty<Boolean> valid() {
+    return tokenListEditor().valid;
+  }
+
   private void updateTargetError() {
     MessageController.setError(getTarget(), valid().get() ? null : "parsing error");
   }
