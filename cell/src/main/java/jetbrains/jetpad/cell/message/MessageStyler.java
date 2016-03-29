@@ -21,7 +21,7 @@ import jetbrains.jetpad.cell.TextCell;
 import jetbrains.jetpad.values.Color;
 
 public class MessageStyler {
-  public static final Color YELLOWISH_BROWN = new Color(248, 231, 172);
+  public static final Color WARNING_BACKGROUND_COLOR = new Color(248, 231, 172);
 
   protected Registration doApplyBroken(Cell cell) {
     if (cell instanceof TextCell) {
@@ -35,6 +35,6 @@ public class MessageStyler {
   }
 
   protected Registration doApplyWarning(Cell cell) {
-    return cell.set(Cell.BACKGROUND, YELLOWISH_BROWN);
+    return cell.set(Cell.BACKGROUND, WARNING_BACKGROUND_COLOR);
   }
 }
