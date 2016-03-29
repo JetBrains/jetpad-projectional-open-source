@@ -177,20 +177,11 @@ public class TextEditingTrait extends TextNavigationTrait {
   @Override
   public void onPaste(Cell cell, PasteEvent event) {
     ClipboardContent content = event.getContent();
-    if (!content.isSupported(ContentKinds.TEXT)) return;
-
-    String text = content.get(ContentKinds.TEXT);
-
-    StringBuilder newText = new StringBuilder();
-    for (int i = 0; i < text.length(); i++) {
-      if (text.charAt(i) != '\n') {
-        newText.append(text.charAt(i));
-      }
-    }
+    if (!content.isSupported(ContentKinds.SINGLE_LINE_TEXT)) return;
 
     CellTextEditor editor = TextEditing.cellTextEditor(cell);
     clearSelection(editor);
-    pasteText(editor, newText.toString());
+    pasteText(editor, content.get(ContentKinds.SINGLE_LINE_TEXT));
     onAfterPaste(editor);
     event.consume();
   }
@@ -213,7 +204,7 @@ public class TextEditingTrait extends TextNavigationTrait {
     if (from == to) return;
 
     String selection = editor.text().get().substring(from, to);
-    event.consume(new TextClipboardContent(selection));
+    event.consume(TextContentHelper.createClipboardContent(selection));
   }
 
   private void pasteText(CellTextEditor editor, String text) {

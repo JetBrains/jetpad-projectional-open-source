@@ -52,7 +52,6 @@ import java.awt.datatransfer.*;
 import java.awt.event.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
-import java.awt.geom.Arc2D;
 import java.awt.image.BufferedImage;
 import java.awt.image.ImageObserver;
 import java.io.ByteArrayInputStream;
@@ -246,7 +245,7 @@ public class ViewContainerComponent extends JComponent implements Scrollable {
               if (cb.isDataFlavorAvailable(DataFlavor.stringFlavor)) {
                 try {
                   String text = (String) cb.getData(DataFlavor.stringFlavor);
-                  myContainer.paste(new PasteEvent(new TextClipboardContent(text)));
+                  myContainer.paste(new PasteEvent(TextContentHelper.createClipboardContent(text)));
                   e.consume();
                   return;
                 } catch (UnsupportedFlavorException | IOException ex) {
@@ -265,8 +264,8 @@ public class ViewContainerComponent extends JComponent implements Scrollable {
               ClipboardContent content = event.getResult();
               if (content != null) {
                 String text;
-                if (content.isSupported(ContentKinds.TEXT)) {
-                  text = content.get(ContentKinds.TEXT);
+                if (content.isSupported(ContentKinds.ANY_TEXT)) {
+                  text = content.get(ContentKinds.ANY_TEXT);
                 } else {
                   text = content.toString();
                 }

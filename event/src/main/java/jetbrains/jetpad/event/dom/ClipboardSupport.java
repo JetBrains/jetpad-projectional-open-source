@@ -46,10 +46,10 @@ public class ClipboardSupport {
     }.schedule(20);
   }
 
-  public void copyContent(ClipboardContent content ) {
+  public void copyContent(ClipboardContent content) {
     final TextArea copyArea = createClipboardTextArea();
-    if (content.isSupported(ContentKinds.TEXT)) {
-      copyArea.setText(content.get(ContentKinds.TEXT));
+    if (content.isSupported(ContentKinds.ANY_TEXT)) {
+      copyArea.setText(content.get(ContentKinds.ANY_TEXT));
     } else {
       copyArea.setText(content.toString());
     }

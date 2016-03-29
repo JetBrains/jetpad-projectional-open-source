@@ -16,6 +16,7 @@
 package jetbrains.jetpad.projectional.cell;
 
 import com.google.common.base.Function;
+import com.google.common.base.Functions;
 import com.google.common.base.Objects;
 import com.google.common.base.Supplier;
 import jetbrains.jetpad.base.Registration;
@@ -46,12 +47,15 @@ import jetbrains.jetpad.model.event.EventHandler;
 import jetbrains.jetpad.model.property.Property;
 import jetbrains.jetpad.model.property.PropertyChangeEvent;
 import jetbrains.jetpad.model.property.ValueProperty;
+import jetbrains.jetpad.model.util.ListMap;
 import jetbrains.jetpad.projectional.generic.EmptyRoleCompletion;
 import jetbrains.jetpad.projectional.generic.Role;
 import jetbrains.jetpad.projectional.generic.RoleCompletion;
 import jetbrains.jetpad.values.Color;
 
 import java.util.*;
+
+import static jetbrains.jetpad.event.ContentKinds.listOf;
 
 abstract class BaseProjectionalSynchronizer<SourceT, ContextT, SourceItemT> implements ProjectionalRoleSynchronizer<ContextT, SourceItemT> {
   private RoleSynchronizer<SourceItemT, Cell> myRoleSynchronizer;
@@ -66,6 +70,10 @@ abstract class BaseProjectionalSynchronizer<SourceT, ContextT, SourceItemT> impl
   private DeleteHandler myDeleteHandler = DeleteHandler.EMPTY;
   private ContentKind<SourceItemT> myItemKind;
   private Function<SourceItemT, SourceItemT> myCloner;
+  private Function<SourceItemT, String> myContentToString;
+  private Function<List<SourceItemT>, String> myContentListToString;
+  private ListMap<ContentKind, Function<?, SourceItemT>> myContentKinds = new ListMap<>();
+  private ListMap<ContentKind, Function<?, List<SourceItemT>>> myListContentKinds = new ListMap<>();
   private Runnable myOnLastItemDeleted;
   private List<Cell> myTargetList;
   private List<Registration> myRegistrations;
@@ -173,6 +181,36 @@ abstract class BaseProjectionalSynchronizer<SourceT, ContextT, SourceItemT> impl
   public void setClipboardParameters(ContentKind<SourceItemT> kind, Function<SourceItemT, SourceItemT> cloner) {
     myItemKind = kind;
     myCloner = cloner;
+    myContentKinds.put(kind, Functions.<SourceItemT>identity());
+  }
+
+  @Override
+  public void supportContentToString(Function<SourceItemT, String> toString) {
+    myContentToString = toString;
+  }
+
+  @Override
+  public void supportContentListToString(Function<List<SourceItemT>, String> listToString) {
+    myContentListToString = listToString;
+  }
+
+  @Override
+  public <ContentT> void supportContentKind(ContentKind<ContentT> kind, Function<ContentT, SourceItemT> fromContent) {
+    if (myContentKinds.containsKey(kind)) {
+      throw new IllegalArgumentException(kind + " already supported");
+    }
+    myContentKinds.put(kind, fromContent);
+  }
+
+  @Override
+  public <ContentT> void supportListContentKind(ContentKind<ContentT> kind, Function<ContentT, List<SourceItemT>> fromContent) {
+    if (!isMultiItemPasteSupported()) {
+      throw new IllegalArgumentException("Multi-item paste not supported");
+    }
+    if (myListContentKinds.containsKey(kind)) {
+      throw new IllegalArgumentException(kind + " already supported");
+    }
+    myListContentKinds.put(kind, fromContent);
   }
 
   protected Cell getTarget() {
@@ -342,7 +380,7 @@ abstract class BaseProjectionalSynchronizer<SourceT, ContextT, SourceItemT> impl
               return copiedItems.size() <= 1;
             }
 
-            return Objects.equal(kind, ContentKinds.listOf(myItemKind));
+            return Objects.equal(kind, listOf(myItemKind));
           }
 
           @Override
@@ -356,6 +394,17 @@ abstract class BaseProjectionalSynchronizer<SourceT, ContextT, SourceItemT> impl
               result.add(myCloner.apply(item));
             }
             return (T) result;
+          }
+
+          @Override
+          public String toString() {
+            if (myContentListToString != null) {
+              return myContentListToString.apply(copiedItems);
+            }
+            if (copiedItems.size() > 0 && myContentToString != null) {
+              return myContentToString.apply(copiedItems.get(0));
+            }
+            return super.toString();
           }
         };
       }
@@ -385,17 +434,46 @@ abstract class BaseProjectionalSynchronizer<SourceT, ContextT, SourceItemT> impl
       }
 
       private boolean canPaste(ClipboardContent content) {
-        if (myItemKind == null) return false;
-        if (content.isSupported(myItemKind)) return true;
-        return isMultiItemPasteSupported() && content.isSupported(ContentKinds.listOf(myItemKind));
+        for (ContentKind kind : myContentKinds.keySet()) {
+          if (content.isSupported(kind) || (isMultiItemPasteSupported() && content.isSupported(listOf(kind)))) {
+            return true;
+          }
+        }
+        if (isMultiItemPasteSupported()) {
+          for (ContentKind kind : myListContentKinds.keySet()) {
+            if (content.isSupported(kind)) {
+              return true;
+            }
+          }
+        }
+        return false;
       }
 
       private void paste(ClipboardContent content) {
-        if (isMultiItemPasteSupported() && content.isSupported(ContentKinds.listOf(myItemKind))) {
-          insertItems(content.get(ContentKinds.listOf(myItemKind))).run();
-        } else {
-          insertItem(content.get(myItemKind)).run();
+        for (ListMap<ContentKind, Function<?, SourceItemT>>.Entry entry : myContentKinds.entrySet()) {
+          ContentKind kind = entry.key();
+          Function<Object, SourceItemT> fromContent = (Function<Object, SourceItemT>) entry.value();
+          if (content.isSupported(entry.key())) {
+            Object contentValue = content.get(kind);
+            insertItem(fromContent.apply(contentValue)).run();
+            return;
+          } else if (isMultiItemPasteSupported() && content.isSupported(listOf(kind))) {
+            Object contentList = content.get(listOf(kind));
+            insertItems((List<SourceItemT>) fromContent.apply(contentList)).run();
+            return;
+          }
         }
+        if (isMultiItemPasteSupported()) {
+          for (ListMap<ContentKind, Function<?, List<SourceItemT>>>.Entry entry : myListContentKinds.entrySet()) {
+            ContentKind kind = entry.key();
+            if (content.isSupported(kind)) {
+              Function<Object, List<SourceItemT>> fromContent = (Function<Object, List<SourceItemT>>) entry.value();
+              insertItems(fromContent.apply(content.get(kind))).run();
+              return;
+            }
+          }
+        }
+        throw new IllegalStateException("canPaste() and paste() are inconsistent. Content: " + content);
       }
 
       @Override

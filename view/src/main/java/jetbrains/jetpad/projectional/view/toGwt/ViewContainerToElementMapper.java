@@ -244,7 +244,7 @@ public class ViewContainerToElementMapper extends Mapper<ViewContainer, Element>
                       if (Strings.isNullOrEmpty(text)) {
                         getSource().keyPressed(e.copy());
                       } else {
-                        getSource().paste(new PasteEvent(new TextClipboardContent(text)));
+                        getSource().paste(new PasteEvent(TextContentHelper.createClipboardContent(text)));
                       }
                     }
                   });
