@@ -28,6 +28,10 @@ public interface ProjectionalRoleSynchronizer<ContextT, SourceT> extends RoleSyn
   void setCompletion(RoleCompletion<? super ContextT, SourceT> completion);
   void setDeleteHandler(DeleteHandler handler);
   void setClipboardParameters(ContentKind<SourceT> kind, Function<SourceT, SourceT> cloner);
+  void supportContentToString(Function<SourceT, String> toString);
+  void supportContentListToString(Function<List<SourceT>, String> listToString);
+  <ContentT> void supportContentKind(ContentKind<ContentT> kind, Function<ContentT, SourceT> fromContent);
+  <ContentT> void supportListContentKind(ContentKind<ContentT> kind, Function<ContentT, List<SourceT>> fromContent);
   void setOnLastItemDeleted(Runnable action);
   void setPlaceholderText(String text);
   void setItemFactory(Supplier<SourceT> itemFactory);

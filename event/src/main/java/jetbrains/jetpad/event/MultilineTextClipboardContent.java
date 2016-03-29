@@ -15,26 +15,25 @@
  */
 package jetbrains.jetpad.event;
 
-public class TextClipboardContent implements ClipboardContent {
-  private String myText;
+import static jetbrains.jetpad.event.ContentKinds.*;
 
-  public TextClipboardContent(String text) {
-    myText = text;
+class MultilineTextClipboardContent implements ClipboardContent {
+  private Iterable<String> myLines;
+
+  MultilineTextClipboardContent(Iterable<String> text) {
+    myLines = text;
   }
 
   @Override
   public boolean isSupported(ContentKind<?> kind) {
-    return kind == ContentKinds.TEXT;
+    return kind == MULTILINE_TEXT || kind == ANY_TEXT;
   }
 
   @Override
   public <T> T get(ContentKind<T> kind) {
-    if (kind == ContentKinds.TEXT) return (T) myText;
+    if (kind == MULTILINE_TEXT) return (T) myLines;
+    if (kind == ANY_TEXT) return (T) TextContentHelper.joinLines(myLines);
 
     throw new IllegalArgumentException();
-  }
-
-  public String getText() {
-    return myText;
   }
 }

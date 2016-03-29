@@ -216,8 +216,8 @@ public class CellContainer {
 
   private void setContent(CopyCutEvent e) {
     myContent = e.getResult();
-    if (myContent.isSupported(ContentKinds.TEXT)) {
-      myLastSeenText = myContent.get(ContentKinds.TEXT);
+    if (myContent.isSupported(ContentKinds.ANY_TEXT)) {
+      myLastSeenText = myContent.get(ContentKinds.ANY_TEXT);
     } else {
       myLastSeenText = myContent.toString();
     }
@@ -225,7 +225,7 @@ public class CellContainer {
 
   public void paste(String text) {
     if (!Objects.equal(myLastSeenText, text)) {
-      myContent = new TextClipboardContent(text);
+      myContent = TextContentHelper.createClipboardContent(text);
       myLastSeenText = text;
     }
 

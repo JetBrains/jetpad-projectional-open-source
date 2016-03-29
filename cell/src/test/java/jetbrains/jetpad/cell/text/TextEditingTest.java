@@ -567,11 +567,11 @@ public class TextEditingTest extends EditingTestCase {
   }
 
   @Test
-  public void textPasteFiltersNewLines() {
-    textView.text().set("");
+  public void textPasteRejectsMultilineString() {
+    textView.text().set("a");
     textView.caretPosition().set(0);
 
-    paste("\na");
+    paste("\nb");
 
     assertEquals("a", textView.text().get());
   }
@@ -588,8 +588,8 @@ public class TextEditingTest extends EditingTestCase {
 
     ClipboardContent result = event.getResult();
     assertTrue(event.isConsumed());
-    assertTrue(result.isSupported(ContentKinds.TEXT));
-    assertEquals("y", result.get(ContentKinds.TEXT));
+    assertTrue(result.isSupported(ContentKinds.SINGLE_LINE_TEXT));
+    assertEquals("y", result.get(ContentKinds.SINGLE_LINE_TEXT));
   }
 
   @Test
@@ -604,8 +604,8 @@ public class TextEditingTest extends EditingTestCase {
     ClipboardContent result = event.getResult();
 
     assertTrue(event.isConsumed());
-    assertTrue(result.isSupported(ContentKinds.TEXT));
-    assertEquals("y", result.get(ContentKinds.TEXT));
+    assertTrue(result.isSupported(ContentKinds.SINGLE_LINE_TEXT));
+    assertEquals("y", result.get(ContentKinds.SINGLE_LINE_TEXT));
     assertEquals("xz", textView.text().get());
     assertEquals(1, (int) textView.caretPosition().get());
     assertFalse(textView.selectionVisible().get());

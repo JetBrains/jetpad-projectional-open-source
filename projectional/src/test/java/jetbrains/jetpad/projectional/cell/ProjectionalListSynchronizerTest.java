@@ -17,6 +17,8 @@ package jetbrains.jetpad.projectional.cell;
 
 import com.google.common.base.Function;
 import com.google.common.base.Supplier;
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
 import jetbrains.jetpad.base.*;
 import jetbrains.jetpad.cell.*;
 import jetbrains.jetpad.cell.action.CellActions;
@@ -65,6 +67,51 @@ public class ProjectionalListSynchronizerTest extends EditingTestCase {
   }
 
   private static final ContentKind<Child> KIND = ContentKinds.create("child");
+
+  private final Function<String, Child> lineParser = new Function<String, Child>() {
+    @Override
+    public Child apply(String s) {
+      switch (s) {
+        case "EmptyChild":
+          return new EmptyChild();
+        case "NonEmptyChild":
+          return new NonEmptyChild();
+        default:
+          throw new IllegalArgumentException(s);
+      }
+    }
+  };
+
+  private final Function<Iterable<String>, List<Child>> multilineParser = new Function<Iterable<String>, List<Child>>() {
+    @Override
+    public List<Child> apply(Iterable<String> items) {
+      return Lists.newArrayList(Iterables.transform(items, new Function<String, Child>() {
+        @Override
+        public Child apply(String s) {
+          return lineParser.apply(s);
+        }
+      }));
+    }
+  };
+
+  private final Function<Child, String> itemToString = new Function<Child, String>() {
+    @Override
+    public String apply(Child child) {
+      return child.getClass().getSimpleName();
+    }
+  };
+
+  private final Function<List<Child>, String> listToString = new Function<List<Child>, String>() {
+    @Override
+    public String apply(List<Child> children) {
+      return TextContentHelper.joinLines(Iterables.transform(children, new Function<Child, String>() {
+        @Override
+        public String apply(Child child) {
+          return child.getClass().getSimpleName();
+        }
+      }));
+    }
+  };
 
   private boolean myWithSeparator;
 
@@ -838,6 +885,66 @@ public class ProjectionalListSynchronizerTest extends EditingTestCase {
     assertEquals(2, container.children.size());
   }
 
+  @Test
+  public void copyPasteMultiple() {
+    container.children.add(new EmptyChild());
+    container.children.add(new EmptyChild());
+    selectChild(0);
+
+    press(KeyStrokeSpecs.SELECT_AFTER);
+    press(KeyStrokeSpecs.SELECT_AFTER);
+    press(KeyStrokeSpecs.COPY);
+    press(KeyStrokeSpecs.PASTE);
+
+    assertEquals(4, container.children.size());
+  }
+
+  @Test
+  public void copyWithItemToTextSupport() {
+    rootMapper.mySynchronizer.supportContentToString(itemToString);
+    container.children.add(new EmptyChild());
+    container.children.add(new NonEmptyChild());
+    selectChild(0);
+
+    press(KeyStrokeSpecs.SELECT_AFTER);
+    press(KeyStrokeSpecs.SELECT_AFTER);
+
+    ClipboardContent content = copy();
+    assertEquals(itemToString.apply(new EmptyChild()), content.toString());
+  }
+
+  @Test
+  public void copyWithListToTextSupport() {
+    rootMapper.mySynchronizer.supportContentListToString(listToString);
+    container.children.add(new EmptyChild());
+    container.children.add(new NonEmptyChild());
+
+    selectChild(0);
+    press(KeyStrokeSpecs.SELECT_AFTER);
+    press(KeyStrokeSpecs.SELECT_AFTER);
+
+    ClipboardContent content = copy();
+    assertEquals(getMultiline(new EmptyChild(), new NonEmptyChild()), content.toString());
+  }
+
+  @Test
+  public void pasteItemAsText() {
+    rootMapper.mySynchronizer.supportListContentKind(ContentKinds.MULTILINE_TEXT, multilineParser);
+
+    paste(getMultiline(new EmptyChild()));
+    assertEquals(1, container.children.size());
+    assertTrue(container.children.get(0) instanceof EmptyChild);
+  }
+
+  @Test
+  public void pasteListAsText() {
+    rootMapper.mySynchronizer.supportListContentKind(ContentKinds.MULTILINE_TEXT, multilineParser);
+
+    paste(getMultiline(new EmptyChild(), new NonEmptyChild()));
+    assertEquals(2, container.children.size());
+    assertTrue(container.children.get(0) instanceof EmptyChild);
+    assertTrue(container.children.get(1) instanceof NonEmptyChild);
+  }
 
   @Test
   public void canCopyFocusedItem() {
@@ -1149,6 +1256,10 @@ public class ProjectionalListSynchronizerTest extends EditingTestCase {
         return Runnables.EMPTY;
       }
     });
+  }
+
+  private String getMultiline(Child ... children) {
+    return listToString.apply(Arrays.asList(children));
   }
 
   private class Container {
