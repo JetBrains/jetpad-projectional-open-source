@@ -17,7 +17,6 @@ package jetbrains.jetpad.hybrid;
 
 import jetbrains.jetpad.base.Registration;
 import jetbrains.jetpad.cell.Cell;
-import jetbrains.jetpad.cell.message.MessageController;
 import jetbrains.jetpad.cell.util.CellState;
 import jetbrains.jetpad.cell.util.CellStateDifference;
 import jetbrains.jetpad.cell.util.CellStateHandler;
@@ -25,9 +24,10 @@ import jetbrains.jetpad.hybrid.parser.Token;
 import jetbrains.jetpad.mapper.Mapper;
 import jetbrains.jetpad.model.collections.list.ObservableArrayList;
 import jetbrains.jetpad.model.composite.Composites;
-import jetbrains.jetpad.model.event.CompositeRegistration;
-import jetbrains.jetpad.model.event.EventHandler;
-import jetbrains.jetpad.model.property.*;
+import jetbrains.jetpad.model.property.Properties;
+import jetbrains.jetpad.model.property.Property;
+import jetbrains.jetpad.model.property.PropertyBinding;
+import jetbrains.jetpad.model.property.ReadableProperty;
 import jetbrains.jetpad.projectional.cell.mapping.ToCellMapping;
 
 import java.util.ArrayList;
@@ -51,15 +51,7 @@ public class HybridSynchronizer<SourceT> extends BaseHybridSynchronizer<SourceT,
 
   @Override
   protected Registration onAttach(Property<SourceT> syncValue) {
-    updateTargetError();
-    return new CompositeRegistration(
-      PropertyBinding.bindTwoWay(myWritableSource, syncValue),
-      valid().addHandler(new EventHandler<PropertyChangeEvent<Boolean>>() {
-        @Override
-        public void onEvent(PropertyChangeEvent<Boolean> event) {
-          updateTargetError();
-        }
-      }));
+      return PropertyBinding.bindTwoWay(myWritableSource, syncValue);
   }
 
   @Override
@@ -131,10 +123,6 @@ public class HybridSynchronizer<SourceT> extends BaseHybridSynchronizer<SourceT,
   @Override
   public ReadableProperty<Boolean> valid() {
     return tokenListEditor().valid;
-  }
-
-  private void updateTargetError() {
-    MessageController.setError(getTarget(), valid().get() ? null : "parsing error");
   }
 
   private static class HybridCellState implements CellState {

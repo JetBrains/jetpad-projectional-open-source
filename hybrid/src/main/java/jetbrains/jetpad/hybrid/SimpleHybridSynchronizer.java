@@ -18,7 +18,6 @@ package jetbrains.jetpad.hybrid;
 import com.google.common.base.Function;
 import jetbrains.jetpad.base.Registration;
 import jetbrains.jetpad.cell.Cell;
-import jetbrains.jetpad.cell.message.MessageController;
 import jetbrains.jetpad.cell.util.CellState;
 import jetbrains.jetpad.cell.util.CellStateHandler;
 import jetbrains.jetpad.completion.CompletionSupplier;
@@ -26,9 +25,10 @@ import jetbrains.jetpad.hybrid.parser.Parser;
 import jetbrains.jetpad.hybrid.parser.Token;
 import jetbrains.jetpad.hybrid.parser.prettyprint.PrettyPrinter;
 import jetbrains.jetpad.mapper.Mapper;
-import jetbrains.jetpad.model.event.CompositeRegistration;
-import jetbrains.jetpad.model.event.EventHandler;
-import jetbrains.jetpad.model.property.*;
+import jetbrains.jetpad.model.property.Properties;
+import jetbrains.jetpad.model.property.Property;
+import jetbrains.jetpad.model.property.PropertyBinding;
+import jetbrains.jetpad.model.property.ReadableProperty;
 import jetbrains.jetpad.projectional.cell.mapping.ToCellMapping;
 
 import java.util.ArrayList;
@@ -98,15 +98,7 @@ public class SimpleHybridSynchronizer<SourceT> extends BaseHybridSynchronizer<So
 
   @Override
   protected Registration onAttach(Property<SourceT> syncValue) {
-    updateTargetError(myValid.get());
-    return new CompositeRegistration(
-      PropertyBinding.bindOneWay(getSource(), syncValue),
-      myValid.addHandler(new EventHandler<PropertyChangeEvent<Boolean>>() {
-        @Override
-        public void onEvent(PropertyChangeEvent<Boolean> event) {
-          updateTargetError(event.getNewValue());
-        }
-      }));
+    return PropertyBinding.bindOneWay(getSource(), syncValue);
   }
 
   @Override
@@ -150,9 +142,5 @@ public class SimpleHybridSynchronizer<SourceT> extends BaseHybridSynchronizer<So
   @Override
   public ReadableProperty<Boolean> valid() {
     return myValid;
-  }
-
-  private void updateTargetError(boolean valid) {
-    MessageController.setError(getTarget(), valid ? null : "parsing error");
   }
 }

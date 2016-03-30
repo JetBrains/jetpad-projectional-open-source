@@ -26,6 +26,7 @@ import jetbrains.jetpad.cell.TextCell;
 import jetbrains.jetpad.cell.action.CellActions;
 import jetbrains.jetpad.cell.completion.Completion;
 import jetbrains.jetpad.cell.completion.CompletionSupport;
+import jetbrains.jetpad.cell.message.MessageController;
 import jetbrains.jetpad.cell.position.Positions;
 import jetbrains.jetpad.cell.text.TextEditing;
 import jetbrains.jetpad.cell.trait.CellTrait;
@@ -53,6 +54,7 @@ import jetbrains.jetpad.model.composite.Composites;
 import jetbrains.jetpad.model.event.CompositeRegistration;
 import jetbrains.jetpad.model.event.EventHandler;
 import jetbrains.jetpad.model.property.Property;
+import jetbrains.jetpad.model.property.PropertyChangeEvent;
 import jetbrains.jetpad.model.property.ReadableProperty;
 import jetbrains.jetpad.model.util.ListMap;
 import jetbrains.jetpad.projectional.cell.SelectionSupport;
@@ -721,14 +723,25 @@ public abstract class BaseHybridSynchronizer<SourceT, SpecT extends SimpleHybrid
     }
   }
 
+  private void updateTargetError(boolean valid) {
+    MessageController.setError(getTarget(), valid ? null : "parsing error");
+  }
+
   protected abstract Registration onAttach(Property<SourceT> syncValue);
 
   @Override
   public void attach(SynchronizerContext ctx) {
     CollectionListener<Token> tokensListener = createTokensListener();
+    updateTargetError(valid().get());
     myAttachRegistration = new CompositeRegistration(
-        onAttach(myTokenListEditor.value),
-        myTokenListEditor.tokens.addListener(tokensListener));
+      valid().addHandler(new EventHandler<PropertyChangeEvent<Boolean>>() {
+        @Override
+        public void onEvent(PropertyChangeEvent<Boolean> event) {
+          updateTargetError(event.getNewValue());
+        }
+      }),
+      onAttach(myTokenListEditor.value),
+      myTokenListEditor.tokens.addListener(tokensListener));
 
     ObservableList<Token> tokens = myTokenListEditor.tokens;
     for (int i = 0; i < tokens.size(); i++) {
