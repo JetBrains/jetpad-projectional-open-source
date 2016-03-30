@@ -1,7 +1,6 @@
 package jetbrains.jetpad.hybrid;
 
 import jetbrains.jetpad.cell.Cell;
-import jetbrains.jetpad.cell.message.MessageController;
 import jetbrains.jetpad.hybrid.testapp.mapper.SimpleExprContainerMapper;
 import jetbrains.jetpad.hybrid.testapp.mapper.Tokens;
 import jetbrains.jetpad.hybrid.testapp.model.Expr;
@@ -33,19 +32,6 @@ public class SimpleHybridEditorTest extends BaseHybridEditorTest<SimpleExprConta
   @Override
   protected Expr getExpr() {
     return container.expr.get();
-  }
-
-  @Test
-  public void cellMessage() {
-    initEditor();
-
-    assertTrue(MessageController.hasError(myTargetCell));
-
-    sync.tokens().add(Tokens.ID);
-    assertFalse(MessageController.hasError(myTargetCell));
-
-    sync.tokens().clear();
-    assertTrue(MessageController.hasError(myTargetCell));
   }
 
   @Test
