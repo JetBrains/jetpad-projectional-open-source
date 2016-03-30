@@ -303,6 +303,15 @@ abstract class BaseHybridEditorEditingTest<ContainerT, MapperT extends Mapper<Co
   }
 
   @Test
+  public void multipleNoSpaceToLeftSelectedProperly() {
+    setTokens(Tokens.RP, Tokens.RP, Tokens.RP, new IntValueToken(1));
+    select(3, false);
+
+    selectLeft(3);
+    assertSelection(0, 4);
+  }
+
+  @Test
   public void noExtraPositionInParens() {
     setTokens(Tokens.LP, new IntValueToken(2), Tokens.RP);
     select(1, false);

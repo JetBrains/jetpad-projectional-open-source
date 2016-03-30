@@ -262,7 +262,7 @@ public class SelectionSupport<ItemT> {
             consumed = true;
           } else {
             if (!mySelectedItems.contains(currentItem) && Positions.isHomePosition(currentCell) && Positions.isEndPosition(currentCell)) {
-              mySelectedItems.add(currentItem);
+              mySelectedItems.add(0, currentItem);
               consumed = true;
             }
 
