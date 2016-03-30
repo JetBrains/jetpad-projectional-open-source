@@ -19,11 +19,11 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 public class TextContentHelper {
-  private static final char CR = '\r';
-  private static final char LF = '\n';
+  private static final char CARRIAGE_RETURN = '\r';
+  private static final char NEWLINE = '\n';
 
   public static ClipboardContent createClipboardContent(String string) {
-    if (string.indexOf(LF) != -1 || string.indexOf(CR) != -1) {
+    if (string.indexOf(NEWLINE) != -1 || string.indexOf(CARRIAGE_RETURN) != -1) {
       return new MultilineTextClipboardContent(splitByNewline(string));
     }
     return new SingleLineTextClipboardContent(string);
@@ -41,7 +41,7 @@ public class TextContentHelper {
   public static String joinLines(Iterable<String> lines) {
     StringBuilder multiline = new StringBuilder();
     for (String line : lines) {
-      multiline.append(line).append('\n');
+      multiline.append(line).append(NEWLINE);
     }
     return multiline.toString();
   }
@@ -86,8 +86,8 @@ public class TextContentHelper {
     }
 
     private void advancePastNewline() {
-      if (!tryAdvancePast(CR, LF)) {
-        if (!tryAdvancePast(LF, CR)) {
+      if (!tryAdvancePast(CARRIAGE_RETURN, NEWLINE)) {
+        if (!tryAdvancePast(NEWLINE, CARRIAGE_RETURN)) {
           throw new IllegalStateException();
         }
       }
@@ -113,7 +113,7 @@ public class TextContentHelper {
     }
 
     private boolean lookingAtStringBody() {
-      return !lookingAtEOF() && current() != CR && current() != LF;
+      return !lookingAtEOF() && current() != CARRIAGE_RETURN && current() != NEWLINE;
     }
 
     private boolean lookingAtEOF() {
