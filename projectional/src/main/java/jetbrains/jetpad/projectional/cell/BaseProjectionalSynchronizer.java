@@ -152,7 +152,23 @@ abstract class BaseProjectionalSynchronizer<SourceT, ContextT, SourceItemT> impl
   protected abstract Runnable insertItems(List<SourceItemT> items);
 
   protected Runnable insertItem(SourceItemT item) {
-    return insertItems(Arrays.asList(item));
+    return insertItems(Collections.singletonList(item));
+  }
+
+  private Runnable insertNonNullItemsList(List<SourceItemT> items) {
+    if (items != null) {
+      return insertItems(items);
+    } else {
+      return Runnables.EMPTY;
+    }
+  }
+
+  private Runnable insertNonNullItem(SourceItemT item) {
+    if (item != null) {
+      return insertItem(item);
+    } else {
+      return Runnables.EMPTY;
+    }
   }
 
   private Registration registerChild(SourceItemT child, Cell childCell) {
@@ -455,11 +471,11 @@ abstract class BaseProjectionalSynchronizer<SourceT, ContextT, SourceItemT> impl
           Function<Object, SourceItemT> fromContent = (Function<Object, SourceItemT>) entry.value();
           if (content.isSupported(entry.key())) {
             Object contentValue = content.get(kind);
-            insertItem(fromContent.apply(contentValue)).run();
+            insertNonNullItem(fromContent.apply(contentValue)).run();
             return;
           } else if (isMultiItemPasteSupported() && content.isSupported(listOf(kind))) {
             Object contentList = content.get(listOf(kind));
-            insertItems((List<SourceItemT>) fromContent.apply(contentList)).run();
+            insertNonNullItemsList((List<SourceItemT>) fromContent.apply(contentList)).run();
             return;
           }
         }
@@ -468,7 +484,7 @@ abstract class BaseProjectionalSynchronizer<SourceT, ContextT, SourceItemT> impl
             ContentKind kind = entry.key();
             if (content.isSupported(kind)) {
               Function<Object, List<SourceItemT>> fromContent = (Function<Object, List<SourceItemT>>) entry.value();
-              insertItems(fromContent.apply(content.get(kind))).run();
+              insertNonNullItemsList(fromContent.apply(content.get(kind))).run();
               return;
             }
           }
