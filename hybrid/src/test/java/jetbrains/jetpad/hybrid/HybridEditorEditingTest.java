@@ -78,27 +78,6 @@ public class HybridEditorEditingTest extends BaseHybridEditorEditingTest<ExprCon
   }
 
   @Test
-  public void tokenUpdateAfterReparse() {
-    setTokens(new IdentifierToken("x"), Tokens.LP);
-
-    select(1, false);
-    type(")");
-
-    assertTokens(new IdentifierToken("x"), Tokens.LP_CALL, Tokens.RP);
-  }
-
-  @Test
-  public void tokenUpdateAfterReparseAndSplit() {
-    setTokens(new IdentifierToken("id*"), new IdentifierToken("x"), Tokens.LP, Tokens.RP);
-
-    select(0, false);
-    left();
-    type(" ");
-
-    assertTokens(Tokens.ID, Tokens.MUL, new IdentifierToken("x"), Tokens.LP_CALL, Tokens.RP);
-  }
-
-  @Test
   public void tokenFocusAfterReparseAndSplitGivesDifferentTokens() {
     setTokens(new IdentifierToken("func("), Tokens.RP);
 
