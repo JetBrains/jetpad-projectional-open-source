@@ -18,6 +18,9 @@ package jetbrains.jetpad.event;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
+import static jetbrains.jetpad.event.ContentKinds.MULTILINE_TEXT;
+import static jetbrains.jetpad.event.ContentKinds.SINGLE_LINE_TEXT;
+
 public class TextContentHelper {
   private static final char CARRIAGE_RETURN = '\r';
   private static final char NEWLINE = '\n';
@@ -27,6 +30,20 @@ public class TextContentHelper {
       return new MultilineTextClipboardContent(splitByNewline(string));
     }
     return new SingleLineTextClipboardContent(string);
+  }
+
+  public static boolean isText(ClipboardContent content) {
+    return content.isSupported(SINGLE_LINE_TEXT) || content.isSupported(MULTILINE_TEXT);
+  }
+
+  public static String getText(ClipboardContent content) {
+    if (content.isSupported(SINGLE_LINE_TEXT)) {
+      return content.get(SINGLE_LINE_TEXT);
+    }
+    if (content.isSupported(MULTILINE_TEXT)) {
+      return joinLines(content.get(MULTILINE_TEXT));
+    }
+    throw new IllegalArgumentException(String.valueOf(content));
   }
 
   public static Iterable<String> splitByNewline(final String multiline) {

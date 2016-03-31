@@ -20,7 +20,6 @@ import java.util.List;
 public class ContentKinds {
   public static final ContentKind<String> SINGLE_LINE_TEXT = create("singleLineText");
   public static final ContentKind<Iterable<String>> MULTILINE_TEXT = create("multilineText");
-  public static final ContentKind<String> ANY_TEXT = create("anyText");
 
   public static <T> ContentKind<T> create(final String name) {
     return new ContentKind<T>() {

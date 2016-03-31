@@ -216,8 +216,8 @@ public class CellContainer {
 
   private void setContent(CopyCutEvent e) {
     myContent = e.getResult();
-    if (myContent.isSupported(ContentKinds.ANY_TEXT)) {
-      myLastSeenText = myContent.get(ContentKinds.ANY_TEXT);
+    if (TextContentHelper.isText(myContent)) {
+      myLastSeenText = TextContentHelper.getText(myContent);
     } else {
       myLastSeenText = myContent.toString();
     }
