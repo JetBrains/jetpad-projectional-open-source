@@ -152,7 +152,7 @@ abstract class BaseProjectionalSynchronizer<SourceT, ContextT, SourceItemT> impl
   protected abstract Runnable insertItems(List<SourceItemT> items);
 
   protected Runnable insertItem(SourceItemT item) {
-    return insertItems(Arrays.asList(item));
+    return insertItems(Collections.singletonList(item));
   }
 
   private Registration registerChild(SourceItemT child, Cell childCell) {
@@ -454,12 +454,16 @@ abstract class BaseProjectionalSynchronizer<SourceT, ContextT, SourceItemT> impl
           ContentKind kind = entry.key();
           Function<Object, SourceItemT> fromContent = (Function<Object, SourceItemT>) entry.value();
           if (content.isSupported(entry.key())) {
-            Object contentValue = content.get(kind);
-            insertItem(fromContent.apply(contentValue)).run();
+            SourceItemT item = fromContent.apply(content.get(kind));
+            if (item != null) {
+              insertItem(item);
+            }
             return;
           } else if (isMultiItemPasteSupported() && content.isSupported(listOf(kind))) {
-            Object contentList = content.get(listOf(kind));
-            insertItems((List<SourceItemT>) fromContent.apply(contentList)).run();
+            List<SourceItemT> itemsList = (List<SourceItemT>) fromContent.apply(content.get(listOf(kind)));
+            if (itemsList != null) {
+              insertItems(itemsList);
+            }
             return;
           }
         }
@@ -468,7 +472,10 @@ abstract class BaseProjectionalSynchronizer<SourceT, ContextT, SourceItemT> impl
             ContentKind kind = entry.key();
             if (content.isSupported(kind)) {
               Function<Object, List<SourceItemT>> fromContent = (Function<Object, List<SourceItemT>>) entry.value();
-              insertItems(fromContent.apply(content.get(kind))).run();
+              List<SourceItemT> items = fromContent.apply(content.get(kind));
+              if (items != null) {
+                insertItems(items);
+              }
               return;
             }
           }
