@@ -24,6 +24,10 @@ import jetbrains.jetpad.model.collections.CollectionListener;
 import jetbrains.jetpad.model.collections.list.ObservableList;
 import jetbrains.jetpad.model.property.BaseDerivedProperty;
 
+/**
+ * @deprecated Doesn't support pretty printing. Use {@link ParsingHybridProperty} instead.
+ */
+@Deprecated
 public class SimpleHybridProperty<ModelT> extends BaseDerivedProperty<ModelT> implements HybridProperty<ModelT> {
 
   private final Parser<ModelT> myParser;
