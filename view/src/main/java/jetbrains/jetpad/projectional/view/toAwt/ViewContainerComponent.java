@@ -264,8 +264,8 @@ public class ViewContainerComponent extends JComponent implements Scrollable {
               ClipboardContent content = event.getResult();
               if (content != null) {
                 String text;
-                if (content.isSupported(ContentKinds.ANY_TEXT)) {
-                  text = content.get(ContentKinds.ANY_TEXT);
+                if (TextContentHelper.isText(content)) {
+                  text = TextContentHelper.getText(content);
                 } else {
                   text = content.toString();
                 }

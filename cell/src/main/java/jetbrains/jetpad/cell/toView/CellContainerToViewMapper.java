@@ -316,8 +316,8 @@ public class CellContainerToViewMapper extends Mapper<CellContainer, View> {
         @Override
         public void handle(View view, PasteEvent e) {
           ClipboardContent content = e.getContent();
-          if (content.isSupported(ContentKinds.ANY_TEXT)) {
-            cellContainer.paste(content.get(ContentKinds.ANY_TEXT));
+          if (TextContentHelper.isText(content)) {
+            cellContainer.paste(TextContentHelper.getText(content));
             e.consume();
           }
         }

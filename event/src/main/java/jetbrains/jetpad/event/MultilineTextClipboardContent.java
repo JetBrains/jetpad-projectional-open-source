@@ -26,13 +26,12 @@ class MultilineTextClipboardContent implements ClipboardContent {
 
   @Override
   public boolean isSupported(ContentKind<?> kind) {
-    return kind == MULTILINE_TEXT || kind == ANY_TEXT;
+    return kind == MULTILINE_TEXT;
   }
 
   @Override
   public <T> T get(ContentKind<T> kind) {
     if (kind == MULTILINE_TEXT) return (T) myLines;
-    if (kind == ANY_TEXT) return (T) TextContentHelper.joinLines(myLines);
 
     throw new IllegalArgumentException();
   }

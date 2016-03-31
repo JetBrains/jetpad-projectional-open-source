@@ -22,7 +22,7 @@ import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.TextArea;
 import jetbrains.jetpad.base.Handler;
 import jetbrains.jetpad.event.ClipboardContent;
-import jetbrains.jetpad.event.ContentKinds;
+import jetbrains.jetpad.event.TextContentHelper;
 
 import static com.google.gwt.query.client.GQuery.$;
 
@@ -48,8 +48,8 @@ public class ClipboardSupport {
 
   public void copyContent(ClipboardContent content) {
     final TextArea copyArea = createClipboardTextArea();
-    if (content.isSupported(ContentKinds.ANY_TEXT)) {
-      copyArea.setText(content.get(ContentKinds.ANY_TEXT));
+    if (TextContentHelper.isText(content)) {
+      copyArea.setText(TextContentHelper.getText(content));
     } else {
       copyArea.setText(content.toString());
     }

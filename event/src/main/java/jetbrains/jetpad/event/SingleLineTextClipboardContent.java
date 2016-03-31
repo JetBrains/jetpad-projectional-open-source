@@ -15,8 +15,6 @@
  */
 package jetbrains.jetpad.event;
 
-import static jetbrains.jetpad.event.ContentKinds.ANY_TEXT;
-
 class SingleLineTextClipboardContent implements ClipboardContent {
   private String myText;
 
@@ -26,12 +24,12 @@ class SingleLineTextClipboardContent implements ClipboardContent {
 
   @Override
   public boolean isSupported(ContentKind<?> kind) {
-    return kind == ContentKinds.SINGLE_LINE_TEXT || kind == ANY_TEXT;
+    return kind == ContentKinds.SINGLE_LINE_TEXT;
   }
 
   @Override
   public <T> T get(ContentKind<T> kind) {
-    if (kind == ContentKinds.SINGLE_LINE_TEXT || kind == ANY_TEXT) return (T) myText;
+    if (kind == ContentKinds.SINGLE_LINE_TEXT) return (T) myText;
 
     throw new IllegalArgumentException();
   }
