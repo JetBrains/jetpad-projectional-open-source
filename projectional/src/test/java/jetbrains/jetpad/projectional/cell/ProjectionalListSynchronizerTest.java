@@ -77,7 +77,7 @@ public class ProjectionalListSynchronizerTest extends EditingTestCase {
         case "NonEmptyChild":
           return new NonEmptyChild();
         default:
-          throw new IllegalArgumentException(s);
+          return null;
       }
     }
   };
@@ -85,12 +85,17 @@ public class ProjectionalListSynchronizerTest extends EditingTestCase {
   private final Function<Iterable<String>, List<Child>> multilineParser = new Function<Iterable<String>, List<Child>>() {
     @Override
     public List<Child> apply(Iterable<String> items) {
-      return Lists.newArrayList(Iterables.transform(items, new Function<String, Child>() {
+      List<Child> children = Lists.newArrayList(Iterables.transform(items, new Function<String, Child>() {
         @Override
         public Child apply(String s) {
           return lineParser.apply(s);
         }
       }));
+      if (children.contains(null)) {
+        return null;
+      } else {
+        return children;
+      }
     }
   };
 
@@ -944,6 +949,22 @@ public class ProjectionalListSynchronizerTest extends EditingTestCase {
     assertEquals(2, container.children.size());
     assertTrue(container.children.get(0) instanceof EmptyChild);
     assertTrue(container.children.get(1) instanceof NonEmptyChild);
+  }
+
+  @Test
+  public void pasteIncorrectItem() {
+    rootMapper.mySynchronizer.supportListContentKind(ContentKinds.MULTILINE_TEXT, multilineParser);
+
+    paste("BadItem\n");
+    assertTrue(container.children.isEmpty());
+  }
+
+  @Test
+  public void pasteIncorrectItems() {
+    rootMapper.mySynchronizer.supportListContentKind(ContentKinds.MULTILINE_TEXT, multilineParser);
+
+    paste("BadItem\nEmptyChild\n");
+    assertTrue(container.children.isEmpty());
   }
 
   @Test
