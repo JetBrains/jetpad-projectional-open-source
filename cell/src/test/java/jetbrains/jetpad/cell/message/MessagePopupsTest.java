@@ -349,4 +349,31 @@ public class MessagePopupsTest extends MessageControllerTestCase {
     assertDecorationPopupVisible(child1, false);
     assertDecorationPopupVisible(cell, false);
   }
+
+  @Test
+  public void infoPopup() {
+    final Value<Integer> popupChangeN = new Value<>(0);
+    cell.addListener(new CellAdapter() {
+      @Override
+      public void onPropertyChanged(CellPropertySpec<?> prop, PropertyChangeEvent<?> event) {
+        if (Cell.isPopupProp(prop) && cell.get(MessageTrait.POPUP_ACTIVE)) {
+          popupChangeN.set(popupChangeN.get() + 1);
+        }
+      }
+    });
+    MessageController.setInfo(cell, "info");
+    assertTrue(cell.get(MessageTrait.POPUP_ACTIVE));
+    assertTrue(((TextCell) cell.get(MessageTrait.POPUP_POSITION)).text().get().contains("info"));
+    assertEquals(1, (int) popupChangeN.get());
+    assertTrue(MessageController.hasInfo(cell));
+
+    MessageController.setBroken(cell, "broken");
+    assertTrue(MessageController.isBroken(cell));
+    assertTrue(((TextCell) cell.get(MessageTrait.POPUP_POSITION)).text().get().contains("info"));
+    assertEquals(1, (int) popupChangeN.get());
+
+    MessageController.setInfo(cell, null);
+    assertEquals(1, (int) popupChangeN.get());
+    assertTrue(((TextCell) cell.get(MessageTrait.POPUP_POSITION)).text().get().contains("broken"));
+  }
 }
