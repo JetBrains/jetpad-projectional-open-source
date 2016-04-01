@@ -968,6 +968,22 @@ public class ProjectionalListSynchronizerTest extends EditingTestCase {
   }
 
   @Test
+  public void onlyTextualCopy() {
+    rootMapper.mySynchronizer.setClipboardParameters(null, null);
+    rootMapper.mySynchronizer.supportContentListToString(listToString);
+    container.children.add(new EmptyChild());
+    selectChild(0);
+
+    assertNull(cut());
+
+    ClipboardContent copied = copy();
+    assertEquals(getMultiline(new EmptyChild()), TextContentHelper.getText(copied));
+
+    paste(copied.toString());
+    assertEquals(1, container.children.size());
+  }
+
+  @Test
   public void canCopyFocusedItem() {
     container.children.add(new ComplexChild());
     selectChild(0);

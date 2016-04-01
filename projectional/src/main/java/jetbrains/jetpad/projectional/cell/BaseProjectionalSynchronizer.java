@@ -358,13 +358,17 @@ abstract class BaseProjectionalSynchronizer<SourceT, ContextT, SourceItemT> impl
       }
 
       private boolean canCopy() {
-        if (myItemKind == null) return false;
-        if (!getSelectedItems().isEmpty()) return true;
-        return currentItem() != null;
+        return hasItemsToCopy() && (myItemKind != null || itemsToStringSupported());
       }
 
       private ClipboardContent copy() {
-        return createClipboardContent(itemsToCopy());
+        if (myItemKind != null) {
+          return createClipboardContent(itemsToCopy());
+        } else if (itemsToStringSupported()) {
+          return TextContentHelper.createClipboardContent(itemsToString(itemsToCopy()));
+        } else {
+          throw new IllegalStateException("canCopy() and copy() are inconsistent");
+        }
       }
 
       private ClipboardContent createClipboardContent(List<SourceItemT> items) {
@@ -398,17 +402,31 @@ abstract class BaseProjectionalSynchronizer<SourceT, ContextT, SourceItemT> impl
 
           @Override
           public String toString() {
-            if (myContentListToString != null) {
-              return myContentListToString.apply(copiedItems);
-            }
-            if (copiedItems.size() > 0 && myContentToString != null) {
-              return myContentToString.apply(copiedItems.get(0));
+            if (itemsToStringSupported()) {
+              return itemsToString(copiedItems);
             }
             return super.toString();
           }
         };
       }
 
+      private boolean itemsToStringSupported() {
+        return myContentListToString != null || myContentToString != null;
+      }
+
+      private String itemsToString(List<SourceItemT> items) {
+        if (myContentListToString != null) {
+          return myContentListToString.apply(items);
+        }
+        if (myContentToString != null) {
+          return myContentToString.apply(items.get(0));
+        }
+        throw new IllegalStateException("itemsToStringSupported() and itemsToString() are inconsistent");
+      }
+
+      private boolean hasItemsToCopy() {
+        return (!getSelectedItems().isEmpty()) || (currentItem() != null);
+      }
 
       private List<SourceItemT> itemsToCopy() {
         final List<SourceItemT> items = new ArrayList<>();
@@ -423,7 +441,7 @@ abstract class BaseProjectionalSynchronizer<SourceT, ContextT, SourceItemT> impl
       }
 
       private boolean canCut() {
-        return canCopy();
+        return hasItemsToCopy() && myItemKind != null;
       }
 
       private ClipboardContent cut() {
