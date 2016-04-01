@@ -23,11 +23,22 @@ import java.util.HashMap;
 import java.util.Map;
 
 class StyleApplicator {
-  private MessageStyler myStyler;
+  private final MessageStyler myStyler;
   private Map<Cell, StyleRegistrations> myRegistrations = null;
 
   StyleApplicator(MessageStyler styler) {
     myStyler = styler == null ? new MessageStyler() : styler;
+  }
+
+  void applyInfo(Cell cell, boolean info) {
+    if (info) {
+      get(cell).myInfo = myStyler.doApplyInfo(cell);
+    } else {
+      StyleRegistrations registrations = get(cell);
+      registrations.myInfo.remove();
+      registrations.myInfo = null;
+      releaseIfEmpty(cell);
+    }
   }
 
   void applyBroken(Cell cell, boolean broken) {
@@ -92,16 +103,20 @@ class StyleApplicator {
   }
 
   private static class StyleRegistrations implements Disposable {
+    private Registration myInfo = null;
     private Registration myBroken = null;
     private Registration myError = null;
     private Registration myWarning = null;
 
     boolean isEmpty() {
-      return myBroken == null && myError == null && myWarning == null;
+      return myInfo == null && myBroken == null && myError == null && myWarning == null;
     }
 
     @Override
     public void dispose() {
+      if (myInfo != null) {
+        myInfo.remove();
+      }
       if (myBroken != null) {
         myBroken.remove();
       }

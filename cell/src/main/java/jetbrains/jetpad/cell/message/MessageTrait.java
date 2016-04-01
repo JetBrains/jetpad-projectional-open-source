@@ -42,7 +42,7 @@ class MessageTrait extends CellTrait {
   static final int POPUPS_SHOW_DELAY_MILLIS = 1000;
 
   private static final List<CellPropertySpec<String>> MESSAGES_IN_PRIORITY_ORDER =
-      Arrays.asList(MessageController.BROKEN, MessageController.ERROR, MessageController.WARNING);
+      Arrays.asList(MessageController.INFO, MessageController.BROKEN, MessageController.ERROR, MessageController.WARNING);
 
   private Registration myUpdatesReg = null;
   private long myLastEditingKeyEvent = 0;
@@ -242,13 +242,18 @@ class MessageTrait extends CellTrait {
       myStyler.applyError(cell, apply);
     } else if (prop == MessageController.WARNING) {
       myStyler.applyWarning(cell, apply);
+    } else if (prop == MessageController.INFO) {
+      myStyler.applyInfo(cell, apply);
+    } else {
+      throw new IllegalStateException("Unexpected property spec: " + prop);
     }
   }
 
   private CellPropertySpec<String> getFirstNotNullProp(Cell cell) {
-    if (cell.get(MessageController.BROKEN) != null) return MessageController.BROKEN;
-    if (cell.get(MessageController.ERROR) != null) return MessageController.ERROR;
-    return cell.get(MessageController.WARNING) == null ? null : MessageController.WARNING;
+    for (CellPropertySpec<String> p : MESSAGES_IN_PRIORITY_ORDER) {
+      if (cell.get(p) != null) return p;
+    }
+    return null;
   }
 
   private void updatePopup(Cell cell, CellPropertySpec<String> prop, PropertyChangeEvent<String> change) {
@@ -294,19 +299,10 @@ class MessageTrait extends CellTrait {
   }
 
   private CellPropertySpec<String> getNextNotNullProp(Cell cell, CellPropertySpec<String> prop) {
-    if (prop == MessageController.ERROR) {
-      if (cell.get(MessageController.BROKEN) != null) return MessageController.BROKEN;
-      return cell.get(MessageController.WARNING) == null ? null : MessageController.WARNING;
+    for (CellPropertySpec<String> p : MESSAGES_IN_PRIORITY_ORDER) {
+      if (p != prop && cell.get(p) != null) return p;
     }
-    if (prop == MessageController.BROKEN) {
-      if (cell.get(MessageController.ERROR) != null) return MessageController.ERROR;
-      return cell.get(MessageController.WARNING) == null ? null : MessageController.WARNING;
-    }
-    if (prop == MessageController.WARNING) {
-      if (cell.get(MessageController.ERROR) != null) return MessageController.ERROR;
-      return cell.get(MessageController.BROKEN) == null ? null : MessageController.BROKEN;
-    }
-    throw new IllegalStateException();
+    return null;
   }
 
   void detach(Cell cell) {

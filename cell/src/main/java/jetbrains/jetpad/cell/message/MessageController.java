@@ -36,6 +36,7 @@ public final class MessageController {
   static final CellPropertySpec<String> ERROR = new CellPropertySpec<>("error");
   static final CellPropertySpec<String> WARNING = new CellPropertySpec<>("warning");
   static final CellPropertySpec<String> BROKEN = new CellPropertySpec<>("broken");
+  static final CellPropertySpec<String> INFO = new CellPropertySpec<>("info");
 
   public static Registration install(CellContainer container) {
     return install(container, null);
@@ -57,6 +58,10 @@ public final class MessageController {
 
   public static void setWarning(Cell cell, String message) {
     set(cell, message, WARNING);
+  }
+
+  public static void setInfo(Cell cell, String message) {
+    set(cell, message, INFO);
   }
 
   static void set(Cell cell, String message, CellPropertySpec<String> prop) {
@@ -92,6 +97,9 @@ public final class MessageController {
     return cell.get(ERROR) != null;
   }
 
+  public static boolean hasInfo(Cell cell) {
+    return cell.get(INFO) != null;
+  }
 
   private CellContainer myContainer;
   private MyChildrenListener myChildrenListener;

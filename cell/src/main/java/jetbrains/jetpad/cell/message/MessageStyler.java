@@ -23,6 +23,10 @@ import jetbrains.jetpad.values.Color;
 public class MessageStyler {
   public static final Color WARNING_BACKGROUND_COLOR = new Color(248, 231, 172);
 
+  protected Registration doApplyInfo(Cell cell) {
+    return Registration.EMPTY;
+  }
+
   protected Registration doApplyBroken(Cell cell) {
     if (cell instanceof TextCell) {
       return cell.set(TextCell.TEXT_COLOR, Color.RED);
