@@ -28,14 +28,13 @@ import jetbrains.jetpad.model.property.Properties;
 import jetbrains.jetpad.model.property.Property;
 import jetbrains.jetpad.model.property.PropertyBinding;
 import jetbrains.jetpad.model.property.ReadableProperty;
-import jetbrains.jetpad.projectional.cell.mapping.ToCellMapping;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
-public class HybridSynchronizer<SourceT> extends BaseHybridSynchronizer<SourceT, HybridEditorSpec<SourceT>> implements ToCellMapping {
+public class HybridSynchronizer<SourceT> extends BaseHybridSynchronizer<SourceT, HybridEditorSpec<SourceT>> {
   private Property<SourceT> myWritableSource;
 
   public HybridSynchronizer(Mapper<?, ?> contextMapper, Property<SourceT> source, Cell target,

@@ -25,19 +25,18 @@ import jetbrains.jetpad.hybrid.parser.Parser;
 import jetbrains.jetpad.hybrid.parser.Token;
 import jetbrains.jetpad.hybrid.parser.prettyprint.PrettyPrinter;
 import jetbrains.jetpad.mapper.Mapper;
+import jetbrains.jetpad.model.composite.Composites;
 import jetbrains.jetpad.model.property.Properties;
 import jetbrains.jetpad.model.property.Property;
 import jetbrains.jetpad.model.property.PropertyBinding;
 import jetbrains.jetpad.model.property.ReadableProperty;
-import jetbrains.jetpad.projectional.cell.mapping.ToCellMapping;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
-public class SimpleHybridSynchronizer<SourceT> extends BaseHybridSynchronizer<SourceT, SimpleHybridEditorSpec<SourceT>>
-    implements ToCellMapping {
+public class SimpleHybridSynchronizer<SourceT> extends BaseHybridSynchronizer<SourceT, SimpleHybridEditorSpec<SourceT>> {
 
   private static <SourceT> HybridEditorSpec<SourceT> toHybridEditorSpec(final SimpleHybridEditorSpec<SourceT> spec) {
     return new HybridEditorSpec<SourceT>() {
@@ -126,7 +125,7 @@ public class SimpleHybridSynchronizer<SourceT> extends BaseHybridSynchronizer<So
 
     for (int i = 0; i < tokenCells().size(); i++) {
       Cell c = tokenCells().get(i);
-      if (c == cell) {
+      if (Composites.isDescendant(c, cell)) {
         return mySourceSupplier.apply(i);
       }
     }

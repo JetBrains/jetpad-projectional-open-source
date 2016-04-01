@@ -5,7 +5,6 @@ import jetbrains.jetpad.hybrid.testapp.mapper.SimpleExprContainerMapper;
 import jetbrains.jetpad.hybrid.testapp.mapper.Tokens;
 import jetbrains.jetpad.hybrid.testapp.model.Expr;
 import jetbrains.jetpad.hybrid.testapp.model.SimpleExprContainer;
-import jetbrains.jetpad.projectional.cell.mapping.ToCellMapping;
 import org.junit.Test;
 
 import java.util.Arrays;
@@ -39,15 +38,23 @@ public class SimpleHybridEditorTest extends BaseHybridEditorTest<SimpleExprConta
     initEditor();
     sync.tokens().addAll(Arrays.asList(Tokens.ID, Tokens.PLUS, Tokens.ID));
 
-    ToCellMapping mapping = (ToCellMapping)sync;
-    assertEquals(Collections.singletonList(sync.tokenCells().get(0)), mapping.getCells("0"));
-    assertEquals(Collections.singletonList(sync.tokenCells().get(1)), mapping.getCells("1"));
-    assertEquals(Collections.singletonList(sync.tokenCells().get(2)), mapping.getCells("2"));
+    assertEquals(Collections.singletonList(sync.tokenCells().get(0)), sync.getCells("0"));
+    assertEquals(Collections.singletonList(sync.tokenCells().get(1)), sync.getCells("1"));
+    assertEquals(Collections.singletonList(sync.tokenCells().get(2)), sync.getCells("2"));
 
-    assertTrue(mapping.getCells("3").isEmpty());
+    assertTrue(sync.getCells("3").isEmpty());
 
     for (Cell c : sync.tokenCells()) {
-      assertNotNull(mapping.getSource(c));
+      assertNotNull(sync.getSource(c));
     }
+  }
+
+  @Test
+  public void cellMappingForValues() {
+    initEditor();
+    sync.tokens().add(TokensUtil.singleQtd("test"));
+
+    Cell valueTextCell = sync.tokenCells().get(0).children().get(1);
+    assertEquals("0", sync.getSource(valueTextCell));
   }
 }
