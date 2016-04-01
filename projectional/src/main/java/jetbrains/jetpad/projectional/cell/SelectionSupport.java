@@ -297,8 +297,8 @@ public class SelectionSupport<ItemT> {
       Cell parent = current.getParent();
       if (parent == null) return false;
       SelectionSupport<?> selection = parent.get(SELECTION_SUPPORT);
-      if (selection != null) {
-        return !selection.selection().isEmpty();
+      if (selection != null && !selection.selection().isEmpty()) {
+        return true;
       }
       if (!Composites.isLastChild(current) && !Composites.isFirstChild(current)) return false;
       current = parent;
