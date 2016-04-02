@@ -16,20 +16,22 @@
 package jetbrains.jetpad.hybrid;
 
 import com.google.common.base.Function;
+import jetbrains.jetpad.base.Disposable;
 import jetbrains.jetpad.base.Registration;
 import jetbrains.jetpad.cell.Cell;
 import jetbrains.jetpad.cell.util.CellState;
 import jetbrains.jetpad.cell.util.CellStateHandler;
 import jetbrains.jetpad.completion.CompletionSupplier;
+import jetbrains.jetpad.hybrid.parser.CommentToken;
 import jetbrains.jetpad.hybrid.parser.Parser;
 import jetbrains.jetpad.hybrid.parser.Token;
 import jetbrains.jetpad.hybrid.parser.prettyprint.PrettyPrinter;
 import jetbrains.jetpad.mapper.Mapper;
+import jetbrains.jetpad.model.collections.CollectionAdapter;
+import jetbrains.jetpad.model.collections.CollectionItemEvent;
 import jetbrains.jetpad.model.composite.Composites;
-import jetbrains.jetpad.model.property.Properties;
-import jetbrains.jetpad.model.property.Property;
-import jetbrains.jetpad.model.property.PropertyBinding;
-import jetbrains.jetpad.model.property.ReadableProperty;
+import jetbrains.jetpad.model.event.EventHandler;
+import jetbrains.jetpad.model.property.*;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -74,25 +76,31 @@ public class SimpleHybridSynchronizer<SourceT> extends BaseHybridSynchronizer<So
 
   private final Function<Integer, Object> mySourceSupplier;
   private final ReadableProperty<Boolean> myValid;
+  private final Registration myDetachRegistration;
 
   public SimpleHybridSynchronizer(
-    Mapper<?, ?> contextMapper,
-    HybridProperty<SourceT> source,
-    Cell target,
-    SimpleHybridEditorSpec<SourceT> spec) {
+      Mapper<?, ?> contextMapper,
+      HybridProperty<SourceT> source,
+      Cell target,
+      SimpleHybridEditorSpec<SourceT> spec) {
     this(contextMapper, source, target, spec, null);
   }
 
   public SimpleHybridSynchronizer(
-    Mapper<?, ?> contextMapper,
-    HybridProperty<SourceT> source,
-    Cell target,
-    SimpleHybridEditorSpec<SourceT> spec,
-    Function<Integer, Object> sourceSupplier) {
+      Mapper<?, ?> contextMapper,
+      HybridProperty<SourceT> source,
+      Cell target,
+      SimpleHybridEditorSpec<SourceT> spec,
+      Function<Integer, Object> sourceSupplier) {
+
     super(contextMapper, source, target, Properties.constant(spec),
       new TokenListEditor<>(toHybridEditorSpec(spec), source.getTokens(), false));
+
     mySourceSupplier = sourceSupplier;
-    myValid = Properties.or(Properties.empty(source.getTokens()), Properties.notNull(source));
+
+    HasOnlyCommentTokens hasOnlyCommentTokens = new HasOnlyCommentTokens(source);
+    myDetachRegistration = Registration.from(hasOnlyCommentTokens);
+    myValid = Properties.or(Properties.notNull(source), hasOnlyCommentTokens);
   }
 
   @Override
@@ -141,5 +149,86 @@ public class SimpleHybridSynchronizer<SourceT> extends BaseHybridSynchronizer<So
   @Override
   public ReadableProperty<Boolean> valid() {
     return myValid;
+  }
+
+  @Override
+  public void detach() {
+    myDetachRegistration.remove();
+    super.detach();
+  }
+
+  private static class HasOnlyCommentTokens implements ReadableProperty<Boolean>, Disposable {
+    private final HybridProperty<?> mySource;
+    private final ValueProperty<Boolean> myValue;
+    private final Registration mySourceRegistration;
+    private int myNotCommentTokensCount = 0;
+
+    HasOnlyCommentTokens(HybridProperty<?> source) {
+      mySource = source;
+
+      for (Token token : source.getTokens()) {
+        if (isNotComment(token)) {
+          myNotCommentTokensCount++;
+        }
+      }
+      myValue = new ValueProperty<>(myNotCommentTokensCount == 0);
+
+      mySourceRegistration = source.getTokens().addListener(new CollectionAdapter<Token>() {
+        @Override
+        public void onItemAdded(CollectionItemEvent<? extends Token> event) {
+          if (isNotComment(event.getNewItem())) {
+            myNotCommentTokensCount++;
+          }
+          update();
+        }
+
+        @Override
+        public void onItemSet(CollectionItemEvent<? extends Token> event) {
+          if (isNotComment(event.getOldItem())) {
+            myNotCommentTokensCount--;
+          }
+          if (isNotComment(event.getNewItem())) {
+            myNotCommentTokensCount++;
+          }
+          update();
+        }
+
+        @Override
+        public void onItemRemoved(CollectionItemEvent<? extends Token> event) {
+          if (isNotComment(event.getOldItem())) {
+            myNotCommentTokensCount--;
+          }
+          update();
+        }
+      });
+    }
+
+    private boolean isNotComment(Token token) {
+      return !(token instanceof CommentToken);
+    }
+
+    private void update() {
+      myValue.set(myNotCommentTokensCount == 0);
+    }
+
+    @Override
+    public String getPropExpr() {
+      return "HasOnlyCommentTokens(" + mySource + ") = " + myValue.get();
+    }
+
+    @Override
+    public Boolean get() {
+      return myValue.get();
+    }
+
+    @Override
+    public Registration addHandler(EventHandler<? super PropertyChangeEvent<Boolean>> handler) {
+      return myValue.addHandler(handler);
+    }
+
+    @Override
+    public void dispose() {
+      mySourceRegistration.remove();
+    }
   }
 }

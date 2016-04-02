@@ -4,6 +4,7 @@ import jetbrains.jetpad.base.Registration;
 import jetbrains.jetpad.cell.Cell;
 import jetbrains.jetpad.cell.CellContainer;
 import jetbrains.jetpad.cell.message.MessageController;
+import jetbrains.jetpad.hybrid.parser.CommentToken;
 import jetbrains.jetpad.hybrid.testapp.mapper.Tokens;
 import jetbrains.jetpad.hybrid.testapp.model.Expr;
 import jetbrains.jetpad.mapper.Mapper;
@@ -13,7 +14,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public abstract class BaseHybridEditorTest<ContainerT, MapperT extends Mapper<ContainerT, ? extends Cell>> extends BaseTestCase {
   private Registration registration;
@@ -53,6 +55,15 @@ public abstract class BaseHybridEditorTest<ContainerT, MapperT extends Mapper<Co
     assertTrue(sync.valid().get());
 
     sync.tokens().add(Tokens.ID);
+    assertTrue(sync.valid().get());
+  }
+
+  @Test
+  public void commentValidity() {
+    initEditor();
+    assertTrue(sync.valid().get());
+    sync.tokens().add(new CommentToken("#", "comment"));
+
     assertTrue(sync.valid().get());
   }
 
