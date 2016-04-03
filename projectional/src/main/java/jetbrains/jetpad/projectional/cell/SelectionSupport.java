@@ -185,24 +185,28 @@ public class SelectionSupport<ItemT> {
           if (!Positions.isEndPosition(currentCell) && !isCurrentCompletelySelected()) {
             if (!mySelectedItems.contains(currentItem)) {
               mySelectedItems.add(currentItem);
-              focusAndScrollTo(currentIndex, false).run();
+              resetFocusAndScrollTo(currentIndex, false).run();
             } else {
               if (myDirection == Direction.FORWARD) {
-                focusAndScrollTo(currentIndex, false).run();
+                resetFocusAndScrollTo(currentIndex, false).run();
               } else {
                 mySelectedItems.remove(currentItem);
                 if (currentIndex == myTargetList.size() - 1) {
-                  focusAndScrollTo(currentIndex, false).run();
+                  resetFocusAndScrollTo(currentIndex, false).run();
                 } else {
-                  focusAndScrollTo(currentIndex + 1, true).run();
+                  resetFocusAndScrollTo(currentIndex + 1, true).run();
                 }
               }
             }
 
             consumed = true;
           } else {
+            int focusIndex = -1;
+            boolean focusOnFirst = true;
+
             if (!mySelectedItems.contains(currentItem) && Positions.isHomePosition(currentCell) && Positions.isEndPosition(currentCell)) {
               mySelectedItems.add(currentItem);
+              focusIndex = currentIndex;
               consumed = true;
             }
 
@@ -210,12 +214,17 @@ public class SelectionSupport<ItemT> {
               ItemT nextItem = mySource.get(currentIndex + 1);
               if (mySelectedItems.contains(nextItem)) {
                 mySelectedItems.remove(currentItem);
-                focusAndScrollTo(currentIndex + 1, true).run();
+                focusIndex = currentIndex + 1;
               } else {
                 mySelectedItems.add(nextItem);
-                focusAndScrollTo(currentIndex + 1, false).run();
+                focusIndex = currentIndex + 1;
+                focusOnFirst = false;
               }
               consumed = true;
+            }
+
+            if (focusIndex != -1) {
+              resetFocusAndScrollTo(focusIndex, focusOnFirst).run();
             }
           }
 
@@ -246,23 +255,27 @@ public class SelectionSupport<ItemT> {
           if (!Positions.isHomePosition(currentCell) && !isCurrentCompletelySelected()) {
             if (!mySelectedItems.contains(currentItem)) {
               mySelectedItems.add(0, currentItem);
-              focusAndScrollTo(currentIndex, true).run();
+              resetFocusAndScrollTo(currentIndex, true).run();
             } else {
               if (myDirection == Direction.BACKWARD) {
-                focusAndScrollTo(currentIndex, true).run();
+                resetFocusAndScrollTo(currentIndex, true).run();
               } else {
                 mySelectedItems.remove(currentItem);
                 if (currentIndex == 0) {
-                  focusAndScrollTo(currentIndex, true).run();
+                  resetFocusAndScrollTo(currentIndex, true).run();
                 } else {
-                  focusAndScrollTo(currentIndex - 1, false).run();
+                  resetFocusAndScrollTo(currentIndex - 1, false).run();
                 }
               }
             }
             consumed = true;
           } else {
+            int focusIndex = -1;
+            boolean focusOnFirst = true;
+
             if (!mySelectedItems.contains(currentItem) && Positions.isHomePosition(currentCell) && Positions.isEndPosition(currentCell)) {
               mySelectedItems.add(0, currentItem);
+              focusIndex = currentIndex;
               consumed = true;
             }
 
@@ -271,12 +284,17 @@ public class SelectionSupport<ItemT> {
 
               if (mySelectedItems.contains(prevItem)) {
                 mySelectedItems.remove(currentItem);
-                focusAndScrollTo(currentIndex - 1, false).run();
+                focusIndex = currentIndex - 1;
+                focusOnFirst = false;
               } else {
                 mySelectedItems.add(0, prevItem);
-                focusAndScrollTo(currentIndex - 1, true).run();
+                focusIndex = currentIndex - 1;
               }
               consumed = true;
+            }
+
+            if (focusIndex != -1) {
+              resetFocusAndScrollTo(focusIndex, focusOnFirst).run();
             }
           }
 
@@ -325,6 +343,19 @@ public class SelectionSupport<ItemT> {
     if (parent.get(LOGICAL_SINGLE_CELL_CONTAINER)) return true;
     List<Cell> siblings = parent.children();
     return siblings.contains(cell) && siblings.size() == 1;
+  }
+
+  private Runnable resetFocusAndScrollTo(int index, boolean first) {
+    return Runnables.seq(
+        new Runnable() {
+          @Override
+          public void run() {
+            // Dropping the focus clears all other selections
+            myTarget.getContainer().focusedCell.set(null);
+          }
+        },
+        focusAndScrollTo(index, first)
+    );
   }
 
   protected Runnable focusAndScrollTo(int index, boolean first) {
