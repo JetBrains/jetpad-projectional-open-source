@@ -15,6 +15,8 @@
  */
 package jetbrains.jetpad.projectional.cell.mapping;
 
+import com.google.common.base.Predicate;
+import com.google.common.base.Predicates;
 import jetbrains.jetpad.cell.Cell;
 import jetbrains.jetpad.mapper.ByTargetIndex;
 import jetbrains.jetpad.mapper.Mapper;
@@ -84,16 +86,22 @@ public final class CellProvider {
   }
 
   public Object getSource(Cell cell) {
-    return lookupSource(cell);
+    return getSource(cell, Predicates.alwaysTrue());
   }
 
-  private Object lookupSource(Cell cell) {
+  /**
+   * @param predicate Check for result, if it returns {@code false}
+   *   search continues up through cell hierarchy.
+   */
+  public Object getSource(Cell cell, Predicate<Object> predicate) {
     for (Cell c = cell; c != null; c = c.getParent()) {
       Collection<Mapper<?, ?>> mappers = myIndex.getMappers(c);
       if (!mappers.isEmpty()) {
         Mapper<?, ?> mapper = mappers.iterator().next();
         Object source = doGetSource(mapper, cell);
-        return source == null ? mapper.getSource() : source;
+        Object res = source == null ? mapper.getSource() : source;
+
+        if (predicate.apply(res)) return res;
       }
     }
     return null;
