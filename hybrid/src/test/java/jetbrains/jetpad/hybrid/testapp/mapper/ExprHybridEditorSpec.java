@@ -330,8 +330,18 @@ public class ExprHybridEditorSpec implements HybridEditorSpec<Expr> {
             return tokenHandler.apply(new ValueToken(new PosValueExpr(), new ValueExprCloner()));
           }
         });
-        for (final String quote : new String[] { "\"", "'" }) {
+
+        String[] quotes = new String[] { "\"", "'", "'''" };
+        int[] priorities = new int[] { 0, 0, -1 };
+        for (int i = 0; i < quotes.length; i++) {
+          final String quote = quotes[i];
+          final int priority = priorities[i];
+
           result.add(new ByBoundsCompletionItem(quote, quote) {
+            @Override
+            public int getMatchPriority() {
+              return priority;
+            }
             @Override
             public Runnable complete(String text) {
               StringExpr stringExpr = new StringExpr(quote);
@@ -344,6 +354,7 @@ public class ExprHybridEditorSpec implements HybridEditorSpec<Expr> {
             }
           });
         }
+
         final String commentPrefix = "#";
         result.add(new ByBoundsCompletionItem(commentPrefix) {
           @Override

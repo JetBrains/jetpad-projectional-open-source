@@ -1032,6 +1032,36 @@ abstract class BaseHybridEditorEditingTest<ContainerT, MapperT extends Mapper<Co
 
   @Test
   public void bulkCompletionInHybridWrapperRole() {
+    CompletionParameters requireBulkCompletion = new BaseCompletionParameters() {
+      @Override
+      public boolean isBulkCompletionRequired() {
+        return true;
+      }
+    };
+    CompletionSupplier roleCompletionSupplier = createHybridWrapperRoleCompletionSupplier();
+    CompletionItems completionItems = new CompletionItems(roleCompletionSupplier.get(requireBulkCompletion));
+
+    String code = "'text 1' + 1";
+    for (boolean eagerCompletion : new boolean[] { false, true }) {
+      assertTrue(completionItems.hasSingleMatch(code, eagerCompletion));
+    }
+    completionItems.completeFirstMatch(code);
+    assertTokensEqual(ImmutableList.of(singleQtd("text 1"), Tokens.PLUS, integer(1)), sync.tokens());
+    assertFocused(targetCell.lastChild());
+  }
+
+  @Test
+  public void hybridWrapperRoleCompletionRespectsPriorities() {
+    CompletionSupplier roleCompletionSupplier = createHybridWrapperRoleCompletionSupplier();
+    CompletionItems completionItems = new CompletionItems(roleCompletionSupplier.get(CompletionParameters.EMPTY));
+
+    String code = "'";
+    for (boolean eagerCompletion : new boolean[] { false, true }) {
+      assertTrue(completionItems.hasSingleMatch(code, eagerCompletion));
+    }
+  }
+
+  private CompletionSupplier createHybridWrapperRoleCompletionSupplier() {
     Supplier<ContainerT> containerSupplier = new Supplier<ContainerT>() {
       @Override
       public ContainerT get() {
@@ -1054,25 +1084,10 @@ abstract class BaseHybridEditorEditingTest<ContainerT, MapperT extends Mapper<Co
         return Runnables.EMPTY;
       }
     };
-    CompletionParameters requireBulkCompletion = new BaseCompletionParameters() {
-      @Override
-      public boolean isBulkCompletionRequired() {
-        return true;
-      }
-    };
 
     HybridWrapperRoleCompletion<Object, ContainerT, Expr> hybridWrapperRole = new HybridWrapperRoleCompletion<>(
         getSpec(), containerSupplier, syncSupplier);
-    CompletionSupplier roleCompletion = hybridWrapperRole.createRoleCompletion(mapper, container, containerRole);
-    CompletionItems completionItems = new CompletionItems(roleCompletion.get(requireBulkCompletion));
-
-    String code = "'text 1' + 1";
-    for (boolean eagerCompletion : new boolean[] { false, true }) {
-      assertTrue(completionItems.hasSingleMatch(code, eagerCompletion));
-    }
-    completionItems.completeFirstMatch(code);
-    assertTokensEqual(ImmutableList.of(singleQtd("text 1"), Tokens.PLUS, integer(1)), sync.tokens());
-    assertFocused(targetCell.lastChild());
+    return hybridWrapperRole.createRoleCompletion(mapper, container, containerRole);
   }
 
   @Test

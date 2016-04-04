@@ -29,6 +29,10 @@ class TokensUtil {
     return new ValueToken(new StringExpr("\"", body), new ValueExprCloner(), new ValueExprTextGen());
   }
 
+  static Token tripleQtd(String body) {
+    return new ValueToken(new StringExpr("'''", body), new ValueExprCloner(), new ValueExprTextGen());
+  }
+
   static Token complex() {
     return new ValueToken(new ComplexValueExpr(), new ValueExprCloner());
   }
