@@ -19,7 +19,6 @@ import jetbrains.jetpad.cell.Cell;
 import jetbrains.jetpad.cell.EditingTestCase;
 import jetbrains.jetpad.cell.HorizontalCell;
 import jetbrains.jetpad.cell.TextCell;
-import jetbrains.jetpad.cell.action.CellActions;
 import jetbrains.jetpad.cell.text.TextEditing;
 import jetbrains.jetpad.event.Key;
 import jetbrains.jetpad.event.ModifierKey;
@@ -33,10 +32,13 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 
+import static jetbrains.jetpad.cell.action.CellActions.toFirstFocusable;
+import static jetbrains.jetpad.cell.action.CellActions.toLastFocusable;
 import static jetbrains.jetpad.projectional.cell.ProjectionalSynchronizers.forRole;
-import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.*;
 
 public class SelectionTest extends EditingTestCase {
   private ContainerMapper containerMapper;
@@ -56,22 +58,37 @@ public class SelectionTest extends EditingTestCase {
     containerMapper = new ContainerMapper(container);
     containerMapper.attachRoot();
     myCellContainer.root.children().add(containerMapper.getTarget());
-    CellActions.toFirstFocusable(containerMapper.getTarget()).run();
     RootController.install(myCellContainer);
   }
 
   @Test
-  public void cantSelectChildWhenParentSelected() {
+  public void levelIncreasesOnRepeatedKeystroke() {
+    Cell target = containerMapper.getTarget();
+    for (Runnable focusRunnable : new Runnable[] { toFirstFocusable(target), toLastFocusable(target) }) {
+      for (Key arrow : new Key[] { Key.DOWN, Key.UP, Key.LEFT, Key.RIGHT }) {
+        target.getContainer().focusedCell.set(null);    // To drop selection
+        focusRunnable.run();
+        doTestLevelIncreases(arrow);
+      }
+    }
+  }
+
+  private void doTestLevelIncreases(Key arrow) {
     List<Object> oldSelection = getSelection();
-    for ( ; ; ) {
-      press(Key.RIGHT, ModifierKey.SHIFT);
+    for (int i = 0; i < 4; i++) {
+      press(arrow, ModifierKey.SHIFT);
+
       List<Object> newSelection = getSelection();
       if (newSelection.equals(oldSelection)) {
-        break;
+        return;
       }
-      assertFalse(additionContainsDescendants(oldSelection, newSelection));
+
+      assertAllOfOneType(newSelection);
+      assertLevelIncreased(oldSelection, newSelection);
+
       oldSelection = newSelection;
     }
+    fail("Iterations maximum exceeded");
   }
 
   private List<Object> getSelection() {
@@ -89,38 +106,28 @@ public class SelectionTest extends EditingTestCase {
     }
   }
 
-  private boolean additionContainsDescendants(List<Object> older, List<Object> newer) {
-    List<Object> addition = new ArrayList<>(newer);
-    addition.removeAll(older);
-
-    List<Object> same = new ArrayList<>(newer);
-    same.retainAll(older);
-
-    for (Object former : same) {
-      for (Object added : addition) {
-        if (isDescendant(former, added)) {
-          return true;
-        }
+  private void assertAllOfOneType(List<Object> selection) {
+    if (selection.size() > 1) {
+      Iterator<Object> i = selection.iterator();
+      Object first = i.next();
+      while (i.hasNext()) {
+        assertEquals("Heterogeneous selection found", first.getClass(), i.next().getClass());
       }
     }
-    return false;
   }
 
-  private boolean isDescendant(Object ancestor, Object descendant) {
-    if (ancestor instanceof Top) {
-      if (descendant instanceof Middle) {
-        return ((Top) ancestor).middles.contains(descendant);
-      } else if (descendant instanceof Leaf) {
-        for (Middle m : ((Top) ancestor).middles) {
-          if (isDescendant(m, descendant)) {
-            return true;
-          }
-        }
-      }
-    } else if (ancestor instanceof Middle && descendant instanceof Leaf) {
-      return ((Middle) ancestor).leaves.contains(descendant);
+  private void assertLevelIncreased(List<Object> oldSelection, List<Object> newSelection) {
+    if (!oldSelection.isEmpty()) {
+      Object older = oldSelection.iterator().next();
+      assertFalse("Selection level decreased: " + older + "-> empty", newSelection.isEmpty());
+      Object newer = newSelection.iterator().next();
+      assertTrue("Selection level did not increase: " + older + "->" + newer, secondIsHigher(older, newer));
     }
-    return false;
+  }
+
+  private boolean secondIsHigher(Object first, Object second) {
+    return first instanceof Leaf && (second instanceof Middle || second instanceof Top)
+        || first instanceof Middle && second instanceof Top;
   }
 
 
