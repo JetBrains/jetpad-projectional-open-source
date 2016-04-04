@@ -20,6 +20,7 @@ import jetbrains.jetpad.completion.CompletionItem;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 
 public class CompletionItems {
@@ -68,17 +69,28 @@ public class CompletionItems {
   }
 
   private List<CompletionItem> reduce(List<CompletionItem> items) {
-    List<CompletionItem> lowPriority = new ArrayList<>();
-    List<CompletionItem> result = new ArrayList<>();
-    for (CompletionItem item : items) {
-      if (item.isLowMatchPriority()) {
-        lowPriority.add(item);
-      } else {
-        result.add(item);
+    if (items.size() <= 1) {
+      return items;
+    } else {
+      Iterator<CompletionItem> i = items.iterator();
+      CompletionItem firstItem = i.next();
+
+      int winningPriority = firstItem.getMatchPriority();
+      List<CompletionItem> winningItems = new ArrayList<>();
+      winningItems.add(firstItem);
+
+      while (i.hasNext()) {
+        CompletionItem item = i.next();
+        if (item.getMatchPriority() == winningPriority) {
+          winningItems.add(item);
+        } else if (item.getMatchPriority() > winningPriority) {
+          winningPriority = item.getMatchPriority();
+          winningItems.clear();
+          winningItems.add(item);
+        }
       }
+      return winningItems;
     }
-    if (result.isEmpty()) return lowPriority;
-    return result;
   }
 
   public boolean hasSingleMatch(String text, boolean eager) {

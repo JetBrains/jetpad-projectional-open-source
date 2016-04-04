@@ -76,8 +76,8 @@ public class ValidTextCompletionTest extends CompletionTestCase {
                 }
 
                 @Override
-                public boolean isLowMatchPriority() {
-                  return true;
+                public int getMatchPriority() {
+                  return super.getMatchPriority() - 1;
                 }
 
                 @Override
@@ -113,8 +113,8 @@ public class ValidTextCompletionTest extends CompletionTestCase {
                 }
 
                 @Override
-                public boolean isLowMatchPriority() {
-                  return true;
+                public int getMatchPriority() {
+                  return super.getMatchPriority() - 1;
                 }
 
                 @Override
