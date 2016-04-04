@@ -29,6 +29,8 @@ public class Tokens {
   public static final Token RP = new SimpleToken(")", true, false);
   public static final Token DOT = new SimpleToken(".", true, true, true);
 
+  static final Token ELLIPSIS = new SimpleToken("...");
+
   static boolean isLp(Token token) {
     return token == LP || token == LP_CALL;
   }

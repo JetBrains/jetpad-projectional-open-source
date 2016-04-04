@@ -100,35 +100,31 @@ public class TextEditingTrait extends TextNavigationTrait {
     String currentText = TextEditing.text(editor);
     CompletionItems completion = new CompletionItems(cell.get(Completion.COMPLETION).get(CompletionParameters.EMPTY));
     String prefixText = TextEditing.getPrefixText(editor);
-    if (TextEditing.isEnd(editor)) {
-      List<CompletionItem> matches = completion.matches(prefixText);
-      List<CompletionItem> strictlyPrefixed = completion.strictlyPrefixedBy(prefixText);
-      if (matches.size() == 1 && strictlyPrefixed.isEmpty()) {
-        BaseCompletionParameters cp = new BaseCompletionParameters() {
-          @Override
-          public boolean isEndRightTransform() {
-            return true;
-          }
-
-          @Override
-          public boolean isMenu() {
-            return true;
-          }
-        };
-        CompletionSupplier supplier = cell.get(Completion.RIGHT_TRANSFORM);
-        if ((!supplier.isEmpty(cp) || !supplier.isAsyncEmpty(cp)) && cell.get(TextEditing.RT_ON_END)) {
-          if (cell.get(Cell.RIGHT_POPUP) == null) {
-            TextCell popup = CompletionSupport.showSideTransformPopup(cell, cell.rightPopup(), cell.get(Completion.RIGHT_TRANSFORM), true);
-            popup.get(Completion.COMPLETION_CONTROLLER).activate(new Runnable() {
-              @Override
-              public void run() {
-                cell.focus();
-              }
-            });
-          }
-          event.consume();
-          return;
+    if (TextEditing.isEnd(editor) && cell.get(Completion.COMPLETION_CONFIG).canDoRightTransform(completion, prefixText)) {
+      BaseCompletionParameters cp = new BaseCompletionParameters() {
+        @Override
+        public boolean isEndRightTransform() {
+          return true;
         }
+
+        @Override
+        public boolean isMenu() {
+          return true;
+        }
+      };
+      CompletionSupplier supplier = cell.get(Completion.RIGHT_TRANSFORM);
+      if ((!supplier.isEmpty(cp) || !supplier.isAsyncEmpty(cp)) && cell.get(TextEditing.RT_ON_END)) {
+        if (cell.get(Cell.RIGHT_POPUP) == null) {
+          TextCell popup = CompletionSupport.showSideTransformPopup(cell, cell.rightPopup(), cell.get(Completion.RIGHT_TRANSFORM), true);
+          popup.get(Completion.COMPLETION_CONTROLLER).activate(new Runnable() {
+            @Override
+            public void run() {
+              cell.focus();
+            }
+          });
+        }
+        event.consume();
+        return;
       }
     }
 
