@@ -319,7 +319,10 @@ public abstract class BaseHybridSynchronizer<SourceT, SpecT extends SimpleHybrid
 
       private ClipboardContent copy() {
         final Range<Integer> selection = selection();
-        final List<Token> tokens = new ArrayList<>(tokens().subList(selection.lowerEndpoint(), selection.upperEndpoint()));
+        final List<Token> copiedTokens = new ArrayList<>(selection.upperEndpoint() - selection.lowerEndpoint());
+        for (Token token : tokens().subList(selection.lowerEndpoint(), selection.upperEndpoint())) {
+          copiedTokens.add(token.copy());
+        }
         return new ClipboardContent() {
           @Override
           public boolean isSupported(ContentKind<?> kind) {
@@ -329,7 +332,11 @@ public abstract class BaseHybridSynchronizer<SourceT, SpecT extends SimpleHybrid
           @Override
           public <T> T get(ContentKind<T> kind) {
             if (kind == TOKENS_CONTENT) {
-              return (T) Collections.unmodifiableList(tokens);
+              List<Token> result = new ArrayList<>(copiedTokens.size());
+              for (Token token : copiedTokens) {
+                result.add(token.copy());
+              }
+              return (T) Collections.unmodifiableList(result);
             }
             return null;
           }
@@ -337,7 +344,7 @@ public abstract class BaseHybridSynchronizer<SourceT, SpecT extends SimpleHybrid
           @Override
           public String toString() {
             try {
-              return TokenUtil.getText(tokens);
+              return TokenUtil.getText(copiedTokens);
             } catch (UnsupportedOperationException e) {
               return super.toString();
             }

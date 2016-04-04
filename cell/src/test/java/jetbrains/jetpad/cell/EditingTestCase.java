@@ -107,6 +107,12 @@ public abstract class EditingTestCase extends BaseTestCase {
     myEditableCellContainer.left();
   }
 
+  protected final void left(int steps) {
+    for (int i = 0; i < steps; i++) {
+      left();
+    }
+  }
+
   protected final void right() {
     myEditableCellContainer.right();
   }
