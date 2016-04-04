@@ -47,7 +47,7 @@ public final class CellProvider {
   }
 
   public List<Cell> getCells(final HasParent<?> source) {
-    return getCells(new Iterator<Object>() {
+    return getCellsOnPath(new Iterator<Object>() {
       private HasParent<?> myCurrent = source;
 
       @Override
@@ -72,13 +72,28 @@ public final class CellProvider {
     });
   }
 
-  public List<Cell> getCells(Iterable<?> sourcePath) {
-    return getCells(sourcePath.iterator());
+  public List<Cell> getCellsOnPath(Iterable<?> sourcePath) {
+    return getCellsOnPath(sourcePath.iterator());
   }
 
-  public List<Cell> getCells(Iterator<?> sourcePath) {
+  @Deprecated
+  public List<Cell> getCells(Iterable<?> sourcePath) {
+    return getCellsOnPath(sourcePath.iterator());
+  }
+
+  public List<Cell> getCellsOnPath(Iterator<?> sourcePath) {
     Object actualSource = sourcePath.next();
     return lookupCells(actualSource, actualSource, sourcePath);
+  }
+
+  @Deprecated
+  public List<Cell> getCells(Iterator<?> sourcePath) {
+    return getCellsOnPath(sourcePath);
+  }
+
+  @Deprecated
+  public List<Cell> getCellsBySource(Object source) {
+    return getCells(source);
   }
 
   public List<Cell> getCells(Object source) {
@@ -156,7 +171,7 @@ public final class CellProvider {
 
   private List<Cell> doGetCells(Mapper<?, ? extends Cell> mapper, Object actualSource) {
     if (mapper.getSource() == actualSource) {
-      return Collections.<Cell>singletonList(mapper.getTarget());
+      return Collections.singletonList(mapper.getTarget());
     }
     List<Cell> result = null;
     for (Synchronizer sync : mapper.synchronizers()) {
