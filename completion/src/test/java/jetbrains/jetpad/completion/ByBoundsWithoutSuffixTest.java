@@ -16,21 +16,30 @@
 package jetbrains.jetpad.completion;
 
 import jetbrains.jetpad.base.Runnables;
-import org.junit.Test;
 
-import static org.junit.Assert.assertTrue;
-
-public final class ByBoundsCompletionItemTest {
-
-  @Test
-  public void noSuffix() {
-    ByBoundsCompletionItem byBoundsCompletionItem = new ByBoundsCompletionItem("#") {
+public class ByBoundsWithoutSuffixTest extends BaseCompletionItemTestCase {
+  @Override
+  CompletionItem createCompletionItem() {
+    return new ByBoundsCompletionItem("#") {
       @Override
       public Runnable complete(String text) {
         return Runnables.EMPTY;
       }
     };
-    assertTrue(byBoundsCompletionItem.isMatch("# + 3"));
   }
 
+  @Override
+  String[] getStrictPrefixes() {
+    return new String[] { "" };
+  }
+
+  @Override
+  String[] getMatches() {
+    return new String[] { "#", "##", "# + 3"};
+  }
+
+  @Override
+  String[] getBadItems() {
+    return new String[] { " ", " #", "x", "x#" };
+  }
 }

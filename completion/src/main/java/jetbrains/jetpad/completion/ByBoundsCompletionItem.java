@@ -37,22 +37,35 @@ public abstract class ByBoundsCompletionItem extends BaseCompletionItem {
 
   @Override
   public boolean isStrictMatchPrefix(String text) {
-    return text.length() < myPrefix.length() && myPrefix.startsWith(text);
+    return text.length() < myPrefix.length() && myPrefix.startsWith(text)
+        || isSuffixSpecified() && isPrefixedButNotSuffixed(text);
   }
 
   @Override
   public boolean isMatch(String text) {
-    return hasPrefixAndDoesNotExceedSuffix(text);
+    if (isSuffixSpecified()) {
+      return isPrefixedAndSuffixed(text);
+    } else {
+      return text.startsWith(myPrefix);
+    }
   }
 
-  private boolean hasPrefixAndDoesNotExceedSuffix(String text) {
+  private boolean isSuffixSpecified() {
+    return mySuffix.length() > 0;
+  }
+
+  private boolean isPrefixedButNotSuffixed(String text) {
+    return isPrefixedAndHasSuffixAt(text, -1);
+  }
+
+  private boolean isPrefixedAndSuffixed(String text) {
+    return isPrefixedAndHasSuffixAt(text, text.length() - mySuffix.length());
+  }
+
+  private boolean isPrefixedAndHasSuffixAt(String text, int expectedSuffixPos) {
     if (text.startsWith(myPrefix)) {
-      int suffixLength = mySuffix.length();
-      if (suffixLength > 0) {
-        int suffixPos = text.indexOf(mySuffix, myPrefix.length());
-        return (suffixPos == -1) || (suffixPos == text.length() - suffixLength);
-      }
-      return true;
+      int suffixPos = text.indexOf(mySuffix, myPrefix.length());
+      return expectedSuffixPos == suffixPos;
     }
     return false;
   }
