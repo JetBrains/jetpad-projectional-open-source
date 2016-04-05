@@ -52,7 +52,7 @@ public class CellProviderTest {
   @Test
   public void attach() {
     assertEquals(rootSource, provider.getSource(rootCell));
-    assertEquals(Arrays.asList(rootCell), provider.getCellsBySource(rootSource));
+    assertEquals(Arrays.asList(rootCell), provider.getCells(rootSource));
   }
 
   @Test
