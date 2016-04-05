@@ -76,24 +76,9 @@ public final class CellProvider {
     return getCellsOnPath(sourcePath.iterator());
   }
 
-  @Deprecated
-  public List<Cell> getCells(Iterable<?> sourcePath) {
-    return getCellsOnPath(sourcePath.iterator());
-  }
-
   public List<Cell> getCellsOnPath(Iterator<?> sourcePath) {
     Object actualSource = sourcePath.next();
     return lookupCells(actualSource, actualSource, sourcePath);
-  }
-
-  @Deprecated
-  public List<Cell> getCells(Iterator<?> sourcePath) {
-    return getCellsOnPath(sourcePath);
-  }
-
-  @Deprecated
-  public List<Cell> getCellsBySource(Object source) {
-    return getCells(source);
   }
 
   public List<Cell> getCells(Object source) {
