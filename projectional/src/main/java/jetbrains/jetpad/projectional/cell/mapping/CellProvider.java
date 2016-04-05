@@ -15,6 +15,8 @@
  */
 package jetbrains.jetpad.projectional.cell.mapping;
 
+import com.google.common.base.Predicate;
+import com.google.common.base.Predicates;
 import jetbrains.jetpad.cell.Cell;
 import jetbrains.jetpad.mapper.ByTargetIndex;
 import jetbrains.jetpad.mapper.Mapper;
@@ -45,7 +47,7 @@ public final class CellProvider {
   }
 
   public List<Cell> getCells(final HasParent<?> source) {
-    return getCells(new Iterator<Object>() {
+    return getCellsOnPath(new Iterator<Object>() {
       private HasParent<?> myCurrent = source;
 
       @Override
@@ -70,13 +72,28 @@ public final class CellProvider {
     });
   }
 
-  public List<Cell> getCells(Iterable<?> sourcePath) {
-    return getCells(sourcePath.iterator());
+  public List<Cell> getCellsOnPath(Iterable<?> sourcePath) {
+    return getCellsOnPath(sourcePath.iterator());
   }
 
-  public List<Cell> getCells(Iterator<?> sourcePath) {
+  @Deprecated
+  public List<Cell> getCells(Iterable<?> sourcePath) {
+    return getCellsOnPath(sourcePath.iterator());
+  }
+
+  public List<Cell> getCellsOnPath(Iterator<?> sourcePath) {
     Object actualSource = sourcePath.next();
     return lookupCells(actualSource, actualSource, sourcePath);
+  }
+
+  @Deprecated
+  public List<Cell> getCells(Iterator<?> sourcePath) {
+    return getCellsOnPath(sourcePath);
+  }
+
+  @Deprecated
+  public List<Cell> getCellsBySource(Object source) {
+    return getCells(source);
   }
 
   public List<Cell> getCells(Object source) {
@@ -84,16 +101,22 @@ public final class CellProvider {
   }
 
   public Object getSource(Cell cell) {
-    return lookupSource(cell);
+    return getSource(cell, Predicates.alwaysTrue());
   }
 
-  private Object lookupSource(Cell cell) {
+  /**
+   * @param predicate Check for result, if it returns {@code false}
+   *   search continues up through cell hierarchy.
+   */
+  public Object getSource(Cell cell, Predicate<Object> predicate) {
     for (Cell c = cell; c != null; c = c.getParent()) {
       Collection<Mapper<?, ?>> mappers = myIndex.getMappers(c);
       if (!mappers.isEmpty()) {
         Mapper<?, ?> mapper = mappers.iterator().next();
         Object source = doGetSource(mapper, cell);
-        return source == null ? mapper.getSource() : source;
+        Object result = source == null ? mapper.getSource() : source;
+
+        if (predicate.apply(result)) return result;
       }
     }
     return null;
@@ -148,6 +171,8 @@ public final class CellProvider {
 
   private List<Cell> doGetCells(Mapper<?, ? extends Cell> mapper, Object actualSource) {
     if (mapper.getSource() == actualSource) {
+      // GTW compilation error.
+      //noinspection RedundantTypeArguments
       return Collections.<Cell>singletonList(mapper.getTarget());
     }
     List<Cell> result = null;
