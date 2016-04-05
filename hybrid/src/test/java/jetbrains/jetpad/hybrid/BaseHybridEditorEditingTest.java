@@ -1195,6 +1195,16 @@ abstract class BaseHybridEditorEditingTest<ContainerT, MapperT extends Mapper<Co
   }
 
   @Test
+  public void typeBeforeComment() {
+    setTokens(new CommentToken("#", " + 3"));
+    select(0, true);
+
+    type("1");
+
+    assertTokens(integer(1), new CommentToken("#", " + 3"));
+  }
+
+  @Test
   public void tokenUpdateAfterReparse() {
     setTokens(new IdentifierToken("x"), Tokens.LP);
 
