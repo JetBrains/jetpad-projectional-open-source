@@ -23,6 +23,7 @@ import jetbrains.jetpad.cell.Cell;
 import jetbrains.jetpad.cell.TextCell;
 import jetbrains.jetpad.cell.completion.CellCompletionController;
 import jetbrains.jetpad.cell.completion.Completion;
+import jetbrains.jetpad.cell.completion.CompletionConfig;
 import jetbrains.jetpad.cell.completion.CompletionItems;
 import jetbrains.jetpad.cell.completion.CompletionTestCase;
 import jetbrains.jetpad.cell.trait.CellTrait;
@@ -159,7 +160,7 @@ public class ValidTextCompletionTest extends CompletionTestCase {
               }
 
               final List<CompletionItem> simpleItems = new ArrayList<>();
-              simpleItems.addAll(FluentIterable.from(createCompletion("a", "c", "ae", "zz", "d", "u", "q").get(cp)).toList());
+              simpleItems.addAll(FluentIterable.from(createCompletion("a", "c", "ae", "zz", "d", "u", "q", "p", "ppp").get(cp)).toList());
               simpleItems.add(new LowPriorityCompletionItem("d"));
               simpleItems.add(new LowPriorityCompletionItem("xx"));
               simpleItems.add(new LowPriorityCompletionItem("qq"));
@@ -196,6 +197,16 @@ public class ValidTextCompletionTest extends CompletionTestCase {
 
         if (spec == TextEditing.RT_ON_END) {
           return true;
+        }
+
+        if (spec == Completion.COMPLETION_CONFIG) {
+          return new CompletionConfig() {
+            @Override
+            public boolean canDoRightTransform(CompletionItems completionItems, String prefixText) {
+              List<CompletionItem> matches = completionItems.matches(prefixText);
+              return matches.size() == 1;
+            }
+          };
         }
 
         return super.get(cell, spec);
@@ -369,6 +380,16 @@ public class ValidTextCompletionTest extends CompletionTestCase {
   @Test
   public void rightTransformOnEnd() {
     type("xx");
+
+    complete();
+    enter();
+
+    assertTrue(rtCompleted);
+  }
+
+  @Test
+  public void rightTransformOnEnd_strictlyPrefixedNotEmpty() {
+    type("p");
 
     complete();
     enter();

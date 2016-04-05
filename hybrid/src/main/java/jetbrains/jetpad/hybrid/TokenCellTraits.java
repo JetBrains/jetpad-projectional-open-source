@@ -20,6 +20,8 @@ import jetbrains.jetpad.cell.Cell;
 import jetbrains.jetpad.cell.CellContainer;
 import jetbrains.jetpad.cell.TextCell;
 import jetbrains.jetpad.cell.completion.Completion;
+import jetbrains.jetpad.cell.completion.CompletionConfig;
+import jetbrains.jetpad.cell.completion.CompletionItems;
 import jetbrains.jetpad.cell.position.Positions;
 import jetbrains.jetpad.cell.text.TextEditing;
 import jetbrains.jetpad.cell.trait.CellTrait;
@@ -27,6 +29,7 @@ import jetbrains.jetpad.cell.trait.CellTraitEventSpec;
 import jetbrains.jetpad.cell.trait.CellTraitPropertySpec;
 import jetbrains.jetpad.cell.trait.CompositeCellTrait;
 import jetbrains.jetpad.cell.util.Cells;
+import jetbrains.jetpad.completion.CompletionItem;
 import jetbrains.jetpad.event.Event;
 import jetbrains.jetpad.event.Key;
 import jetbrains.jetpad.event.KeyEvent;
@@ -188,6 +191,16 @@ class TokenCellTraits {
     public Object get(Cell cell, CellTraitPropertySpec<?> spec) {
       if (spec == Completion.COMPLETION && !hybridSync(cell).hasSelection()) {
         return tokenCompletion(cell).tokenCompletion(cell);
+      }
+
+      if (spec == Completion.COMPLETION_CONFIG) {
+        return new CompletionConfig() {
+          @Override
+          public boolean canDoRightTransform(CompletionItems completionItems, String prefixText) {
+            List<CompletionItem> matches = completionItems.matches(prefixText);
+            return matches.size() == 1;
+          }
+        };
       }
 
       return super.get(cell, spec);
