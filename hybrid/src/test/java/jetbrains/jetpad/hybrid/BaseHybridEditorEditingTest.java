@@ -1017,6 +1017,44 @@ abstract class BaseHybridEditorEditingTest<ContainerT, MapperT extends Mapper<Co
   }
 
   @Test
+  public void editStringAfterCopyBeforePaste() {
+    type("'x");
+    right();
+    selectLeft(1);
+
+    ClipboardContent content = copy();
+    String contentToString = content.toString();
+    right();
+    type("1");
+    end(); end();
+
+    paste(contentToString);
+
+    assertTokens(singleQtd("1x"), singleQtd("x"));
+  }
+
+  @Test
+  public void editStringAfterPaste() {
+    type("'x");
+    right();
+    selectLeft(1);
+
+    ClipboardContent content = copy();
+    String contentToString = content.toString();
+    end();
+
+    paste(contentToString);
+    paste(contentToString);
+
+    left();
+    type("2");
+    left(5);
+    type("1");
+
+    assertTokens(singleQtd("x"), singleQtd("x1"), singleQtd("x2"));
+  }
+
+  @Test
   public void hideTokensInMenuForHybridWrapperRole() {
     HybridWrapperRoleCompletion<Object, Expr, Expr> hybridWrapperRole = new HybridWrapperRoleCompletion<>(getSpec(), null, null, true);
     CompletionSupplier roleCompletion = hybridWrapperRole.createRoleCompletion(mapper, null, null);

@@ -41,9 +41,6 @@ class TokensUtil {
     return new ValueToken(new ValueExpr(), new ValueExprCloner());
   }
 
-  static Token async() {
-    return new ValueToken(new AsyncValueExpr(), new ValueExprCloner());
-  }
   static Token error(String text) {
     return new ErrorToken(text);
   }
@@ -77,7 +74,7 @@ class TokensUtil {
       assertTrue(actualValue instanceof PosValueExpr);
     } else if (expectedValue instanceof StringExpr) {
       assertTrue(actualValue instanceof StringExpr);
-      assertEquals(actualValue.toString(), expectedValue.toString());
+      assertEquals(expectedValue.toString(), actualValue.toString());
     } else {
       assertEquals(expectedValue, actualValue);
     }
