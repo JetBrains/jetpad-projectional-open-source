@@ -914,6 +914,28 @@ abstract class BaseHybridEditorEditingTest<ContainerT, MapperT extends Mapper<Co
   }
 
   @Test
+  public void completeToEmptyString() {
+    type("'");
+    assertTokens(singleQtd(""));
+  }
+
+  @Test
+  public void completeToNonemptyString() {
+    type("abc'");
+    home();
+    type("'");
+    assertTokens(singleQtd("abc"));
+  }
+
+  @Test
+  public void typeQuoteBeforeNumber() {
+    type("10");
+    home();
+    type("'");
+    assertTokens(singleQtd(""), integer(10));
+  }
+
+  @Test
   public void copyPasteToken() {
     setTokens(Tokens.ID, Tokens.PLUS);
     select(0, true);

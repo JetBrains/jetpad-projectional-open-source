@@ -335,15 +335,35 @@ public class ExprHybridEditorSpec implements HybridEditorSpec<Expr> {
         });
 
         String[] quotes = new String[] { "\"", "'", "'''" };
-        int[] priorities = new int[] { 0, 0, -1 };
+        int[] simpleCompletionPriorities = new int[] { 0, 0, -1 };
+        final int byBoundsCompletionPriority = -2;
         for (int i = 0; i < quotes.length; i++) {
           final String quote = quotes[i];
-          final int priority = priorities[i];
+          final int simpleCompletionPriority = simpleCompletionPriorities[i];
+
+          if (!cp.isMenu()) {
+            result.add(new SimpleCompletionItem(quote) {
+              @Override
+              public int getMatchPriority() {
+                return simpleCompletionPriority;
+              }
+              @Override
+              public Runnable complete(String text) {
+                StringExpr stringExpr = new StringExpr(quote);
+                stringExpr.body.set(text.substring(quote.length()));
+                return tokenHandler.apply(new ValueToken(stringExpr, new ValueExprCloner(), new ValueExprTextGen()));
+              }
+              @Override
+              public int getSortPriority() {
+                return -1;
+              }
+            });
+          }
 
           result.add(new ByBoundsCompletionItem(quote, quote) {
             @Override
             public int getMatchPriority() {
-              return priority;
+              return byBoundsCompletionPriority;
             }
             @Override
             public Runnable complete(String text) {

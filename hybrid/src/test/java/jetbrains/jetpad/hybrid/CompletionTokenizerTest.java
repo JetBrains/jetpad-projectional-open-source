@@ -87,7 +87,7 @@ public class CompletionTokenizerTest {
   @Test
   public void incompleteStringLiteral() {
     List<Token> tokens = tokenizer.tokenize("\"text 1");
-    assertTokensEqual(of(doubleQtd("text 1")), tokens);
+    assertTokensEqual(of(error("\"text 1")), tokens);
   }
 
   @Test
