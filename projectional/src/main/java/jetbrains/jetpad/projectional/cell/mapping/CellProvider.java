@@ -114,9 +114,9 @@ public final class CellProvider {
       if (!mappers.isEmpty()) {
         Mapper<?, ?> mapper = mappers.iterator().next();
         Object source = doGetSource(mapper, cell);
-        Object res = source == null ? mapper.getSource() : source;
+        Object result = source == null ? mapper.getSource() : source;
 
-        if (predicate.apply(res)) return res;
+        if (predicate.apply(result)) return result;
       }
     }
     return null;
@@ -171,7 +171,9 @@ public final class CellProvider {
 
   private List<Cell> doGetCells(Mapper<?, ? extends Cell> mapper, Object actualSource) {
     if (mapper.getSource() == actualSource) {
-      return Collections.singletonList(mapper.getTarget());
+      // GTW compilation error.
+      //noinspection RedundantTypeArguments
+      return Collections.<Cell>singletonList(mapper.getTarget());
     }
     List<Cell> result = null;
     for (Synchronizer sync : mapper.synchronizers()) {
