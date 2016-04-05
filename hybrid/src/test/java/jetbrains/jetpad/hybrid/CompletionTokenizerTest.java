@@ -97,6 +97,12 @@ public class CompletionTokenizerTest {
   }
 
   @Test
+  public void tripleQuotedString() {
+    List<Token> tokens = tokenizer.tokenize("'''x'''");
+    assertTokensEqual(of(tripleQtd("x")), tokens);
+  }
+
+  @Test
   public void longCorrectExpression() {
     List<Token> tokens = tokenizer.tokenize("\t( 10) * 5! + id.value ++ + '\"text 1\"' + \"text 2\"");
     assertTokensEqual(of(LP, integer(10), RP, MUL, integer(5), FACTORIAL, PLUS, ID, DOT, value(), INCREMENT, PLUS,

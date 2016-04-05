@@ -85,8 +85,8 @@ public class HybridWrapperRoleCompletion<ContainerT, WrapperT, TargetT> implemen
             }
 
             @Override
-            public boolean isLowMatchPriority() {
-              return true;
+            public int getMatchPriority() {
+              return super.getMatchPriority() - 1;
             }
 
             @Override
@@ -115,7 +115,7 @@ public class HybridWrapperRoleCompletion<ContainerT, WrapperT, TargetT> implemen
           });
         } else {
           if (!(cp.isMenu() && myHideTokensInMenu)) {
-            for (CompletionItem ci : mySpec.getTokenCompletion(new Function<Token, Runnable>() {
+            for (final CompletionItem ci : mySpec.getTokenCompletion(new Function<Token, Runnable>() {
               @Override
               public Runnable apply(Token input) {
                 return completer.complete(input);
@@ -123,8 +123,8 @@ public class HybridWrapperRoleCompletion<ContainerT, WrapperT, TargetT> implemen
             }).get(cp)) {
               result.add(new WrapperCompletionItem(ci) {
                 @Override
-                public boolean isLowMatchPriority() {
-                  return true;
+                public int getMatchPriority() {
+                  return super.getMatchPriority() - 1;
                 }
               });
             }

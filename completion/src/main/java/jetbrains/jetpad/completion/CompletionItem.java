@@ -35,11 +35,12 @@ public interface CompletionItem {
   boolean isMatch(String text);
 
   /**
-   * Low match priority means that if we have two strictly matching items one with low priority and another without it, then the higher
-   * priority item beats the lower priority item. We need this in order to support variable references and keyword variables. If
+   * Match priority matters when we have > 1 strictly matching items with different priorities - a subset with
+   * the highest priority wins. One of use cases is supporting variable references and keyword variables. If
    * there's a keyword expression, it beats variable reference.
+   * The greater is returned number, the higher is priority.
    */
-  boolean isLowMatchPriority();
+  int getMatchPriority();
 
   /**
    * Use this priority to move items higher in completion menu. Default priority should be 0. The higher
