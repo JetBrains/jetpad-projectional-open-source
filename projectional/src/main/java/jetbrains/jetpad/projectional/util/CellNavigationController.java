@@ -44,25 +44,23 @@ import static jetbrains.jetpad.model.composite.Composites.prevFocusable;
 public class CellNavigationController {
   public static final CellPropertySpec<Cell> PAIR_CELL = new CellPropertySpec<>("pairCell");
 
+  private static final CompositesWithBounds WITH_BOUNDS = new CompositesWithBounds(2);
 
-  private CompositesWithBounds ourWithBounds = new CompositesWithBounds(2);
-
-  static Registration install(final CellContainer container) {
+  public static Registration install(CellContainer container) {
     final CellNavigationController controller = new CellNavigationController(container);
     return controller.install();
   }
 
-  private CellContainer myContainer;
-  private Value<Integer> myPrevXOffset = new Value<>(null);
-  private Value<Boolean> myStackResetEnabled = new Value<>(true);
-  private Stack<Cell> mySelectionStack = new Stack<>();
+  private final CellContainer myContainer;
+  private final Value<Integer> myPrevXOffset = new Value<>(null);
+  private final Value<Boolean> myStackResetEnabled = new Value<>(true);
+  private final Stack<Cell> mySelectionStack = new Stack<>();
 
-
-  private CellNavigationController(final CellContainer container) {
+  private CellNavigationController(CellContainer container) {
     myContainer = container;
   }
 
-  public CompositeRegistration install() {
+  private CompositeRegistration install() {
     CompositeRegistration result = new CompositeRegistration();
     result.add(
       selectedCaretOffset().addHandler(new EventHandler<PropertyChangeEvent<Integer>>() {
@@ -189,7 +187,7 @@ public class CellNavigationController {
     return Properties.select(focusedCell(), caretPositionSelector());
   }
 
-  protected void handleKeyPress(Cell cell, KeyEvent event) {
+  private void handleKeyPress(Cell cell, KeyEvent event) {
     Cell current = focusedCell().get();
     Integer currentOffset = null;
 
@@ -223,16 +221,16 @@ public class CellNavigationController {
       next = prevFocusable(current);
       moveToHome(next);
     } else if (event.is(Key.UP)) {
-      next = ourWithBounds.upperFocusable(current, currentOffset);
+      next = WITH_BOUNDS.upperFocusable(current, currentOffset);
       restoreOffset = true;
     } else if (event.is(Key.DOWN)) {
-      next = ourWithBounds.lowerFocusable(current, currentOffset);
+      next = WITH_BOUNDS.lowerFocusable(current, currentOffset);
       restoreOffset = true;
     } else if (event.is(Key.PAGE_UP)) {
       next = new PageUpDown(current, currentOffset, visibleRect.dimension.y) {
         @Override
         protected Cell next(Cell current, int offset) {
-          return ourWithBounds.upperFocusable(current, offset);
+          return WITH_BOUNDS.upperFocusable(current, offset);
         }
       }.execute();
       restoreOffset = true;
@@ -240,15 +238,15 @@ public class CellNavigationController {
       next = new PageUpDown(current, currentOffset, visibleRect.dimension.y) {
         @Override
         protected Cell next(Cell current, int offset) {
-          return ourWithBounds.lowerFocusable(current, offset);
+          return WITH_BOUNDS.lowerFocusable(current, offset);
         }
       }.execute();
       restoreOffset = true;
     } else if (event.is(KeyStrokeSpecs.HOME)) {
-      next = ourWithBounds.homeElement(current);
+      next = WITH_BOUNDS.homeElement(current);
       moveToHome(next);
     } else if (event.is(KeyStrokeSpecs.END)) {
-      next = ourWithBounds.endElement(current);
+      next = WITH_BOUNDS.endElement(current);
       moveToEnd(next);
     } else if (event.is(KeyStrokeSpecs.FILE_HOME)) {
       next = Composites.firstFocusable(cell, true);
@@ -298,7 +296,7 @@ public class CellNavigationController {
     myStackResetEnabled.set(true);
   }
 
-  protected void handleMousePress(MouseEvent event) {
+  private void handleMousePress(MouseEvent event) {
     Cell closest = findFocusableAt(event.getLocation());
     if (closest == null) {
       closest = Cells.findClosestFocusableToSide(root(), event.getLocation());
