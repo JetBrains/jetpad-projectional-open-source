@@ -16,6 +16,7 @@
 package jetbrains.jetpad.hybrid;
 
 import jetbrains.jetpad.base.Registration;
+import jetbrains.jetpad.hybrid.parser.CommentToken;
 import jetbrains.jetpad.hybrid.parser.Parser;
 import jetbrains.jetpad.hybrid.parser.ParsingContextFactory;
 import jetbrains.jetpad.hybrid.parser.Token;
@@ -144,8 +145,9 @@ public class ParsingHybridProperty<ModelT> implements HybridProperty<ModelT> {
         myPrettyTokens.add(p);
       }
     }
-
-    myPrettyTokens.subList(newTokens.size(), myPrettyTokens.size()).clear();
+    if (newTokens.size() < myPrettyTokens.size() && !(myPrettyTokens.get(newTokens.size()) instanceof CommentToken)) {
+      myPrettyTokens.subList(newTokens.size(), myPrettyTokens.size()).clear();
+    }
   }
 
   @Override
