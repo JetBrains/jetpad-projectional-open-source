@@ -19,9 +19,9 @@ import jetbrains.jetpad.hybrid.parser.CommentParsingContextFactory;
 import jetbrains.jetpad.hybrid.parser.ParsingContextFactory;
 import jetbrains.jetpad.hybrid.parser.SimpleParsingContextFactory;
 
-final class HybridEditorSpecUtil {
+public final class HybridEditorSpecUtil {
 
-  static ParsingContextFactory getParsingContextFactory(SimpleHybridEditorSpec<?> simpleHybridEditorSpec) {
+  public static ParsingContextFactory getParsingContextFactory(SimpleHybridEditorSpec<?> simpleHybridEditorSpec) {
     ParsingContextFactory parsingContextFactory;
     CommentSpec commentSpec = simpleHybridEditorSpec.getCommentSpec();
     String commentPrefix = commentSpec.getCommentPrefix();
