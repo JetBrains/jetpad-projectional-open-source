@@ -58,6 +58,7 @@ public class ParsingHybridProperty<ModelT> implements HybridProperty<ModelT> {
     myPrinter = printer;
     mySourceTokens = tokens;
     myParsingContextFactory = parsingContextFactory;
+    initUpdate();
     myValue = parse();
     update();
     mySourceTokens.addListener(new CollectionListener<Token>() {
@@ -98,6 +99,15 @@ public class ParsingHybridProperty<ModelT> implements HybridProperty<ModelT> {
   @Override
   public ObservableList<Token> getTokens() {
     return myPrettyTokens;
+  }
+
+  private void initUpdate() {
+    myInUpdate = true;
+    try {
+      syncTokens(mySourceTokens);
+    } finally {
+      myInUpdate = false;
+    }
   }
 
   private void update() {
