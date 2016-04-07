@@ -176,9 +176,14 @@ abstract class BaseCellMapper<SourceT extends Cell> extends Mapper<SourceT, Elem
     } else if (background != null) {
       backgroundColor = background.toCssColor();
     }
-    String underline = getSource().get(Cell.RED_UNDERLINE) ? CSS.redUnderline()
-        : (getSource().get(Cell.YELLOW_UNDERLINE) ? CSS.yellowUnderline() : null);
-    applyBackground(backgroundColor, underline);
+    if (getSource().get(Cell.LINK)) {
+      updateCssStyle(CSS.link(), true);
+    } else {
+      updateCssStyle(CSS.link(), false);
+      String underline = getSource().get(Cell.RED_UNDERLINE) ? CSS.redUnderline()
+          : (getSource().get(Cell.YELLOW_UNDERLINE) ? CSS.yellowUnderline() : null);
+      applyBackground(backgroundColor, underline);
+    }
 
     Style style = getTarget().getStyle();
     Color borderColor = getSource().get(Cell.BORDER_COLOR);
@@ -190,7 +195,7 @@ abstract class BaseCellMapper<SourceT extends Cell> extends Mapper<SourceT, Elem
     updateCssStyle(CSS.hasShadow(), getSource().get(Cell.HAS_SHADOW));
   }
 
-  protected final void updateCssStyle(String cssStyle, boolean apply) {
+  final void updateCssStyle(String cssStyle, boolean apply) {
     if (apply) {
       getTarget().addClassName(cssStyle);
     } else {

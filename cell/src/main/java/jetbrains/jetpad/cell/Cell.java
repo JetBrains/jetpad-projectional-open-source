@@ -70,7 +70,7 @@ public abstract class Cell implements NavComposite<Cell>, HasVisibility, HasFocu
   public static final CellPropertySpec<Boolean> HAS_SHADOW = new CellPropertySpec<>("hasShadow", false);
   public static final CellPropertySpec<Boolean> RED_UNDERLINE = new CellPropertySpec<>("redUnderline", false);
   public static final CellPropertySpec<Boolean> YELLOW_UNDERLINE = new CellPropertySpec<>("yellowUnderline", false);
-
+  public static final CellPropertySpec<Boolean> LINK = new CellPropertySpec<>("link", false);
 
   public static boolean isPopupProp(CellPropertySpec<?> prop) {
     return POPUP_SPECS.contains(prop);
