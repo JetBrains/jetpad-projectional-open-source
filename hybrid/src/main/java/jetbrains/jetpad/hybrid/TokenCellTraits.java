@@ -177,10 +177,16 @@ class TokenCellTraits {
         Token current = tokens(cell).get(index);
 
         if (current instanceof CommentToken) {
+          CommentToken commentToken = (CommentToken) current;
+
           TextCell textCell = (TextCell) cell;
-          tokenOperations(cell).replaceCommentToken(cell, textCell).run();
-          event.consume();
-          return;
+          String text = textCell.text().get();
+          String prefix = commentToken.getPrefix();
+          if (!text.contains(prefix)) {
+            tokenOperations(cell).replaceCommentToken(cell, textCell).run();
+            event.consume();
+            return;
+          }
         }
       }
 
