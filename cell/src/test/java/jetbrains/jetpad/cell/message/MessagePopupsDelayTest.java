@@ -15,9 +15,11 @@
  */
 package jetbrains.jetpad.cell.message;
 
-import jetbrains.jetpad.base.Registration;
 import jetbrains.jetpad.base.edt.TestEventDispatchThread;
-import jetbrains.jetpad.cell.*;
+import jetbrains.jetpad.cell.Cell;
+import jetbrains.jetpad.cell.CellContainerEdtUtil;
+import jetbrains.jetpad.cell.HorizontalCell;
+import jetbrains.jetpad.cell.TextCell;
 import jetbrains.jetpad.cell.text.TextEditing;
 import jetbrains.jetpad.event.KeyStroke;
 import jetbrains.jetpad.event.KeyStrokeSpec;
@@ -123,11 +125,6 @@ public class MessagePopupsDelayTest extends MessageControllerTestCase {
     c.focusable().set(true);
     c.addTrait(TextEditing.textEditing());
     return c;
-  }
-
-  @Override
-  protected Registration installMessageController(CellContainer container) {
-    return MessageController.install(container, null);
   }
 
   @Override
