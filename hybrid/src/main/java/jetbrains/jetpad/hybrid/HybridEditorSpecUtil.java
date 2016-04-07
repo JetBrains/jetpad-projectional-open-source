@@ -22,8 +22,12 @@ import jetbrains.jetpad.hybrid.parser.SimpleParsingContextFactory;
 public final class HybridEditorSpecUtil {
 
   public static ParsingContextFactory getParsingContextFactory(SimpleHybridEditorSpec<?> simpleHybridEditorSpec) {
-    ParsingContextFactory parsingContextFactory;
     CommentSpec commentSpec = simpleHybridEditorSpec.getCommentSpec();
+    return getParsingContextFactory(commentSpec);
+  }
+
+  public static ParsingContextFactory getParsingContextFactory(CommentSpec commentSpec) {
+    ParsingContextFactory parsingContextFactory;
     String commentPrefix = commentSpec.getCommentPrefix();
     if (commentPrefix == null) {
       parsingContextFactory = new SimpleParsingContextFactory();
