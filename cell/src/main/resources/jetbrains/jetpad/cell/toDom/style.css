@@ -163,7 +163,7 @@
   transform: rotate(-135deg);
 }
 
-.link {
+.link:hover {
   cursor: pointer;
   background: blueUnderline bottom repeat-x !important;
 }
