@@ -15,40 +15,12 @@
  */
 package jetbrains.jetpad.cell.message;
 
-import jetbrains.jetpad.cell.CellContainer;
 import jetbrains.jetpad.cell.HorizontalCell;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 
 public class MessageControllerTest extends MessageControllerTestCase {
-
-  @Test
-  public void notEmptyContainer() {
-    CellContainer container = new CellContainer();
-    container.root.children().add(new HorizontalCell());
-    MessageController.install(container);
-    assertEquals(2, MessageController.getController(container).getDecoratedCellsCount());
-  }
-
-  @Test(expected = IllegalArgumentException.class)
-  public void doubleInstall() {
-    MessageController.install(myCellContainer);
-  }
-
-  @Test
-  public void detachChild() {
-    HorizontalCell parent = new HorizontalCell();
-    HorizontalCell child = new HorizontalCell();
-    parent.children().add(child);
-    myCellContainer.root.children().add(parent);
-
-    MessageController controller = MessageController.getController(myCellContainer);
-    assertEquals(4, controller.getDecoratedCellsCount());
-
-    parent.children().remove(0);
-    assertEquals(3, controller.getDecoratedCellsCount());
-  }
 
   @Test
   public void setErrorBeforeAttach() {
@@ -60,21 +32,6 @@ public class MessageControllerTest extends MessageControllerTestCase {
     myCellContainer.root.children().add(parent);
 
     assertTrue(MessageController.hasError(child));
-  }
-
-  @Test
-  public void noErrorSupportForPopup() {
-    HorizontalCell popup = new HorizontalCell();
-    cell.bottomPopup().set(popup);
-
-    MessageController controller = MessageController.getController(myCellContainer);
-    assertEquals(2, controller.getDecoratedCellsCount());
-
-    MessageController.setError(popup, "a");
-    assertFalse(MessageController.hasError(popup));
-
-    cell.bottomPopup().set(null);
-    assertEquals(2, controller.getDecoratedCellsCount());
   }
 
   @Test
