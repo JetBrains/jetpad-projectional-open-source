@@ -1,5 +1,6 @@
 package jetbrains.jetpad.hybrid;
 
+import jetbrains.jetpad.hybrid.parser.CommentToken;
 import jetbrains.jetpad.hybrid.parser.ErrorToken;
 import jetbrains.jetpad.hybrid.parser.IntValueToken;
 import jetbrains.jetpad.hybrid.parser.Token;
@@ -47,6 +48,10 @@ class TokensUtil {
 
   static Token error(String text) {
     return new ErrorToken(text);
+  }
+
+  static Token comment(String text) {
+    return new CommentToken("#", text);
   }
 
   static void assertTokensEqual(List<Token> expected, List<Token> actual) {

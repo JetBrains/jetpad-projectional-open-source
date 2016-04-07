@@ -145,4 +145,10 @@ public class CompletionTokenizerTest {
     List<Token> tokens = tokenizer.tokenize("bad+ bad +");
     assertTokensEqual(of(error("bad+"), error("bad"), PLUS), tokens);
   }
+
+  @Test
+  public void oneComment() {
+    List<Token> tokens = tokenizer.tokenize("#comment");
+    assertTokensEqual(of(comment("comment")), tokens);
+  }
 }
