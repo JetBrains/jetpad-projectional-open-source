@@ -31,6 +31,8 @@ import jetbrains.jetpad.test.BaseTestCase;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.Arrays;
+
 import static org.junit.Assert.*;
 
 public class ParsingHybridPropertyTest extends BaseTestCase {
@@ -41,7 +43,12 @@ public class ParsingHybridPropertyTest extends BaseTestCase {
 
   @Before
   public void init() {
+    init(new Token[0]);
+  }
+
+  private void init(Token... tokens) {
     mySourceTokens = new ObservableArrayList<>();
+    mySourceTokens.addAll(Arrays.asList(tokens));
     final HybridEditorSpec<Expr> hybridEditorSpec = new ExprHybridEditorSpec();
     parser = new TestParser(hybridEditorSpec);
     myProp = new ParsingHybridProperty<>(
@@ -171,6 +178,12 @@ public class ParsingHybridPropertyTest extends BaseTestCase {
     assertSame(myProp.getTokens().get(1), Tokens.LP_CALL);
 
     r.remove();
+  }
+
+  @Test
+  public void missingCommentOnStart() {
+    init(new IdentifierToken("a"), new CommentToken("#", "comment"));
+    assertEquals(mySourceTokens, myProp.getTokens());
   }
 
   private static class TestParser implements Parser<Expr> {
