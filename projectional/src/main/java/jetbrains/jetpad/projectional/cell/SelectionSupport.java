@@ -33,7 +33,7 @@ import java.util.List;
 
 public class SelectionSupport<ItemT> {
   public static final CellTraitPropertySpec<Boolean> LOGICAL_SINGLE_CELL_CONTAINER = new CellTraitPropertySpec<>("logicalSingleCellContainer", false);
-  private static final CellTraitPropertySpec<SelectionSupport<?>> SELECTION_SUPPORT = new CellTraitPropertySpec<>("selectionSupport");
+  public static final CellTraitPropertySpec<SelectionSupport<?>> SELECTION_SUPPORT = new CellTraitPropertySpec<>("selectionSupport");
 
   private ObservableList<ItemT> mySelectedItems = new ObservableArrayList<>();
   private Direction myDirection;
@@ -310,7 +310,7 @@ public class SelectionSupport<ItemT> {
     }
   }
 
-  private boolean isLowerPrioritySelection() {
+  public boolean isLowerPrioritySelection() {
     Cell current = myTarget;
     while (true) {
       Cell parent = current.getParent();
