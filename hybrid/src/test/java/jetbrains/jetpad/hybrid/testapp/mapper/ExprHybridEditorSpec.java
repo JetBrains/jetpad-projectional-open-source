@@ -31,6 +31,8 @@ import java.util.List;
 
 public class ExprHybridEditorSpec implements HybridEditorSpec<Expr> {
 
+  private static final CommentSpec COMMENT_SPEC = new ExprCommentSpec();
+
   private final Token tokenPlus;
   private final Token tokenMul;
 
@@ -299,7 +301,7 @@ public class ExprHybridEditorSpec implements HybridEditorSpec<Expr> {
 
   @Override
   public CompletionSupplier getTokenCompletion(final Function<Token, Runnable> tokenHandler) {
-    return new CompletionSupplier() {
+    return new TokenCompletionSupplier(COMMENT_SPEC, tokenHandler) {
       @Override
       public List<CompletionItem> get(CompletionParameters cp) {
         List<CompletionItem> result = new ArrayList<>();
@@ -378,13 +380,7 @@ public class ExprHybridEditorSpec implements HybridEditorSpec<Expr> {
           });
         }
 
-        final String commentPrefix = "#";
-        result.add(new ByBoundsCompletionItem(commentPrefix) {
-          @Override
-          public Runnable complete(String text) {
-            return tokenHandler.apply(new CommentToken(commentPrefix, getBody(text)));
-          }
-        });
+        result.add(getCommentCompletionItem());
 
         return result;
       }
@@ -410,6 +406,6 @@ public class ExprHybridEditorSpec implements HybridEditorSpec<Expr> {
 
   @Override
   public CommentSpec getCommentSpec() {
-    return new ExprCommentSpec();
+    return COMMENT_SPEC;
   }
 }

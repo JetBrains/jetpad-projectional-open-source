@@ -44,6 +44,9 @@ public abstract class CompletionSupplier {
     return create(Arrays.asList(items));
   }
 
+  protected CompletionSupplier() {
+  }
+
   public Iterable<CompletionItem> get(CompletionParameters cp) {
     return Collections.emptyList();
   }
