@@ -64,6 +64,7 @@ abstract class BaseProjectionalSynchronizer<SourceT, ContextT, SourceItemT> impl
   private Mapper<? extends ContextT, ? extends Cell> myMapper;
   private Cell myTarget;
   private String myPlaceholderText;
+  private boolean myPlaceholderEnabled = true;
   private TargetCellList myTargetCellList;
   private Supplier<SourceItemT> myItemFactory;
   private RoleCompletion<? super ContextT, SourceItemT> myCompletion = new EmptyRoleCompletion<>();
@@ -281,6 +282,12 @@ abstract class BaseProjectionalSynchronizer<SourceT, ContextT, SourceItemT> impl
   @Override
   public void setPlaceholderText(String text) {
     myPlaceholderText = text;
+  }
+
+  @Override
+  public void disablePlaceholder(Runnable onLastItemDeleted) {
+    myPlaceholderEnabled = false;
+    setOnLastItemDeleted(onLastItemDeleted);
   }
 
   @Override
@@ -634,8 +641,14 @@ abstract class BaseProjectionalSynchronizer<SourceT, ContextT, SourceItemT> impl
     }
 
     void initList() {
-      myHasPlaceholder = true;
-      myTargetList.add(createPlaceholder());
+      addPlaceholderIfEnabled();
+    }
+
+    private void addPlaceholderIfEnabled() {
+      if (myPlaceholderEnabled) {
+        myHasPlaceholder = true;
+        myTargetList.add(createPlaceholder());
+      }
     }
 
     private Cell createPlaceholder() {
@@ -727,8 +740,7 @@ abstract class BaseProjectionalSynchronizer<SourceT, ContextT, SourceItemT> impl
       Cell result = myTargetList.remove(index);
       myRegistrations.remove(index).remove();
       if (myTargetList.isEmpty()) {
-        myTargetList.add(createPlaceholder());
-        myHasPlaceholder = true;
+        addPlaceholderIfEnabled();
       }
       return result;
     }
