@@ -34,6 +34,7 @@ public interface ProjectionalRoleSynchronizer<ContextT, SourceT> extends RoleSyn
   <ContentT> void supportListContentKind(ContentKind<ContentT> kind, Function<ContentT, List<SourceT>> fromContent);
   void setOnLastItemDeleted(Runnable action);
   void setPlaceholderText(String text);
+  void disablePlaceholder(Runnable onLastItemDeleted);
   void setItemFactory(Supplier<SourceT> itemFactory);
   void setSeparator(Character ch);
 
