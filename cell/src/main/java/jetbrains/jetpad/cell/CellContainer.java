@@ -265,13 +265,8 @@ public class CellContainer {
     return target;
   }
 
-  private <EventT extends Event> void dispatch(final EventT e, final CellEventSpec<EventT> spec) {
-    executeCommand(new Runnable() {
-      @Override
-      public void run() {
-        dispatch(focusedCell.get(), e, spec);
-      }
-    });
+  private <EventT extends Event> void dispatch(EventT e, CellEventSpec<EventT> spec) {
+    dispatch(focusedCell.get(), e, spec);
   }
 
   private <EventT extends Event> void dispatch(final Cell target, final EventT e, final CellEventSpec<EventT> spec) {
