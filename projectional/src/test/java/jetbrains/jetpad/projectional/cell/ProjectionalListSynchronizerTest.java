@@ -1074,6 +1074,28 @@ public class ProjectionalListSynchronizerTest extends EditingTestCase {
     assertEquals(2, container.children.size());
   }
 
+  @Test
+  public void placeholderDisabled() {
+    container.children.add(new EmptyChild());
+    rootMapper.mySynchronizer.setOnLastItemDeleted(Runnables.EMPTY);
+    rootMapper.mySynchronizer.disablePlaceholder();
+    container.children.clear();
+    assertTrue(rootMapper.getTarget().container.children().isEmpty());
+    assertNull(myCellContainer.focusedCell.get());
+  }
+
+  @Test(expected = IllegalStateException.class)
+  public void placeholderDisabledIncorrectly() {
+    rootMapper.mySynchronizer.disablePlaceholder();
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void onLastItemDeletedActionRestoredIncorrectly() {
+    rootMapper.mySynchronizer.setOnLastItemDeleted(Runnables.EMPTY);
+    rootMapper.mySynchronizer.disablePlaceholder();
+    rootMapper.mySynchronizer.setOnLastItemDeleted(null);
+  }
+
   private Child get(int index) {
     return container.children.get(index);
   }

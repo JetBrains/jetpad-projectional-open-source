@@ -64,6 +64,7 @@ abstract class BaseProjectionalSynchronizer<SourceT, ContextT, SourceItemT> impl
   private Mapper<? extends ContextT, ? extends Cell> myMapper;
   private Cell myTarget;
   private String myPlaceholderText;
+  private boolean myPlaceholderEnabled = true;
   private TargetCellList myTargetCellList;
   private Supplier<SourceItemT> myItemFactory;
   private RoleCompletion<? super ContextT, SourceItemT> myCompletion = new EmptyRoleCompletion<>();
@@ -275,12 +276,26 @@ abstract class BaseProjectionalSynchronizer<SourceT, ContextT, SourceItemT> impl
 
   @Override
   public void setOnLastItemDeleted(Runnable action) {
+    if (!myPlaceholderEnabled && action == null) {
+      throw new IllegalArgumentException("Can't set the default onLastItemDeleted action when the placeholder is disabled");
+    }
     myOnLastItemDeleted = action;
   }
 
   @Override
   public void setPlaceholderText(String text) {
+    if (!myPlaceholderEnabled) {
+      throw new IllegalStateException("The placeholder is disabled");
+    }
     myPlaceholderText = text;
+  }
+
+  @Override
+  public void disablePlaceholder() {
+    if (myOnLastItemDeleted == null) {
+      throw new IllegalStateException("Please provide onLastItemDeleted action first by calling setOnLastItemDeleted()");
+    }
+    myPlaceholderEnabled = false;
   }
 
   @Override
@@ -634,8 +649,14 @@ abstract class BaseProjectionalSynchronizer<SourceT, ContextT, SourceItemT> impl
     }
 
     void initList() {
-      myHasPlaceholder = true;
-      myTargetList.add(createPlaceholder());
+      addPlaceholderIfEnabled();
+    }
+
+    private void addPlaceholderIfEnabled() {
+      if (myPlaceholderEnabled) {
+        myHasPlaceholder = true;
+        myTargetList.add(createPlaceholder());
+      }
     }
 
     private Cell createPlaceholder() {
@@ -727,8 +748,7 @@ abstract class BaseProjectionalSynchronizer<SourceT, ContextT, SourceItemT> impl
       Cell result = myTargetList.remove(index);
       myRegistrations.remove(index).remove();
       if (myTargetList.isEmpty()) {
-        myTargetList.add(createPlaceholder());
-        myHasPlaceholder = true;
+        addPlaceholderIfEnabled();
       }
       return result;
     }
