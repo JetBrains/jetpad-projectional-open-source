@@ -17,10 +17,10 @@ import jetbrains.jetpad.model.collections.list.ObservableList;
 import jetbrains.jetpad.model.event.EventHandler;
 import jetbrains.jetpad.model.property.PropertyChangeEvent;
 import jetbrains.jetpad.test.BaseTestCase;
-import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.Assert.*;
@@ -31,9 +31,9 @@ public class PrettyHybridPropertyTest extends BaseTestCase {
   private TestParser parser;
   private TestRemoveHandler removeHandler;
 
-  @Before
-  public void init() {
+  public void init(Token... tokens) {
     source = new ObservableArrayList<>();
+    setSource(tokens);
     final HybridEditorSpec<Expr> hybridEditorSpec = new ExprHybridEditorSpec();
     parser = new TestParser(hybridEditorSpec);
 
@@ -54,6 +54,12 @@ public class PrettyHybridPropertyTest extends BaseTestCase {
     prop = new PrettyHybridProperty<>(
       source, to, from,
       removeHandler,
+      new Handler<Runnable>() {
+        @Override
+        public void handle(Runnable item) {
+          item.run();
+        }
+      },
       parser,
       hybridEditorSpec.getPrettyPrinter(),
       HybridEditorSpecUtil.getParsingContextFactory(hybridEditorSpec));
@@ -61,13 +67,22 @@ public class PrettyHybridPropertyTest extends BaseTestCase {
 
   @Test
   public void empty() {
+    init();
     assertNull(prop.get());
     assertTrue(prop.getTokens().isEmpty());
     assertSync();
   }
 
   @Test
+  public void start() {
+    init(new IdentifierToken("a"), Tokens.PLUS, new IdentifierToken("b"));
+    assertTrue(prop.get() instanceof PlusExpr);
+    assertSync();
+  }
+
+  @Test
   public void sourceError() {
+    init();
     setSource(Tokens.PLUS);
     assertNull(prop.get());
     assertSync();
@@ -75,6 +90,7 @@ public class PrettyHybridPropertyTest extends BaseTestCase {
 
   @Test
   public void tokensError() {
+    init();
     setTokens(Tokens.PLUS);
     assertNull(prop.get());
     assertSync();
@@ -82,6 +98,7 @@ public class PrettyHybridPropertyTest extends BaseTestCase {
 
   @Test
   public void tokenError() {
+    init();
     setSource(new ErrorToken("something wrong"));
     assertNull(prop.get());
     assertSync();
@@ -93,6 +110,7 @@ public class PrettyHybridPropertyTest extends BaseTestCase {
 
   @Test
   public void validateSource() {
+    init();
     setSource(new IdentifierToken("a"), Tokens.PLUS);
     assertNull(prop.get());
     assertSync();
@@ -104,6 +122,7 @@ public class PrettyHybridPropertyTest extends BaseTestCase {
 
   @Test
   public void invalidateSource() {
+    init();
     setSource(new IdentifierToken("a"), Tokens.PLUS, new IdentifierToken("b"));
     assertTrue(prop.get() instanceof PlusExpr);
     assertSync();
@@ -111,10 +130,12 @@ public class PrettyHybridPropertyTest extends BaseTestCase {
     source.remove(2);
     assertNull(prop.get());
     assertSync();
+    assertEquals(Arrays.asList(2), removeHandler.invocations);
   }
 
   @Test
   public void invalidateTokens() {
+    init();
     setTokens(new IdentifierToken("a"), Tokens.PLUS, new IdentifierToken("b"));
     assertTrue(prop.get() instanceof PlusExpr);
     assertSync();
@@ -122,10 +143,12 @@ public class PrettyHybridPropertyTest extends BaseTestCase {
     prop.getTokens().remove(2);
     assertNull(prop.get());
     assertSync();
+    assertEquals(Arrays.asList(2), removeHandler.invocations);
   }
 
   @Test
   public void validateTokens() {
+    init();
     setTokens(new IdentifierToken("a"), Tokens.PLUS);
     assertNull(prop.get());
     assertSync();
@@ -137,6 +160,7 @@ public class PrettyHybridPropertyTest extends BaseTestCase {
 
   @Test
   public void parserInvocations() {
+    init();
     final Value<Integer> changes = new Value<>(0);
     Registration r = prop.addHandler(new EventHandler<PropertyChangeEvent<Expr>>() {
       @Override
@@ -159,6 +183,7 @@ public class PrettyHybridPropertyTest extends BaseTestCase {
 
   @Test
   public void reprint() {
+    init();
     setTokens(Tokens.ID, Tokens.MUL, new IdentifierToken("x"), Tokens.LP, Tokens.RP);
 
     assertTrue(prop.get() instanceof MulExpr);
@@ -169,6 +194,7 @@ public class PrettyHybridPropertyTest extends BaseTestCase {
 
   @Test
   public void reprintWithListener() {
+    init();
     final Value<Integer> sourceChanges = new Value<>(0);
     Registration vr = prop.addHandler(new EventHandler<PropertyChangeEvent<Expr>>() {
       @Override
@@ -212,7 +238,24 @@ public class PrettyHybridPropertyTest extends BaseTestCase {
 
   @Test
   public void missingCommentOnStart() {
-    setSource(new IdentifierToken("a"), new CommentToken("#", "comment"));
+    init(new IdentifierToken("a"), new CommentToken("#", "comment"));
+    assertSync();
+  }
+
+  @Test
+  public void typos() {
+    init();
+    addTokens(Tokens.ID);
+    addTokens(new ErrorToken(" "));
+    prop.getTokens().remove(1);
+    addTokens(new IdentifierToken("x"));
+    addTokens(new ErrorToken(" "));
+    prop.getTokens().remove(2);
+    addTokens(Tokens.LP);
+    addTokens(new ErrorToken(" "));
+    prop.getTokens().remove(3);
+    addTokens(Tokens.RP);
+    assertEquals(Arrays.asList(1, 2, 3), removeHandler.invocations);
     assertSync();
   }
 

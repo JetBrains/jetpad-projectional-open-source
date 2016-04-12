@@ -26,6 +26,7 @@ public class PrettyHybridProperty<SourceT, ModelT> implements HybridProperty<Mod
   private final ObservableList<SourceT> mySource;
   private final IndexedTransform<Token, SourceT> myFrom;
   private final Handler<Integer> myRemoveHandler;
+  private final Handler<Runnable> myUpdateHandler;
   private final Parser<? extends ModelT> myParser;
   private final PrettyPrinter<? super ModelT> myPrinter;
   private final ParsingContextFactory myParsingContextFactory;
@@ -34,61 +35,62 @@ public class PrettyHybridProperty<SourceT, ModelT> implements HybridProperty<Mod
   private Listeners<EventHandler<? super PropertyChangeEvent<ModelT>>> myHandlers;
 
   public PrettyHybridProperty(
-      ObservableList<SourceT> source,
-      final IndexedTransform<SourceT, Token> to,
-      IndexedTransform<Token, SourceT> from,
-      Handler<Integer> removeHandler,
-      Parser<? extends ModelT> parser,
-      PrettyPrinter<? super ModelT> printer,
-      ParsingContextFactory parsingContextFactory) {
+    ObservableList<SourceT> source,
+    final IndexedTransform<SourceT, Token> to,
+    IndexedTransform<Token, SourceT> from,
+    Handler<Integer> removeHandler,
+    Handler<Runnable> updateHandler,
+    Parser<? extends ModelT> parser,
+    PrettyPrinter<? super ModelT> printer,
+    ParsingContextFactory parsingContextFactory) {
     mySource = source;
     myFrom = from;
     myRemoveHandler = removeHandler;
+    myUpdateHandler = updateHandler;
     myParser = parser;
     myPrinter = printer;
     myParsingContextFactory = parsingContextFactory;
 
-    for (int i  = 0; i < mySource.size(); i++) {
-      myTokens.add(to.apply(i, mySource.get(i)));
-    }
+    inSync(new Runnable() {
+      @Override
+      public void run() {
+        for (int i  = 0; i < mySource.size(); i++) {
+          myTokens.add(to.apply(i, mySource.get(i)));
+        }
+      }
+    });
     myValue = parse();
 
     mySource.addListener(new CollectionListener<SourceT>() {
       @Override
       public void onItemAdded(final CollectionItemEvent<? extends SourceT> event) {
-        if (!myInSync) {
-          myInSync = true;
-          try {
+        inSync(new Runnable() {
+          @Override
+          public void run() {
             myTokens.add(event.getIndex(), to.apply(event.getIndex(), event.getNewItem()));
-          } finally {
-            myInSync = false;
           }
-        }
+        });
       }
 
       @Override
       public void onItemSet(final CollectionItemEvent<? extends SourceT> event) {
-        if (!myInSync) {
-          myInSync = true;
-          try {
+        inSync(new Runnable() {
+          @Override
+          public void run() {
             myTokens.set(event.getIndex(), to.apply(event.getIndex(), event.getNewItem()));
-          } finally {
-            myInSync = false;
           }
-        }
+        });
       }
 
       @Override
       public void onItemRemoved(final CollectionItemEvent<? extends SourceT> event) {
-        myRemoveHandler.handle(event.getIndex());
-        if (!myInSync) {
-          myInSync = true;
-          try {
+        inSync(new Runnable() {
+          @Override
+          public void run() {
+            myRemoveHandler.handle(event.getIndex());
             myTokens.remove(event.getIndex());
-          } finally {
-            myInSync = false;
           }
-        }
+        });
       }
     });
   }
@@ -134,6 +136,44 @@ public class PrettyHybridProperty<SourceT, ModelT> implements HybridProperty<Mod
     }
   }
 
+  private void inSync(Runnable r) {
+    if (!myInSync) {
+      myInSync = true;
+      try {
+        r.run();
+      } finally {
+        myInSync = false;
+      }
+    }
+  }
+
+  private void sourceAdd(final int index, final Token item) {
+    myUpdateHandler.handle(new Runnable() {
+      @Override
+      public void run() {
+        mySource.add(myFrom.apply(index, item));
+      }
+    });
+  }
+
+  private void sourceSet(final int index, final Token newItem) {
+    myUpdateHandler.handle(new Runnable() {
+      @Override
+      public void run() {
+        mySource.set(index, myFrom.apply(index, newItem));
+      }
+    });
+  }
+
+  private void sourceRemove(final int index) {
+    myUpdateHandler.handle(new Runnable() {
+      @Override
+      public void run() {
+        mySource.remove(index);
+      }
+    });
+  }
+
   public interface IndexedTransform <SourceT, TargetT> {
     TargetT apply(int index, SourceT source);
   }
@@ -147,9 +187,9 @@ public class PrettyHybridProperty<SourceT, ModelT> implements HybridProperty<Mod
           @Override
           public void run() {
             if (myValue != null) {
-              updateFromPretty();
+              updateFromPretty(index);
             } else {
-              mySource.add(myFrom.apply(index, item));
+              sourceAdd(index, item);
             }
           }
         });
@@ -164,9 +204,9 @@ public class PrettyHybridProperty<SourceT, ModelT> implements HybridProperty<Mod
           @Override
           public void run() {
             if (myValue != null) {
-              updateFromPretty();
+              updateFromPretty(index);
             } else {
-              mySource.set(index, myFrom.apply(index, newItem));
+              sourceSet(index, newItem);
             }
           }
         });
@@ -177,53 +217,55 @@ public class PrettyHybridProperty<SourceT, ModelT> implements HybridProperty<Mod
     protected void afterItemRemoved(final int index, Token item, boolean success) {
       if (success) {
         updateValue(parse());
-        myRemoveHandler.handle(index);
         inSync(new Runnable() {
           @Override
           public void run() {
+            myRemoveHandler.handle(index);
             if (myValue != null) {
-              updateFromPretty();
+              updateFromPretty(index);
             } else {
-              mySource.remove(index);
+              sourceRemove(index);
             }
           }
         });
       }
     }
 
-    private void inSync(Runnable r) {
-      if (!myInSync) {
-        myInSync = true;
-        try {
-          r.run();
-        } finally {
-          myInSync = false;
-        }
-      }
-    }
-
-    private void updateFromPretty() {
+    private void updateFromPretty(final int forceToSource) {
       PrettyPrinterContext<? super ModelT> printCtx = new PrettyPrinterContext<>(myPrinter);
       printCtx.print(myValue);
       List<Token> prettyTokens = printCtx.tokens();
+      boolean forceUpdated = false;
       for (int i = 0; i < prettyTokens.size(); i++) {
-        Token p = prettyTokens.get(i);
+        final Token p = prettyTokens.get(i);
         if (i < myTokens.size() && i < mySource.size()) {
           // Token exists in both source and tokens.
           if (!Objects.equals(p, myTokens.get(i))) {
             myTokens.set(i, p);
-            mySource.set(i, myFrom.apply(i, p));
+            if (i == forceToSource) {
+              forceUpdated = true;
+            }
+            sourceSet(i, p);
           }
         } else if (i < myTokens.size() && i >= mySource.size()) {
           // Token just appeared in tokens and doesn't exists in source.
           if (!Objects.equals(p, myTokens.get(i))) {
             myTokens.set(i, p);
           }
-          mySource.add(i, myFrom.apply(i, p));
+          if (i == forceToSource) {
+            forceUpdated = true;
+          }
+          sourceAdd(i, p);
         } else {
-          // A new token added.
-          myTokens.add(p);
-          mySource.add(myFrom.apply(i, p));
+          throw new IllegalStateException("A printer generated more tokens than where is source.");
+        }
+      }
+
+      if (!forceUpdated) {
+        if (forceToSource < myTokens.size()) {
+          sourceSet(forceToSource, myTokens.get(forceToSource));
+        } else if (forceToSource >= myTokens.size()) {
+          sourceRemove(forceToSource);
         }
       }
     }
