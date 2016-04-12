@@ -37,7 +37,9 @@ import java.util.Objects;
 /**
  * Note that this class sets a never-disposing listener on
  * the {@code tokens} collection so their lifetime is always aligned.
+ * @deprecated Use {@link PrettyHybridProperty} instead.
  */
+@Deprecated
 public class ParsingHybridProperty<ModelT> implements HybridProperty<ModelT> {
 
   private final Parser<? extends ModelT> myParser;
