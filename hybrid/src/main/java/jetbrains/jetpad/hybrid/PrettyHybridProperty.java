@@ -50,14 +50,14 @@ public class PrettyHybridProperty<SourceT, ModelT> implements HybridProperty<Mod
   private Listeners<EventHandler<? super PropertyChangeEvent<ModelT>>> myHandlers;
 
   public PrettyHybridProperty(
-    ObservableList<SourceT> source,
-    final IndexedTransform<SourceT, Token> to,
-    IndexedTransform<Token, SourceT> from,
-    Handler<Integer> removeHandler,
-    Handler<Runnable> updateHandler,
-    Parser<? extends ModelT> parser,
-    PrettyPrinter<? super ModelT> printer,
-    ParsingContextFactory parsingContextFactory) {
+      ObservableList<SourceT> source,
+      final IndexedTransform<SourceT, Token> to,
+      IndexedTransform<Token, SourceT> from,
+      Handler<Integer> removeHandler,
+      Handler<Runnable> updateHandler,
+      Parser<? extends ModelT> parser,
+      PrettyPrinter<? super ModelT> printer,
+      ParsingContextFactory parsingContextFactory) {
     mySource = source;
     myFrom = from;
     myRemoveHandler = removeHandler;
@@ -166,7 +166,7 @@ public class PrettyHybridProperty<SourceT, ModelT> implements HybridProperty<Mod
     myUpdateHandler.handle(new Runnable() {
       @Override
       public void run() {
-        mySource.add(myFrom.apply(index, item));
+        mySource.add(index, myFrom.apply(index, item));
       }
     });
   }
@@ -272,7 +272,7 @@ public class PrettyHybridProperty<SourceT, ModelT> implements HybridProperty<Mod
           }
           sourceAdd(i, p);
         } else {
-          throw new IllegalStateException("A printer generated more tokens than where is source.");
+          throw new IllegalStateException("A printer generated more tokens than the source");
         }
       }
 

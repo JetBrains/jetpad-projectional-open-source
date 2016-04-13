@@ -174,6 +174,16 @@ public class PrettyHybridPropertyTest extends BaseTestCase {
   }
 
   @Test
+  public void insertion() {
+    init();
+    prop.getTokens().add(Tokens.PLUS);
+    prop.getTokens().add(0, new IdentifierToken("a"));
+    prop.getTokens().add(new IdentifierToken("b"));
+    assertTrue(prop.get() instanceof PlusExpr);
+    assertSync();
+  }
+
+  @Test
   public void parserInvocations() {
     init();
     final Value<Integer> changes = new Value<>(0);
