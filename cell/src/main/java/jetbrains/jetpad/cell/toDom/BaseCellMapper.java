@@ -169,6 +169,7 @@ abstract class BaseCellMapper<SourceT extends Cell> extends Mapper<SourceT, Elem
   private void applyStyle(boolean selected, boolean focusHighlighted, Color background) {
     updateCssStyle(CSS.selected(), (focusHighlighted && !isLeaf()) || selected);
     updateCssStyle(CSS.paired(), getSource().get(Cell.PAIR_HIGHLIGHTED));
+    updateCssStyle(CSS.link(), getSource().get(Cell.LINK));
 
     String backgroundColor = null;
     if (isLeaf() && focusHighlighted) {
@@ -176,14 +177,11 @@ abstract class BaseCellMapper<SourceT extends Cell> extends Mapper<SourceT, Elem
     } else if (background != null) {
       backgroundColor = background.toCssColor();
     }
-    if (getSource().get(Cell.LINK)) {
-      updateCssStyle(CSS.link(), true);
-    } else {
-      updateCssStyle(CSS.link(), false);
-      String underline = getSource().get(Cell.RED_UNDERLINE) ? CSS.redUnderline()
-          : (getSource().get(Cell.YELLOW_UNDERLINE) ? CSS.yellowUnderline() : null);
-      applyBackground(backgroundColor, underline);
-    }
+
+    String underline = getSource().get(Cell.LINK) && getSource().get(Cell.HOVERED) ? CSS.blueUnderline()
+        : getSource().get(Cell.RED_UNDERLINE) ? CSS.redUnderline()
+        : getSource().get(Cell.YELLOW_UNDERLINE) ? CSS.yellowUnderline() : null;
+    applyBackground(backgroundColor, underline);
 
     Style style = getTarget().getStyle();
     Color borderColor = getSource().get(Cell.BORDER_COLOR);

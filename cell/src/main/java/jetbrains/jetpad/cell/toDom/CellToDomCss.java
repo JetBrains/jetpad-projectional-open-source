@@ -42,6 +42,7 @@ public interface CellToDomCss extends CssResource {
   String currentHighlightColor();
   String redUnderline();
   String yellowUnderline();
+  String blueUnderline();
   String link();
 
   String popup();
