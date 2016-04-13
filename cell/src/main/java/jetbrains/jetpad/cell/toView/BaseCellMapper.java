@@ -151,7 +151,7 @@ class BaseCellMapper<SourceT extends Cell, TargetT extends View> extends Mapper<
     }
     getTarget().background().set(background);
 
-    if (getSource().get(Cell.LINK)) {
+    if (getSource().get(Cell.LINK) && getSource().get(Cell.HOVERED)) {
       getTarget().border().set(Color.BLUE);
     } else if (getSource().get(Cell.RED_UNDERLINE)) {
       getTarget().border().set(Color.RED);

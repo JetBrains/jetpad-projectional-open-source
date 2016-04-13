@@ -58,6 +58,7 @@ public abstract class Cell implements NavComposite<Cell>, HasVisibility, HasFocu
   public static final CellPropertySpec<Boolean> POPUP = new CellPropertySpec<>("popup", false);
   public static final CellPropertySpec<Boolean> HAS_POPUP_DECORATION = new CellPropertySpec<>("popupDecoration", false);
 
+  public static final CellPropertySpec<Boolean> HOVERED = new CellPropertySpec<>("hovered", false);
   public static final CellPropertySpec<Boolean> FOCUSED = new CellPropertySpec<>("focused", false);
   public static final CellPropertySpec<Boolean> VISIBLE = new CellPropertySpec<>("visible", true);
   public static final CellPropertySpec<Boolean> SELECTED = new CellPropertySpec<>("selected", false);
@@ -120,6 +121,10 @@ public abstract class Cell implements NavComposite<Cell>, HasVisibility, HasFocu
   public Cell lastChild() {
     if (myChildren == null) return null;
     return myChildren.get(myChildren.size() - 1);
+  }
+
+  public Property<Boolean> hovered() {
+    return getProp(HOVERED);
   }
 
   public Property<Boolean> visible() {

@@ -179,18 +179,16 @@ public class CellContainer {
 
   private void changeCellUnderMouse(MouseEvent e, Cell newCell) {
     if (newCell == myCellUnderMouse) return;
-
     if (myCellUnderMouse != null) {
+      myCellUnderMouse.set(Cell.HOVERED, false);
       dispatch(myCellUnderMouse, new MouseEvent(e.getLocation()), CellEventSpec.MOUSE_LEFT);
     }
-
+    myCellUnderMouse = newCell;
     if (newCell != null) {
+      newCell.set(Cell.HOVERED, true);
       dispatch(newCell, new MouseEvent(e.getLocation()), CellEventSpec.MOUSE_ENTERED);
     }
-
-    myCellUnderMouse = newCell;
   }
-
 
   public void copy(CopyCutEvent e) {
     dispatch(e, CellEventSpec.COPY);
