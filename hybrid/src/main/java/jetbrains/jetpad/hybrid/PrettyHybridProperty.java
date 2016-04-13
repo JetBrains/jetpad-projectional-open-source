@@ -41,7 +41,6 @@ public class PrettyHybridProperty<SourceT, ModelT> implements HybridProperty<Mod
   private final ObservableList<SourceT> mySource;
   private final IndexedTransform<Token, SourceT> myWrite;
   private final Handler<Integer> myRemoveHandler;
-  private final Handler<Runnable> myUpdateHandler;
   private final Parser<? extends ModelT> myParser;
   private final PrettyPrinter<? super ModelT> myPrinter;
   private final ParsingContextFactory myParsingContextFactory;
@@ -54,14 +53,12 @@ public class PrettyHybridProperty<SourceT, ModelT> implements HybridProperty<Mod
       final IndexedTransform<SourceT, Token> read,
       IndexedTransform<Token, SourceT> write,
       Handler<Integer> removeHandler,
-      Handler<Runnable> updateHandler,
       Parser<? extends ModelT> parser,
       PrettyPrinter<? super ModelT> printer,
       ParsingContextFactory parsingContextFactory) {
     mySource = source;
     myWrite = write;
     myRemoveHandler = removeHandler;
-    myUpdateHandler = updateHandler;
     myParser = parser;
     myPrinter = printer;
     myParsingContextFactory = parsingContextFactory;
@@ -163,30 +160,15 @@ public class PrettyHybridProperty<SourceT, ModelT> implements HybridProperty<Mod
   }
 
   private void sourceAdd(final int index, final Token item) {
-    myUpdateHandler.handle(new Runnable() {
-      @Override
-      public void run() {
-        mySource.add(index, myWrite.apply(index, item));
-      }
-    });
+    mySource.add(index, myWrite.apply(index, item));
   }
 
   private void sourceSet(final int index, final Token newItem) {
-    myUpdateHandler.handle(new Runnable() {
-      @Override
-      public void run() {
-        mySource.set(index, myWrite.apply(index, newItem));
-      }
-    });
+    mySource.set(index, myWrite.apply(index, newItem));
   }
 
   private void sourceRemove(final int index) {
-    myUpdateHandler.handle(new Runnable() {
-      @Override
-      public void run() {
-        mySource.remove(index);
-      }
-    });
+    mySource.remove(index);
   }
 
   public interface IndexedTransform <SourceT, TargetT> {

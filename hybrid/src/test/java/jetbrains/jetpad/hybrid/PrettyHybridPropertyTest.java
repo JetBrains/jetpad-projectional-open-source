@@ -66,12 +66,6 @@ public class PrettyHybridPropertyTest extends BaseTestCase {
     prop = new PrettyHybridProperty<>(
       source, to, from,
       removeHandler,
-      new Handler<Runnable>() {
-        @Override
-        public void handle(Runnable item) {
-          item.run();
-        }
-      },
       parser,
       hybridEditorSpec.getPrettyPrinter(),
       HybridEditorSpecUtil.getParsingContextFactory(hybridEditorSpec));
