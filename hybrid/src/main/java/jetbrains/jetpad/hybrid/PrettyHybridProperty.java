@@ -39,7 +39,7 @@ public class PrettyHybridProperty<SourceT, ModelT> implements HybridProperty<Mod
   private ModelT myValue;
 
   private final ObservableList<SourceT> mySource;
-  private final IndexedTransform<Token, SourceT> myFrom;
+  private final IndexedTransform<Token, SourceT> myWrite;
   private final Handler<Integer> myRemoveHandler;
   private final Handler<Runnable> myUpdateHandler;
   private final Parser<? extends ModelT> myParser;
@@ -51,15 +51,15 @@ public class PrettyHybridProperty<SourceT, ModelT> implements HybridProperty<Mod
 
   public PrettyHybridProperty(
       ObservableList<SourceT> source,
-      final IndexedTransform<SourceT, Token> to,
-      IndexedTransform<Token, SourceT> from,
+      final IndexedTransform<SourceT, Token> read,
+      IndexedTransform<Token, SourceT> write,
       Handler<Integer> removeHandler,
       Handler<Runnable> updateHandler,
       Parser<? extends ModelT> parser,
       PrettyPrinter<? super ModelT> printer,
       ParsingContextFactory parsingContextFactory) {
     mySource = source;
-    myFrom = from;
+    myWrite = write;
     myRemoveHandler = removeHandler;
     myUpdateHandler = updateHandler;
     myParser = parser;
@@ -70,7 +70,7 @@ public class PrettyHybridProperty<SourceT, ModelT> implements HybridProperty<Mod
       @Override
       public void run() {
         for (int i  = 0; i < mySource.size(); i++) {
-          myTokens.add(to.apply(i, mySource.get(i)));
+          myTokens.add(read.apply(i, mySource.get(i)));
         }
       }
     });
@@ -82,7 +82,7 @@ public class PrettyHybridProperty<SourceT, ModelT> implements HybridProperty<Mod
         inSync(new Runnable() {
           @Override
           public void run() {
-            myTokens.add(event.getIndex(), to.apply(event.getIndex(), event.getNewItem()));
+            myTokens.add(event.getIndex(), read.apply(event.getIndex(), event.getNewItem()));
           }
         });
       }
@@ -92,7 +92,7 @@ public class PrettyHybridProperty<SourceT, ModelT> implements HybridProperty<Mod
         inSync(new Runnable() {
           @Override
           public void run() {
-            myTokens.set(event.getIndex(), to.apply(event.getIndex(), event.getNewItem()));
+            myTokens.set(event.getIndex(), read.apply(event.getIndex(), event.getNewItem()));
           }
         });
       }
@@ -166,7 +166,7 @@ public class PrettyHybridProperty<SourceT, ModelT> implements HybridProperty<Mod
     myUpdateHandler.handle(new Runnable() {
       @Override
       public void run() {
-        mySource.add(index, myFrom.apply(index, item));
+        mySource.add(index, myWrite.apply(index, item));
       }
     });
   }
@@ -175,7 +175,7 @@ public class PrettyHybridProperty<SourceT, ModelT> implements HybridProperty<Mod
     myUpdateHandler.handle(new Runnable() {
       @Override
       public void run() {
-        mySource.set(index, myFrom.apply(index, newItem));
+        mySource.set(index, myWrite.apply(index, newItem));
       }
     });
   }
@@ -245,13 +245,13 @@ public class PrettyHybridProperty<SourceT, ModelT> implements HybridProperty<Mod
       }
     }
 
-    private void updateFromPretty(final int forceToSource) {
+    private void updateFromPretty(int forceToSource) {
       PrettyPrinterContext<? super ModelT> printCtx = new PrettyPrinterContext<>(myPrinter);
       printCtx.print(myValue);
       List<Token> prettyTokens = printCtx.tokens();
       boolean forceUpdated = false;
       for (int i = 0; i < prettyTokens.size(); i++) {
-        final Token p = prettyTokens.get(i);
+        Token p = prettyTokens.get(i);
         if (i < myTokens.size() && i < mySource.size()) {
           // Token exists in both source and tokens.
           if (!Objects.equals(p, myTokens.get(i))) {
@@ -262,7 +262,7 @@ public class PrettyHybridProperty<SourceT, ModelT> implements HybridProperty<Mod
             sourceSet(i, p);
           }
         } else if (i < myTokens.size() && i >= mySource.size()) {
-          // Token just appeared in tokens and doesn't exists in source.
+          // Token just appeared in tokens and doesn't exist in source.
           if (!Objects.equals(p, myTokens.get(i))) {
             myTokens.set(i, p);
           }
