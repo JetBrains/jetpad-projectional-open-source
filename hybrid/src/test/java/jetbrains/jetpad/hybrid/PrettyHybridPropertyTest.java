@@ -21,10 +21,7 @@ import jetbrains.jetpad.base.Value;
 import jetbrains.jetpad.hybrid.parser.*;
 import jetbrains.jetpad.hybrid.testapp.mapper.ExprHybridEditorSpec;
 import jetbrains.jetpad.hybrid.testapp.mapper.Tokens;
-import jetbrains.jetpad.hybrid.testapp.model.CallExpr;
-import jetbrains.jetpad.hybrid.testapp.model.Expr;
-import jetbrains.jetpad.hybrid.testapp.model.MulExpr;
-import jetbrains.jetpad.hybrid.testapp.model.PlusExpr;
+import jetbrains.jetpad.hybrid.testapp.model.*;
 import jetbrains.jetpad.model.collections.CollectionItemEvent;
 import jetbrains.jetpad.model.collections.CollectionListener;
 import jetbrains.jetpad.model.collections.list.ObservableArrayList;
@@ -180,6 +177,18 @@ public class PrettyHybridPropertyTest extends BaseTestCase {
     prop.getTokens().add(0, new IdentifierToken("a"));
     prop.getTokens().add(new IdentifierToken("b"));
     assertTrue(prop.get() instanceof PlusExpr);
+    assertSync();
+  }
+
+  @Test
+  public void deletion() {
+    init();
+    prop.getTokens().add(Tokens.PLUS);
+    prop.getTokens().add(new IdentifierToken("b"));
+    assertSync();
+
+    prop.getTokens().remove(0);
+    assertTrue(prop.get() instanceof VarExpr);
     assertSync();
   }
 

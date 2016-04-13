@@ -236,10 +236,9 @@ public class PrettyHybridProperty<SourceT, ModelT> implements HybridProperty<Mod
           @Override
           public void run() {
             myRemoveHandler.handle(index);
+            sourceRemove(index);
             if (myValue != null) {
               updateFromPretty(index);
-            } else {
-              sourceRemove(index);
             }
           }
         });
@@ -276,12 +275,8 @@ public class PrettyHybridProperty<SourceT, ModelT> implements HybridProperty<Mod
         }
       }
 
-      if (!forceUpdated) {
-        if (forceToSource < myTokens.size()) {
-          sourceSet(forceToSource, myTokens.get(forceToSource));
-        } else if (forceToSource >= myTokens.size()) {
-          sourceRemove(forceToSource);
-        }
+      if (!forceUpdated && forceToSource < myTokens.size()) {
+        sourceSet(forceToSource, myTokens.get(forceToSource));
       }
     }
   }
