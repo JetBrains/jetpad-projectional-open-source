@@ -34,10 +34,11 @@ class StyleApplicator {
     if (info) {
       get(cell).myInfo = myStyler.doApplyInfo(cell);
     } else {
-      StyleRegistrations registrations = get(cell);
+      StyleRegistrations registrations = getIfExists(cell);
+      if (registrations == null) return;
       registrations.myInfo.remove();
       registrations.myInfo = null;
-      releaseIfEmpty(cell);
+      releaseIfEmpty(cell, registrations);
     }
   }
 
@@ -45,10 +46,11 @@ class StyleApplicator {
     if (broken) {
       get(cell).myBroken = myStyler.doApplyBroken(cell);
     } else {
-      StyleRegistrations registrations = get(cell);
+      StyleRegistrations registrations = getIfExists(cell);
+      if (registrations == null) return;
       registrations.myBroken.remove();
       registrations.myBroken = null;
-      releaseIfEmpty(cell);
+      releaseIfEmpty(cell, registrations);
     }
   }
 
@@ -56,10 +58,11 @@ class StyleApplicator {
     if (error) {
       get(cell).myError = myStyler.doApplyError(cell);
     } else {
-      StyleRegistrations registrations = get(cell);
+      StyleRegistrations registrations = getIfExists(cell);
+      if (registrations == null) return;
       registrations.myError.remove();
       registrations.myError = null;
-      releaseIfEmpty(cell);
+      releaseIfEmpty(cell, registrations);
     }
   }
 
@@ -67,10 +70,11 @@ class StyleApplicator {
     if (warning) {
       get(cell).myWarning = myStyler.doApplyWarning(cell);
     } else {
-      StyleRegistrations registrations = get(cell);
+      StyleRegistrations registrations = getIfExists(cell);
+      if (registrations == null) return;
       registrations.myWarning.remove();
       registrations.myWarning = null;
-      releaseIfEmpty(cell);
+      releaseIfEmpty(cell, registrations);
     }
   }
 
@@ -84,8 +88,12 @@ class StyleApplicator {
     return myRegistrations.get(cell);
   }
 
-  private void releaseIfEmpty(Cell cell) {
-    if (!get(cell).isEmpty()) return;
+  private StyleRegistrations getIfExists(Cell cell) {
+    return myRegistrations == null ? null : myRegistrations.get(cell);
+  }
+
+  private void releaseIfEmpty(Cell cell, StyleRegistrations registrations) {
+    if (!registrations.isEmpty()) return;
     myRegistrations.remove(cell);
     if (myRegistrations.isEmpty()) {
       myRegistrations = null;
