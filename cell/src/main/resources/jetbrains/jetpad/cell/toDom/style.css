@@ -118,7 +118,7 @@
 }
 
 .hasShadow {
-  box-shadow: 2px 2px 4px black;
+  box-shadow: 3px 3px 6px gray;
 }
 
 .hasError {
