@@ -15,6 +15,7 @@
  */
 package jetbrains.jetpad.cell.message;
 
+import jetbrains.jetpad.base.Pair;
 import jetbrains.jetpad.base.Registration;
 import jetbrains.jetpad.cell.Cell;
 import jetbrains.jetpad.cell.CellContainer;
@@ -30,16 +31,13 @@ import jetbrains.jetpad.model.property.PropertyChangeEvent;
 import jetbrains.jetpad.values.Color;
 import jetbrains.jetpad.values.FontFamily;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 class MessageTrait extends CellTrait {
   static final CellPropertySpec<Cell> POPUP_POSITION = Cell.TOP_POPUP;
   static final CellPropertySpec<Boolean> POPUP_ACTIVE = new CellPropertySpec<>("isMessagePopupActive", false);
 
-  static final int POPUPS_SHOW_DELAY_MILLIS = 1000;
+  static final int POPUPS_SHOW_DELAY_MILLIS = 500;
 
   private static final List<CellPropertySpec<String>> MESSAGES_IN_PRIORITY_ORDER =
       Arrays.asList(MessageController.INFO, MessageController.BROKEN, MessageController.ERROR, MessageController.WARNING);
@@ -47,6 +45,7 @@ class MessageTrait extends CellTrait {
   private Registration myUpdatesReg = null;
   private long myLastEditingKeyEvent = 0;
   private boolean myForceHide = false;
+  private final Map<Pair<Cell, CellPropertySpec<String>>, PropertyChangeEvent<String>> myPendingUpdates = new HashMap<>();
 
   // this field is required only as EDT supplier, but the appropriate EDT may be set after MessageController is installed
   private CellContainer myContainer;
@@ -73,9 +72,11 @@ class MessageTrait extends CellTrait {
   @Override
   public void onPropertyChanged(Cell cell, CellPropertySpec<?> prop, PropertyChangeEvent<?> event) {
     if (MESSAGES_IN_PRIORITY_ORDER.contains(prop)) {
-      updateDecorations(cell, (CellPropertySpec<String>) prop, (PropertyChangeEvent<String>) event);
-      updatePopup(cell, (CellPropertySpec<String>) prop, (PropertyChangeEvent<String>) event);
-
+      if (myForceHide) {
+        myPendingUpdates.put(new Pair<>(cell, (CellPropertySpec<String>) prop), (PropertyChangeEvent<String>) event);
+      } else {
+        apply(cell, (CellPropertySpec<String>) prop, (PropertyChangeEvent<String>) event);
+      }
     } else if (prop == POPUP_POSITION && !myEditingPopup) {
       PropertyChangeEvent<Cell> change = (PropertyChangeEvent<Cell>) event;
       if (change.getOldValue() != null && cell.get(POPUP_ACTIVE)) {
@@ -139,6 +140,10 @@ class MessageTrait extends CellTrait {
         myUpdatesReg.remove();
         myUpdatesReg = null;
         setForceHide(false);
+        for (Map.Entry<Pair<Cell, CellPropertySpec<String>>, PropertyChangeEvent<String>> entry : myPendingUpdates.entrySet()) {
+          apply(entry.getKey().first, entry.getKey().second, entry.getValue());
+        }
+        myPendingUpdates.clear();
       }
     });
   }
@@ -233,6 +238,11 @@ class MessageTrait extends CellTrait {
     return false;
   }
 
+  private void apply(Cell cell, CellPropertySpec<String> prop, PropertyChangeEvent<String> change) {
+    updateDecorations(cell, prop, change);
+    updatePopup(cell, prop, change);
+  }
+
   private void updateDecorations(Cell cell, CellPropertySpec<String> prop, PropertyChangeEvent<String> change) {
     if (change.getOldValue() != null && change.getNewValue() != null) return;
     boolean apply = change.getOldValue() == null;
@@ -307,7 +317,14 @@ class MessageTrait extends CellTrait {
 
   void detach(Cell cell) {
     myStyler.detach(cell);
-
+    if (!myPendingUpdates.isEmpty()) {
+      Set<Pair<Cell, CellPropertySpec<String>>> keysCopy = new HashSet<>(myPendingUpdates.keySet());
+      for (Pair<Cell, CellPropertySpec<String>> key : keysCopy) {
+        if (key.first == cell) {
+          myPendingUpdates.remove(key);
+        }
+      }
+    }
     if (myRegistrations == null) return;
     Registration registration = myRegistrations.remove(cell);
     if (registration == null) return;
