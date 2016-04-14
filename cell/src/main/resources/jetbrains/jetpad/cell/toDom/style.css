@@ -34,6 +34,7 @@
 }
 
 .cell {
+  cursor: inherit;
 }
 
 .fitContentWidth {
@@ -136,6 +137,7 @@
 
 .popup {
   border-radius: 2px;
+  cursor: default;
 }
 
 .tooltip {
