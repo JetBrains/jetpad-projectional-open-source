@@ -34,6 +34,15 @@ import jetbrains.jetpad.model.property.PropertyChangeEvent;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * Makes a {@link HybridProperty} from a list of sources,
+ * transformation methods from source to {@link Token}s and
+ * parsing/printing.
+ *
+ * Unlike {@link ParsingHybridProperty} this implementation
+ * maintains a single copy of tokens, assuming only users input
+ * needs prettifying.
+ */
 public class PrettyHybridProperty<SourceT, ModelT> implements HybridProperty<ModelT> {
   private final ObservableList<Token> myTokens = new MyList();
   private ModelT myValue;

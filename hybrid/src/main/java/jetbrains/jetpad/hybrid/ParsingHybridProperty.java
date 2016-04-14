@@ -35,8 +35,11 @@ import java.util.List;
 import java.util.Objects;
 
 /**
+ * Makes a {@link HybridProperty} from a list of tokens and
+ * a parsing/printing methods.
+ *
  * Note that this class sets a never-disposing listener on
- * the {@code tokens} collection so their lifetime is always aligned.
+ * the {@code tokens} collection so their lifetimes are always aligned.
  */
 public class ParsingHybridProperty<ModelT> implements HybridProperty<ModelT> {
 
