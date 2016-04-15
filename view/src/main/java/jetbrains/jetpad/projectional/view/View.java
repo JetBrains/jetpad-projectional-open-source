@@ -15,7 +15,7 @@
  */
 package jetbrains.jetpad.projectional.view;
 
-import com.google.common.base.Objects;
+import jetbrains.jetpad.base.Objects;
 import com.google.common.base.Strings;
 import jetbrains.jetpad.base.Registration;
 import jetbrains.jetpad.event.Event;

@@ -16,7 +16,7 @@
 package jetbrains.jetpad.cell.text;
 
 import com.google.common.base.Function;
-import com.google.common.base.Objects;
+import jetbrains.jetpad.base.Objects;
 import com.google.common.base.Predicate;
 import com.google.common.base.Supplier;
 import jetbrains.jetpad.cell.Cell;

@@ -15,7 +15,7 @@
  */
 package jetbrains.jetpad.cell.util;
 
-import com.google.common.base.Objects;
+import jetbrains.jetpad.base.Objects;
 import jetbrains.jetpad.cell.Cell;
 import jetbrains.jetpad.cell.CellContainer;
 import jetbrains.jetpad.cell.CellContainerAdapter;

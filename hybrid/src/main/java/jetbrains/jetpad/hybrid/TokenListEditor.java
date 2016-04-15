@@ -15,7 +15,7 @@
  */
 package jetbrains.jetpad.hybrid;
 
-import com.google.common.base.Objects;
+import jetbrains.jetpad.base.Objects;
 import jetbrains.jetpad.base.Registration;
 import jetbrains.jetpad.hybrid.parser.CommentToken;
 import jetbrains.jetpad.hybrid.parser.ParsingContext;

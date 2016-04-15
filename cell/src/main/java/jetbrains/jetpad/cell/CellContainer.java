@@ -15,7 +15,7 @@
  */
 package jetbrains.jetpad.cell;
 
-import com.google.common.base.Objects;
+import jetbrains.jetpad.base.Objects;
 import jetbrains.jetpad.base.Registration;
 import jetbrains.jetpad.base.edt.EventDispatchThread;
 import jetbrains.jetpad.cell.event.CellEventSpec;

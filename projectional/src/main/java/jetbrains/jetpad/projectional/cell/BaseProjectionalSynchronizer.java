@@ -17,7 +17,7 @@ package jetbrains.jetpad.projectional.cell;
 
 import com.google.common.base.Function;
 import com.google.common.base.Functions;
-import com.google.common.base.Objects;
+import jetbrains.jetpad.base.Objects;
 import com.google.common.base.Supplier;
 import jetbrains.jetpad.base.Registration;
 import jetbrains.jetpad.base.Runnables;

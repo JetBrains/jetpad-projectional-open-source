@@ -15,7 +15,7 @@
  */
 package jetbrains.jetpad.event;
 
-import com.google.common.base.Objects;
+import jetbrains.jetpad.base.Objects;
 
 import java.util.*;
 

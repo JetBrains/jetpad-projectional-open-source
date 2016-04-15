@@ -16,7 +16,7 @@
 package jetbrains.jetpad.hybrid;
 
 import com.google.common.base.Function;
-import com.google.common.base.Objects;
+import jetbrains.jetpad.base.Objects;
 import com.google.common.collect.FluentIterable;
 import jetbrains.jetpad.base.Async;
 import jetbrains.jetpad.base.Asyncs;

@@ -31,5 +31,11 @@
       <groupId>com.google.guava</groupId>
       <artifactId>guava-gwt</artifactId>
     </dependency>
+
+    <dependency>
+      <groupId>jetbrains.jetpad.util</groupId>
+      <artifactId>base</artifactId>
+      <version>1.1-SNAPSHOT</version>
+    </dependency>
   </dependencies>
 </project>

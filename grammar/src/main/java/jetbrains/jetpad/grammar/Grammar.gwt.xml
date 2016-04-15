@@ -9,4 +9,5 @@
   <inherits name="com.google.gwt.user.User" />
   <inherits name="com.google.common.base.Base" />
   <inherits name="com.google.common.collect.Collect"/>
+  <inherits name="jetbrains.jetpad.base.Base"/>
 </module>

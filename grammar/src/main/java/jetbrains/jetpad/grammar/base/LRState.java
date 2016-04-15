@@ -163,7 +163,7 @@ public class LRState<ItemT extends LRItem<ItemT>> {
     Set<LRActionRecord<ItemT>> result = new HashSet<>();
     for (LRActionRecord<ItemT> rec : records) {
       Integer currentPriority = rec.getItem().getRule().getPriority();
-      if (com.google.common.base.Objects.equal(currentPriority, highestPriority)) {
+      if (jetbrains.jetpad.base.Objects.equal(currentPriority, highestPriority)) {
         result.add(rec);
       }
     }

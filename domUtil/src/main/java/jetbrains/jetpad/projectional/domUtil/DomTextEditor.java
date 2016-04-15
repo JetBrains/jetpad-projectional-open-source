@@ -15,7 +15,7 @@
  */
 package jetbrains.jetpad.projectional.domUtil;
 
-import com.google.common.base.Objects;
+import jetbrains.jetpad.base.Objects;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.user.client.DOM;
