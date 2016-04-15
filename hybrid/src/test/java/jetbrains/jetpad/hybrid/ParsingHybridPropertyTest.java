@@ -17,6 +17,7 @@ package jetbrains.jetpad.hybrid;
 
 import jetbrains.jetpad.base.Registration;
 import jetbrains.jetpad.hybrid.parser.*;
+import jetbrains.jetpad.hybrid.parser.prettyprint.PrettyPrinterContext;
 import jetbrains.jetpad.hybrid.testapp.mapper.ExprHybridEditorSpec;
 import jetbrains.jetpad.hybrid.testapp.mapper.Tokens;
 import jetbrains.jetpad.hybrid.testapp.model.CallExpr;
@@ -40,6 +41,7 @@ public class ParsingHybridPropertyTest extends BaseTestCase {
   private ObservableList<Token> mySourceTokens;
   private HybridProperty<Expr> myProp;
   private TestParser parser;
+  private HybridEditorSpec<Expr> myEditorSpec;
 
   @Before
   public void init() {
@@ -49,10 +51,10 @@ public class ParsingHybridPropertyTest extends BaseTestCase {
   private void init(Token... tokens) {
     mySourceTokens = new ObservableArrayList<>();
     mySourceTokens.addAll(Arrays.asList(tokens));
-    final HybridEditorSpec<Expr> hybridEditorSpec = new ExprHybridEditorSpec();
-    parser = new TestParser(hybridEditorSpec);
+    myEditorSpec = new ExprHybridEditorSpec();
+    parser = new TestParser(myEditorSpec);
     myProp = new ParsingHybridProperty<>(
-      parser, hybridEditorSpec.getPrettyPrinter(), mySourceTokens, HybridEditorSpecUtil.getParsingContextFactory(hybridEditorSpec));
+      parser, myEditorSpec.getPrettyPrinter(), mySourceTokens, HybridEditorSpecUtil.getParsingContextFactory(myEditorSpec));
   }
 
   @Test
@@ -184,6 +186,28 @@ public class ParsingHybridPropertyTest extends BaseTestCase {
   public void missingCommentOnStart() {
     init(new IdentifierToken("a"), new CommentToken("#", "comment"));
     assertEquals(mySourceTokens, myProp.getTokens());
+  }
+
+  @Test
+  public void valueChangesAfterSync() {
+    init(new IdentifierToken("a"), Tokens.PLUS);
+    assertNull(myProp.get());
+
+    Registration r = myProp.addHandler(new EventHandler<PropertyChangeEvent<Expr>>() {
+      @Override
+      public void onEvent(PropertyChangeEvent<Expr> event) {
+        Expr newValue = event.getNewValue();
+        if (newValue != null) {
+          PrettyPrinterContext<? super Expr> printCtx = new PrettyPrinterContext<>(myEditorSpec.getPrettyPrinter());
+          printCtx.print(newValue);
+          assertEquals(printCtx.tokens(), myProp.getTokens());
+        }
+      }
+    });
+
+    mySourceTokens.add(new IdentifierToken("b"));
+
+    r.remove();
   }
 
   private static class TestParser implements Parser<Expr> {
