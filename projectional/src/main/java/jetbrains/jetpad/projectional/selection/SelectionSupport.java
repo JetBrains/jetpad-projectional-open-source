@@ -13,27 +13,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package jetbrains.jetpad.projectional.cell;
+package jetbrains.jetpad.projectional.selection;
 
 import jetbrains.jetpad.base.Runnables;
-import jetbrains.jetpad.cell.trait.CellTrait;
-import jetbrains.jetpad.cell.util.Cells;
-import jetbrains.jetpad.event.KeyStrokeSpecs;
-import jetbrains.jetpad.model.composite.Composites;
-import jetbrains.jetpad.model.collections.list.ObservableArrayList;
-import jetbrains.jetpad.model.collections.list.ObservableList;
-import jetbrains.jetpad.event.KeyEvent;
-import jetbrains.jetpad.cell.*;
+import jetbrains.jetpad.cell.Cell;
 import jetbrains.jetpad.cell.action.CellActions;
 import jetbrains.jetpad.cell.event.FocusEvent;
 import jetbrains.jetpad.cell.position.Positions;
+import jetbrains.jetpad.cell.trait.CellTrait;
 import jetbrains.jetpad.cell.trait.CellTraitPropertySpec;
+import jetbrains.jetpad.cell.util.Cells;
+import jetbrains.jetpad.event.KeyEvent;
+import jetbrains.jetpad.event.KeyStrokeSpecs;
+import jetbrains.jetpad.model.collections.CollectionItemEvent;
+import jetbrains.jetpad.model.collections.list.ObservableArrayList;
+import jetbrains.jetpad.model.collections.list.ObservableList;
+import jetbrains.jetpad.model.composite.Composites;
+import jetbrains.jetpad.model.event.EventHandler;
 
 import java.util.List;
 
 public class SelectionSupport<ItemT> {
   public static final CellTraitPropertySpec<Boolean> LOGICAL_SINGLE_CELL_CONTAINER = new CellTraitPropertySpec<>("logicalSingleCellContainer", false);
-  public static final CellTraitPropertySpec<SelectionSupport<?>> SELECTION_SUPPORT = new CellTraitPropertySpec<>("selectionSupport");
+  static final CellTraitPropertySpec<SelectionSupport<?>> SELECTION_SUPPORT = new CellTraitPropertySpec<>("selectionSupport");
 
   private ObservableList<ItemT> mySelectedItems = new ObservableArrayList<>();
   private Direction myDirection;
@@ -41,6 +43,8 @@ public class SelectionSupport<ItemT> {
   private List<ItemT> mySource;
   private Cell myTarget;
   private List<Cell> myTargetList;
+
+  private SelectionController mySelectionController;
 
   public SelectionSupport(
       List<ItemT> source,
@@ -75,6 +79,21 @@ public class SelectionSupport<ItemT> {
       public Object get(Cell cell, CellTraitPropertySpec<?> spec) {
         if (spec == SELECTION_SUPPORT) return SelectionSupport.this;
         return super.get(cell, spec);
+      }
+    });
+
+    mySelectedItems.addHandler(new EventHandler<CollectionItemEvent<? extends ItemT>>() {
+      @Override
+      public void onEvent(CollectionItemEvent<? extends ItemT> event) {
+        if (mySelectionController != null && !isLowerPrioritySelection()) {
+          if (!mySelectedItems.isEmpty()) {
+            int startIndex = mySource.indexOf(mySelectedItems.get(0));
+            int endIndex = mySource.indexOf(mySelectedItems.get(mySelectedItems.size() - 1));
+            mySelectionController.updateLegacySelection(myTargetList.get(startIndex), myTargetList.get(endIndex));
+          } else {
+            mySelectionController.closeLegacySelection();
+          }
+        }
       }
     });
   }
@@ -142,6 +161,10 @@ public class SelectionSupport<ItemT> {
         myDirection = null;
       }
     });
+  }
+
+  public void setSelectionController(SelectionController selectionController) {
+    mySelectionController = selectionController;
   }
 
   private void handleFocusLost(FocusEvent event) {
@@ -310,7 +333,7 @@ public class SelectionSupport<ItemT> {
     }
   }
 
-  public boolean isLowerPrioritySelection() {
+  boolean isLowerPrioritySelection() {
     Cell current = myTarget;
     while (true) {
       Cell parent = current.getParent();
@@ -389,6 +412,6 @@ public class SelectionSupport<ItemT> {
   }
 
   private static enum Direction {
-    FORWARD, BACKWARD;
+    FORWARD, BACKWARD
   }
 }
