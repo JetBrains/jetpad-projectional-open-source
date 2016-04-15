@@ -92,7 +92,7 @@ public class ParsingHybridProperty<ModelT> implements HybridProperty<ModelT> {
   }
 
   @Override
-  public Registration addHandler(final EventHandler<? super PropertyChangeEvent<ModelT>> handler) {
+  public Registration addHandler(EventHandler<? super PropertyChangeEvent<ModelT>> handler) {
     if (myHandlers == null) {
       myHandlers = new Listeners<>();
     }
@@ -115,20 +115,20 @@ public class ParsingHybridProperty<ModelT> implements HybridProperty<ModelT> {
 
   private void update() {
     ModelT newValue = parse();
-    if (!Objects.equals(myValue, newValue)) {
-      updateValue(newValue);
-    }
     myInUpdate = true;
     try {
-      if (myValue != null) {
+      if (newValue != null) {
         PrettyPrinterContext<? super ModelT> printCtx = new PrettyPrinterContext<>(myPrinter);
-        printCtx.print(myValue);
+        printCtx.print(newValue);
         syncTokens(printCtx.tokens());
       } else {
         syncTokens(mySourceTokens);
       }
     } finally {
       myInUpdate = false;
+    }
+    if (!Objects.equals(myValue, newValue)) {
+      updateValue(newValue);
     }
   }
 

@@ -19,6 +19,7 @@ import jetbrains.jetpad.base.Handler;
 import jetbrains.jetpad.base.Registration;
 import jetbrains.jetpad.base.Value;
 import jetbrains.jetpad.hybrid.parser.*;
+import jetbrains.jetpad.hybrid.parser.prettyprint.PrettyPrinterContext;
 import jetbrains.jetpad.hybrid.testapp.mapper.ExprHybridEditorSpec;
 import jetbrains.jetpad.hybrid.testapp.mapper.Tokens;
 import jetbrains.jetpad.hybrid.testapp.model.*;
@@ -42,12 +43,13 @@ public class PrettyHybridPropertyTest extends BaseTestCase {
   private HybridProperty<Expr> prop;
   private TestParser parser;
   private TestRemoveHandler removeHandler;
+  private HybridEditorSpec<Expr> editorSpec;
 
   public void init(Token... tokens) {
     source = new ObservableArrayList<>();
     setSource(tokens);
-    final HybridEditorSpec<Expr> hybridEditorSpec = new ExprHybridEditorSpec();
-    parser = new TestParser(hybridEditorSpec);
+    editorSpec = new ExprHybridEditorSpec();
+    parser = new TestParser(editorSpec);
 
     PrettyHybridProperty.IndexedTransform<TestTokenWrapper, Token> to = new PrettyHybridProperty.IndexedTransform<TestTokenWrapper, Token>() {
       @Override
@@ -67,8 +69,8 @@ public class PrettyHybridPropertyTest extends BaseTestCase {
       source, to, from,
       removeHandler,
       parser,
-      hybridEditorSpec.getPrettyPrinter(),
-      HybridEditorSpecUtil.getParsingContextFactory(hybridEditorSpec));
+      editorSpec.getPrettyPrinter(),
+      HybridEditorSpecUtil.getParsingContextFactory(editorSpec));
   }
 
   @Test
@@ -262,6 +264,28 @@ public class PrettyHybridPropertyTest extends BaseTestCase {
 
     vr.remove();
     sr.remove();
+  }
+
+  @Test
+  public void valueChangesAfterSync() {
+    init(new IdentifierToken("a"), Tokens.PLUS);
+    assertNull(prop.get());
+
+    Registration r = prop.addHandler(new EventHandler<PropertyChangeEvent<Expr>>() {
+      @Override
+      public void onEvent(PropertyChangeEvent<Expr> event) {
+        Expr newValue = event.getNewValue();
+        if (newValue != null) {
+          PrettyPrinterContext<? super Expr> printCtx = new PrettyPrinterContext<>(editorSpec.getPrettyPrinter());
+          printCtx.print(newValue);
+          assertEquals(printCtx.tokens(), prop.getTokens());
+        }
+      }
+    });
+
+    addSource(new IdentifierToken("b"));
+
+    r.remove();
   }
 
   @Test
