@@ -21,11 +21,14 @@ import jetbrains.jetpad.hybrid.ParsingHybridProperty;
 import jetbrains.jetpad.hybrid.parser.Token;
 import jetbrains.jetpad.hybrid.testapp.mapper.ExprHybridEditorSpec;
 import jetbrains.jetpad.model.collections.list.ObservableArrayList;
+import jetbrains.jetpad.model.collections.list.ObservableList;
 
 public class SimpleExprContainer extends ExprNode {
   private final ExprHybridEditorSpec myEditorSpec = new ExprHybridEditorSpec();
 
+  public final ObservableList<Token> sourceTokens = new ObservableArrayList<>();
+
   public final HybridProperty<Expr> expr = new ParsingHybridProperty<>(
       myEditorSpec.getParser(), myEditorSpec.getPrettyPrinter(),
-      new ObservableArrayList<Token>(), HybridEditorSpecUtil.getParsingContextFactory(myEditorSpec));
+      sourceTokens, HybridEditorSpecUtil.getParsingContextFactory(myEditorSpec));
 }
