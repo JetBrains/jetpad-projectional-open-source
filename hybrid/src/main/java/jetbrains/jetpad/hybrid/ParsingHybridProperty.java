@@ -66,18 +66,56 @@ public class ParsingHybridProperty<ModelT> implements HybridProperty<ModelT> {
     update();
     mySourceTokens.addListener(new CollectionListener<Token>() {
       @Override
-      public void onItemAdded(CollectionItemEvent<? extends Token> event) {
-        update();
+      public void onItemAdded(final CollectionItemEvent<? extends Token> event) {
+        if (event.getNewItem() instanceof CommentToken) {
+          executeInUpdate(new Runnable() {
+            @Override
+            public void run() {
+              myPrettyTokens.add(event.getIndex(), event.getNewItem());
+            }
+          });
+        } else {
+          update();
+        }
       }
 
       @Override
-      public void onItemSet(CollectionItemEvent<? extends Token> event) {
-        update();
+      public void onItemSet(final CollectionItemEvent<? extends Token> event) {
+        if (event.getNewItem() instanceof CommentToken) {
+          executeInUpdate(new Runnable() {
+            @Override
+            public void run() {
+              myPrettyTokens.set(event.getIndex(), event.getNewItem());
+            }
+          });
+          if (!(event.getOldItem() instanceof CommentToken)) {
+            update();
+          }
+        } else if (event.getOldItem() instanceof CommentToken) {
+          executeInUpdate(new Runnable() {
+            @Override
+            public void run() {
+              myPrettyTokens.set(event.getIndex(), event.getNewItem());
+            }
+          });
+          update();
+        } else {
+          update();
+        }
       }
 
       @Override
-      public void onItemRemoved(CollectionItemEvent<? extends Token> event) {
-        update();
+      public void onItemRemoved(final CollectionItemEvent<? extends Token> event) {
+        if (event.getOldItem() instanceof CommentToken) {
+          executeInUpdate(new Runnable() {
+            @Override
+            public void run() {
+              myPrettyTokens.remove(event.getIndex());
+            }
+          });
+        } else {
+          update();
+        }
       }
     });
   }
@@ -105,31 +143,32 @@ public class ParsingHybridProperty<ModelT> implements HybridProperty<ModelT> {
   }
 
   private void initUpdate() {
-    myInUpdate = true;
-    try {
-      syncTokens(mySourceTokens);
-    } finally {
-      myInUpdate = false;
-    }
+    executeInUpdate(new Runnable() {
+      @Override
+      public void run() {
+        updatePrettyTokens(mySourceTokens);
+      }
+    });
   }
 
   private void update() {
-    ModelT newValue = parse();
-    myInUpdate = true;
-    try {
-      if (newValue != null) {
-        PrettyPrinterContext<? super ModelT> printCtx = new PrettyPrinterContext<>(myPrinter);
-        printCtx.print(newValue);
-        syncTokens(printCtx.tokens());
-      } else {
-        syncTokens(mySourceTokens);
+    executeInUpdate(new Runnable() {
+      @Override
+      public void run() {
+        ModelT newValue = parse();
+        if (newValue != null) {
+          PrettyPrinterContext<? super ModelT> printCtx = new PrettyPrinterContext<>(myPrinter);
+          printCtx.print(newValue);
+          updatePrettyTokens(printCtx.tokens());
+        } else {
+          myPrettyTokens.clear();
+          myPrettyTokens.addAll(mySourceTokens);
+        }
+        if (!Objects.equals(myValue, newValue)) {
+          updateValue(newValue);
+        }
       }
-    } finally {
-      myInUpdate = false;
-    }
-    if (!Objects.equals(myValue, newValue)) {
-      updateValue(newValue);
-    }
+    });
   }
 
   private void updateValue(ModelT newValue) {
@@ -146,20 +185,22 @@ public class ParsingHybridProperty<ModelT> implements HybridProperty<ModelT> {
     }
   }
 
-  private void syncTokens(List<Token> newTokens) {
+  private void updatePrettyTokens(List<Token> newTokens) {
     int i;
     for (i = 0; i < newTokens.size(); i++) {
       Token p = newTokens.get(i);
       if (i < myPrettyTokens.size()) {
-        if (!Objects.equals(p, myPrettyTokens.get(i))) {
+        if (myPrettyTokens.get(i) instanceof CommentToken) {
+          myPrettyTokens.add(i, p);
+        } else if (!Objects.equals(p, myPrettyTokens.get(i))) {
           myPrettyTokens.set(i, p);
         }
       } else {
         myPrettyTokens.add(p);
       }
     }
-    if (newTokens.size() < myPrettyTokens.size() && !(myPrettyTokens.get(newTokens.size()) instanceof CommentToken)) {
-      myPrettyTokens.subList(newTokens.size(), myPrettyTokens.size()).clear();
+    while (newTokens.size() < myPrettyTokens.size() && !(myPrettyTokens.get(newTokens.size()) instanceof CommentToken)) {
+      myPrettyTokens.remove(newTokens.size());
     }
   }
 
@@ -170,23 +211,52 @@ public class ParsingHybridProperty<ModelT> implements HybridProperty<ModelT> {
 
   private class MyList extends ObservableArrayList<Token> {
     @Override
-    protected void afterItemAdded(int index, Token item, boolean success) {
-      if (!myInUpdate && success) {
-        mySourceTokens.add(index, item);
+    protected void afterItemAdded(final int index, final Token item, boolean success) {
+      executeInUpdate(new Runnable() {
+        @Override
+        public void run() {
+          mySourceTokens.add(index, item);
+        }
+      });
+      if (!(item instanceof CommentToken)) {
+        update();
       }
     }
 
     @Override
-    protected void afterItemSet(int index, Token oldItem, Token newItem, boolean success) {
-      if (!myInUpdate && success) {
-        mySourceTokens.set(index, newItem);
+    protected void afterItemSet(final int index, Token oldItem, final Token newItem, boolean success) {
+      executeInUpdate(new Runnable() {
+        @Override
+        public void run() {
+          mySourceTokens.set(index, newItem);
+        }
+      });
+      if (!(oldItem instanceof CommentToken && newItem instanceof CommentToken)) {
+        update();
       }
     }
 
     @Override
-    protected void afterItemRemoved(int index, Token item, boolean success) {
-      if (!myInUpdate && success) {
-        mySourceTokens.remove(index);
+    protected void afterItemRemoved(final int index, Token item, boolean success) {
+      executeInUpdate(new Runnable() {
+        @Override
+        public void run() {
+          mySourceTokens.remove(index);
+        }
+      });
+      if (!(item instanceof CommentToken)) {
+        update();
+      }
+    }
+  }
+
+  private void executeInUpdate(Runnable body) {
+    if (!myInUpdate) {
+      myInUpdate = true;
+      try {
+        body.run();
+      } finally {
+        myInUpdate = false;
       }
     }
   }
