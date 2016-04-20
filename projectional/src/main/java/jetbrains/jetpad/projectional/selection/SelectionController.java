@@ -56,14 +56,14 @@ public class SelectionController {
       myListeners.fire(new ListenerCaller<SelectionListener>() {
         @Override
         public void call(SelectionListener l) {
-          l.onSelectionOpened(myLegacySelectionId, new Selection(start, null, end, null));
+          l.onSelectionOpened(myLegacySelectionId, new SimpleSelection(start, null, end, null));
         }
       });
     } else {
       myListeners.fire(new ListenerCaller<SelectionListener>() {
         @Override
         public void call(SelectionListener l) {
-          l.onSelectionChanged(myLegacySelectionId, new Selection(start, null, end, null));
+          l.onSelectionChanged(myLegacySelectionId, new SimpleSelection(start, null, end, null));
         }
       });
     }
