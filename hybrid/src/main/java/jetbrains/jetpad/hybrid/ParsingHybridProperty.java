@@ -92,7 +92,12 @@ public class ParsingHybridProperty<ModelT> implements HybridProperty<ModelT> {
             update();
           }
         } else if (event.getOldItem() instanceof CommentToken) {
-          myPrettyTokens.set(event.getIndex(), event.getNewItem());
+          executeInUpdate(new Runnable() {
+            @Override
+            public void run() {
+              myPrettyTokens.set(event.getIndex(), event.getNewItem());
+            }
+          });
           update();
         } else {
           update();
@@ -151,18 +156,13 @@ public class ParsingHybridProperty<ModelT> implements HybridProperty<ModelT> {
       @Override
       public void run() {
         ModelT newValue = parse();
-        myInUpdate = true;
-        try {
-          if (newValue != null) {
-            PrettyPrinterContext<? super ModelT> printCtx = new PrettyPrinterContext<>(myPrinter);
-            printCtx.print(newValue);
-            updatePrettyTokens(printCtx.tokens());
-          } else {
-            myPrettyTokens.clear();
-            myPrettyTokens.addAll(mySourceTokens);
-          }
-        } finally {
-          myInUpdate = false;
+        if (newValue != null) {
+          PrettyPrinterContext<? super ModelT> printCtx = new PrettyPrinterContext<>(myPrinter);
+          printCtx.print(newValue);
+          updatePrettyTokens(printCtx.tokens());
+        } else {
+          myPrettyTokens.clear();
+          myPrettyTokens.addAll(mySourceTokens);
         }
         if (!Objects.equals(myValue, newValue)) {
           updateValue(newValue);
