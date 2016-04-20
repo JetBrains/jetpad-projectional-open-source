@@ -16,7 +16,7 @@
 package jetbrains.jetpad.projectional.selection;
 
 public interface SelectionListener {
-  void onSelectionOpened(long selectionId, Selection selection);
-  void onSelectionChanged(long selectionId, Selection selection);
-  void onSelectionClosed(long selectionId);
+  void onSelectionOpened(int selectionId, Selection selection);
+  void onSelectionChanged(int selectionId, Selection selection);
+  void onSelectionClosed(int selectionId);
 }

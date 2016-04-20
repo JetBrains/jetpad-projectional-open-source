@@ -31,15 +31,15 @@ public class SelectionController {
   private static final CellPropertySpec<Boolean> HAS_SELECTION_CONTROLLER =
     new CellPropertySpec<>("hasSelectionController", false);
 
-  private static final long NO_ID = -1l;
+  private static final int NO_ID = -1;
 
   public static Registration install(CellContainer container) {
     SelectionController sm = new SelectionController();
     return TraitPropagator.install(container, sm.trait(), HAS_SELECTION_CONTROLLER);
   }
 
-  private long myNextSelectionId = 0l;
-  private long myLegacySelectionId = NO_ID;
+  private int myNextSelectionId = 0;
+  private int myLegacySelectionId = NO_ID;
 
   private Listeners<SelectionListener> myListeners = new Listeners<>();
 
@@ -50,6 +50,9 @@ public class SelectionController {
   public void updateLegacySelection(final Cell start, final Cell end) {
     if (myLegacySelectionId == NO_ID) {
       myLegacySelectionId = myNextSelectionId++;
+      if (myNextSelectionId == Integer.MAX_VALUE) {
+        throw new IllegalStateException("Selection id counter reached MAX_VALUE");
+      }
       myListeners.fire(new ListenerCaller<SelectionListener>() {
         @Override
         public void call(SelectionListener l) {

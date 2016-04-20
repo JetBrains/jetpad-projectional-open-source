@@ -57,17 +57,17 @@ public class SelectionControllerLegacyTest extends EditingTestCase {
     assertNotNull(selectionController);
     selectionController.addListener(new SelectionListener() {
       @Override
-      public void onSelectionOpened(long selectionId, Selection selection) {
+      public void onSelectionOpened(int selectionId, Selection selection) {
         selectionHistory.add(selection);
       }
 
       @Override
-      public void onSelectionChanged(long selectionId, Selection selection) {
+      public void onSelectionChanged(int selectionId, Selection selection) {
         selectionHistory.add(selection);
       }
 
       @Override
-      public void onSelectionClosed(long selectionId) {
+      public void onSelectionClosed(int selectionId) {
         selectionHistory.clear();
       }
     });
