@@ -24,7 +24,6 @@ import jetbrains.jetpad.cell.trait.CellTrait;
 import jetbrains.jetpad.cell.trait.CellTraitPropertySpec;
 import jetbrains.jetpad.model.event.ListenerCaller;
 import jetbrains.jetpad.model.event.Listeners;
-import jetbrains.jetpad.projectional.cell.SelectionSupport;
 
 public class SelectionController {
   public static final CellTraitPropertySpec<SelectionController> PROPERTY = new CellTraitPropertySpec<>("SelectionController");

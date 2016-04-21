@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package jetbrains.jetpad.projectional.cell;
+package jetbrains.jetpad.projectional.selection;
 
 import jetbrains.jetpad.base.Runnables;
 import jetbrains.jetpad.cell.Cell;
@@ -30,13 +30,12 @@ import jetbrains.jetpad.model.collections.list.ObservableArrayList;
 import jetbrains.jetpad.model.collections.list.ObservableList;
 import jetbrains.jetpad.model.composite.Composites;
 import jetbrains.jetpad.model.event.EventHandler;
-import jetbrains.jetpad.projectional.selection.SelectionController;
 
 import java.util.List;
 
 public class SelectionSupport<ItemT> {
   public static final CellTraitPropertySpec<Boolean> LOGICAL_SINGLE_CELL_CONTAINER = new CellTraitPropertySpec<>("logicalSingleCellContainer", false);
-  public static final CellTraitPropertySpec<SelectionSupport<?>> SELECTION_SUPPORT = new CellTraitPropertySpec<>("selectionSupport");
+  static final CellTraitPropertySpec<SelectionSupport<?>> SELECTION_SUPPORT = new CellTraitPropertySpec<>("selectionSupport");
 
   private ObservableList<ItemT> mySelectedItems = new ObservableArrayList<>();
   private Direction myDirection;
@@ -334,7 +333,7 @@ public class SelectionSupport<ItemT> {
     }
   }
 
-  public boolean isLowerPrioritySelection() {
+  boolean isLowerPrioritySelection() {
     Cell current = myTarget;
     while (true) {
       Cell parent = current.getParent();
