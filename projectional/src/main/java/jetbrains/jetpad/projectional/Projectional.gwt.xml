@@ -5,6 +5,7 @@
     <include name="cell/mapping/*.java" />
     <include name="generic/*.java" />
     <include name="util/*.java" />
+    <include name="selection/*.java" />
   </source>
 
   <inherits name="jetbrains.jetpad.cell.Cell" />

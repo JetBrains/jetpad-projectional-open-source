@@ -57,7 +57,7 @@ import jetbrains.jetpad.model.property.Property;
 import jetbrains.jetpad.model.property.PropertyChangeEvent;
 import jetbrains.jetpad.model.property.ReadableProperty;
 import jetbrains.jetpad.model.util.ListMap;
-import jetbrains.jetpad.projectional.cell.SelectionSupport;
+import jetbrains.jetpad.projectional.selection.SelectionSupport;
 import jetbrains.jetpad.projectional.cell.mapping.ToCellMapping;
 
 import java.util.*;

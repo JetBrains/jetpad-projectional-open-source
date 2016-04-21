@@ -51,6 +51,7 @@ import jetbrains.jetpad.model.util.ListMap;
 import jetbrains.jetpad.projectional.generic.EmptyRoleCompletion;
 import jetbrains.jetpad.projectional.generic.Role;
 import jetbrains.jetpad.projectional.generic.RoleCompletion;
+import jetbrains.jetpad.projectional.selection.SelectionSupport;
 import jetbrains.jetpad.values.Color;
 
 import java.util.*;
