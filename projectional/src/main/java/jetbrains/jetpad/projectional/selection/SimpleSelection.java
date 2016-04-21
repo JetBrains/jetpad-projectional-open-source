@@ -18,35 +18,35 @@ package jetbrains.jetpad.projectional.selection;
 import jetbrains.jetpad.cell.Cell;
 
 public class SimpleSelection implements Selection {
-  private final Cell start;
-  private final Object startPosition;
-  private final Cell end;
-  private final Object endPosition;
+  private final Cell myStart;
+  private final Object myStartPosition;
+  private final Cell myEnd;
+  private final Object myEndPosition;
 
   public SimpleSelection(Cell start, Object startPosition, Cell end, Object endPosition) {
-    this.start = start;
-    this.startPosition = startPosition;
-    this.end = end;
-    this.endPosition = endPosition;
+    this.myStart = start;
+    this.myStartPosition = startPosition;
+    this.myEnd = end;
+    this.myEndPosition = endPosition;
   }
 
   @Override
   public Cell getStart() {
-    return start;
+    return myStart;
   }
 
   @Override
   public Object getStartPosition() {
-    return startPosition;
+    return myStartPosition;
   }
 
   @Override
   public Cell getEnd() {
-    return end;
+    return myEnd;
   }
 
   @Override
   public Object getEndPosition() {
-    return endPosition;
+    return myEndPosition;
   }
 }

@@ -79,7 +79,7 @@ public class SelectionController {
     myLegacySelectionId = -1;
   }
 
-  public CellTrait trait(){
+  private CellTrait trait(){
     return new CellTrait() {
       @Override
       public Object get(Cell cell, CellTraitPropertySpec<?> spec) {
