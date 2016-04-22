@@ -39,6 +39,7 @@ import jetbrains.jetpad.hybrid.parser.*;
 import jetbrains.jetpad.hybrid.testapp.mapper.Tokens;
 import jetbrains.jetpad.hybrid.testapp.model.*;
 import jetbrains.jetpad.mapper.Mapper;
+import jetbrains.jetpad.mapper.Synchronizer;
 import jetbrains.jetpad.model.composite.Composites;
 import jetbrains.jetpad.projectional.generic.Role;
 import jetbrains.jetpad.projectional.util.RootController;
@@ -48,6 +49,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Arrays;
+import java.util.List;
 
 import static jetbrains.jetpad.hybrid.SelectionPosition.*;
 import static jetbrains.jetpad.hybrid.TokensUtil.*;
@@ -1223,6 +1225,51 @@ abstract class BaseHybridEditorEditingTest<ContainerT, MapperT extends Mapper<Co
     type(" ");
 
     assertTokens(Tokens.ID, Tokens.MUL, new IdentifierToken("x"), Tokens.LP_CALL, Tokens.RP);
+  }
+
+  @Test
+  public void tokensPostProcessorOnType() {
+    Synchronizer initialSync = sync;
+    attachTokensEditPostProcessor();
+    type("1 2"); type("3");
+    assertNotEquals(initialSync, sync);
+    assertTokens(integer(3));
+  }
+
+  @Test
+  public void tokensPostProcessorOnBackspace() {
+    Synchronizer initialSync = sync;
+    attachTokensEditPostProcessor();
+    type("1 12");
+    left();
+    backspace();
+    type("3");
+    assertNotEquals(initialSync, sync);
+    assertTokens(integer(3));
+  }
+
+  @Test
+  public void tokensPostProcessorOnDel() {
+    Synchronizer initialSync = sync;
+    attachTokensEditPostProcessor();
+    type("1 12");
+    left(); left();
+    del();
+    type("3");
+    assertNotEquals(initialSync, sync);
+    assertTokens(integer(3));
+  }
+
+  private void attachTokensEditPostProcessor() {
+    sync.setTokensEditPostProcessor(new TokensEditPostProcessor<Expr>() {
+      @Override
+      public void afterTokensEdit(List<Token> tokens, Expr value) {
+        if (tokens.equals(Arrays.asList(integer(1), integer(2)))) {
+          dispose();
+          init();
+        }
+      }
+    });
   }
 
   protected ValueToken createComplexToken() {

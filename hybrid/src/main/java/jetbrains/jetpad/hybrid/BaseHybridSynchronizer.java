@@ -93,6 +93,8 @@ public abstract class BaseHybridSynchronizer<SourceT, SpecT extends SimpleHybrid
   private boolean myHideTokensInMenu = false;
   private ReadableProperty<? extends SpecT> mySpec;
 
+  private TokensEditPostProcessor<SourceT> myTokensEditPostProcessor;
+
   BaseHybridSynchronizer(Mapper<?, ?> contextMapper, ReadableProperty<SourceT> source, Cell target,
                          ReadableProperty<? extends SpecT> spec, TokenListEditor<SourceT> editor) {
     myContextMapper = contextMapper;
@@ -489,10 +491,14 @@ public abstract class BaseHybridSynchronizer<SourceT, SpecT extends SimpleHybrid
       }
       myValueCellToMapper.put(target, mapper);
 
+      final CellTrait[] baseTraits = (myTokensEditPostProcessor == null)
+          ? new CellTrait[] { CompletionSupport.trait() }
+          : new CellTrait[] { CompletionSupport.trait(), new TokensEditPostProcessorTrait<>(BaseHybridSynchronizer.this, myTokensEditPostProcessor) };
+
       target.addTrait(new TokenCellTraits.TokenCellTrait(true) {
         @Override
         protected CellTrait[] getBaseTraits(Cell cell) {
-          return new CellTrait[] { CompletionSupport.trait() };
+          return baseTraits;
         }
       });
 
@@ -502,7 +508,7 @@ public abstract class BaseHybridSynchronizer<SourceT, SpecT extends SimpleHybrid
       return target;
     }
 
-    return new TextTokenCell(this, token);
+    return new TextTokenCell(this, token, myTokensEditPostProcessor);
   }
 
   private void addPlaceholder() {
@@ -734,6 +740,11 @@ public abstract class BaseHybridSynchronizer<SourceT, SpecT extends SimpleHybrid
 
   private void updateTargetError(boolean valid) {
     MessageController.setError(getTarget(), valid ? null : "parsing error");
+  }
+
+  // Editing ValueToken content may be not handled because it may have specific cell traits
+  public void setTokensEditPostProcessor(TokensEditPostProcessor<SourceT> tokensEditPostProcessor) {
+    myTokensEditPostProcessor = tokensEditPostProcessor;
   }
 
   protected abstract Registration onAttach(Property<SourceT> syncValue);
