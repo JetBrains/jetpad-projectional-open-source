@@ -18,10 +18,10 @@ package jetbrains.jetpad.hybrid;
 import com.google.common.base.Function;
 import com.google.common.base.Supplier;
 import com.google.common.collect.FluentIterable;
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Range;
 import jetbrains.jetpad.base.Registration;
 import jetbrains.jetpad.base.Runnables;
+import jetbrains.jetpad.base.Value;
 import jetbrains.jetpad.cell.Cell;
 import jetbrains.jetpad.cell.EditingTestCase;
 import jetbrains.jetpad.cell.HorizontalCell;
@@ -48,9 +48,12 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
+import static com.google.common.collect.ImmutableList.of;
 import static jetbrains.jetpad.hybrid.SelectionPosition.*;
 import static jetbrains.jetpad.hybrid.TokensUtil.*;
 import static org.junit.Assert.*;
@@ -1037,7 +1040,7 @@ abstract class BaseHybridEditorEditingTest<ContainerT, MapperT extends Mapper<Co
   @Test
   public void pasteStringLiteralWithOtherTokens() {
     paste("\"text 1\" + 10");
-    assertTokensEqual(ImmutableList.of(doubleQtd("text 1"), Tokens.PLUS, integer(10)), sync.tokens());
+    assertTokensEqual(of(doubleQtd("text 1"), Tokens.PLUS, integer(10)), sync.tokens());
   }
 
   @Test
@@ -1108,7 +1111,7 @@ abstract class BaseHybridEditorEditingTest<ContainerT, MapperT extends Mapper<Co
       assertTrue(completionItems.hasSingleMatch(code, eagerCompletion));
     }
     completionItems.completeFirstMatch(code);
-    assertTokensEqual(ImmutableList.of(singleQtd("text 1"), Tokens.PLUS, integer(1)), sync.tokens());
+    assertTokensEqual(of(singleQtd("text 1"), Tokens.PLUS, integer(1)), sync.tokens());
     assertFocused(targetCell.lastChild());
   }
 
@@ -1228,39 +1231,8 @@ abstract class BaseHybridEditorEditingTest<ContainerT, MapperT extends Mapper<Co
   }
 
   @Test
-  public void tokensPostProcessorOnType() {
+  public void reinitInTokensPostProcessor() {
     Synchronizer initialSync = sync;
-    attachTokensEditPostProcessor();
-    type("1 2"); type("3");
-    assertNotEquals(initialSync, sync);
-    assertTokens(integer(3));
-  }
-
-  @Test
-  public void tokensPostProcessorOnBackspace() {
-    Synchronizer initialSync = sync;
-    attachTokensEditPostProcessor();
-    type("1 12");
-    left();
-    backspace();
-    type("3");
-    assertNotEquals(initialSync, sync);
-    assertTokens(integer(3));
-  }
-
-  @Test
-  public void tokensPostProcessorOnDel() {
-    Synchronizer initialSync = sync;
-    attachTokensEditPostProcessor();
-    type("1 12");
-    left(); left();
-    del();
-    type("3");
-    assertNotEquals(initialSync, sync);
-    assertTokens(integer(3));
-  }
-
-  private void attachTokensEditPostProcessor() {
     sync.setTokensEditPostProcessor(new TokensEditPostProcessor<Expr>() {
       @Override
       public void afterTokensEdit(List<Token> tokens, Expr value) {
@@ -1270,6 +1242,115 @@ abstract class BaseHybridEditorEditingTest<ContainerT, MapperT extends Mapper<Co
         }
       }
     });
+    type("1 2"); type("3");
+    assertNotEquals(initialSync, sync);
+    assertTokens(integer(3));
+  }
+
+  @Test
+  public void postProcessTypingToEmpty() {
+    Value<List<Token>> lastSeenTokens = installVerifyingPostProcessor();
+    type('1');
+    assertTokensEqual(of(integer(1)), lastSeenTokens.get());
+  }
+
+  @Test
+  public void postProcessTypingToNonEmpty() {
+    Value<List<Token>> lastSeenTokens = installVerifyingPostProcessor();
+    type("1 2");
+    assertTokensEqual(of(integer(1), integer(2)), lastSeenTokens.get());
+  }
+
+  @Test
+  public void postProcessBackspace() {
+    Value<List<Token>> lastSeenTokens = installVerifyingPostProcessor();
+    type("12");
+    backspace();
+    assertTokensEqual(of(integer(1)), lastSeenTokens.get());
+  }
+
+  @Test
+  public void postProcessDel() {
+    Value<List<Token>> lastSeenTokens = installVerifyingPostProcessor();
+    type("12");
+    left(); del();
+    assertTokensEqual(of(integer(1)), lastSeenTokens.get());
+  }
+
+  @Test
+  public void noPostProcessingOnNavigationAndSelection() {
+    Value<List<Token>> lastSeenTokens = installVerifyingPostProcessor();
+    type("1 2");
+    left();
+    selectLeft(1);
+    assertTokensEqual(of(integer(1), integer(2)), lastSeenTokens.get());
+  }
+
+  @Test
+  public void postProcessTokensPaste() {
+    Value<List<Token>> lastSeenTokens = installVerifyingPostProcessor();
+    type("1 2");
+    selectLeft(1);
+    paste(copy().toString());
+    assertTokensEqual(of(integer(1), integer(2), integer(2)), lastSeenTokens.get());
+  }
+
+  @Test
+  public void postProcessTextPasteToEmpty() {
+    Value<List<Token>> lastSeenTokens = installVerifyingPostProcessor();
+    paste("1");
+    assertTokensEqual(of(integer(1)), lastSeenTokens.get());
+  }
+
+  @Test
+  public void postProcessTextPasteToNonEmpty() {
+    Value<List<Token>> lastSeenTokens =  installVerifyingPostProcessor();
+    type("1");
+    paste("2");
+    assertTokensEqual(of(integer(12)), lastSeenTokens.get());
+  }
+
+  @Test
+  public void noPostProcessingOnEmptyPaste() {
+    Value<List<Token>> lastSeenTokens = installVerifyingPostProcessor();
+    type("1");
+    paste("");
+    assertTokensEqual(of(integer(1)), lastSeenTokens.get());
+  }
+
+  @Test
+  public void postProcessTokensCut() {
+    Value<List<Token>> lastSeenTokens = installVerifyingPostProcessor();
+    type("1");
+    selectLeft(1);
+    cut();
+    assertTrue(lastSeenTokens.get().isEmpty());
+  }
+
+  @Test
+  public void postProcessTextCut() {
+    Value<List<Token>> lastSeenTokens = installVerifyingPostProcessor();
+    type("1");
+
+    TextTokenCell tokenCell = (TextTokenCell) sync.tokenCells().get(0);
+    tokenCell.selectionStart().set(0);
+    tokenCell.caretPosition().set(1);
+    tokenCell.selectionVisible().set(true);
+    cut();
+
+    assertTrue(lastSeenTokens.get().isEmpty());
+  }
+
+  private Value<List<Token>> installVerifyingPostProcessor() {
+    final Value<List<Token>> lastSeenTokens = new Value<List<Token>>(Collections.EMPTY_LIST);
+    sync.setTokensEditPostProcessor(new TokensEditPostProcessor<Expr>() {
+      @Override
+      public void afterTokensEdit(List<Token> tokens, Expr value) {
+        assertNotEquals(lastSeenTokens.get(), tokens);
+        lastSeenTokens.set(new ArrayList<>(tokens));
+      }
+    });
+    return lastSeenTokens;
   }
 
   protected ValueToken createComplexToken() {

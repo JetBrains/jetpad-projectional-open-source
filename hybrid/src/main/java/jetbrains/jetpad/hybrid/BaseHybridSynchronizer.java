@@ -31,7 +31,7 @@ import jetbrains.jetpad.cell.position.Positions;
 import jetbrains.jetpad.cell.text.TextEditing;
 import jetbrains.jetpad.cell.trait.CellTrait;
 import jetbrains.jetpad.cell.trait.CellTraitPropertySpec;
-import jetbrains.jetpad.cell.trait.DerivedCellTrait;
+import jetbrains.jetpad.cell.trait.CompositeCellTrait;
 import jetbrains.jetpad.cell.util.CellFactory;
 import jetbrains.jetpad.cell.util.CellLists;
 import jetbrains.jetpad.cell.util.CellState;
@@ -265,7 +265,11 @@ public abstract class BaseHybridSynchronizer<SourceT, SpecT extends SimpleHybrid
       @Override
       public void onCut(Cell cell, CopyCutEvent event) {
         if (canCut()) {
-          event.consume(cut());
+          ClipboardContent content = cut();
+          if (myTokensEditPostProcessor != null) {
+            myTokensEditPostProcessor.afterTokensEdit(tokens(), property().get());
+          }
+          event.consume(content);
           return;
         }
         super.onCut(cell, event);
@@ -275,6 +279,9 @@ public abstract class BaseHybridSynchronizer<SourceT, SpecT extends SimpleHybrid
       public void onPaste(Cell cell, PasteEvent event) {
         if (canPaste(event.getContent())) {
           paste(event.getContent());
+          if (myTokensEditPostProcessor != null) {
+            myTokensEditPostProcessor.afterTokensEdit(tokens(), property().get());
+          }
           event.consume();
           return;
         }
@@ -493,7 +500,7 @@ public abstract class BaseHybridSynchronizer<SourceT, SpecT extends SimpleHybrid
 
       final CellTrait[] baseTraits = (myTokensEditPostProcessor == null)
           ? new CellTrait[] { CompletionSupport.trait() }
-          : new CellTrait[] { CompletionSupport.trait(), new TokensEditPostProcessorTrait<>(BaseHybridSynchronizer.this, myTokensEditPostProcessor) };
+          : new CellTrait[] { CompletionSupport.trait(), tokensEditPostProcessorTrait() };
 
       target.addTrait(new TokenCellTraits.TokenCellTrait(true) {
         @Override
@@ -529,10 +536,12 @@ public abstract class BaseHybridSynchronizer<SourceT, SpecT extends SimpleHybrid
 
   private TextCell createPlaceholder() {
     final TextCell result = new TextCell();
-    result.addTrait(new DerivedCellTrait() {
+    result.addTrait(new CompositeCellTrait() {
       @Override
-      protected CellTrait getBase(Cell cell) {
-        return TextEditing.validTextEditing(Predicates.equalTo(""));
+      protected CellTrait[] getBaseTraits(Cell cell) {
+        return (myTokensEditPostProcessor == null)
+            ? new CellTrait[] { placeholderTextEditing() }
+            : new CellTrait[] { placeholderTextEditing(), tokensEditPostProcessorTrait() };
       }
 
       @Override
@@ -553,6 +562,14 @@ public abstract class BaseHybridSynchronizer<SourceT, SpecT extends SimpleHybrid
       }
     });
     return result;
+  }
+
+  private CellTrait placeholderTextEditing() {
+    return TextEditing.validTextEditing(Predicates.equalTo(""));
+  }
+
+  private CellTrait tokensEditPostProcessorTrait() {
+    return new TokenTextEditPostProcessorTrait<>(this, myTokensEditPostProcessor);
   }
 
   void setTokens(List<Token> tokens) {

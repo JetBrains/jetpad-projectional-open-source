@@ -17,14 +17,13 @@ package jetbrains.jetpad.hybrid;
 
 import jetbrains.jetpad.cell.Cell;
 import jetbrains.jetpad.cell.trait.CellTrait;
-import jetbrains.jetpad.event.Key;
-import jetbrains.jetpad.event.KeyEvent;
+import jetbrains.jetpad.event.*;
 
-class TokensEditPostProcessorTrait<SourceT> extends CellTrait {
-  private BaseHybridSynchronizer<SourceT, ?> mySync;
-  private TokensEditPostProcessor<SourceT> myPostProcessor;
+class TokenTextEditPostProcessorTrait<SourceT> extends CellTrait {
+  private final BaseHybridSynchronizer<SourceT, ?> mySync;
+  private final TokensEditPostProcessor<SourceT> myPostProcessor;
 
-  TokensEditPostProcessorTrait(BaseHybridSynchronizer<SourceT, ?> sync, TokensEditPostProcessor<SourceT> postProcessor) {
+  TokenTextEditPostProcessorTrait(BaseHybridSynchronizer<SourceT, ?> sync, TokensEditPostProcessor<SourceT> postProcessor) {
     mySync = sync;
     myPostProcessor = postProcessor;
   }
@@ -37,6 +36,23 @@ class TokensEditPostProcessorTrait<SourceT> extends CellTrait {
   @Override
   public void onKeyPressed(Cell cell, KeyEvent event) {
     if (isRemove(event)) {
+      myPostProcessor.afterTokensEdit(mySync.tokens(), mySync.property().get());
+    }
+  }
+
+  @Override
+  public void onCut(Cell cell, CopyCutEvent event) {
+    if (event.getResult() != null
+        && event.getResult().isSupported(ContentKinds.SINGLE_LINE_TEXT)
+        && !TextContentHelper.getText(event.getResult()).isEmpty()) {
+      myPostProcessor.afterTokensEdit(mySync.tokens(), mySync.property().get());
+    }
+  }
+
+  @Override
+  public void onPaste(Cell cell, PasteEvent event) {
+    if (event.getContent().isSupported(ContentKinds.SINGLE_LINE_TEXT)
+        && !TextContentHelper.getText(event.getContent()).isEmpty()) {
       myPostProcessor.afterTokensEdit(mySync.tokens(), mySync.property().get());
     }
   }

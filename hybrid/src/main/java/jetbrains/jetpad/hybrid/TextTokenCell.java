@@ -84,7 +84,7 @@ class TextTokenCell extends TextCell {
             new TokenCellTraits.LeftLeafTokenCellTrait(),
             new TokenCellTraits.RightLeafTokenCellTrait(),
             TextEditing.validTextEditing(myToken.getValidator(), tokenTextColor(), false),
-            new TokensEditPostProcessorTrait(mySync, myPostProcessor)
+            new TokenTextEditPostProcessorTrait(mySync, myPostProcessor)
         };
 
     return new TokenCellTraits.TokenCellTrait(false) {
