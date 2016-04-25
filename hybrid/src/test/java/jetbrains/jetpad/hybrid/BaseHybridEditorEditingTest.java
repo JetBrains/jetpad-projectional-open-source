@@ -1349,6 +1349,16 @@ abstract class BaseHybridEditorEditingTest<ContainerT, MapperT extends Mapper<Co
   }
 
   @Test
+  public void postProcessorUninstall() {
+    Value<List<Token>> lastSeenTokens = installTrackingPostProcessor(true);
+    type("1");
+    backspace();
+    sync.setTokensEditPostProcessor(null);
+    type("2");
+    assertTrue(lastSeenTokens.get().isEmpty());
+  }
+
+  @Test
   public void postProcessValueTokenRemoval() {
     // Such removes are processed with both onKeyPressed and
     // onKeyPressedLowPriority - and both may be passed the same tokens,

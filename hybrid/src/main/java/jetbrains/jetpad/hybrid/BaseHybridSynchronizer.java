@@ -756,8 +756,13 @@ public abstract class BaseHybridSynchronizer<SourceT, SpecT extends SimpleHybrid
   // NB: ValueTokens may have their own content editing handling -
   // in this case this post-processor won't run
   public void setTokensEditPostProcessor(TokensEditPostProcessor<SourceT> tokensEditPostProcessor) {
-    myTokensEditPostProcessor = tokensEditPostProcessor;
-    myTokenTextEditPostProcessorTrait = new TokenTextEditPostProcessorTrait<>(this, tokensEditPostProcessor);
+    if (tokensEditPostProcessor != null) {
+      myTokensEditPostProcessor = tokensEditPostProcessor;
+      myTokenTextEditPostProcessorTrait = new TokenTextEditPostProcessorTrait<>(this, tokensEditPostProcessor);
+    } else {
+      myTokensEditPostProcessor = new EmptyTokensEditPostProcessor<>();
+      myTokenTextEditPostProcessorTrait = CellTrait.EMPTY;
+    }
   }
 
   protected abstract Registration onAttach(Property<SourceT> syncValue);
