@@ -82,6 +82,11 @@ public class SelectionSupport<ItemT> {
       }
     });
 
+    SelectionController preinstalled = myTarget.get(SelectionController.PROPERTY);
+    if (preinstalled != null) {
+      setSelectionController(preinstalled);
+    }
+
     mySelectedItems.addHandler(new EventHandler<CollectionItemEvent<? extends ItemT>>() {
       @Override
       public void onEvent(CollectionItemEvent<? extends ItemT> event) {
