@@ -33,10 +33,12 @@ class TextTokenCell extends TextCell {
   private boolean myFirst;
   private Token myToken;
   private Token myNextToken;
+  private final CellTrait myPostProcessorTrait;
 
-  TextTokenCell(BaseHybridSynchronizer<?, ?> sync, Token token) {
+  TextTokenCell(BaseHybridSynchronizer<?, ?> sync, Token token, CellTrait postProcessorTrait) {
     mySync = sync;
     myToken = token;
+    myPostProcessorTrait = postProcessorTrait;
 
     textColor().set(tokenTextColor());
     bold().set(token instanceof SimpleToken && ((SimpleToken) token).isBold());
@@ -76,9 +78,10 @@ class TextTokenCell extends TextCell {
       @Override
       protected CellTrait[] getBaseTraits(Cell cell) {
         return new CellTrait[] {
-          new TokenCellTraits.LeftLeafTokenCellTrait(),
-          new TokenCellTraits.RightLeafTokenCellTrait(),
-          TextEditing.validTextEditing(myToken.getValidator(), tokenTextColor(), false)
+            new TokenCellTraits.LeftLeafTokenCellTrait(),
+            new TokenCellTraits.RightLeafTokenCellTrait(),
+            TextEditing.validTextEditing(myToken.getValidator(), tokenTextColor(), false),
+            myPostProcessorTrait
         };
       }
 
