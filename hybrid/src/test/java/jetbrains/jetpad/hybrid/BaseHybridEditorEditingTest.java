@@ -1249,21 +1249,21 @@ abstract class BaseHybridEditorEditingTest<ContainerT, MapperT extends Mapper<Co
 
   @Test
   public void postProcessTypingToEmpty() {
-    Value<List<Token>> lastSeenTokens = installVerifyingPostProcessor();
+    Value<List<Token>> lastSeenTokens = installTrackingPostProcessor(true);
     type('1');
     assertTokensEqual(of(integer(1)), lastSeenTokens.get());
   }
 
   @Test
   public void postProcessTypingToNonEmpty() {
-    Value<List<Token>> lastSeenTokens = installVerifyingPostProcessor();
+    Value<List<Token>> lastSeenTokens = installTrackingPostProcessor(true);
     type("1 2");
     assertTokensEqual(of(integer(1), integer(2)), lastSeenTokens.get());
   }
 
   @Test
   public void postProcessBackspace() {
-    Value<List<Token>> lastSeenTokens = installVerifyingPostProcessor();
+    Value<List<Token>> lastSeenTokens = installTrackingPostProcessor(true);
     type("12");
     backspace();
     assertTokensEqual(of(integer(1)), lastSeenTokens.get());
@@ -1271,7 +1271,7 @@ abstract class BaseHybridEditorEditingTest<ContainerT, MapperT extends Mapper<Co
 
   @Test
   public void postProcessDel() {
-    Value<List<Token>> lastSeenTokens = installVerifyingPostProcessor();
+    Value<List<Token>> lastSeenTokens = installTrackingPostProcessor(true);
     type("12");
     left(); del();
     assertTokensEqual(of(integer(1)), lastSeenTokens.get());
@@ -1279,7 +1279,7 @@ abstract class BaseHybridEditorEditingTest<ContainerT, MapperT extends Mapper<Co
 
   @Test
   public void noPostProcessingOnNavigationAndSelection() {
-    Value<List<Token>> lastSeenTokens = installVerifyingPostProcessor();
+    Value<List<Token>> lastSeenTokens = installTrackingPostProcessor(true);
     type("1 2");
     left();
     selectLeft(1);
@@ -1288,7 +1288,7 @@ abstract class BaseHybridEditorEditingTest<ContainerT, MapperT extends Mapper<Co
 
   @Test
   public void postProcessTokensPaste() {
-    Value<List<Token>> lastSeenTokens = installVerifyingPostProcessor();
+    Value<List<Token>> lastSeenTokens = installTrackingPostProcessor(true);
     type("1 2");
     selectLeft(1);
     paste(copy().toString());
@@ -1297,14 +1297,14 @@ abstract class BaseHybridEditorEditingTest<ContainerT, MapperT extends Mapper<Co
 
   @Test
   public void postProcessTextPasteToEmpty() {
-    Value<List<Token>> lastSeenTokens = installVerifyingPostProcessor();
+    Value<List<Token>> lastSeenTokens = installTrackingPostProcessor(true);
     paste("1");
     assertTokensEqual(of(integer(1)), lastSeenTokens.get());
   }
 
   @Test
   public void postProcessTextPasteToNonEmpty() {
-    Value<List<Token>> lastSeenTokens =  installVerifyingPostProcessor();
+    Value<List<Token>> lastSeenTokens = installTrackingPostProcessor(true);
     type("1");
     paste("2");
     assertTokensEqual(of(integer(12)), lastSeenTokens.get());
@@ -1312,7 +1312,7 @@ abstract class BaseHybridEditorEditingTest<ContainerT, MapperT extends Mapper<Co
 
   @Test
   public void noPostProcessingOnEmptyPaste() {
-    Value<List<Token>> lastSeenTokens = installVerifyingPostProcessor();
+    Value<List<Token>> lastSeenTokens = installTrackingPostProcessor(true);
     type("1");
     paste("");
     assertTokensEqual(of(integer(1)), lastSeenTokens.get());
@@ -1320,7 +1320,7 @@ abstract class BaseHybridEditorEditingTest<ContainerT, MapperT extends Mapper<Co
 
   @Test
   public void postProcessTokensCut() {
-    Value<List<Token>> lastSeenTokens = installVerifyingPostProcessor();
+    Value<List<Token>> lastSeenTokens = installTrackingPostProcessor(true);
     type("1");
     selectLeft(1);
     cut();
@@ -1329,7 +1329,7 @@ abstract class BaseHybridEditorEditingTest<ContainerT, MapperT extends Mapper<Co
 
   @Test
   public void postProcessTextCut() {
-    Value<List<Token>> lastSeenTokens = installVerifyingPostProcessor();
+    Value<List<Token>> lastSeenTokens = installTrackingPostProcessor(true);
     type("1");
 
     TextTokenCell tokenCell = (TextTokenCell) sync.tokenCells().get(0);
@@ -1341,12 +1341,32 @@ abstract class BaseHybridEditorEditingTest<ContainerT, MapperT extends Mapper<Co
     assertTrue(lastSeenTokens.get().isEmpty());
   }
 
-  private Value<List<Token>> installVerifyingPostProcessor() {
+  @Test
+  public void postProcessAfterTokenAddition() {
+    Value<List<Token>> lastSeenTokens = installTrackingPostProcessor(true);
+    type("'");
+    assertTokensEqual(of(singleQtd("")), lastSeenTokens.get());
+  }
+
+  @Test
+  public void postProcessValueTokenRemoval() {
+    // Such removes are processed with both onKeyPressed and
+    // onKeyPressedLowPriority - and both may be passed the same tokens,
+    // so we don't require tokens to be different on each handle.
+    Value<List<Token>> lastSeenTokens = installTrackingPostProcessor(false);
+    type("'");
+    backspace();
+    assertTrue(lastSeenTokens.get().isEmpty());
+  }
+
+  private Value<List<Token>> installTrackingPostProcessor(final boolean assertTokensChange) {
     final Value<List<Token>> lastSeenTokens = new Value<List<Token>>(Collections.EMPTY_LIST);
     sync.setTokensEditPostProcessor(new TokensEditPostProcessor<Expr>() {
       @Override
       public void afterTokensEdit(List<Token> tokens, Expr value) {
-        assertNotEquals(lastSeenTokens.get(), tokens);
+        if (assertTokensChange) {
+          assertNotEquals(lastSeenTokens.get(), tokens);
+        }
         lastSeenTokens.set(new ArrayList<>(tokens));
       }
     });

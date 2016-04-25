@@ -93,7 +93,8 @@ public abstract class BaseHybridSynchronizer<SourceT, SpecT extends SimpleHybrid
   private boolean myHideTokensInMenu = false;
   private ReadableProperty<? extends SpecT> mySpec;
 
-  private TokensEditPostProcessor<SourceT> myTokensEditPostProcessor;
+  private TokensEditPostProcessor<SourceT> myTokensEditPostProcessor = new EmptyTokensEditPostProcessor<>();
+  private CellTrait myTokenTextEditPostProcessorTrait = CellTrait.EMPTY;
 
   BaseHybridSynchronizer(Mapper<?, ?> contextMapper, ReadableProperty<SourceT> source, Cell target,
                          ReadableProperty<? extends SpecT> spec, TokenListEditor<SourceT> editor) {
@@ -266,9 +267,7 @@ public abstract class BaseHybridSynchronizer<SourceT, SpecT extends SimpleHybrid
       public void onCut(Cell cell, CopyCutEvent event) {
         if (canCut()) {
           ClipboardContent content = cut();
-          if (myTokensEditPostProcessor != null) {
-            myTokensEditPostProcessor.afterTokensEdit(tokens(), property().get());
-          }
+          myTokensEditPostProcessor.afterTokensEdit(tokens(), property().get());
           event.consume(content);
           return;
         }
@@ -279,9 +278,7 @@ public abstract class BaseHybridSynchronizer<SourceT, SpecT extends SimpleHybrid
       public void onPaste(Cell cell, PasteEvent event) {
         if (canPaste(event.getContent())) {
           paste(event.getContent());
-          if (myTokensEditPostProcessor != null) {
-            myTokensEditPostProcessor.afterTokensEdit(tokens(), property().get());
-          }
+          myTokensEditPostProcessor.afterTokensEdit(tokens(), property().get());
           event.consume();
           return;
         }
@@ -498,14 +495,17 @@ public abstract class BaseHybridSynchronizer<SourceT, SpecT extends SimpleHybrid
       }
       myValueCellToMapper.put(target, mapper);
 
-      final CellTrait[] baseTraits = (myTokensEditPostProcessor == null)
-          ? new CellTrait[] { CompletionSupport.trait() }
-          : new CellTrait[] { CompletionSupport.trait(), tokensEditPostProcessorTrait() };
-
-      target.addTrait(new TokenCellTraits.TokenCellTrait(true) {
+      final CellTrait tokenCellTrait = new TokenCellTraits.TokenCellTrait(true) {
         @Override
         protected CellTrait[] getBaseTraits(Cell cell) {
-          return baseTraits;
+          return new CellTrait[] { CompletionSupport.trait() };
+        }
+      };
+
+      target.addTrait(new CompositeCellTrait() {
+        @Override
+        protected CellTrait[] getBaseTraits(Cell cell) {
+          return new CellTrait[] { tokenCellTrait, myTokenTextEditPostProcessorTrait };
         }
       });
 
@@ -515,7 +515,7 @@ public abstract class BaseHybridSynchronizer<SourceT, SpecT extends SimpleHybrid
       return target;
     }
 
-    return new TextTokenCell(this, token, myTokensEditPostProcessor);
+    return new TextTokenCell(this, token, myTokenTextEditPostProcessorTrait);
   }
 
   private void addPlaceholder() {
@@ -539,9 +539,7 @@ public abstract class BaseHybridSynchronizer<SourceT, SpecT extends SimpleHybrid
     result.addTrait(new CompositeCellTrait() {
       @Override
       protected CellTrait[] getBaseTraits(Cell cell) {
-        return (myTokensEditPostProcessor == null)
-            ? new CellTrait[] { placeholderTextEditing() }
-            : new CellTrait[] { placeholderTextEditing(), tokensEditPostProcessorTrait() };
+        return new CellTrait[] { placeholderTextEditing(), myTokenTextEditPostProcessorTrait };
       }
 
       @Override
@@ -566,10 +564,6 @@ public abstract class BaseHybridSynchronizer<SourceT, SpecT extends SimpleHybrid
 
   private CellTrait placeholderTextEditing() {
     return TextEditing.validTextEditing(Predicates.equalTo(""));
-  }
-
-  private CellTrait tokensEditPostProcessorTrait() {
-    return new TokenTextEditPostProcessorTrait<>(this, myTokensEditPostProcessor);
   }
 
   void setTokens(List<Token> tokens) {
@@ -759,9 +753,11 @@ public abstract class BaseHybridSynchronizer<SourceT, SpecT extends SimpleHybrid
     MessageController.setError(getTarget(), valid ? null : "parsing error");
   }
 
-  // Editing ValueToken content may be not handled because it may have specific cell traits
+  // NB: ValueTokens may have their own content editing handling -
+  // in this case this post-processor won't run
   public void setTokensEditPostProcessor(TokensEditPostProcessor<SourceT> tokensEditPostProcessor) {
     myTokensEditPostProcessor = tokensEditPostProcessor;
+    myTokenTextEditPostProcessorTrait = new TokenTextEditPostProcessorTrait<>(this, tokensEditPostProcessor);
   }
 
   protected abstract Registration onAttach(Property<SourceT> syncValue);
@@ -793,4 +789,10 @@ public abstract class BaseHybridSynchronizer<SourceT, SpecT extends SimpleHybrid
     myAttachRegistration.remove();
     myAttachRegistration = null;
   }
+
+  private static class EmptyTokensEditPostProcessor<SourceT> implements TokensEditPostProcessor<SourceT> {
+    @Override
+    public void afterTokensEdit(List<Token> tokens, SourceT value) {
+    }
+  };
 }

@@ -41,6 +41,13 @@ class TokenTextEditPostProcessorTrait<SourceT> extends CellTrait {
   }
 
   @Override
+  public void onKeyPressedLowPriority(Cell cell, KeyEvent event) {
+    if (isRemove(event)) {
+      myPostProcessor.afterTokensEdit(mySync.tokens(), mySync.property().get());
+    }
+  }
+
+  @Override
   public void onCut(Cell cell, CopyCutEvent event) {
     if (event.getResult() != null
         && event.getResult().isSupported(ContentKinds.SINGLE_LINE_TEXT)

@@ -33,12 +33,12 @@ class TextTokenCell extends TextCell {
   private boolean myFirst;
   private Token myToken;
   private Token myNextToken;
-  private final TokensEditPostProcessor<?> myPostProcessor;
+  private final CellTrait myPostProcessorTrait;
 
-  TextTokenCell(BaseHybridSynchronizer<?, ?> sync, Token token, TokensEditPostProcessor<?> postProcessor) {
+  TextTokenCell(BaseHybridSynchronizer<?, ?> sync, Token token, CellTrait postProcessorTrait) {
     mySync = sync;
     myToken = token;
-    myPostProcessor = postProcessor;
+    myPostProcessorTrait = postProcessorTrait;
 
     textColor().set(tokenTextColor());
     bold().set(token instanceof SimpleToken && ((SimpleToken) token).isBold());
@@ -74,23 +74,15 @@ class TextTokenCell extends TextCell {
   }
 
   private CellTrait createTrait() {
-    final CellTrait[] baseTraits = (myPostProcessor == null)
-        ? new CellTrait[] {
-            new TokenCellTraits.LeftLeafTokenCellTrait(),
-            new TokenCellTraits.RightLeafTokenCellTrait(),
-            TextEditing.validTextEditing(myToken.getValidator(), tokenTextColor(), false)
-        }
-        : new CellTrait[] {
-            new TokenCellTraits.LeftLeafTokenCellTrait(),
-            new TokenCellTraits.RightLeafTokenCellTrait(),
-            TextEditing.validTextEditing(myToken.getValidator(), tokenTextColor(), false),
-            new TokenTextEditPostProcessorTrait(mySync, myPostProcessor)
-        };
-
     return new TokenCellTraits.TokenCellTrait(false) {
       @Override
       protected CellTrait[] getBaseTraits(Cell cell) {
-        return baseTraits;
+        return new CellTrait[] {
+            new TokenCellTraits.LeftLeafTokenCellTrait(),
+            new TokenCellTraits.RightLeafTokenCellTrait(),
+            TextEditing.validTextEditing(myToken.getValidator(), tokenTextColor(), false),
+            myPostProcessorTrait
+        };
       }
 
       @Override
