@@ -119,7 +119,7 @@ public abstract class CompositeCellTrait extends CellTrait {
   @Override
   public void onKeyPressedLowPriority(Cell cell, KeyEvent event) {
     for (CellTrait t : getBaseTraits(cell)) {
-      t.onKeyReleasedLowPriority(cell, event);
+      t.onKeyPressedLowPriority(cell, event);
     }
   }
 
