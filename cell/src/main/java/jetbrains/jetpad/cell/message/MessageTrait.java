@@ -15,7 +15,7 @@
  */
 package jetbrains.jetpad.cell.message;
 
-import jetbrains.jetpad.base.Pair;
+import jetbrains.jetpad.base.Objects;
 import jetbrains.jetpad.base.Registration;
 import jetbrains.jetpad.cell.Cell;
 import jetbrains.jetpad.cell.CellContainer;
@@ -31,13 +31,16 @@ import jetbrains.jetpad.model.property.PropertyChangeEvent;
 import jetbrains.jetpad.values.Color;
 import jetbrains.jetpad.values.FontFamily;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 class MessageTrait extends CellTrait {
   static final CellPropertySpec<Cell> POPUP_POSITION = Cell.TOP_POPUP;
   static final CellPropertySpec<Boolean> POPUP_ACTIVE = new CellPropertySpec<>("isMessagePopupActive", false);
 
-  static final int POPUPS_SHOW_DELAY_MILLIS = 500;
+  static final int POPUPS_SHOW_DELAY_MILLIS = 300;
 
   private static final List<CellPropertySpec<String>> MESSAGES_IN_PRIORITY_ORDER =
       Arrays.asList(MessageController.INFO, MessageController.BROKEN, MessageController.ERROR, MessageController.WARNING);
@@ -45,7 +48,7 @@ class MessageTrait extends CellTrait {
   private Registration myUpdatesReg = null;
   private long myLastEditingKeyEvent = 0;
   private boolean myForceHide = false;
-  private final Map<Pair<Cell, CellPropertySpec<String>>, PropertyChangeEvent<String>> myPendingUpdates = new HashMap<>();
+  private final Map<Cell, Map<CellPropertySpec<String>, PropertyChangeEvent<String>>> myPendingUpdates = new HashMap<>();
 
   // this field is required only as EDT supplier, but the appropriate EDT may be set after MessageController is installed
   private CellContainer myContainer;
@@ -73,7 +76,7 @@ class MessageTrait extends CellTrait {
   public void onPropertyChanged(Cell cell, CellPropertySpec<?> prop, PropertyChangeEvent<?> event) {
     if (MESSAGES_IN_PRIORITY_ORDER.contains(prop)) {
       if (myForceHide) {
-        myPendingUpdates.put(new Pair<>(cell, (CellPropertySpec<String>) prop), (PropertyChangeEvent<String>) event);
+        postpone(cell, (CellPropertySpec<String>) prop, (PropertyChangeEvent<String>) event);
       } else {
         apply(cell, (CellPropertySpec<String>) prop, (PropertyChangeEvent<String>) event);
       }
@@ -91,6 +94,23 @@ class MessageTrait extends CellTrait {
     }
 
     super.onPropertyChanged(cell, prop, event);
+  }
+
+  private void postpone(Cell cell, CellPropertySpec<String> prop, PropertyChangeEvent<String> event) {
+    if (!myPendingUpdates.containsKey(cell)) {
+      myPendingUpdates.put(cell, new HashMap<CellPropertySpec<String>, PropertyChangeEvent<String>>());
+    }
+    Map<CellPropertySpec<String>, PropertyChangeEvent<String>> updates = myPendingUpdates.get(cell);
+    if (updates.containsKey(prop)) {
+      String oldValue = updates.get(prop).getOldValue();
+      if (Objects.equal(oldValue,  event.getNewValue())) {
+        updates.remove(prop);
+      } else {
+        updates.put(prop, new PropertyChangeEvent<>(oldValue, event.getNewValue()));
+      }
+    } else {
+      updates.put(prop, event);
+    }
   }
 
   private void setPopup(Cell cell, String message) {
@@ -140,8 +160,11 @@ class MessageTrait extends CellTrait {
         myUpdatesReg.remove();
         myUpdatesReg = null;
         setForceHide(false);
-        for (Map.Entry<Pair<Cell, CellPropertySpec<String>>, PropertyChangeEvent<String>> entry : myPendingUpdates.entrySet()) {
-          apply(entry.getKey().first, entry.getKey().second, entry.getValue());
+        for (Map.Entry<Cell, Map<CellPropertySpec<String>, PropertyChangeEvent<String>>> cellEntry : myPendingUpdates.entrySet()) {
+          Cell cell = cellEntry.getKey();
+          for (Map.Entry<CellPropertySpec<String>, PropertyChangeEvent<String>> propEntry : cellEntry.getValue().entrySet()) {
+            apply(cell, propEntry.getKey(), propEntry.getValue());
+          }
         }
         myPendingUpdates.clear();
       }
@@ -317,14 +340,7 @@ class MessageTrait extends CellTrait {
 
   void detach(Cell cell) {
     myStyler.detach(cell);
-    if (!myPendingUpdates.isEmpty()) {
-      Set<Pair<Cell, CellPropertySpec<String>>> keysCopy = new HashSet<>(myPendingUpdates.keySet());
-      for (Pair<Cell, CellPropertySpec<String>> key : keysCopy) {
-        if (key.first == cell) {
-          myPendingUpdates.remove(key);
-        }
-      }
-    }
+    myPendingUpdates.remove(cell);
     if (myRegistrations == null) return;
     Registration registration = myRegistrations.remove(cell);
     if (registration == null) return;

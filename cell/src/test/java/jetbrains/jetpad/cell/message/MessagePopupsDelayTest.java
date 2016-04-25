@@ -26,6 +26,8 @@ import jetbrains.jetpad.event.KeyStrokeSpec;
 import jetbrains.jetpad.event.KeyStrokeSpecs;
 import org.junit.Test;
 
+import static org.junit.Assert.*;
+
 public class MessagePopupsDelayTest extends MessageControllerTestCase {
   private TestEventDispatchThread edt = new TestEventDispatchThread();
 
@@ -117,6 +119,48 @@ public class MessagePopupsDelayTest extends MessageControllerTestCase {
     edt.executeUpdates(MessageTrait.POPUPS_SHOW_DELAY_MILLIS);
     assertDecorationPopupVisible(cell, true);
     assertDecorationPopupVisible(cell2, true);
+  }
+
+  @Test
+  public void messageUpdatedQuickly() {
+    assertFalse(cell.get(MessageTrait.POPUP_ACTIVE));
+    assertFalse(cell.get(Cell.RED_UNDERLINE));
+
+    cell.focus();
+    type("a");
+
+    MessageController.setError(cell, "1");
+    MessageController.setError(cell, "2");
+    edt.executeUpdates(MessageTrait.POPUPS_SHOW_DELAY_MILLIS);
+    assertPopupText("2");
+    assertTrue(cell.get(MessageTrait.POPUP_ACTIVE));
+    assertTrue(cell.get(Cell.RED_UNDERLINE));
+  }
+
+  @Test
+  public void messageAddedTwiceAndRemoved() {
+    showErrorPopup();
+    cell.focus();
+    type("a");
+
+    MessageController.setError(cell, null);
+    MessageController.setError(cell, "1");
+    edt.executeUpdates(MessageTrait.POPUPS_SHOW_DELAY_MILLIS);
+    assertTrue(cell.get(MessageTrait.POPUP_ACTIVE));
+    assertTrue(cell.get(Cell.RED_UNDERLINE));
+    assertPopupText("1");
+
+    type("b");
+    MessageController.setError(cell, null);
+
+    edt.executeUpdates(MessageTrait.POPUPS_SHOW_DELAY_MILLIS);
+    assertNull(cell.get(MessageTrait.POPUP_POSITION));
+    assertFalse(cell.get(MessageTrait.POPUP_ACTIVE));
+    assertFalse(cell.get(Cell.RED_UNDERLINE));
+  }
+
+  private void assertPopupText(String expected) {
+    assertTrue(((TextCell) cell.get(MessageTrait.POPUP_POSITION)).text().get().contains(expected));
   }
 
   @Override
