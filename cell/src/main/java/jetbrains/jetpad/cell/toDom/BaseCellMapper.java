@@ -167,7 +167,8 @@ abstract class BaseCellMapper<SourceT extends Cell> extends Mapper<SourceT, Elem
   }
 
   private void applyStyle(boolean selected, boolean focusHighlighted, Color background) {
-    updateCssStyle(CSS.selected(), (focusHighlighted && !isLeaf()) || selected);
+    updateCssStyle(CSS.outlined(), focusHighlighted && !isLeaf() && !selected);
+    updateCssStyle(CSS.selected(), selected);
     updateCssStyle(CSS.paired(), getSource().get(Cell.PAIR_HIGHLIGHTED));
     updateCssStyle(CSS.link(), getSource().get(Cell.LINK));
 

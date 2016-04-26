@@ -102,11 +102,13 @@
   background-color: pairHighlightColor !important;
 }
 
+.outlined {
+  outline: 1px dotted black;
+}
+
 .selected {
   background-color: Highlight !important;
   color: HighlightText !important;
-
-  outline: 1px dotted black;
 }
 
 .selected .selected {
