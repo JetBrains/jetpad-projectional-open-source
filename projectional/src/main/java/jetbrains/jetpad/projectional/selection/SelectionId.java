@@ -15,8 +15,10 @@
  */
 package jetbrains.jetpad.projectional.selection;
 
-public interface SelectionListener {
-  void onSelectionOpened(SelectionId id, Selection selection);
-  void onSelectionChanged(SelectionId id, Selection selection);
-  void onSelectionClosed(SelectionId id);
+import jetbrains.jetpad.model.id.BaseId;
+
+public class SelectionId extends BaseId {
+  public SelectionId() {
+    super();
+  }
 }
