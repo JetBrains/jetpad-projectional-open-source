@@ -232,7 +232,7 @@ public class SelectionSupport<ItemT> {
             int focusIndex = -1;
             boolean focusOnFirst = true;
 
-            if (!mySelectedItems.contains(currentItem) && Positions.isHomePosition(currentCell) && Positions.isEndPosition(currentCell)) {
+            if (!mySelectedItems.contains(currentItem) && (cursorIsInSinglePossiblePos(currentCell) || hasLowerPrioritySelection(currentCell))) {
               mySelectedItems.add(currentItem);
               focusIndex = currentIndex;
               focusOnFirst = false;
@@ -302,7 +302,7 @@ public class SelectionSupport<ItemT> {
             int focusIndex = -1;
             boolean focusOnFirst = true;
 
-            if (!mySelectedItems.contains(currentItem) && Positions.isHomePosition(currentCell) && Positions.isEndPosition(currentCell)) {
+            if (!mySelectedItems.contains(currentItem) && (cursorIsInSinglePossiblePos(currentCell) || hasLowerPrioritySelection(currentCell))) {
               mySelectedItems.add(0, currentItem);
               focusIndex = currentIndex;
               consumed = true;
@@ -336,6 +336,36 @@ public class SelectionSupport<ItemT> {
         }
       });
     }
+  }
+
+  private boolean cursorIsInSinglePossiblePos(Cell cell) {
+    return Positions.isHomePosition(cell) && Positions.isEndPosition(cell);
+  }
+
+  private boolean hasLowerPrioritySelection(Cell cell) {
+    return mySelectionController != null
+        ? isLowerPrioritySelection(cell, mySelectionController.getLastSelection())
+        : walkTreeCheckHasLowerSelection(cell);
+  }
+
+  private boolean isLowerPrioritySelection(Cell cell, Selection selection) {
+    return selection != null
+        && Composites.isDescendant(cell, selection.getStart())
+        && Composites.isDescendant(cell, selection.getEnd());
+
+  }
+
+  private boolean walkTreeCheckHasLowerSelection(Cell cell) {
+    SelectionSupport<?> selection = cell.get(SELECTION_SUPPORT);
+    if (selection != null && !selection.selection().isEmpty()) {
+      return true;
+    }
+    for (Cell child : cell.children()) {
+      if (hasLowerPrioritySelection(child)) {
+        return true;
+      }
+    }
+    return false;
   }
 
   boolean isLowerPrioritySelection() {

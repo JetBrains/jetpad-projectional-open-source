@@ -47,7 +47,9 @@ public class SelectionControllerLegacyTest extends EditingTestCase {
       new TestTree("a",
         new TestTree("c"),
         new TestTree("d")),
-      new TestTree("b"));
+      new TestTree("b",
+        new TestTree("e"),
+        new TestTree("f")));
     rootMapper = new TestTreeMapper(root);
     rootMapper.attachRoot();
     myCellContainer.root.children().add(rootMapper.getTarget());
@@ -90,10 +92,19 @@ public class SelectionControllerLegacyTest extends EditingTestCase {
     press(Key.RIGHT, ModifierKey.SHIFT);
     assertEquals(2, selectionHistory.size()); // [c, c], [c, d]
     press(Key.RIGHT, ModifierKey.SHIFT);
-    assertEquals(3, selectionHistory.size()); // [c, c], [c, d], [b, b]
+    assertEquals(4, selectionHistory.size()); // [c, c], [c, d], [a, a], [a, b]
 
     CellActions.toFirstFocusable(rootMapper.getTarget()).run();
     assertTrue(selectionHistory.isEmpty());
+  }
+
+  @Test
+  public void backwardRange() {
+    CellActions.toLastFocusable(rootMapper.getTarget()).run();
+    press(Key.LEFT, ModifierKey.SHIFT);
+    assertEquals(2, selectionHistory.size());
+    press(Key.LEFT, ModifierKey.SHIFT);
+    assertEquals(4, selectionHistory.size());
   }
 
   private static class TestCell extends VerticalCell {
