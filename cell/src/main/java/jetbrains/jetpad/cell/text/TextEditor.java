@@ -23,6 +23,8 @@ import jetbrains.jetpad.model.property.Property;
 import jetbrains.jetpad.model.property.ReadableProperty;
 
 public interface TextEditor {
+  boolean isAttached();
+
   ReadableProperty<Boolean> focused();
 
   Property<String> text();
