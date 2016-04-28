@@ -41,7 +41,7 @@ public class SelectionControllerLegacyTest extends EditingTestCase {
   private TestTreeMapper rootMapper;
   private List<Selection> selectionHistory = new ArrayList<>();
   private MappingContext mappingContext;
-  private TestTree a, b, d, e, g, h;
+  private TestTree a, b, d, e, f, g, h, x, y, z;
 
   @Before
   public void setup() {
@@ -50,10 +50,13 @@ public class SelectionControllerLegacyTest extends EditingTestCase {
         new TestTree("c"),
         d = new TestTree("d"),
         e = new TestTree("e"),
-        new TestTree("f")),
+        f = new TestTree("f")),
       b = new TestTree("b"),
       g = new TestTree("g",
-        h = new TestTree("h")));
+        h = new TestTree("h")),
+      x = new TestTree("x", false,
+        y = new TestTree("y", false),
+        z = new TestTree("z", false)));
     rootMapper = new TestTreeMapper(root);
     mappingContext = new MappingContext();
     rootMapper.attachRoot(mappingContext);
@@ -128,6 +131,26 @@ public class SelectionControllerLegacyTest extends EditingTestCase {
     assertHistory(selection(get(h), get(h)), selection(get(g), get(g)), selection(get(b), get(g)), selection(get(a), get(g)));
   }
 
+  @Test
+  public void escalation() {
+    CellActions.toHome(get(f).labelCell).run();
+    press(Key.RIGHT, ModifierKey.SHIFT);
+    assertHistory(selection(get(f), get(f)));
+
+    press(Key.RIGHT, ModifierKey.SHIFT);
+    assertHistory(selection(get(f), get(f)), selection(get(a), get(a)), selection(get(a), get(b)));
+  }
+
+  @Test
+  public void backwardEscalation() {
+    CellActions.toLastFocusable(rootMapper.getTarget()).run();
+    press(Key.LEFT, ModifierKey.SHIFT);
+    assertHistory(selection(get(z), get(z)), selection(get(y), get(z)));
+
+    press(Key.LEFT, ModifierKey.SHIFT);
+    assertHistory(selection(get(z), get(z)), selection(get(y), get(z)), selection(get(x), get(x)), selection(get(g), get(x)));
+  }
+
   private TestCell get(TestTree source) {
     return (TestCell)mappingContext.getMapper(rootMapper, source).getTarget();
   }
@@ -149,9 +172,9 @@ public class SelectionControllerLegacyTest extends EditingTestCase {
     final TextCell labelCell = text("");
     String label;
 
-    public TestCell() {
+    private TestCell(boolean focusable) {
       to(this, labelCell, branches);
-      labelCell.set(FOCUSABLE, true);
+      labelCell.set(FOCUSABLE, focusable);
     }
 
     private void setLabel(String label) {
@@ -176,7 +199,7 @@ public class SelectionControllerLegacyTest extends EditingTestCase {
 
     private ProjectionalRoleSynchronizer<TestTree, TestTree> sync;
     private TestTreeMapper(TestTree source) {
-      super(source, new TestCell());
+      super(source, new TestCell(source.focusable));
     }
 
     @Override
@@ -194,11 +217,17 @@ public class SelectionControllerLegacyTest extends EditingTestCase {
 
   private static class TestTree {
     private final String text;
+    private final boolean focusable;
     private final ObservableList<TestTree> branches = new ObservableArrayList<>();
 
     private TestTree(String text, TestTree ... branches) {
+      this(text, true, branches);
+    }
+
+    private TestTree(String text, boolean focusable, TestTree ... branches) {
       Collections.addAll(this.branches, branches);
       this.text = text;
+      this.focusable = focusable;
     }
   }
 }

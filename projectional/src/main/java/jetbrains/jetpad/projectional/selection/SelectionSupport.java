@@ -232,7 +232,7 @@ public class SelectionSupport<ItemT> {
             int focusIndex = -1;
             boolean focusOnFirst = true;
 
-            if (!mySelectedItems.contains(currentItem) && Positions.isHomePosition(currentCell) && Positions.isEndPosition(currentCell)) {
+            if (!mySelectedItems.contains(currentItem) && (Positions.isOnePosition(currentCell) || hasLowerPrioritySelection(currentCell))) {
               mySelectedItems.add(currentItem);
               focusIndex = currentIndex;
               focusOnFirst = false;
@@ -302,7 +302,7 @@ public class SelectionSupport<ItemT> {
             int focusIndex = -1;
             boolean focusOnFirst = true;
 
-            if (!mySelectedItems.contains(currentItem) && Positions.isHomePosition(currentCell) && Positions.isEndPosition(currentCell)) {
+            if (!mySelectedItems.contains(currentItem) && (Positions.isOnePosition(currentCell) || hasLowerPrioritySelection(currentCell))) {
               mySelectedItems.add(0, currentItem);
               focusIndex = currentIndex;
               consumed = true;
@@ -338,7 +338,34 @@ public class SelectionSupport<ItemT> {
     }
   }
 
-  boolean isLowerPrioritySelection() {
+  private boolean hasLowerPrioritySelection(Cell cell) {
+    return mySelectionController != null
+        ? hasLowerSelectionInController(cell)
+        : hasLowerSelectionInTree(cell);
+  }
+
+  private boolean hasLowerSelectionInController(Cell cell) {
+    Selection selection = mySelectionController.getLastSelection();
+    return selection != null
+        && Composites.isDescendant(cell, selection.getStart())
+        && Composites.isDescendant(cell, selection.getEnd());
+
+  }
+
+  private boolean hasLowerSelectionInTree(Cell cell) {
+    SelectionSupport<?> selection = cell.get(SELECTION_SUPPORT);
+    if (selection != null && !selection.selection().isEmpty()) {
+      return true;
+    }
+    for (Cell child : cell.children()) {
+      if (hasLowerPrioritySelection(child)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  private boolean isLowerPrioritySelection() {
     Cell current = myTarget;
     while (true) {
       Cell parent = current.getParent();
