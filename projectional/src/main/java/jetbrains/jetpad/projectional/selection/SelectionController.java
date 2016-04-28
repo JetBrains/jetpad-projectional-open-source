@@ -22,6 +22,7 @@ import jetbrains.jetpad.cell.CellPropertySpec;
 import jetbrains.jetpad.cell.TraitPropagator;
 import jetbrains.jetpad.cell.trait.CellTrait;
 import jetbrains.jetpad.cell.trait.CellTraitPropertySpec;
+import jetbrains.jetpad.model.event.CompositeRegistration;
 import jetbrains.jetpad.model.event.ListenerCaller;
 import jetbrains.jetpad.model.event.Listeners;
 
@@ -32,12 +33,15 @@ public class SelectionController {
 
   public static Registration install(CellContainer container) {
     SelectionController sm = new SelectionController();
-    return TraitPropagator.install(container, sm.trait(), HAS_SELECTION_CONTROLLER);
+    return new CompositeRegistration(TraitPropagator.install(container, sm.trait(), HAS_SELECTION_CONTROLLER),
+        sm.installLastUpdateTracker());
   }
 
   private SelectionId myLegacySelectionId = null;
 
   private Listeners<SelectionListener> myListeners = new Listeners<>();
+
+  private Selection myLastSelection;
 
   public Registration addListener(SelectionListener l) {
     return myListeners.add(l);
@@ -72,6 +76,10 @@ public class SelectionController {
     myLegacySelectionId = null;
   }
 
+  Selection getLastSelection() {
+    return myLastSelection;
+  }
+
   private CellTrait trait(){
     return new CellTrait() {
       @Override
@@ -91,5 +99,24 @@ public class SelectionController {
         }
       }
     };
+  }
+
+  private Registration installLastUpdateTracker() {
+    return myListeners.add(new SelectionListener() {
+      @Override
+      public void onSelectionOpened(SelectionId id, Selection selection) {
+        myLastSelection = selection;
+      }
+
+      @Override
+      public void onSelectionChanged(SelectionId id, Selection selection) {
+        myLastSelection = selection;
+      }
+
+      @Override
+      public void onSelectionClosed(SelectionId id) {
+        myLastSelection = null;
+      }
+    });
   }
 }
