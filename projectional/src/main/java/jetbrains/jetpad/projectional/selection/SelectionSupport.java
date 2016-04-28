@@ -232,7 +232,7 @@ public class SelectionSupport<ItemT> {
             int focusIndex = -1;
             boolean focusOnFirst = true;
 
-            if (!mySelectedItems.contains(currentItem) && (cursorIsInSinglePossiblePos(currentCell) || hasLowerPrioritySelection(currentCell))) {
+            if (!mySelectedItems.contains(currentItem) && (Positions.isOnePosition(currentCell) || hasLowerPrioritySelection(currentCell))) {
               mySelectedItems.add(currentItem);
               focusIndex = currentIndex;
               focusOnFirst = false;
@@ -302,7 +302,7 @@ public class SelectionSupport<ItemT> {
             int focusIndex = -1;
             boolean focusOnFirst = true;
 
-            if (!mySelectedItems.contains(currentItem) && (cursorIsInSinglePossiblePos(currentCell) || hasLowerPrioritySelection(currentCell))) {
+            if (!mySelectedItems.contains(currentItem) && (Positions.isOnePosition(currentCell) || hasLowerPrioritySelection(currentCell))) {
               mySelectedItems.add(0, currentItem);
               focusIndex = currentIndex;
               consumed = true;
@@ -338,24 +338,21 @@ public class SelectionSupport<ItemT> {
     }
   }
 
-  private boolean cursorIsInSinglePossiblePos(Cell cell) {
-    return Positions.isHomePosition(cell) && Positions.isEndPosition(cell);
-  }
-
   private boolean hasLowerPrioritySelection(Cell cell) {
     return mySelectionController != null
-        ? isLowerPrioritySelection(cell, mySelectionController.getLastSelection())
-        : walkTreeCheckHasLowerSelection(cell);
+        ? hasLowerSelectionInController(cell)
+        : hasLowerSelectionInTree(cell);
   }
 
-  private boolean isLowerPrioritySelection(Cell cell, Selection selection) {
+  private boolean hasLowerSelectionInController(Cell cell) {
+    Selection selection = mySelectionController.getLastSelection();
     return selection != null
         && Composites.isDescendant(cell, selection.getStart())
         && Composites.isDescendant(cell, selection.getEnd());
 
   }
 
-  private boolean walkTreeCheckHasLowerSelection(Cell cell) {
+  private boolean hasLowerSelectionInTree(Cell cell) {
     SelectionSupport<?> selection = cell.get(SELECTION_SUPPORT);
     if (selection != null && !selection.selection().isEmpty()) {
       return true;
@@ -368,7 +365,7 @@ public class SelectionSupport<ItemT> {
     return false;
   }
 
-  boolean isLowerPrioritySelection() {
+  private boolean isLowerPrioritySelection() {
     Cell current = myTarget;
     while (true) {
       Cell parent = current.getParent();

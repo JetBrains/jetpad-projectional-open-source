@@ -76,7 +76,7 @@ public class SelectionController {
     myLegacySelectionId = null;
   }
 
-  public Selection getLastSelection() {
+  Selection getLastSelection() {
     return myLastSelection;
   }
 
