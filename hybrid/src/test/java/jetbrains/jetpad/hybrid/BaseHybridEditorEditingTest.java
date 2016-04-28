@@ -1200,6 +1200,16 @@ abstract class BaseHybridEditorEditingTest<ContainerT, MapperT extends Mapper<Co
   }
 
   @Test
+  public void uncommentWithInnerComment() {
+    setTokens(integer(1), new CommentToken("#", " + 2 # + 3"));
+    select(1, true);
+
+    del();
+
+    assertTokens(integer(1), Tokens.PLUS, integer(2), new CommentToken("#", " + 3"));
+  }
+
+  @Test
   public void typeBeforeComment() {
     setTokens(new CommentToken("#", " + 3"));
     select(0, true);
@@ -1207,6 +1217,16 @@ abstract class BaseHybridEditorEditingTest<ContainerT, MapperT extends Mapper<Co
     type("1");
 
     assertTokens(integer(1), new CommentToken("#", " + 3"));
+  }
+
+  @Test
+  public void pasteBeforeComment() {
+    setTokens(new CommentToken("#", "test"));
+    select(0, true);
+
+    paste("1");
+
+    assertTokens(integer(1), new CommentToken("#", "test"));
   }
 
   @Test

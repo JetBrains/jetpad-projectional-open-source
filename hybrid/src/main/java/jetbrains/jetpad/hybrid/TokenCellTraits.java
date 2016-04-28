@@ -182,7 +182,7 @@ class TokenCellTraits {
           TextCell textCell = (TextCell) cell;
           String text = textCell.text().get();
           String prefix = commentToken.getPrefix();
-          if (!text.contains(prefix)) {
+          if (!text.startsWith(prefix)) {
             tokenOperations(cell).replaceCommentToken(cell, textCell).run();
             event.consume();
             return;
