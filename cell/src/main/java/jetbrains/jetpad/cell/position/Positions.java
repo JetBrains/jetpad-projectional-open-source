@@ -29,6 +29,10 @@ public class Positions {
     return last != null && last.focused().get() && last.get(PositionHandler.PROPERTY).isEnd();
   }
 
+  public static boolean isOnePosition(Cell cell) {
+    return isHomePosition(cell) && isEndPosition(cell);
+  }
+
   public static boolean isFirstPosition(Cell cell) {
     Cell firstFocusable = Composites.firstFocusable(cell, true);
     if (firstFocusable == null) return false;
