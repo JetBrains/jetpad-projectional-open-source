@@ -165,8 +165,10 @@ public class TextEditingTrait extends TextNavigationTrait {
 
     String text = "" + event.getKeyChar();
     pasteText(editor, text);
-    editor.scrollToCaret();
-    onAfterType(editor);
+    if (editor.isAttached()) {
+      editor.scrollToCaret();
+      onAfterType(editor);
+    }
     event.consume();
   }
 
@@ -178,7 +180,9 @@ public class TextEditingTrait extends TextNavigationTrait {
     CellTextEditor editor = TextEditing.cellTextEditor(cell);
     clearSelection(editor);
     pasteText(editor, content.get(ContentKinds.SINGLE_LINE_TEXT));
-    onAfterPaste(editor);
+    if (editor.isAttached()) {
+      onAfterPaste(editor);
+    }
     event.consume();
   }
 
@@ -211,7 +215,9 @@ public class TextEditingTrait extends TextNavigationTrait {
     } else {
       setText(editor, "" + text);
     }
-    editor.caretPosition().set(caret + text.length());
+    if (editor.isAttached()) {
+      editor.caretPosition().set(caret + text.length());
+    }
   }
 
   protected void setText(CellTextEditor editor, String text) {

@@ -39,6 +39,11 @@ abstract class CellTextEditor implements TextEditor {
   }
 
   @Override
+  public boolean isAttached() {
+    return myCell.isAttached();
+  }
+
+  @Override
   public boolean isFirstAllowed() {
     return myCell.get(TextEditing.FIRST_ALLOWED);
   }

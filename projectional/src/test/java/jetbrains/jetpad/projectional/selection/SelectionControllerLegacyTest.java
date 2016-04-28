@@ -40,18 +40,26 @@ import static org.junit.Assert.*;
 public class SelectionControllerLegacyTest extends EditingTestCase {
   private TestTreeMapper rootMapper;
   private List<Selection> selectionHistory = new ArrayList<>();
+  private MappingContext mappingContext;
+  private TestTree a, b, d, e, f, g, h, x, y, z;
 
   @Before
   public void setup() {
     TestTree root = new TestTree("root",
-      new TestTree("a",
+      a = new TestTree("a",
         new TestTree("c"),
-        new TestTree("d")),
-      new TestTree("b",
-        new TestTree("e"),
-        new TestTree("f")));
+        d = new TestTree("d"),
+        e = new TestTree("e"),
+        f = new TestTree("f")),
+      b = new TestTree("b"),
+      g = new TestTree("g",
+        h = new TestTree("h")),
+      x = new TestTree("x", false,
+        y = new TestTree("y", false),
+        z = new TestTree("z", false)));
     rootMapper = new TestTreeMapper(root);
-    rootMapper.attachRoot();
+    mappingContext = new MappingContext();
+    rootMapper.attachRoot(mappingContext);
     myCellContainer.root.children().add(rootMapper.getTarget());
     RootController.install(myCellContainer);
     SelectionController.install(myCellContainer);
@@ -88,23 +96,75 @@ public class SelectionControllerLegacyTest extends EditingTestCase {
 
   @Test
   public void range() {
-    CellActions.toFirstFocusable(rootMapper.getTarget()).run();
+    get(d).labelCell.focus();
     press(Key.RIGHT, ModifierKey.SHIFT);
-    assertEquals(2, selectionHistory.size()); // [c, c], [c, d]
+    assertHistory(selection(get(d), get(d)));
     press(Key.RIGHT, ModifierKey.SHIFT);
-    assertEquals(4, selectionHistory.size()); // [c, c], [c, d], [a, a], [a, b]
+    assertHistory(selection(get(d), get(d)), selection(get(d), get(e)));
 
-    CellActions.toFirstFocusable(rootMapper.getTarget()).run();
+    get(b).labelCell.focus();
     assertTrue(selectionHistory.isEmpty());
   }
 
   @Test
   public void backwardRange() {
+    CellActions.toEnd(get(e).labelCell).run();
+    press(Key.LEFT, ModifierKey.SHIFT);
+    assertHistory(selection(get(e), get(e)));
+    press(Key.LEFT, ModifierKey.SHIFT);
+    assertHistory(selection(get(e), get(e)), selection(get(d), get(e)));
+  }
+
+  @Test
+  public void backwardMultilayer() {
+    CellActions.toEnd(get(h).labelCell).run();
+    press(Key.LEFT, ModifierKey.SHIFT);
+    assertHistory(selection(get(h), get(h)));
+
+    press(Key.LEFT, ModifierKey.SHIFT);
+    assertHistory(selection(get(h), get(h)), selection(get(g), get(g)));
+
+    press(Key.LEFT, ModifierKey.SHIFT);
+    assertHistory(selection(get(h), get(h)), selection(get(g), get(g)), selection(get(b), get(g)));
+
+    press(Key.LEFT, ModifierKey.SHIFT);
+    assertHistory(selection(get(h), get(h)), selection(get(g), get(g)), selection(get(b), get(g)), selection(get(a), get(g)));
+  }
+
+  @Test
+  public void escalation() {
+    CellActions.toHome(get(f).labelCell).run();
+    press(Key.RIGHT, ModifierKey.SHIFT);
+    assertHistory(selection(get(f), get(f)));
+
+    press(Key.RIGHT, ModifierKey.SHIFT);
+    assertHistory(selection(get(f), get(f)), selection(get(a), get(a)), selection(get(a), get(b)));
+  }
+
+  @Test
+  public void backwardEscalation() {
     CellActions.toLastFocusable(rootMapper.getTarget()).run();
     press(Key.LEFT, ModifierKey.SHIFT);
-    assertEquals(2, selectionHistory.size());
+    assertHistory(selection(get(z), get(z)), selection(get(y), get(z)));
+
     press(Key.LEFT, ModifierKey.SHIFT);
-    assertEquals(4, selectionHistory.size());
+    assertHistory(selection(get(z), get(z)), selection(get(y), get(z)), selection(get(x), get(x)), selection(get(g), get(x)));
+  }
+
+  private TestCell get(TestTree source) {
+    return (TestCell)mappingContext.getMapper(rootMapper, source).getTarget();
+  }
+
+  private Selection selection(Cell start, Cell end) {
+    return new SimpleSelection(start, null, end, null);
+  }
+
+  private void assertHistory(Selection... history) {
+    assertEquals(history.length, selectionHistory.size());
+    for (int i = 0; i < history.length; i++) {
+      assertSame(i + " item start", history[i].getStart(), selectionHistory.get(i).getStart());
+      assertSame(i + " item end", history[i].getEnd(), selectionHistory.get(i).getEnd());
+    }
   }
 
   private static class TestCell extends VerticalCell {
@@ -112,8 +172,9 @@ public class SelectionControllerLegacyTest extends EditingTestCase {
     final TextCell labelCell = text("");
     String label;
 
-    public TestCell() {
+    private TestCell(boolean focusable) {
       to(this, labelCell, branches);
+      labelCell.set(FOCUSABLE, focusable);
     }
 
     private void setLabel(String label) {
@@ -138,7 +199,7 @@ public class SelectionControllerLegacyTest extends EditingTestCase {
 
     private ProjectionalRoleSynchronizer<TestTree, TestTree> sync;
     private TestTreeMapper(TestTree source) {
-      super(source, new TestCell());
+      super(source, new TestCell(source.focusable));
     }
 
     @Override
@@ -156,11 +217,17 @@ public class SelectionControllerLegacyTest extends EditingTestCase {
 
   private static class TestTree {
     private final String text;
+    private final boolean focusable;
     private final ObservableList<TestTree> branches = new ObservableArrayList<>();
 
     private TestTree(String text, TestTree ... branches) {
+      this(text, true, branches);
+    }
+
+    private TestTree(String text, boolean focusable, TestTree ... branches) {
       Collections.addAll(this.branches, branches);
       this.text = text;
+      this.focusable = focusable;
     }
   }
 }
