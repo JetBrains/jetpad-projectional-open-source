@@ -28,18 +28,23 @@ import jetbrains.jetpad.mapper.Mapper;
 import jetbrains.jetpad.mapper.MapperFactory;
 import jetbrains.jetpad.mapper.Synchronizers;
 import jetbrains.jetpad.model.event.CompositeRegistration;
-import jetbrains.jetpad.model.property.DerivedProperty;
-import jetbrains.jetpad.model.property.Properties;
-import jetbrains.jetpad.model.property.ReadableProperty;
-import jetbrains.jetpad.model.property.WritableProperty;
+import jetbrains.jetpad.model.event.EventHandler;
+import jetbrains.jetpad.model.property.*;
 import jetbrains.jetpad.values.Color;
 
 import java.util.Arrays;
+
+import static jetbrains.jetpad.model.property.Properties.and;
+import static jetbrains.jetpad.model.property.Properties.ifProp;
+import static jetbrains.jetpad.model.property.Properties.isEmpty;
+import static jetbrains.jetpad.model.property.Properties.not;
+import static jetbrains.jetpad.model.property.Properties.or;
 
 class CompletionMenu {
   private static final Color BACKGROUND = new Color(226, 242, 254);
   private static final Color SELECTED_BACKGROUND = new Color(0, 62, 149);
   private static final Color MATCH_TEXT = new Color(247, 232, 193);
+  static final int EMPTY_COMPLETION_DELAY = 1500;
 
   static Cell createCell(CompletionMenuModel model, Handler<CompletionItem> completer, CompositeRegistration reg) {
     final CompletionMenuModelMapper mapper = new CompletionMenuModelMapper(model, completer);
@@ -63,8 +68,6 @@ class CompletionMenu {
 
     private CompletionMenuModelMapper(CompletionMenuModel source, Handler<CompletionItem> completer) {
       super(source, new ScrollCell());
-
-      myEmptyCell.textColor().set(Color.RED);
 
       myCompleter = completer;
 
@@ -93,9 +96,29 @@ class CompletionMenu {
             }
           }));
 
-      conf.add(Synchronizers.forPropsOneWay(getSource().loading, Properties.ifProp(myEmptyCell.text(), "Loading...", "<no completion items>")));
-      conf.add(Synchronizers.forPropsOneWay(getSource().loading, Properties.ifProp(myEmptyCell.textColor(), Color.GRAY, Color.RED)));
-      conf.add(Synchronizers.forPropsOneWay(Properties.isEmpty(getSource().visibleItems), myEmptyCell.visible()));
+      conf.add(Synchronizers.forPropsOneWay(getSource().loading, ifProp(myEmptyCell.text(), "Loading...", "<no completion items>")));
+      conf.add(Synchronizers.forPropsOneWay(getSource().loading, ifProp(myEmptyCell.textColor(), Color.GRAY, Color.RED)));
+
+      final Property<Boolean> delayPassed = new ValueProperty<>(false);
+      conf.add(Synchronizers.forPropsOneWay(
+          and(isEmpty(getSource().visibleItems), or(delayPassed, not(getSource().loading))),
+          myEmptyCell.visible()));
+
+      final CompositeRegistration delayReg = new CompositeRegistration();
+      delayReg.add(getTarget().cellContainer().addHandler(new EventHandler<PropertyChangeEvent<CellContainer>>() {
+        @Override
+        public void onEvent(PropertyChangeEvent<CellContainer> event) {
+          if (event.getNewValue() != null && getSource().loading.get() && !delayPassed.get()) {
+            delayReg.add(event.getNewValue().getEdt().schedule(EMPTY_COMPLETION_DELAY, new Runnable() {
+              @Override
+              public void run() {
+                delayPassed.set(true);
+              }
+            }));
+          }
+        }
+      }));
+      conf.add(Synchronizers.forRegistration(delayReg));;
     }
   }
 
