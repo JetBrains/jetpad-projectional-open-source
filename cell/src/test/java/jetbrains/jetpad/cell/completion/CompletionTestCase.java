@@ -76,7 +76,7 @@ public abstract class CompletionTestCase extends EditingTestCase {
     };
   }
 
-  private Iterable<CompletionItem> createItems(String... items) {
+  protected Iterable<CompletionItem> createItems(String... items) {
     List<CompletionItem> result = new ArrayList<>();
     for (String i : items) {
       result.add(new SetTextToCompletionItem(i));
@@ -110,6 +110,4 @@ public abstract class CompletionTestCase extends EditingTestCase {
       return Runnables.EMPTY;
     }
   }
-
-
 }

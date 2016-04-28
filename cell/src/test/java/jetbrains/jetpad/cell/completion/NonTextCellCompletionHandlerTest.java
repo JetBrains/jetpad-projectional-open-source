@@ -17,6 +17,7 @@ package jetbrains.jetpad.cell.completion;
 
 import jetbrains.jetpad.cell.Cell;
 import jetbrains.jetpad.cell.HorizontalCell;
+import jetbrains.jetpad.cell.ScrollCell;
 import org.junit.Before;
 
 public class NonTextCellCompletionHandlerTest extends CompletionHandlerTestCase {
@@ -35,5 +36,10 @@ public class NonTextCellCompletionHandlerTest extends CompletionHandlerTestCase 
   @Override
   protected Cell getView() {
     return target;
+  }
+
+  @Override
+  protected ScrollCell getCompletionMenu() {
+    return (ScrollCell) getView().frontPopup().get().children().get(0).bottomPopup().get();
   }
 }

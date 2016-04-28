@@ -15,18 +15,26 @@
  */
 package jetbrains.jetpad.cell.completion;
 
-import jetbrains.jetpad.cell.Cell;
-import jetbrains.jetpad.cell.TextCell;
+import jetbrains.jetpad.base.Async;
+import jetbrains.jetpad.base.SimpleAsync;
+import jetbrains.jetpad.base.edt.TestEventDispatchThread;
+import jetbrains.jetpad.cell.*;
 import jetbrains.jetpad.cell.text.TextEditing;
 import jetbrains.jetpad.cell.text.TextEditingTrait;
 import jetbrains.jetpad.cell.text.TextEditor;
+import jetbrains.jetpad.cell.trait.CellTrait;
+import jetbrains.jetpad.cell.trait.CellTraitPropertySpec;
 import jetbrains.jetpad.completion.CompletionController;
+import jetbrains.jetpad.completion.CompletionItem;
+import jetbrains.jetpad.completion.CompletionParameters;
+import jetbrains.jetpad.completion.CompletionSupplier;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
 
 public abstract class CompletionHandlerTestCase extends CompletionTestCase {
   protected abstract Cell getView();
+  protected abstract ScrollCell getCompletionMenu();
 
   protected CompletionController getController() {
     return getView().get(Completion.COMPLETION_CONTROLLER);
@@ -100,5 +108,58 @@ public abstract class CompletionHandlerTestCase extends CompletionTestCase {
     getView().set(CompletionSupport.EDITOR, editor);
     textCell.focus();
     return editor;
+  }
+
+  @Test
+  public void loadingCompletionPlaceholderShownAfterDelay() {
+    final TestEventDispatchThread edt = new TestEventDispatchThread();
+    CellContainerEdtUtil.resetEdt(myCellContainer, edt);
+
+    getView().addTrait(new CellTrait() {
+      @Override
+      public Object get(Cell cell, CellTraitPropertySpec<?> spec) {
+        if (spec == Completion.COMPLETION) {
+          return new CompletionSupplier() {
+            @Override
+            public Async<Iterable<CompletionItem>> getAsync(CompletionParameters cp) {
+              final SimpleAsync<Iterable<CompletionItem>> completionAsync = new SimpleAsync<>();
+              edt.schedule(CompletionMenu.EMPTY_COMPLETION_DELAY + 1, new Runnable() {
+                @Override
+                public void run() {
+                  completionAsync.success(createItems("a", "b"));
+                }
+              });
+              return completionAsync;
+            }
+          };
+        }
+        return super.get(cell, spec);
+      }
+    });
+
+    complete();
+    assertCompletionMenuState(false, false, null);
+
+    edt.executeUpdates(CompletionMenu.EMPTY_COMPLETION_DELAY);
+    assertCompletionMenuState(false, true, "Loading");
+
+    edt.executeUpdates(1);
+    assertCompletionMenuState(true, false, null);
+  }
+
+  protected final void assertCompletionMenuState(boolean hasCompletionItems, boolean placeholderVisible,
+      String placeholderText) {
+    assertTrue(getController().isActive());
+
+    ScrollCell menu = getCompletionMenu();
+    VerticalCell content = (VerticalCell) menu.children().get(0);
+    assertEquals(2, content.children().size());
+    VerticalCell items = (VerticalCell) content.children().get(0);
+    assertEquals(hasCompletionItems, !items.children().isEmpty());
+    TextCell placeholder = (TextCell) content.children().get(1);
+    assertEquals(placeholderVisible, placeholder.visible().get());
+    if (placeholderVisible) {
+      assertTrue(placeholder.text().get().contains(placeholderText));
+    }
   }
 }

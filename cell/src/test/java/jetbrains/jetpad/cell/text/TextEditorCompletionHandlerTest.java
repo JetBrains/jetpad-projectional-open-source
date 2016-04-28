@@ -15,7 +15,10 @@
  */
 package jetbrains.jetpad.cell.text;
 
+import jetbrains.jetpad.base.edt.TestEventDispatchThread;
 import jetbrains.jetpad.cell.Cell;
+import jetbrains.jetpad.cell.CellContainerEdtUtil;
+import jetbrains.jetpad.cell.ScrollCell;
 import jetbrains.jetpad.cell.TextCell;
 import jetbrains.jetpad.cell.completion.CompletionHandlerTestCase;
 import jetbrains.jetpad.cell.indent.IndentCell;
@@ -40,6 +43,11 @@ public class TextEditorCompletionHandlerTest extends CompletionHandlerTestCase {
     return text;
   }
 
+  @Override
+  protected ScrollCell getCompletionMenu() {
+    return (ScrollCell) getView().bottomPopup().get();
+  }
+
   @Test
   public void indentContainer() {
     TextCell text = new TextCell("");
@@ -58,5 +66,17 @@ public class TextEditorCompletionHandlerTest extends CompletionHandlerTestCase {
 
     escape();
     assertNoBottomPopup(text);
+  }
+
+  @Test
+  public void emptyCompletionPlaceholderShownImmediately() {
+    final TestEventDispatchThread edt = new TestEventDispatchThread();
+    CellContainerEdtUtil.resetEdt(myCellContainer, edt);
+
+    getView().addTrait(createCompletionTrait("a", "b"));
+
+    type("x");
+    complete();
+    assertCompletionMenuState(false, true, "no completion items");
   }
 }
