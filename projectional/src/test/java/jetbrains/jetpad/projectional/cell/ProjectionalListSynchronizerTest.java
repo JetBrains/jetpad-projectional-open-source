@@ -16,7 +16,6 @@
 package jetbrains.jetpad.projectional.cell;
 
 import com.google.common.base.Function;
-import com.google.common.base.Predicate;
 import com.google.common.base.Supplier;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
@@ -1099,12 +1098,7 @@ public class ProjectionalListSynchronizerTest extends EditingTestCase {
 
   @Test
   public void replaceWithNewOnRemove() {
-    rootMapper.mySynchronizer.replaceWithNewOnRemove(new Predicate<Child>() {
-      @Override
-      public boolean apply(Child child) {
-        return !(child instanceof EmptyChild);
-      }
-    });
+    rootMapper.mySynchronizer.setReplaceNonemptyWithNewOnRemove(true);
     container.children.add(new NonEmptyChild());
     selectChild(0);
     backspace();

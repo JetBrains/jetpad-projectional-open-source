@@ -49,7 +49,7 @@ class ProjectionalObservableListSynchronizer<ContextT, SourceItemT> extends Base
   static final CellTraitPropertySpec<ItemHandler> ITEM_HANDLER = new CellTraitPropertySpec<>("itemHandler");
 
   private ObservableList<SourceItemT> mySource;
-  private Predicate<SourceItemT> myReplaceWithNewOnRemove = Predicates.alwaysFalse();
+  private boolean myReplaceNonemptyWithNewOnRemove;
 
   ProjectionalObservableListSynchronizer(
       Mapper<? extends ContextT, ? extends Cell> mapper,
@@ -142,7 +142,7 @@ class ProjectionalObservableListSynchronizer<ContextT, SourceItemT> extends Base
   }
 
   private void keyPressedInChild(KeyEvent event) {
-    new CollectionEditor<SourceItemT, Cell>(mySource, getChildCells(), getForDeletion(), canCreateNewItem(), myReplaceWithNewOnRemove) {
+    new CollectionEditor<SourceItemT, Cell>(mySource, getChildCells(), getForDeletion(), canCreateNewItem(), replaceOnRemovePredicate()) {
       @Override
       protected SourceItemT newItem() {
         return ProjectionalObservableListSynchronizer.this.newItem();
@@ -220,6 +220,15 @@ class ProjectionalObservableListSynchronizer<ContextT, SourceItemT> extends Base
     }.handleKey(currentCell(), event);
   }
 
+  private Predicate<Cell> replaceOnRemovePredicate() {
+    return myReplaceNonemptyWithNewOnRemove ? new Predicate<Cell>() {
+      @Override
+      public boolean apply(Cell cell) {
+        return !Cells.isEmpty(cell);
+      }
+    } : Predicates.<Cell>alwaysFalse();
+  }
+
   private CompletionSupplier getCurrentChildCompletion() {
     return createCompletion(new Role<SourceItemT>() {
       @Override
@@ -284,11 +293,11 @@ class ProjectionalObservableListSynchronizer<ContextT, SourceItemT> extends Base
   }
 
   @Override
-  public void replaceWithNewOnRemove(Predicate<SourceItemT> shouldReplace) {
+  public void setReplaceNonemptyWithNewOnRemove(boolean replaceWithNew) {
     if (!canCreateNewItem()) {
       throw new IllegalStateException("Can't create new items");
     }
-    myReplaceWithNewOnRemove = shouldReplace;
+    myReplaceNonemptyWithNewOnRemove = replaceWithNew;
   }
 
   interface ItemHandler {
