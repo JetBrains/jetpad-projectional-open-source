@@ -15,7 +15,6 @@
  */
 package jetbrains.jetpad.cell.toDom;
 
-import com.google.common.base.Strings;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Node;
 import com.google.gwt.user.client.DOM;
@@ -48,7 +47,7 @@ class IndentRootCellMapper extends BaseCellMapper<IndentCell> {
   private IndentUpdater<Node> myIndentUpdater;
   private Registration myRegistration;
 
-  IndentRootCellMapper(IndentCell source, CellToDomContext ctx) {
+  IndentRootCellMapper(final IndentCell source, CellToDomContext ctx) {
     super(source, ctx, DOM.createDiv());
     myCellMappers = createChildSet();
 
@@ -67,7 +66,7 @@ class IndentRootCellMapper extends BaseCellMapper<IndentCell> {
         public Element newIndent(int size) {
           Element result = DOM.createDiv();
           DomTextEditor editor = new DomTextEditor(result);
-          editor.setText(Strings.repeat("  ", size));
+          editor.setText(IndentUtil.getIndentText(size, source.getIndentNumSpaces()));
           return result;
         }
 
