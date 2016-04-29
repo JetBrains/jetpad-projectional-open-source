@@ -16,6 +16,7 @@
 package jetbrains.jetpad.projectional.cell;
 
 import com.google.common.base.Function;
+import com.google.common.base.Predicate;
 import com.google.common.base.Supplier;
 import jetbrains.jetpad.event.ContentKind;
 import jetbrains.jetpad.mapper.RoleSynchronizer;
@@ -37,6 +38,7 @@ public interface ProjectionalRoleSynchronizer<ContextT, SourceT> extends RoleSyn
   void disablePlaceholder();
   void setItemFactory(Supplier<SourceT> itemFactory);
   void setSeparator(Character ch);
+  void replaceWithNewOnRemove(Predicate<SourceT> shouldReplace);
 
   SourceT getFocusedItem();
 

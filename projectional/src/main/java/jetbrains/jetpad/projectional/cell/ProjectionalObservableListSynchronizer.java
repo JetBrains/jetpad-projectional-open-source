@@ -15,6 +15,8 @@
  */
 package jetbrains.jetpad.projectional.cell;
 
+import com.google.common.base.Predicate;
+import com.google.common.base.Predicates;
 import jetbrains.jetpad.base.Registration;
 import jetbrains.jetpad.base.Runnables;
 import jetbrains.jetpad.cell.Cell;
@@ -47,6 +49,7 @@ class ProjectionalObservableListSynchronizer<ContextT, SourceItemT> extends Base
   static final CellTraitPropertySpec<ItemHandler> ITEM_HANDLER = new CellTraitPropertySpec<>("itemHandler");
 
   private ObservableList<SourceItemT> mySource;
+  private Predicate<SourceItemT> myReplaceWithNewOnRemove = Predicates.alwaysFalse();
 
   ProjectionalObservableListSynchronizer(
       Mapper<? extends ContextT, ? extends Cell> mapper,
@@ -139,7 +142,7 @@ class ProjectionalObservableListSynchronizer<ContextT, SourceItemT> extends Base
   }
 
   private void keyPressedInChild(KeyEvent event) {
-    new CollectionEditor<SourceItemT, Cell>(mySource, getChildCells(), getForDeletion(), canCreateNewItem()) {
+    new CollectionEditor<SourceItemT, Cell>(mySource, getChildCells(), getForDeletion(), canCreateNewItem(), myReplaceWithNewOnRemove) {
       @Override
       protected SourceItemT newItem() {
         return ProjectionalObservableListSynchronizer.this.newItem();
@@ -278,6 +281,14 @@ class ProjectionalObservableListSynchronizer<ContextT, SourceItemT> extends Base
 
   private boolean isEmpty(int index) {
     return Cells.isEmpty(getChildCells().get(index));
+  }
+
+  @Override
+  public void replaceWithNewOnRemove(Predicate<SourceItemT> shouldReplace) {
+    if (!canCreateNewItem()) {
+      throw new IllegalStateException("Can't create new items");
+    }
+    myReplaceWithNewOnRemove = shouldReplace;
   }
 
   interface ItemHandler {

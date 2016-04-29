@@ -15,6 +15,7 @@
  */
 package jetbrains.jetpad.projectional.cell;
 
+import com.google.common.base.Predicate;
 import jetbrains.jetpad.base.Registration;
 import jetbrains.jetpad.cell.Cell;
 import jetbrains.jetpad.cell.TextCell;
@@ -160,5 +161,10 @@ class ProjectionalPropertySynchronizer<ContextT, SourceItemT> extends BaseProjec
     if (getTarget().get(ProjectionalSynchronizers.DELETE_ON_EMPTY)) {
       getTarget().dispatch(new Event(), Cells.BECAME_EMPTY);
     }
+  }
+
+  @Override
+  public void replaceWithNewOnRemove(Predicate<SourceItemT> shouldReplace) {
+    throw new UnsupportedOperationException("Use onLastItemDeleted instead");
   }
 }
