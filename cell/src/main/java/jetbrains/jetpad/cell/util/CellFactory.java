@@ -60,7 +60,11 @@ public class CellFactory {
   }
 
   public static IndentCell indent(boolean indent, Cell... cells) {
-    IndentCell result = new IndentCell(indent);
+    return indent(indent, IndentCell.DEFAULT_INDENT_NUM_SPACES, cells);
+  }
+
+  public static IndentCell indent(boolean indent, int indentNumSpaces, Cell... cells) {
+    IndentCell result = new IndentCell(indent, indentNumSpaces);
     result.children().addAll(Arrays.asList(cells));
     return result;
   }
