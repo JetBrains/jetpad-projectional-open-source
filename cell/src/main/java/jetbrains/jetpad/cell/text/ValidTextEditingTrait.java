@@ -30,10 +30,7 @@ import jetbrains.jetpad.cell.util.Cells;
 import jetbrains.jetpad.completion.BaseCompletionParameters;
 import jetbrains.jetpad.completion.CompletionItem;
 import jetbrains.jetpad.completion.CompletionParameters;
-import jetbrains.jetpad.event.Event;
-import jetbrains.jetpad.event.Key;
-import jetbrains.jetpad.event.KeyEvent;
-import jetbrains.jetpad.event.ModifierKey;
+import jetbrains.jetpad.event.*;
 import jetbrains.jetpad.model.property.PropertyChangeEvent;
 import jetbrains.jetpad.values.Color;
 
@@ -55,7 +52,7 @@ class ValidTextEditingTrait extends TextEditingTrait {
 
   @Override
   public void onAdd(Cell cell) {
-    validate(cell);
+    validate(cell, null);
   }
 
   @Override
@@ -82,17 +79,18 @@ class ValidTextEditingTrait extends TextEditingTrait {
   @Override
   public void onPropertyChanged(Cell cell, CellPropertySpec<?> prop, PropertyChangeEvent<?> e) {
     if (prop == TextCell.TEXT) {
-      validate(cell);
+      validate(cell, new PropertyChangeEventWrapper(e));
     }
     super.onPropertyChanged(cell, prop, e);
   }
 
-  private void validate(Cell cell) {
+  private void validate(Cell cell, Event cause) {
     CellTextEditor editor = TextEditing.cellTextEditor(cell);
     boolean valid = isValid(editor);
     MessageController.setBroken(cell, valid ? null : "Cannot resolve '" + TextEditing.text(editor) + '\'');
     if (!valid) {
-      cell.dispatch(new Event(), Cells.BECAME_INVALID);
+      Event becameInvalidEvent = cause != null ? new DerivedEvent(cause) : new Event();
+      cell.dispatch(becameInvalidEvent, Cells.BECAME_INVALID);
     }
   }
 

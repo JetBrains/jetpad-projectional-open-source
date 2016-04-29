@@ -2,6 +2,7 @@
   <inherits name="com.google.gwt.query.Query"/>
   <inherits name="jetbrains.jetpad.base.Base"/>
   <inherits name="jetbrains.jetpad.geometry.Geometry"/>
+  <inherits name="jetbrains.jetpad.model.Model"/>
   <source path="">
     <exclude name="awt/**" />
   </source>
