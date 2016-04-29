@@ -46,16 +46,19 @@ import java.util.List;
 class ProjectionalObservableListSynchronizer<ContextT, SourceItemT> extends BaseProjectionalSynchronizer<ObservableList<SourceItemT>, ContextT, SourceItemT> {
   static final CellTraitPropertySpec<ItemHandler> ITEM_HANDLER = new CellTraitPropertySpec<>("itemHandler");
 
-  private ObservableList<SourceItemT> mySource;
+  private final ObservableList<SourceItemT> mySource;
+  private final int myNumAllowedEmptyLines;
 
   ProjectionalObservableListSynchronizer(
       Mapper<? extends ContextT, ? extends Cell> mapper,
       ObservableList<SourceItemT> source,
       Cell target,
       List<Cell> targetList,
-      MapperFactory<SourceItemT, Cell> factory) {
+      MapperFactory<SourceItemT, Cell> factory,
+      int numAllowedEmptyLines) {
     super(mapper, source, target, targetList, factory);
     mySource = source;
+    myNumAllowedEmptyLines = numAllowedEmptyLines;
   }
 
   @Override
@@ -139,7 +142,7 @@ class ProjectionalObservableListSynchronizer<ContextT, SourceItemT> extends Base
   }
 
   private void keyPressedInChild(KeyEvent event) {
-    new CollectionEditor<SourceItemT, Cell>(mySource, getChildCells(), getForDeletion(), canCreateNewItem()) {
+    new CollectionEditor<SourceItemT, Cell>(mySource, getChildCells(), getForDeletion(), canCreateNewItem(), myNumAllowedEmptyLines) {
       @Override
       protected SourceItemT newItem() {
         return ProjectionalObservableListSynchronizer.this.newItem();

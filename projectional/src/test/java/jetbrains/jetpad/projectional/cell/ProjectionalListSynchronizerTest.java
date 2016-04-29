@@ -1060,18 +1060,35 @@ public class ProjectionalListSynchronizerTest extends EditingTestCase {
 
   @Test
   public void canCreateItemCheck() {
-    RecordCompositeChild recordCompositeChild = new RecordCompositeChild();
-    container.children.add(recordCompositeChild);
+    NoItemFactoryRecordList recordList = new NoItemFactoryRecordList();
+    container.children.add(recordList);
     CompositeRecord compositeRecord = new CompositeRecord();
-    recordCompositeChild.records.add(compositeRecord);
+    recordList.records.add(compositeRecord);
     selectFirst(0);
 
     enter();
     enter();
 
     assertEquals(0, compositeRecord.records.size());
-    assertEquals(1, recordCompositeChild.records.size());
+    assertEquals(1, recordList.records.size());
     assertEquals(2, container.children.size());
+  }
+
+  @Test
+  public void emptyLinesAtTheEnd() {
+    RecordList recordList = new RecordList();
+    container.children.add(recordList);
+    CompositeRecord compositeRecord = new CompositeRecord();
+    recordList.records.add(compositeRecord);
+    selectFirst(0);
+
+    enter();
+    enter();
+    enter();
+
+    assertEquals(0, compositeRecord.records.size());
+    assertEquals(3, recordList.records.size());
+    assertEquals(1, container.children.size());
   }
 
   @Test
@@ -1190,8 +1207,12 @@ public class ProjectionalListSynchronizerTest extends EditingTestCase {
           return new EmptyCompositeChildMapper((EmptyCompositeChild) source);
         }
 
-        if (source instanceof RecordCompositeChild) {
-          return new RecordCompositeChildMapper((RecordCompositeChild) source);
+        if (source instanceof NoItemFactoryRecordList) {
+          return new RecordListMapper((NoItemFactoryRecordList) source, false);
+        }
+
+        if (source instanceof RecordList) {
+          return new RecordListMapper((RecordList) source, true);
         }
 
         if (source instanceof DeleteOnEmptyChild) {
@@ -1293,7 +1314,7 @@ public class ProjectionalListSynchronizerTest extends EditingTestCase {
   private ProjectionalRoleSynchronizer<Object, Record> createRecordSynchronizer(
       Mapper<?, ? extends Cell> contextMapper, Cell target, ObservableList<Record> list, boolean hasItemFactory) {
     ProjectionalRoleSynchronizer<Object, Record> result =
-        ProjectionalSynchronizers.forRole(contextMapper, list, target, createRecordMapperFactory());
+        ProjectionalSynchronizers.forRole(contextMapper, list, target, createRecordMapperFactory(), 2);
 
     if (hasItemFactory) {
       result.setItemFactory(new Supplier<Record>() {
@@ -1356,8 +1377,16 @@ public class ProjectionalListSynchronizerTest extends EditingTestCase {
     final ObservableList<Child> children = new ObservableArrayList<>();
   }
 
-  private class RecordCompositeChild extends Child {
+  private class NoItemFactoryRecordList extends RecordList {
+    private NoItemFactoryRecordList() {
+    }
+  }
+
+  private class RecordList extends Child {
     final ObservableList<Record> records = new ObservableArrayList<>();
+
+    private RecordList() {
+    }
   }
 
   private class NonSelectableChild extends Child {
@@ -1580,15 +1609,19 @@ public class ProjectionalListSynchronizerTest extends EditingTestCase {
     }
   }
 
-  private class RecordCompositeChildMapper extends Mapper<RecordCompositeChild, VerticalCell> {
-    private RecordCompositeChildMapper(RecordCompositeChild source) {
+  private class RecordListMapper extends Mapper<RecordList, VerticalCell> {
+
+    private final boolean myHasItemFactory;
+
+    private RecordListMapper(RecordList source, boolean hasItemFactory) {
       super(source, new VerticalCell());
+      myHasItemFactory = hasItemFactory;
     }
 
     @Override
     protected void registerSynchronizers(SynchronizersConfiguration conf) {
       super.registerSynchronizers(conf);
-      conf.add(createRecordSynchronizer(this, getTarget(), getSource().records, false));
+      conf.add(createRecordSynchronizer(this, getTarget(), getSource().records, myHasItemFactory));
     }
   }
 

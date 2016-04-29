@@ -24,16 +24,19 @@ import jetbrains.jetpad.model.property.Property;
 import java.util.List;
 
 public abstract class CollectionEditor<ItemT, ViewT> {
-  private List<ItemT> myItems;
-  private List<ViewT> myViews;
-  private Property<ItemT> myForDeletion;
-  private boolean myCanCreateNew;
+  private final List<ItemT> myItems;
+  private final List<ViewT> myViews;
+  private final Property<ItemT> myForDeletion;
+  private final boolean myCanCreateNew;
+  private final int myNumAllowedEmptyLines;
 
-  protected CollectionEditor(List<ItemT> items, List<ViewT> views, Property<ItemT> forDeletion, boolean canCreateNew) {
+  protected CollectionEditor(List<ItemT> items, List<ViewT> views, Property<ItemT> forDeletion, boolean canCreateNew,
+      int numAllowedEmptyLines) {
     myItems = items;
     myViews = views;
     myForDeletion = forDeletion;
     myCanCreateNew = canCreateNew;
+    myNumAllowedEmptyLines = numAllowedEmptyLines;
   }
 
   protected abstract ItemT newItem();
@@ -65,6 +68,17 @@ public abstract class CollectionEditor<ItemT, ViewT> {
     return isEmpty(myViews.get(index));
   }
 
+  private int getNumEmptyLinesBefore(int index) {
+    int count = 0;
+    for (int i = index - 1; i >= 0; i--) {
+      if (!isEmpty(i)) {
+        break;
+      }
+      count++;
+    }
+    return count;
+  }
+
   public void handleKey(ViewT cell, KeyEvent event) {
     int index = myViews.indexOf(cell);
     boolean isHome = isHome(cell);
@@ -76,9 +90,13 @@ public abstract class CollectionEditor<ItemT, ViewT> {
         if (!isEmpty(index)) {
           selectOnCreation(index);
         } else if (isEmpty(index + 1) && index + 1 == myViews.size() - 1) {
-          if (addAfterParent()) {
+          int numEmptyLinesBefore = getNumEmptyLinesBefore(index);
+          if ((index == 0 || numEmptyLinesBefore >= myNumAllowedEmptyLines) && addAfterParent()) {
             myItems.remove(index + 1);
             myItems.remove(index);
+            for (int i = 0; i < numEmptyLinesBefore; i++) {
+              myItems.remove(index - 1 - i);
+            }
           }
         }
         event.consume();
