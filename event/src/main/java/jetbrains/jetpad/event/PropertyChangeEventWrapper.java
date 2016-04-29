@@ -18,9 +18,17 @@ package jetbrains.jetpad.event;
 import jetbrains.jetpad.model.property.PropertyChangeEvent;
 
 public class PropertyChangeEventWrapper extends Event {
-  public final PropertyChangeEvent<?> event;
+  private final PropertyChangeEvent<?> myEvent;
 
   public PropertyChangeEventWrapper(PropertyChangeEvent<?> event) {
-    this.event = event;
+    myEvent = event;
+  }
+
+  public Object getOldValue() {
+    return myEvent.getOldValue();
+  }
+
+  public Object getNewValue() {
+    return myEvent.getNewValue();
   }
 }

@@ -16,9 +16,13 @@
 package jetbrains.jetpad.event;
 
 public class DerivedEvent extends Event {
-  public final Event cause;
+  private final Event myCause;
 
   public DerivedEvent(Event cause) {
-    this.cause = cause;
+    myCause = cause;
+  }
+
+  public Event getCause() {
+    return myCause;
   }
 }

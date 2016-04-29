@@ -18,7 +18,7 @@ package jetbrains.jetpad.event;
 public class Events {
   public static Event getCause(Event e) {
     while (e instanceof DerivedEvent) {
-      e = ((DerivedEvent) e).cause;
+      e = ((DerivedEvent) e).getCause();
     }
     return e;
   }

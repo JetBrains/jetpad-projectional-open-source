@@ -191,7 +191,7 @@ class TokenCellTraits {
     private boolean isUncomment(Event e, String prefix) {
       Event cause = Events.getCause(e);
       if (cause instanceof PropertyChangeEventWrapper) {
-        PropertyChangeEvent<?> event = ((PropertyChangeEventWrapper) cause).event;
+        PropertyChangeEventWrapper event = (PropertyChangeEventWrapper) cause;
         if (event.getOldValue() instanceof String && event.getNewValue() instanceof String) {
           String oldText = (String) event.getOldValue();
           String newText = (String) event.getNewValue();
