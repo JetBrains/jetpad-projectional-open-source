@@ -161,9 +161,4 @@ class ProjectionalPropertySynchronizer<ContextT, SourceItemT> extends BaseProjec
       getTarget().dispatch(new Event(), Cells.BECAME_EMPTY);
     }
   }
-
-  @Override
-  public void setReplaceNonemptyWithNewOnRemove(boolean replaceWithNew) {
-    throw new UnsupportedOperationException("Use onLastItemDeleted instead");
-  }
 }

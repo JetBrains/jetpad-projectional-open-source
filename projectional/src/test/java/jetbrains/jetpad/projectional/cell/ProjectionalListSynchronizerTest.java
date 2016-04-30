@@ -298,14 +298,15 @@ public class ProjectionalListSynchronizerTest extends EditingTestCase {
   }
 
   @Test
-  public void lastItemDelete() {
+  public void lastItemReplaceWithEmtpy() {
     container.children.add(new NonEmptyChild());
     selectChild(0);
 
     backspace();
     backspace();
 
-    assertTrue(container.children.isEmpty());
+    assertEquals(1, container.children.size());
+    assertTrue(get(0) instanceof EmptyChild);
   }
 
   @Test
@@ -320,7 +321,7 @@ public class ProjectionalListSynchronizerTest extends EditingTestCase {
   }
 
   @Test
-  public void deleteSelectionInsideIndent() {
+  public void replaceSelectionWithEmptyInsideIndent() {
     CompositeChild cc = new CompositeChild();
     cc.children.add(new IndentChild());
     container.children.add(cc);
@@ -330,7 +331,8 @@ public class ProjectionalListSynchronizerTest extends EditingTestCase {
     backspace();
     backspace();
 
-    assertEquals(0, cc.children.size());
+    assertTrue(cc.children.get(0) instanceof EmptyChild);
+    assertEquals(1, cc.children.size());
   }
 
   @Test
@@ -345,7 +347,7 @@ public class ProjectionalListSynchronizerTest extends EditingTestCase {
   }
 
   @Test
-  public void tailItemDelete() {
+  public void tailItemReplaceWithEmpty() {
     container.children.addAll(Arrays.asList(new NonEmptyChild(), new NonEmptyChild()));
 
     selectChild(1);
@@ -354,19 +356,21 @@ public class ProjectionalListSynchronizerTest extends EditingTestCase {
     del();
     del();
 
-    assertFocusedEnd(0);
+    assertTrue(get(1) instanceof EmptyChild);
+    assertFocusedEnd(1);
   }
 
 
   @Test
-  public void tailItemDeleteManyItems() {
+  public void tailItemReplaceWithEmptyManyItems() {
     container.children.addAll(Arrays.asList(new NonEmptyChild(), new NonEmptyChild(), new NonEmptyChild()));
 
     selectChild(2);
 
     press(Key.DELETE, ModifierKey.CONTROL);
 
-    assertFocusedEnd(1) ;
+    assertTrue(get(2) instanceof EmptyChild);
+    assertFocusedEnd(2) ;
   }
 
   @Test
@@ -1098,7 +1102,6 @@ public class ProjectionalListSynchronizerTest extends EditingTestCase {
 
   @Test
   public void replaceWithNewOnRemove() {
-    rootMapper.mySynchronizer.setReplaceNonemptyWithNewOnRemove(true);
     container.children.add(new NonEmptyChild());
     selectChild(0);
     backspace();

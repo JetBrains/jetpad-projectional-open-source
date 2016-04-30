@@ -29,15 +29,15 @@ public abstract class CollectionEditor<ItemT, ViewT> {
   private List<ViewT> myViews;
   private Property<ItemT> myForDeletion;
   private boolean myCanCreateNew;
-  private Predicate<ViewT> myReplaceWithNewOnRemove;
+  private Predicate<ViewT> myReplaceWithNewOnDel;
 
   protected CollectionEditor(List<ItemT> items, List<ViewT> views, Property<ItemT> forDeletion, boolean canCreateNew,
-      Predicate<ViewT> replaceWithNewOnRemove) {
+      Predicate<ViewT> replaceWithNewOnDel) {
     myItems = items;
     myViews = views;
     myForDeletion = forDeletion;
     myCanCreateNew = canCreateNew;
-    myReplaceWithNewOnRemove = replaceWithNewOnRemove;
+    myReplaceWithNewOnDel = replaceWithNewOnDel;
   }
 
   protected abstract ItemT newItem();
@@ -131,7 +131,7 @@ public abstract class CollectionEditor<ItemT, ViewT> {
     }
 
     if (isDeleteEvent(event)) {
-      if (myReplaceWithNewOnRemove.apply(myViews.get(index))) {
+      if (myReplaceWithNewOnDel.apply(myViews.get(index))) {
         myItems.set(index, newItem());
         selectHome(index);
       } else {

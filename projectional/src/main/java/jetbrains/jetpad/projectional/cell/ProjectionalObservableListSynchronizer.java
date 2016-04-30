@@ -49,7 +49,6 @@ class ProjectionalObservableListSynchronizer<ContextT, SourceItemT> extends Base
   static final CellTraitPropertySpec<ItemHandler> ITEM_HANDLER = new CellTraitPropertySpec<>("itemHandler");
 
   private ObservableList<SourceItemT> mySource;
-  private boolean myReplaceNonemptyWithNewOnRemove;
 
   ProjectionalObservableListSynchronizer(
       Mapper<? extends ContextT, ? extends Cell> mapper,
@@ -142,7 +141,7 @@ class ProjectionalObservableListSynchronizer<ContextT, SourceItemT> extends Base
   }
 
   private void keyPressedInChild(KeyEvent event) {
-    new CollectionEditor<SourceItemT, Cell>(mySource, getChildCells(), getForDeletion(), canCreateNewItem(), replaceOnRemovePredicate()) {
+    new CollectionEditor<SourceItemT, Cell>(mySource, getChildCells(), getForDeletion(), canCreateNewItem(), replaceWithNewOnDel()) {
       @Override
       protected SourceItemT newItem() {
         return ProjectionalObservableListSynchronizer.this.newItem();
@@ -220,8 +219,8 @@ class ProjectionalObservableListSynchronizer<ContextT, SourceItemT> extends Base
     }.handleKey(currentCell(), event);
   }
 
-  private Predicate<Cell> replaceOnRemovePredicate() {
-    return myReplaceNonemptyWithNewOnRemove ? new Predicate<Cell>() {
+  private Predicate<Cell> replaceWithNewOnDel() {
+    return canCreateNewItem() ? new Predicate<Cell>() {
       @Override
       public boolean apply(Cell cell) {
         return !Cells.isEmpty(cell);
@@ -290,14 +289,6 @@ class ProjectionalObservableListSynchronizer<ContextT, SourceItemT> extends Base
 
   private boolean isEmpty(int index) {
     return Cells.isEmpty(getChildCells().get(index));
-  }
-
-  @Override
-  public void setReplaceNonemptyWithNewOnRemove(boolean replaceWithNew) {
-    if (!canCreateNewItem()) {
-      throw new IllegalStateException("Can't create new items");
-    }
-    myReplaceNonemptyWithNewOnRemove = replaceWithNew;
   }
 
   interface ItemHandler {

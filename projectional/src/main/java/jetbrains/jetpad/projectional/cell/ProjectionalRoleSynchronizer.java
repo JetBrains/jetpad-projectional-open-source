@@ -37,7 +37,6 @@ public interface ProjectionalRoleSynchronizer<ContextT, SourceT> extends RoleSyn
   void disablePlaceholder();
   void setItemFactory(Supplier<SourceT> itemFactory);
   void setSeparator(Character ch);
-  void setReplaceNonemptyWithNewOnRemove(boolean replaceWithNew);
 
   SourceT getFocusedItem();
 
