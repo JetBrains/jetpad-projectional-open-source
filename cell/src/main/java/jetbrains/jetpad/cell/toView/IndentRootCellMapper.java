@@ -15,7 +15,6 @@
  */
 package jetbrains.jetpad.cell.toView;
 
-import com.google.common.base.Strings;
 import jetbrains.jetpad.base.Handler;
 import jetbrains.jetpad.base.Registration;
 import jetbrains.jetpad.cell.Cell;
@@ -47,7 +46,7 @@ class IndentRootCellMapper extends BaseCellMapper<IndentCell, VerticalView> {
   private ObservableSet<BaseCellMapper<?, ?>> myCellMappers;
   private Registration myRegistration;
 
-  IndentRootCellMapper(IndentCell source, CellToViewContext ctx) {
+  IndentRootCellMapper(final IndentCell source, CellToViewContext ctx) {
     super(source, new VerticalView(), ctx);
 
     myCellMappers = createChildSet();
@@ -62,7 +61,7 @@ class IndentRootCellMapper extends BaseCellMapper<IndentCell, VerticalView> {
           @Override
           public View newIndent(int size) {
             TextView result = new TextView();
-            result.text().set(Strings.repeat("  ", size));
+            result.text().set(IndentUtil.getIndentText(size, source.getIndentNumSpaces()));
             return result;
           }
 
