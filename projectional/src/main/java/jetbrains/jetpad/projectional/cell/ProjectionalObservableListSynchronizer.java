@@ -15,6 +15,8 @@
  */
 package jetbrains.jetpad.projectional.cell;
 
+import com.google.common.base.Predicate;
+import com.google.common.base.Predicates;
 import jetbrains.jetpad.base.Registration;
 import jetbrains.jetpad.base.Runnables;
 import jetbrains.jetpad.cell.Cell;
@@ -139,7 +141,7 @@ class ProjectionalObservableListSynchronizer<ContextT, SourceItemT> extends Base
   }
 
   private void keyPressedInChild(KeyEvent event) {
-    new CollectionEditor<SourceItemT, Cell>(mySource, getChildCells(), getForDeletion(), canCreateNewItem()) {
+    new CollectionEditor<SourceItemT, Cell>(mySource, getChildCells(), getForDeletion(), canCreateNewItem(), replaceWithNewOnDel()) {
       @Override
       protected SourceItemT newItem() {
         return ProjectionalObservableListSynchronizer.this.newItem();
@@ -215,6 +217,15 @@ class ProjectionalObservableListSynchronizer<ContextT, SourceItemT> extends Base
       }
 
     }.handleKey(currentCell(), event);
+  }
+
+  private Predicate<Cell> replaceWithNewOnDel() {
+    return canCreateNewItem() ? new Predicate<Cell>() {
+      @Override
+      public boolean apply(Cell cell) {
+        return !Cells.isEmpty(cell);
+      }
+    } : Predicates.<Cell>alwaysFalse();
   }
 
   private CompletionSupplier getCurrentChildCompletion() {
