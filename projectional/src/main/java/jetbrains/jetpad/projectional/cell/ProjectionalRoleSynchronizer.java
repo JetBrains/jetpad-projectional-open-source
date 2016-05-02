@@ -24,6 +24,17 @@ import jetbrains.jetpad.projectional.generic.RoleCompletion;
 
 import java.util.List;
 
+/**
+ * A {@link jetbrains.jetpad.mapper.RoleSynchronizer} which has the following additional functionality:
+ * - completion
+ * - delete handler
+ * - copy paste
+ * - item separation
+ *
+ * @param <ContextT> - type which is a context of a synchronizer. Typically, it's a source node of a mapper which
+ *                  contains this synchronizer
+ * @param <SourceT>  - type which is contained in the role
+ */
 public interface ProjectionalRoleSynchronizer<ContextT, SourceT> extends RoleSynchronizer<SourceT, Cell> {
   void setCompletion(RoleCompletion<? super ContextT, SourceT> completion);
   void setDeleteHandler(DeleteHandler handler);
