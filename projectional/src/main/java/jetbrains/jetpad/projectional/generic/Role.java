@@ -15,6 +15,12 @@
  */
 package jetbrains.jetpad.projectional.generic;
 
+/**
+ * Role, i.e. position where we might get or set value of type TargetT.
+ *
+ * It might be a value stored in a property as well as an item in a list
+ * with particular index.
+ */
 public interface Role<TargetT> {
   TargetT get();
   Runnable set(TargetT target);
