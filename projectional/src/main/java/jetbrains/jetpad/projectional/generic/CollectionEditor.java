@@ -30,14 +30,16 @@ public abstract class CollectionEditor<ItemT, ViewT> {
   private Property<ItemT> myForDeletion;
   private boolean myCanCreateNew;
   private Predicate<ViewT> myReplaceWithNewOnDelete;
+  private final int myNumAllowedEmptyLines;
 
   protected CollectionEditor(List<ItemT> items, List<ViewT> views, Property<ItemT> forDeletion, boolean canCreateNew,
-      Predicate<ViewT> replaceWithNewOnDelete) {
+      Predicate<ViewT> replaceWithNewOnDelete, int numAllowedEmptyLines) {
     myItems = items;
     myViews = views;
     myForDeletion = forDeletion;
     myCanCreateNew = canCreateNew;
     myReplaceWithNewOnDelete = replaceWithNewOnDelete;
+    myNumAllowedEmptyLines = numAllowedEmptyLines;
   }
 
   protected abstract ItemT newItem();
@@ -69,6 +71,17 @@ public abstract class CollectionEditor<ItemT, ViewT> {
     return isEmpty(myViews.get(index));
   }
 
+  private int getNumEmptyLinesBefore(int index) {
+    int count = 0;
+    for (int i = index - 1; i >= 0; i--) {
+      if (!isEmpty(i)) {
+        break;
+      }
+      count++;
+    }
+    return count;
+  }
+
   public void handleKey(ViewT cell, KeyEvent event) {
     int index = myViews.indexOf(cell);
     boolean isHome = isHome(cell);
@@ -80,9 +93,13 @@ public abstract class CollectionEditor<ItemT, ViewT> {
         if (!isEmpty(index)) {
           selectOnCreation(index);
         } else if (isEmpty(index + 1) && index + 1 == myViews.size() - 1) {
-          if (addAfterParent()) {
+          int numEmptyLinesBefore = getNumEmptyLinesBefore(index);
+          if ((index == 0 || numEmptyLinesBefore >= myNumAllowedEmptyLines) && addAfterParent()) {
             myItems.remove(index + 1);
             myItems.remove(index);
+            for (int i = 0; i < numEmptyLinesBefore; i++) {
+              myItems.remove(index - 1 - i);
+            }
           }
         }
         event.consume();
