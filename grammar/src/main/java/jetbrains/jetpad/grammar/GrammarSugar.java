@@ -21,7 +21,7 @@ import java.util.List;
 
 public class GrammarSugar {
   /**
-   * NT = s1 s2 ... sN
+   * NT = S1 S2 ... SN
    */
   public static NonTerminal seq(Symbol... symbols) {
     if (symbols.length == 0) {
@@ -34,7 +34,7 @@ public class GrammarSugar {
   }
 
   /**
-   * NT = s?
+   * NT = S?
    */
   public static NonTerminal optional(Symbol symbol) {
     Grammar g = symbol.getGrammar();
@@ -45,7 +45,7 @@ public class GrammarSugar {
   }
 
   /**
-   * NT = s+
+   * NT = S+
    */
   public static NonTerminal plus(Symbol symbol) {
     Grammar g = symbol.getGrammar();
@@ -62,7 +62,7 @@ public class GrammarSugar {
   }
 
   /**
-   * NT = s*
+   * NT = S*
    */
   public static NonTerminal star(Symbol symbol) {
     return star(symbol, new StarRulesUpdater() {
@@ -98,9 +98,9 @@ public class GrammarSugar {
 
   /**
    * NT = first
-   * NT = s1
+   * NT = S1
    * ...
-   * NT = sN
+   * NT = SN
    */
   public static NonTerminal oneOf(Symbol first, Symbol... symbols) {
     OneOfRuleUpdater updater = new OneOfRuleUpdater() {
@@ -125,7 +125,7 @@ public class GrammarSugar {
 
 
   /**
-   * NT = ((item separator)* item)?
+   * NT = ((ITEM SEP)* ITEM)?
    */
   public static NonTerminal separated(Symbol item, Symbol separator) {
     return separated(item, separator, false);

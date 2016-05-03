@@ -15,6 +15,9 @@
  */
 package jetbrains.jetpad.grammar;
 
+/**
+ * Terminal symbol of a grammar
+ */
 public final class Terminal extends Symbol {
   Terminal(Grammar grammar, String name) {
     super(grammar, name);
