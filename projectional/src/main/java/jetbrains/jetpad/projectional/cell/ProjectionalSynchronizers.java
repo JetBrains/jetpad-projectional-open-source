@@ -51,9 +51,25 @@ public class ProjectionalSynchronizers {
 
   public static <ContextT, SourceT> ProjectionalRoleSynchronizer<ContextT, SourceT> forRole(
       Mapper<? extends ContextT, ? extends Cell> mapper,
+      ObservableList<SourceT> source, Cell target,
+      MapperFactory<SourceT, Cell> factory,
+      int numAllowedEmptyLines) {
+    return forRole(mapper, source, target, target.children(), factory, numAllowedEmptyLines);
+  }
+
+  public static <ContextT, SourceT> ProjectionalRoleSynchronizer<ContextT, SourceT> forRole(
+      Mapper<? extends ContextT, ? extends Cell> mapper,
       ObservableList<SourceT> source, Cell target, List<Cell> targetList,
       MapperFactory<SourceT, Cell> factory) {
-    return new ProjectionalObservableListSynchronizer<>(mapper, source, target, targetList, factory);
+    return forRole(mapper, source, target, targetList, factory, 0);
+  }
+
+  public static <ContextT, SourceT> ProjectionalRoleSynchronizer<ContextT, SourceT> forRole(
+      Mapper<? extends ContextT, ? extends Cell> mapper,
+      ObservableList<SourceT> source, Cell target, List<Cell> targetList,
+      MapperFactory<SourceT, Cell> factory,
+      int numAllowedEmptyLines) {
+    return new ProjectionalObservableListSynchronizer<>(mapper, source, target, targetList, factory, numAllowedEmptyLines);
   }
 
   public static <ContextT, SourceT> ProjectionalRoleSynchronizer<ContextT, SourceT> forSingleRole(
