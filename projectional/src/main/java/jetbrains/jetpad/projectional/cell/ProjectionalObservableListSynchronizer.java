@@ -143,7 +143,7 @@ class ProjectionalObservableListSynchronizer<ContextT, SourceItemT> extends Base
   }
 
   private void keyPressedInChild(KeyEvent event) {
-    new CollectionEditor<SourceItemT, Cell>(mySource, getChildCells(), getForDeletion(), canCreateNewItem(), replaceWithNewOnDel()) {
+    new CollectionEditor<SourceItemT, Cell>(mySource, getChildCells(), getForDeletion(), canCreateNewItem(), replaceWithNewOnDelete()) {
       @Override
       protected SourceItemT newItem() {
         return ProjectionalObservableListSynchronizer.this.newItem();
@@ -221,7 +221,7 @@ class ProjectionalObservableListSynchronizer<ContextT, SourceItemT> extends Base
     }.handleKey(currentCell(), event);
   }
 
-  private Predicate<Cell> replaceWithNewOnDel() {
+  private Predicate<Cell> replaceWithNewOnDelete() {
     return canCreateNewItem() ? new Predicate<Cell>() {
       @Override
       public boolean apply(Cell cell) {
