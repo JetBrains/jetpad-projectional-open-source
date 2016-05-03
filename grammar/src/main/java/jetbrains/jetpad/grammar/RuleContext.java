@@ -20,6 +20,9 @@ import com.google.common.collect.Range;
 
 import java.util.List;
 
+/**
+ * Context objects which is passed to {@link RuleHandler}s
+ */
 public interface RuleContext {
   ParserParameters getParams();
   Object get(int index);

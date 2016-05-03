@@ -17,7 +17,11 @@ package jetbrains.jetpad.grammar;
 
 import java.util.*;
 
-public class NonTerminal extends Symbol {
+/**
+ * Non terminal symbol of a grammar.
+ * Has a set of rules associated with it.
+ */
+public final class NonTerminal extends Symbol {
   private Set<Rule> myRules = new LinkedHashSet<>();
 
   NonTerminal(Grammar grammar, String name) {

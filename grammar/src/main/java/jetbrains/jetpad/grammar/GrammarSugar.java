@@ -168,6 +168,9 @@ public class GrammarSugar {
     }
   }
 
+  /**
+   * NT = (item separator)*
+   */
   public static NonTerminal terminated(Symbol item, Symbol separator) {
     return terminated(item, separator, false);
   }

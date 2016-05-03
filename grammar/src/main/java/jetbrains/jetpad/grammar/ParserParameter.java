@@ -15,6 +15,9 @@
  */
 package jetbrains.jetpad.grammar;
 
+/**
+ * Key object for passing to {@link Rule}s via {@link RuleContext}
+ */
 public class ParserParameter<ValueT> {
   private String myName;
 
