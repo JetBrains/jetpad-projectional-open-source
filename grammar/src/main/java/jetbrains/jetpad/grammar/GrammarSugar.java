@@ -20,6 +20,9 @@ import java.util.Arrays;
 import java.util.List;
 
 public class GrammarSugar {
+  /**
+   * NT = s1 s2 ... sN
+   */
   public static NonTerminal seq(Symbol... symbols) {
     if (symbols.length == 0) {
       throw new IllegalArgumentException();
@@ -30,6 +33,9 @@ public class GrammarSugar {
     return seq;
   }
 
+  /**
+   * NT = s?
+   */
   public static NonTerminal optional(Symbol symbol) {
     Grammar g = symbol.getGrammar();
     NonTerminal opt = g.newNonTerminal(g.uniqueName("opt_"));
@@ -38,6 +44,9 @@ public class GrammarSugar {
     return opt;
   }
 
+  /**
+   * NT = s+
+   */
   public static NonTerminal plus(Symbol symbol) {
     Grammar g = symbol.getGrammar();
     NonTerminal plus = g.newNonTerminal(g.uniqueName("plus_"));
@@ -52,6 +61,9 @@ public class GrammarSugar {
     return plus;
   }
 
+  /**
+   * NT = s*
+   */
   public static NonTerminal star(Symbol symbol) {
     return star(symbol, new StarRulesUpdater() {
       @Override
@@ -84,6 +96,12 @@ public class GrammarSugar {
     return star;
   }
 
+  /**
+   * NT = first
+   * NT = s1
+   * ...
+   * NT = sN
+   */
   public static NonTerminal oneOf(Symbol first, Symbol... symbols) {
     OneOfRuleUpdater updater = new OneOfRuleUpdater() {
       @Override
@@ -105,6 +123,10 @@ public class GrammarSugar {
     return oneOf;
   }
 
+
+  /**
+   * NT = ((item separator)* item)?
+   */
   public static NonTerminal separated(Symbol item, Symbol separator) {
     return separated(item, separator, false);
   }
