@@ -15,6 +15,8 @@
  */
 package jetbrains.jetpad.projectional.cell;
 
+import com.google.common.base.Predicate;
+import com.google.common.base.Predicates;
 import jetbrains.jetpad.base.Registration;
 import jetbrains.jetpad.base.Runnables;
 import jetbrains.jetpad.cell.Cell;
@@ -49,6 +51,10 @@ class ProjectionalObservableListSynchronizer<ContextT, SourceItemT> extends Base
   private final ObservableList<SourceItemT> mySource;
   private final int myNumAllowedEmptyLines;
 
+  /**
+   * Mappers created by given factory should map new items to empty cells,
+   * otherwise they won't be able to be deleted from inside.
+   */
   ProjectionalObservableListSynchronizer(
       Mapper<? extends ContextT, ? extends Cell> mapper,
       ObservableList<SourceItemT> source,
@@ -142,7 +148,8 @@ class ProjectionalObservableListSynchronizer<ContextT, SourceItemT> extends Base
   }
 
   private void keyPressedInChild(KeyEvent event) {
-    new CollectionEditor<SourceItemT, Cell>(mySource, getChildCells(), getForDeletion(), canCreateNewItem(), myNumAllowedEmptyLines) {
+    new CollectionEditor<SourceItemT, Cell>(mySource, getChildCells(), getForDeletion(), canCreateNewItem(),
+        replaceWithNewOnDelete(), myNumAllowedEmptyLines) {
       @Override
       protected SourceItemT newItem() {
         return ProjectionalObservableListSynchronizer.this.newItem();
@@ -218,6 +225,15 @@ class ProjectionalObservableListSynchronizer<ContextT, SourceItemT> extends Base
       }
 
     }.handleKey(currentCell(), event);
+  }
+
+  private Predicate<Cell> replaceWithNewOnDelete() {
+    return canCreateNewItem() ? new Predicate<Cell>() {
+      @Override
+      public boolean apply(Cell cell) {
+        return !Cells.isEmpty(cell);
+      }
+    } : Predicates.<Cell>alwaysFalse();
   }
 
   private CompletionSupplier getCurrentChildCompletion() {
