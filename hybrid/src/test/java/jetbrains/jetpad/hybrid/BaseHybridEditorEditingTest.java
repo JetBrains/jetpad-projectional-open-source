@@ -1214,9 +1214,9 @@ abstract class BaseHybridEditorEditingTest<ContainerT, MapperT extends Mapper<Co
     setTokens(new CommentToken("#", " + 3"));
     select(0, true);
 
-    type("1");
+    type("12");
 
-    assertTokens(integer(1), new CommentToken("#", " + 3"));
+    assertTokens(integer(12), new CommentToken("#", " + 3"));
   }
 
   @Test

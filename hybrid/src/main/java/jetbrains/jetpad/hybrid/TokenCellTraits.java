@@ -30,13 +30,11 @@ import jetbrains.jetpad.cell.trait.CellTraitPropertySpec;
 import jetbrains.jetpad.cell.trait.CompositeCellTrait;
 import jetbrains.jetpad.cell.util.Cells;
 import jetbrains.jetpad.completion.CompletionItem;
-import jetbrains.jetpad.event.Event;
-import jetbrains.jetpad.event.Key;
-import jetbrains.jetpad.event.KeyEvent;
-import jetbrains.jetpad.event.KeyStrokeSpecs;
+import jetbrains.jetpad.event.*;
 import jetbrains.jetpad.hybrid.parser.CommentToken;
 import jetbrains.jetpad.hybrid.parser.ErrorToken;
 import jetbrains.jetpad.hybrid.parser.Token;
+import jetbrains.jetpad.model.property.PropertyChangeEvent;
 
 import java.util.List;
 
@@ -179,11 +177,8 @@ class TokenCellTraits {
         if (current instanceof CommentToken) {
           CommentToken commentToken = (CommentToken) current;
 
-          TextCell textCell = (TextCell) cell;
-          String text = textCell.text().get();
-          String prefix = commentToken.getPrefix();
-          if (!text.startsWith(prefix)) {
-            tokenOperations(cell).replaceCommentToken(cell, textCell).run();
+          if (isUncomment(event, commentToken.getPrefix())) {
+            tokenOperations(cell).replaceCommentToken(cell, (TextCell) cell).run();
             event.consume();
             return;
           }
@@ -191,6 +186,19 @@ class TokenCellTraits {
       }
 
       super.onCellTraitEvent(cell, spec, event);
+    }
+
+    private boolean isUncomment(Event e, String prefix) {
+      Event cause = Events.getCause(e);
+      if (cause instanceof PropertyChangeEventWrapper) {
+        PropertyChangeEvent<?> event = ((PropertyChangeEventWrapper) cause).getEvent();
+        if (event.getOldValue() instanceof String && event.getNewValue() instanceof String) {
+          String oldText = (String) event.getOldValue();
+          String newText = (String) event.getNewValue();
+          return oldText.endsWith(newText) && oldText.startsWith(prefix) && !newText.startsWith(prefix);
+        }
+      }
+      return false;
     }
 
     @Override
