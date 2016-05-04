@@ -51,8 +51,10 @@ class ProjectionalObservableListSynchronizer<ContextT, SourceItemT> extends Base
   private final ObservableList<SourceItemT> mySource;
   private final int myNumAllowedEmptyLines;
 
-  // Mappers created by given factory should map new items to empty cells,
-  // otherwise they won't be able to be deleted from inside.
+  /**
+   * Mappers created by given factory should map new items to empty cells,
+   * otherwise they won't be able to be deleted from inside.
+   */
   ProjectionalObservableListSynchronizer(
       Mapper<? extends ContextT, ? extends Cell> mapper,
       ObservableList<SourceItemT> source,

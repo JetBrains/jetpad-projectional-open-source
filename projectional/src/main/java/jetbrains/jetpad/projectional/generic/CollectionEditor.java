@@ -25,11 +25,11 @@ import jetbrains.jetpad.model.property.Property;
 import java.util.List;
 
 public abstract class CollectionEditor<ItemT, ViewT> {
-  private List<ItemT> myItems;
-  private List<ViewT> myViews;
-  private Property<ItemT> myForDeletion;
-  private boolean myCanCreateNew;
-  private Predicate<ViewT> myReplaceWithNewOnDelete;
+  private final List<ItemT> myItems;
+  private final List<ViewT> myViews;
+  private final Property<ItemT> myForDeletion;
+  private final boolean myCanCreateNew;
+  private final Predicate<ViewT> myReplaceWithNewOnDelete;
   private final int myNumAllowedEmptyLines;
 
   protected CollectionEditor(List<ItemT> items, List<ViewT> views, Property<ItemT> forDeletion, boolean canCreateNew,
