@@ -79,7 +79,7 @@ class ValidTextEditingTrait extends TextEditingTrait {
   @Override
   public void onPropertyChanged(Cell cell, CellPropertySpec<?> prop, PropertyChangeEvent<?> e) {
     if (prop == TextCell.TEXT) {
-      validate(cell, new PropertyChangeEventWrapper(e));
+      validate(cell, new PropertyChangeEventWrapper<>(e));
     }
     super.onPropertyChanged(cell, prop, e);
   }
