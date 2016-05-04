@@ -77,8 +77,12 @@ public final class CellProvider {
   }
 
   public List<Cell> getCellsOnPath(Iterator<?> sourcePath) {
-    Object actualSource = sourcePath.next();
-    return lookupCells(actualSource, actualSource, sourcePath);
+    if (sourcePath.hasNext()) {
+      Object actualSource = sourcePath.next();
+      return lookupCells(actualSource, actualSource, sourcePath);
+    } else {
+      return Collections.emptyList();
+    }
   }
 
   public List<Cell> getCells(Object source) {
