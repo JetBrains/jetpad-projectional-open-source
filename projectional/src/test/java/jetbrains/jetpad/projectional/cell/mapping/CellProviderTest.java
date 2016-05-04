@@ -22,10 +22,12 @@ import jetbrains.jetpad.cell.TextCell;
 import jetbrains.jetpad.cell.VerticalCell;
 import jetbrains.jetpad.mapper.*;
 import jetbrains.jetpad.model.collections.list.ObservableCollections;
+import jetbrains.jetpad.model.composite.HasParent;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static org.junit.Assert.*;
@@ -53,6 +55,22 @@ public class CellProviderTest {
   public void attach() {
     assertEquals(rootSource, provider.getSource(rootCell));
     assertEquals(Arrays.asList(rootCell), provider.getCells(rootSource));
+  }
+
+  @Test
+  public void nonAttached() {
+    assertTrue(provider.getCells(new TestRoot()).isEmpty());
+    assertTrue(provider.getCells(new Object()).isEmpty());
+  }
+
+  @Test
+  public void nullSource() {
+    assertTrue(provider.getCells(null).isEmpty());
+  }
+
+  @Test
+  public void emptyPath() {
+    assertTrue(provider.getCellsOnPath(Collections.emptyList()).isEmpty());
   }
 
   @Test
@@ -125,6 +143,13 @@ public class CellProviderTest {
     protected void registerSynchronizers(SynchronizersConfiguration conf) {
       conf.add(Synchronizers.forRegistration(
         getTarget().set(TextCell.TEXT, getSource())));
+    }
+  }
+
+  private static class TestRoot implements HasParent<TestRoot> {
+    @Override
+    public TestRoot getParent() {
+      return null;
     }
   }
 }
