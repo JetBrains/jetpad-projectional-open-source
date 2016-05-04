@@ -15,6 +15,7 @@
  */
 package jetbrains.jetpad.projectional.generic;
 
+import com.google.common.base.Predicate;
 import jetbrains.jetpad.event.Key;
 import jetbrains.jetpad.event.KeyEvent;
 import jetbrains.jetpad.event.KeyStrokeSpecs;
@@ -28,14 +29,16 @@ public abstract class CollectionEditor<ItemT, ViewT> {
   private final List<ViewT> myViews;
   private final Property<ItemT> myForDeletion;
   private final boolean myCanCreateNew;
+  private final Predicate<ViewT> myReplaceWithNewOnDelete;
   private final int myNumAllowedEmptyLines;
 
   protected CollectionEditor(List<ItemT> items, List<ViewT> views, Property<ItemT> forDeletion, boolean canCreateNew,
-      int numAllowedEmptyLines) {
+      Predicate<ViewT> replaceWithNewOnDelete, int numAllowedEmptyLines) {
     myItems = items;
     myViews = views;
     myForDeletion = forDeletion;
     myCanCreateNew = canCreateNew;
+    myReplaceWithNewOnDelete = replaceWithNewOnDelete;
     myNumAllowedEmptyLines = numAllowedEmptyLines;
   }
 
@@ -145,10 +148,14 @@ public abstract class CollectionEditor<ItemT, ViewT> {
     }
 
     if (isDeleteEvent(event)) {
-      myItems.remove(index);
-      selectAfterClear(index);
+      if (myReplaceWithNewOnDelete.apply(myViews.get(index))) {
+        myItems.set(index, newItem());
+        selectHome(index);
+      } else {
+        myItems.remove(index);
+        selectAfterClear(index);
+      }
       event.consume();
-      return;
     }
   }
 
@@ -164,11 +171,11 @@ public abstract class CollectionEditor<ItemT, ViewT> {
     }
   }
 
-  protected boolean isDeleteEvent(KeyEvent event) {
+  private boolean isDeleteEvent(KeyEvent event) {
     return isAnyPositionDeleteEvent(event) || isSimpleDeleteEvent(event);
   }
 
-  protected boolean isSimpleDeleteEvent(KeyEvent event) {
+  private boolean isSimpleDeleteEvent(KeyEvent event) {
     return event.is(Key.BACKSPACE) || event.is(Key.DELETE);
   }
 
