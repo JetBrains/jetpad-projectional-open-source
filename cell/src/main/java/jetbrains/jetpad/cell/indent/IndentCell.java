@@ -25,7 +25,12 @@ import jetbrains.jetpad.model.event.Listeners;
 import jetbrains.jetpad.model.property.PropertyChangeEvent;
 
 public class IndentCell extends Cell {
-  private boolean myIndented;
+
+  public static final int DEFAULT_INDENT_NUM_SPACES = 2;
+
+  private final boolean myIndented;
+  private final int myIndentNumSpaces;
+
   private Listeners<IndentContainerCellListener> myListeners;
 
   public IndentCell() {
@@ -33,11 +38,20 @@ public class IndentCell extends Cell {
   }
 
   public IndentCell(boolean indented) {
+    this(indented, DEFAULT_INDENT_NUM_SPACES);
+  }
+
+  public IndentCell(boolean indented, int indentNumSpaces) {
     myIndented = indented;
+    myIndentNumSpaces = indentNumSpaces;
   }
 
   public boolean isIndented() {
     return myIndented;
+  }
+
+  public int getIndentNumSpaces() {
+    return myIndentNumSpaces;
   }
 
   public boolean isRootIndent() {

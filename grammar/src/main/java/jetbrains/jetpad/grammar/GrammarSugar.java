@@ -20,6 +20,9 @@ import java.util.Arrays;
 import java.util.List;
 
 public class GrammarSugar {
+  /**
+   * NT = S1 S2 ... SN
+   */
   public static NonTerminal seq(Symbol... symbols) {
     if (symbols.length == 0) {
       throw new IllegalArgumentException();
@@ -30,6 +33,9 @@ public class GrammarSugar {
     return seq;
   }
 
+  /**
+   * NT = S?
+   */
   public static NonTerminal optional(Symbol symbol) {
     Grammar g = symbol.getGrammar();
     NonTerminal opt = g.newNonTerminal(g.uniqueName("opt_"));
@@ -38,6 +44,9 @@ public class GrammarSugar {
     return opt;
   }
 
+  /**
+   * NT = S+
+   */
   public static NonTerminal plus(Symbol symbol) {
     Grammar g = symbol.getGrammar();
     NonTerminal plus = g.newNonTerminal(g.uniqueName("plus_"));
@@ -52,6 +61,9 @@ public class GrammarSugar {
     return plus;
   }
 
+  /**
+   * NT = S*
+   */
   public static NonTerminal star(Symbol symbol) {
     return star(symbol, new StarRulesUpdater() {
       @Override
@@ -84,6 +96,12 @@ public class GrammarSugar {
     return star;
   }
 
+  /**
+   * NT = first
+   * NT = S1
+   * ...
+   * NT = SN
+   */
   public static NonTerminal oneOf(Symbol first, Symbol... symbols) {
     OneOfRuleUpdater updater = new OneOfRuleUpdater() {
       @Override
@@ -105,6 +123,10 @@ public class GrammarSugar {
     return oneOf;
   }
 
+
+  /**
+   * NT = ((ITEM SEP)* ITEM)?
+   */
   public static NonTerminal separated(Symbol item, Symbol separator) {
     return separated(item, separator, false);
   }
@@ -146,6 +168,9 @@ public class GrammarSugar {
     }
   }
 
+  /**
+   * NT = (item separator)*
+   */
   public static NonTerminal terminated(Symbol item, Symbol separator) {
     return terminated(item, separator, false);
   }

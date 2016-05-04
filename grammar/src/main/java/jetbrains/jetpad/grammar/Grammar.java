@@ -17,6 +17,16 @@ package jetbrains.jetpad.grammar;
 
 import java.util.*;
 
+/**
+ * Grammar which is used by parser generators.
+ *
+ * It consists of:
+ * - Start non terminal
+ * - File end terminal
+ * - Set of terminals
+ * - Set of non terminals
+ * - Set of rules
+ */
 public final class Grammar {
   private Terminal myEnd;
   private NonTerminal myStart;

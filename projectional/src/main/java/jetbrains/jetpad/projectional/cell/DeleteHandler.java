@@ -15,8 +15,12 @@
  */
 package jetbrains.jetpad.projectional.cell;
 
+/**
+ * Handler of abstract delete event for cells. These delete event might be triggered by
+ * key events, mouse events, or in other ways.
+ */
 public interface DeleteHandler {
-  public static final DeleteHandler EMPTY = new DeleteHandler() {
+  DeleteHandler EMPTY = new DeleteHandler() {
     @Override
     public boolean canDelete() {
       return false;

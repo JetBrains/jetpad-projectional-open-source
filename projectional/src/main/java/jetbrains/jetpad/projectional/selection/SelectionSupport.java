@@ -94,7 +94,16 @@ public class SelectionSupport<ItemT> {
           if (!mySelectedItems.isEmpty()) {
             int startIndex = mySource.indexOf(mySelectedItems.get(0));
             int endIndex = mySource.indexOf(mySelectedItems.get(mySelectedItems.size() - 1));
-            mySelectionController.updateLegacySelection(myTargetList.get(startIndex), myTargetList.get(endIndex));
+            /*
+             * Because list clear may be implemented with iterate-remove, intermediate states
+             * are possible when selection (mySelectedItems) contains items already removed
+             * from the model (mySource). We bypass such cases.
+             */
+            if (startIndex != -1 && endIndex != -1) {
+              mySelectionController.updateLegacySelection(myTargetList.get(startIndex), myTargetList.get(endIndex));
+            } else if (!myChangingSelection) {
+              throw new IllegalStateException("Intermediate state outside changing selection encountered. Selected items: " + mySelectedItems);
+            }
           } else {
             mySelectionController.closeLegacySelection();
           }

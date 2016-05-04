@@ -19,7 +19,18 @@ package jetbrains.jetpad.projectional.generic;
 import jetbrains.jetpad.completion.CompletionSupplier;
 import jetbrains.jetpad.mapper.Mapper;
 
+/**
+ * Provider of completion for particular role
+ *
+ * @param <ContextT> - context type of this role
+ * @param <TargetT> - the type of a value which we set, typically it's a source node of a mapper which contains
+ *   typically it's a type of source node of the mapper which contains {@link jetbrains.jetpad.projectional.cell.ProjectionalRoleSynchronizer}
+ */
 public interface RoleCompletion<ContextT, TargetT> {
+  /**
+   * @param mapper - either mapper for the current value or if there's no one the mapper which contains
+   *               {@link jetbrains.jetpad.projectional.cell.ProjectionalRoleSynchronizer}
+   */
   CompletionSupplier createRoleCompletion(
     Mapper<?, ?> mapper,
     ContextT contextNode,

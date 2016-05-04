@@ -22,7 +22,12 @@ import jetbrains.jetpad.grammar.parser.LRParserAction;
 
 import java.util.*;
 
-public class LRState<ItemT extends LRItem<ItemT>> {
+/**
+ * State of the LRParser.
+ *
+ * The state is characterized by the set of all posible LRItems which might be active at current position.
+ */
+public final class LRState<ItemT extends LRItem<ItemT>> {
   private int myNumber;
   private Set<ItemT> myItems = new LinkedHashSet<>();
   private Map<Symbol, Set<LRActionRecord<ItemT>>> myActionRecords = new HashMap<>();

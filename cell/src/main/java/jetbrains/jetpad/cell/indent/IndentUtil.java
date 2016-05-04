@@ -15,11 +15,12 @@
  */
 package jetbrains.jetpad.cell.indent;
 
+import com.google.common.base.Strings;
 import jetbrains.jetpad.base.Handler;
 import jetbrains.jetpad.cell.Cell;
 import jetbrains.jetpad.model.composite.Composites;
 
-public class IndentUtil {
+public final class IndentUtil {
 
   public static void iterateLeaves(Cell cell, Handler<Cell> handler) {
     for (Cell child : cell.children()) {
@@ -31,4 +32,13 @@ public class IndentUtil {
       }
     }
   }
+
+  public static String getIndentText(int size, int numSpaces) {
+    String oneIndent = Strings.repeat(" ", numSpaces);
+    return Strings.repeat(oneIndent, size);
+  }
+
+  private IndentUtil() {
+  }
+
 }
