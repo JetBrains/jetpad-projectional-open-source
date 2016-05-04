@@ -15,6 +15,9 @@
  */
 package jetbrains.jetpad.grammar;
 
+/**
+ * Base class for grammar symbols. Either {@link Terminal} or {@link NonTerminal}
+ */
 public abstract class Symbol {
   private String myName;
   private Grammar myGrammar;

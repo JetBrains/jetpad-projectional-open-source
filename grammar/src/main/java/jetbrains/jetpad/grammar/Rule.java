@@ -20,6 +20,14 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * Grammar rule. It has the following form:
+ *  NT = s1 ... sN
+ *
+ *  If there're ambiguities during grammar generation, they are resolved via associativity and priorirty.
+ *
+ *  You can specify how the resulting AST is being via {@link RuleHandler}
+ */
 public class Rule {
   private NonTerminal myHead;
   private List<Symbol> mySymbols;

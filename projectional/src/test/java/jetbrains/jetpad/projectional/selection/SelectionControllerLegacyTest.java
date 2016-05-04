@@ -151,6 +151,16 @@ public class SelectionControllerLegacyTest extends EditingTestCase {
     assertHistory(selection(get(z), get(z)), selection(get(y), get(z)), selection(get(x), get(x)), selection(get(g), get(x)));
   }
 
+  @Test
+  public void removeMultiple() {
+    CellActions.toHome(get(d).labelCell).run();
+    press(Key.DOWN, ModifierKey.SHIFT);
+    press(Key.DOWN, ModifierKey.SHIFT);
+
+    del();
+    assertEquals(2, a.branches.size());
+  }
+
   private TestCell get(TestTree source) {
     return (TestCell)mappingContext.getMapper(rootMapper, source).getTarget();
   }

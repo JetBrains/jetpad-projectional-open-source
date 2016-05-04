@@ -18,12 +18,52 @@ package jetbrains.jetpad.grammar.base;
 import jetbrains.jetpad.grammar.Rule;
 import jetbrains.jetpad.grammar.Symbol;
 
-public abstract interface LRItem<ItemT extends LRItem<ItemT>> {
+/**
+ * LRItem. It's a rule with a dot inside which specifies the current position of the parser in this rule.
+ *
+ * For example, if we have the following rule:
+ * NT = T1 T2
+ * We have the following valid positions:
+ * NT = * T1 T2
+ * NT = T1 * T2
+ * NT = T1 T2 *
+ */
+public interface LRItem<ItemT extends LRItem<ItemT>> {
+  /**
+   * Rule which is associated with this item
+   */
   Rule getRule();
+
+  /**
+   * Index of a position
+   */
   int getIndex();
+
+  /**
+   * Whether the position has the form:
+   * StartNT = * S1 S2 ... SN
+   */
   boolean isKernel();
+
+  /**
+   * Initial if it has the form:
+   * NT = * S1 ... SN
+   */
   boolean isInitial();
+
+  /**
+   * Final if it has the form
+   * NT = S1 ... SN *
+   */
   boolean isFinal();
+
+  /**
+   * The symbol right after dot position
+   */
   Symbol getNextSymbol();
+
+  /**
+   * The item which we get by moving dot by one position to the right
+   */
   ItemT getNextItem();
 }

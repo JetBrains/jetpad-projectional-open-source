@@ -22,6 +22,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+/**
+ *
+ * @param <ItemT>
+ */
 public class LRActionRecord<ItemT extends LRItem<ItemT>> {
   private ItemT myItem;
   private LRParserAction<LRState<ItemT>> myAction;

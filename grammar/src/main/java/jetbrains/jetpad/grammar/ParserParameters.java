@@ -16,7 +16,7 @@
 package jetbrains.jetpad.grammar;
 
 public interface ParserParameters {
-  public static final ParserParameters EMPTY = new ParserParameters() {
+  ParserParameters EMPTY = new ParserParameters() {
     @Override
     public <ValueT> ValueT get(ParserParameter<ValueT> key) {
       return null;

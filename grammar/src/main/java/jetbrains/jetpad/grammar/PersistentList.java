@@ -17,6 +17,9 @@ package jetbrains.jetpad.grammar;
 
 import java.util.AbstractList;
 
+/**
+ * Unmodifiable cons based list
+ */
 class PersistentList<ValueT> extends AbstractList<ValueT> {
   static <ValueT> PersistentList<ValueT> nil() {
     PersistentList<ValueT> result = new PersistentList<>();

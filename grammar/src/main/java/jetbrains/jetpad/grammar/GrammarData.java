@@ -17,6 +17,9 @@ package jetbrains.jetpad.grammar;
 
 import java.util.*;
 
+/**
+ * Precomputed information useful for parser generation
+ */
 class GrammarData {
   private Grammar myGrammar;
 

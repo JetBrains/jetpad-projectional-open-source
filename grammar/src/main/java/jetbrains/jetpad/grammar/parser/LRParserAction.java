@@ -17,6 +17,14 @@ package jetbrains.jetpad.grammar.parser;
 
 import jetbrains.jetpad.grammar.Rule;
 
+/**
+ * Action which can be performed by the parser upon receiving a new terminal symbol.
+ * Can be:
+ * - Shift
+ * - Reduce
+ * - Accept
+ * - Error
+ */
 public abstract class LRParserAction<StateT> {
   public static <StateT> LRParserAction<StateT> shift(StateT state) {
     return new Shift<>(state);
@@ -37,7 +45,7 @@ public abstract class LRParserAction<StateT> {
   private LRParserAction() {
   }
 
-  public static class Shift<StateT> extends LRParserAction<StateT> {
+  public static final class Shift<StateT> extends LRParserAction<StateT> {
     private StateT myState;
 
     private Shift(StateT state) {
@@ -67,7 +75,7 @@ public abstract class LRParserAction<StateT> {
     }
   }
 
-  public static class Reduce<StateT> extends LRParserAction<StateT> {
+  public static final class Reduce<StateT> extends LRParserAction<StateT> {
     private Rule myRule;
 
     private Reduce(Rule rule) {
@@ -96,7 +104,7 @@ public abstract class LRParserAction<StateT> {
     }
   }
 
-  public static class Accept<StateT> extends LRParserAction<StateT> {
+  public static final class Accept<StateT> extends LRParserAction<StateT> {
     private Accept() {
     }
 
@@ -116,7 +124,7 @@ public abstract class LRParserAction<StateT> {
     }
   }
 
-  public static class Error<StateT> extends LRParserAction<StateT> {
+  public static final class Error<StateT> extends LRParserAction<StateT> {
     private Error() {
     }
 
