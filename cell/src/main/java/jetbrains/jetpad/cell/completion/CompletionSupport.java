@@ -18,14 +18,12 @@ package jetbrains.jetpad.cell.completion;
 import com.google.common.base.Function;
 import com.google.common.base.Strings;
 import com.google.common.collect.FluentIterable;
-import com.google.common.collect.Lists;
 import jetbrains.jetpad.base.*;
 import jetbrains.jetpad.cell.*;
 import jetbrains.jetpad.cell.event.CompletionEvent;
 import jetbrains.jetpad.cell.event.FocusEvent;
 import jetbrains.jetpad.cell.text.TextEditing;
 import jetbrains.jetpad.cell.text.TextEditingTrait;
-import jetbrains.jetpad.cell.text.TextEditor;
 import jetbrains.jetpad.cell.trait.CellTrait;
 import jetbrains.jetpad.cell.trait.CellTraitPropertySpec;
 import jetbrains.jetpad.completion.*;
@@ -37,38 +35,9 @@ import jetbrains.jetpad.model.event.EventHandler;
 import jetbrains.jetpad.model.property.*;
 
 import java.util.Collections;
-import java.util.List;
 
 public class CompletionSupport {
-  public static final CellTraitPropertySpec<TextEditor> EDITOR = new CellTraitPropertySpec<>("textEditor", new Function<Cell, TextEditor>() {
-    @Override
-    public TextEditor apply(Cell notEditableCell) {
-      final TextCell textCell = new TextCell();
-      textCell.focusable().set(true);
-      final Registration textEditingReg = textCell.addTrait(new TextEditingTrait() {
-        @Override
-        public void onComplete(Cell cell, CompletionEvent event) {
-          // nop
-        }
-      });
-      final HorizontalCell popup = new HorizontalCell();
-      popup.children().add(textCell);
-      notEditableCell.frontPopup().set(popup);
-      textCell.focus();
-
-      TextEditor editor = TextEditing.textEditor(textCell);
-      editor.addDisableRegistration(new Registration() {
-        @Override
-        protected void doRemove() {
-          textCell.text().set("");
-          popup.removeFromParent();
-          textEditingReg.remove();
-        }
-      });
-      editor.addDisableRegistration(notEditableCell.set(EDITOR, editor));  // to provide same editor instance to all further calls
-      return editor;
-    }
-  });
+  public static final CellTraitPropertySpec<TextCell> EDITOR = new CellTraitPropertySpec<>("textEditor");
 
   public static CellTrait trait() {
     return new CellTrait() {
@@ -112,8 +81,8 @@ public class CompletionSupport {
     };
   }
 
-  static void showCompletion(final TextEditor editor, Async<Iterable<CompletionItem>> items,
-                             final Runnable restoreCompletionState, final Runnable restoreFocusState) {
+  static void showCompletion(final TextCell editor, Async<Iterable<CompletionItem>> items,
+      final Runnable restoreCompletionState, final Runnable restoreFocusState) {
 
     if (!editor.focused().get()) {
       throw new IllegalArgumentException();
@@ -147,9 +116,9 @@ public class CompletionSupport {
         }
       }
     }));
-    completionReg.add(editor.addKeyPressedHandler(new EventHandler<KeyEvent>() {
+    completionReg.add(editor.addTrait(new CellTrait() {
       @Override
-      public void onEvent(KeyEvent event) {
+      public void onKeyPressed(Cell cell, KeyEvent event) {
         CompletionItem selectedItem = menuModel.selectedItem.get();
 
         if (event.is(Key.ESCAPE)) {
@@ -216,15 +185,15 @@ public class CompletionSupport {
       }
     });
 
-    editor.setCompletionItems(completionCell);
+    editor.bottomPopup().set(completionCell);
     completionCell.scrollTo();
   }
 
-  private static ReadableProperty<String> prefixText(final TextEditor t) {
+  private static ReadableProperty<String> prefixText(final TextCell t) {
     return new DerivedProperty<String>(t.text(), t.caretPosition()) {
       @Override
       public String doGet() {
-        return TextEditing.getPrefixText(t);
+        return t.getPrefixText();
       }
 
       @Override
@@ -311,10 +280,10 @@ public class CompletionSupport {
       }
 
       @Override
-      protected boolean onAfterType(TextEditor editor) {
+      protected boolean onAfterType(TextCell editor) {
         if (super.onAfterType(editor)) return true;
 
-        if (!TextEditing.isEnd(editor)) return false;
+        if (!editor.isEnd()) return false;
 
         String text = editor.text().get();
 

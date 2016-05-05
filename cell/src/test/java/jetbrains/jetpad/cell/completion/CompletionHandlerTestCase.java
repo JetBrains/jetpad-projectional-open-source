@@ -19,9 +19,7 @@ import jetbrains.jetpad.base.Async;
 import jetbrains.jetpad.base.SimpleAsync;
 import jetbrains.jetpad.base.edt.TestEventDispatchThread;
 import jetbrains.jetpad.cell.*;
-import jetbrains.jetpad.cell.text.TextEditing;
 import jetbrains.jetpad.cell.text.TextEditingTrait;
-import jetbrains.jetpad.cell.text.TextEditor;
 import jetbrains.jetpad.cell.trait.CellTrait;
 import jetbrains.jetpad.cell.trait.CellTraitPropertySpec;
 import jetbrains.jetpad.completion.CompletionController;
@@ -30,7 +28,11 @@ import jetbrains.jetpad.completion.CompletionParameters;
 import jetbrains.jetpad.completion.CompletionSupplier;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
 
 public abstract class CompletionHandlerTestCase extends CompletionTestCase {
   protected abstract Cell getView();
@@ -99,15 +101,14 @@ public abstract class CompletionHandlerTestCase extends CompletionTestCase {
     assertFalse(getController().isActive());
   }
 
-  private TextEditor addCustomEditor() {
+  private TextCell addCustomEditor() {
     TextCell textCell = new TextCell();
     textCell.addTrait(new TextEditingTrait());
     textCell.focusable().set(true);
     getView().children().add(textCell);
-    TextEditor editor = TextEditing.textEditor(textCell);
-    getView().set(CompletionSupport.EDITOR, editor);
+    getView().set(CompletionSupport.EDITOR, textCell);
     textCell.focus();
-    return editor;
+    return textCell;
   }
 
   @Test

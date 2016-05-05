@@ -17,7 +17,7 @@ package jetbrains.jetpad.cell.position;
 
 import com.google.common.base.Function;
 import jetbrains.jetpad.cell.Cell;
-import jetbrains.jetpad.cell.text.TextEditing;
+import jetbrains.jetpad.cell.TextCell;
 import jetbrains.jetpad.cell.text.TextPositionHandler;
 import jetbrains.jetpad.cell.trait.CellTraitPropertySpec;
 import jetbrains.jetpad.model.property.Property;
@@ -28,8 +28,8 @@ public interface PositionHandler {
   CellTraitPropertySpec<PositionHandler> PROPERTY = new CellTraitPropertySpec<>("positionHandler", new Function<Cell, PositionHandler>() {
     @Override
     public PositionHandler apply(Cell input) {
-      if (TextEditing.isTextEditor(input)) {
-        return new TextPositionHandler(TextEditing.textEditor(input));
+      if (input instanceof TextCell) {
+        return new TextPositionHandler((TextCell) input);
       }
       return new CellDefaultPositionHandler(input);
     }

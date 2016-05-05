@@ -80,12 +80,21 @@ public class TextCell extends Cell {
     return getProp(SELECTION_START);
   }
 
+  public String getPrefixText() {
+    String text = get(TEXT);
+    return text == null ? "" : text.substring(0, caretPosition().get());
+  }
+
   public boolean isEnd() {
     return caretPosition().get() == lastPosition();
   }
 
   public boolean isHome() {
     return caretPosition().get() == 0;
+  }
+
+  public boolean isEmpty() {
+    return lastPosition() == 0;
   }
 
   public int lastPosition() {

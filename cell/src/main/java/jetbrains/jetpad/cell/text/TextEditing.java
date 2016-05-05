@@ -49,45 +49,9 @@ public class TextEditing {
 
   private static final TextEditorStateHandler STATE_HANDLER = new TextEditorStateHandler(false, null);
 
-
-  public static boolean isTextEditor(Cell cell) {
-    return cell instanceof TextCell;
-  }
-
-  public static TextEditor textEditor(Cell cell) {
-    return cellTextEditor(cell);
-  }
-
-  static CellTextEditor cellTextEditor(Cell cell) {
-    if (cell instanceof TextCell) {
-      return new TextCellToEditorAdapter((TextCell) cell);
-    }
-    throw new RuntimeException("Cannot create text editor for " + cell);
-  }
-
-  public static boolean isHome(TextEditor t) {
-    return t.caretPosition().get() == 0;
-  }
-
-  public static boolean isEnd(TextEditor t) {
-    return t.caretPosition().get() == lastPosition(t);
-  }
-
-  public static boolean isEmpty(TextEditor t) {
-    return lastPosition(t) == 0;
-  }
-
-  static int lastPosition(TextEditor t) {
-    return text(t).length();
-  }
-
-  public static String text(TextEditor t) {
-    String text = t.text().get();
+  public static String nonNullText(TextCell cell) {
+    String text = cell.get(TextCell.TEXT);
     return text == null ? "" : text;
-  }
-
-  public static String getPrefixText(TextEditor t) {
-    return text(t).substring(0, t.caretPosition().get());
   }
 
   public static CellTrait textNavigation(final boolean firstAllowed, final boolean lastAllowed) {
@@ -240,13 +204,13 @@ public class TextEditing {
 
     @Override
     public boolean synced(Cell cell) {
-      return myValidator == null || myValidator.apply(cellTextEditor(cell).text().get());
+      return myValidator == null || myValidator.apply(((TextCell) cell).text().get());
     }
 
     @Override
     public TextEditorCellState saveState(Cell cell) {
       TextEditorCellState result = new TextEditorCellState();
-      CellTextEditor editor = cellTextEditor(cell);
+      TextCell editor = (TextCell) cell;
       if (mySaveText) {
         String text = editor.text().get();
         result.myText = text;
@@ -258,7 +222,7 @@ public class TextEditing {
 
     @Override
     public void restoreState(Cell cell, TextEditorCellState state) {
-      CellTextEditor editor = cellTextEditor(cell);
+      TextCell editor = (TextCell) cell;
       if (mySaveText) {
         editor.text().set(state.myText);
       }
