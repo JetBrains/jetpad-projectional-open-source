@@ -15,6 +15,7 @@
  */
 package jetbrains.jetpad.projectional.util;
 
+import com.google.common.base.Predicate;
 import jetbrains.jetpad.base.Registration;
 import jetbrains.jetpad.base.Value;
 import jetbrains.jetpad.cell.Cell;
@@ -22,6 +23,7 @@ import jetbrains.jetpad.cell.CellContainer;
 import jetbrains.jetpad.cell.CellPropertySpec;
 import jetbrains.jetpad.cell.TextCell;
 import jetbrains.jetpad.cell.position.PositionHandler;
+import jetbrains.jetpad.cell.text.TextEditing;
 import jetbrains.jetpad.cell.trait.CellTrait;
 import jetbrains.jetpad.cell.util.Cells;
 import jetbrains.jetpad.event.Key;
@@ -38,13 +40,21 @@ import jetbrains.jetpad.model.property.*;
 
 import java.util.Stack;
 
+import static jetbrains.jetpad.model.composite.Composites.next;
 import static jetbrains.jetpad.model.composite.Composites.nextFocusable;
+import static jetbrains.jetpad.model.composite.Composites.prev;
 import static jetbrains.jetpad.model.composite.Composites.prevFocusable;
 
 public class CellNavigationController {
   public static final CellPropertySpec<Cell> PAIR_CELL = new CellPropertySpec<>("pairCell");
 
   private static final CompositesWithBounds WITH_BOUNDS = new CompositesWithBounds(2);
+
+  private static final Predicate<Cell> EDITABLE = new Predicate<Cell>() {
+    public boolean apply(Cell cell) {
+      return cell.get(TextEditing.EDITABLE) && cell.get(Cell.FOCUSABLE) && Composites.isVisible(cell);
+    }
+  };
 
   public static Registration install(CellContainer container) {
     final CellNavigationController controller = new CellNavigationController(container);
@@ -214,11 +224,22 @@ public class CellNavigationController {
         next = current;
         moveToEnd(next);
       }
+    } else if (event.is(KeyStrokeSpecs.NEXT_EDITABLE)) {
+      next = next(current, EDITABLE);
+      if (next != null) {
+        moveToHome(next);
+      } else if (!current.get(PositionHandler.PROPERTY).isEnd()) {
+        next = current;
+        moveToEnd(next);
+      }
     } else if (event.is(Key.LEFT)) {
       next = prevFocusable(current);
       moveToEnd(next);
     } else if (event.is(KeyStrokeSpecs.PREV_WORD)) {
       next = prevFocusable(current);
+      moveToHome(next);
+    } else if (event.is(KeyStrokeSpecs.PREV_EDITABLE)) {
+      next = prev(current, EDITABLE);
       moveToHome(next);
     } else if (event.is(Key.UP)) {
       next = WITH_BOUNDS.upperFocusable(current, currentOffset);
@@ -277,20 +298,18 @@ public class CellNavigationController {
       }
       restoreOffset = false;
     }
+
     if (next != null) {
       focusedCell().set(next);
-
       if (restoreOffset) {
         moveCaretTo(next, currentOffset - next.getBounds().origin.x);
         myPrevXOffset.set(currentOffset);
       }
-
       if (next instanceof TextCell) {
         ((TextCell) next).scrollToCaret();
       } else {
         scrollTo(next);
       }
-
       event.consume();
     }
     myStackResetEnabled.set(true);

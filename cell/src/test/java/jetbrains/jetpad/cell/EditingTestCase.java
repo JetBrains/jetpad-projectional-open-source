@@ -141,6 +141,14 @@ public abstract class EditingTestCase extends BaseTestCase {
     myEditableCellContainer.macEnd();
   }
 
+  protected final void tab() {
+    myEditableCellContainer.tab();
+  }
+
+  protected final void shiftTab() {
+    myEditableCellContainer.shiftTab();
+  }
+
   protected final void backspace() {
     myEditableCellContainer.backspace();
   }
