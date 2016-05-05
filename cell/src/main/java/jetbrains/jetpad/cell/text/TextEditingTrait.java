@@ -43,6 +43,9 @@ public class TextEditingTrait extends TextNavigationTrait {
     if (spec == CompletionSupport.EDITOR) {
       return TextEditing.textEditor(cell);
     }
+    if (spec == TextEditing.EDITABLE) {
+      return true;
+    }
     return super.get(cell, spec);
   }
 

@@ -33,6 +33,8 @@ import jetbrains.jetpad.cell.util.CellStateHandler;
 import jetbrains.jetpad.values.Color;
 
 public class TextEditing {
+  public static final CellTraitPropertySpec<Boolean> EDITABLE = new CellTraitPropertySpec<>("editable", false);
+
   public static final CellTraitPropertySpec<Boolean> FIRST_ALLOWED = new CellTraitPropertySpec<>("firstAllowed", true);
   public static final CellTraitPropertySpec<Boolean> LAST_ALLOWED = new CellTraitPropertySpec<>("firstAllowed", true);
   public static final CellTraitPropertySpec<Boolean> RT_ON_END = new CellTraitPropertySpec<>("dotLikeRt", false);

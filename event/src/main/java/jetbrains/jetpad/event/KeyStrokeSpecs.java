@@ -28,7 +28,7 @@ public class KeyStrokeSpecs {
   public static final KeyStrokeSpec UNDO = commandOrMeta(Key.Z);
   public static final KeyStrokeSpec REDO = commandOrMeta(Key.Z, ModifierKey.SHIFT);
 
-  public static final KeyStrokeSpec COMPLETE = composite(new KeyStroke(Key.SPACE, ModifierKey.CONTROL), new KeyStroke(Key.TAB));
+  public static final KeyStrokeSpec COMPLETE = composite(new KeyStroke(Key.SPACE, ModifierKey.CONTROL));
 
   public static final KeyStrokeSpec HELP = composite(new KeyStroke(Key.F1, ModifierKey.CONTROL), new KeyStroke(Key.DIGIT_1, ModifierKey.CONTROL));
 
@@ -47,6 +47,9 @@ public class KeyStrokeSpecs {
 
   public static final KeyStrokeSpec PREV_WORD = composite(PREV_WORD_CONTROL, PREV_WORD_ALT);
   public static final KeyStrokeSpec NEXT_WORD = composite(NEXT_WORD_CONTROL, NEXT_WORD_ALT);
+
+  public static final KeyStrokeSpec NEXT_EDITABLE = new KeyStroke(Key.TAB);
+  public static final KeyStrokeSpec PREV_EDITABLE = new KeyStroke(Key.TAB, ModifierKey.SHIFT);
 
   public static final KeyStrokeSpec SELECT_HOME = composite(new KeyStroke(Key.HOME, ModifierKey.SHIFT), new KeyStroke(Key.LEFT, ModifierKey.META, ModifierKey.SHIFT));
   public static final KeyStrokeSpec SELECT_END = composite(new KeyStroke(Key.END, ModifierKey.SHIFT), new KeyStroke(Key.RIGHT, ModifierKey.META, ModifierKey.SHIFT));

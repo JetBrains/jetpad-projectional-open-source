@@ -33,15 +33,16 @@ import static org.junit.Assert.assertTrue;
 public class CellNavigationControllerTest extends EditingTestCase {
   private Cell c1 = new HorizontalCell();
   private TextCell c11 = view(true);
-  private Cell c12 = view(false);
-  private Cell c13 = view(true);
+  private TextCell c12 = view(false);
+  private TextCell c13 = view(true);
   private TextCell c14 = view(true);
 
-  private Cell c2 = view(true);
-  private Cell c3 = view(true);
+  private TextCell c2 = view(true);
+  private TextCell c3 = view(true);
+
   private Cell c4 = new HorizontalCell();
-  private TextCell c41 = navigable();
-  private TextCell c42 = navigable();
+  private TextCell c41 = editable();
+  private TextCell c42 = editable();
 
   @Before
   public void init() {
@@ -184,6 +185,62 @@ public class CellNavigationControllerTest extends EditingTestCase {
   }
 
   @Test
+  public void nextEditable() {
+    c11.focus();
+    tab();
+    assertFocused(c41);
+    assertTrue(c41.isHome());
+    tab();
+    assertFocused(c42);
+    assertTrue(c42.isHome());
+    tab();
+    assertFocused(c42);
+    assertTrue(c42.isEnd());
+    tab();
+    assertFocused(c42);
+    assertTrue(c42.isEnd());
+  }
+
+  @Test
+  public void nextEditableSkipsInvisible() {
+    c41.visible().set(false);
+    c2.focus();
+    tab();
+    assertFocused(c42);
+    assertTrue(c42.isHome());
+  }
+
+  @Test
+  public void nextEditableStaysWhenNoNext() {
+    c41.visible().set(false);
+    c42.visible().set(false);
+    c2.focus();
+    assertTrue(c2.isHome());
+    tab();
+    assertFocused(c2);
+    assertTrue(c2.isEnd());
+  }
+
+  @Test
+  public void navigableIsNotEditable() {
+    Cell c43 = navigable();
+    c4.children().add(1, c43);
+    c42.focus();
+    tab();
+    assertFocused(c42);
+    assertTrue(c42.isEnd());
+  }
+
+  @Test
+  public void editableNotFocusableSkipped() {
+    c42.focusable().set(false);
+    c41.focus();
+    tab();
+    assertFocused(c41);
+    assertTrue(c41.isEnd());
+  }
+
+  @Test
   public void selectionStack() {
     c13.focus();
 
@@ -292,10 +349,17 @@ public class CellNavigationControllerTest extends EditingTestCase {
     return result;
   }
 
-  private TextCell navigable() {
+  private TextCell editable() {
     TextCell result = new TextCell();
     result.text().set("abcdef");
     result.addTrait(TextEditing.textEditing());
+    return result;
+  }
+
+  private TextCell navigable() {
+    TextCell result = new TextCell();
+    result.text().set("abcdef");
+    result.addTrait(TextEditing.textNavigation(true, true));
     return result;
   }
 }
