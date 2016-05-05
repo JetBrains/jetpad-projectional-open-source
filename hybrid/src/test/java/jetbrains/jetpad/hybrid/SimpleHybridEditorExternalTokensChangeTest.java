@@ -66,7 +66,7 @@ public class SimpleHybridEditorExternalTokensChangeTest extends BaseHybridEditor
   public void addMakeIncorrect() {
     setTokens(new IdentifierToken("x"), Tokens.LP, Tokens.RP, comment("test"));
     container.sourceTokens.add(2, Tokens.RP);
-    assertTokens(new IdentifierToken("x"), Tokens.LP, Tokens.RP, Tokens.RP, comment("test"));
+    assertTokens(new IdentifierToken("x"), Tokens.LP_CALL, Tokens.RP, Tokens.RP, comment("test"));
   }
 
   @Test
@@ -80,7 +80,7 @@ public class SimpleHybridEditorExternalTokensChangeTest extends BaseHybridEditor
   public void removeMakeIncorrect() {
     setTokens(new IdentifierToken("x"), Tokens.LP, Tokens.RP, comment("test"));
     container.sourceTokens.remove(2);
-    assertTokens(new IdentifierToken("x"), Tokens.LP, comment("test"));
+    assertTokens(new IdentifierToken("x"), Tokens.LP_CALL, comment("test"));
   }
 
   @Test
@@ -136,7 +136,7 @@ public class SimpleHybridEditorExternalTokensChangeTest extends BaseHybridEditor
   public void replaceCommentWithAnotherCorrectToIncorrect() {
     setTokens(new IdentifierToken("x"), Tokens.LP, Tokens.RP, comment("test"));
     container.sourceTokens.set(3, Tokens.RP);
-    assertTokens(new IdentifierToken("x"), Tokens.LP, Tokens.RP, Tokens.RP);
+    assertTokens(new IdentifierToken("x"), Tokens.LP_CALL, Tokens.RP, Tokens.RP);
   }
 
   @Test
@@ -150,7 +150,7 @@ public class SimpleHybridEditorExternalTokensChangeTest extends BaseHybridEditor
   public void replaceCommentWithAnotherIncorrectToIncorrect() {
     setTokens(new IdentifierToken("x"), Tokens.LP, Tokens.RP, Tokens.RP, comment("test"));
     container.sourceTokens.set(4, Tokens.FACTORIAL);
-    assertTokens(new IdentifierToken("x"), Tokens.LP, Tokens.RP, Tokens.RP, Tokens.FACTORIAL);
+    assertTokens(new IdentifierToken("x"), Tokens.LP_CALL, Tokens.RP, Tokens.RP, Tokens.FACTORIAL);
   }
 
   @Test
@@ -164,7 +164,7 @@ public class SimpleHybridEditorExternalTokensChangeTest extends BaseHybridEditor
   public void replaceWithCommentCorrectToIncorrect() {
     setTokens(new IdentifierToken("x"), Tokens.LP, Tokens.RP);
     container.sourceTokens.set(2, comment("test"));
-    assertTokens(new IdentifierToken("x"), Tokens.LP, comment("test"));
+    assertTokens(new IdentifierToken("x"), Tokens.LP_CALL, comment("test"));
   }
 
   @Test
@@ -178,7 +178,7 @@ public class SimpleHybridEditorExternalTokensChangeTest extends BaseHybridEditor
   public void replaceWithCommentIncorrectToIncorrect() {
     setTokens(new IdentifierToken("x"), Tokens.LP, Tokens.RP, Tokens.RP, Tokens.FACTORIAL);
     container.sourceTokens.set(4, comment("test"));
-    assertTokens(new IdentifierToken("x"), Tokens.LP, Tokens.RP, Tokens.RP, comment("test"));
+    assertTokens(new IdentifierToken("x"), Tokens.LP_CALL, Tokens.RP, Tokens.RP, comment("test"));
   }
 
   private void assertTokens(Token... tokens) {

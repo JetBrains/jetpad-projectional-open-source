@@ -163,6 +163,17 @@ public class ParsingHybridPropertyTest extends BaseTestCase {
   }
 
   @Test
+  public void previousFormatting() {
+    mySourceTokens.add(new IdentifierToken("x"));
+    mySourceTokens.add(Tokens.LP);
+    mySourceTokens.add(Tokens.RP);
+    assertSame(myProp.getTokens().get(1), Tokens.LP_CALL);
+
+    mySourceTokens.add(Tokens.MUL);
+    assertSame(myProp.getTokens().get(1), Tokens.LP_CALL);
+  }
+
+  @Test
   public void withListener() {
     Registration r = myProp.addHandler(new EventHandler<PropertyChangeEvent<Expr>>() {
       @Override
