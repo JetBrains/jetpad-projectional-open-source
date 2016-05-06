@@ -37,7 +37,7 @@ class TextCellMapper extends BaseCellMapper<TextCell, TextView> {
 
     view.text().set(cell.text().get());
     view.caretPosition().set(cell.caretPosition().get());
-    view.caretVisible().set(cell.caretVisible().get() && cell.focused().get() && getContext().focused.get());
+    view.caretVisible().set(cell.caretVisible().get() && getContext().focused.get());
     view.textColor().set(cell.textColor().get());
     view.bold().set(cell.bold().get());
     view.fontFamily().set(cell.fontFamily().get());

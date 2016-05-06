@@ -128,7 +128,7 @@ class TextCellMapper extends BaseCellMapper<TextCell> {
 
     myTextEditor.setText(getSource().text().get());
     myTextEditor.setCaretPosition(getSource().caretPosition().get());
-    myTextEditor.setCaretVisible(getSource().caretVisible().get() && focused);
+    myTextEditor.setCaretVisible(getSource().caretVisible().get());
     myTextEditor.setTextColor(getSource().textColor().get());
     myTextEditor.setBold(getSource().bold().get());
     myTextEditor.setFontFamily(getSource().fontFamily().get());
