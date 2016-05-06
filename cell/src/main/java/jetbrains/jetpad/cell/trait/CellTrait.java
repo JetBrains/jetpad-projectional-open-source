@@ -27,6 +27,19 @@ import jetbrains.jetpad.cell.event.FocusEvent;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * Memory efficient way to add listeners/modify properties to a Cell.
+ *
+ * Since we need a large number of cells, we can't set each property on each cell separately,
+ * and we can't add every required listener to event sources.
+ *
+ * Instead to save memory you should do the following:
+ * - For each typical kind of cell create CellTrait
+ * - Make this trait provide common properties for this class of cells
+ * - Make this trait handle events, putting the state related to this event into cell properties
+ *
+ * In this way you can dramatically reduce amount of memory required by your editor.
+ */
 public abstract class CellTrait {
   public static final CellTrait EMPTY = new CellTrait() {};
 
