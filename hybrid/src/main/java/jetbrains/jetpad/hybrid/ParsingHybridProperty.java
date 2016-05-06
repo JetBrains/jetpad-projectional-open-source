@@ -63,7 +63,7 @@ public class ParsingHybridProperty<ModelT> implements HybridProperty<ModelT> {
     myParsingContextFactory = parsingContextFactory;
     initUpdate();
     myValue = parse();
-    update();
+    updateFromSource(null);
     mySourceTokens.addListener(new CollectionListener<Token>() {
       @Override
       public void onItemAdded(final CollectionItemEvent<? extends Token> event) {
@@ -75,7 +75,7 @@ public class ParsingHybridProperty<ModelT> implements HybridProperty<ModelT> {
             }
           });
         } else {
-          update();
+          updateFromSource(event);
         }
       }
 
@@ -89,7 +89,7 @@ public class ParsingHybridProperty<ModelT> implements HybridProperty<ModelT> {
             }
           });
           if (!(event.getOldItem() instanceof CommentToken)) {
-            update();
+            updateFromSource(event);
           }
         } else if (event.getOldItem() instanceof CommentToken) {
           executeInUpdate(new Runnable() {
@@ -98,9 +98,9 @@ public class ParsingHybridProperty<ModelT> implements HybridProperty<ModelT> {
               myPrettyTokens.set(event.getIndex(), event.getNewItem());
             }
           });
-          update();
+          updateFromSource(event);
         } else {
-          update();
+          updateFromSource(event);
         }
       }
 
@@ -114,7 +114,7 @@ public class ParsingHybridProperty<ModelT> implements HybridProperty<ModelT> {
             }
           });
         } else {
-          update();
+          updateFromSource(event);
         }
       }
     });
@@ -151,24 +151,56 @@ public class ParsingHybridProperty<ModelT> implements HybridProperty<ModelT> {
     });
   }
 
-  private void update() {
+  private void updateFromSource(final CollectionItemEvent<? extends Token> change) {
     executeInUpdate(new Runnable() {
       @Override
       public void run() {
-        ModelT newValue = parse();
-        if (newValue != null) {
-          PrettyPrinterContext<? super ModelT> printCtx = new PrettyPrinterContext<>(myPrinter);
-          printCtx.print(newValue);
-          updatePrettyTokens(printCtx.tokens());
-        } else {
-          myPrettyTokens.clear();
-          myPrettyTokens.addAll(mySourceTokens);
+        ModelT newValue = tryPrettyPrint();
+        if (newValue == null) {
+          if (change != null) {
+            switch (change.getType()) {
+              case ADD:
+                myPrettyTokens.add(change.getIndex(), change.getNewItem());
+                break;
+              case SET:
+                myPrettyTokens.set(change.getIndex(), change.getNewItem());
+                break;
+              case REMOVE:
+                myPrettyTokens.remove(change.getIndex());
+                break;
+            }
+          } else {
+            myPrettyTokens.clear();
+            myPrettyTokens.addAll(mySourceTokens);
+          }
         }
         if (!Objects.equals(myValue, newValue)) {
           updateValue(newValue);
         }
       }
     });
+  }
+
+  private void updateFromTokens() {
+    executeInUpdate(new Runnable() {
+      @Override
+      public void run() {
+        ModelT newValue = tryPrettyPrint();
+        if (!Objects.equals(myValue, newValue)) {
+          updateValue(newValue);
+        }
+      }
+    });
+  }
+
+  private ModelT tryPrettyPrint() {
+    ModelT newValue = parse();
+    if (newValue != null) {
+      PrettyPrinterContext<? super ModelT> printCtx = new PrettyPrinterContext<>(myPrinter);
+      printCtx.print(newValue);
+      updatePrettyTokens(printCtx.tokens());
+    }
+    return newValue;
   }
 
   private void updateValue(ModelT newValue) {
@@ -219,7 +251,7 @@ public class ParsingHybridProperty<ModelT> implements HybridProperty<ModelT> {
         }
       });
       if (!(item instanceof CommentToken)) {
-        update();
+        updateFromTokens();
       }
     }
 
@@ -232,7 +264,7 @@ public class ParsingHybridProperty<ModelT> implements HybridProperty<ModelT> {
         }
       });
       if (!(oldItem instanceof CommentToken && newItem instanceof CommentToken)) {
-        update();
+        updateFromTokens();
       }
     }
 
@@ -245,7 +277,7 @@ public class ParsingHybridProperty<ModelT> implements HybridProperty<ModelT> {
         }
       });
       if (!(item instanceof CommentToken)) {
-        update();
+        updateFromTokens();
       }
     }
   }

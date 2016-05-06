@@ -223,6 +223,20 @@ public class PrettyHybridPropertyTest extends BaseTestCase {
   }
 
   @Test
+  public void olderPretty() {
+    init();
+    setTokens(new IdentifierToken("x"), Tokens.LP, Tokens.RP);
+    assertSync();
+    assertSame(Tokens.LP_CALL, prop.getTokens().get(1));
+    assertSame(Tokens.LP_CALL, source.get(1).token);
+
+    addTokens(Tokens.MUL);
+    assertSync();
+    assertSame(Tokens.LP_CALL, prop.getTokens().get(1));
+    assertSame(Tokens.LP_CALL, source.get(1).token);
+  }
+
+  @Test
   public void reprintWithListener() {
     init();
     final Value<Integer> sourceChanges = new Value<>(0);
