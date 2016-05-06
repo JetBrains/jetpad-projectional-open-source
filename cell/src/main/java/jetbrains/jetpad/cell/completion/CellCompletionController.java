@@ -15,23 +15,30 @@
  */
 package jetbrains.jetpad.cell.completion;
 
+import jetbrains.jetpad.base.Registration;
 import jetbrains.jetpad.base.Runnables;
 import jetbrains.jetpad.cell.Cell;
 import jetbrains.jetpad.cell.CellPropertySpec;
-import jetbrains.jetpad.cell.text.TextEditing;
+import jetbrains.jetpad.cell.HorizontalCell;
+import jetbrains.jetpad.cell.TextCell;
+import jetbrains.jetpad.cell.event.CompletionEvent;
+import jetbrains.jetpad.cell.text.TextEditingTrait;
 import jetbrains.jetpad.completion.BaseCompletionParameters;
 import jetbrains.jetpad.completion.CompletionController;
 import jetbrains.jetpad.completion.CompletionParameters;
+import jetbrains.jetpad.model.event.CompositeRegistration;
 
 public final class CellCompletionController implements CompletionController {
+  private static final CellPropertySpec<Registration> EDITOR_DISPOSE_REG =
+      new CellPropertySpec<>("textEditorDisposeReg", Registration.EMPTY);
   private static final CellPropertySpec<Boolean> ACTIVE = new CellPropertySpec<>("isCompletionActive", false);
 
   public static boolean isCompletionActive(Cell cell) {
     return cell.get(ACTIVE);
   }
 
-  private Cell myCell;
-  private boolean myMenu;
+  private final Cell myCell;
+  private final boolean myMenu;
 
   public CellCompletionController(Cell cell) {
     this(cell, false);
@@ -71,8 +78,10 @@ public final class CellCompletionController implements CompletionController {
         CellCompletionController.this.doDeactivate();
       }
     };
+    TextCell cellTextEditor = myCell.get(CompletionSupport.EDITOR);
+    TextCell editor = cellTextEditor == null ? defaultTextEditor() : cellTextEditor;
     CompletionSupport.showCompletion(
-        myCell.get(CompletionSupport.EDITOR),
+        editor,
         Completion.allCompletion(myCell, menuCompletionParameters()),
         deactivate,
         Runnables.seq(state, restoreFocus));
@@ -90,17 +99,17 @@ public final class CellCompletionController implements CompletionController {
   private void doDeactivate() {
     if (isActive()) {
       myCell.set(ACTIVE, false);
-      myCell.get(CompletionSupport.EDITOR).disable();
+      myCell.get(EDITOR_DISPOSE_REG).remove();
     }
   }
 
   @Override
   public boolean hasAmbiguousMatches() {
-    if (!TextEditing.isTextEditor(myCell)) {
+    if (!(myCell instanceof TextCell)) {
       return true;
     }
     CompletionItems helper = Completion.completionFor(myCell, menuCompletionParameters());
-    return !helper.hasSingleMatch(TextEditing.getPrefixText(TextEditing.textEditor(myCell)), false);
+    return !helper.hasSingleMatch(((TextCell) myCell).getPrefixText(), false);
   }
 
   private CompletionParameters menuCompletionParameters() {
@@ -110,5 +119,34 @@ public final class CellCompletionController implements CompletionController {
         return true;
       }
     };
+  }
+
+  private TextCell defaultTextEditor() {
+    final TextCell editor = new TextCell();
+    editor.focusable().set(true);
+    final Registration textEditingReg = editor.addTrait(new TextEditingTrait() {
+      @Override
+      public void onComplete(Cell cell, CompletionEvent event) {
+        // nop
+      }
+    });
+    final HorizontalCell popup = new HorizontalCell();
+    popup.children().add(editor);
+    myCell.frontPopup().set(popup);
+    editor.focus();
+
+    Registration disposeReg = new CompositeRegistration(
+        myCell.set(CompletionSupport.EDITOR, editor), // to provide same editor instance to all further calls
+        new Registration() {
+          @Override
+          protected void doRemove() {
+            editor.text().set("");
+            popup.removeFromParent();
+            textEditingReg.remove();
+          }
+        }
+    );
+    myCell.set(EDITOR_DISPOSE_REG, disposeReg);
+    return editor;
   }
 }

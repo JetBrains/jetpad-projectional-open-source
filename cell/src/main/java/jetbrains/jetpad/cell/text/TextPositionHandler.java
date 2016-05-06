@@ -16,6 +16,7 @@
 package jetbrains.jetpad.cell.text;
 
 import jetbrains.jetpad.base.Registration;
+import jetbrains.jetpad.cell.TextCell;
 import jetbrains.jetpad.cell.position.PositionHandler;
 import jetbrains.jetpad.model.event.EventHandler;
 import jetbrains.jetpad.model.property.DerivedProperty;
@@ -27,9 +28,9 @@ import static jetbrains.jetpad.cell.text.TextNavigationTrait.getMaxPos;
 import static jetbrains.jetpad.cell.text.TextNavigationTrait.getMinPos;
 
 public class TextPositionHandler implements PositionHandler {
-  private final TextEditor myEditor;
+  private final TextCell myEditor;
 
-  public TextPositionHandler(TextEditor editor) {
+  public TextPositionHandler(TextCell editor) {
     myEditor = editor;
   }
 
