@@ -25,7 +25,7 @@ import jetbrains.jetpad.model.property.PropertyChangeEvent;
 /**
  * Cell trait which 'extends' a number of other cell traits.
  *
- * Using this class results in a structure resembling a JS prototype chain and multiple inheritance hierarchy.
+ * Using this class results in a structure resembling a JS prototype chain.
  */
 public abstract class DerivedCellTrait extends CellTrait {
   protected abstract CellTrait getBase(Cell cell);
