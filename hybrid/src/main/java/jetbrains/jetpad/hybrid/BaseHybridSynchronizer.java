@@ -570,6 +570,7 @@ public abstract class BaseHybridSynchronizer<SourceT, SpecT extends SimpleHybrid
     myTokenListEditor.tokens.clear();
     myTokenListEditor.tokens.addAll(tokens);
     myTokenListEditor.updateToPrintedTokens();
+    myTokensEditPostProcessor.afterTokensEdit(tokens, mySource.get());
   }
 
   public ObservableList<Token> tokens() {
@@ -798,6 +799,9 @@ public abstract class BaseHybridSynchronizer<SourceT, SpecT extends SimpleHybrid
   private static class EmptyTokensEditPostProcessor<SourceT> implements TokensEditPostProcessor<SourceT> {
     @Override
     public void afterTokensEdit(List<Token> tokens, SourceT value) {
+    }
+    @Override
+    public void afterTokenCompleted(List<Token> tokens, SourceT value) {
     }
   };
 }

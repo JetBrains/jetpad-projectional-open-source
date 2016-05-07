@@ -478,6 +478,7 @@ public class ProjectionalListSynchronizerTest extends EditingTestCase {
     type("ite");
 
     complete();
+    enter();
 
     assertEquals(1, container.children.size());
     assertTrue(container.children.get(0) instanceof NonEmptyChild);
@@ -1272,6 +1273,12 @@ public class ProjectionalListSynchronizerTest extends EditingTestCase {
           public List<CompletionItem> get(CompletionParameters cp) {
             List<CompletionItem> result = new ArrayList<>();
             result.add(new SimpleCompletionItem("item") {
+              @Override
+              public Runnable complete(String text) {
+                return target.set(new NonEmptyChild());
+              }
+            });
+            result.add(new SimpleCompletionItem("item_alias") {
               @Override
               public Runnable complete(String text) {
                 return target.set(new NonEmptyChild());

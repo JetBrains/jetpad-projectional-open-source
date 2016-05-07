@@ -699,6 +699,10 @@ abstract class BaseProjectionalSynchronizer<SourceT, ContextT, SourceItemT> impl
             });
           }
 
+          if (spec == TextEditing.EAGER_COMPLETION) {
+            return true;
+          }
+
           return super.get(cell, spec);
         }
       });

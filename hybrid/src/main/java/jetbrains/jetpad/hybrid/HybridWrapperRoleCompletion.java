@@ -19,6 +19,7 @@ import com.google.common.base.CharMatcher;
 import com.google.common.base.Function;
 import com.google.common.base.Supplier;
 import com.google.common.collect.FluentIterable;
+import jetbrains.jetpad.base.Runnables;
 import jetbrains.jetpad.cell.Cell;
 import jetbrains.jetpad.completion.*;
 import jetbrains.jetpad.hybrid.parser.Token;
@@ -73,7 +74,9 @@ public class HybridWrapperRoleCompletion<ContainerT, WrapperT, TargetT> implemen
             Mapper<?, ?> targetItemMapper =  mapper.getDescendantMapper(targetItem);
             BaseHybridSynchronizer<?, ?> sync = mySyncProvider.apply(targetItemMapper);
             sync.setTokens(Arrays.asList(tokens));
-            return sync.selectOnCreation(selectionIndex, LAST);
+            return targetItemMapper.isAttached()
+                ? sync.selectOnCreation(selectionIndex, LAST)
+                : Runnables.EMPTY;
           }
         };
 

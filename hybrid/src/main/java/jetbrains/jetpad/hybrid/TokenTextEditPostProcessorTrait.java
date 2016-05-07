@@ -17,6 +17,8 @@ package jetbrains.jetpad.hybrid;
 
 import jetbrains.jetpad.cell.Cell;
 import jetbrains.jetpad.cell.trait.CellTrait;
+import jetbrains.jetpad.cell.trait.CellTraitEventSpec;
+import jetbrains.jetpad.cell.util.Cells;
 import jetbrains.jetpad.event.*;
 
 class TokenTextEditPostProcessorTrait<SourceT> extends CellTrait {
@@ -30,20 +32,20 @@ class TokenTextEditPostProcessorTrait<SourceT> extends CellTrait {
 
   @Override
   public void onKeyTyped(Cell cell, KeyEvent event) {
-    myPostProcessor.afterTokensEdit(mySync.tokens(), mySync.property().get());
+    afterTokensEdit();
   }
 
   @Override
   public void onKeyPressed(Cell cell, KeyEvent event) {
     if (isRemove(event)) {
-      myPostProcessor.afterTokensEdit(mySync.tokens(), mySync.property().get());
+      afterTokensEdit();
     }
   }
 
   @Override
   public void onKeyPressedLowPriority(Cell cell, KeyEvent event) {
     if (isRemove(event)) {
-      myPostProcessor.afterTokensEdit(mySync.tokens(), mySync.property().get());
+      afterTokensEdit();
     }
   }
 
@@ -52,7 +54,7 @@ class TokenTextEditPostProcessorTrait<SourceT> extends CellTrait {
     if (event.getResult() != null
         && event.getResult().isSupported(ContentKinds.SINGLE_LINE_TEXT)
         && !TextContentHelper.getText(event.getResult()).isEmpty()) {
-      myPostProcessor.afterTokensEdit(mySync.tokens(), mySync.property().get());
+      afterTokensEdit();
     }
   }
 
@@ -60,11 +62,26 @@ class TokenTextEditPostProcessorTrait<SourceT> extends CellTrait {
   public void onPaste(Cell cell, PasteEvent event) {
     if (event.getContent().isSupported(ContentKinds.SINGLE_LINE_TEXT)
         && !TextContentHelper.getText(event.getContent()).isEmpty()) {
-      myPostProcessor.afterTokensEdit(mySync.tokens(), mySync.property().get());
+      afterTokensEdit();
+    }
+  }
+
+  @Override
+  public void onCellTraitEvent(Cell cell, CellTraitEventSpec<?> spec, Event event) {
+    if (spec == Cells.AFTER_COMPLETED) {
+      afterTokenCompleted();
     }
   }
 
   private boolean isRemove(KeyEvent event) {
     return event.getKey() == Key.BACKSPACE || event.getKey() == Key.DELETE;
+  }
+
+  private void afterTokensEdit() {
+    myPostProcessor.afterTokensEdit(mySync.tokens(), mySync.property().get());
+  }
+
+  private void afterTokenCompleted() {
+    myPostProcessor.afterTokenCompleted(mySync.tokens(), mySync.property().get());
   }
 }
