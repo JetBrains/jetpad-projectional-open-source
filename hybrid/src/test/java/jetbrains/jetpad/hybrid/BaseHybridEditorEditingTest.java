@@ -1420,13 +1420,6 @@ abstract class BaseHybridEditorEditingTest<ContainerT, MapperT extends Mapper<Co
   }
 
   @Test
-  public void postProcessTokensSet() {
-    Value<List<Token>> lastSeenTokens = installTrackingPostProcessor(true);
-    setTokens(integer(1), integer(2));
-    assertTokensEqual(of(integer(1), integer(2)), lastSeenTokens.get());
-  }
-
-  @Test
   public void postProcessHybridRoleCompletion() {
     CompletionSupplier roleCompletionSupplier = createHybridWrapperRoleCompletionSupplier();
     CompletionItems completionItems = new CompletionItems(roleCompletionSupplier.get(requireBulkCompletion()));
@@ -1437,6 +1430,35 @@ abstract class BaseHybridEditorEditingTest<ContainerT, MapperT extends Mapper<Co
 
     assertNotEquals(initialSync, sync);
     assertTrue(sync.tokens().isEmpty());
+  }
+
+  @Test
+  public void postProcessHybridRoleMenuCompletion() {
+    CompletionSupplier roleCompletionSupplier = createHybridWrapperRoleCompletionSupplier();
+    CompletionItems completionItems = new CompletionItems(roleCompletionSupplier.get(requireCompletionMenu()));
+
+    final List<Token> postProcessedTokens = new ArrayList<>();
+    sync.setTokensEditPostProcessor(new TokensEditPostProcessor<Expr>() {
+      @Override
+      public void afterTokensEdit(List<Token> tokens, Expr value) {
+        throw new IllegalStateException();
+      }
+      @Override
+      public void afterTokenCompleted(List<Token> tokens, Expr value) {
+        postProcessedTokens.addAll(tokens);
+      }
+    });
+    completionItems.completeFirstMatch("1");
+    assertTokensEqual(of(integer(1)), postProcessedTokens);
+  }
+
+  private CompletionParameters requireCompletionMenu() {
+    return new BaseCompletionParameters() {
+      @Override
+      public boolean isMenu() {
+        return true;
+      }
+    };
   }
 
   private Value<List<Token>> installTrackingPostProcessor(final boolean assertTokensChange) {

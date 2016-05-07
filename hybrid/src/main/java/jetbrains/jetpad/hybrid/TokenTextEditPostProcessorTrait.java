@@ -68,7 +68,9 @@ class TokenTextEditPostProcessorTrait<SourceT> extends CellTrait {
 
   @Override
   public void onCellTraitEvent(Cell cell, CellTraitEventSpec<?> spec, Event event) {
-    if (spec == Cells.AFTER_COMPLETED) {
+    if (spec == Cells.AFTER_EDITED) {
+      afterTokensEdit();
+    } else if (spec == Cells.AFTER_COMPLETED) {
       afterTokenCompleted();
     }
   }

@@ -31,6 +31,8 @@ import java.util.List;
 public class Cells {
   public static final CellTraitEventSpec<Event> BECAME_EMPTY = new CellTraitEventSpec<>("becameEmpty", false);
   public static final CellTraitEventSpec<Event> BECAME_INVALID = new CellTraitEventSpec<>("becameInvalid", false);
+
+  public static final CellTraitEventSpec<Event> AFTER_EDITED = new CellTraitEventSpec<>("afterEdited", false);
   public static final CellTraitEventSpec<Event> AFTER_COMPLETED = new CellTraitEventSpec<>("afterCompleted", false);
 
   public static Cell getNonPopupAncestor(Cell c) {

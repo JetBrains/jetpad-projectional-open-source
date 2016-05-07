@@ -21,7 +21,10 @@ import com.google.common.base.Supplier;
 import com.google.common.collect.FluentIterable;
 import jetbrains.jetpad.base.Runnables;
 import jetbrains.jetpad.cell.Cell;
+import jetbrains.jetpad.cell.trait.CellTraitEventSpec;
+import jetbrains.jetpad.cell.util.Cells;
 import jetbrains.jetpad.completion.*;
+import jetbrains.jetpad.event.Event;
 import jetbrains.jetpad.hybrid.parser.Token;
 import jetbrains.jetpad.mapper.Mapper;
 import jetbrains.jetpad.projectional.generic.Role;
@@ -63,7 +66,7 @@ public class HybridWrapperRoleCompletion<ContainerT, WrapperT, TargetT> implemen
   public CompletionSupplier createRoleCompletion(final Mapper<?, ?> mapper, ContainerT contextNode, final Role<WrapperT> target) {
     return new CompletionSupplier() {
       @Override
-      public List<CompletionItem> get(CompletionParameters cp) {
+      public List<CompletionItem> get(final CompletionParameters cp) {
         List<CompletionItem> result = new ArrayList<>();
 
         final BaseCompleter completer = new BaseCompleter() {
@@ -74,6 +77,8 @@ public class HybridWrapperRoleCompletion<ContainerT, WrapperT, TargetT> implemen
             Mapper<?, ?> targetItemMapper =  mapper.getDescendantMapper(targetItem);
             BaseHybridSynchronizer<?, ?> sync = mySyncProvider.apply(targetItemMapper);
             sync.setTokens(Arrays.asList(tokens));
+            CellTraitEventSpec<Event> traitEvent = cp.isMenu() ? Cells.AFTER_COMPLETED : Cells.AFTER_EDITED;
+            sync.getTargetList().iterator().next().dispatch(new Event(), traitEvent);
             return targetItemMapper.isAttached()
                 ? sync.selectOnCreation(selectionIndex, LAST)
                 : Runnables.EMPTY;
