@@ -42,7 +42,7 @@ class TextCellMapper extends BaseCellMapper<TextCell, TextView> {
     view.bold().set(cell.bold().get());
     view.fontSize().set(cell.fontSize().get());
     view.fontFamily().set(cell.fontFamily().get());
-    view.selectionVisible().set(cell.selectionVisible().get() && cell.focused().get());
+    view.selectionVisible().set(cell.selectionVisible().get());
     view.selectionStart().set(cell.selectionStart().get());
   }
 }
