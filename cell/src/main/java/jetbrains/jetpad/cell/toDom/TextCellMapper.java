@@ -134,7 +134,7 @@ class TextCellMapper extends BaseCellMapper<TextCell> {
     myTextEditor.setFontFamily(getSource().fontFamily().get());
     myTextEditor.setFontSize(getSource().fontSize().get());
 
-    myTextEditor.setSelectionVisible(getSource().selectionVisible().get() && focused);
+    myTextEditor.setSelectionVisible(getSource().selectionVisible().get());
     myTextEditor.setSelectionStart(getSource().selectionStart().get());
   }
 
