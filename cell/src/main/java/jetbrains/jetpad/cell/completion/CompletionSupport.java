@@ -26,7 +26,9 @@ import jetbrains.jetpad.cell.text.TextEditing;
 import jetbrains.jetpad.cell.text.TextEditingTrait;
 import jetbrains.jetpad.cell.trait.CellTrait;
 import jetbrains.jetpad.cell.trait.CellTraitPropertySpec;
+import jetbrains.jetpad.cell.util.Cells;
 import jetbrains.jetpad.completion.*;
+import jetbrains.jetpad.event.Event;
 import jetbrains.jetpad.event.Key;
 import jetbrains.jetpad.event.KeyEvent;
 import jetbrains.jetpad.event.ModifierKey;
@@ -133,6 +135,7 @@ public class CompletionSupport {
         if (event.is(Key.ENTER)) {
           completer.handle(selectedItem);
           event.consume();
+          cell.dispatch(new Event(), Cells.AFTER_COMPLETED);
           return;
         }
 

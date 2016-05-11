@@ -21,4 +21,5 @@ import java.util.List;
 
 public interface TokensEditPostProcessor<SourceT> {
   void afterTokensEdit(List<Token> tokens, SourceT value);
+  void afterTokenCompleted(List<Token> tokens, SourceT value);
 }

@@ -135,6 +135,7 @@ public class TextEditingTrait extends TextNavigationTrait {
     String currentText = TextEditing.nonNullText(editor);
     if (prefixed.size() == 1 && !currentText.isEmpty() && canCompleteWithCtrlSpace(editor)) {
       prefixed.get(0).complete(prefixText).run();
+      cell.dispatch(new Event(), Cells.AFTER_COMPLETED);
       event.consume();
     } else if (handler.canActivate()) {
       handler.activate();

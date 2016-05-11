@@ -18,6 +18,7 @@ package jetbrains.jetpad.hybrid;
 import com.google.common.base.Function;
 import com.google.common.base.Supplier;
 import com.google.common.collect.FluentIterable;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Range;
 import jetbrains.jetpad.base.Registration;
 import jetbrains.jetpad.base.Runnables;
@@ -87,6 +88,7 @@ abstract class BaseHybridEditorEditingTest<ContainerT, MapperT extends Mapper<Co
   public void dispose() {
     mapper.detachRoot();
     registration.remove();
+    myCellContainer.root.children().remove(targetCell);
   }
 
   @Test
@@ -1097,14 +1099,8 @@ abstract class BaseHybridEditorEditingTest<ContainerT, MapperT extends Mapper<Co
 
   @Test
   public void bulkCompletionInHybridWrapperRole() {
-    CompletionParameters requireBulkCompletion = new BaseCompletionParameters() {
-      @Override
-      public boolean isBulkCompletionRequired() {
-        return true;
-      }
-    };
     CompletionSupplier roleCompletionSupplier = createHybridWrapperRoleCompletionSupplier();
-    CompletionItems completionItems = new CompletionItems(roleCompletionSupplier.get(requireBulkCompletion));
+    CompletionItems completionItems = new CompletionItems(roleCompletionSupplier.get(requireBulkCompletion()));
 
     String code = "'text 1' + 1";
     for (boolean eagerCompletion : new boolean[] { false, true }) {
@@ -1113,6 +1109,15 @@ abstract class BaseHybridEditorEditingTest<ContainerT, MapperT extends Mapper<Co
     completionItems.completeFirstMatch(code);
     assertTokensEqual(of(singleQtd("text 1"), Tokens.PLUS, integer(1)), sync.tokens());
     assertFocused(targetCell.lastChild());
+  }
+
+  private CompletionParameters requireBulkCompletion() {
+    return new BaseCompletionParameters() {
+      @Override
+      public boolean isBulkCompletionRequired() {
+        return true;
+      }
+    };
   }
 
   @Test
@@ -1253,6 +1258,13 @@ abstract class BaseHybridEditorEditingTest<ContainerT, MapperT extends Mapper<Co
   @Test
   public void reinitInTokensPostProcessor() {
     Synchronizer initialSync = sync;
+    installResettingPostProcessor();
+    type("1 2"); type("3");
+    assertNotEquals(initialSync, sync);
+    assertTokens(integer(3));
+  }
+
+  private void installResettingPostProcessor() {
     sync.setTokensEditPostProcessor(new TokensEditPostProcessor<Expr>() {
       @Override
       public void afterTokensEdit(List<Token> tokens, Expr value) {
@@ -1261,10 +1273,11 @@ abstract class BaseHybridEditorEditingTest<ContainerT, MapperT extends Mapper<Co
           init();
         }
       }
+      @Override
+      public void afterTokenCompleted(List<Token> tokens, Expr value) {
+        throw new IllegalStateException();
+      }
     });
-    type("1 2"); type("3");
-    assertNotEquals(initialSync, sync);
-    assertTokens(integer(3));
   }
 
   @Test
@@ -1389,11 +1402,79 @@ abstract class BaseHybridEditorEditingTest<ContainerT, MapperT extends Mapper<Co
     assertTrue(lastSeenTokens.get().isEmpty());
   }
 
+  @Test
+  public void postProcessCompletion() {
+    // "value" prefix won't complete, tokens will stay [] multiple times
+    Value<List<Token>> lastSeenTokens = installTrackingPostProcessor(false);
+    type("valu");
+    complete();
+    assertTokensEqual(ImmutableList.of(value()), lastSeenTokens.get());
+  }
+
+  @Test
+  public void postProcessCompletionWithMenu() {
+    Value<List<Token>> lastSeenTokens = installTrackingPostProcessor(true);
+    complete();
+    enter();
+    assertTokensEqual(of(Tokens.FACTORIAL), lastSeenTokens.get());
+  }
+
+  @Test
+  public void postProcessHybridRoleCompletion() {
+    CompletionSupplier roleCompletionSupplier = createHybridWrapperRoleCompletionSupplier();
+    CompletionItems completionItems = new CompletionItems(roleCompletionSupplier.get(requireBulkCompletion()));
+
+    BaseHybridSynchronizer initialSync = sync;
+    installResettingPostProcessor();
+    completionItems.completeFirstMatch("1 2");
+
+    assertNotEquals(initialSync, sync);
+    assertTrue(sync.tokens().isEmpty());
+  }
+
+  @Test
+  public void postProcessHybridRoleMenuCompletion() {
+    CompletionSupplier roleCompletionSupplier = createHybridWrapperRoleCompletionSupplier();
+    CompletionItems completionItems = new CompletionItems(roleCompletionSupplier.get(requireCompletionMenu()));
+
+    final List<Token> postProcessedTokens = new ArrayList<>();
+    sync.setTokensEditPostProcessor(new TokensEditPostProcessor<Expr>() {
+      @Override
+      public void afterTokensEdit(List<Token> tokens, Expr value) {
+        throw new IllegalStateException();
+      }
+      @Override
+      public void afterTokenCompleted(List<Token> tokens, Expr value) {
+        postProcessedTokens.addAll(tokens);
+      }
+    });
+    completionItems.completeFirstMatch("1");
+    assertTokensEqual(of(integer(1)), postProcessedTokens);
+  }
+
+  private CompletionParameters requireCompletionMenu() {
+    return new BaseCompletionParameters() {
+      @Override
+      public boolean isMenu() {
+        return true;
+      }
+    };
+  }
+
   private Value<List<Token>> installTrackingPostProcessor(final boolean assertTokensChange) {
     final Value<List<Token>> lastSeenTokens = new Value<List<Token>>(Collections.EMPTY_LIST);
     sync.setTokensEditPostProcessor(new TokensEditPostProcessor<Expr>() {
       @Override
       public void afterTokensEdit(List<Token> tokens, Expr value) {
+        postProcess(tokens);
+      }
+
+      @Override
+      public void afterTokenCompleted(List<Token> tokens, Expr value) {
+        postProcess(tokens);
+      }
+
+      private void postProcess(List<Token> tokens) {
         if (assertTokensChange) {
           assertNotEquals(lastSeenTokens.get(), tokens);
         }

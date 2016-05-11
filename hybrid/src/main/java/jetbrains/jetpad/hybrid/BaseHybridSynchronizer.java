@@ -799,5 +799,8 @@ public abstract class BaseHybridSynchronizer<SourceT, SpecT extends SimpleHybrid
     @Override
     public void afterTokensEdit(List<Token> tokens, SourceT value) {
     }
+    @Override
+    public void afterTokenCompleted(List<Token> tokens, SourceT value) {
+    }
   };
 }
