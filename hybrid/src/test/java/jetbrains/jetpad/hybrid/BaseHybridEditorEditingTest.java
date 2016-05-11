@@ -103,6 +103,15 @@ abstract class BaseHybridEditorEditingTest<ContainerT, MapperT extends Mapper<Co
   }
 
   @Test
+  public void currentCellIndex() {
+    assertEquals(-1, sync.getCurrentCellIndex());
+    type("id");
+    assertEquals(0, sync.getCurrentCellIndex());
+    type("+");
+    assertEquals(1, sync.getCurrentCellIndex());
+  }
+
+  @Test
   public void errorState() {
     type("+");
 

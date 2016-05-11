@@ -795,6 +795,11 @@ public abstract class BaseHybridSynchronizer<SourceT, SpecT extends SimpleHybrid
     myAttachRegistration = null;
   }
 
+  public int getCurrentCellIndex() {
+    Cell currentCell = mySelectionSupport.currentCell();
+    return currentCell == null ? -1 : myTargetList.indexOf(currentCell);
+  }
+
   private static class EmptyTokensEditPostProcessor<SourceT> implements TokensEditPostProcessor<SourceT> {
     @Override
     public void afterTokensEdit(List<Token> tokens, SourceT value) {
