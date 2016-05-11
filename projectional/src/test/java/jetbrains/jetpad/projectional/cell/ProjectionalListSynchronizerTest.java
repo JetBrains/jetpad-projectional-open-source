@@ -157,7 +157,15 @@ public class ProjectionalListSynchronizerTest extends EditingTestCase {
   }
 
   @Test
-  public void insertWithCompletion() {
+  public void notInsertedWithNonEagerCompletion() {
+    type("item");
+    complete();
+    assertTrue(container.children.isEmpty());
+  }
+
+  @Test
+  public void insertWithEagerCompletion() {
+    rootMapper.mySynchronizer.setEagerCompletion(true);
     type("item");
     complete();
     assertNonEmpty(0);
