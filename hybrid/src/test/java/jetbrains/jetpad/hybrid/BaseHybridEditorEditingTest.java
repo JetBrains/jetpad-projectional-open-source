@@ -1320,6 +1320,17 @@ abstract class BaseHybridEditorEditingTest<ContainerT, MapperT extends Mapper<Co
   }
 
   @Test
+  public void postProcessTokensMerge() {
+    // Backspace is post-processed first for token, then for tokens list.
+    // First time no changes visible, don't verify.
+    Value<List<Token>> lastSeenTokens = installTrackingPostProcessor(false);
+    type("1 2");
+    left();
+    backspace();
+    assertTokensEqual(of(integer(12)), lastSeenTokens.get());
+  }
+
+  @Test
   public void noPostProcessingOnNavigationAndSelection() {
     Value<List<Token>> lastSeenTokens = installTrackingPostProcessor(true);
     type("1 2");

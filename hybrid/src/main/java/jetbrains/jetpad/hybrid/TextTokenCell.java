@@ -21,6 +21,7 @@ import jetbrains.jetpad.cell.TextCell;
 import jetbrains.jetpad.cell.text.TextEditing;
 import jetbrains.jetpad.cell.trait.CellTrait;
 import jetbrains.jetpad.cell.trait.CellTraitPropertySpec;
+import jetbrains.jetpad.cell.trait.CompositeCellTrait;
 import jetbrains.jetpad.cell.util.CellLists;
 import jetbrains.jetpad.hybrid.parser.SimpleToken;
 import jetbrains.jetpad.hybrid.parser.Token;
@@ -44,7 +45,13 @@ class TextTokenCell extends TextCell {
     bold().set(token instanceof SimpleToken && ((SimpleToken) token).isBold());
     text().set(token.text());
 
-    addTrait(createTrait());
+    addTrait(new CompositeCellTrait() {
+      @Override
+      protected CellTrait[] getBaseTraits(Cell cell) {
+        return new CellTrait[] { createTrait(), myPostProcessorTrait };
+      }
+    });
+
     updateFocusability();
   }
 
@@ -80,8 +87,7 @@ class TextTokenCell extends TextCell {
         return new CellTrait[] {
             new TokenCellTraits.LeftLeafTokenCellTrait(),
             new TokenCellTraits.RightLeafTokenCellTrait(),
-            TextEditing.validTextEditing(myToken.getValidator(), tokenTextColor(), false),
-            myPostProcessorTrait
+            TextEditing.validTextEditing(myToken.getValidator(), tokenTextColor(), false)
         };
       }
 
