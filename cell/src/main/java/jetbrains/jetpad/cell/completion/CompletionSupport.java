@@ -184,7 +184,7 @@ public class CompletionSupport {
     items.onFailure(new Handler<Throwable>() {
       @Override
       public void handle(Throwable item) {
-        menuModel.loading.set(true);
+        menuModel.loading.set(false);
       }
     });
 
