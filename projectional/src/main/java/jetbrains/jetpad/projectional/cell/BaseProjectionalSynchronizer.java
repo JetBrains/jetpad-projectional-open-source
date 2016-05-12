@@ -80,6 +80,7 @@ abstract class BaseProjectionalSynchronizer<SourceT, ContextT, SourceItemT> impl
   private List<Cell> myTargetList;
   private List<Registration> myRegistrations;
   private Character mySeparatorChar;
+  private boolean myEagerCompletion = false;
 
   private Property<SourceItemT> myForDeletion = new ValueProperty<>();
 
@@ -307,6 +308,11 @@ abstract class BaseProjectionalSynchronizer<SourceT, ContextT, SourceItemT> impl
   @Override
   public void setSeparator(Character ch) {
     mySeparatorChar = ch;
+  }
+
+  @Override
+  public void setEagerCompletion(boolean eagerCompletion) {
+    myEagerCompletion = eagerCompletion;
   }
 
   Character getSeparator() {
@@ -700,7 +706,7 @@ abstract class BaseProjectionalSynchronizer<SourceT, ContextT, SourceItemT> impl
           }
 
           if (spec == TextEditing.EAGER_COMPLETION) {
-            return true;
+            return myEagerCompletion;
           }
 
           return super.get(cell, spec);
