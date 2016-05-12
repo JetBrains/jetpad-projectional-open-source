@@ -17,7 +17,12 @@ package jetbrains.jetpad.cell.completion;
 
 import jetbrains.jetpad.base.Handler;
 import jetbrains.jetpad.base.Registration;
-import jetbrains.jetpad.cell.*;
+import jetbrains.jetpad.cell.Cell;
+import jetbrains.jetpad.cell.CellContainer;
+import jetbrains.jetpad.cell.HorizontalCell;
+import jetbrains.jetpad.cell.ScrollCell;
+import jetbrains.jetpad.cell.TextCell;
+import jetbrains.jetpad.cell.VerticalCell;
 import jetbrains.jetpad.cell.trait.CellTrait;
 import jetbrains.jetpad.completion.CompletionItem;
 import jetbrains.jetpad.completion.CompletionMenuModel;
@@ -29,15 +34,24 @@ import jetbrains.jetpad.mapper.MapperFactory;
 import jetbrains.jetpad.mapper.Synchronizers;
 import jetbrains.jetpad.model.event.CompositeRegistration;
 import jetbrains.jetpad.model.event.EventHandler;
-import jetbrains.jetpad.model.property.*;
+import jetbrains.jetpad.model.property.DerivedProperty;
+import jetbrains.jetpad.model.property.Properties;
+import jetbrains.jetpad.model.property.Property;
+import jetbrains.jetpad.model.property.PropertyChangeEvent;
+import jetbrains.jetpad.model.property.ReadableProperty;
+import jetbrains.jetpad.model.property.ValueProperty;
+import jetbrains.jetpad.model.property.WritableProperty;
 import jetbrains.jetpad.values.Color;
 
 import java.util.Arrays;
 
+import static jetbrains.jetpad.mapper.Synchronizers.forPropsOneWay;
+import static jetbrains.jetpad.mapper.Synchronizers.forRegistration;
 import static jetbrains.jetpad.model.property.Properties.and;
 import static jetbrains.jetpad.model.property.Properties.ifProp;
 import static jetbrains.jetpad.model.property.Properties.isEmpty;
 import static jetbrains.jetpad.model.property.Properties.not;
+import static jetbrains.jetpad.model.property.Properties.notEmpty;
 import static jetbrains.jetpad.model.property.Properties.or;
 
 class CompletionMenu {
@@ -62,7 +76,7 @@ class CompletionMenu {
 
   private static class CompletionMenuModelMapper extends Mapper<CompletionMenuModel, ScrollCell> {
     private VerticalCell myRootCell = new VerticalCell();
-    private VerticalCell myVerticalCell = new VerticalCell();
+    private VerticalCell myCompletionItemsCell = new VerticalCell();
     private TextCell myEmptyCell = new TextCell();
     private Handler<CompletionItem> myCompleter;
 
@@ -71,8 +85,9 @@ class CompletionMenu {
 
       myCompleter = completer;
 
-      myRootCell.children().addAll(Arrays.asList(myVerticalCell, myEmptyCell));
+      myRootCell.children().addAll(Arrays.asList(myCompletionItemsCell, myEmptyCell));
 
+      getTarget().visible().set(false);
       getTarget().children().add(myRootCell);
       getTarget().hasShadow().set(true);
       getTarget().borderColor().set(Color.LIGHT_GRAY);
@@ -88,7 +103,7 @@ class CompletionMenu {
       conf.add(Synchronizers.forObservableRole(
           this,
           getSource().visibleItems,
-          myVerticalCell.children(),
+          myCompletionItemsCell.children(),
           new MapperFactory<CompletionItem, Cell>() {
             @Override
             public Mapper<? extends CompletionItem, ? extends Cell> createMapper(CompletionItem source) {
@@ -96,11 +111,11 @@ class CompletionMenu {
             }
           }));
 
-      conf.add(Synchronizers.forPropsOneWay(getSource().loading, ifProp(myEmptyCell.text(), "Loading...", "<no completion items>")));
-      conf.add(Synchronizers.forPropsOneWay(getSource().loading, ifProp(myEmptyCell.textColor(), Color.GRAY, Color.RED)));
+      conf.add(forPropsOneWay(getSource().loading, ifProp(myEmptyCell.text(), "Loading...", "<no completion items>")));
+      conf.add(forPropsOneWay(getSource().loading, ifProp(myEmptyCell.textColor(), Color.GRAY, Color.RED)));
 
       final Property<Boolean> delayPassed = new ValueProperty<>(false);
-      conf.add(Synchronizers.forPropsOneWay(
+      conf.add(forPropsOneWay(
           and(isEmpty(getSource().visibleItems), or(delayPassed, not(getSource().loading))),
           myEmptyCell.visible()));
 
@@ -118,7 +133,9 @@ class CompletionMenu {
           }
         }
       }));
-      conf.add(Synchronizers.forRegistration(delayReg));;
+      conf.add(forRegistration(delayReg));
+
+      conf.add(forPropsOneWay(or(notEmpty(myCompletionItemsCell.children()), myEmptyCell.visible()), getTarget().visible()));
     }
   }
 
@@ -167,9 +184,9 @@ class CompletionMenu {
           }
         }
       };
-      conf.add(Synchronizers.forPropsOneWay(textColor, myText.textColor()));
+      conf.add(forPropsOneWay(textColor, myText.textColor()));
 
-      conf.add(Synchronizers.forPropsOneWay(new DerivedProperty<String>() {
+      conf.add(forPropsOneWay(new DerivedProperty<String>() {
         @Override
         public String doGet() {
           return getSource().visibleText(text.get());
@@ -181,7 +198,7 @@ class CompletionMenu {
         }
       }, myText.text()));
 
-      conf.add(Synchronizers.forPropsOneWay(selected, new WritableProperty<Boolean>() {
+      conf.add(forPropsOneWay(selected, new WritableProperty<Boolean>() {
             @Override
             public void set(Boolean value) {
               if (value == null) {
