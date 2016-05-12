@@ -158,12 +158,53 @@ public class CellNavigationControllerTest extends EditingTestCase {
   }
 
   @Test
+  public void homeOnEditable() {
+    c42.focus();
+    home();
+    assertFocused(c41);
+  }
+
+  @Test
+  public void macHomeOnEditable() {
+    c42.focus();
+    macHome();
+    assertFocused(c41);
+  }
+
+  @Test
   public void endWorks() {
     c11.focus();
 
     end();
 
     assertFocused(c14);
+  }
+
+  @Test
+  public void endOnEditable() {
+    endOnEditable(new Runnable() {
+      @Override
+      public void run() {
+        end();
+      }
+    });
+  }
+
+  @Test
+  public void macEndOnEditable() {
+    endOnEditable(new Runnable() {
+      @Override
+      public void run() {
+        macEnd();
+      }
+    });
+  }
+
+  private void endOnEditable(Runnable end) {
+    c41.focus();
+    end.run();
+    assertFocused(c42);
+    assertEquals(c42.lastPosition(), (int) c42.caretPosition().get());
   }
 
   @Test
