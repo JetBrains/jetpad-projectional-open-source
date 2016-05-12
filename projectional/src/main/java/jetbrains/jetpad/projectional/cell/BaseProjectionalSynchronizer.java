@@ -80,7 +80,7 @@ abstract class BaseProjectionalSynchronizer<SourceT, ContextT, SourceItemT> impl
   private List<Cell> myTargetList;
   private List<Registration> myRegistrations;
   private Character mySeparatorChar;
-  private boolean myEagerCompletion;
+  private boolean myEagerCompletion = false;
 
   private Property<SourceItemT> myForDeletion = new ValueProperty<>();
 
