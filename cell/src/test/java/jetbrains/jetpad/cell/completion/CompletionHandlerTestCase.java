@@ -181,6 +181,7 @@ public abstract class CompletionHandlerTestCase extends CompletionTestCase {
     assertTrue(getController().isActive());
 
     ScrollCell menu = getCompletionMenu();
+    assertEquals(hasCompletionItems || placeholderVisible, menu.visible().get());
     VerticalCell content = (VerticalCell) menu.children().get(0);
     assertEquals(2, content.children().size());
     VerticalCell items = (VerticalCell) content.children().get(0);
