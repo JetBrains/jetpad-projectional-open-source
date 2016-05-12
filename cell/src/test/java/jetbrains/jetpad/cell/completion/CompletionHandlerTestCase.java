@@ -16,6 +16,7 @@
 package jetbrains.jetpad.cell.completion;
 
 import jetbrains.jetpad.base.Async;
+import jetbrains.jetpad.base.Asyncs;
 import jetbrains.jetpad.base.SimpleAsync;
 import jetbrains.jetpad.base.edt.TestEventDispatchThread;
 import jetbrains.jetpad.cell.*;
@@ -142,10 +143,37 @@ public abstract class CompletionHandlerTestCase extends CompletionTestCase {
     assertCompletionMenuState(false, false, null);
 
     edt.executeUpdates(CompletionMenu.EMPTY_COMPLETION_DELAY);
-    assertCompletionMenuState(false, true, "Loading");
+    assertCompletionMenuState(false, true, CompletionMenu.LOADING_MESSAGE);
 
     edt.executeUpdates(1);
     assertCompletionMenuState(true, false, null);
+  }
+
+  @Test
+  public void asyncCompletionLoadFailure() {
+    final TestEventDispatchThread edt = new TestEventDispatchThread();
+    CellContainerEdtUtil.resetEdt(myCellContainer, edt);
+
+    getView().addTrait(new CellTrait() {
+      @Override
+      public Object get(Cell cell, CellTraitPropertySpec<?> spec) {
+        if (spec == Completion.COMPLETION) {
+          return new CompletionSupplier() {
+            @Override
+            public Async<Iterable<CompletionItem>> getAsync(CompletionParameters cp) {
+              return Asyncs.failure(null);
+            }
+          };
+        }
+        return super.get(cell, spec);
+      }
+    });
+
+    complete();
+    assertCompletionMenuState(false, true, CompletionMenu.NO_COMPLETION_MESSAGE);
+
+    edt.executeUpdates(CompletionMenu.EMPTY_COMPLETION_DELAY + 10);
+    assertCompletionMenuState(false, true, CompletionMenu.NO_COMPLETION_MESSAGE);
   }
 
   protected final void assertCompletionMenuState(boolean hasCompletionItems, boolean placeholderVisible,

@@ -45,6 +45,8 @@ class CompletionMenu {
   private static final Color SELECTED_BACKGROUND = new Color(0, 62, 149);
   private static final Color MATCH_TEXT = new Color(247, 232, 193);
   static final int EMPTY_COMPLETION_DELAY = 1500;
+  static final String LOADING_MESSAGE = "Loading...";
+  static final String NO_COMPLETION_MESSAGE = "<no completion items>";
 
   static Cell createCell(CompletionMenuModel model, Handler<CompletionItem> completer, CompositeRegistration reg) {
     final CompletionMenuModelMapper mapper = new CompletionMenuModelMapper(model, completer);
@@ -96,7 +98,7 @@ class CompletionMenu {
             }
           }));
 
-      conf.add(Synchronizers.forPropsOneWay(getSource().loading, ifProp(myEmptyCell.text(), "Loading...", "<no completion items>")));
+      conf.add(Synchronizers.forPropsOneWay(getSource().loading, ifProp(myEmptyCell.text(), LOADING_MESSAGE, NO_COMPLETION_MESSAGE)));
       conf.add(Synchronizers.forPropsOneWay(getSource().loading, ifProp(myEmptyCell.textColor(), Color.GRAY, Color.RED)));
 
       final Property<Boolean> delayPassed = new ValueProperty<>(false);
