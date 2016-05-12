@@ -15,10 +15,10 @@
  */
 package jetbrains.jetpad.projectional.domUtil;
 
-import jetbrains.jetpad.base.Objects;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.user.client.DOM;
+import jetbrains.jetpad.base.Objects;
 import jetbrains.jetpad.values.Color;
 import jetbrains.jetpad.values.Font;
 import jetbrains.jetpad.values.FontFamily;
@@ -107,6 +107,7 @@ public class DomTextEditor {
     updateFontSize();
     updateLineHeight();
     updateText();
+    updateCaretAndSelection();
   }
 
   private void fontChanged() {
