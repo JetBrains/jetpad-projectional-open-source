@@ -66,6 +66,16 @@ class TextNavigationTrait extends CellTrait {
     return event.is(key, mods);
   }
 
+  private boolean isCellHome(boolean selectionAvailable, KeyEvent event) {
+    return event.is(KeyStrokeSpecs.PREV_WORD)
+        || isCaretKey(selectionAvailable, event, Key.LEFT, ModifierKey.ALT);
+  }
+
+  private boolean isCellEnd(boolean selectionAvailable, KeyEvent event) {
+    return event.is(KeyStrokeSpecs.NEXT_WORD)
+        || isCaretKey(selectionAvailable, event, Key.RIGHT, ModifierKey.ALT);
+  }
+
   @Override
   public void onKeyPressed(Cell cell, KeyEvent event) {
     TextCell editor = (TextCell) cell;
@@ -93,20 +103,17 @@ class TextNavigationTrait extends CellTrait {
         return;
       }
 
-      if ((isCaretKey(selectionAvailable, event, Key.LEFT, ModifierKey.ALT) ||
-          event.is(KeyStrokeSpecs.HOME) ||
-          (event.is(KeyStrokeSpecs.SELECT_HOME) && selectionAvailable) ||
-          event.is(KeyStrokeSpecs.PREV_WORD)) && caret > 0) {
+      if ((caret > 0 && isCellHome(selectionAvailable, event)) ||
+          (selectionAvailable && event.is(KeyStrokeSpecs.SELECT_HOME)) ||
+          event.is(KeyStrokeSpecs.PREV_WORD_CONTROL.with(ModifierKey.SHIFT))) {
         editor.caretPosition().set(0);
         editor.scrollToCaret();
         event.consume();
         return;
       }
 
-      if ((isCaretKey(selectionAvailable, event, Key.RIGHT, ModifierKey.ALT) ||
-          event.is(KeyStrokeSpecs.END) ||
-          (event.is(KeyStrokeSpecs.SELECT_END) && selectionAvailable) ||
-          event.is(KeyStrokeSpecs.NEXT_WORD_ALT)) && caret < maxCaret ||
+      if ((caret < maxCaret && isCellEnd(selectionAvailable, event)) ||
+          (selectionAvailable && event.is(KeyStrokeSpecs.SELECT_END)) ||
           event.is(KeyStrokeSpecs.NEXT_WORD_CONTROL.with(ModifierKey.SHIFT))) {
         editor.caretPosition().set(maxCaret);
         editor.scrollToCaret();

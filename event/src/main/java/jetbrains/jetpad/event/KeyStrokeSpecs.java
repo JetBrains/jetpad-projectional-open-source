@@ -21,23 +21,24 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 public class KeyStrokeSpecs {
-  public static final KeyStrokeSpec COPY = commandOrMeta(Key.C);
-  public static final KeyStrokeSpec CUT = commandOrMeta(Key.X);
-  public static final KeyStrokeSpec PASTE = commandOrMeta(Key.V);
+  public static final KeyStrokeSpec COPY = ctrlOrMeta(Key.C);
+  public static final KeyStrokeSpec CUT = ctrlOrMeta(Key.X);
+  public static final KeyStrokeSpec PASTE = ctrlOrMeta(Key.V);
 
-  public static final KeyStrokeSpec UNDO = commandOrMeta(Key.Z);
-  public static final KeyStrokeSpec REDO = commandOrMeta(Key.Z, ModifierKey.SHIFT);
+  public static final KeyStrokeSpec UNDO = ctrlOrMeta(Key.Z);
+  public static final KeyStrokeSpec REDO = ctrlOrMeta(Key.Z, ModifierKey.SHIFT);
 
   public static final KeyStrokeSpec COMPLETE = composite(new KeyStroke(Key.SPACE, ModifierKey.CONTROL));
 
   public static final KeyStrokeSpec HELP = composite(new KeyStroke(Key.F1, ModifierKey.CONTROL), new KeyStroke(Key.DIGIT_1, ModifierKey.CONTROL));
 
-  public static final KeyStrokeSpec SELECT_ALL = commandOrMeta(Key.A);
+  public static final KeyStrokeSpec SELECT_ALL = ctrlOrMeta(Key.A);
+
   public static final KeyStrokeSpec HOME = composite(new KeyStroke(Key.HOME), new KeyStroke(Key.LEFT, ModifierKey.META));
   public static final KeyStrokeSpec END = composite(new KeyStroke(Key.END), new KeyStroke(Key.RIGHT, ModifierKey.META));
 
-  public static final KeyStrokeSpec FILE_HOME = composite(new KeyStroke(Key.HOME, ModifierKey.CONTROL), new KeyStroke(Key.HOME, ModifierKey.META));
-  public static final KeyStrokeSpec FILE_END = composite(new KeyStroke(Key.END, ModifierKey.CONTROL), new KeyStroke(Key.END, ModifierKey.META));
+  public static final KeyStrokeSpec FILE_HOME = ctrlOrMeta(Key.HOME);
+  public static final KeyStrokeSpec FILE_END = ctrlOrMeta(Key.END);
 
   public static final KeyStroke PREV_WORD_CONTROL = new KeyStroke(Key.LEFT, ModifierKey.CONTROL);
   public static final KeyStroke PREV_WORD_ALT = new KeyStroke(Key.LEFT, ModifierKey.ALT);
@@ -67,11 +68,11 @@ public class KeyStrokeSpecs {
 
   public static final KeyStrokeSpec DELETE_CURRENT = composite(new KeyStroke(Key.BACKSPACE, ModifierKey.META), new KeyStroke(Key.DELETE, ModifierKey.META), new KeyStroke(Key.DELETE, ModifierKey.CONTROL), new KeyStroke(Key.BACKSPACE, ModifierKey.CONTROL));
 
-  public static final KeyStrokeSpec MATCHING_CONSTRUCTS = composite(commandOrMeta(Key.LEFT_BRACE), commandOrMeta(Key.RIGHT_BRACE));
+  public static final KeyStrokeSpec MATCHING_CONSTRUCTS = composite(ctrlOrMeta(Key.LEFT_BRACE), ctrlOrMeta(Key.RIGHT_BRACE));
 
-  public static final KeyStrokeSpec NAVIGATE = commandOrMeta(Key.B);
+  public static final KeyStrokeSpec NAVIGATE = ctrlOrMeta(Key.B);
 
-  public static KeyStrokeSpec commandOrMeta(Key key, ModifierKey... modifiers) {
+  public static KeyStrokeSpec ctrlOrMeta(Key key, ModifierKey... modifiers) {
     return composite(new KeyStroke(key, add(ModifierKey.CONTROL, modifiers)), new KeyStroke(key, add(ModifierKey.META, modifiers)));
   }
 

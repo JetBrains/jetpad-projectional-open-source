@@ -101,56 +101,18 @@ public class TextEditingTest extends EditingTestCase {
     assertCaret(3);
   }
 
-  private void assertFirstPosActionWorks(Runnable action) {
+  @Test
+  public void altLeftWorks() {
     textView.caretPosition().set(3);
-    action.run();
+    altLeft();
     assertCaret(0);
   }
 
   @Test
-  public void altLeftWorks() {
-    assertFirstPosActionWorks(new Runnable() {
-      @Override
-      public void run() {
-        altLeft();
-      }
-    });
-  }
-
-  @Test
-  public void homeWorks() {
-    assertFirstPosActionWorks(new Runnable() {
-      @Override
-      public void run() {
-        home();
-      }
-    });
-  }
-
-  private void assertLastPosActionWorks(Runnable action) {
-    textView.caretPosition().set(2);
-    action.run();
-    assertCaret(3);
-  }
-
-  @Test
   public void altRightWorks() {
-    assertLastPosActionWorks(new Runnable() {
-      @Override
-      public void run() {
-        altRight();
-      }
-    });
-  }
-
-  @Test
-  public void endWorks() {
-    assertLastPosActionWorks(new Runnable() {
-      @Override
-      public void run() {
-        end();
-      }
-    });
+    textView.caretPosition().set(2);
+    altRight();
+    assertCaret(3);
   }
 
   @Test
@@ -409,7 +371,6 @@ public class TextEditingTest extends EditingTestCase {
     assertCaret(2);
   }
 
-
   @Test
   public void selectionWithCtrlShiftRight() {
     textView.caretPosition().set(0);
@@ -418,6 +379,16 @@ public class TextEditingTest extends EditingTestCase {
 
     assertTrue(textView.selectionVisible().get());
     assertCaret(textView.text().get().length());
+  }
+
+  @Test
+  public void selectionWithCtrlShiftLeft() {
+    textView.caretPosition().set(textView.lastPosition());
+
+    press(Key.LEFT, ModifierKey.CONTROL, ModifierKey.SHIFT);
+
+    assertTrue(textView.selectionVisible().get());
+    assertCaret(0);
   }
 
   @Test
