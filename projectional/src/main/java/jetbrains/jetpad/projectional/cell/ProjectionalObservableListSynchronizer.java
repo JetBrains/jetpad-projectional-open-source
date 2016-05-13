@@ -40,6 +40,7 @@ import jetbrains.jetpad.mapper.Synchronizers;
 import jetbrains.jetpad.model.collections.list.ObservableList;
 import jetbrains.jetpad.model.composite.Composites;
 import jetbrains.jetpad.projectional.generic.CollectionEditor;
+import jetbrains.jetpad.projectional.generic.ItemsSplitterJoiner;
 import jetbrains.jetpad.projectional.generic.Role;
 
 import java.util.ArrayList;
@@ -50,6 +51,8 @@ class ProjectionalObservableListSynchronizer<ContextT, SourceItemT> extends Base
 
   private final ObservableList<SourceItemT> mySource;
   private final int myNumAllowedEmptyLines;
+
+  private ItemsSplitterJoiner<SourceItemT, Cell> myItemsSplitterJoiner = new ItemsSplitterJoiner.NotSupported<>();
 
   /**
    * Mappers created by given factory should map new items to empty cells,
@@ -149,7 +152,7 @@ class ProjectionalObservableListSynchronizer<ContextT, SourceItemT> extends Base
 
   private void keyPressedInChild(KeyEvent event) {
     new CollectionEditor<SourceItemT, Cell>(mySource, getChildCells(), getForDeletion(), canCreateNewItem(),
-        replaceWithNewOnDelete(), myNumAllowedEmptyLines) {
+        replaceWithNewOnDelete(), myNumAllowedEmptyLines, myItemsSplitterJoiner) {
       @Override
       protected SourceItemT newItem() {
         return ProjectionalObservableListSynchronizer.this.newItem();
@@ -297,6 +300,11 @@ class ProjectionalObservableListSynchronizer<ContextT, SourceItemT> extends Base
 
   private boolean isEmpty(int index) {
     return Cells.isEmpty(getChildCells().get(index));
+  }
+
+  @Override
+  public void setItemsSplitterJoiner(ItemsSplitterJoiner<SourceItemT, Cell> splitterJoiner) {
+    myItemsSplitterJoiner = splitterJoiner;
   }
 
   interface ItemHandler {

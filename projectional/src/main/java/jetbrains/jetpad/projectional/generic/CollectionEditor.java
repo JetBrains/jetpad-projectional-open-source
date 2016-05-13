@@ -16,6 +16,7 @@
 package jetbrains.jetpad.projectional.generic;
 
 import com.google.common.base.Predicate;
+import jetbrains.jetpad.base.Pair;
 import jetbrains.jetpad.event.Key;
 import jetbrains.jetpad.event.KeyEvent;
 import jetbrains.jetpad.event.KeyStrokeSpecs;
@@ -31,15 +32,17 @@ public abstract class CollectionEditor<ItemT, ViewT> {
   private final boolean myCanCreateNew;
   private final Predicate<ViewT> myReplaceWithNewOnDelete;
   private final int myNumAllowedEmptyLines;
+  private final ItemsSplitterJoiner<ItemT, ViewT> mySplitterJoiner;
 
   protected CollectionEditor(List<ItemT> items, List<ViewT> views, Property<ItemT> forDeletion, boolean canCreateNew,
-      Predicate<ViewT> replaceWithNewOnDelete, int numAllowedEmptyLines) {
+      Predicate<ViewT> replaceWithNewOnDelete, int numAllowedEmptyLines, ItemsSplitterJoiner<ItemT, ViewT> splitterJoiner) {
     myItems = items;
     myViews = views;
     myForDeletion = forDeletion;
     myCanCreateNew = canCreateNew;
     myReplaceWithNewOnDelete = replaceWithNewOnDelete;
     myNumAllowedEmptyLines = numAllowedEmptyLines;
+    mySplitterJoiner = splitterJoiner;
   }
 
   protected abstract ItemT newItem();
@@ -107,23 +110,29 @@ public abstract class CollectionEditor<ItemT, ViewT> {
       }
 
       if (event.is(KeyStrokeSpecs.INSERT_AFTER) && !isHome) {
-        myItems.add(index + 1, newItem());
-        selectOnCreation(index + 1);
+        if (isEnd || !trySplit(index, event)) {
+          myItems.add(index + 1, newItem());
+          selectOnCreation(index + 1);
+        }
         event.consume();
         return;
       }
 
-      if ((event.is(KeyStrokeSpecs.INSERT_BEFORE))) {
-        int i = isEnd && !isHome ? index + 1 : index;
-        myItems.add(i, newItem());
-        selectOnCreation(i);
+      if (event.is(KeyStrokeSpecs.INSERT_BEFORE)) {
+        if (isHome || isEnd || !trySplit(index, event)) {
+          int i = isEnd && !isHome ? index + 1 : index;
+          myItems.add(i, newItem());
+          selectOnCreation(i);
+        }
         event.consume();
         return;
       }
     }
 
     if (event.is(Key.BACKSPACE) && isHome && index > 0 && (isEmpty(index) == isEmpty(index - 1) || !isEmpty(index))) {
-      myItems.remove(index - 1);
+      if (!tryJoin(index - 1, index, ItemsSplitterJoiner.JoinDirection.BACKWARD)) {
+        myItems.remove(index - 1);
+      }
       event.consume();
       return;
     }
@@ -136,7 +145,9 @@ public abstract class CollectionEditor<ItemT, ViewT> {
     }
 
     if (event.is(Key.DELETE) && isEnd && !isLast(index) && (isEmpty(index) == isEmpty(index + 1) || !isEmpty(index))) {
-      myItems.remove(index + 1);
+      if (!tryJoin(index, index + 1, ItemsSplitterJoiner.JoinDirection.FORWARD)) {
+        myItems.remove(index + 1);
+      }
       event.consume();
       return;
     }
@@ -156,6 +167,46 @@ public abstract class CollectionEditor<ItemT, ViewT> {
         selectAfterClear(index);
       }
       event.consume();
+    }
+  }
+
+  private boolean trySplit(int index, KeyEvent event) {
+    ItemT item = myItems.get(index);
+    ViewT view = myViews.get(index);
+    if (mySplitterJoiner.canSplit(item, view)) {
+      Pair<ItemT, ItemT> separated = mySplitterJoiner.split(item, view);
+      myItems.set(index, separated.first);
+      myItems.add(index + 1, separated.second);
+      if (event.is(KeyStrokeSpecs.INSERT_BEFORE)) {
+        selectEnd(index);
+      } else {
+        selectHome(index + 1);
+      }
+      return true;
+    }
+    return false;
+  }
+
+  private boolean tryJoin(int leftIndex, int rightIndex, ItemsSplitterJoiner.JoinDirection direction) {
+    ItemT left = myItems.get(leftIndex);
+    ItemT right = myItems.get(rightIndex);
+    if (mySplitterJoiner.canJoin(left, right, direction)) {
+      Pair<ItemT, Runnable> joinResult = mySplitterJoiner.join(left, right, direction);
+      replaceItems(leftIndex, rightIndex, joinResult.first);
+      joinResult.second.run();
+      return true;
+    }
+    return false;
+  }
+
+  private void replaceItems(int leftIndex, int rightIndex, ItemT with) {
+    if (with == myItems.get(leftIndex)) {
+      myItems.remove(rightIndex);
+    } else if (with == myItems.get(rightIndex)) {
+      myItems.remove(leftIndex);
+    } else {
+      myItems.remove(rightIndex);
+      myItems.set(leftIndex, with);
     }
   }
 
