@@ -137,7 +137,9 @@ class CompletionMenu {
       }));
       conf.add(forRegistration(delayReg));
 
-      conf.add(forPropsOneWay(or(notEmpty(myCompletionItemsCell.children()), myEmptyCell.visible()), getTarget().visible()));
+      ReadableProperty<Boolean> hasCompletionItems = notEmpty(myCompletionItemsCell.children());
+      conf.add(forPropsOneWay(or(hasCompletionItems, myEmptyCell.visible()), getTarget().visible()));
+      conf.add(forPropsOneWay(hasCompletionItems, getTarget().scroll()));
     }
   }
 
