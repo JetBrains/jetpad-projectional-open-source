@@ -20,7 +20,7 @@ import jetbrains.jetpad.base.Pair;
 /**
  * Split and join items in projectional synchronizer as alternative to simple insert-new and delete.
  */
-public interface ItemsSplitterJoiner<SourceItemT, ViewT> {
+public interface SplitJoinHandler<SourceItemT, ViewT> {
   /**
    * Dry run of {@link #split(Object, Object)}.
    */
@@ -47,7 +47,7 @@ public interface ItemsSplitterJoiner<SourceItemT, ViewT> {
    */
   Pair<SourceItemT, Runnable> join(SourceItemT left, SourceItemT right, JoinDirection direction);
 
-  class NotSupported<SourceItemT, ViewT> implements ItemsSplitterJoiner<SourceItemT, ViewT> {
+  class NotSupported<SourceItemT, ViewT> implements SplitJoinHandler<SourceItemT, ViewT> {
     @Override
     public boolean canSplit(SourceItemT item, ViewT view) {
       return false;

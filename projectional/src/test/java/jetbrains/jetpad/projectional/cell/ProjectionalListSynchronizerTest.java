@@ -48,7 +48,7 @@ import jetbrains.jetpad.model.property.Properties;
 import jetbrains.jetpad.model.property.Property;
 import jetbrains.jetpad.model.property.ValueProperty;
 import jetbrains.jetpad.projectional.cell.mapping.CellProvider;
-import jetbrains.jetpad.projectional.generic.ItemsSplitterJoiner;
+import jetbrains.jetpad.projectional.generic.SplitJoinHandler;
 import jetbrains.jetpad.projectional.generic.Role;
 import jetbrains.jetpad.projectional.generic.RoleCompletion;
 import jetbrains.jetpad.projectional.util.RootController;
@@ -1175,7 +1175,7 @@ public class ProjectionalListSynchronizerTest extends EditingTestCase {
   }
 
   private void prepareForSplit() {
-    rootMapper.mySynchronizer.setItemsSplitterJoiner(new ChildrenSplitterJoiner());
+    rootMapper.mySynchronizer.setSplitJoinHandler(new ChildrenSplitJoinHandler());
     container.children.add(new ComplexChild());
   }
 
@@ -1207,7 +1207,7 @@ public class ProjectionalListSynchronizerTest extends EditingTestCase {
   }
 
   private void prepareForJoin() {
-    rootMapper.mySynchronizer.setItemsSplitterJoiner(new ChildrenSplitterJoiner());
+    rootMapper.mySynchronizer.setSplitJoinHandler(new ChildrenSplitJoinHandler());
     container.children.addAll(ImmutableList.<Child>of(new NonEmptyChild(), new NonEmptyChild()));
   }
 
@@ -1754,7 +1754,7 @@ public class ProjectionalListSynchronizerTest extends EditingTestCase {
     }
   }
 
-  private class ChildrenSplitterJoiner implements ItemsSplitterJoiner<Child,Cell> {
+  private class ChildrenSplitJoinHandler implements SplitJoinHandler<Child,Cell> {
     @Override
     public boolean canSplit(Child item, Cell view) {
       return item instanceof ComplexChild;

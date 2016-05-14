@@ -32,17 +32,17 @@ public abstract class CollectionEditor<ItemT, ViewT> {
   private final boolean myCanCreateNew;
   private final Predicate<ViewT> myReplaceWithNewOnDelete;
   private final int myNumAllowedEmptyLines;
-  private final ItemsSplitterJoiner<ItemT, ViewT> mySplitterJoiner;
+  private final SplitJoinHandler<ItemT, ViewT> mySplitJoinHandler;
 
   protected CollectionEditor(List<ItemT> items, List<ViewT> views, Property<ItemT> forDeletion, boolean canCreateNew,
-      Predicate<ViewT> replaceWithNewOnDelete, int numAllowedEmptyLines, ItemsSplitterJoiner<ItemT, ViewT> splitterJoiner) {
+      Predicate<ViewT> replaceWithNewOnDelete, int numAllowedEmptyLines, SplitJoinHandler<ItemT, ViewT> splitJoinHandler) {
     myItems = items;
     myViews = views;
     myForDeletion = forDeletion;
     myCanCreateNew = canCreateNew;
     myReplaceWithNewOnDelete = replaceWithNewOnDelete;
     myNumAllowedEmptyLines = numAllowedEmptyLines;
-    mySplitterJoiner = splitterJoiner;
+    mySplitJoinHandler = splitJoinHandler;
   }
 
   protected abstract ItemT newItem();
@@ -130,7 +130,7 @@ public abstract class CollectionEditor<ItemT, ViewT> {
     }
 
     if (event.is(Key.BACKSPACE) && isHome && index > 0 && (isEmpty(index) == isEmpty(index - 1) || !isEmpty(index))) {
-      if (!tryJoin(index - 1, index, ItemsSplitterJoiner.JoinDirection.BACKWARD)) {
+      if (!tryJoin(index - 1, index, SplitJoinHandler.JoinDirection.BACKWARD)) {
         myItems.remove(index - 1);
       }
       event.consume();
@@ -145,7 +145,7 @@ public abstract class CollectionEditor<ItemT, ViewT> {
     }
 
     if (event.is(Key.DELETE) && isEnd && !isLast(index) && (isEmpty(index) == isEmpty(index + 1) || !isEmpty(index))) {
-      if (!tryJoin(index, index + 1, ItemsSplitterJoiner.JoinDirection.FORWARD)) {
+      if (!tryJoin(index, index + 1, SplitJoinHandler.JoinDirection.FORWARD)) {
         myItems.remove(index + 1);
       }
       event.consume();
@@ -173,8 +173,8 @@ public abstract class CollectionEditor<ItemT, ViewT> {
   private boolean trySplit(int index, KeyEvent event) {
     ItemT item = myItems.get(index);
     ViewT view = myViews.get(index);
-    if (mySplitterJoiner.canSplit(item, view)) {
-      Pair<ItemT, ItemT> separated = mySplitterJoiner.split(item, view);
+    if (mySplitJoinHandler.canSplit(item, view)) {
+      Pair<ItemT, ItemT> separated = mySplitJoinHandler.split(item, view);
       myItems.set(index, separated.first);
       myItems.add(index + 1, separated.second);
       if (event.is(KeyStrokeSpecs.INSERT_BEFORE)) {
@@ -187,11 +187,11 @@ public abstract class CollectionEditor<ItemT, ViewT> {
     return false;
   }
 
-  private boolean tryJoin(int leftIndex, int rightIndex, ItemsSplitterJoiner.JoinDirection direction) {
+  private boolean tryJoin(int leftIndex, int rightIndex, SplitJoinHandler.JoinDirection direction) {
     ItemT left = myItems.get(leftIndex);
     ItemT right = myItems.get(rightIndex);
-    if (mySplitterJoiner.canJoin(left, right, direction)) {
-      Pair<ItemT, Runnable> joinResult = mySplitterJoiner.join(left, right, direction);
+    if (mySplitJoinHandler.canJoin(left, right, direction)) {
+      Pair<ItemT, Runnable> joinResult = mySplitJoinHandler.join(left, right, direction);
       replaceItems(leftIndex, rightIndex, joinResult.first);
       joinResult.second.run();
       return true;
