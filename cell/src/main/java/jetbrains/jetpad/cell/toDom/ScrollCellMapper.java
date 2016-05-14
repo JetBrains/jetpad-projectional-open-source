@@ -23,6 +23,7 @@ import jetbrains.jetpad.cell.ScrollCell;
 class ScrollCellMapper extends BaseCellMapper<ScrollCell> {
   ScrollCellMapper(ScrollCell source, CellToDomContext ctx) {
     super(source, ctx, DOM.createDiv());
+    getTarget().getStyle().setOverflowX(Style.Overflow.AUTO);
   }
 
   @Override
@@ -34,7 +35,6 @@ class ScrollCellMapper extends BaseCellMapper<ScrollCell> {
     style.setProperty("maxWidth", maxDim.x + "px");
     style.setProperty("maxHeight", maxDim.y + "px");
 
-    Boolean scroll = getSource().scroll().get();
-    style.setOverflow(scroll ? Style.Overflow.SCROLL : Style.Overflow.VISIBLE);
+    style.setOverflowY(getSource().scroll().get() ? Style.Overflow.SCROLL : Style.Overflow.HIDDEN);
   }
 }

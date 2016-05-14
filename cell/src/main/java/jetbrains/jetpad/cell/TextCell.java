@@ -32,6 +32,7 @@ public class TextCell extends Cell {
 
   public static final CellPropertySpec<FontFamily> FONT_FAMILY = new CellPropertySpec<>("fontFamily", DEFAULT_FONT.getFamily());
   public static final CellPropertySpec<Boolean> BOLD = new CellPropertySpec<>("bold", DEFAULT_FONT.isBold());
+  public static final CellPropertySpec<Boolean> ITALIC = new CellPropertySpec<>("italic", DEFAULT_FONT.isItalic());
   public static final CellPropertySpec<Integer> FONT_SIZE = new CellPropertySpec<>("fontSize", DEFAULT_FONT.getSize());
 
   public static final CellPropertySpec<Boolean> SELECTION_VISIBLE = new CellPropertySpec<>("selectionVisible", false);
@@ -58,6 +59,10 @@ public class TextCell extends Cell {
 
   public Property<Boolean> bold() {
     return getProp(BOLD);
+  }
+
+  public Property<Boolean> italic() {
+    return getProp(ITALIC);
   }
 
   public Property<FontFamily> fontFamily() {
