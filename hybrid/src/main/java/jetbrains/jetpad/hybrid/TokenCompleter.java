@@ -126,10 +126,15 @@ class TokenCompleter {
         final boolean wasCompletionActive = controller != null && controller.isActive();
 
         TokenListEditor<?> tokenListEditor = getTokenListEditor();
-        tokenListEditor.tokens.remove(index);
-        int i = index;
-        for (Token t : tokens) {
-          tokenListEditor.tokens.add(i++, t);
+
+        if (tokens.length == 0) {
+          tokenListEditor.tokens.remove(index);
+        } else {
+          int targetIndex = index, sourceIndex = 0;
+          tokenListEditor.tokens.set(targetIndex++, tokens[sourceIndex++]);
+          while (sourceIndex < tokens.length) {
+            tokenListEditor.tokens.add(targetIndex++, tokens[sourceIndex++]);
+          }
         }
 
         tokenListEditor.processComments();
