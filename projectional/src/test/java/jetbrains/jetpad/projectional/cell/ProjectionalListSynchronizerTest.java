@@ -16,7 +16,9 @@
 package jetbrains.jetpad.projectional.cell;
 
 import com.google.common.base.Function;
+import com.google.common.base.Predicate;
 import com.google.common.base.Supplier;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import jetbrains.jetpad.base.*;
@@ -24,6 +26,7 @@ import jetbrains.jetpad.cell.*;
 import jetbrains.jetpad.cell.action.CellActions;
 import jetbrains.jetpad.cell.indent.IndentCell;
 import jetbrains.jetpad.cell.position.PositionHandler;
+import jetbrains.jetpad.cell.position.Positions;
 import jetbrains.jetpad.cell.text.TextEditing;
 import jetbrains.jetpad.cell.trait.CellTrait;
 import jetbrains.jetpad.cell.trait.CellTraitPropertySpec;
@@ -44,6 +47,8 @@ import jetbrains.jetpad.model.composite.Composites;
 import jetbrains.jetpad.model.property.Properties;
 import jetbrains.jetpad.model.property.Property;
 import jetbrains.jetpad.model.property.ValueProperty;
+import jetbrains.jetpad.projectional.cell.mapping.CellProvider;
+import jetbrains.jetpad.projectional.generic.SplitJoinHandler;
 import jetbrains.jetpad.projectional.generic.Role;
 import jetbrains.jetpad.projectional.generic.RoleCompletion;
 import jetbrains.jetpad.projectional.util.RootController;
@@ -1135,6 +1140,82 @@ public class ProjectionalListSynchronizerTest extends EditingTestCase {
     assertTrue(container.children.get(0) instanceof EmptyChild);
   }
 
+  @Test
+  public void splitWithInsertAfter() {
+    prepareForSplit();
+    selectChild(0);
+    enter();
+    assertTrue(isSplitHappened());
+    assertFocused(1);
+  }
+
+  @Test
+  public void splitWithInsertBefore() {
+    prepareForSplit();
+    selectChild(0);
+    shiftEnter();
+    assertTrue(isSplitHappened());
+    assertFocused(0);
+  }
+
+  @Test
+  public void noSplitInHomePosition() {
+    prepareForSplit();
+    selectFirst(0);
+    enter();
+    assertFalse(isSplitHappened());
+  }
+
+  @Test
+  public void noSplitInEndPosition() {
+    prepareForSplit();
+    selectLast(0);
+    enter();
+    assertFalse(isSplitHappened());
+  }
+
+  private void prepareForSplit() {
+    rootMapper.mySynchronizer.setSplitJoinHandler(new ChildrenSplitJoinHandler());
+    container.children.add(new ComplexChild());
+  }
+
+  private boolean isSplitHappened() {
+    return container.children.size() == 2 && Iterables.all(container.children, new Predicate<Child>() {
+      @Override
+      public boolean apply(Child child) {
+        return child instanceof NonEmptyChild;
+      }
+    });
+  }
+
+  @Test
+  public void joinForward() {
+    prepareForJoin();
+    selectLast(0);
+    del();
+    assertJoined();
+    assertTrue(Positions.isHomePosition(myCellContainer.focusedCell.get()));
+  }
+
+  @Test
+  public void joinBackward() {
+    prepareForJoin();
+    selectFirst(1);
+    backspace();
+    assertJoined();
+    assertTrue(Positions.isEndPosition(myCellContainer.focusedCell.get()));
+  }
+
+  private void prepareForJoin() {
+    rootMapper.mySynchronizer.setSplitJoinHandler(new ChildrenSplitJoinHandler());
+    container.children.addAll(ImmutableList.<Child>of(new NonEmptyChild(), new NonEmptyChild()));
+  }
+
+  private void assertJoined() {
+    assertEquals(1, container.children.size());
+    assertTrue(get(0) instanceof ComplexChild);
+  }
+
   private Child get(int index) {
     return container.children.get(index);
   }
@@ -1670,6 +1751,40 @@ public class ProjectionalListSynchronizerTest extends EditingTestCase {
     protected void registerSynchronizers(SynchronizersConfiguration conf) {
       super.registerSynchronizers(conf);
       conf.add(createRecordSynchronizer(this, getTarget(), getSource().records, true));
+    }
+  }
+
+  private class ChildrenSplitJoinHandler implements SplitJoinHandler<Child,Cell> {
+    @Override
+    public boolean canSplit(Child item, Cell view) {
+      return item instanceof ComplexChild;
+    }
+
+    @Override
+    public Pair<Child, Child> split(Child item, Cell view) {
+      return new Pair<Child, Child>(new NonEmptyChild(), new NonEmptyChild());
+    }
+
+    @Override
+    public boolean canJoin(Child left, Child right, JoinDirection direction) {
+      return left instanceof NonEmptyChild && right instanceof NonEmptyChild;
+    }
+
+    @Override
+    public Pair<Child, Runnable> join(Child left, Child right, final JoinDirection direction) {
+      final ComplexChild joined = new ComplexChild();
+      Runnable focusOnJoined = new Runnable() {
+        @Override
+        public void run() {
+          Cell joinedCell = CellProvider.fromMapper(rootMapper).getCells(joined).iterator().next();
+          if (direction == JoinDirection.FORWARD) {
+            CellActions.toFirstFocusable(joinedCell).run();
+          } else {
+            CellActions.toLastFocusable(joinedCell).run();
+          }
+        }
+      };
+      return new Pair<Child, Runnable>(joined, focusOnJoined);
     }
   }
 }

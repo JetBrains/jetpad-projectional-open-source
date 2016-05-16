@@ -34,6 +34,7 @@ import jetbrains.jetpad.mapper.RoleSynchronizer;
 import jetbrains.jetpad.mapper.Synchronizers;
 import jetbrains.jetpad.model.property.Property;
 import jetbrains.jetpad.model.property.WritableProperty;
+import jetbrains.jetpad.projectional.generic.SplitJoinHandler;
 import jetbrains.jetpad.projectional.generic.Role;
 
 import java.util.List;
@@ -160,5 +161,10 @@ class ProjectionalPropertySynchronizer<ContextT, SourceItemT> extends BaseProjec
     if (getTarget().get(ProjectionalSynchronizers.DELETE_ON_EMPTY)) {
       getTarget().dispatch(new Event(), Cells.BECAME_EMPTY);
     }
+  }
+
+  @Override
+  public void setSplitJoinHandler(SplitJoinHandler<SourceItemT, Cell> splitJoinHandler) {
+    throw new UnsupportedOperationException();
   }
 }
