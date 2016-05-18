@@ -41,7 +41,7 @@ import jetbrains.jetpad.hybrid.testapp.mapper.Tokens;
 import jetbrains.jetpad.hybrid.testapp.model.*;
 import jetbrains.jetpad.mapper.Mapper;
 import jetbrains.jetpad.mapper.Synchronizer;
-import jetbrains.jetpad.model.collections.CollectionEventHandlers;
+import jetbrains.jetpad.model.collections.RecordingCollectionEventHandler;
 import jetbrains.jetpad.model.composite.Composites;
 import jetbrains.jetpad.model.property.PropertyEventHandlers;
 import jetbrains.jetpad.projectional.generic.Role;
@@ -1552,7 +1552,7 @@ abstract class BaseHybridEditorEditingTest<ContainerT, MapperT extends Mapper<Co
    */
   private Runnable installUpdatesCounters(final int maxAllowedUpdates) {
     final PropertyEventHandlers.CountingHandler<Expr> propHandler = new PropertyEventHandlers.CountingHandler<>();
-    final CollectionEventHandlers.CountingHandler<Token> tokensHandler = new CollectionEventHandlers.CountingHandler<>();
+    final RecordingCollectionEventHandler<Token> tokensHandler = new RecordingCollectionEventHandler<>();
     sync.property().addHandler(propHandler);
     sync.tokenListEditor().tokens.addHandler(tokensHandler);
     return new Runnable() {
