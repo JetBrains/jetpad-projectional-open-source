@@ -17,6 +17,7 @@ package jetbrains.jetpad.cell.text;
 
 import jetbrains.jetpad.base.Runnables;
 import jetbrains.jetpad.base.Value;
+import jetbrains.jetpad.base.edt.TestEventDispatchThread;
 import jetbrains.jetpad.cell.trait.CellTrait;
 import jetbrains.jetpad.cell.trait.CellTraitEventSpec;
 import jetbrains.jetpad.cell.util.Cells;
@@ -46,9 +47,12 @@ public class TextEditingTest extends EditingTestCase {
   private TextCell navTextView2 = new TextCell();
 
   private String completed;
+  private TestEventDispatchThread edt = new TestEventDispatchThread();
 
   @Before
   public void init() {
+    CellContainerEdtUtil.resetEdt(myCellContainer, edt);
+
     textView.focusable().set(true);
 
     myCellContainer.root.children().addAll(Arrays.asList(textView, navTextView1, navTextView2));
@@ -261,7 +265,7 @@ public class TextEditingTest extends EditingTestCase {
     createTestCell(false, 1);
 
     type("yy");
-
+    edt.executeUpdates(TextEditing.AFTER_TYPE_DELAY);
     assertEquals("yy", completed);
   }
 
@@ -270,7 +274,7 @@ public class TextEditingTest extends EditingTestCase {
     createTestCell(true, 1);
 
     type("yy");
-
+    edt.executeUpdates(TextEditing.AFTER_TYPE_DELAY);
     assertEquals("yy", completed);
   }
 

@@ -17,7 +17,10 @@ package jetbrains.jetpad.cell.text;
 
 import com.google.common.base.Strings;
 import com.google.common.base.Supplier;
+import jetbrains.jetpad.base.Registration;
 import jetbrains.jetpad.cell.Cell;
+import jetbrains.jetpad.cell.CellContainer;
+import jetbrains.jetpad.cell.CellPropertySpec;
 import jetbrains.jetpad.cell.TextCell;
 import jetbrains.jetpad.cell.completion.CellCompletionController;
 import jetbrains.jetpad.cell.completion.Completion;
@@ -26,12 +29,28 @@ import jetbrains.jetpad.cell.completion.CompletionSupport;
 import jetbrains.jetpad.cell.event.CompletionEvent;
 import jetbrains.jetpad.cell.trait.CellTraitPropertySpec;
 import jetbrains.jetpad.cell.util.Cells;
-import jetbrains.jetpad.completion.*;
-import jetbrains.jetpad.event.*;
+import jetbrains.jetpad.cell.util.DebouncedCommand;
+import jetbrains.jetpad.completion.BaseCompletionParameters;
+import jetbrains.jetpad.completion.CompletionController;
+import jetbrains.jetpad.completion.CompletionItem;
+import jetbrains.jetpad.completion.CompletionParameters;
+import jetbrains.jetpad.completion.CompletionSupplier;
+import jetbrains.jetpad.event.ClipboardContent;
+import jetbrains.jetpad.event.ContentKinds;
+import jetbrains.jetpad.event.CopyCutEvent;
+import jetbrains.jetpad.event.Event;
+import jetbrains.jetpad.event.Key;
+import jetbrains.jetpad.event.KeyEvent;
+import jetbrains.jetpad.event.KeyStrokeSpecs;
+import jetbrains.jetpad.event.PasteEvent;
+import jetbrains.jetpad.event.TextContentHelper;
 
 import java.util.List;
 
 public class TextEditingTrait extends TextNavigationTrait {
+  private static final CellPropertySpec<DebouncedCommand> AFTER_TYPE_COMMAND = new CellPropertySpec<>("afterTypeCommand");
+  private static final CellPropertySpec<Boolean> COMPLETE_ON_INSERT = new CellPropertySpec<>("completeOnInsert", false);
+
   public TextEditingTrait() {
   }
 
@@ -44,6 +63,9 @@ public class TextEditingTrait extends TextNavigationTrait {
       return cell;
     }
     if (spec == TextEditing.EDITABLE) {
+      return true;
+    }
+    if (spec == TextEditing.EAGER_COMPLETION && cell.get(COMPLETE_ON_INSERT)) {
       return true;
     }
     return super.get(cell, spec);
@@ -87,7 +109,27 @@ public class TextEditingTrait extends TextNavigationTrait {
       event.consume();
     }
 
+    if (event.is(KeyStrokeSpecs.INSERT) && !editor.isEmpty()) {
+      DebouncedCommand command = editor.get(AFTER_TYPE_COMMAND);
+      if (command != null) {
+        command.dispose();
+        event.consume();
+
+        Registration r = editor.set(COMPLETE_ON_INSERT, true);
+        CellContainer container = runAfterTypeCommand(editor);
+        r.remove();
+        container.keyPressed(event.copy());
+        return;
+      }
+    }
+
     super.onKeyPressed(cell, event);
+  }
+
+  private CellContainer runAfterTypeCommand(TextCell editor) {
+    CellContainer container = editor.getContainer();
+    debouncedAfterType(editor);
+    return container;
   }
 
   @Override
@@ -100,6 +142,14 @@ public class TextEditingTrait extends TextNavigationTrait {
     }
 
     final TextCell editor = (TextCell) cell;
+    DebouncedCommand command = editor.get(AFTER_TYPE_COMMAND);
+    if (command != null) {
+      command.dispose();
+      event.consume();
+      CellContainer container = runAfterTypeCommand(editor);
+      container.complete(new CompletionEvent(event.isAutoInvoked()));
+      return;
+    }
 
     CompletionItems completion = new CompletionItems(editor.get(Completion.COMPLETION).get(CompletionParameters.EMPTY));
     String prefixText = editor.getPrefixText();
@@ -172,7 +222,7 @@ public class TextEditingTrait extends TextNavigationTrait {
     pasteText(editor, text);
     if (editor.isAttached()) {
       editor.scrollToCaret();
-      onAfterType(editor);
+      afterType(editor, event);
     }
     event.consume();
   }
@@ -232,18 +282,66 @@ public class TextEditingTrait extends TextNavigationTrait {
     editor.text().set(text);
   }
 
-  protected boolean onAfterType(TextCell editor) {
-    Supplier<Boolean> afterType = editor.get(TextEditing.AFTER_TYPE);
-    if (afterType != null) {
-      return afterType.get();
+  private void afterType(final TextCell editor, KeyEvent event) {
+    if (event.isAutoInvoked() && !CellCompletionController.isCompletionActive(editor)) {
+      DebouncedCommand command = editor.get(AFTER_TYPE_COMMAND);
+      if (command == null) {
+        command = new DebouncedCommand(TextEditing.AFTER_TYPE_DELAY, editor.getContainer().getEdt(), new Runnable() {
+          @Override
+          public void run() {
+            debouncedAfterType(editor);
+          }
+        });
+        editor.set(AFTER_TYPE_COMMAND, command);
+      }
+      command.run();
+    } else {
+      DebouncedCommand command = editor.get(AFTER_TYPE_COMMAND);
+      if (command == null) {
+        onAfterType(editor);
+      } else {
+        command.dispose();
+        runAfterTypeCommand(editor);
+      }
     }
-    return false;
+  }
+
+  private void debouncedAfterType(final TextCell editor) {
+    if (editor.get(AFTER_TYPE_COMMAND) == null) {
+      throw new IllegalStateException("No debounced command");
+    }
+
+    editor.set(AFTER_TYPE_COMMAND, null);
+
+    if (editor.isAttached()) {
+      editor.getContainer().executeCommand(new Runnable() {
+        @Override
+        public void run() {
+          if (!editor.isAttached()) return;
+          boolean processed = onAfterType(editor);
+          if (!processed && editor.isAttached()) {
+            processed = onAfterPaste(editor);
+          }
+          if (processed) {
+            editor.dispatch(new Event(), Cells.AFTER_EDITED);
+          }
+        }
+      });
+    }
+  }
+
+  protected boolean onAfterType(TextCell editor) {
+    return callCustomProcessor(editor, TextEditing.AFTER_TYPE);
   }
 
   protected boolean onAfterPaste(TextCell editor) {
-    Supplier<Boolean> afterPaste = editor.get(TextEditing.AFTER_PASTE);
-    if (afterPaste != null) {
-      return afterPaste.get();
+    return callCustomProcessor(editor, TextEditing.AFTER_PASTE);
+  }
+
+  private boolean callCustomProcessor(TextCell editor, CellTraitPropertySpec<Supplier<Boolean>> prop) {
+    Supplier<Boolean> processor = editor.get(prop);
+    if (processor != null) {
+      return processor.get();
     }
     return false;
   }

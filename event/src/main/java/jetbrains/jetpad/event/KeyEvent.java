@@ -18,16 +18,22 @@ package jetbrains.jetpad.event;
 import java.util.*;
 
 public class KeyEvent extends Event {
-  private KeyStroke myKeyStroke;
-  private char myKeyChar;
+  private final KeyStroke myKeyStroke;
+  private final char myKeyChar;
+  private final boolean myAutoInvoked;
 
   public KeyEvent(Key key) {
     this(key, (char) 0, Collections.<ModifierKey>emptyList());
   }
 
   public KeyEvent(Key key, char ch, Collection<ModifierKey> modifiers) {
+    this(key, ch, modifiers, true);
+  }
+
+  public KeyEvent(Key key, char ch, Collection<ModifierKey> modifiers, boolean autoInvoked) {
     myKeyStroke = new KeyStroke(key, modifiers);
     myKeyChar = ch;
+    myAutoInvoked = autoInvoked;
   }
 
   @Deprecated
@@ -67,7 +73,11 @@ public class KeyEvent extends Event {
   }
 
   public KeyEvent copy() {
-    return new KeyEvent(getKey(), getKeyChar(), getModifiers());
+    return new KeyEvent(getKey(), getKeyChar(), getModifiers(), isAutoInvoked());
+  }
+
+  public boolean isAutoInvoked() {
+    return myAutoInvoked;
   }
 
   @Override
