@@ -99,7 +99,7 @@ abstract class BaseHybridEditorEditingTest<ContainerT, MapperT extends Mapper<Co
   protected Cell targetCell;
 
   private Registration registration;
-  private TestEventDispatchThread edt = new TestEventDispatchThread();
+  private final TestEventDispatchThread edt = new TestEventDispatchThread();
 
   protected abstract ContainerT createContainer();
   protected abstract MapperT createMapper();

@@ -35,7 +35,7 @@ import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
 public class SideTransformTest extends EditingTestCase {
-  private TestEventDispatchThread edt = new TestEventDispatchThread();
+  private final TestEventDispatchThread edt = new TestEventDispatchThread();
   private ExprContainer container = new ExprContainer();
   private IdExpr rootId = new IdExpr();
   private Mapper<?, ? extends Cell> idMapper;

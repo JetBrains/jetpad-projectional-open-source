@@ -45,7 +45,7 @@ public class HybridEditorWithTransformedListTest extends EditingTestCase {
   private ExprList exprList = new ExprList();
   private Registration registration;
   private ExprListMapper rootMapper = new ExprListMapper(exprList);
-  private TestEventDispatchThread edt = new TestEventDispatchThread();
+  private final TestEventDispatchThread edt = new TestEventDispatchThread();
 
   @Before
   public void init() {
