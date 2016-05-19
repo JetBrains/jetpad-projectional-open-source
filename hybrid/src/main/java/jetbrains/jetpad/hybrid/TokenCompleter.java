@@ -130,7 +130,8 @@ class TokenCompleter {
         if (tokens.length == 0) {
           tokenListEditor.tokens.remove(index);
         } else {
-          int targetIndex = index, sourceIndex = 0;
+          int sourceIndex = 0;
+          int targetIndex = index;
           tokenListEditor.tokens.set(targetIndex++, tokens[sourceIndex++]);
           while (sourceIndex < tokens.length) {
             tokenListEditor.tokens.add(targetIndex++, tokens[sourceIndex++]);

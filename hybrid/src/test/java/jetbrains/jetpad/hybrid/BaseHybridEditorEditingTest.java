@@ -1509,7 +1509,7 @@ abstract class BaseHybridEditorEditingTest<ContainerT, MapperT extends Mapper<Co
   @Test
   public void oneUpdateOnAppendToToken() {
     type("1");
-    Runnable verifier = installUpdatesCounters(1);
+    Runnable verifier = installUpdateCounters(1);
     type("2");
     verifier.run();
   }
@@ -1517,7 +1517,7 @@ abstract class BaseHybridEditorEditingTest<ContainerT, MapperT extends Mapper<Co
   @Test
   public void oneUpdateOnTokenTypeChange() {
     setTokens(new IdentifierToken("i"));
-    Runnable verifier = installUpdatesCounters(1);
+    Runnable verifier = installUpdateCounters(1);
     type("d");
     verifier.run();
   }
@@ -1526,7 +1526,7 @@ abstract class BaseHybridEditorEditingTest<ContainerT, MapperT extends Mapper<Co
   public void threeUpdatesOnTokenSplit() {
     type("12");
     left();
-    Runnable verifier = installUpdatesCounters(3);      // replace(12 -> 1), add(+), add(2)
+    Runnable verifier = installUpdateCounters(3);      // replace(12 -> 1), add(+), add(2)
     type("+");
     verifier.run();
   }
@@ -1534,7 +1534,7 @@ abstract class BaseHybridEditorEditingTest<ContainerT, MapperT extends Mapper<Co
   @Test
   public void oneUpdateOnSimpleBackspace() {
     type("12");
-    Runnable verifier = installUpdatesCounters(1);
+    Runnable verifier = installUpdateCounters(1);
     backspace();
     verifier.run();
   }
@@ -1542,7 +1542,7 @@ abstract class BaseHybridEditorEditingTest<ContainerT, MapperT extends Mapper<Co
   @Test
   public void oneUpdateOnTokenRemove() {
     type("1 2");
-    Runnable verifier = installUpdatesCounters(1);
+    Runnable verifier = installUpdateCounters(1);
     backspace();
     verifier.run();
   }
@@ -1550,7 +1550,7 @@ abstract class BaseHybridEditorEditingTest<ContainerT, MapperT extends Mapper<Co
   /**
    * @return Run to verify the count.
    */
-  private Runnable installUpdatesCounters(final int maxAllowedUpdates) {
+  private Runnable installUpdateCounters(final int maxAllowedUpdates) {
     final PropertyEventHandlers.CountingHandler<Expr> propHandler = new PropertyEventHandlers.CountingHandler<>();
     final RecordingCollectionEventHandler<Token> tokensHandler = new RecordingCollectionEventHandler<>();
     sync.property().addHandler(propHandler);
@@ -1558,8 +1558,8 @@ abstract class BaseHybridEditorEditingTest<ContainerT, MapperT extends Mapper<Co
     return new Runnable() {
       @Override
       public void run() {
-        assertTrue("Too much property updates: " + propHandler.getCounter(), propHandler.getCounter() <= maxAllowedUpdates);
-        assertTrue("Too much tokens updates: " + tokensHandler.getCounter(), tokensHandler.getCounter() <= maxAllowedUpdates);
+        assertTrue("Too many property updates: " + propHandler.getCounter(), propHandler.getCounter() <= maxAllowedUpdates);
+        assertTrue("Too many tokens updates: " + tokensHandler.getCounter(), tokensHandler.getCounter() <= maxAllowedUpdates);
       }
     };
   }
