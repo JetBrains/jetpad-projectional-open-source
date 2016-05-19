@@ -79,6 +79,6 @@ public class ProjectionalSynchronizers {
   }
 
   public static boolean isAdd(KeyEvent event) {
-    return event.is(KeyStrokeSpecs.INSERT_BEFORE) || event.is(KeyStrokeSpecs.INSERT_AFTER);
+    return event.is(KeyStrokeSpecs.INSERT);
   }
 }
