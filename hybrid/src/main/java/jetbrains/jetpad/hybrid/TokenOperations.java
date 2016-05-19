@@ -270,8 +270,7 @@ class TokenOperations<SourceT> {
       Token third = tc.completeToken(text.substring(caret));
 
       int index = tokenViews().indexOf(textTokenCell);
-      tokens().remove(index);
-      tokens().add(index, first);
+      tokens().set(index, first);
       tokens().add(index + 1, second);
       tokens().add(index + 2, third);
       mySync.tokenListEditor().updateToPrintedTokens();

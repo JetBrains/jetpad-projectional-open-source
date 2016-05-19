@@ -41,7 +41,9 @@ import jetbrains.jetpad.hybrid.testapp.mapper.Tokens;
 import jetbrains.jetpad.hybrid.testapp.model.*;
 import jetbrains.jetpad.mapper.Mapper;
 import jetbrains.jetpad.mapper.Synchronizer;
+import jetbrains.jetpad.model.collections.RecordingCollectionEventHandler;
 import jetbrains.jetpad.model.composite.Composites;
+import jetbrains.jetpad.model.property.PropertyEventHandlers;
 import jetbrains.jetpad.projectional.generic.Role;
 import jetbrains.jetpad.projectional.util.RootController;
 import jetbrains.jetpad.values.Color;
@@ -1502,6 +1504,64 @@ abstract class BaseHybridEditorEditingTest<ContainerT, MapperT extends Mapper<Co
       }
     });
     return lastSeenTokens;
+  }
+
+  @Test
+  public void oneUpdateOnAppendToToken() {
+    type("1");
+    Runnable verifier = installUpdateCounters(1);
+    type("2");
+    verifier.run();
+  }
+
+  @Test
+  public void oneUpdateOnTokenTypeChange() {
+    setTokens(new IdentifierToken("i"));
+    Runnable verifier = installUpdateCounters(1);
+    type("d");
+    verifier.run();
+  }
+
+  @Test
+  public void threeUpdatesOnTokenSplit() {
+    type("12");
+    left();
+    Runnable verifier = installUpdateCounters(3);      // replace(12 -> 1), add(+), add(2)
+    type("+");
+    verifier.run();
+  }
+
+  @Test
+  public void oneUpdateOnSimpleBackspace() {
+    type("12");
+    Runnable verifier = installUpdateCounters(1);
+    backspace();
+    verifier.run();
+  }
+
+  @Test
+  public void oneUpdateOnTokenRemove() {
+    type("1 2");
+    Runnable verifier = installUpdateCounters(1);
+    backspace();
+    verifier.run();
+  }
+
+  /**
+   * @return Run to verify the count.
+   */
+  private Runnable installUpdateCounters(final int maxAllowedUpdates) {
+    final PropertyEventHandlers.CountingHandler<Expr> propHandler = new PropertyEventHandlers.CountingHandler<>();
+    final RecordingCollectionEventHandler<Token> tokensHandler = new RecordingCollectionEventHandler<>();
+    sync.property().addHandler(propHandler);
+    sync.tokenListEditor().tokens.addHandler(tokensHandler);
+    return new Runnable() {
+      @Override
+      public void run() {
+        assertTrue("Too many property updates: " + propHandler.getCounter(), propHandler.getCounter() <= maxAllowedUpdates);
+        assertTrue("Too many tokens updates: " + tokensHandler.getCounter(), tokensHandler.getCounter() <= maxAllowedUpdates);
+      }
+    };
   }
 
   protected ValueToken createComplexToken() {
