@@ -19,7 +19,9 @@ import com.google.common.base.Predicate;
 import com.google.common.base.Splitter;
 import com.google.common.collect.FluentIterable;
 import jetbrains.jetpad.base.Runnables;
+import jetbrains.jetpad.base.edt.TestEventDispatchThread;
 import jetbrains.jetpad.cell.Cell;
+import jetbrains.jetpad.cell.CellContainerEdtUtil;
 import jetbrains.jetpad.cell.TextCell;
 import jetbrains.jetpad.cell.completion.CellCompletionController;
 import jetbrains.jetpad.cell.completion.Completion;
@@ -44,9 +46,11 @@ public class ValidTextCompletionTest extends CompletionTestCase {
   private boolean lowPriorityCompleted;
   private boolean rtCompleted;
   private boolean bulkCompleted;
+  private TestEventDispatchThread edt = new TestEventDispatchThread();
 
   @Before
   public void init() {
+    CellContainerEdtUtil.resetEdt(myCellContainer, edt);
     myCellContainer.root.children().add(text);
 
     text.text().set("");
@@ -219,6 +223,7 @@ public class ValidTextCompletionTest extends CompletionTestCase {
   @Test
   public void simpleCompletion() {
     type('c');
+    edt.executeUpdates(TextEditing.AFTER_TYPE_DELAY);
     assertCompleted("c");
   }
 
@@ -347,6 +352,7 @@ public class ValidTextCompletionTest extends CompletionTestCase {
     });
 
     type("a");
+    edt.executeUpdates(TextEditing.AFTER_TYPE_DELAY);
 
     assertCompleted("a");
   }
@@ -354,7 +360,7 @@ public class ValidTextCompletionTest extends CompletionTestCase {
   @Test
   public void lowPriorityIsBeatenByHighPriority() {
     type("d");
-
+    edt.executeUpdates(TextEditing.AFTER_TYPE_DELAY);
     assertFalse(lowPriorityCompleted);
     assertCompleted("d");
   }
@@ -363,7 +369,7 @@ public class ValidTextCompletionTest extends CompletionTestCase {
   @Test
   public void lowPriorityWorksIfThereNoHighPriority() {
     type("xx");
-
+    edt.executeUpdates(TextEditing.AFTER_TYPE_DELAY);
     assertTrue(lowPriorityCompleted);
     assertNotCompleted();
   }
@@ -371,7 +377,7 @@ public class ValidTextCompletionTest extends CompletionTestCase {
   @Test
   public void lowPriorityPrefixAndStrictNormalPriorityDontConflict() {
     type("q");
-
+    edt.executeUpdates(TextEditing.AFTER_TYPE_DELAY);
     assertFalse(lowPriorityCompleted);
     assertCompleted("q");
   }
@@ -413,14 +419,14 @@ public class ValidTextCompletionTest extends CompletionTestCase {
   public void completeOnSpaceOnEnd() {
     // Tests that the following line does not throw
     type("foo ");
-
+    edt.executeUpdates(TextEditing.AFTER_TYPE_DELAY);
     assertCompleted("qaz");
   }
 
   @Test
   public void lowPriorityIsntCompletedIf() {
     type("var");
-
+    edt.executeUpdates(TextEditing.AFTER_TYPE_DELAY);
     assertFalse(lowPriorityCompleted);
     assertCompleted("var");
   }

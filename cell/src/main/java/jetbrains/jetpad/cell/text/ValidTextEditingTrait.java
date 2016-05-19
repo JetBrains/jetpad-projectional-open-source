@@ -30,7 +30,12 @@ import jetbrains.jetpad.cell.util.Cells;
 import jetbrains.jetpad.completion.BaseCompletionParameters;
 import jetbrains.jetpad.completion.CompletionItem;
 import jetbrains.jetpad.completion.CompletionParameters;
-import jetbrains.jetpad.event.*;
+import jetbrains.jetpad.event.DerivedEvent;
+import jetbrains.jetpad.event.Event;
+import jetbrains.jetpad.event.Key;
+import jetbrains.jetpad.event.KeyEvent;
+import jetbrains.jetpad.event.ModifierKey;
+import jetbrains.jetpad.event.PropertyChangeEventWrapper;
 import jetbrains.jetpad.model.property.PropertyChangeEvent;
 import jetbrains.jetpad.values.Color;
 
@@ -40,6 +45,13 @@ import java.util.List;
 class ValidTextEditingTrait extends TextEditingTrait {
   static final CellTraitPropertySpec<Predicate<String>> VALIDATOR = new CellTraitPropertySpec<>("validator");
   static final CellTraitPropertySpec<Color> VALID_TEXT_COLOR = new CellTraitPropertySpec<>("validTextColor", Color.BLACK);
+
+  private static final CompletionParameters BULK_COMPLETION_PARAMETERS = new BaseCompletionParameters() {
+    @Override
+    public boolean isBulkCompletionRequired() {
+      return true;
+    }
+  };
 
   ValidTextEditingTrait() {
   }
@@ -53,22 +65,6 @@ class ValidTextEditingTrait extends TextEditingTrait {
   @Override
   public void onAdd(Cell cell) {
     validate(cell, null);
-  }
-
-  @Override
-  public void onKeyPressed(Cell cell, KeyEvent event) {
-    TextCell editor = (TextCell) cell;
-    if (event.is(Key.ENTER) && !editor.isEmpty() && !isValid(editor)) {
-      CompletionItems completionItems = new CompletionItems(cell.get(Completion.COMPLETION).get(CompletionParameters.EMPTY));
-      String prefixText = editor.getPrefixText();
-      if (completionItems.hasSingleMatch(prefixText, true)) {
-        completionItems.completeFirstMatch(prefixText);
-        event.consume();
-        return;
-      }
-    }
-
-    super.onKeyPressed(cell, event);
   }
 
   @Override
@@ -105,19 +101,12 @@ class ValidTextEditingTrait extends TextEditingTrait {
   protected boolean onAfterPaste(TextCell editor) {
     if (super.onAfterPaste(editor)) return true;
 
-    CompletionParameters requireBulkCompletion = new BaseCompletionParameters() {
-      @Override
-      public boolean isBulkCompletionRequired() {
-        return true;
-      }
-    };
-
-    return onAfterTextAdded(editor, requireBulkCompletion, false);
+    return onAfterTextAdded(editor, BULK_COMPLETION_PARAMETERS, false);
   }
 
   private boolean onAfterTextAdded(TextCell editor, CompletionParameters cp, boolean sideTransformationsAllowed) {
     Boolean eagerCompletion = editor.get(TextEditing.EAGER_COMPLETION);
-    if (isValid(editor) && !eagerCompletion) return false;
+    if (!eagerCompletion && isValid(editor)) return false;
 
     String text = editor.text().get();
     if (text == null || text.isEmpty()) return false;
@@ -129,21 +118,23 @@ class ValidTextEditingTrait extends TextEditingTrait {
       return true;
     }
 
+    boolean completed = false;
     if (sideTransformationsAllowed) {
-      CellContainer container = editor.getContainer();
       if (editor.isEnd() && !completion.hasMatches(text)) {
         //right transform
         String prefix = text.substring(0, text.length() - 1);
         String suffix = text.substring(text.length() - 1);
-
         if (getValidator(editor).apply(prefix)) {
-          handleSideTransform(editor, prefix, suffix.trim(), Side.RIGHT);
+          completed = handleSideTransform(editor, prefix, suffix.trim(), Side.RIGHT, eagerCompletion);
         } else {
           List<CompletionItem> matches = completion.matches(prefix);
           if (matches.size() == 1) {
+            CellContainer container = editor.getContainer();
             matches.get(0).complete(prefix).run();
             assertValid(container.focusedCell.get());
-            container.keyTyped(new KeyEvent(Key.UNKNOWN, suffix.charAt(0), Collections.<ModifierKey>emptySet()));
+            container.keyTyped(new KeyEvent(Key.UNKNOWN, suffix.charAt(0), Collections.<ModifierKey>emptySet(), false));
+            // Here we don't set 'true' to 'completed' variable, because the structural completion will be performed
+            // on the new key event.
           }
         }
       } else if (editor.caretPosition().get() == 1 && !CellCompletionController.isCompletionActive(editor)) {
@@ -151,24 +142,24 @@ class ValidTextEditingTrait extends TextEditingTrait {
         String prefix = text.substring(0, 1).trim();
         String suffix = text.substring(1);
         if (getValidator(editor).apply(suffix)) {
-          handleSideTransform(editor, suffix, prefix, Side.LEFT);
+          completed = handleSideTransform(editor, suffix, prefix, Side.LEFT, eagerCompletion);
         }
       }
     }
-    return true;
+    return completed;
   }
 
-  private void handleSideTransform(TextCell editor, String cellText, String sideText, Side side) {
+  private boolean handleSideTransform(TextCell editor, String cellText, String sideText, Side side, boolean eagerCompletion) {
     CompletionItems sideCompletion = Completion.completionFor(editor, CompletionParameters.EMPTY, side.getKey());
-    if (sideCompletion.hasSingleMatch(sideText, editor.get(TextEditing.EAGER_COMPLETION))) {
+    if (sideCompletion.hasSingleMatch(sideText, eagerCompletion)) {
       setText(editor, cellText);
       sideCompletion.completeFirstMatch(sideText);
     } else {
-      if (!sideCompletion.hasMatches(sideText)) return;
-
+      if (!sideCompletion.hasMatches(sideText)) return false;
       setText(editor, cellText);
       expand(editor, side, sideText).run();
     }
+    return true;
   }
 
   private Runnable expand(TextCell editor, Side side, String sideText) {
@@ -183,14 +174,14 @@ class ValidTextEditingTrait extends TextEditingTrait {
     if (!editor.get(TextEditing.EAGER_COMPLETION)) return;
 
     if (isValid(editor)) return;
-    String text = editor.text().get();
+    String text = TextEditing.nonNullText(editor);
 
     if (text.isEmpty()) return;
 
     int caret = editor.caretPosition().get();
     CellContainer cellContainer = editor.getContainer();
     CompletionItems completion = Completion.completionFor(editor, CompletionParameters.EMPTY);
-    if (completion.hasSingleMatch(text, editor.get(TextEditing.EAGER_COMPLETION))) {
+    if (completion.hasSingleMatch(text, true)) {
       completion.completeFirstMatch(text);
       Cell focusedCell = cellContainer.focusedCell.get();
       if (focusedCell instanceof TextCell) {
@@ -202,7 +193,7 @@ class ValidTextEditingTrait extends TextEditingTrait {
     }
   }
 
-  private Predicate<String> getValidator(TextCell editor) {
+  private Predicate<String> getValidator(Cell editor) {
     return editor.get(VALIDATOR);
   }
 
@@ -211,8 +202,11 @@ class ValidTextEditingTrait extends TextEditingTrait {
   }
 
   private void assertValid(Cell cell) {
-    if (cell instanceof TextCell && !isValid((TextCell) cell)) {
-      throw new IllegalStateException("Completion should lead to a valid result, otherwise, we might have a stackoverflow error");
+    if (cell instanceof TextCell) {
+      Predicate<String> validator = getValidator(cell);
+      if (validator != null && !validator.apply(((TextCell) cell).text().get())) {
+        throw new IllegalStateException("Completion should lead to a valid result, otherwise we might have a stackoverflow error");
+      }
     }
   }
 }

@@ -15,12 +15,19 @@
  */
 package jetbrains.jetpad.projectional.cell;
 
-import jetbrains.jetpad.mapper.Mapper;
+import jetbrains.jetpad.base.edt.TestEventDispatchThread;
 import jetbrains.jetpad.cell.Cell;
+import jetbrains.jetpad.cell.CellContainerEdtUtil;
 import jetbrains.jetpad.cell.EditingTestCase;
 import jetbrains.jetpad.cell.TextCell;
+import jetbrains.jetpad.cell.text.TextEditing;
+import jetbrains.jetpad.mapper.Mapper;
 import jetbrains.jetpad.projectional.testApp.mapper.ExprMappers;
-import jetbrains.jetpad.projectional.testApp.model.*;
+import jetbrains.jetpad.projectional.testApp.model.AssignExpr;
+import jetbrains.jetpad.projectional.testApp.model.EqExpr;
+import jetbrains.jetpad.projectional.testApp.model.ExprContainer;
+import jetbrains.jetpad.projectional.testApp.model.IdExpr;
+import jetbrains.jetpad.projectional.testApp.model.PlusExpr;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -28,28 +35,35 @@ import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
 public class SideTransformTest extends EditingTestCase {
+  private final TestEventDispatchThread edt = new TestEventDispatchThread();
   private ExprContainer container = new ExprContainer();
   private IdExpr rootId = new IdExpr();
-  private Mapper<?, ? extends Cell> rootMapper;
   private Mapper<?, ? extends Cell> idMapper;
   private TextCell idView;
 
   @Before
   public void init() {
     container.expr.set(rootId);
-    rootMapper = ExprMappers.create(container);
+    Mapper<?, ? extends Cell> rootMapper = ExprMappers.create(container);
     rootMapper.attachRoot();
     idMapper = (Mapper<?, ? extends Cell>) rootMapper.getDescendantMapper(rootId);
     myCellContainer.root.children().add(rootMapper.getTarget());
     idView = (TextCell) idMapper.getTarget();
     idView.focus();
+    CellContainerEdtUtil.resetEdt(myCellContainer, edt);
+  }
+
+  @Override
+  protected void type(String s) {
+    super.type(s);
+    edt.executeUpdates(TextEditing.AFTER_TYPE_DELAY);
   }
 
   @Test
   public void simpleRightTransform() {
     idView.caretPosition().set(2);
 
-    type('+');
+    type("+");
 
     assertTrue(container.expr.get() instanceof PlusExpr);
     PlusExpr plusExpr = (PlusExpr) container.expr.get();
@@ -69,8 +83,8 @@ public class SideTransformTest extends EditingTestCase {
   public void rightTransformWithSpace() {
     idView.caretPosition().set(2);
 
-    type(' ');
-    type('+');
+    type(" ");
+    type("+");
     complete();
 
     assertTrue(container.expr.get() instanceof PlusExpr);
@@ -82,7 +96,7 @@ public class SideTransformTest extends EditingTestCase {
   public void simpleLeftTransform() {
     idView.caretPosition().set(0);
 
-    type('+');
+    type("+");
 
     assertTrue(container.expr.get() instanceof PlusExpr);
     PlusExpr plusExpr = (PlusExpr) container.expr.get();
@@ -93,8 +107,8 @@ public class SideTransformTest extends EditingTestCase {
   public void leftTransformWithSpace() {
     idView.caretPosition().set(0);
 
-    type(' ');
-    type('+');
+    type(" ");
+    type("+");
     complete();
 
     assertTrue(container.expr.get() instanceof PlusExpr);
@@ -105,47 +119,53 @@ public class SideTransformTest extends EditingTestCase {
   @Test
   public void rightTransformAutoComplete() {
     idView.caretPosition().set(2);
-    type(' ');
-    type('+');
-    type('i');
-
-    assertTrue(container.expr.get() instanceof PlusExpr);
-    PlusExpr plusExpr = (PlusExpr) container.expr.get();
-    assertSame(idMapper.getSource(), plusExpr.left.get());
+    autoComplete(true);
   }
 
   @Test
   public void leftTransformAutoComplete() {
     idView.caretPosition().set(0);
-    type(' ');
-    type('+');
-    type('i');
+    autoComplete(false);
+  }
+
+  private void autoComplete(boolean rightTransform) {
+    type(" ");
+    type("+");
+    type("i");
 
     assertTrue(container.expr.get() instanceof PlusExpr);
     PlusExpr plusExpr = (PlusExpr) container.expr.get();
-    assertSame(idMapper.getSource(), plusExpr.right.get());
+    if (rightTransform) {
+      assertSame(idMapper.getSource(), plusExpr.left.get());
+    } else {
+      assertSame(idMapper.getSource(), plusExpr.right.get());
+    }
   }
 
   @Test
   public void leftTransformAmbiguity() {
     idView.caretPosition().set(0);
-    type("==i");
-
-    assertTrue(container.expr.get() instanceof EqExpr);
+    transformAmbiguity();
   }
 
   @Test
   public void rightTransformAmbiguity() {
     idView.caretPosition().set(2);
-    type("==i");
+    transformAmbiguity();
+  }
 
+  private void transformAmbiguity() {
+    type("=");
+    type("=");
+    type("i");
     assertTrue(container.expr.get() instanceof EqExpr);
   }
 
   @Test
   public void rightTransformAmbiguityResolveInCaseOfNoMatches() {
     idView.caretPosition().set(2);
-    type("=i");
+    type("=");
+    type("i");
     assertTrue(container.expr.get() instanceof AssignExpr);
   }
 
@@ -156,5 +176,4 @@ public class SideTransformTest extends EditingTestCase {
 
     assertTrue(container.expr.get() instanceof PlusExpr);
   }
-
 }

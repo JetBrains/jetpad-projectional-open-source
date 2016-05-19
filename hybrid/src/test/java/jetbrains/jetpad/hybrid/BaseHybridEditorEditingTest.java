@@ -23,7 +23,9 @@ import com.google.common.collect.Range;
 import jetbrains.jetpad.base.Registration;
 import jetbrains.jetpad.base.Runnables;
 import jetbrains.jetpad.base.Value;
+import jetbrains.jetpad.base.edt.TestEventDispatchThread;
 import jetbrains.jetpad.cell.Cell;
+import jetbrains.jetpad.cell.CellContainerEdtUtil;
 import jetbrains.jetpad.cell.EditingTestCase;
 import jetbrains.jetpad.cell.HorizontalCell;
 import jetbrains.jetpad.cell.TextCell;
@@ -32,13 +34,32 @@ import jetbrains.jetpad.cell.completion.Completion;
 import jetbrains.jetpad.cell.completion.CompletionItems;
 import jetbrains.jetpad.cell.message.MessageController;
 import jetbrains.jetpad.cell.position.Positions;
+import jetbrains.jetpad.cell.text.TextEditing;
 import jetbrains.jetpad.cell.util.CellState;
 import jetbrains.jetpad.cell.util.CellStateHandler;
-import jetbrains.jetpad.completion.*;
-import jetbrains.jetpad.event.*;
-import jetbrains.jetpad.hybrid.parser.*;
+import jetbrains.jetpad.completion.BaseCompletionParameters;
+import jetbrains.jetpad.completion.CompletionController;
+import jetbrains.jetpad.completion.CompletionItem;
+import jetbrains.jetpad.completion.CompletionParameters;
+import jetbrains.jetpad.completion.CompletionSupplier;
+import jetbrains.jetpad.event.ClipboardContent;
+import jetbrains.jetpad.event.Key;
+import jetbrains.jetpad.event.KeyEvent;
+import jetbrains.jetpad.event.KeyStrokeSpecs;
+import jetbrains.jetpad.event.ModifierKey;
+import jetbrains.jetpad.hybrid.parser.CommentToken;
+import jetbrains.jetpad.hybrid.parser.ErrorToken;
+import jetbrains.jetpad.hybrid.parser.IdentifierToken;
+import jetbrains.jetpad.hybrid.parser.IntValueToken;
+import jetbrains.jetpad.hybrid.parser.Token;
+import jetbrains.jetpad.hybrid.parser.ValueToken;
 import jetbrains.jetpad.hybrid.testapp.mapper.Tokens;
-import jetbrains.jetpad.hybrid.testapp.model.*;
+import jetbrains.jetpad.hybrid.testapp.model.AsyncValueExpr;
+import jetbrains.jetpad.hybrid.testapp.model.ComplexValueExpr;
+import jetbrains.jetpad.hybrid.testapp.model.Expr;
+import jetbrains.jetpad.hybrid.testapp.model.IdExpr;
+import jetbrains.jetpad.hybrid.testapp.model.PlusExpr;
+import jetbrains.jetpad.hybrid.testapp.model.ValueExpr;
 import jetbrains.jetpad.mapper.Mapper;
 import jetbrains.jetpad.mapper.Synchronizer;
 import jetbrains.jetpad.model.collections.RecordingCollectionEventHandler;
@@ -57,9 +78,21 @@ import java.util.Collections;
 import java.util.List;
 
 import static com.google.common.collect.ImmutableList.of;
-import static jetbrains.jetpad.hybrid.SelectionPosition.*;
-import static jetbrains.jetpad.hybrid.TokensUtil.*;
-import static org.junit.Assert.*;
+import static jetbrains.jetpad.hybrid.SelectionPosition.FIRST;
+import static jetbrains.jetpad.hybrid.SelectionPosition.LAST;
+import static jetbrains.jetpad.hybrid.TokensUtil.assertTokensEqual;
+import static jetbrains.jetpad.hybrid.TokensUtil.doubleQtd;
+import static jetbrains.jetpad.hybrid.TokensUtil.error;
+import static jetbrains.jetpad.hybrid.TokensUtil.integer;
+import static jetbrains.jetpad.hybrid.TokensUtil.singleQtd;
+import static jetbrains.jetpad.hybrid.TokensUtil.value;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
 
 abstract class BaseHybridEditorEditingTest<ContainerT, MapperT extends Mapper<ContainerT, ? extends Cell>> extends EditingTestCase {
   protected ContainerT container;
@@ -68,6 +101,7 @@ abstract class BaseHybridEditorEditingTest<ContainerT, MapperT extends Mapper<Co
   protected Cell targetCell;
 
   private Registration registration;
+  private final TestEventDispatchThread edt = new TestEventDispatchThread();
 
   protected abstract ContainerT createContainer();
   protected abstract MapperT createMapper();
@@ -84,6 +118,7 @@ abstract class BaseHybridEditorEditingTest<ContainerT, MapperT extends Mapper<Co
     myCellContainer.root.children().add(targetCell = mapper.getTarget());
     CellActions.toFirstFocusable(mapper.getTarget()).run();
     sync = getSync();
+    CellContainerEdtUtil.resetEdt(myCellContainer, edt);
   }
 
   @After
@@ -91,6 +126,12 @@ abstract class BaseHybridEditorEditingTest<ContainerT, MapperT extends Mapper<Co
     mapper.detachRoot();
     registration.remove();
     myCellContainer.root.children().remove(targetCell);
+  }
+
+  @Override
+  protected void type(String s) {
+    super.type(s);
+    edt.executeUpdates(TextEditing.AFTER_TYPE_DELAY);
   }
 
   @Test
@@ -292,7 +333,7 @@ abstract class BaseHybridEditorEditingTest<ContainerT, MapperT extends Mapper<Co
     setTokens(Tokens.PLUS);
     select(0, false);
 
-    type(' ');
+    type(" ");
 
     assertTokens(Tokens.PLUS, new ErrorToken(""));
   }
@@ -366,7 +407,7 @@ abstract class BaseHybridEditorEditingTest<ContainerT, MapperT extends Mapper<Co
     setTokens(Tokens.INCREMENT);
     select(0, 1);
 
-    type(' ');
+    type(" ");
 
     assertTokens(Tokens.PLUS, Tokens.PLUS);
   }
@@ -387,7 +428,8 @@ abstract class BaseHybridEditorEditingTest<ContainerT, MapperT extends Mapper<Co
     select(0, true);
     right();
 
-    type("  ");
+    type(" ");
+    type(" ");
     left();
     del();
 
@@ -526,7 +568,9 @@ abstract class BaseHybridEditorEditingTest<ContainerT, MapperT extends Mapper<Co
     setTokens(createComplexToken());
     select(0, false);
 
-    type("+id");
+    type("+");
+    type("i");
+    type("d");
 
     assertTrue(sync.valid().get());
     assertTrue(getExpr() instanceof PlusExpr);
@@ -898,7 +942,8 @@ abstract class BaseHybridEditorEditingTest<ContainerT, MapperT extends Mapper<Co
     assertSelected(0);
 
     Token token = sync.tokens().get(0);
-    assertTrue(token instanceof ValueToken && ((ValueToken) token).value() instanceof AsyncValueExpr);
+    assertEquals(ValueToken.class, token.getClass());
+    assertTrue(((ValueToken) token).value() instanceof AsyncValueExpr);
   }
 
   @Test
@@ -1042,7 +1087,7 @@ abstract class BaseHybridEditorEditingTest<ContainerT, MapperT extends Mapper<Co
 
   @Test
   public void copyStringLiteralWithOtherTokens() {
-    String text = "10+'text 1";   // Closing quote autocompletes
+    String text = "10+'text 1'";
     type(text);
     right();
     selectLeft(text.length() + 1);
@@ -1058,7 +1103,8 @@ abstract class BaseHybridEditorEditingTest<ContainerT, MapperT extends Mapper<Co
 
   @Test
   public void editStringAfterCopyBeforePaste() {
-    type("'x");
+    type("'x'");
+    right();
     right();
     selectLeft(1);
 
@@ -1075,7 +1121,8 @@ abstract class BaseHybridEditorEditingTest<ContainerT, MapperT extends Mapper<Co
 
   @Test
   public void editStringAfterPaste() {
-    type("'x");
+    type("'x'");
+    right();
     right();
     selectLeft(1);
 
@@ -1270,7 +1317,8 @@ abstract class BaseHybridEditorEditingTest<ContainerT, MapperT extends Mapper<Co
   public void reinitInTokensPostProcessor() {
     Synchronizer initialSync = sync;
     installResettingPostProcessor();
-    type("1 2"); type("3");
+    type("1 2");
+    type("3");
     assertNotEquals(initialSync, sync);
     assertTokens(integer(3));
   }
@@ -1293,21 +1341,21 @@ abstract class BaseHybridEditorEditingTest<ContainerT, MapperT extends Mapper<Co
 
   @Test
   public void postProcessTypingToEmpty() {
-    Value<List<Token>> lastSeenTokens = installTrackingPostProcessor(true);
-    type('1');
+    Value<List<Token>> lastSeenTokens = installTrackingPostProcessor(false);
+    type("1");
     assertTokensEqual(of(integer(1)), lastSeenTokens.get());
   }
 
   @Test
   public void postProcessTypingToNonEmpty() {
-    Value<List<Token>> lastSeenTokens = installTrackingPostProcessor(true);
+    Value<List<Token>> lastSeenTokens = installTrackingPostProcessor(false);
     type("1 2");
     assertTokensEqual(of(integer(1), integer(2)), lastSeenTokens.get());
   }
 
   @Test
   public void postProcessBackspace() {
-    Value<List<Token>> lastSeenTokens = installTrackingPostProcessor(true);
+    Value<List<Token>> lastSeenTokens = installTrackingPostProcessor(false);
     type("12");
     backspace();
     assertTokensEqual(of(integer(1)), lastSeenTokens.get());
@@ -1315,7 +1363,7 @@ abstract class BaseHybridEditorEditingTest<ContainerT, MapperT extends Mapper<Co
 
   @Test
   public void postProcessDel() {
-    Value<List<Token>> lastSeenTokens = installTrackingPostProcessor(true);
+    Value<List<Token>> lastSeenTokens = installTrackingPostProcessor(false);
     type("12");
     left(); del();
     assertTokensEqual(of(integer(1)), lastSeenTokens.get());
@@ -1334,7 +1382,7 @@ abstract class BaseHybridEditorEditingTest<ContainerT, MapperT extends Mapper<Co
 
   @Test
   public void noPostProcessingOnNavigationAndSelection() {
-    Value<List<Token>> lastSeenTokens = installTrackingPostProcessor(true);
+    Value<List<Token>> lastSeenTokens = installTrackingPostProcessor(false);
     type("1 2");
     left();
     selectLeft(1);
@@ -1343,7 +1391,7 @@ abstract class BaseHybridEditorEditingTest<ContainerT, MapperT extends Mapper<Co
 
   @Test
   public void postProcessTokensPaste() {
-    Value<List<Token>> lastSeenTokens = installTrackingPostProcessor(true);
+    Value<List<Token>> lastSeenTokens = installTrackingPostProcessor(false);
     type("1 2");
     selectLeft(1);
     paste(copy().toString());
@@ -1359,7 +1407,7 @@ abstract class BaseHybridEditorEditingTest<ContainerT, MapperT extends Mapper<Co
 
   @Test
   public void postProcessTextPasteToNonEmpty() {
-    Value<List<Token>> lastSeenTokens = installTrackingPostProcessor(true);
+    Value<List<Token>> lastSeenTokens = installTrackingPostProcessor(false);
     type("1");
     paste("2");
     assertTokensEqual(of(integer(12)), lastSeenTokens.get());
@@ -1367,7 +1415,7 @@ abstract class BaseHybridEditorEditingTest<ContainerT, MapperT extends Mapper<Co
 
   @Test
   public void noPostProcessingOnEmptyPaste() {
-    Value<List<Token>> lastSeenTokens = installTrackingPostProcessor(true);
+    Value<List<Token>> lastSeenTokens = installTrackingPostProcessor(false);
     type("1");
     paste("");
     assertTokensEqual(of(integer(1)), lastSeenTokens.get());
@@ -1375,7 +1423,7 @@ abstract class BaseHybridEditorEditingTest<ContainerT, MapperT extends Mapper<Co
 
   @Test
   public void postProcessTokensCut() {
-    Value<List<Token>> lastSeenTokens = installTrackingPostProcessor(true);
+    Value<List<Token>> lastSeenTokens = installTrackingPostProcessor(false);
     type("1");
     selectLeft(1);
     cut();
@@ -1384,7 +1432,7 @@ abstract class BaseHybridEditorEditingTest<ContainerT, MapperT extends Mapper<Co
 
   @Test
   public void postProcessTextCut() {
-    Value<List<Token>> lastSeenTokens = installTrackingPostProcessor(true);
+    Value<List<Token>> lastSeenTokens = installTrackingPostProcessor(false);
     type("1");
 
     TextTokenCell tokenCell = (TextTokenCell) sync.tokenCells().get(0);
@@ -1398,14 +1446,14 @@ abstract class BaseHybridEditorEditingTest<ContainerT, MapperT extends Mapper<Co
 
   @Test
   public void postProcessAfterTokenAddition() {
-    Value<List<Token>> lastSeenTokens = installTrackingPostProcessor(true);
+    Value<List<Token>> lastSeenTokens = installTrackingPostProcessor(false);
     type("'");
     assertTokensEqual(of(singleQtd("")), lastSeenTokens.get());
   }
 
   @Test
   public void postProcessorUninstall() {
-    Value<List<Token>> lastSeenTokens = installTrackingPostProcessor(true);
+    Value<List<Token>> lastSeenTokens = installTrackingPostProcessor(false);
     type("1");
     backspace();
     sync.setTokensEditPostProcessor(null);
@@ -1484,7 +1532,7 @@ abstract class BaseHybridEditorEditingTest<ContainerT, MapperT extends Mapper<Co
   }
 
   private Value<List<Token>> installTrackingPostProcessor(final boolean assertTokensChange) {
-    final Value<List<Token>> lastSeenTokens = new Value<List<Token>>(Collections.EMPTY_LIST);
+    final Value<List<Token>> lastSeenTokens = new Value<>(Collections.<Token>emptyList());
     sync.setTokensEditPostProcessor(new TokensEditPostProcessor<Expr>() {
       @Override
       public void afterTokensEdit(List<Token> tokens, Expr value) {

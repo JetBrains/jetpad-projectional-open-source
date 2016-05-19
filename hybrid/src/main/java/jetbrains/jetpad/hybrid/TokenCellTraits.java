@@ -86,9 +86,10 @@ class TokenCellTraits {
 
     @Override
     public void onKeyPressed(Cell tokenCell, KeyEvent event) {
-      if (hybridSync(tokenCell).hasSelection() &&
+      BaseHybridSynchronizer<?, ?> sync = hybridSync(tokenCell);
+      if (sync != null && sync.hasSelection() &&
           (event.is(Key.BACKSPACE) || event.is(Key.DELETE) || event.is(KeyStrokeSpecs.DELETE_CURRENT))) {
-        hybridSync(tokenCell).clearSelection();
+        sync.clearSelection();
         event.consume();
         return;
       }
@@ -203,8 +204,11 @@ class TokenCellTraits {
 
     @Override
     public Object get(Cell cell, CellTraitPropertySpec<?> spec) {
-      if (spec == Completion.COMPLETION && !hybridSync(cell).hasSelection()) {
-        return tokenCompletion(cell).tokenCompletion(cell);
+      if (spec == Completion.COMPLETION) {
+        BaseHybridSynchronizer<?, ?> sync = hybridSync(cell);
+        if (sync != null &&  !sync.hasSelection()) {
+          return tokenCompletion(cell).tokenCompletion(cell);
+        }
       }
 
       if (spec == Completion.COMPLETION_CONFIG) {
@@ -242,7 +246,9 @@ class TokenCellTraits {
   static class RightLeafTokenCellTrait extends BaseTokenCellTrait {
     @Override
     public Object get(final Cell cell, CellTraitPropertySpec<?> spec) {
-      if (spec == Completion.RIGHT_TRANSFORM) return tokenCompletion(cell).sideTransform(tokenView(cell), 1);
+      if (spec == Completion.RIGHT_TRANSFORM) {
+        return tokenCompletion(cell).sideTransform(tokenView(cell), 1);
+      }
 
       if (spec == TextEditing.EXPAND_RIGHT) {
         return new Function<String, Runnable>() {
