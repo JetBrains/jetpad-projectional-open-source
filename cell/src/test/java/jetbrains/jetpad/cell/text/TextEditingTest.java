@@ -47,7 +47,7 @@ public class TextEditingTest extends EditingTestCase {
   private TextCell navTextView2 = new TextCell();
 
   private String completed;
-  private TestEventDispatchThread edt = new TestEventDispatchThread();
+  private final TestEventDispatchThread edt = new TestEventDispatchThread();
 
   @Before
   public void init() {
