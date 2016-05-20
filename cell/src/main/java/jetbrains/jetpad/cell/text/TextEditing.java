@@ -33,7 +33,7 @@ import jetbrains.jetpad.cell.util.CellStateHandler;
 import jetbrains.jetpad.values.Color;
 
 public class TextEditing {
-  public static final int AFTER_TYPE_DELAY = 250;
+  public static final int AFTER_TYPE_DELAY = 50;
 
   public static final CellTraitPropertySpec<Boolean> EDITABLE = new CellTraitPropertySpec<>("editable", false);
 
