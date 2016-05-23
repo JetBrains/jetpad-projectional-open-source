@@ -68,6 +68,22 @@ class ValidTextEditingTrait extends TextEditingTrait {
   }
 
   @Override
+  public void onKeyPressed(Cell cell, KeyEvent event) {
+    TextCell editor = (TextCell) cell;
+    if (event.is(Key.ENTER) && !editor.isEmpty() && !isValid(editor)) {
+      CompletionItems completionItems = new CompletionItems(cell.get(Completion.COMPLETION).get(CompletionParameters.EMPTY));
+      String prefixText = editor.getPrefixText();
+      if (completionItems.hasSingleMatch(prefixText, true)) {
+        completionItems.completeFirstMatch(prefixText);
+        event.consume();
+        return;
+      }
+    }
+
+    super.onKeyPressed(cell, event);
+  }
+
+  @Override
   protected boolean canCompleteWithCtrlSpace(TextCell cell) {
     return !isValid(cell);
   }

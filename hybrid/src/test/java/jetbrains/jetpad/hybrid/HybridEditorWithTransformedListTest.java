@@ -16,11 +16,8 @@
 package jetbrains.jetpad.hybrid;
 
 import jetbrains.jetpad.base.Registration;
-import jetbrains.jetpad.base.edt.TestEventDispatchThread;
-import jetbrains.jetpad.cell.CellContainerEdtUtil;
 import jetbrains.jetpad.cell.EditingTestCase;
 import jetbrains.jetpad.cell.action.CellActions;
-import jetbrains.jetpad.cell.text.TextEditing;
 import jetbrains.jetpad.event.Key;
 import jetbrains.jetpad.event.ModifierKey;
 import jetbrains.jetpad.hybrid.testapp.mapper.ExprListMapper;
@@ -45,7 +42,6 @@ public class HybridEditorWithTransformedListTest extends EditingTestCase {
   private ExprList exprList = new ExprList();
   private Registration registration;
   private ExprListMapper rootMapper = new ExprListMapper(exprList);
-  private final TestEventDispatchThread edt = new TestEventDispatchThread();
 
   @Before
   public void init() {
@@ -55,19 +51,12 @@ public class HybridEditorWithTransformedListTest extends EditingTestCase {
     rootMapper.attachRoot();
     myCellContainer.root.children().add(rootMapper.getTarget());
     CellActions.toFirstFocusable(rootMapper.getTarget()).run();
-    CellContainerEdtUtil.resetEdt(myCellContainer, edt);
   }
 
   @After
   public void dispose() {
     rootMapper.detachRoot();
     registration.remove();
-  }
-
-  @Override
-  protected void type(String s) {
-    super.type(s);
-    edt.executeUpdates(TextEditing.AFTER_TYPE_DELAY);
   }
 
   @Test
