@@ -16,9 +16,7 @@
 package jetbrains.jetpad.cell.text;
 
 import com.google.common.base.Predicates;
-import jetbrains.jetpad.base.edt.TestEventDispatchThread;
 import jetbrains.jetpad.cell.Cell;
-import jetbrains.jetpad.cell.CellContainerEdtUtil;
 import jetbrains.jetpad.cell.TextCell;
 import jetbrains.jetpad.cell.completion.Completion;
 import jetbrains.jetpad.cell.completion.CompletionTestCase;
@@ -30,12 +28,9 @@ import org.junit.Test;
 
 public class ValidTextEditingEagerCompletionTest extends CompletionTestCase {
   private TextCell text = new TextCell();
-  private TestEventDispatchThread edt = new TestEventDispatchThread();
 
   @Before
   public void init() {
-    CellContainerEdtUtil.resetEdt(myCellContainer, edt);
-
     myCellContainer.root.children().add(text);
 
     text.text().set("");
@@ -67,7 +62,7 @@ public class ValidTextEditingEagerCompletionTest extends CompletionTestCase {
   @Test
   public void eagerCompletionRecompletesIfThereAreMatches() {
     type("a");
-    edt.executeUpdates(TextEditing.AFTER_TYPE_DELAY);
+
     assertCompleted("a");
   }
 
@@ -76,7 +71,7 @@ public class ValidTextEditingEagerCompletionTest extends CompletionTestCase {
     text.text().set("aa");
     text.caretPosition().set(1);
     type("a");
-    edt.executeUpdates(TextEditing.AFTER_TYPE_DELAY);
+
     assertCompleted("aaa");
   }
 }
