@@ -266,7 +266,7 @@ class ProjectionalObservableListSynchronizer<ContextT, SourceItemT> extends Base
     if (Positions.isHomePosition(currentCell())) {
       mySource.addAll(index, items);
       if (!isEmpty(index)) {
-        return selectOnCreation(index);
+        return selectOnCreation(index + items.size() - 1);
       }
       return Runnables.EMPTY;
     } else {

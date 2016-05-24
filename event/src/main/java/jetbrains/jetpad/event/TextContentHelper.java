@@ -57,8 +57,11 @@ public class TextContentHelper {
 
   public static String joinLines(Iterable<String> lines) {
     StringBuilder multiline = new StringBuilder();
-    for (String line : lines) {
-      multiline.append(line).append(NEWLINE);
+    for (Iterator<String> lineIter = lines.iterator(); lineIter.hasNext(); ) {
+      multiline.append(lineIter.next());
+      if (lineIter.hasNext()) {
+        multiline.append(NEWLINE);
+      }
     }
     return multiline.toString();
   }
@@ -67,14 +70,16 @@ public class TextContentHelper {
   private static class LinesIterator implements Iterator<String> {
     private final String myMultiline;
     private int myCurrentPos;
+    private boolean myInTrailingEmptyLine;
 
     private LinesIterator(String multiline) {
-      this.myMultiline = multiline;
+      myMultiline = multiline;
+      myInTrailingEmptyLine = lookingAtEOF();
     }
 
     @Override
     public boolean hasNext() {
-      return !lookingAtEOF();
+      return !lookingAtEOF() || myInTrailingEmptyLine;
     }
 
     @Override
@@ -82,13 +87,24 @@ public class TextContentHelper {
       if (!hasNext()) {
         throw new NoSuchElementException();
       }
-      int lineBeginning = myCurrentPos;
-      advancePastStringBody();
-      int lineRightBound = myCurrentPos;
-      if (!lookingAtEOF()) {
-        advancePastNewline();
+
+      String nextLine;
+      if (myInTrailingEmptyLine) {
+        myInTrailingEmptyLine = false;
+        nextLine = "";
+      } else {
+        int lineBeginning = myCurrentPos;
+        advancePastStringBody();
+        int lineRightBound = myCurrentPos;
+        if (!lookingAtEOF()) {
+          advancePastNewline();
+          if (lookingAtEOF()) {
+            myInTrailingEmptyLine = true;
+          }
+        }
+        nextLine = myMultiline.substring(lineBeginning, lineRightBound);
       }
-      return myMultiline.substring(lineBeginning, lineRightBound);
+      return nextLine;
     }
 
     @Override

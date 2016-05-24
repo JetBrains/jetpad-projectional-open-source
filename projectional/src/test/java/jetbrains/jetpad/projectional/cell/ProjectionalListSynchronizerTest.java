@@ -18,9 +18,9 @@ package jetbrains.jetpad.projectional.cell;
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 import com.google.common.base.Supplier;
+import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
-import com.google.common.collect.Lists;
 import jetbrains.jetpad.base.*;
 import jetbrains.jetpad.cell.*;
 import jetbrains.jetpad.cell.action.CellActions;
@@ -90,16 +90,22 @@ public class ProjectionalListSynchronizerTest extends EditingTestCase {
   private final Function<Iterable<String>, List<Child>> multilineParser = new Function<Iterable<String>, List<Child>>() {
     @Override
     public List<Child> apply(Iterable<String> items) {
-      List<Child> children = Lists.newArrayList(Iterables.transform(items, new Function<String, Child>() {
-        @Override
-        public Child apply(String s) {
-          return lineParser.apply(s);
-        }
-      }));
+      FluentIterable<Child> children = FluentIterable.from(items)
+          .filter(new Predicate<String>() {
+            @Override
+            public boolean apply(String s) {
+              return !s.isEmpty();
+            }
+          }).transform(new Function<String, Child>() {
+            @Override
+            public Child apply(String s) {
+              return lineParser.apply(s);
+            }
+          });
       if (children.contains(null)) {
         return null;
       } else {
-        return children;
+        return children.toList();
       }
     }
   };
@@ -954,9 +960,10 @@ public class ProjectionalListSynchronizerTest extends EditingTestCase {
   public void pasteItemAsText() {
     rootMapper.mySynchronizer.supportListContentKind(ContentKinds.MULTILINE_TEXT, multilineParser);
 
-    paste(getMultiline(new EmptyChild()));
+    paste(getMultiline(new EmptyChild()) + '\n');
     assertEquals(1, container.children.size());
     assertTrue(container.children.get(0) instanceof EmptyChild);
+    assertFocused(0);
   }
 
   @Test
@@ -967,6 +974,7 @@ public class ProjectionalListSynchronizerTest extends EditingTestCase {
     assertEquals(2, container.children.size());
     assertTrue(container.children.get(0) instanceof EmptyChild);
     assertTrue(container.children.get(1) instanceof NonEmptyChild);
+    assertFocused(1);
   }
 
   @Test
