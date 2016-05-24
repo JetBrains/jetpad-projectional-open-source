@@ -496,13 +496,13 @@ abstract class BaseProjectionalSynchronizer<SourceT, ContextT, SourceItemT> impl
           if (content.isSupported(entry.key())) {
             SourceItemT item = fromContent.apply(content.get(kind));
             if (item != null) {
-              insertItem(item);
+              insertItem(item).run();
             }
             return;
           } else if (isMultiItemPasteSupported() && content.isSupported(listOf(kind))) {
             List<SourceItemT> itemsList = (List<SourceItemT>) fromContent.apply(content.get(listOf(kind)));
             if (itemsList != null) {
-              insertItems(itemsList);
+              insertItems(itemsList).run();
             }
             return;
           }
@@ -514,7 +514,7 @@ abstract class BaseProjectionalSynchronizer<SourceT, ContextT, SourceItemT> impl
               Function<Object, List<SourceItemT>> fromContent = (Function<Object, List<SourceItemT>>) entry.value();
               List<SourceItemT> items = fromContent.apply(content.get(kind));
               if (items != null) {
-                insertItems(items);
+                insertItems(items).run();
               }
               return;
             }
