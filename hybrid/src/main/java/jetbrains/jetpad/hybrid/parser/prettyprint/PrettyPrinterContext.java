@@ -72,6 +72,8 @@ public class PrettyPrinterContext<NodeT>  {
     myResult.myTokens.add(token);
     TokenParseNode result = new TokenParseNode(token, myResult.myTokens.size() - 1);
     myResult.myStack.peek().add(result);
+
+    myResult.myPrinted = true;
   }
 
   public <ValueT> void append(ReadableProperty<ValueT> prop, Function<ValueT, Token> f) {
