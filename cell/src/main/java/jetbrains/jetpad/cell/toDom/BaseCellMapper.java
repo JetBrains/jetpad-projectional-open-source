@@ -18,7 +18,6 @@ package jetbrains.jetpad.cell.toDom;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Node;
 import com.google.gwt.dom.client.Style;
-import com.google.gwt.user.client.DOM;
 import jetbrains.jetpad.cell.Cell;
 import jetbrains.jetpad.cell.CellPropertySpec;
 import jetbrains.jetpad.cell.mappersUtil.CounterSpec;
@@ -27,13 +26,13 @@ import jetbrains.jetpad.cell.mappersUtil.HasCounters;
 import jetbrains.jetpad.cell.mappersUtil.PopupManager;
 import jetbrains.jetpad.mapper.Mapper;
 import jetbrains.jetpad.mapper.MappingContext;
+import jetbrains.jetpad.mapper.gwt.DomUtil;
 import jetbrains.jetpad.model.collections.list.ObservableList;
 import jetbrains.jetpad.model.composite.Composites;
 import jetbrains.jetpad.model.event.EventHandler;
 import jetbrains.jetpad.model.property.PropertyChangeEvent;
 import jetbrains.jetpad.values.Color;
 
-import java.util.AbstractList;
 import java.util.Collection;
 import java.util.List;
 
@@ -78,7 +77,7 @@ abstract class BaseCellMapper<SourceT extends Cell> extends Mapper<SourceT, Elem
 
     if (isAutoChildManagement()) {
       myChildMappers = createChildList();
-      myChildTargets = divWrappedElementChildren(getTarget());
+      myChildTargets = DomUtil.elementChildren(getTarget());
       ObservableList<Cell> children = getSource().children();
       for (int i = 0; i < children.size(); i++) {
         childAdded(i, children.get(i));
@@ -217,58 +216,6 @@ abstract class BaseCellMapper<SourceT extends Cell> extends Mapper<SourceT, Elem
         style.setProperty(BACKGROUND, underline + UNDERLINE_SUFFIX + " " + color);
       }
     }
-  }
-
-  List<Node> divWrappedElementChildren(final Element e) {
-    return new AbstractList<Node>() {
-      @Override
-      public Node get(int index) {
-        return e.getChild(index).getFirstChild();
-      }
-
-      @Override
-      public Node set(int index, Node element) {
-        if (element.getParentElement() != null) {
-          throw new IllegalStateException();
-        }
-
-        Element wrapperDiv = DOM.createDiv();
-        wrapperDiv.appendChild(element);
-
-        Node child = e.getChild(index);
-        e.replaceChild(child, wrapperDiv);
-        return child;
-      }
-
-      @Override
-      public void add(int index, Node element) {
-        if (element.getParentElement() != null) {
-          throw new IllegalStateException();
-        }
-
-        Element wrapperDiv = DOM.createDiv();
-        wrapperDiv.appendChild(element);
-        if (index == 0) {
-          e.insertFirst(wrapperDiv);
-        } else {
-          Node prev = e.getChild(index - 1);
-          e.insertAfter(wrapperDiv, prev);
-        }
-      }
-
-      @Override
-      public Node remove(int index) {
-        Element childWrapper = (Element) e.getChild(index);
-        get(index).removeFromParent();
-        e.removeChild(childWrapper);
-        return childWrapper;
-      }
-
-      @Override
-      public int size() {
-        return e.getChildCount();
-      }
-    };
   }
 
   protected PopupManager createPopupManager() {
