@@ -1,3 +1,4 @@
+[![obsolete JetBrains project](http://jb.gg/badges/obsolete-flat-square.svg)](https://confluence.jetbrains.com/display/ALL/JetBrains+on+GitHub)
 # JetBrains JetPad Projectional Editing Framework
 
 Projectional editing is an approach to editing where instead of working with text as is, user works with model data structure
